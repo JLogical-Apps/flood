@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/widgets/input_field.dart';
+import 'package:jlogical_utils/smartform/fields/smart_text_field.dart';
+import 'package:jlogical_utils/smartform/smart_form.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,12 +24,17 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home')),
-      body: Center(
-        child: InputField(
-          label: 'Name',
-        ),
-      ),
-    );
+        appBar: AppBar(title: Text('Home')),
+        body: SmartForm(
+          initialValues: {'name': 'Jake'},
+          children: [
+            SmartTextField(
+              name: 'name',
+            )
+          ],
+          onAccept: (data) {
+            print(data);
+          },
+        ));
   }
 }
