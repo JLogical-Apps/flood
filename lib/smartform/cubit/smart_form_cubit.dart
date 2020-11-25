@@ -83,6 +83,5 @@ class SmartFormCubit extends Cubit<SmartFormState> {
     newInitialValues[name] = value;
 
     emit(state.copyWith(nameToValueMap: newValues, nameToInitialValueMap: newInitialValues));
-    print('setting initial value');
   }
 }

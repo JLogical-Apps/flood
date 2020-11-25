@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
 
               return null;
             },
-          )
+          ),
         ],
         onAccept: (data) {
           print(data);
