@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Text field with additional functionality.
 class InputField extends StatefulWidget {
@@ -83,6 +84,7 @@ class _InputFieldState extends State<InputField> {
       padding: EdgeInsets.all(8),
       child: TextFormField(
         enabled: widget.enabled,
+        inputFormatters: [],
         readOnly: widget.readonly,
         controller: controller,
         maxLength: widget.maxLength == 0 || widget.controller.text.length < widget.maxLength - 10 ? null : widget.maxLength,

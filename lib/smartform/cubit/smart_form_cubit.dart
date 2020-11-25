@@ -15,6 +15,7 @@ class SmartFormCubit extends Cubit<SmartFormState> {
           nameToErrorMap: {},
           nameToInitialValueMap: {},
           nameToValidatorMap: {},
+          isLoading: false,
         ));
 
   /// Changes the value of the field with [name] to [value].
@@ -36,20 +37,21 @@ class SmartFormCubit extends Cubit<SmartFormState> {
 
   /// Validates the fields in the form and returns whether it was validated.
   Future<bool> validate() async {
+    emit(state.copyWith(isLoading: true));
     Map<String, String> nameToErrorMap = {};
     bool hasError = false;
     for (var entry in state.nameToValidatorMap.entries) {
       var error = await entry.value(getValue(entry.key));
-      print(state.nameToValueMap);
-      print('error in loop: $error for ${entry.key}. Value is ${getValue(entry.key)}');
       if (error != null) {
         hasError = true;
         nameToErrorMap[entry.key] = error;
-        print('found error with name; ${entry.key}, value: ${error}');
       }
     }
 
-    emit(state.copyWith(nameToErrorMap: nameToErrorMap));
+    emit(state.copyWith(
+      nameToErrorMap: nameToErrorMap,
+      isLoading: false,
+    ));
 
     return hasError;
   }

@@ -36,6 +36,7 @@ class HomePage extends StatelessWidget {
             name: 'company',
             label: 'Company',
             validator: (str) async {
+              await Future.delayed(Duration(seconds: 1));
               if (str.startsWith('a')) {
                 return 'Can\'t start with a';
               }

@@ -43,7 +43,7 @@ class SmartTextField extends StatelessWidget {
     Key key,
     @required this.name,
     this.label,
-    this.initialText,
+    this.initialText: '',
     this.validator,
     this.format: SmartTextFieldFormat.text,
   }) : super(key: key);

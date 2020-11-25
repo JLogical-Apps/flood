@@ -18,12 +18,14 @@ class _$SmartFormStateTearOff {
       {@required Map<String, dynamic> nameToValueMap,
       @required Map<String, dynamic> nameToInitialValueMap,
       @required Map<String, String> nameToErrorMap,
-      @required Map<String, Validator> nameToValidatorMap}) {
+      @required Map<String, Validator> nameToValidatorMap,
+      @required bool isLoading}) {
     return _SmartFormState(
       nameToValueMap: nameToValueMap,
       nameToInitialValueMap: nameToInitialValueMap,
       nameToErrorMap: nameToErrorMap,
       nameToValidatorMap: nameToValidatorMap,
+      isLoading: isLoading,
     );
   }
 }
@@ -46,6 +48,9 @@ mixin _$SmartFormState {
   /// Maps the [name] of a field to its validator.
   Map<String, Validator> get nameToValidatorMap;
 
+  /// Whether the form is loading.
+  bool get isLoading;
+
   $SmartFormStateCopyWith<SmartFormState> get copyWith;
 }
 
@@ -58,7 +63,8 @@ abstract class $SmartFormStateCopyWith<$Res> {
       {Map<String, dynamic> nameToValueMap,
       Map<String, dynamic> nameToInitialValueMap,
       Map<String, String> nameToErrorMap,
-      Map<String, Validator> nameToValidatorMap});
+      Map<String, Validator> nameToValidatorMap,
+      bool isLoading});
 }
 
 /// @nodoc
@@ -76,6 +82,7 @@ class _$SmartFormStateCopyWithImpl<$Res>
     Object nameToInitialValueMap = freezed,
     Object nameToErrorMap = freezed,
     Object nameToValidatorMap = freezed,
+    Object isLoading = freezed,
   }) {
     return _then(_value.copyWith(
       nameToValueMap: nameToValueMap == freezed
@@ -90,6 +97,7 @@ class _$SmartFormStateCopyWithImpl<$Res>
       nameToValidatorMap: nameToValidatorMap == freezed
           ? _value.nameToValidatorMap
           : nameToValidatorMap as Map<String, Validator>,
+      isLoading: isLoading == freezed ? _value.isLoading : isLoading as bool,
     ));
   }
 }
@@ -105,7 +113,8 @@ abstract class _$SmartFormStateCopyWith<$Res>
       {Map<String, dynamic> nameToValueMap,
       Map<String, dynamic> nameToInitialValueMap,
       Map<String, String> nameToErrorMap,
-      Map<String, Validator> nameToValidatorMap});
+      Map<String, Validator> nameToValidatorMap,
+      bool isLoading});
 }
 
 /// @nodoc
@@ -125,6 +134,7 @@ class __$SmartFormStateCopyWithImpl<$Res>
     Object nameToInitialValueMap = freezed,
     Object nameToErrorMap = freezed,
     Object nameToValidatorMap = freezed,
+    Object isLoading = freezed,
   }) {
     return _then(_SmartFormState(
       nameToValueMap: nameToValueMap == freezed
@@ -139,6 +149,7 @@ class __$SmartFormStateCopyWithImpl<$Res>
       nameToValidatorMap: nameToValidatorMap == freezed
           ? _value.nameToValidatorMap
           : nameToValidatorMap as Map<String, Validator>,
+      isLoading: isLoading == freezed ? _value.isLoading : isLoading as bool,
     ));
   }
 }
@@ -149,11 +160,13 @@ class _$_SmartFormState implements _SmartFormState {
       {@required this.nameToValueMap,
       @required this.nameToInitialValueMap,
       @required this.nameToErrorMap,
-      @required this.nameToValidatorMap})
+      @required this.nameToValidatorMap,
+      @required this.isLoading})
       : assert(nameToValueMap != null),
         assert(nameToInitialValueMap != null),
         assert(nameToErrorMap != null),
-        assert(nameToValidatorMap != null);
+        assert(nameToValidatorMap != null),
+        assert(isLoading != null);
 
   @override
 
@@ -171,10 +184,14 @@ class _$_SmartFormState implements _SmartFormState {
 
   /// Maps the [name] of a field to its validator.
   final Map<String, Validator> nameToValidatorMap;
+  @override
+
+  /// Whether the form is loading.
+  final bool isLoading;
 
   @override
   String toString() {
-    return 'SmartFormState(nameToValueMap: $nameToValueMap, nameToInitialValueMap: $nameToInitialValueMap, nameToErrorMap: $nameToErrorMap, nameToValidatorMap: $nameToValidatorMap)';
+    return 'SmartFormState(nameToValueMap: $nameToValueMap, nameToInitialValueMap: $nameToInitialValueMap, nameToErrorMap: $nameToErrorMap, nameToValidatorMap: $nameToValidatorMap, isLoading: $isLoading)';
   }
 
   @override
@@ -192,7 +209,10 @@ class _$_SmartFormState implements _SmartFormState {
                     .equals(other.nameToErrorMap, nameToErrorMap)) &&
             (identical(other.nameToValidatorMap, nameToValidatorMap) ||
                 const DeepCollectionEquality()
-                    .equals(other.nameToValidatorMap, nameToValidatorMap)));
+                    .equals(other.nameToValidatorMap, nameToValidatorMap)) &&
+            (identical(other.isLoading, isLoading) ||
+                const DeepCollectionEquality()
+                    .equals(other.isLoading, isLoading)));
   }
 
   @override
@@ -201,7 +221,8 @@ class _$_SmartFormState implements _SmartFormState {
       const DeepCollectionEquality().hash(nameToValueMap) ^
       const DeepCollectionEquality().hash(nameToInitialValueMap) ^
       const DeepCollectionEquality().hash(nameToErrorMap) ^
-      const DeepCollectionEquality().hash(nameToValidatorMap);
+      const DeepCollectionEquality().hash(nameToValidatorMap) ^
+      const DeepCollectionEquality().hash(isLoading);
 
   @override
   _$SmartFormStateCopyWith<_SmartFormState> get copyWith =>
@@ -213,7 +234,8 @@ abstract class _SmartFormState implements SmartFormState {
       {@required Map<String, dynamic> nameToValueMap,
       @required Map<String, dynamic> nameToInitialValueMap,
       @required Map<String, String> nameToErrorMap,
-      @required Map<String, Validator> nameToValidatorMap}) = _$_SmartFormState;
+      @required Map<String, Validator> nameToValidatorMap,
+      @required bool isLoading}) = _$_SmartFormState;
 
   @override
 
@@ -231,6 +253,10 @@ abstract class _SmartFormState implements SmartFormState {
 
   /// Maps the [name] of a field to its validator.
   Map<String, Validator> get nameToValidatorMap;
+  @override
+
+  /// Whether the form is loading.
+  bool get isLoading;
   @override
   _$SmartFormStateCopyWith<_SmartFormState> get copyWith;
 }

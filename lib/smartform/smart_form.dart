@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jlogical_utils/smartform/cubit/smart_form_cubit.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 
 /// Form that greatly helps automate forms.
 /// The [children] of the SmartForm will automatically do validation, exporting of data, etc.
@@ -18,19 +19,22 @@ class SmartForm extends StatelessWidget {
     return BlocProvider(
       create: (_) => SmartFormCubit(),
       child: Builder(
-        builder: (context) => Column(
-          children: [
-            ...children,
-            ElevatedButton(
-              child: Text('OK'),
-              onPressed: () async {
-                SmartFormCubit smartFormCubit = context.read<SmartFormCubit>();
-                if (await smartFormCubit.validate()) {
-                  onAccept?.call(smartFormCubit.state.nameToValueMap);
-                }
-              },
-            ),
-          ],
+        builder: (context) => LoadingOverlay(
+          isLoading: context.watch<SmartFormCubit>().state.isLoading,
+          child: Column(
+            children: [
+              ...children,
+              ElevatedButton(
+                child: Text('OK'),
+                onPressed: () async {
+                  SmartFormCubit smartFormCubit = context.read<SmartFormCubit>();
+                  if (await smartFormCubit.validate()) {
+                    onAccept?.call(smartFormCubit.state.nameToValueMap);
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

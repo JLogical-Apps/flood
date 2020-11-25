@@ -14,5 +14,8 @@ abstract class SmartFormState with _$SmartFormState {
 
     /// Maps the [name] of a field to its validator.
     @required Map<String, Validator> nameToValidatorMap,
+
+    /// Whether the form is loading.
+    @required bool isLoading,
   }) = _SmartFormState;
 }
