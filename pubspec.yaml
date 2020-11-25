@@ -15,6 +15,7 @@ dependencies:
   # Presentation
   flutter_colorpicker: 0.3.4
   flutter_picker: 1.1.5
+  expandable: 4.1.4
   loading_overlay: 0.2.1
 
   # Application
