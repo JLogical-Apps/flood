@@ -7,16 +7,31 @@ class SmartField<T> extends StatelessWidget {
   /// The name of this field. In the SmartForm.onAccept, this [name] will be mapped to this value.
   final String name;
 
+  /// Builder for the widget with the given [value] and [error].
+  final Widget Function(T value, String error) builder;
+
+  /// The initial value of the field.
+  final T initialValue;
+
   /// Validator for the field. Returns [null] if no errors were found.
-  final String Function(T value) validator;
+  final Validator validator;
 
-  /// Builder for the widget with the given [value].
-  final Widget Function(T value) builder;
-
-  const SmartField({Key key, this.name, this.validator, this.builder}) : super(key: key);
+  const SmartField({Key key, @required this.name, @required this.builder, this.initialValue, this.validator}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return builder(context.watch<SmartFormCubit>().state.formValues[name]);
+    SmartFormCubit smartFormCubit = context.watch<SmartFormCubit>();
+    smartFormCubit.setValidator(
+      name: name,
+      validator: validator,
+    );
+    smartFormCubit.setInitialValue(
+      name: name,
+      value: initialValue,
+    );
+    return builder(
+      smartFormCubit.getValue(name),
+      smartFormCubit.getError(name),
+    );
   }
 }

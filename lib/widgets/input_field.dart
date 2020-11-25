@@ -42,6 +42,9 @@ class InputField extends StatefulWidget {
   /// Function to call to validate the text in the text field.
   final String Function(String text) validator;
 
+  /// Error text to show.
+  final String errorText;
+
   const InputField({
     Key key,
     this.controller,
@@ -57,6 +60,7 @@ class InputField extends StatefulWidget {
     this.onSubmit,
     this.onChange,
     this.validator,
+    this.errorText,
   }) : super(key: key);
 
   @override
@@ -104,6 +108,7 @@ class _InputFieldState extends State<InputField> {
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: widget.lineColor),
           ),
+          errorText: widget.errorText,
         ),
         keyboardType: widget.keyboardType,
         maxLines: widget.maxLines,
