@@ -60,7 +60,7 @@ class SmartFormCubit extends Cubit<SmartFormState> {
       onAccept?.call(state.nameToValueMap);
     }
 
-    return hasError;
+    return !hasError;
   }
 
   /// Sets the errors of the form.

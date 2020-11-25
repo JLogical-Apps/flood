@@ -53,7 +53,6 @@ class HomePage extends StatelessWidget {
           ElevatedButton(
             child: Text('OK'),
             onPressed: () async {
-              print(controller.smartFormCubit);
               if (await controller.validate()) {
                 print('in onPressed');
               }
