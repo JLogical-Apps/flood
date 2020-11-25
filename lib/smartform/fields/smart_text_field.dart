@@ -4,24 +4,6 @@ import 'package:jlogical_utils/smartform/cubit/smart_form_cubit.dart';
 import 'package:jlogical_utils/smartform/fields/smart_field.dart';
 import 'package:jlogical_utils/widgets/input_field.dart';
 
-/// Different formats allowed for SmartTextFields.
-enum SmartTextFieldFormat {
-  /// Regular text format.
-  text,
-
-  /// Multiline text format.
-  multiline,
-
-  /// Number, but forced to be an int.
-  numberInt,
-
-  /// Can be any number.
-  number,
-
-  /// Can be a currency.
-  currency,
-}
-
 /// SmartField that handles text.
 class SmartTextField extends StatelessWidget {
   /// The name of the field.
@@ -36,8 +18,8 @@ class SmartTextField extends StatelessWidget {
   /// The validator of the text field.
   final Validator<String> validator;
 
-  /// The format for this field.
-  final SmartTextFieldFormat format;
+  /// The keyboard type to show.
+  final TextInputType keyboardType;
 
   const SmartTextField({
     Key key,
@@ -45,7 +27,7 @@ class SmartTextField extends StatelessWidget {
     this.label,
     this.initialText: '',
     this.validator,
-    this.format: SmartTextFieldFormat.text,
+    this.keyboardType: TextInputType.text,
   }) : super(key: key);
 
   @override
@@ -55,32 +37,14 @@ class SmartTextField extends StatelessWidget {
       builder: (str, error) {
         return InputField(
           label: label,
-          keyboardType: _getKeyboardType(format),
-          initialText: context.read<SmartFormCubit>().getValue(name),
-          onChange: (s) => context.read<SmartFormCubit>().changeValue(name: name, value: s),
+          keyboardType: keyboardType,
+          initialText: BlocProvider.of<SmartFormCubit>(context).getValue(name),
+          onChange: (s) => BlocProvider.of<SmartFormCubit>(context).changeValue(name: name, value: s),
           errorText: error,
         );
       },
       validator: validator,
       initialValue: initialText,
     );
-  }
-
-  /// Returns the appropriate keyboard type for the given [format].
-  TextInputType _getKeyboardType(SmartTextFieldFormat format) {
-    switch (format) {
-      case SmartTextFieldFormat.text:
-        return TextInputType.text;
-      case SmartTextFieldFormat.multiline:
-        return TextInputType.multiline;
-      case SmartTextFieldFormat.number:
-        return TextInputType.numberWithOptions(signed: true);
-      case SmartTextFieldFormat.numberInt:
-        return TextInputType.numberWithOptions(signed: true, decimal: true);
-      case SmartTextFieldFormat.currency:
-        return TextInputType.number;
-    }
-
-    return TextInputType.text;
   }
 }

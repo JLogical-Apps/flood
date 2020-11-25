@@ -20,7 +20,7 @@ class SmartField<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SmartFormCubit smartFormCubit = context.watch<SmartFormCubit>();
+    SmartFormCubit smartFormCubit = BlocProvider.of<SmartFormCubit>(context);
     smartFormCubit.setValidator(
       name: name,
       validator: validator,
@@ -29,9 +29,13 @@ class SmartField<T> extends StatelessWidget {
       name: name,
       value: initialValue,
     );
-    return builder(
-      smartFormCubit.getValue(name),
-      smartFormCubit.getError(name),
+    return BlocBuilder<SmartFormCubit, SmartFormState>(
+      builder: (context, state) {
+        return builder(
+          smartFormCubit.getValue(name),
+          smartFormCubit.getError(name),
+        );
+      },
     );
   }
 }

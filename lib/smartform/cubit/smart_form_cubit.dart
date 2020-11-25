@@ -9,7 +9,10 @@ part 'smart_form_state.dart';
 typedef FutureOr<T> Validator<T>(dynamic value);
 
 class SmartFormCubit extends Cubit<SmartFormState> {
-  SmartFormCubit()
+  /// Function to call when the input is accepted.
+  final void Function(Map<String, dynamic> data) onAccept;
+
+  SmartFormCubit({@required this.onAccept})
       : super(SmartFormState(
           nameToValueMap: {},
           nameToErrorMap: {},
@@ -52,6 +55,10 @@ class SmartFormCubit extends Cubit<SmartFormState> {
       nameToErrorMap: nameToErrorMap,
       isLoading: false,
     ));
+
+    if (!hasError) {
+      onAccept?.call(state.nameToValueMap);
+    }
 
     return hasError;
   }

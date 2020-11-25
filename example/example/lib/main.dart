@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/smartform/fields/smart_text_field.dart';
 import 'package:jlogical_utils/smartform/smart_form.dart';
+import 'package:jlogical_utils/smartform/smart_form_controller.dart';
+import 'package:jlogical_utils/utils/validator.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,27 +23,40 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
+  final SmartFormController controller = SmartFormController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Home')),
       body: SmartForm(
+        controller: controller,
         children: [
           SmartTextField(
-            name: 'name',
-            label: 'Name',
-            initialText: 'Jake',
+            name: 'username',
+            label: 'Username',
           ),
           SmartTextField(
-            name: 'company',
-            label: 'Company',
+            name: 'email',
+            label: 'Email',
+            keyboardType: TextInputType.emailAddress,
             validator: (str) async {
-              await Future.delayed(Duration(seconds: 1));
-              if (str.startsWith('a')) {
-                return 'Can\'t start with a';
+              var emailError = Validator.email(str, onEmpty: 'Cannot be empty!', onInvalid: 'Invalid email address.');
+              if (emailError != null) {
+                return emailError;
               }
 
+              await Future.delayed(Duration(seconds: 1));
               return null;
+            },
+          ),
+          ElevatedButton(
+            child: Text('OK'),
+            onPressed: () async {
+              print(controller.smartFormCubit);
+              if (await controller.validate()) {
+                print('in onPressed');
+              }
             },
           ),
         ],
