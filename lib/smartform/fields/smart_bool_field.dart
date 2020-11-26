@@ -13,7 +13,7 @@ enum SmartBoolFieldStyle {
 class SmartBoolField extends StatelessWidget {
   final String name;
 
-  final String label;
+  final Widget child;
 
   final bool initiallyChecked;
 
@@ -24,7 +24,7 @@ class SmartBoolField extends StatelessWidget {
   const SmartBoolField({
     Key key,
     this.name,
-    this.label,
+    this.child,
     this.validator,
     this.initiallyChecked: false,
     this.style: SmartBoolFieldStyle.checkbox,
@@ -38,7 +38,7 @@ class SmartBoolField extends StatelessWidget {
         return style == SmartBoolFieldStyle.checkbox
             ? CheckboxListTile(
                 value: value,
-                title: Text(label),
+                title: child,
                 subtitle: error != null ? Text(error, style: TextStyle(color: Colors.red)) : null,
                 onChanged: (value) {
                   SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();
@@ -47,7 +47,7 @@ class SmartBoolField extends StatelessWidget {
               )
             : SwitchListTile(
                 value: value,
-                title: Text(label),
+                title: child,
                 subtitle: error != null ? Text(error, style: TextStyle(color: Colors.red)) : null,
                 onChanged: (value) {
                   SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();

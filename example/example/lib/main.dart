@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
                   ),
                   SmartBoolField(
                     name: 'acceptedTerms',
-                    label: 'Accept Terms and Conditions?',
+                    child: Text('Accept Terms and Conditions?'),
                     initiallyChecked: false,
                     validator: (value) async {
                       if (!value) {
