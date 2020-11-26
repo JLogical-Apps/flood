@@ -3,6 +3,7 @@ import 'package:jlogical_utils/smartform/fields/smart_bool_field.dart';
 import 'package:jlogical_utils/smartform/fields/smart_text_field.dart';
 import 'package:jlogical_utils/smartform/smart_form.dart';
 import 'package:jlogical_utils/widgets/category_card.dart';
+import 'package:jlogical_utils/widgets/navigation_card.dart';
 
 void main() {
   runApp(MyApp());
@@ -35,6 +36,21 @@ class HomePage extends StatelessWidget {
         child: (controller) => SingleChildScrollView(
           child: Column(
             children: [
+              NavigationCard.url(
+                title: 'Speed Test',
+                description: 'Test the speed of your internet. ',
+                url: 'https://www.speedtest.net',
+                icon: Icons.language,
+                color: Colors.purple,
+              ),
+              NavigationCard(
+                title: 'Settings',
+                description: 'Open the settings page.',
+                onTap: () {
+                  print('Opening');
+                },
+                icon: Icons.settings,
+              ),
               CategoryCard(
                 category: 'General',
                 leading: Icon(

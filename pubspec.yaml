@@ -20,6 +20,7 @@ dependencies:
 
   # Application
   flutter_bloc: 6.1.1
+  url_launcher: 5.7.10
 
   # Backend
   freezed_annotation: 0.12.0
