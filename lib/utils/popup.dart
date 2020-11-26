@@ -3,8 +3,29 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 /// Helper class that shows popups.
 class Popup {
+  /// Shows a dialog with a message.
+  static Future<void> message(BuildContext context, {@required String title, @required String message, String okText: 'OK'}) async {
+    await showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (bc) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: <Widget>[
+              OutlinedButton(
+                child: new Text(okText),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   /// Shows a dialog that asks a yes/no question. Cancelling the dialog counts as a no.
-  static Future<bool> yesNo(BuildContext context, {String title: "Title Here", String message: "Message Here", String noMsg: "NEVERMIND", String yesMsg: "OK"}) async {
+  static Future<bool> yesNo(BuildContext context, {@required String title, @required String message, String noMsg: "NEVERMIND", String yesMsg: "OK"}) async {
     var output = await showDialog(
         context: context,
         barrierDismissible: true,
@@ -13,13 +34,13 @@ class Popup {
             title: Text(title),
             content: Text(message),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text(noMsg),
                 onPressed: () {
                   Navigator.of(context).pop(false);
                 },
               ),
-              FlatButton(
+              OutlinedButton(
                 child: new Text(yesMsg),
                 onPressed: () {
                   Navigator.of(context).pop(true);

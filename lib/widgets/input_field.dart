@@ -95,12 +95,8 @@ class _InputFieldState extends State<InputField> {
         ),
         decoration: InputDecoration(
           labelText: widget.label,
-          labelStyle: TextStyle(
-            color: widget.lineColor,
-          ),
-          errorMaxLines: 3,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+          hintStyle: TextStyle(
+            color: Theme.of(context).primaryColor,
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -108,7 +104,7 @@ class _InputFieldState extends State<InputField> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: widget.lineColor),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor),
           ),
           errorText: widget.errorText,
         ),

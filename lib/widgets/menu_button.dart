@@ -6,7 +6,13 @@ class MenuButton extends StatelessWidget {
 
   final Widget child;
 
-  MenuButton({@required this.items, this.child: const Icon(Icons.more_vert)});
+  MenuButton({
+    @required this.items,
+    this.child: const Padding(
+      padding: EdgeInsets.all(8),
+      child: Icon(Icons.more_vert),
+    ),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +25,7 @@ class MenuButton extends StatelessWidget {
                       value: item.text,
                       child: ListTile(
                         title: Text(item.text),
-                        subtitle: Text(item.description),
+                        subtitle: item.description == null ? null : Text(item.description),
                         leading: item.icon != null
                             ? Icon(
                                 item.icon,

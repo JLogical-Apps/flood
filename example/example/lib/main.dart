@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/smartform/fields/smart_bool_field.dart';
 import 'package:jlogical_utils/smartform/fields/smart_text_field.dart';
 import 'package:jlogical_utils/smartform/smart_form.dart';
+import 'package:jlogical_utils/theme/theme.dart';
+import 'package:jlogical_utils/utils/popup.dart';
 import 'package:jlogical_utils/widgets/category_card.dart';
+import 'package:jlogical_utils/widgets/menu_button.dart';
 import 'package:jlogical_utils/widgets/navigation_card.dart';
 
 void main() {
@@ -14,9 +17,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+      theme: CustomTheme.theme(
+        primaryColor: Colors.blue,
       ),
       home: HomePage(),
     );
@@ -24,18 +26,66 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text('Home'),
-        elevation: 0,
       ),
-      backgroundColor: Colors.blue,
       body: SmartForm(
         child: (controller) => SingleChildScrollView(
           child: Column(
             children: [
+              Card(
+                child: Column(
+                  children: [
+                    Text('Button Bar', style: Theme.of(context).textTheme.headline4),
+                    Divider(),
+                    ButtonBar(
+                      children: [
+                        ElevatedButton(
+                          child: Text('DIALOG'),
+                          onPressed: () async {
+                            Popup.message(
+                              context,
+                              title: 'Example',
+                              message: 'Here is an example popup.',
+                            );
+                          },
+                        ),
+                        OutlinedButton(
+                          child: Text('SNACKBAR'),
+                          onPressed: () {
+                            scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Text('Snackbar!'),
+                              action: SnackBarAction(
+                                label: 'UNDO',
+                                onPressed: () {},
+                              ),
+                            ));
+                          },
+                        ),
+                        MenuButton(
+                          items: [
+                            MenuItem(
+                              text: 'Test',
+                              onPressed: () {
+                                print(';hey!');
+                              },
+                              color: Colors.blue,
+                              description: 'This is a super long description in order to test the width of a popup menu.',
+                              icon: Icons.language,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               NavigationCard.url(
                 title: 'Speed Test',
                 description: 'Test the speed of your internet. ',
@@ -95,6 +145,7 @@ class HomePage extends StatelessWidget {
                       return null;
                     },
                   ),
+                  Divider(),
                   ElevatedButton(
                     child: Text('OK'),
                     onPressed: () async {
