@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/smartform/fields/smart_checkbox_field.dart';
+import 'package:jlogical_utils/smartform/fields/smart_bool_field.dart';
 import 'package:jlogical_utils/smartform/fields/smart_text_field.dart';
 import 'package:jlogical_utils/smartform/smart_form.dart';
 import 'package:jlogical_utils/smartform/smart_form_controller.dart';
@@ -64,7 +64,7 @@ class HomePage extends StatelessWidget {
                   return null;
                 },
               ),
-              SmartCheckboxField(
+              SmartBoolField(
                 name: 'acceptedTerms',
                 label: 'Accept Terms and Conditions?',
                 initiallyChecked: false,
@@ -74,7 +74,8 @@ class HomePage extends StatelessWidget {
                   }
 
                   return null;
-                }
+                },
+                style: SmartBoolFieldStyle.$switch,
               ),
               ElevatedButton(
                 child: Text('OK'),
