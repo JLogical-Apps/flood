@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jlogical_utils/smartform/fields/smart_checkbox_field.dart';
 import 'package:jlogical_utils/smartform/fields/smart_text_field.dart';
 import 'package:jlogical_utils/smartform/smart_form.dart';
 import 'package:jlogical_utils/smartform/smart_form_controller.dart';
@@ -62,6 +63,18 @@ class HomePage extends StatelessWidget {
                   await Future.delayed(Duration(seconds: 1));
                   return null;
                 },
+              ),
+              SmartCheckboxField(
+                name: 'acceptedTerms',
+                label: 'Accept Terms and Conditions?',
+                initiallyChecked: false,
+                validator: (value) async {
+                  if(!value){
+                    return 'You must accept in order to continue';
+                  }
+
+                  return null;
+                }
               ),
               ElevatedButton(
                 child: Text('OK'),

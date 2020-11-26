@@ -6,7 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'smart_form_cubit.freezed.dart';
 part 'smart_form_state.dart';
 
-typedef FutureOr<T> Validator<T>(dynamic value);
+typedef FutureOr<String> Validator<T>(T value);
 
 class SmartFormCubit extends Cubit<SmartFormState> {
   /// Function to call when the input is accepted.

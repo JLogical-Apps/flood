@@ -43,7 +43,7 @@ class SmartTextField extends StatelessWidget {
           errorText: error,
         );
       },
-      validator: validator,
+      validator: validator == null ? null : (value) => validator(value as String),
       initialValue: initialText,
     );
   }
