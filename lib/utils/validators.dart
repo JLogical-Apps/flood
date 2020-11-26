@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 /// Holds some useful validation functions.
-class Validator {
+class Validators {
   /// Validates the given [text] by the given [minLength].
   static String minLength(String text, {@required int minLength, @required String onEmpty, @required String onShortLength}) {
     text = text.trim();
