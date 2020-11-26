@@ -64,12 +64,18 @@ class HomePage extends StatelessWidget {
                   return null;
                 },
               ),
+              SmartTextField(
+                name: 'password',
+                label: 'Password',
+                obscureText: true,
+                validator: (str) => Validator.password(str, onEmpty: 'Password cannot be empty!', onShortLength: 'Too short!'),
+              ),
               SmartBoolField(
                 name: 'acceptedTerms',
                 label: 'Accept Terms and Conditions?',
                 initiallyChecked: false,
                 validator: (value) async {
-                  if(!value){
+                  if (!value) {
                     return 'You must accept in order to continue';
                   }
 

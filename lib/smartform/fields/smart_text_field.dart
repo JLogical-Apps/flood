@@ -21,6 +21,9 @@ class SmartTextField extends StatelessWidget {
   /// The keyboard type to show.
   final TextInputType keyboardType;
 
+  /// Whether to obscure the text.
+  final bool obscureText;
+
   const SmartTextField({
     Key key,
     @required this.name,
@@ -28,6 +31,7 @@ class SmartTextField extends StatelessWidget {
     this.initialText: '',
     this.validator,
     this.keyboardType: TextInputType.text,
+    this.obscureText: false,
   }) : super(key: key);
 
   @override
@@ -41,6 +45,7 @@ class SmartTextField extends StatelessWidget {
           initialText: BlocProvider.of<SmartFormCubit>(context).getValue(name),
           onChange: (s) => BlocProvider.of<SmartFormCubit>(context).changeValue(name: name, value: s),
           errorText: error,
+          obscureText: obscureText,
         );
       },
       validator: validator == null ? null : (value) => validator(value as String),
