@@ -1,16 +1,18 @@
+import 'package:meta/meta.dart';
+
 import 'cubit/smart_form_cubit.dart';
 
 /// Optional controller for a smart form.
 class SmartFormController {
-  SmartFormCubit smartFormCubit;
+  final SmartFormCubit _smartFormCubit;
 
-  /// Sets the cubit this controller will be interacting with.
-  void setCubit(SmartFormCubit cubit) {
-    smartFormCubit = cubit;
-  }
+  const SmartFormController({@required SmartFormCubit smartFormCubit}) : _smartFormCubit = smartFormCubit;
+
+  /// Whether the smart form is loading.
+  bool get isLoading => _smartFormCubit.state.isLoading;
 
   /// Validates the attached SmartForm. Returns whether the validation was successful.
   Future<bool> validate() async {
-    return smartFormCubit.validate();
+    return _smartFormCubit.validate();
   }
 }

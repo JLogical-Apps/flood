@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/smartform/fields/smart_bool_field.dart';
 import 'package:jlogical_utils/smartform/fields/smart_text_field.dart';
 import 'package:jlogical_utils/smartform/smart_form.dart';
-import 'package:jlogical_utils/smartform/smart_form_controller.dart';
-import 'package:jlogical_utils/utils/validator.dart';
 import 'package:jlogical_utils/widgets/category_card.dart';
 
 void main() {
@@ -25,75 +23,81 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-  final SmartFormController controller = SmartFormController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
       appBar: AppBar(
         title: Text('Home'),
         elevation: 0,
       ),
+      backgroundColor: Colors.blue,
       body: SmartForm(
-        controller: controller,
-        children: [
-          CategoryCard(
-            category: 'General',
-            leading: Icon(
-              Icons.category,
-              color: Colors.blue,
-            ),
-            canCollapse: true,
+        child: (controller) => SingleChildScrollView(
+          child: Column(
             children: [
-              SmartTextField(
-                name: 'username',
-                label: 'Username',
-              ),
-              SmartTextField(
-                name: 'email',
-                label: 'Email',
-                keyboardType: TextInputType.emailAddress,
-                validator: (str) async {
-                  var emailError = Validator.email(str, onEmpty: 'Cannot be empty!', onInvalid: 'Invalid email address.');
-                  if (emailError != null) {
-                    return emailError;
-                  }
+              CategoryCard(
+                category: 'General',
+                leading: Icon(
+                  Icons.category,
+                  color: Colors.blue,
+                ),
+                canCollapse: true,
+                children: [
+                  SmartTextField(
+                    name: 'username',
+                    label: 'Username',
+                  ),
+                  SmartTextField(
+                    name: 'email',
+                    label: 'Email',
+                    keyboardType: TextInputType.emailAddress,
+                    // validator: (str) async {
+                    //   var emailError = Validator.email(str, onEmpty: 'Cannot be empty!', onInvalid: 'Invalid email address.');
+                    //   if (emailError != null) {
+                    //     return emailError;
+                    //   }
+                    //
+                    //   await Future.delayed(Duration(seconds: 1));
+                    //   return null;
+                    // },
+                  ),
+                  SmartTextField(
+                    name: 'password',
+                    label: 'Password',
+                    obscureText: true,
+                    // validator: (str) => Validator.password(str, onEmpty: 'Password cannot be empty!', onShortLength: 'Too short!'),
+                  ),
+                  SmartBoolField(
+                    name: 'acceptedTerms',
+                    label: 'Accept Terms and Conditions?',
+                    initiallyChecked: false,
+                    validator: (value) async {
+                      if (!value) {
+                        return 'You must accept in order to continue';
+                      }
 
-                  await Future.delayed(Duration(seconds: 1));
-                  return null;
-                },
-              ),
-              SmartTextField(
-                name: 'password',
-                label: 'Password',
-                obscureText: true,
-                validator: (str) => Validator.password(str, onEmpty: 'Password cannot be empty!', onShortLength: 'Too short!'),
-              ),
-              SmartBoolField(
-                name: 'acceptedTerms',
-                label: 'Accept Terms and Conditions?',
-                initiallyChecked: false,
-                validator: (value) async {
-                  if (!value) {
-                    return 'You must accept in order to continue';
-                  }
-
-                  return null;
-                },
-                style: SmartBoolFieldStyle.$switch,
-              ),
-              ElevatedButton(
-                child: Text('OK'),
-                onPressed: () async {
-                  if (await controller.validate()) {
-                    print('in onPressed');
-                  }
-                },
+                      return null;
+                    },
+                  ),
+                  ElevatedButton(
+                    child: Text('OK'),
+                    onPressed: () async {
+                      if (await controller.validate()) {
+                        print('in onPressed');
+                      }
+                    },
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
+        postValidator: (data) async {
+          await Future.delayed(Duration(seconds: 1));
+          return {
+            'email': 'Email was not found in our database. ',
+          };
+        },
         onAccept: (data) {
           print(data);
         },

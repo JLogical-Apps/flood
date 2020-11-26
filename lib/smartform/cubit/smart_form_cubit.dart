@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:jlogical_utils/smartform/smart_form.dart';
 
 part 'smart_form_cubit.freezed.dart';
 part 'smart_form_state.dart';
@@ -12,7 +13,10 @@ class SmartFormCubit extends Cubit<SmartFormState> {
   /// Function to call when the input is accepted.
   final void Function(Map<String, dynamic> data) onAccept;
 
-  SmartFormCubit({@required this.onAccept})
+  /// The validator to run after all the fields have validated themselves.
+  final PostValidator postValidator;
+
+  SmartFormCubit({@required this.onAccept, @required this.postValidator})
       : super(SmartFormState(
           nameToValueMap: {},
           nameToErrorMap: {},
@@ -51,14 +55,26 @@ class SmartFormCubit extends Cubit<SmartFormState> {
       }
     }
 
-    emit(state.copyWith(
-      nameToErrorMap: nameToErrorMap,
-      isLoading: false,
-    ));
+    if (hasError) {
+      emit(state.copyWith(
+        nameToErrorMap: nameToErrorMap,
+        isLoading: false,
+      ));
+
+      return false;
+    }
+
+    nameToErrorMap = await postValidator?.call(state.nameToValueMap);
+    hasError = nameToErrorMap == null || nameToErrorMap.isEmpty;
 
     if (!hasError) {
       onAccept?.call(state.nameToValueMap);
     }
+
+    emit(state.copyWith(
+      nameToErrorMap: nameToErrorMap ?? {},
+      isLoading: false,
+    ));
 
     return !hasError;
   }
