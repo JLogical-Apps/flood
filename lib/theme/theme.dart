@@ -23,6 +23,7 @@ class CustomTheme {
         ),
         elevation: 0,
         margin: EdgeInsets.all(8),
+        color: Colors.white,
       ),
       cursorColor: primaryColor,
       dialogTheme: DialogTheme(
