@@ -65,7 +65,7 @@ class SmartFormCubit extends Cubit<SmartFormState> {
     }
 
     nameToErrorMap = await postValidator?.call(state.nameToValueMap);
-    hasError = nameToErrorMap == null || nameToErrorMap.isEmpty;
+    hasError = nameToErrorMap != null && nameToErrorMap.isNotEmpty;
 
     if (!hasError) {
       onAccept?.call(state.nameToValueMap);
