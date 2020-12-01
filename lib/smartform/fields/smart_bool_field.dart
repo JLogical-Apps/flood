@@ -35,6 +35,31 @@ class SmartBoolField extends StatelessWidget {
     return SmartField<bool>(
       name: name,
       builder: (value, error) {
+        return Row(
+          children: [
+            style == SmartBoolFieldStyle.checkbox
+                ? Checkbox(
+                    value: value,
+                    onChanged: (value) {
+                      SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();
+                      smartFormCubit.changeValue(name: name, value: value);
+                    },
+                  )
+                : Switch(
+                    value: value,
+                    onChanged: (value) {
+                      SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();
+                      smartFormCubit.changeValue(name: name, value: value);
+                    },
+                  ),
+            Expanded(
+              child: ListTile(
+                title: child,
+                subtitle: error != null ? Text(error, style: TextStyle(color: Colors.red)) : null,
+              ),
+            )
+          ],
+        );
         return style == SmartBoolFieldStyle.checkbox
             ? CheckboxListTile(
                 value: value,
