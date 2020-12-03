@@ -33,7 +33,10 @@ class CategoryCard extends StatelessWidget {
         children: [
           if (canCollapse)
             ExpansionTile(
-              title: Text(category),
+              title: Text(
+                category,
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
               leading: leading,
               trailing: trailing,
               children: children,
