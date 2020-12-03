@@ -11,7 +11,7 @@ typedef FutureOr<String> Validator<T>(T value);
 
 class SmartFormCubit extends Cubit<SmartFormState> {
   /// Function to call when the input is accepted.
-  final void Function(Map<String, dynamic> data) onAccept;
+  final FutureOr Function(Map<String, dynamic> data) onAccept;
 
   /// The validator to run after all the fields have validated themselves.
   final PostValidator postValidator;
@@ -68,7 +68,7 @@ class SmartFormCubit extends Cubit<SmartFormState> {
     hasError = nameToErrorMap != null && nameToErrorMap.isNotEmpty;
 
     if (!hasError) {
-      onAccept?.call(state.nameToValueMap);
+      await onAccept?.call(state.nameToValueMap);
     }
 
     emit(state.copyWith(

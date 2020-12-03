@@ -18,7 +18,7 @@ class SmartForm extends StatelessWidget {
   final PostValidator postValidator;
 
   /// Function to call when the form is accepted.
-  final void Function(Map<String, dynamic> data) onAccept;
+  final FutureOr Function(Map<String, dynamic> data) onAccept;
 
   const SmartForm({Key key, this.onAccept, this.child, this.postValidator}) : super(key: key);
 
