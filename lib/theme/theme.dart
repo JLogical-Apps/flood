@@ -15,7 +15,7 @@ class CustomTheme {
         elevation: 0,
       ),
       buttonBarTheme: ButtonBarThemeData(
-        alignment: MainAxisAlignment.spaceEvenly,
+        alignment: MainAxisAlignment.center,
         buttonPadding: EdgeInsets.all(4),
         layoutBehavior: ButtonBarLayoutBehavior.padded,
       ),
