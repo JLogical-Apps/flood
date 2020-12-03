@@ -17,6 +17,9 @@ class CategoryCard extends StatelessWidget {
   /// Whether the category can expand and collapse.
   final bool canCollapse;
 
+  /// Whether the card is initially collapsed if it [canCollapse].
+  final bool initiallyCollapsed;
+
   const CategoryCard({
     Key key,
     @required this.category,
@@ -24,6 +27,7 @@ class CategoryCard extends StatelessWidget {
     this.trailing,
     @required this.children,
     this.canCollapse: false,
+    this.initiallyCollapsed: true,
   }) : super(key: key);
 
   @override
@@ -40,7 +44,7 @@ class CategoryCard extends StatelessWidget {
               leading: leading,
               trailing: trailing,
               children: children,
-              initiallyExpanded: true,
+              initiallyExpanded: !initiallyCollapsed,
             ),
           if (!canCollapse) ...[
             ListTile(
