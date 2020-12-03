@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomTheme {
   /// Returns the theme used in JLogical apps.
-  static ThemeData theme({MaterialColor primaryColor, Color accentColor}) {
+  static ThemeData theme({Color primaryColor, Color accentColor}) {
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: primaryColor,
