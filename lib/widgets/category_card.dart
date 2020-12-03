@@ -8,6 +8,9 @@ class CategoryCard extends StatelessWidget {
   /// The leading icon to display.
   final Widget leading;
 
+  /// The trailing widget to display. Will replace the expansion widget if [canCollapse] is true.
+  final Widget trailing;
+
   /// The children inside this category.
   final List<Widget> children;
 
@@ -18,6 +21,7 @@ class CategoryCard extends StatelessWidget {
     Key key,
     @required this.category,
     @required this.leading,
+    this.trailing,
     @required this.children,
     this.canCollapse: false,
   }) : super(key: key);
@@ -31,6 +35,7 @@ class CategoryCard extends StatelessWidget {
             ExpansionTile(
               title: Text(category),
               leading: leading,
+              trailing: trailing,
               children: children,
               initiallyExpanded: true,
             ),
@@ -38,6 +43,7 @@ class CategoryCard extends StatelessWidget {
             ListTile(
               title: Text(category),
               leading: leading,
+              trailing: trailing,
             ),
             ...children,
           ]
