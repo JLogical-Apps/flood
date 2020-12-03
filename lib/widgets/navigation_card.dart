@@ -13,8 +13,11 @@ class NavigationCard extends StatelessWidget {
   /// The icon to show in front.
   final IconData icon;
 
-  /// The background color for the navigation card.
+  /// The color for the navigation card. If [null], then uses primary theme.
   final Color color;
+
+  /// Whether the [color] should fill the navigation card or simply be an accent.
+  final bool fillColor;
 
   /// Action to perform when tapped.
   VoidCallback onTap;
@@ -28,7 +31,8 @@ class NavigationCard extends StatelessWidget {
     @required this.onTap,
     this.description,
     this.icon,
-    this.color: Colors.white,
+    this.color,
+    this.fillColor: false,
     this.isExternalLink: false,
   }) : super(key: key);
 
@@ -39,7 +43,8 @@ class NavigationCard extends StatelessWidget {
     @required String url,
     this.description,
     this.icon,
-    this.color: Colors.white,
+    this.color,
+    this.fillColor: false,
     this.isExternalLink: true,
   }) : super(key: key) {
     onTap = () async {
@@ -49,34 +54,69 @@ class NavigationCard extends StatelessWidget {
     };
   }
 
+  Color _getBackgroundColor(BuildContext context) {
+    if (fillColor) {
+      return color ?? Theme.of(context).primaryColor;
+    } else {
+      return Colors.white;
+    }
+  }
+
+  Color _getIconColor(BuildContext context) {
+    if (fillColor) {
+      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5) ? Theme.of(context).primaryIconTheme.color : Theme.of(context).iconTheme.color;
+    } else {
+      return color ?? Theme.of(context).primaryColor;
+    }
+  }
+
+  TextStyle _getTitleTextStyle(BuildContext context) {
+    if (fillColor) {
+      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5) ? Theme.of(context).primaryTextTheme.subtitle1 : Theme.of(context).textTheme.subtitle1;
+    } else {
+      return Theme.of(context).textTheme.subtitle1.copyWith(color: color ?? Theme.of(context).primaryColor);
+    }
+  }
+
+  TextStyle _getSubtitleTextStyle(BuildContext context) {
+    if (fillColor) {
+      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5) ? Theme.of(context).primaryTextTheme.bodyText2 : Theme.of(context).textTheme.bodyText2;
+    } else {
+      return Theme.of(context).textTheme.bodyText2;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: color,
-      child: ListTile(
-        title: Text(
-          title,
-          style: useWhiteForeground(color, bias: 1.5) ? Theme.of(context).primaryTextTheme.bodyText1 : Theme.of(context).textTheme.bodyText1,
+      color: _getBackgroundColor(context),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        child: ListTile(
+          title: Text(
+            title,
+            style: _getTitleTextStyle(context),
+          ),
+          subtitle: description == null
+              ? null
+              : Text(
+                  description,
+                  style: _getSubtitleTextStyle(context),
+                ),
+          leading: Icon(
+            icon,
+            color: _getIconColor(context),
+          ),
+          trailing: isExternalLink
+              ? Icon(
+                  Icons.exit_to_app,
+                  color: _getIconColor(context),
+                )
+              : Icon(
+                  Icons.chevron_right,
+                  color: _getIconColor(context),
+                ),
         ),
-        subtitle: description == null
-            ? null
-            : Text(
-                description,
-                style: useWhiteForeground(color, bias: 1.5) ? Theme.of(context).primaryTextTheme.bodyText2 : Theme.of(context).textTheme.bodyText2,
-              ),
-        leading: Icon(
-          icon,
-          color: useWhiteForeground(color, bias: 1.5) ? Theme.of(context).primaryIconTheme.color : Theme.of(context).iconTheme.color,
-        ),
-        trailing: isExternalLink
-            ? Icon(
-                Icons.exit_to_app,
-                color: useWhiteForeground(color, bias: 1.5) ? Theme.of(context).primaryIconTheme.color : Theme.of(context).iconTheme.color,
-              )
-            : Icon(
-                Icons.chevron_right,
-                color: useWhiteForeground(color, bias: 1.5) ? Theme.of(context).primaryIconTheme.color : Theme.of(context).iconTheme.color,
-              ),
         onTap: onTap,
       ),
     );

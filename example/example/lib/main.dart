@@ -99,6 +99,7 @@ class HomePage extends StatelessWidget {
                 onTap: () {
                   print('Opening');
                 },
+                color: Colors.orange,
                 icon: Icons.settings,
               ),
               CategoryCard(
