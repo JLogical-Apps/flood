@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class CustomTheme {
   /// Returns the theme used in JLogical apps.
@@ -91,6 +92,16 @@ class CustomTheme {
           fontSize: 18,
         ),
       ),
+      primaryColorBrightness: primaryColor == null
+          ? Brightness.dark
+          : useWhiteForeground(primaryColor, bias: 1.5)
+              ? Brightness.dark
+              : Brightness.light,
+      accentColorBrightness: accentColor == null
+          ? Brightness.dark
+          : useWhiteForeground(accentColor, bias: 1.5)
+              ? Brightness.dark
+              : Brightness.light,
     );
   }
 }
