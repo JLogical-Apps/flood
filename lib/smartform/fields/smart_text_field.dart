@@ -24,6 +24,9 @@ class SmartTextField extends StatelessWidget {
   /// Whether to obscure the text.
   final bool obscureText;
 
+  /// The number of lines to show.
+  final int maxLines;
+
   const SmartTextField({
     Key key,
     @required this.name,
@@ -32,6 +35,7 @@ class SmartTextField extends StatelessWidget {
     this.validator,
     this.keyboardType: TextInputType.text,
     this.obscureText: false,
+    this.maxLines: 1,
   }) : super(key: key);
 
   @override
@@ -46,6 +50,7 @@ class SmartTextField extends StatelessWidget {
           onChange: (s) => BlocProvider.of<SmartFormCubit>(context).changeValue(name: name, value: s),
           errorText: error,
           obscureText: obscureText,
+          maxLines: maxLines,
         );
       },
       validator: validator == null ? null : (value) => validator(value as String),
