@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
+import 'format.dart';
+
 /// Holds some useful validation functions.
 class Validators {
   /// Validates the given [text] by the given [minLength].
@@ -16,6 +18,26 @@ class Validators {
   static String notEmpty(String text, {@required String onEmpty}) {
     text = text.trim();
     if (text.isEmpty) return onEmpty;
+
+    return null;
+  }
+
+  /// Validates whether the text can be parsed to a double.
+  static String isDouble(String text, {@required String onInvalidParse, bool cleanCurrency: true, bool cleanCommas: true}) {
+    double parse = text.tryParseDoubleAfterClean(cleanCommas: cleanCommas, cleanCurrency: cleanCurrency);
+    if (parse == null) {
+      return onInvalidParse;
+    }
+
+    return null;
+  }
+
+  /// Validates whether the text can be parsed to an int.
+  static String isInt(String text, {@required String onInvalidParse, bool cleanCurrency: true, bool cleanCommas: true}) {
+    int parse = text.tryParseIntAfterClean(cleanCommas: cleanCommas, cleanCurrency: cleanCurrency);
+    if (parse == null) {
+      return onInvalidParse;
+    }
 
     return null;
   }

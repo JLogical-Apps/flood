@@ -18,7 +18,7 @@ extension NumberFormatUtil on num {
 /// Extension methods for parsing numbers.
 extension NumberParseUtil on String {
   /// Parses the string after cleaning up some user inputs.
-  double tryParseDoubleAfterClean([bool cleanCommas = true, bool cleanCurrency = true]) {
+  double tryParseDoubleAfterClean({bool cleanCommas = true, bool cleanCurrency = true}) {
     String clean = this;
     if (cleanCommas) clean = clean.replaceAll(',', '');
     if (cleanCurrency) clean = clean.replaceAll('\$', '');
@@ -27,7 +27,7 @@ extension NumberParseUtil on String {
   }
 
   /// Parses the string after cleaning up some user inputs.
-  int tryParseIntAfterClean([bool cleanCommas = true, bool cleanCurrency = true]) {
+  int tryParseIntAfterClean({bool cleanCommas = true, bool cleanCurrency = true}) {
     String clean = this;
     if (cleanCommas) clean = clean.replaceAll(',', '');
     if (cleanCurrency) clean = clean.replaceAll('\$', '');
