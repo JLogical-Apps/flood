@@ -84,7 +84,7 @@ class CustomTheme {
       ),
       snackBarTheme: SnackBarThemeData(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
         ),
         elevation: 12,
         contentTextStyle: TextStyle(
