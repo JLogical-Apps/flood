@@ -27,6 +27,9 @@ class SmartTextField extends StatelessWidget {
   /// The number of lines to show.
   final int maxLines;
 
+  /// Whether this is enabled.
+  final bool isEnabled;
+
   const SmartTextField({
     Key key,
     @required this.name,
@@ -36,6 +39,7 @@ class SmartTextField extends StatelessWidget {
     this.keyboardType: TextInputType.text,
     this.obscureText: false,
     this.maxLines: 1,
+    this.isEnabled: true,
   }) : super(key: key);
 
   @override
@@ -51,6 +55,7 @@ class SmartTextField extends StatelessWidget {
           errorText: error,
           obscureText: obscureText,
           maxLines: maxLines,
+          enabled: isEnabled,
         );
       },
       validator: validator == null ? null : (value) => validator(value as String),
