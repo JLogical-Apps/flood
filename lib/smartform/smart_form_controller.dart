@@ -15,4 +15,9 @@ class SmartFormController {
   Future<bool> validate() async {
     return _smartFormCubit.validate();
   }
+
+  /// Returns the value of the field with [name].
+  dynamic getValue(String name) {
+    return _smartFormCubit.getValue(name);
+  }
 }
