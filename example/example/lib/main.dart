@@ -108,7 +108,11 @@ class HomePage extends StatelessWidget {
                   Icons.category,
                   color: Colors.blue,
                 ),
-                canCollapse: true,
+                trailing: SmartBoolField(
+                  name: 'bool',
+                  initiallyChecked: true,
+                  child: Container(),
+                ),
                 children: [
                   SmartTextField(
                     name: 'username',

@@ -38,6 +38,7 @@ class SmartBoolField extends StatelessWidget {
         return Column(
           children: [
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 style == SmartBoolFieldStyle.checkbox
                     ? Checkbox(
