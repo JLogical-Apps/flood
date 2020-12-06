@@ -35,50 +35,31 @@ class SmartBoolField extends StatelessWidget {
     return SmartField<bool>(
       name: name,
       builder: (value, error) {
-        return Row(
+        return Column(
           children: [
-            style == SmartBoolFieldStyle.checkbox
-                ? Checkbox(
-                    value: value,
-                    onChanged: (value) {
-                      SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();
-                      smartFormCubit.changeValue(name: name, value: value);
-                    },
-                  )
-                : Switch(
-                    value: value,
-                    onChanged: (value) {
-                      SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();
-                      smartFormCubit.changeValue(name: name, value: value);
-                    },
-                  ),
-            Expanded(
-              child: ListTile(
-                title: child,
-                subtitle: error != null ? Text(error, style: TextStyle(color: Colors.red)) : null,
-              ),
-            )
+            Row(
+              children: [
+                style == SmartBoolFieldStyle.checkbox
+                    ? Checkbox(
+                        value: value,
+                        onChanged: (value) {
+                          SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();
+                          smartFormCubit.changeValue(name: name, value: value);
+                        },
+                      )
+                    : Switch(
+                        value: value,
+                        onChanged: (value) {
+                          SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();
+                          smartFormCubit.changeValue(name: name, value: value);
+                        },
+                      ),
+                child,
+              ],
+            ),
+            if (error != null) Text(error, style: TextStyle(color: Colors.red)),
           ],
         );
-        return style == SmartBoolFieldStyle.checkbox
-            ? CheckboxListTile(
-                value: value,
-                title: child,
-                subtitle: error != null ? Text(error, style: TextStyle(color: Colors.red)) : null,
-                onChanged: (value) {
-                  SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();
-                  smartFormCubit.changeValue(name: name, value: value);
-                },
-              )
-            : SwitchListTile(
-                value: value,
-                title: child,
-                subtitle: error != null ? Text(error, style: TextStyle(color: Colors.red)) : null,
-                onChanged: (value) {
-                  SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();
-                  smartFormCubit.changeValue(name: name, value: value);
-                },
-              );
       },
       validator: validator == null ? null : (value) => validator(value as bool),
       initialValue: initiallyChecked,
