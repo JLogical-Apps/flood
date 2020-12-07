@@ -30,6 +30,14 @@ class SmartField<T> extends StatelessWidget {
       value: initialValue,
     );
     return BlocBuilder<SmartFormCubit, SmartFormState>(
+      buildWhen: (oldState, newState) {
+        bool shouldBuild = oldState.nameToErrorMap[name] != newState.nameToErrorMap[name] || oldState.nameToValueMap[name] != newState.nameToValueMap[name];
+        if (shouldBuild) {
+          print('value: ${oldState.nameToValueMap} != ${newState.nameToValueMap} || ${oldState.nameToErrorMap} != ${newState.nameToErrorMap}');
+        }
+
+        return shouldBuild;
+      },
       builder: (context, state) {
         return builder(
           smartFormCubit.getValue(name),

@@ -18,7 +18,7 @@ dependencies:
   expandable: 4.1.4
   loading_overlay: 0.2.1
   transparent_image: 1.0.0
-  vb_image_cache: 1.0.0
+  cached_network_image: 2.4.1
 
   # Application
   flutter_bloc: 6.1.1

@@ -8,6 +8,7 @@ import 'package:jlogical_utils/widgets/category_card.dart';
 import 'package:jlogical_utils/widgets/clickable_card.dart';
 import 'package:jlogical_utils/widgets/menu_button.dart';
 import 'package:jlogical_utils/widgets/navigation_card.dart';
+import 'package:jlogical_utils/widgets/smart_image.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,6 +33,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('rebuiling home page.');
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -88,57 +90,65 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 250,
-                    height: 150,
-                    child: ClickableCard(
-                      color: Theme.of(context).primaryColor,
-                      child: Center(
-                        child: Text(
-                          'Button 1!',
-                          style: Theme.of(context).primaryTextTheme.headline4,
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 250,
+                      height: 150,
+                      child: ClickableCard(
+                        color: Theme.of(context).primaryColor,
+                        child: Center(
+                          child: Text(
+                            'Button 1!',
+                            style: Theme.of(context).primaryTextTheme.headline4,
+                          ),
                         ),
+                        onTap: () {
+                          print('hey!');
+                        },
                       ),
-                      onTap: () {
-                        print('hey!');
-                      },
                     ),
-                  ),
-                  SizedBox(
-                    width: 250,
-                    height: 150,
-                    child: ClickableCard(
-                      color: Theme.of(context).accentColor,
-                      child: Center(
-                        child: Text(
-                          'Button 2!',
-                          style: Theme.of(context).primaryTextTheme.headline4,
+                    SizedBox(
+                      width: 250,
+                      height: 150,
+                      child: ClickableCard(
+                        color: Theme.of(context).accentColor,
+                        child: Center(
+                          child: Text(
+                            'Button 2!',
+                            style: Theme.of(context).primaryTextTheme.headline4,
+                          ),
                         ),
+                        onTap: () {
+                          print('hey!');
+                        },
                       ),
-                      onTap: () {
-                        print('hey!');
-                      },
                     ),
-                  ),
-                  SizedBox(
-                    width: 250,
-                    height: 150,
-                    child: ClickableCard(
-                      color: Colors.white,
-                      child: Center(
-                        child: Text(
-                          'Button 3!',
-                          style: Theme.of(context).textTheme.headline4,
+                    SizedBox(
+                      width: 250,
+                      height: 150,
+                      child: ClickableCard(
+                        color: Colors.white,
+                        child: Center(
+                          child: Text(
+                            'Button 3!',
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
                         ),
+                        onTap: () {
+                          print('hey!');
+                        },
                       ),
-                      onTap: () {
-                        print('hey!');
-                      },
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+              SmartImage(
+                url: 'https://files.logoscdn.com/v1/files/7168291/content.jpg?signature=fbdfEuiCRUJOnZ4l2Al22V54Eqo',
+                width: 200,
+                height: 200,
               ),
               NavigationCard.url(
                 title: 'Speed Test',
