@@ -13,12 +13,12 @@ dependencies:
     sdk: flutter
 
   # Presentation
-  cache_image: 1.0.5
   flutter_colorpicker: 0.3.4
   flutter_picker: 1.1.5
   expandable: 4.1.4
   loading_overlay: 0.2.1
   transparent_image: 1.0.0
+  vb_image_cache: 1.0.0
 
   # Application
   flutter_bloc: 6.1.1

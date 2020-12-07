@@ -1,6 +1,6 @@
-import 'package:cache_image/cache_image.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:vb_image_cache/vb_image_cache.dart';
 
 /// Image that handles caching, and fade in animation.
 class SmartImage extends StatelessWidget {
@@ -16,7 +16,7 @@ class SmartImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return FadeInImage(
       placeholder: MemoryImage(kTransparentImage),
-      image: CacheImage(url),
+      image: VBCacheImage(url),
       width: width,
       height: height,
     );
