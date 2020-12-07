@@ -5,6 +5,7 @@ import 'package:jlogical_utils/smartform/smart_form.dart';
 import 'package:jlogical_utils/theme/theme.dart';
 import 'package:jlogical_utils/utils/popup.dart';
 import 'package:jlogical_utils/widgets/category_card.dart';
+import 'package:jlogical_utils/widgets/clickable_card.dart';
 import 'package:jlogical_utils/widgets/menu_button.dart';
 import 'package:jlogical_utils/widgets/navigation_card.dart';
 
@@ -17,8 +18,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: CustomTheme.theme(
+      theme: CustomTheme.lightTheme(
         primaryColor: Colors.blue,
+        accentColor: Colors.purple,
       ),
       home: HomePage(),
     );
@@ -85,6 +87,58 @@ class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 250,
+                    height: 150,
+                    child: ClickableCard(
+                      color: Theme.of(context).primaryColor,
+                      child: Center(
+                        child: Text(
+                          'Button 1!',
+                          style: Theme.of(context).primaryTextTheme.headline4,
+                        ),
+                      ),
+                      onTap: () {
+                        print('hey!');
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 250,
+                    height: 150,
+                    child: ClickableCard(
+                      color: Theme.of(context).accentColor,
+                      child: Center(
+                        child: Text(
+                          'Button 2!',
+                          style: Theme.of(context).primaryTextTheme.headline4,
+                        ),
+                      ),
+                      onTap: () {
+                        print('hey!');
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 250,
+                    height: 150,
+                    child: ClickableCard(
+                      color: Colors.white,
+                      child: Center(
+                        child: Text(
+                          'Button 3!',
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
+                      onTap: () {
+                        print('hey!');
+                      },
+                    ),
+                  ),
+                ],
               ),
               NavigationCard.url(
                 title: 'Speed Test',
