@@ -58,7 +58,12 @@ class SmartBoolField extends StatelessWidget {
                 child,
               ],
             ),
-            if (error != null) Text(error, style: TextStyle(color: Colors.red)),
+            if (error != null)
+              Text(
+                error,
+                style: TextStyle(color: Colors.red),
+                textAlign: TextAlign.center,
+              ),
           ],
         );
       },
