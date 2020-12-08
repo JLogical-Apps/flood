@@ -38,6 +38,7 @@ class SmartForm extends StatelessWidget {
           return LoadingOverlay(
             isLoading: state.isLoading,
             child: child,
+            color: Theme.of(context).appBarTheme.color,
           );
         },
       ),

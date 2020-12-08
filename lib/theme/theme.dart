@@ -13,6 +13,7 @@ class CustomTheme {
       scaffoldBackgroundColor: primaryColor,
       appBarTheme: AppBarTheme(
         elevation: 0,
+        color: primaryColor,
       ),
       buttonBarTheme: ButtonBarThemeData(
         alignment: MainAxisAlignment.center,
