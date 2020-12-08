@@ -103,7 +103,7 @@ class NavigationCard extends StatelessWidget {
                   description,
                   style: _getSubtitleTextStyle(context),
                 ),
-          leading: Icon(
+          leading: icon == null ? null : Icon(
             icon,
             color: _getIconColor(context),
           ),
