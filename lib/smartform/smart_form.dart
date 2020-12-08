@@ -11,8 +11,11 @@ typedef FutureOr<Map<String, String>> PostValidator(Map<String, dynamic> data);
 /// Form that greatly helps automate forms.
 /// The [children] of the SmartForm will automatically do validation, exporting of data, etc.
 class SmartForm extends StatelessWidget {
+  /// The controller to use.
+  final SmartFormController controller;
+
   /// Child of the smart form.
-  final Widget Function(SmartFormController controller) child;
+  final Widget child;
 
   /// Post validator after the fields have been successfully validated. Returns a map that maps the name of a field to its error, or null/empty if no errors were present.
   final PostValidator postValidator;
@@ -20,7 +23,7 @@ class SmartForm extends StatelessWidget {
   /// Function to call when the form is accepted.
   final FutureOr Function(Map<String, dynamic> data) onAccept;
 
-  const SmartForm({Key key, this.onAccept, this.child, this.postValidator}) : super(key: key);
+  const SmartForm({Key key, @required this.controller, this.onAccept, @required this.child, this.postValidator}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +34,10 @@ class SmartForm extends StatelessWidget {
       ),
       child: BlocBuilder<SmartFormCubit, SmartFormState>(
         builder: (context, state) {
-          SmartFormController controller = SmartFormController(smartFormCubit: context.bloc<SmartFormCubit>());
+          controller.setCubit(context.bloc<SmartFormCubit>());
           return LoadingOverlay(
             isLoading: state.isLoading,
-            child: child(controller),
+            child: child,
           );
         },
       ),
