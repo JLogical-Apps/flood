@@ -217,7 +217,7 @@ class CustomTheme {
       ),
       centerTitle: true,
       iconTheme: IconThemeData(
-        color: Colors.black87,
+        color: primaryColor,
       ),
     ));
   }
