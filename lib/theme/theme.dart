@@ -5,7 +5,7 @@ class CustomTheme {
   /// Returns a material theme that emphasizes filled colors.
   static ThemeData filledMaterialTheme({Color primaryColor, Color accentColor}) {
     return ThemeData(
-      brightness: useWhiteForeground(primaryColor, bias: 1.5) ? Brightness.dark : Brightness.light,
+      brightness: useWhiteForeground(primaryColor, bias: 1.5) ? Brightness.light : Brightness.dark,
       primaryColor: primaryColor,
       accentColor: accentColor,
       fontFamily: 'Roboto',
@@ -109,7 +109,7 @@ class CustomTheme {
 
   static ThemeData lightTheme({Color primaryColor: Colors.blue, Color accentColor: Colors.purple}) {
     var theme = ThemeData(
-      brightness: useWhiteForeground(primaryColor, bias: 1.5) ? Brightness.dark : Brightness.light,
+      brightness: useWhiteForeground(primaryColor, bias: 1.5) ? Brightness.light : Brightness.dark,
       primaryColor: primaryColor,
       accentColor: accentColor,
       fontFamily: 'Roboto',
