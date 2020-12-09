@@ -14,6 +14,7 @@ class CustomTheme {
       appBarTheme: AppBarTheme(
         elevation: 0,
         color: primaryColor,
+        brightness: Brightness.dark,
       ),
       buttonBarTheme: ButtonBarThemeData(
         alignment: MainAxisAlignment.center,
@@ -216,6 +217,7 @@ class CustomTheme {
           fontSize: 22,
         ),
       ),
+      brightness: Brightness.light ,
       centerTitle: true,
       iconTheme: IconThemeData(
         color: primaryColor,
