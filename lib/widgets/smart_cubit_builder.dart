@@ -14,13 +14,13 @@ class SmartCubitBuilder<C extends Cubit<S>, S, L1 extends S, L2 extends S> exten
   final Widget Function(C cubit, L2 state) loadedWidget;
 
   /// The widget to show during an error.
-  final Widget errorWidget;
+  final Widget Function(C cubit, S state) errorWidget;
 
   const SmartCubitBuilder({
     this.cubit,
     @required this.loadedWidget,
     this.loadingWidget: const LoadingWidget(),
-    this.errorWidget: const LoadingWidget(),
+    this.errorWidget,
   });
 
   @override
@@ -31,9 +31,12 @@ class SmartCubitBuilder<C extends Cubit<S>, S, L1 extends S, L2 extends S> exten
         if (state is L1) {
           return loadingWidget;
         } else if (state is L2) {
-          return loadedWidget(cubit ?? context.bloc<C>(), state);
+          return loadedWidget(cubit ?? context.watch<C>(), state);
         } else {
-          return errorWidget;
+          if (errorWidget == null) {
+            return loadingWidget;
+          }
+          return errorWidget(cubit ?? context.watch<C>(), state);
         }
       },
     );
