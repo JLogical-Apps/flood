@@ -73,6 +73,17 @@ class Validators {
     return error.isEmpty ? null : error;
   }
 
+  /// Validates the given [text] as a url.
+  static String url(String text, {@required String onEmpty, @required String onInvalid}) {
+    if (text.isEmpty) return onEmpty;
+    try {
+      var isAbsolute = Uri.parse(text).isAbsolute;
+      return isAbsolute ? null : onInvalid;
+    } catch (e) {
+      return onInvalid;
+    }
+  }
+
   /// Handles multiple validators.
   static String multi(String text, {@required List<String Function(String)> validators}) {
     for (var validator in validators) {
