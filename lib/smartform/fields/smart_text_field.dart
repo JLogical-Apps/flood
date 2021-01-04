@@ -30,6 +30,9 @@ class SmartTextField extends StatelessWidget {
   /// Whether this is enabled.
   final bool isEnabled;
 
+  /// The line color to use. If null, then uses primaryColor.
+  final Color lineColor;
+
   const SmartTextField({
     Key key,
     @required this.name,
@@ -40,6 +43,7 @@ class SmartTextField extends StatelessWidget {
     this.obscureText: false,
     this.maxLines: 1,
     this.isEnabled: true,
+    this.lineColor,
   }) : super(key: key);
 
   @override
@@ -56,6 +60,7 @@ class SmartTextField extends StatelessWidget {
           obscureText: obscureText,
           maxLines: maxLines,
           enabled: isEnabled,
+          lineColor: lineColor,
         );
       },
       validator: validator == null ? null : (value) => validator(value as String),

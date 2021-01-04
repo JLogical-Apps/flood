@@ -28,7 +28,7 @@ class InputField extends StatefulWidget {
   /// Whether the input field is readonly.
   final bool readonly;
 
-  /// The line color of the input field.
+  /// The line color of the input field. If null, uses a default theme.
   final Color lineColor;
 
   /// The keyboard type of the text field.
@@ -56,7 +56,7 @@ class InputField extends StatefulWidget {
     this.obscureText: false,
     this.readonly: false,
     this.enabled: true,
-    this.lineColor: Colors.black,
+    this.lineColor,
     this.keyboardType,
     this.onSubmit,
     this.onChange,
@@ -88,23 +88,26 @@ class _InputFieldState extends State<InputField> {
         readOnly: widget.readonly,
         controller: controller,
         maxLength: widget.maxLength == 0 || widget.controller.text.length < widget.maxLength - 10 ? null : widget.maxLength,
-        cursorColor: widget.lineColor,
+        cursorColor: widget.lineColor ?? Colors.black,
         obscureText: widget.obscureText,
         style: TextStyle(
-          color: widget.lineColor,
+          color: widget.lineColor ?? Colors.black,
         ),
         decoration: InputDecoration(
           labelText: widget.label,
           hintStyle: TextStyle(
-            color: Theme.of(context).primaryColor,
+            color: widget.lineColor ?? Theme.of(context).primaryColor,
+          ),
+          labelStyle: widget.lineColor == null ? null : TextStyle(
+            color: widget.lineColor,
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: widget.lineColor),
+            borderSide: BorderSide(color: widget.lineColor ?? Colors.black),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+            borderSide: BorderSide(color: widget.lineColor ?? Theme.of(context).primaryColor),
           ),
           errorText: widget.errorText,
         ),

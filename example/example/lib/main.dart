@@ -228,6 +228,14 @@ class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
+                Card(
+                  color: Theme.of(context).primaryColor,
+                  child: SmartTextField(
+                    name: 'test',
+                    label: 'Test',
+                    lineColor: Colors.white,
+                  ),
+                ),
               ],
             ),
           ),
