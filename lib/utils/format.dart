@@ -35,3 +35,29 @@ extension NumberParseUtil on String {
     return int.tryParse(clean);
   }
 }
+
+/// Extension methods for formatting DateTimes.
+extension DateFormatUtil on DateTime {
+  /// Formats to include both date and time.
+  String formatDateTime({bool isLong = true}) {
+    if (isLong) {
+      return DateFormat.yMMMMd().add_jm().format(this);
+    } else {
+      return DateFormat.yMd().add_jm().format(this);
+    }
+  }
+
+  /// Formats to include only date.
+  String formatDate({bool isLong = true}) {
+    if (isLong) {
+      return DateFormat.yMMMMd().format(this);
+    } else {
+      return DateFormat.yMd().format(this);
+    }
+  }
+
+  /// Formats to include only time.
+  String formatTime() {
+    return DateFormat.jm().format(this);
+  }
+}

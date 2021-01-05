@@ -10,6 +10,7 @@ import 'package:jlogical_utils/widgets/clickable_card.dart';
 import 'package:jlogical_utils/widgets/menu_button.dart';
 import 'package:jlogical_utils/widgets/navigation_card.dart';
 import 'package:jlogical_utils/widgets/smart_image.dart';
+import 'package:jlogical_utils/utils/format.dart';
 
 void main() {
   runApp(MyApp());
@@ -37,7 +38,7 @@ class HomePage extends StatelessWidget {
     print('rebuiling home page.');
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text('Home ${DateTime.now().formatTime()}'),
       ),
       body: Builder(
         builder: (context) => SmartForm(
