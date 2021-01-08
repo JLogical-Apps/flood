@@ -38,11 +38,16 @@ class _InputPopupState extends State<InputPopup> {
     return AlertDialog(
       title: Text(widget.title),
       content: SingleChildScrollView(
-        child: InputField(
-          controller: _controller,
-          label: widget.label,
-          initialText: widget.initialText,
-          onChange: (s) => setState(() {}),
+        child: Column(
+          children: [
+            Text(widget.message),
+            InputField(
+              controller: _controller,
+              label: widget.label,
+              initialText: widget.initialText,
+              onChange: (s) => setState(() {}),
+            ),
+          ],
         ),
       ),
       actions: <Widget>[
