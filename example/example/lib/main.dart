@@ -56,11 +56,15 @@ class HomePage extends StatelessWidget {
                           ElevatedButton(
                             child: Text('DIALOG'),
                             onPressed: () async {
-                              Popup.message(
+                              var input = await Popup.input(
                                 context,
-                                title: 'Example',
-                                message: 'Here is an example popup.',
+                                title: 'Name',
+                                message: 'What is your name?',
+                                label: 'Name',
+                                initialText: 'Jake',
+                                canBeEmpty: false,
                               );
+                              print(input);
                             },
                           ),
                           OutlinedButton(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:jlogical_utils/utils/popups/color_popup.dart';
+import 'package:jlogical_utils/utils/popups/input_popup.dart';
 
 /// Helper class that shows popups.
 class Popup {
@@ -52,6 +54,36 @@ class Popup {
     return output == null ? false : output;
   }
 
+  /// Shows a dialog that asks for a text input.
+  /// Returns null if the dialog was cancelled.
+  /// Returns a string if input was submitted. Empty text if no input was added, but still submitted.
+  static Future<String> input(
+    BuildContext context, {
+    @required String title,
+    @required String message,
+    @required String label,
+    String initialText: '',
+    String cancelMsg: 'NEVERMIND',
+    String submitMsg: 'OK',
+    bool canBeEmpty: false,
+  }) async {
+    var output = await showDialog<String>(
+        context: context,
+        barrierDismissible: true,
+        builder: (bc) {
+          return InputPopup(
+            title: title,
+            message: message,
+            label: label,
+            cancelMsg: cancelMsg,
+            submitMsg: submitMsg,
+            canBeEmpty: canBeEmpty,
+            initialText: initialText,
+          );
+        });
+    return output;
+  }
+
   /// Show a popup so that the user can change the color.
   static Future<Color> chooseColor(BuildContext context, {Color initialColor}) async {
     var output = await showDialog<Color>(
@@ -61,52 +93,5 @@ class Popup {
           return ColorPickerPopup(initialColor: initialColor);
         });
     return output == null ? false : output;
-  }
-}
-
-class ColorPickerPopup extends StatefulWidget {
-  final Color initialColor;
-
-  const ColorPickerPopup({@required this.initialColor});
-
-  @override
-  _ColorPickerPopupState createState() => _ColorPickerPopupState();
-}
-
-class _ColorPickerPopupState extends State<ColorPickerPopup> {
-  Color currColor;
-
-  @override
-  void initState() {
-    super.initState();
-
-    currColor = widget.initialColor;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Choose Color'),
-      content: SingleChildScrollView(
-        child: BlockPicker(
-          pickerColor: currColor,
-          onColorChanged: (color) => setState(() => currColor = color),
-        ),
-      ),
-      actions: <Widget>[
-        FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () {
-            Navigator.of(context).pop<Color>(null);
-          },
-        ),
-        FlatButton(
-          child: Text('OK'),
-          onPressed: () {
-            Navigator.of(context).pop<Color>(currColor);
-          },
-        ),
-      ],
-    );
   }
 }
