@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:jlogical_utils/utils/popups/color_popup.dart';
 import 'package:jlogical_utils/utils/popups/input_popup.dart';
 
