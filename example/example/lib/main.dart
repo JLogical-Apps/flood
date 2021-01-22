@@ -175,10 +175,7 @@ class HomePage extends StatelessWidget {
                 ),
                 CategoryCard(
                   category: Text('General'),
-                  leading: Icon(
-                    Icons.category,
-                    color: Colors.blue,
-                  ),
+                  leading: Icon(Icons.category),
                   trailing: SmartBoolField(
                     name: 'bool',
                     initiallyChecked: true,

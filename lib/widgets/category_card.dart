@@ -41,7 +41,12 @@ class CategoryCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.subtitle1,
                 child: category,
               ),
-              leading: leading,
+              leading: IconTheme(
+                child: leading,
+                data: IconThemeData(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
               trailing: trailing,
               children: children,
               initiallyExpanded: !initiallyCollapsed,
@@ -52,7 +57,12 @@ class CategoryCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.subtitle1,
                 child: category,
               ),
-              leading: leading,
+              leading: IconTheme(
+                child: leading,
+                data: IconThemeData(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
               trailing: trailing,
             ),
             ...children,
