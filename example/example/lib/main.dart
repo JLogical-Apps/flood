@@ -158,23 +158,23 @@ class HomePage extends StatelessWidget {
                   height: 200,
                 ),
                 NavigationCard.url(
-                  title: 'Speed Test',
-                  description: 'Test the speed of your internet. ',
+                  title: Text('Speed Test'),
+                  description: Text('Test the speed of your internet. '),
                   url: 'https://www.speedtest.net',
-                  icon: Icons.language,
+                  icon: Icon(Icons.language),
                   color: Colors.purple,
                 ),
                 NavigationCard(
-                  title: 'Settings',
-                  description: 'Open the settings page.',
+                  title: Text('Settings'),
+                  description: Text('Open the settings page.'),
                   onTap: () {
                     print('Opening');
                   },
                   color: Colors.orange,
-                  icon: Icons.settings,
+                  icon: Icon(Icons.settings),
                 ),
                 CategoryCard(
-                  category: 'General',
+                  category: Text('General'),
                   leading: Icon(
                     Icons.category,
                     color: Colors.blue,

@@ -5,13 +5,13 @@ import 'package:url_launcher/url_launcher.dart';
 /// Card that shows navigation.
 class NavigationCard extends StatelessWidget {
   /// The title of the navigation card.
-  final String title;
+  final Widget title;
 
   /// The description for the navigation card.
-  final String description;
+  final Widget description;
 
   /// The icon to show in front.
-  final IconData icon;
+  final Widget icon;
 
   /// The color for the navigation card. If [null], then uses primary theme.
   final Color color;
@@ -93,20 +93,22 @@ class NavigationCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         child: ListTile(
-          title: Text(
-            title,
+          title: DefaultTextStyle(
+            child: title,
             style: _getTitleTextStyle(context),
           ),
           subtitle: description == null
               ? null
-              : Text(
-                  description,
+              : DefaultTextStyle(
+                  child: description,
                   style: _getSubtitleTextStyle(context),
                 ),
-          leading: icon == null ? null : Icon(
-            icon,
-            color: _getIconColor(context),
-          ),
+          leading: icon == null
+              ? null
+              : IconTheme(
+                  child: icon,
+                  data: IconThemeData(color: _getIconColor(context)),
+                ),
           trailing: isExternalLink
               ? Icon(
                   Icons.exit_to_app,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Card that shows a category with children inside. Can be set to be expandable.
 class CategoryCard extends StatelessWidget {
   /// The category name.
-  final String category;
+  final Widget category;
 
   /// The leading icon to display.
   final Widget leading;
@@ -37,9 +37,9 @@ class CategoryCard extends StatelessWidget {
         children: [
           if (canCollapse)
             ExpansionTile(
-              title: Text(
-                category,
+              title: DefaultTextStyle(
                 style: Theme.of(context).textTheme.subtitle1,
+                child: category,
               ),
               leading: leading,
               trailing: trailing,
@@ -48,7 +48,10 @@ class CategoryCard extends StatelessWidget {
             ),
           if (!canCollapse) ...[
             ListTile(
-              title: Text(category),
+              title: DefaultTextStyle(
+                style: Theme.of(context).textTheme.subtitle1,
+                child: category,
+              ),
               leading: leading,
               trailing: trailing,
             ),
