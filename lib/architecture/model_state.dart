@@ -18,3 +18,12 @@ class ModelLoadedState<T> extends ModelState<T> {
   @override
   List<Object> get props => [model];
 }
+
+class ModelErrorState<T> extends ModelState<T> {
+  final dynamic error;
+
+  const ModelErrorState({@required this.error});
+
+  @override
+  List<Object> get props => [error];
+}

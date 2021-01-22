@@ -7,9 +7,9 @@ abstract class MultiModelState<M> extends Equatable {
   List<Object> get props => [];
 }
 
-class MultiInitialState<M> extends MultiModelState<M> {}
+class MultiModelInitialState<M> extends MultiModelState<M> {}
 
-class MultiLoadedState<M> extends MultiModelState<M> {
+class MultiModelLoadedState<M> extends MultiModelState<M> {
   /// Maps the ids to their models.
   final Map<String, M> idToModelMap;
 
@@ -25,16 +25,16 @@ class MultiLoadedState<M> extends MultiModelState<M> {
   /// The loaded models.
   List<M> get models => idToModelMap.values.toList();
 
-  MultiLoadedState({@required this.idToModelMap, @required this.isLoading, @required this.canLoadMore});
+  MultiModelLoadedState({@required this.idToModelMap, @required this.isLoading, @required this.canLoadMore});
 
   @override
   List<Object> get props => [idToModelMap, isLoading, canLoadMore];
 }
 
-class MultiErrorState<M> extends MultiModelState<M> {
+class MultiModelErrorState<M> extends MultiModelState<M> {
   final dynamic error;
 
-  MultiErrorState({this.error});
+  MultiModelErrorState({this.error});
 
   @override
   List<Object> get props => [error];

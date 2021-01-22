@@ -13,7 +13,7 @@ abstract class MultiModelCubit<M> extends Cubit<MultiModelState<M>> {
   /// If [restart], restarts the query.
   Future<void> Function({bool restart}) _referenceCommand;
 
-  MultiModelCubit() : super(MultiInitialState<M>());
+  MultiModelCubit() : super(MultiModelInitialState<M>());
 
   /// Loads models using a query list response.
   /// If [refresh], restarts the query.
@@ -33,7 +33,7 @@ abstract class MultiModelCubit<M> extends Cubit<MultiModelState<M>> {
   /// Loads the next models from the previous request.
   Future<void> loadNext() async {
     if (_referenceCommand == null) {
-      print('Null reference command in MultiCubit');
+      print('Null reference command in MultiModelCubit');
       return;
     }
     await _referenceCommand(restart: false);
@@ -42,7 +42,7 @@ abstract class MultiModelCubit<M> extends Cubit<MultiModelState<M>> {
   /// Restarts the query.
   Future<void> restart() async {
     if (_referenceCommand == null) {
-      print('Null reference command in MultiCubit');
+      print('Null reference command in MultiModelCubit');
       return;
     }
     await _referenceCommand(restart: true);
@@ -52,16 +52,16 @@ abstract class MultiModelCubit<M> extends Cubit<MultiModelState<M>> {
     var state = this.state;
     Map<String, M> currentIDToCompletedOrdersMap = {};
 
-    if (!refresh && state is MultiLoadedState<M>) {
+    if (!refresh && state is MultiModelLoadedState<M>) {
       currentIDToCompletedOrdersMap = state.idToModelMap;
 
-      emit(MultiLoadedState(
+      emit(MultiModelLoadedState(
         idToModelMap: state.idToModelMap,
         isLoading: true,
         canLoadMore: state.canLoadMore,
       ));
-    } else if (state is MultiErrorState<M>) {
-      emit(MultiInitialState<M>());
+    } else if (state is MultiModelErrorState<M>) {
+      emit(MultiModelInitialState<M>());
     }
 
     try {
@@ -71,14 +71,14 @@ abstract class MultiModelCubit<M> extends Cubit<MultiModelState<M>> {
 
       var idToModelMap = Map.fromEntries([...currentIDToCompletedOrdersMap.entries] + [...completedOrdersResult.data.map((pair) => MapEntry<String, M>(pair.first, pair.second))]);
 
-      emit(MultiLoadedState<M>(
+      emit(MultiModelLoadedState<M>(
         idToModelMap: idToModelMap,
         canLoadMore: cursor != null,
         isLoading: false,
       ));
     } catch (e) {
       print(e);
-      emit(MultiErrorState<M>());
+      emit(MultiModelErrorState<M>());
     }
   }
 }
