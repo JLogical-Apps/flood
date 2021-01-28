@@ -39,12 +39,19 @@ extension NumberParseUtil on String {
 /// Extension methods for formatting DateTimes.
 extension DateFormatUtil on DateTime {
   /// Formats to include both date and time.
-  String formatDateTime({bool isLong = true}) {
+  String formatDateTime({bool isLong = true, bool includeSeconds = false}) {
+    DateFormat dateFormat;
     if (isLong) {
-      return DateFormat.yMMMMd().add_jm().format(this);
+      dateFormat = DateFormat.yMMMMd().add_jm();
     } else {
-      return DateFormat.yMd().add_jm().format(this);
+      dateFormat = DateFormat.yMd().add_jm();
     }
+
+    if (includeSeconds) {
+      dateFormat = dateFormat.add_s();
+    }
+
+    return dateFormat.format(this);
   }
 
   /// Formats to include only date.
