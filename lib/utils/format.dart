@@ -40,16 +40,8 @@ extension NumberParseUtil on String {
 extension DateFormatUtil on DateTime {
   /// Formats to include both date and time.
   String formatDateTime({bool isLong = true, bool includeSeconds = false}) {
-    DateFormat dateFormat;
-    if (isLong) {
-      dateFormat = DateFormat.yMMMMd().add_jm();
-    } else {
-      dateFormat = DateFormat.yMd().add_jm();
-    }
-
-    if (includeSeconds) {
-      dateFormat = dateFormat.add_s();
-    }
+    DateFormat dateFormat = isLong ? DateFormat.yMMMMd() : DateFormat.yMd();
+    dateFormat = includeSeconds ? dateFormat.add_jms() : dateFormat.add_jm();
 
     return dateFormat.format(this);
   }
