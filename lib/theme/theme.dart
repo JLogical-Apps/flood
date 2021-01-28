@@ -217,7 +217,7 @@ class CustomTheme {
           fontSize: 22,
         ),
       ),
-      brightness: Brightness.light ,
+      brightness: Brightness.light,
       centerTitle: true,
       iconTheme: IconThemeData(
         color: primaryColor,
