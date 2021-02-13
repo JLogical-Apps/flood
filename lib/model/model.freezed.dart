@@ -14,21 +14,21 @@ class _$ModelTearOff {
   const _$ModelTearOff();
 
 // ignore: unused_element
-  _InitialModel<T> initial<T>() {
-    return _InitialModel<T>();
+  ModelInitial<T> initial<T>() {
+    return ModelInitial<T>();
   }
 
 // ignore: unused_element
-  _LoadedModel<T> loaded<T>({T model, bool isLoading}) {
-    return _LoadedModel<T>(
+  ModelLoaded<T> loaded<T>({T model, bool isLoading}) {
+    return ModelLoaded<T>(
       model: model,
       isLoading: isLoading,
     );
   }
 
 // ignore: unused_element
-  _ErrorModel<T> error<T>({dynamic error}) {
-    return _ErrorModel<T>(
+  ModelError<T> error<T>({dynamic error}) {
+    return ModelError<T>(
       error: error,
     );
   }
@@ -55,15 +55,15 @@ mixin _$Model<T> {
   });
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(_InitialModel<T> value),
-    @required TResult loaded(_LoadedModel<T> value),
-    @required TResult error(_ErrorModel<T> value),
+    @required TResult initial(ModelInitial<T> value),
+    @required TResult loaded(ModelLoaded<T> value),
+    @required TResult error(ModelError<T> value),
   });
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(_InitialModel<T> value),
-    TResult loaded(_LoadedModel<T> value),
-    TResult error(_ErrorModel<T> value),
+    TResult initial(ModelInitial<T> value),
+    TResult loaded(ModelLoaded<T> value),
+    TResult error(ModelError<T> value),
     @required TResult orElse(),
   });
 }
@@ -84,26 +84,26 @@ class _$ModelCopyWithImpl<T, $Res> implements $ModelCopyWith<T, $Res> {
 }
 
 /// @nodoc
-abstract class _$InitialModelCopyWith<T, $Res> {
-  factory _$InitialModelCopyWith(
-          _InitialModel<T> value, $Res Function(_InitialModel<T>) then) =
-      __$InitialModelCopyWithImpl<T, $Res>;
+abstract class $ModelInitialCopyWith<T, $Res> {
+  factory $ModelInitialCopyWith(
+          ModelInitial<T> value, $Res Function(ModelInitial<T>) then) =
+      _$ModelInitialCopyWithImpl<T, $Res>;
 }
 
 /// @nodoc
-class __$InitialModelCopyWithImpl<T, $Res> extends _$ModelCopyWithImpl<T, $Res>
-    implements _$InitialModelCopyWith<T, $Res> {
-  __$InitialModelCopyWithImpl(
-      _InitialModel<T> _value, $Res Function(_InitialModel<T>) _then)
-      : super(_value, (v) => _then(v as _InitialModel<T>));
+class _$ModelInitialCopyWithImpl<T, $Res> extends _$ModelCopyWithImpl<T, $Res>
+    implements $ModelInitialCopyWith<T, $Res> {
+  _$ModelInitialCopyWithImpl(
+      ModelInitial<T> _value, $Res Function(ModelInitial<T>) _then)
+      : super(_value, (v) => _then(v as ModelInitial<T>));
 
   @override
-  _InitialModel<T> get _value => super._value as _InitialModel<T>;
+  ModelInitial<T> get _value => super._value as ModelInitial<T>;
 }
 
 /// @nodoc
-class _$_InitialModel<T> implements _InitialModel<T> {
-  const _$_InitialModel();
+class _$ModelInitial<T> implements ModelInitial<T> {
+  const _$ModelInitial();
 
   @override
   String toString() {
@@ -112,7 +112,7 @@ class _$_InitialModel<T> implements _InitialModel<T> {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is _InitialModel<T>);
+    return identical(this, other) || (other is ModelInitial<T>);
   }
 
   @override
@@ -149,9 +149,9 @@ class _$_InitialModel<T> implements _InitialModel<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(_InitialModel<T> value),
-    @required TResult loaded(_LoadedModel<T> value),
-    @required TResult error(_ErrorModel<T> value),
+    @required TResult initial(ModelInitial<T> value),
+    @required TResult loaded(ModelLoaded<T> value),
+    @required TResult error(ModelError<T> value),
   }) {
     assert(initial != null);
     assert(loaded != null);
@@ -162,9 +162,9 @@ class _$_InitialModel<T> implements _InitialModel<T> {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(_InitialModel<T> value),
-    TResult loaded(_LoadedModel<T> value),
-    TResult error(_ErrorModel<T> value),
+    TResult initial(ModelInitial<T> value),
+    TResult loaded(ModelLoaded<T> value),
+    TResult error(ModelError<T> value),
     @required TResult orElse(),
   }) {
     assert(orElse != null);
@@ -175,34 +175,34 @@ class _$_InitialModel<T> implements _InitialModel<T> {
   }
 }
 
-abstract class _InitialModel<T> implements Model<T> {
-  const factory _InitialModel() = _$_InitialModel<T>;
+abstract class ModelInitial<T> implements Model<T> {
+  const factory ModelInitial() = _$ModelInitial<T>;
 }
 
 /// @nodoc
-abstract class _$LoadedModelCopyWith<T, $Res> {
-  factory _$LoadedModelCopyWith(
-          _LoadedModel<T> value, $Res Function(_LoadedModel<T>) then) =
-      __$LoadedModelCopyWithImpl<T, $Res>;
+abstract class $ModelLoadedCopyWith<T, $Res> {
+  factory $ModelLoadedCopyWith(
+          ModelLoaded<T> value, $Res Function(ModelLoaded<T>) then) =
+      _$ModelLoadedCopyWithImpl<T, $Res>;
   $Res call({T model, bool isLoading});
 }
 
 /// @nodoc
-class __$LoadedModelCopyWithImpl<T, $Res> extends _$ModelCopyWithImpl<T, $Res>
-    implements _$LoadedModelCopyWith<T, $Res> {
-  __$LoadedModelCopyWithImpl(
-      _LoadedModel<T> _value, $Res Function(_LoadedModel<T>) _then)
-      : super(_value, (v) => _then(v as _LoadedModel<T>));
+class _$ModelLoadedCopyWithImpl<T, $Res> extends _$ModelCopyWithImpl<T, $Res>
+    implements $ModelLoadedCopyWith<T, $Res> {
+  _$ModelLoadedCopyWithImpl(
+      ModelLoaded<T> _value, $Res Function(ModelLoaded<T>) _then)
+      : super(_value, (v) => _then(v as ModelLoaded<T>));
 
   @override
-  _LoadedModel<T> get _value => super._value as _LoadedModel<T>;
+  ModelLoaded<T> get _value => super._value as ModelLoaded<T>;
 
   @override
   $Res call({
     Object model = freezed,
     Object isLoading = freezed,
   }) {
-    return _then(_LoadedModel<T>(
+    return _then(ModelLoaded<T>(
       model: model == freezed ? _value.model : model as T,
       isLoading: isLoading == freezed ? _value.isLoading : isLoading as bool,
     ));
@@ -210,8 +210,8 @@ class __$LoadedModelCopyWithImpl<T, $Res> extends _$ModelCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
-class _$_LoadedModel<T> implements _LoadedModel<T> {
-  const _$_LoadedModel({this.model, this.isLoading});
+class _$ModelLoaded<T> implements ModelLoaded<T> {
+  const _$ModelLoaded({this.model, this.isLoading});
 
   @override
   final T model;
@@ -226,7 +226,7 @@ class _$_LoadedModel<T> implements _LoadedModel<T> {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _LoadedModel<T> &&
+        (other is ModelLoaded<T> &&
             (identical(other.model, model) ||
                 const DeepCollectionEquality().equals(other.model, model)) &&
             (identical(other.isLoading, isLoading) ||
@@ -242,8 +242,8 @@ class _$_LoadedModel<T> implements _LoadedModel<T> {
 
   @JsonKey(ignore: true)
   @override
-  _$LoadedModelCopyWith<T, _LoadedModel<T>> get copyWith =>
-      __$LoadedModelCopyWithImpl<T, _LoadedModel<T>>(this, _$identity);
+  $ModelLoadedCopyWith<T, ModelLoaded<T>> get copyWith =>
+      _$ModelLoadedCopyWithImpl<T, ModelLoaded<T>>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -276,9 +276,9 @@ class _$_LoadedModel<T> implements _LoadedModel<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(_InitialModel<T> value),
-    @required TResult loaded(_LoadedModel<T> value),
-    @required TResult error(_ErrorModel<T> value),
+    @required TResult initial(ModelInitial<T> value),
+    @required TResult loaded(ModelLoaded<T> value),
+    @required TResult error(ModelError<T> value),
   }) {
     assert(initial != null);
     assert(loaded != null);
@@ -289,9 +289,9 @@ class _$_LoadedModel<T> implements _LoadedModel<T> {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(_InitialModel<T> value),
-    TResult loaded(_LoadedModel<T> value),
-    TResult error(_ErrorModel<T> value),
+    TResult initial(ModelInitial<T> value),
+    TResult loaded(ModelLoaded<T> value),
+    TResult error(ModelError<T> value),
     @required TResult orElse(),
   }) {
     assert(orElse != null);
@@ -302,46 +302,46 @@ class _$_LoadedModel<T> implements _LoadedModel<T> {
   }
 }
 
-abstract class _LoadedModel<T> implements Model<T> {
-  const factory _LoadedModel({T model, bool isLoading}) = _$_LoadedModel<T>;
+abstract class ModelLoaded<T> implements Model<T> {
+  const factory ModelLoaded({T model, bool isLoading}) = _$ModelLoaded<T>;
 
   T get model;
   bool get isLoading;
   @JsonKey(ignore: true)
-  _$LoadedModelCopyWith<T, _LoadedModel<T>> get copyWith;
+  $ModelLoadedCopyWith<T, ModelLoaded<T>> get copyWith;
 }
 
 /// @nodoc
-abstract class _$ErrorModelCopyWith<T, $Res> {
-  factory _$ErrorModelCopyWith(
-          _ErrorModel<T> value, $Res Function(_ErrorModel<T>) then) =
-      __$ErrorModelCopyWithImpl<T, $Res>;
+abstract class $ModelErrorCopyWith<T, $Res> {
+  factory $ModelErrorCopyWith(
+          ModelError<T> value, $Res Function(ModelError<T>) then) =
+      _$ModelErrorCopyWithImpl<T, $Res>;
   $Res call({dynamic error});
 }
 
 /// @nodoc
-class __$ErrorModelCopyWithImpl<T, $Res> extends _$ModelCopyWithImpl<T, $Res>
-    implements _$ErrorModelCopyWith<T, $Res> {
-  __$ErrorModelCopyWithImpl(
-      _ErrorModel<T> _value, $Res Function(_ErrorModel<T>) _then)
-      : super(_value, (v) => _then(v as _ErrorModel<T>));
+class _$ModelErrorCopyWithImpl<T, $Res> extends _$ModelCopyWithImpl<T, $Res>
+    implements $ModelErrorCopyWith<T, $Res> {
+  _$ModelErrorCopyWithImpl(
+      ModelError<T> _value, $Res Function(ModelError<T>) _then)
+      : super(_value, (v) => _then(v as ModelError<T>));
 
   @override
-  _ErrorModel<T> get _value => super._value as _ErrorModel<T>;
+  ModelError<T> get _value => super._value as ModelError<T>;
 
   @override
   $Res call({
     Object error = freezed,
   }) {
-    return _then(_ErrorModel<T>(
+    return _then(ModelError<T>(
       error: error == freezed ? _value.error : error as dynamic,
     ));
   }
 }
 
 /// @nodoc
-class _$_ErrorModel<T> implements _ErrorModel<T> {
-  const _$_ErrorModel({this.error});
+class _$ModelError<T> implements ModelError<T> {
+  const _$ModelError({this.error});
 
   @override
   final dynamic error;
@@ -354,7 +354,7 @@ class _$_ErrorModel<T> implements _ErrorModel<T> {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _ErrorModel<T> &&
+        (other is ModelError<T> &&
             (identical(other.error, error) ||
                 const DeepCollectionEquality().equals(other.error, error)));
   }
@@ -365,8 +365,8 @@ class _$_ErrorModel<T> implements _ErrorModel<T> {
 
   @JsonKey(ignore: true)
   @override
-  _$ErrorModelCopyWith<T, _ErrorModel<T>> get copyWith =>
-      __$ErrorModelCopyWithImpl<T, _ErrorModel<T>>(this, _$identity);
+  $ModelErrorCopyWith<T, ModelError<T>> get copyWith =>
+      _$ModelErrorCopyWithImpl<T, ModelError<T>>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -399,9 +399,9 @@ class _$_ErrorModel<T> implements _ErrorModel<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(_InitialModel<T> value),
-    @required TResult loaded(_LoadedModel<T> value),
-    @required TResult error(_ErrorModel<T> value),
+    @required TResult initial(ModelInitial<T> value),
+    @required TResult loaded(ModelLoaded<T> value),
+    @required TResult error(ModelError<T> value),
   }) {
     assert(initial != null);
     assert(loaded != null);
@@ -412,9 +412,9 @@ class _$_ErrorModel<T> implements _ErrorModel<T> {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(_InitialModel<T> value),
-    TResult loaded(_LoadedModel<T> value),
-    TResult error(_ErrorModel<T> value),
+    TResult initial(ModelInitial<T> value),
+    TResult loaded(ModelLoaded<T> value),
+    TResult error(ModelError<T> value),
     @required TResult orElse(),
   }) {
     assert(orElse != null);
@@ -425,10 +425,10 @@ class _$_ErrorModel<T> implements _ErrorModel<T> {
   }
 }
 
-abstract class _ErrorModel<T> implements Model<T> {
-  const factory _ErrorModel({dynamic error}) = _$_ErrorModel<T>;
+abstract class ModelError<T> implements Model<T> {
+  const factory ModelError({dynamic error}) = _$ModelError<T>;
 
   dynamic get error;
   @JsonKey(ignore: true)
-  _$ErrorModelCopyWith<T, _ErrorModel<T>> get copyWith;
+  $ModelErrorCopyWith<T, ModelError<T>> get copyWith;
 }
