@@ -13,9 +13,9 @@ abstract class Model<T> with _$Model<T> {
 
   /// Invokes the future and returns the result of it in a loaded model.
   /// If an exception occurred, returns an error model.
-  static Future<Model<T>> guard<T>(Future<T> future) async {
+  static Future<Model<T>> guard<T>(Future<T> future()) async {
     try {
-      var data = await future;
+      var data = await future();
       return Model.loaded(model: data, isLoading: false);
     } catch (ex) {
       return Model.error(error: ex);
