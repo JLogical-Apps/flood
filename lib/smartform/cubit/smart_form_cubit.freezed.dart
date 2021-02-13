@@ -51,6 +51,7 @@ mixin _$SmartFormState {
   /// Whether the form is loading.
   bool get isLoading;
 
+  @JsonKey(ignore: true)
   $SmartFormStateCopyWith<SmartFormState> get copyWith;
 }
 
@@ -224,6 +225,7 @@ class _$_SmartFormState implements _SmartFormState {
       const DeepCollectionEquality().hash(nameToValidatorMap) ^
       const DeepCollectionEquality().hash(isLoading);
 
+  @JsonKey(ignore: true)
   @override
   _$SmartFormStateCopyWith<_SmartFormState> get copyWith =>
       __$SmartFormStateCopyWithImpl<_SmartFormState>(this, _$identity);
@@ -258,5 +260,6 @@ abstract class _SmartFormState implements SmartFormState {
   /// Whether the form is loading.
   bool get isLoading;
   @override
+  @JsonKey(ignore: true)
   _$SmartFormStateCopyWith<_SmartFormState> get copyWith;
 }
