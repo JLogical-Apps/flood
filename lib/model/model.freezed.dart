@@ -19,10 +19,9 @@ class _$ModelTearOff {
   }
 
 // ignore: unused_element
-  ModelLoaded<T> loaded<T>({T model, bool isLoading}) {
+  ModelLoaded<T> loaded<T>({T model}) {
     return ModelLoaded<T>(
       model: model,
-      isLoading: isLoading,
     );
   }
 
@@ -43,13 +42,13 @@ mixin _$Model<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object>({
     @required TResult initial(),
-    @required TResult loaded(T model, bool isLoading),
+    @required TResult loaded(T model),
     @required TResult error(dynamic error),
   });
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
     TResult initial(),
-    TResult loaded(T model, bool isLoading),
+    TResult loaded(T model),
     TResult error(dynamic error),
     @required TResult orElse(),
   });
@@ -122,7 +121,7 @@ class _$ModelInitial<T> implements ModelInitial<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object>({
     @required TResult initial(),
-    @required TResult loaded(T model, bool isLoading),
+    @required TResult loaded(T model),
     @required TResult error(dynamic error),
   }) {
     assert(initial != null);
@@ -135,7 +134,7 @@ class _$ModelInitial<T> implements ModelInitial<T> {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
     TResult initial(),
-    TResult loaded(T model, bool isLoading),
+    TResult loaded(T model),
     TResult error(dynamic error),
     @required TResult orElse(),
   }) {
@@ -184,7 +183,7 @@ abstract class $ModelLoadedCopyWith<T, $Res> {
   factory $ModelLoadedCopyWith(
           ModelLoaded<T> value, $Res Function(ModelLoaded<T>) then) =
       _$ModelLoadedCopyWithImpl<T, $Res>;
-  $Res call({T model, bool isLoading});
+  $Res call({T model});
 }
 
 /// @nodoc
@@ -200,27 +199,23 @@ class _$ModelLoadedCopyWithImpl<T, $Res> extends _$ModelCopyWithImpl<T, $Res>
   @override
   $Res call({
     Object model = freezed,
-    Object isLoading = freezed,
   }) {
     return _then(ModelLoaded<T>(
       model: model == freezed ? _value.model : model as T,
-      isLoading: isLoading == freezed ? _value.isLoading : isLoading as bool,
     ));
   }
 }
 
 /// @nodoc
 class _$ModelLoaded<T> implements ModelLoaded<T> {
-  const _$ModelLoaded({this.model, this.isLoading});
+  const _$ModelLoaded({this.model});
 
   @override
   final T model;
-  @override
-  final bool isLoading;
 
   @override
   String toString() {
-    return 'Model<$T>.loaded(model: $model, isLoading: $isLoading)';
+    return 'Model<$T>.loaded(model: $model)';
   }
 
   @override
@@ -228,17 +223,12 @@ class _$ModelLoaded<T> implements ModelLoaded<T> {
     return identical(this, other) ||
         (other is ModelLoaded<T> &&
             (identical(other.model, model) ||
-                const DeepCollectionEquality().equals(other.model, model)) &&
-            (identical(other.isLoading, isLoading) ||
-                const DeepCollectionEquality()
-                    .equals(other.isLoading, isLoading)));
+                const DeepCollectionEquality().equals(other.model, model)));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(model) ^
-      const DeepCollectionEquality().hash(isLoading);
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(model);
 
   @JsonKey(ignore: true)
   @override
@@ -249,26 +239,26 @@ class _$ModelLoaded<T> implements ModelLoaded<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object>({
     @required TResult initial(),
-    @required TResult loaded(T model, bool isLoading),
+    @required TResult loaded(T model),
     @required TResult error(dynamic error),
   }) {
     assert(initial != null);
     assert(loaded != null);
     assert(error != null);
-    return loaded(model, isLoading);
+    return loaded(model);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
     TResult initial(),
-    TResult loaded(T model, bool isLoading),
+    TResult loaded(T model),
     TResult error(dynamic error),
     @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (loaded != null) {
-      return loaded(model, isLoading);
+      return loaded(model);
     }
     return orElse();
   }
@@ -303,10 +293,9 @@ class _$ModelLoaded<T> implements ModelLoaded<T> {
 }
 
 abstract class ModelLoaded<T> implements Model<T> {
-  const factory ModelLoaded({T model, bool isLoading}) = _$ModelLoaded<T>;
+  const factory ModelLoaded({T model}) = _$ModelLoaded<T>;
 
   T get model;
-  bool get isLoading;
   @JsonKey(ignore: true)
   $ModelLoadedCopyWith<T, ModelLoaded<T>> get copyWith;
 }
@@ -372,7 +361,7 @@ class _$ModelError<T> implements ModelError<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object>({
     @required TResult initial(),
-    @required TResult loaded(T model, bool isLoading),
+    @required TResult loaded(T model),
     @required TResult error(dynamic error),
   }) {
     assert(initial != null);
@@ -385,7 +374,7 @@ class _$ModelError<T> implements ModelError<T> {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
     TResult initial(),
-    TResult loaded(T model, bool isLoading),
+    TResult loaded(T model),
     TResult error(dynamic error),
     @required TResult orElse(),
   }) {

@@ -7,7 +7,7 @@ part 'model.freezed.dart';
 abstract class Model<T> with _$Model<T> {
   const factory Model.initial() = ModelInitial<T>;
 
-  const factory Model.loaded({T model, bool isLoading}) = ModelLoaded<T>;
+  const factory Model.loaded({T model}) = ModelLoaded<T>;
 
   const factory Model.error({dynamic error}) = ModelError<T>;
 
@@ -16,7 +16,7 @@ abstract class Model<T> with _$Model<T> {
   static Future<Model<T>> guard<T>(Future<T> future()) async {
     try {
       var data = await future();
-      return Model.loaded(model: data, isLoading: false);
+      return Model.loaded(model: data);
     } catch (ex) {
       return Model.error(error: ex);
     }
