@@ -24,6 +24,13 @@ mixin _$Model<T> on ModelBase<T>, Store {
     });
   }
 
+  final _$loadAsyncAction = AsyncAction('ModelBase.load');
+
+  @override
+  Future<void> load() {
+    return _$loadAsyncAction.run(() => super.load());
+  }
+
   final _$ModelBaseActionController = ActionController(name: 'ModelBase');
 
   @override
