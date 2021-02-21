@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/architecture/multi_model_cubit.dart';
 import 'package:jlogical_utils/architecture/multi_model_state.dart';
-import 'package:jlogical_utils/widgets/loading_widget.dart';
+
+import '../jlogical_utils.dart';
 
 /// Button to load more elements of a multi src.model cubit.
 class LoadMoreButton extends StatelessWidget {

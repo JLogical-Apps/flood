@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jlogical_utils/architecture/model_state.dart';
-import 'package:jlogical_utils/widgets/loading_widget.dart';
-import 'package:jlogical_utils/widgets/smart_cubit_builder.dart';
+import 'package:jlogical_utils/src/widgets/smart_cubit_builder.dart';
 
+import '../jlogical_utils.dart';
 import 'model_cubit.dart';
 
 class ModelBuilder<C extends ModelCubit<M>, M> extends StatelessWidget {

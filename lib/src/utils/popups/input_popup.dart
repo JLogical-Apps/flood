@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/widgets/input_field.dart';
+import 'package:jlogical_utils/src/widgets/input_field.dart';
 
 class InputPopup extends StatefulWidget {
   final String title;

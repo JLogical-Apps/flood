@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/utils/popups/color_popup.dart';
-import 'package:jlogical_utils/utils/popups/input_popup.dart';
+
+import 'popups/color_popup.dart';
+import 'popups/input_popup.dart';
 
 /// Helper class that shows popups.
 class Popup {

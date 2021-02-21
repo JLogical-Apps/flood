@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jlogical_utils/widgets/loading_widget.dart';
 
+import '../jlogical_utils.dart';
 import 'multi_model_cubit.dart';
 import 'multi_model_state.dart';
 

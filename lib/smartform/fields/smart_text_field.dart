@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jlogical_utils/smartform/cubit/smart_form_cubit.dart';
 import 'package:jlogical_utils/smartform/fields/smart_field.dart';
-import 'package:jlogical_utils/widgets/input_field.dart';
+
+import '../../jlogical_utils.dart';
 
 /// SmartField that handles text.
 class SmartTextField extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jlogical_utils/architecture/query_list_response.dart';
-import 'package:jlogical_utils/utils/pair.dart';
 
+import '../jlogical_utils.dart';
 import 'multi_model_state.dart';
 
 abstract class MultiModelCubit<M> extends Cubit<MultiModelState<M>> {

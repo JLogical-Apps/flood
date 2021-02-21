@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jlogical_utils/widgets/loading_widget.dart';
+
+import 'loading_widget.dart';
 
 /// Builds a cubit in an easy way. L1 is a loading state. L2 is a loaded state.
 class SmartCubitBuilder<C extends Cubit<S>, S, L1 extends S, L2 extends S> extends StatelessWidget {
