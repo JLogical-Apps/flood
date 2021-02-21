@@ -1,7 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
 
-part of 'model.dart';
+part of 'future_value.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -10,24 +10,24 @@ part of 'model.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-class _$ModelTearOff {
-  const _$ModelTearOff();
+class _$FutureValueTearOff {
+  const _$FutureValueTearOff();
 
 // ignore: unused_element
-  ModelInitial<T> initial<T>() {
-    return ModelInitial<T>();
+  FutureValueInitial<T> initial<T>() {
+    return FutureValueInitial<T>();
   }
 
 // ignore: unused_element
-  ModelLoaded<T> loaded<T>({T model}) {
-    return ModelLoaded<T>(
+  FutureValueLoaded<T> loaded<T>({T model}) {
+    return FutureValueLoaded<T>(
       model: model,
     );
   }
 
 // ignore: unused_element
-  ModelError<T> error<T>({dynamic error}) {
-    return ModelError<T>(
+  FutureValueError<T> error<T>({dynamic error}) {
+    return FutureValueError<T>(
       error: error,
     );
   }
@@ -35,10 +35,10 @@ class _$ModelTearOff {
 
 /// @nodoc
 // ignore: unused_element
-const $Model = _$ModelTearOff();
+const $FutureValue = _$FutureValueTearOff();
 
 /// @nodoc
-mixin _$Model<T> {
+mixin _$FutureValue<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object>({
     @required TResult initial(),
@@ -54,64 +54,67 @@ mixin _$Model<T> {
   });
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(ModelInitial<T> value),
-    @required TResult loaded(ModelLoaded<T> value),
-    @required TResult error(ModelError<T> value),
+    @required TResult initial(FutureValueInitial<T> value),
+    @required TResult loaded(FutureValueLoaded<T> value),
+    @required TResult error(FutureValueError<T> value),
   });
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(ModelInitial<T> value),
-    TResult loaded(ModelLoaded<T> value),
-    TResult error(ModelError<T> value),
+    TResult initial(FutureValueInitial<T> value),
+    TResult loaded(FutureValueLoaded<T> value),
+    TResult error(FutureValueError<T> value),
     @required TResult orElse(),
   });
 }
 
 /// @nodoc
-abstract class $ModelCopyWith<T, $Res> {
-  factory $ModelCopyWith(Model<T> value, $Res Function(Model<T>) then) =
-      _$ModelCopyWithImpl<T, $Res>;
+abstract class $FutureValueCopyWith<T, $Res> {
+  factory $FutureValueCopyWith(
+          FutureValue<T> value, $Res Function(FutureValue<T>) then) =
+      _$FutureValueCopyWithImpl<T, $Res>;
 }
 
 /// @nodoc
-class _$ModelCopyWithImpl<T, $Res> implements $ModelCopyWith<T, $Res> {
-  _$ModelCopyWithImpl(this._value, this._then);
+class _$FutureValueCopyWithImpl<T, $Res>
+    implements $FutureValueCopyWith<T, $Res> {
+  _$FutureValueCopyWithImpl(this._value, this._then);
 
-  final Model<T> _value;
+  final FutureValue<T> _value;
   // ignore: unused_field
-  final $Res Function(Model<T>) _then;
+  final $Res Function(FutureValue<T>) _then;
 }
 
 /// @nodoc
-abstract class $ModelInitialCopyWith<T, $Res> {
-  factory $ModelInitialCopyWith(
-          ModelInitial<T> value, $Res Function(ModelInitial<T>) then) =
-      _$ModelInitialCopyWithImpl<T, $Res>;
+abstract class $FutureValueInitialCopyWith<T, $Res> {
+  factory $FutureValueInitialCopyWith(FutureValueInitial<T> value,
+          $Res Function(FutureValueInitial<T>) then) =
+      _$FutureValueInitialCopyWithImpl<T, $Res>;
 }
 
 /// @nodoc
-class _$ModelInitialCopyWithImpl<T, $Res> extends _$ModelCopyWithImpl<T, $Res>
-    implements $ModelInitialCopyWith<T, $Res> {
-  _$ModelInitialCopyWithImpl(
-      ModelInitial<T> _value, $Res Function(ModelInitial<T>) _then)
-      : super(_value, (v) => _then(v as ModelInitial<T>));
+class _$FutureValueInitialCopyWithImpl<T, $Res>
+    extends _$FutureValueCopyWithImpl<T, $Res>
+    implements $FutureValueInitialCopyWith<T, $Res> {
+  _$FutureValueInitialCopyWithImpl(
+      FutureValueInitial<T> _value, $Res Function(FutureValueInitial<T>) _then)
+      : super(_value, (v) => _then(v as FutureValueInitial<T>));
 
   @override
-  ModelInitial<T> get _value => super._value as ModelInitial<T>;
+  FutureValueInitial<T> get _value => super._value as FutureValueInitial<T>;
 }
 
 /// @nodoc
-class _$ModelInitial<T> implements ModelInitial<T> {
-  const _$ModelInitial();
+class _$FutureValueInitial<T> implements FutureValueInitial<T> {
+  const _$FutureValueInitial();
 
   @override
   String toString() {
-    return 'Model<$T>.initial()';
+    return 'FutureValue<$T>.initial()';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other is ModelInitial<T>);
+    return identical(this, other) || (other is FutureValueInitial<T>);
   }
 
   @override
@@ -148,9 +151,9 @@ class _$ModelInitial<T> implements ModelInitial<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(ModelInitial<T> value),
-    @required TResult loaded(ModelLoaded<T> value),
-    @required TResult error(ModelError<T> value),
+    @required TResult initial(FutureValueInitial<T> value),
+    @required TResult loaded(FutureValueLoaded<T> value),
+    @required TResult error(FutureValueError<T> value),
   }) {
     assert(initial != null);
     assert(loaded != null);
@@ -161,9 +164,9 @@ class _$ModelInitial<T> implements ModelInitial<T> {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(ModelInitial<T> value),
-    TResult loaded(ModelLoaded<T> value),
-    TResult error(ModelError<T> value),
+    TResult initial(FutureValueInitial<T> value),
+    TResult loaded(FutureValueLoaded<T> value),
+    TResult error(FutureValueError<T> value),
     @required TResult orElse(),
   }) {
     assert(orElse != null);
@@ -174,54 +177,55 @@ class _$ModelInitial<T> implements ModelInitial<T> {
   }
 }
 
-abstract class ModelInitial<T> implements Model<T> {
-  const factory ModelInitial() = _$ModelInitial<T>;
+abstract class FutureValueInitial<T> implements FutureValue<T> {
+  const factory FutureValueInitial() = _$FutureValueInitial<T>;
 }
 
 /// @nodoc
-abstract class $ModelLoadedCopyWith<T, $Res> {
-  factory $ModelLoadedCopyWith(
-          ModelLoaded<T> value, $Res Function(ModelLoaded<T>) then) =
-      _$ModelLoadedCopyWithImpl<T, $Res>;
+abstract class $FutureValueLoadedCopyWith<T, $Res> {
+  factory $FutureValueLoadedCopyWith(FutureValueLoaded<T> value,
+          $Res Function(FutureValueLoaded<T>) then) =
+      _$FutureValueLoadedCopyWithImpl<T, $Res>;
   $Res call({T model});
 }
 
 /// @nodoc
-class _$ModelLoadedCopyWithImpl<T, $Res> extends _$ModelCopyWithImpl<T, $Res>
-    implements $ModelLoadedCopyWith<T, $Res> {
-  _$ModelLoadedCopyWithImpl(
-      ModelLoaded<T> _value, $Res Function(ModelLoaded<T>) _then)
-      : super(_value, (v) => _then(v as ModelLoaded<T>));
+class _$FutureValueLoadedCopyWithImpl<T, $Res>
+    extends _$FutureValueCopyWithImpl<T, $Res>
+    implements $FutureValueLoadedCopyWith<T, $Res> {
+  _$FutureValueLoadedCopyWithImpl(
+      FutureValueLoaded<T> _value, $Res Function(FutureValueLoaded<T>) _then)
+      : super(_value, (v) => _then(v as FutureValueLoaded<T>));
 
   @override
-  ModelLoaded<T> get _value => super._value as ModelLoaded<T>;
+  FutureValueLoaded<T> get _value => super._value as FutureValueLoaded<T>;
 
   @override
   $Res call({
     Object model = freezed,
   }) {
-    return _then(ModelLoaded<T>(
+    return _then(FutureValueLoaded<T>(
       model: model == freezed ? _value.model : model as T,
     ));
   }
 }
 
 /// @nodoc
-class _$ModelLoaded<T> implements ModelLoaded<T> {
-  const _$ModelLoaded({this.model});
+class _$FutureValueLoaded<T> implements FutureValueLoaded<T> {
+  const _$FutureValueLoaded({this.model});
 
   @override
   final T model;
 
   @override
   String toString() {
-    return 'Model<$T>.loaded(model: $model)';
+    return 'FutureValue<$T>.loaded(model: $model)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is ModelLoaded<T> &&
+        (other is FutureValueLoaded<T> &&
             (identical(other.model, model) ||
                 const DeepCollectionEquality().equals(other.model, model)));
   }
@@ -232,8 +236,9 @@ class _$ModelLoaded<T> implements ModelLoaded<T> {
 
   @JsonKey(ignore: true)
   @override
-  $ModelLoadedCopyWith<T, ModelLoaded<T>> get copyWith =>
-      _$ModelLoadedCopyWithImpl<T, ModelLoaded<T>>(this, _$identity);
+  $FutureValueLoadedCopyWith<T, FutureValueLoaded<T>> get copyWith =>
+      _$FutureValueLoadedCopyWithImpl<T, FutureValueLoaded<T>>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -266,9 +271,9 @@ class _$ModelLoaded<T> implements ModelLoaded<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(ModelInitial<T> value),
-    @required TResult loaded(ModelLoaded<T> value),
-    @required TResult error(ModelError<T> value),
+    @required TResult initial(FutureValueInitial<T> value),
+    @required TResult loaded(FutureValueLoaded<T> value),
+    @required TResult error(FutureValueError<T> value),
   }) {
     assert(initial != null);
     assert(loaded != null);
@@ -279,9 +284,9 @@ class _$ModelLoaded<T> implements ModelLoaded<T> {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(ModelInitial<T> value),
-    TResult loaded(ModelLoaded<T> value),
-    TResult error(ModelError<T> value),
+    TResult initial(FutureValueInitial<T> value),
+    TResult loaded(FutureValueLoaded<T> value),
+    TResult error(FutureValueError<T> value),
     @required TResult orElse(),
   }) {
     assert(orElse != null);
@@ -292,58 +297,59 @@ class _$ModelLoaded<T> implements ModelLoaded<T> {
   }
 }
 
-abstract class ModelLoaded<T> implements Model<T> {
-  const factory ModelLoaded({T model}) = _$ModelLoaded<T>;
+abstract class FutureValueLoaded<T> implements FutureValue<T> {
+  const factory FutureValueLoaded({T model}) = _$FutureValueLoaded<T>;
 
   T get model;
   @JsonKey(ignore: true)
-  $ModelLoadedCopyWith<T, ModelLoaded<T>> get copyWith;
+  $FutureValueLoadedCopyWith<T, FutureValueLoaded<T>> get copyWith;
 }
 
 /// @nodoc
-abstract class $ModelErrorCopyWith<T, $Res> {
-  factory $ModelErrorCopyWith(
-          ModelError<T> value, $Res Function(ModelError<T>) then) =
-      _$ModelErrorCopyWithImpl<T, $Res>;
+abstract class $FutureValueErrorCopyWith<T, $Res> {
+  factory $FutureValueErrorCopyWith(
+          FutureValueError<T> value, $Res Function(FutureValueError<T>) then) =
+      _$FutureValueErrorCopyWithImpl<T, $Res>;
   $Res call({dynamic error});
 }
 
 /// @nodoc
-class _$ModelErrorCopyWithImpl<T, $Res> extends _$ModelCopyWithImpl<T, $Res>
-    implements $ModelErrorCopyWith<T, $Res> {
-  _$ModelErrorCopyWithImpl(
-      ModelError<T> _value, $Res Function(ModelError<T>) _then)
-      : super(_value, (v) => _then(v as ModelError<T>));
+class _$FutureValueErrorCopyWithImpl<T, $Res>
+    extends _$FutureValueCopyWithImpl<T, $Res>
+    implements $FutureValueErrorCopyWith<T, $Res> {
+  _$FutureValueErrorCopyWithImpl(
+      FutureValueError<T> _value, $Res Function(FutureValueError<T>) _then)
+      : super(_value, (v) => _then(v as FutureValueError<T>));
 
   @override
-  ModelError<T> get _value => super._value as ModelError<T>;
+  FutureValueError<T> get _value => super._value as FutureValueError<T>;
 
   @override
   $Res call({
     Object error = freezed,
   }) {
-    return _then(ModelError<T>(
+    return _then(FutureValueError<T>(
       error: error == freezed ? _value.error : error as dynamic,
     ));
   }
 }
 
 /// @nodoc
-class _$ModelError<T> implements ModelError<T> {
-  const _$ModelError({this.error});
+class _$FutureValueError<T> implements FutureValueError<T> {
+  const _$FutureValueError({this.error});
 
   @override
   final dynamic error;
 
   @override
   String toString() {
-    return 'Model<$T>.error(error: $error)';
+    return 'FutureValue<$T>.error(error: $error)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is ModelError<T> &&
+        (other is FutureValueError<T> &&
             (identical(other.error, error) ||
                 const DeepCollectionEquality().equals(other.error, error)));
   }
@@ -354,8 +360,8 @@ class _$ModelError<T> implements ModelError<T> {
 
   @JsonKey(ignore: true)
   @override
-  $ModelErrorCopyWith<T, ModelError<T>> get copyWith =>
-      _$ModelErrorCopyWithImpl<T, ModelError<T>>(this, _$identity);
+  $FutureValueErrorCopyWith<T, FutureValueError<T>> get copyWith =>
+      _$FutureValueErrorCopyWithImpl<T, FutureValueError<T>>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -388,9 +394,9 @@ class _$ModelError<T> implements ModelError<T> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object>({
-    @required TResult initial(ModelInitial<T> value),
-    @required TResult loaded(ModelLoaded<T> value),
-    @required TResult error(ModelError<T> value),
+    @required TResult initial(FutureValueInitial<T> value),
+    @required TResult loaded(FutureValueLoaded<T> value),
+    @required TResult error(FutureValueError<T> value),
   }) {
     assert(initial != null);
     assert(loaded != null);
@@ -401,9 +407,9 @@ class _$ModelError<T> implements ModelError<T> {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object>({
-    TResult initial(ModelInitial<T> value),
-    TResult loaded(ModelLoaded<T> value),
-    TResult error(ModelError<T> value),
+    TResult initial(FutureValueInitial<T> value),
+    TResult loaded(FutureValueLoaded<T> value),
+    TResult error(FutureValueError<T> value),
     @required TResult orElse(),
   }) {
     assert(orElse != null);
@@ -414,10 +420,10 @@ class _$ModelError<T> implements ModelError<T> {
   }
 }
 
-abstract class ModelError<T> implements Model<T> {
-  const factory ModelError({dynamic error}) = _$ModelError<T>;
+abstract class FutureValueError<T> implements FutureValue<T> {
+  const factory FutureValueError({dynamic error}) = _$FutureValueError<T>;
 
   dynamic get error;
   @JsonKey(ignore: true)
-  $ModelErrorCopyWith<T, ModelError<T>> get copyWith;
+  $FutureValueErrorCopyWith<T, FutureValueError<T>> get copyWith;
 }
