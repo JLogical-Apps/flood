@@ -13,24 +13,65 @@ abstract class ModelBase<T> with Store {
   @observable
   FutureValue<T> value;
 
+  /// Completer so that multiple [load] calls will wait for the initial [load] to complete.
+  Completer _completer;
+
   /// A function that loads data to be stored in the model.
   final FutureOr<T> Function() loader;
 
-  ModelBase({this.loader});
+  /// Whether the model is in its initial state.
+  bool get isInitial => value is FutureValueInitial;
+
+  /// Whether the model is loaded.
+  bool get isLoaded => value is FutureValueLoaded;
+
+  /// Whether the model contains an error.
+  bool get isError => value is FutureValueError;
+
+  ModelBase({this.loader, T initialValue}) : value = initialValue == null ? FutureValue.initial() : FutureValue.loaded(value: initialValue);
 
   /// Loads the data for the model using the [loader].
   @action
   Future<void> load() async {
-    if(value is FutureValueError){
+    // If the model is currently loading something, just wait for the previous load to finish.
+    if (_completer != null && !_completer.isCompleted) {
+      return await _completer.future;
+    }
+
+    _completer = Completer();
+
+    if (value is FutureValueError) {
       value = FutureValue.initial();
     }
 
     value = await FutureValue.guard(() async => await loader());
+
+    // Once the model completes loading, notify other [load] calls that the load has finished.
+    _completer.complete();
+    _completer = null;
   }
 
-  /// Sets the value of the model.
-  @action
-  void set(T _value) {
-    value = FutureValue.loaded(value: _value);
+  /// Returns the loaded value of the model, or calls [orElse] if not loaded.
+  T get({T orElse()}) {
+    return value.maybeWhen(
+      loaded: (data) => data,
+      orElse: orElse,
+    );
+  }
+
+  /// Shorthand to getting the model's value.
+  T call({T orElse()}) => get(orElse: orElse);
+
+  /// Waits for the model to finish loading and returns the loaded value of the model, or calls [onError] if an error occurred.
+  Future<T> complete({T onError(dynamic obj)}) async {
+    if (isInitial) {
+      await _completer.future;
+    }
+
+    return value.when(
+      initial: () => throw Exception('Model is in initial state after being loaded.'),
+      loaded: (data) => data,
+      error: (error) => onError(error),
+    );
   }
 }

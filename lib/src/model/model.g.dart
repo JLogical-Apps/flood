@@ -31,19 +31,6 @@ mixin _$Model<T> on ModelBase<T>, Store {
     return _$loadAsyncAction.run(() => super.load());
   }
 
-  final _$ModelBaseActionController = ActionController(name: 'ModelBase');
-
-  @override
-  void set(T _value) {
-    final _$actionInfo =
-        _$ModelBaseActionController.startAction(name: 'ModelBase.set');
-    try {
-      return super.set(_value);
-    } finally {
-      _$ModelBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
   @override
   String toString() {
     return '''
