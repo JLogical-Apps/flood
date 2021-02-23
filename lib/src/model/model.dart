@@ -55,7 +55,7 @@ abstract class ModelBase<T> with Store {
   T get({T orElse()}) {
     return value.maybeWhen(
       loaded: (data) => data,
-      orElse: orElse,
+      orElse: () => orElse != null ? orElse() : throw Exception('get() called without loaded state!'),
     );
   }
 
