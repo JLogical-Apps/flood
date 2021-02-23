@@ -12,6 +12,22 @@ abstract class ModelListBase<T> with Store {
   @observable
   FutureValue<Map<String, Model<T>>> modelsMap;
 
+  /// The ids of the list.
+  @computed
+  FutureValue<List<String>> get ids => modelsMap.when(
+        initial: () => FutureValue.initial(),
+        loaded: (map) => FutureValue.loaded(value: map.keys.toList()),
+        error: (error) => FutureValue.error(error: error),
+      );
+
+  /// The models of the list.
+  @computed
+  FutureValue<List<Model<T>>> get models => modelsMap.when(
+        initial: () => FutureValue.initial(),
+        loaded: (map) => FutureValue.loaded(value: map.values.toList()),
+        error: (error) => FutureValue.error(error: error),
+      );
+
   /// A function that loads data to be stored in the model.
   FutureOr<Map<String, T>> Function() loader;
 
@@ -77,6 +93,7 @@ abstract class ModelListBase<T> with Store {
 
   /// Waits for the model to finish loading and returns the loaded value of the model, or calls [onError] if an error occurred.
   Future<Map<String, Model<T>>> complete({Map<String, Model<T>> onError(dynamic obj)}) async {
+    // If still loading, wait for the completer to complete.
     if (isInitial) {
       await _completer.future;
     }
