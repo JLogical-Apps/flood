@@ -23,6 +23,10 @@ class ErrorText extends StatelessWidget {
             onPressed: () {
               Popup.message(context, title: 'Error Message', message: error.toString(), okText: 'OK');
             },
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(Colors.red),
+              overlayColor: MaterialStateProperty.all(Colors.red.withOpacity(0.2)),
+            ),
           );
   }
 }

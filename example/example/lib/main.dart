@@ -39,6 +39,10 @@ class HomePage extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                ErrorText(
+                  'ERROR',
+                  error: 'YIKES',
+                ),
                 Card(
                   child: Column(
                     children: [
