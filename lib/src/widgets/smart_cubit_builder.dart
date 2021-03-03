@@ -27,7 +27,7 @@ class SmartCubitBuilder<C extends Cubit<S>, S, L1 extends S, L2 extends S> exten
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<C, S>(
-      cubit: cubit,
+      bloc: cubit,
       builder: (context, state) {
         if (state is L1) {
           return loadingWidget;

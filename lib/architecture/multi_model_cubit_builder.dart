@@ -23,7 +23,7 @@ class MultiModelCubitBuilder<C extends MultiModelCubit<M>, M> extends StatelessW
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<C, MultiModelState<M>>(
-      cubit: cubit,
+      bloc: cubit,
       builder: (context, state) {
         if (state is MultiModelInitialState<M>) {
           return initialWidget ?? LoadingWidget();

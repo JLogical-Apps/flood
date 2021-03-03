@@ -13,30 +13,30 @@ dependencies:
     sdk: flutter
 
   # Presentation
-  flutter_colorpicker: ^0.3.5
+  flutter_colorpicker: ^0.4.0-nullsafety.0
   flutter_picker: ^1.1.5
   expandable: ^4.1.4
   loading_overlay: ^0.2.1
-  transparent_image: ^1.0.0
-  cached_network_image: ^2.5.0
+  transparent_image: ^2.0.0-nullsafety.0
+  cached_network_image: ^3.0.0-nullsafety
 
   # Application
-  flutter_bloc: ^6.1.2
-  equatable: ^1.2.6
+  flutter_bloc: ^7.0.0-nullsafety.3
+  equatable: ^2.0.0
   mobx: ^1.2.1+4
-  provider: ^4.3.3
-  url_launcher: ^5.7.10
+  provider: ^5.0.0-nullsafety.5
+  url_launcher: ^6.0.2
 
   # Backend
-  freezed_annotation: ^0.12.0
-  intl: ^0.16.1
+  freezed_annotation: ^0.13.0-nullsafety.0
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  build_runner: ^1.11.1 # flutter packages pub run build_runner watch
-  freezed: ^0.12.7
+  build_runner: ^1.11.5 # flutter packages pub run build_runner watch
+  freezed: ^0.14.0-nullsafety.0
   mobx_codegen: ^1.1.2
 
 flutter:
