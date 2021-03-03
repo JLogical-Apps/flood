@@ -31,13 +31,13 @@ class _ColorPickerPopupState extends State<ColorPickerPopup> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text('CANCEL'),
           onPressed: () {
             Navigator.of(context).pop<Color>(null);
           },
         ),
-        FlatButton(
+        TextButton(
           child: Text('OK'),
           onPressed: () {
             Navigator.of(context).pop<Color>(currColor);

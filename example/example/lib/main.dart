@@ -67,13 +67,7 @@ class HomePage extends StatelessWidget {
                           OutlinedButton(
                             child: Text('SNACKBAR'),
                             onPressed: () {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text('Snackbar!'),
-                                action: SnackBarAction(
-                                  label: 'UNDO',
-                                  onPressed: () {},
-                                ),
-                              ));
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Snackbar!')));
                             },
                           ),
                           MenuButton(

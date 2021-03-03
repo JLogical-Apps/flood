@@ -26,7 +26,7 @@ class DurationInputField extends StatelessWidget {
             initialText: '${initialDuration.inDays} days',
           ),
         ),
-        FlatButton(
+        TextButton(
           child: Text('CHANGE TIME TO BUILD'),
           onPressed: () async {
             // This code was inspired from StackOverflow: https://stackoverflow.com/a/58145696/4891134

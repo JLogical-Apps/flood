@@ -34,7 +34,7 @@ class SmartForm extends StatelessWidget {
       ),
       child: BlocBuilder<SmartFormCubit, SmartFormState>(
         builder: (context, state) {
-          controller.setCubit(context.bloc<SmartFormCubit>());
+          controller.setCubit(context.read<SmartFormCubit>());
           return LoadingOverlay(
             isLoading: state.isLoading,
             child: child,

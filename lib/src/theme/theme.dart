@@ -29,7 +29,9 @@ class CustomTheme {
         margin: EdgeInsets.all(8),
         color: Colors.white,
       ),
-      cursorColor: primaryColor,
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: primaryColor,
+      ),
       dialogTheme: DialogTheme(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
@@ -129,7 +131,9 @@ class CustomTheme {
         margin: EdgeInsets.all(8),
         color: Colors.white,
       ),
-      cursorColor: primaryColor,
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: primaryColor
+      ),
       dialogTheme: DialogTheme(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(

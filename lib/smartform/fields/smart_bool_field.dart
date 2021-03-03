@@ -44,14 +44,14 @@ class SmartBoolField extends StatelessWidget {
                     ? Checkbox(
                         value: value,
                         onChanged: (value) {
-                          SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();
+                          SmartFormCubit smartFormCubit = context.read<SmartFormCubit>();
                           smartFormCubit.changeValue(name: name, value: value);
                         },
                       )
                     : Switch(
                         value: value,
                         onChanged: (value) {
-                          SmartFormCubit smartFormCubit = context.bloc<SmartFormCubit>();
+                          SmartFormCubit smartFormCubit = context.read<SmartFormCubit>();
                           smartFormCubit.changeValue(name: name, value: value);
                         },
                       ),
