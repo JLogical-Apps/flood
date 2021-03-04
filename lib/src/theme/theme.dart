@@ -3,7 +3,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class CustomTheme {
   /// Returns a material theme that emphasizes filled colors.
-  static ThemeData filledMaterialTheme({Color primaryColor, Color accentColor}) {
+  static ThemeData filledMaterialTheme({required Color primaryColor, required Color accentColor}) {
     return ThemeData(
       brightness: useWhiteForeground(primaryColor, bias: 1.5) ? Brightness.light : Brightness.dark,
       primaryColor: primaryColor,
@@ -131,9 +131,7 @@ class CustomTheme {
         margin: EdgeInsets.all(8),
         color: Colors.white,
       ),
-      textSelectionTheme: TextSelectionThemeData(
-        cursorColor: primaryColor
-      ),
+      textSelectionTheme: TextSelectionThemeData(cursorColor: primaryColor),
       dialogTheme: DialogTheme(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(

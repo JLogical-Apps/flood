@@ -8,5 +8,5 @@ class Pair<A, B> extends Equatable {
   const Pair(this.first, this.second);
 
   @override
-  List<Object> get props => [first, second];
+  List<Object> get props => [first ?? Never, second ?? Never];
 }

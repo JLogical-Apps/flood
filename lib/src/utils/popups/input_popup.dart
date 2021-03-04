@@ -11,13 +11,13 @@ class InputPopup extends StatefulWidget {
   final bool canBeEmpty;
 
   InputPopup({
-    @required this.title,
-    @required this.message,
-    @required this.label,
-    @required this.initialText,
-    @required this.cancelMsg,
-    @required this.submitMsg,
-    @required this.canBeEmpty,
+    required this.title,
+    required this.message,
+    required this.label,
+    required this.initialText,
+    required this.cancelMsg,
+    required this.submitMsg,
+    required this.canBeEmpty,
   });
 
   @override

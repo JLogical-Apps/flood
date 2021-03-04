@@ -6,9 +6,9 @@ class FutureButton extends StatefulWidget {
   final Widget child;
 
   /// Action to perform when pressed.
-  final Future Function() onPressed;
+  final Future Function()? onPressed;
 
-  const FutureButton({@required this.child, @required this.onPressed});
+  const FutureButton({required this.child, required this.onPressed});
 
   @override
   _FutureButtonState createState() => _FutureButtonState();
@@ -26,14 +26,14 @@ class _FutureButtonState extends State<FutureButton> {
             ? () {}
             : () async {
                 setState(() => inFuture = true);
-                await widget.onPressed();
+                await widget.onPressed?.call();
                 setState(() => inFuture = false);
               },
         child: AnimatedCrossFade(
           duration: Duration(milliseconds: 110),
           crossFadeState: inFuture ? CrossFadeState.showSecond : CrossFadeState.showFirst,
           firstChild: DefaultTextStyle(
-            style: Theme.of(context).primaryTextTheme.button,
+            style: Theme.of(context).primaryTextTheme.button!,
             textAlign: TextAlign.center,
             overflow: TextOverflow.fade,
             maxLines: 1,

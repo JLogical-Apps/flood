@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
 part of 'future_value.dart';
 
@@ -9,24 +9,24 @@ part of 'future_value.dart';
 
 T _$identity<T>(T value) => value;
 
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+
 /// @nodoc
 class _$FutureValueTearOff {
   const _$FutureValueTearOff();
 
-// ignore: unused_element
   FutureValueInitial<T> initial<T>() {
     return FutureValueInitial<T>();
   }
 
-// ignore: unused_element
-  FutureValueLoaded<T> loaded<T>({T value}) {
+  FutureValueLoaded<T> loaded<T>({required T value}) {
     return FutureValueLoaded<T>(
       value: value,
     );
   }
 
-// ignore: unused_element
-  FutureValueError<T> error<T>({dynamic error}) {
+  FutureValueError<T> error<T>({Object? error}) {
     return FutureValueError<T>(
       error: error,
     );
@@ -34,37 +34,40 @@ class _$FutureValueTearOff {
 }
 
 /// @nodoc
-// ignore: unused_element
 const $FutureValue = _$FutureValueTearOff();
 
 /// @nodoc
 mixin _$FutureValue<T> {
   @optionalTypeArgs
-  TResult when<TResult extends Object>({
-    @required TResult initial(),
-    @required TResult loaded(T value),
-    @required TResult error(dynamic error),
-  });
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function(T value) loaded,
+    required TResult Function(Object? error) error,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object>({
-    TResult initial(),
-    TResult loaded(T value),
-    TResult error(dynamic error),
-    @required TResult orElse(),
-  });
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(T value)? loaded,
+    TResult Function(Object? error)? error,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult map<TResult extends Object>({
-    @required TResult initial(FutureValueInitial<T> value),
-    @required TResult loaded(FutureValueLoaded<T> value),
-    @required TResult error(FutureValueError<T> value),
-  });
+  TResult map<TResult extends Object?>({
+    required TResult Function(FutureValueInitial<T> value) initial,
+    required TResult Function(FutureValueLoaded<T> value) loaded,
+    required TResult Function(FutureValueError<T> value) error,
+  }) =>
+      throw _privateConstructorUsedError;
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object>({
-    TResult initial(FutureValueInitial<T> value),
-    TResult loaded(FutureValueLoaded<T> value),
-    TResult error(FutureValueError<T> value),
-    @required TResult orElse(),
-  });
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FutureValueInitial<T> value)? initial,
+    TResult Function(FutureValueLoaded<T> value)? loaded,
+    TResult Function(FutureValueError<T> value)? error,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -122,26 +125,22 @@ class _$FutureValueInitial<T> implements FutureValueInitial<T> {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object>({
-    @required TResult initial(),
-    @required TResult loaded(T value),
-    @required TResult error(dynamic error),
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function(T value) loaded,
+    required TResult Function(Object? error) error,
   }) {
-    assert(initial != null);
-    assert(loaded != null);
-    assert(error != null);
     return initial();
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object>({
-    TResult initial(),
-    TResult loaded(T value),
-    TResult error(dynamic error),
-    @required TResult orElse(),
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(T value)? loaded,
+    TResult Function(Object? error)? error,
+    required TResult orElse(),
   }) {
-    assert(orElse != null);
     if (initial != null) {
       return initial();
     }
@@ -150,26 +149,22 @@ class _$FutureValueInitial<T> implements FutureValueInitial<T> {
 
   @override
   @optionalTypeArgs
-  TResult map<TResult extends Object>({
-    @required TResult initial(FutureValueInitial<T> value),
-    @required TResult loaded(FutureValueLoaded<T> value),
-    @required TResult error(FutureValueError<T> value),
+  TResult map<TResult extends Object?>({
+    required TResult Function(FutureValueInitial<T> value) initial,
+    required TResult Function(FutureValueLoaded<T> value) loaded,
+    required TResult Function(FutureValueError<T> value) error,
   }) {
-    assert(initial != null);
-    assert(loaded != null);
-    assert(error != null);
     return initial(this);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object>({
-    TResult initial(FutureValueInitial<T> value),
-    TResult loaded(FutureValueLoaded<T> value),
-    TResult error(FutureValueError<T> value),
-    @required TResult orElse(),
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FutureValueInitial<T> value)? initial,
+    TResult Function(FutureValueLoaded<T> value)? loaded,
+    TResult Function(FutureValueError<T> value)? error,
+    required TResult orElse(),
   }) {
-    assert(orElse != null);
     if (initial != null) {
       return initial(this);
     }
@@ -202,7 +197,7 @@ class _$FutureValueLoadedCopyWithImpl<T, $Res>
 
   @override
   $Res call({
-    Object value = freezed,
+    Object? value = freezed,
   }) {
     return _then(FutureValueLoaded<T>(
       value: value == freezed ? _value.value : value as T,
@@ -212,7 +207,7 @@ class _$FutureValueLoadedCopyWithImpl<T, $Res>
 
 /// @nodoc
 class _$FutureValueLoaded<T> implements FutureValueLoaded<T> {
-  const _$FutureValueLoaded({this.value});
+  const _$FutureValueLoaded({required this.value});
 
   @override
   final T value;
@@ -242,26 +237,22 @@ class _$FutureValueLoaded<T> implements FutureValueLoaded<T> {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object>({
-    @required TResult initial(),
-    @required TResult loaded(T value),
-    @required TResult error(dynamic error),
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function(T value) loaded,
+    required TResult Function(Object? error) error,
   }) {
-    assert(initial != null);
-    assert(loaded != null);
-    assert(error != null);
     return loaded(value);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object>({
-    TResult initial(),
-    TResult loaded(T value),
-    TResult error(dynamic error),
-    @required TResult orElse(),
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(T value)? loaded,
+    TResult Function(Object? error)? error,
+    required TResult orElse(),
   }) {
-    assert(orElse != null);
     if (loaded != null) {
       return loaded(value);
     }
@@ -270,26 +261,22 @@ class _$FutureValueLoaded<T> implements FutureValueLoaded<T> {
 
   @override
   @optionalTypeArgs
-  TResult map<TResult extends Object>({
-    @required TResult initial(FutureValueInitial<T> value),
-    @required TResult loaded(FutureValueLoaded<T> value),
-    @required TResult error(FutureValueError<T> value),
+  TResult map<TResult extends Object?>({
+    required TResult Function(FutureValueInitial<T> value) initial,
+    required TResult Function(FutureValueLoaded<T> value) loaded,
+    required TResult Function(FutureValueError<T> value) error,
   }) {
-    assert(initial != null);
-    assert(loaded != null);
-    assert(error != null);
     return loaded(this);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object>({
-    TResult initial(FutureValueInitial<T> value),
-    TResult loaded(FutureValueLoaded<T> value),
-    TResult error(FutureValueError<T> value),
-    @required TResult orElse(),
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FutureValueInitial<T> value)? initial,
+    TResult Function(FutureValueLoaded<T> value)? loaded,
+    TResult Function(FutureValueError<T> value)? error,
+    required TResult orElse(),
   }) {
-    assert(orElse != null);
     if (loaded != null) {
       return loaded(this);
     }
@@ -298,11 +285,12 @@ class _$FutureValueLoaded<T> implements FutureValueLoaded<T> {
 }
 
 abstract class FutureValueLoaded<T> implements FutureValue<T> {
-  const factory FutureValueLoaded({T value}) = _$FutureValueLoaded<T>;
+  const factory FutureValueLoaded({required T value}) = _$FutureValueLoaded<T>;
 
-  T get value;
+  T get value => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $FutureValueLoadedCopyWith<T, FutureValueLoaded<T>> get copyWith;
+  $FutureValueLoadedCopyWith<T, FutureValueLoaded<T>> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -310,7 +298,7 @@ abstract class $FutureValueErrorCopyWith<T, $Res> {
   factory $FutureValueErrorCopyWith(
           FutureValueError<T> value, $Res Function(FutureValueError<T>) then) =
       _$FutureValueErrorCopyWithImpl<T, $Res>;
-  $Res call({dynamic error});
+  $Res call({Object? error});
 }
 
 /// @nodoc
@@ -326,10 +314,10 @@ class _$FutureValueErrorCopyWithImpl<T, $Res>
 
   @override
   $Res call({
-    Object error = freezed,
+    Object? error = freezed,
   }) {
     return _then(FutureValueError<T>(
-      error: error == freezed ? _value.error : error as dynamic,
+      error: error == freezed ? _value.error : error,
     ));
   }
 }
@@ -339,7 +327,7 @@ class _$FutureValueError<T> implements FutureValueError<T> {
   const _$FutureValueError({this.error});
 
   @override
-  final dynamic error;
+  final Object? error;
 
   @override
   String toString() {
@@ -365,26 +353,22 @@ class _$FutureValueError<T> implements FutureValueError<T> {
 
   @override
   @optionalTypeArgs
-  TResult when<TResult extends Object>({
-    @required TResult initial(),
-    @required TResult loaded(T value),
-    @required TResult error(dynamic error),
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function(T value) loaded,
+    required TResult Function(Object? error) error,
   }) {
-    assert(initial != null);
-    assert(loaded != null);
-    assert(error != null);
     return error(this.error);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object>({
-    TResult initial(),
-    TResult loaded(T value),
-    TResult error(dynamic error),
-    @required TResult orElse(),
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(T value)? loaded,
+    TResult Function(Object? error)? error,
+    required TResult orElse(),
   }) {
-    assert(orElse != null);
     if (error != null) {
       return error(this.error);
     }
@@ -393,26 +377,22 @@ class _$FutureValueError<T> implements FutureValueError<T> {
 
   @override
   @optionalTypeArgs
-  TResult map<TResult extends Object>({
-    @required TResult initial(FutureValueInitial<T> value),
-    @required TResult loaded(FutureValueLoaded<T> value),
-    @required TResult error(FutureValueError<T> value),
+  TResult map<TResult extends Object?>({
+    required TResult Function(FutureValueInitial<T> value) initial,
+    required TResult Function(FutureValueLoaded<T> value) loaded,
+    required TResult Function(FutureValueError<T> value) error,
   }) {
-    assert(initial != null);
-    assert(loaded != null);
-    assert(error != null);
     return error(this);
   }
 
   @override
   @optionalTypeArgs
-  TResult maybeMap<TResult extends Object>({
-    TResult initial(FutureValueInitial<T> value),
-    TResult loaded(FutureValueLoaded<T> value),
-    TResult error(FutureValueError<T> value),
-    @required TResult orElse(),
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FutureValueInitial<T> value)? initial,
+    TResult Function(FutureValueLoaded<T> value)? loaded,
+    TResult Function(FutureValueError<T> value)? error,
+    required TResult orElse(),
   }) {
-    assert(orElse != null);
     if (error != null) {
       return error(this);
     }
@@ -421,9 +401,10 @@ class _$FutureValueError<T> implements FutureValueError<T> {
 }
 
 abstract class FutureValueError<T> implements FutureValue<T> {
-  const factory FutureValueError({dynamic error}) = _$FutureValueError<T>;
+  const factory FutureValueError({Object? error}) = _$FutureValueError<T>;
 
-  dynamic get error;
+  Object? get error => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $FutureValueErrorCopyWith<T, FutureValueError<T>> get copyWith;
+  $FutureValueErrorCopyWith<T, FutureValueError<T>> get copyWith =>
+      throw _privateConstructorUsedError;
 }

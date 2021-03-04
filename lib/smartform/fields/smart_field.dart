@@ -8,19 +8,19 @@ class SmartField<T> extends StatelessWidget {
   final String name;
 
   /// Builder for the widget with the given [value] and [error].
-  final Widget Function(T value, String error) builder;
+  final Widget Function(T value, String? error) builder;
 
   /// The initial value of the field.
-  final T initialValue;
+  final T? initialValue;
 
   /// Validator for the field. Returns [null] if no errors were found.
-  final Validator validator;
+  final Validator? validator;
 
-  const SmartField({Key key, @required this.name, @required this.builder, this.initialValue, this.validator}) : super(key: key);
+  const SmartField({Key? key, required this.name, required this.builder, this.initialValue, this.validator}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    SmartFormCubit smartFormCubit = BlocProvider.of<SmartFormCubit>(context);
+    SmartFormCubit smartFormCubit = context.read<SmartFormCubit>();
     smartFormCubit.setValidator(
       name: name,
       validator: validator,

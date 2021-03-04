@@ -18,12 +18,12 @@ class SmartForm extends StatelessWidget {
   final Widget child;
 
   /// Post validator after the fields have been successfully validated. Returns a map that maps the name of a field to its error, or null/empty if no errors were present.
-  final PostValidator postValidator;
+  final PostValidator? postValidator;
 
   /// Function to call when the form is accepted.
-  final FutureOr Function(Map<String, dynamic> data) onAccept;
+  final FutureOr Function(Map<String, dynamic> data)? onAccept;
 
-  const SmartForm({Key key, @required this.controller, this.onAccept, @required this.child, this.postValidator}) : super(key: key);
+  const SmartForm({Key? key, required this.controller, this.onAccept, required this.child, this.postValidator}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

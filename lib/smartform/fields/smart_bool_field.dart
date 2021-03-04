@@ -17,14 +17,14 @@ class SmartBoolField extends StatelessWidget {
 
   final bool initiallyChecked;
 
-  final Validator<bool> validator;
+  final Validator<bool>? validator;
 
   final SmartBoolFieldStyle style;
 
   const SmartBoolField({
-    Key key,
-    this.name,
-    this.child,
+    Key? key,
+    required this.name,
+    required this.child,
     this.validator,
     this.initiallyChecked: false,
     this.style: SmartBoolFieldStyle.checkbox,
@@ -67,7 +67,7 @@ class SmartBoolField extends StatelessWidget {
           ],
         );
       },
-      validator: validator == null ? null : (value) => validator(value as bool),
+      validator: validator == null ? null : (value) => validator!(value as bool),
       initialValue: initiallyChecked,
     );
   }

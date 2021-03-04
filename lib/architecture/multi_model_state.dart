@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:meta/meta.dart';
-
 abstract class MultiModelState<M> extends Equatable {
   @override
   List<Object> get props => [];
@@ -25,7 +23,7 @@ class MultiModelLoadedState<M> extends MultiModelState<M> {
   /// The loaded models.
   List<M> get models => idToModelMap.values.toList();
 
-  MultiModelLoadedState({@required this.idToModelMap, @required this.isLoading, @required this.canLoadMore});
+  MultiModelLoadedState({required this.idToModelMap, required this.isLoading, required this.canLoadMore});
 
   @override
   List<Object> get props => [idToModelMap, isLoading, canLoadMore];

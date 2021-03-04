@@ -6,7 +6,7 @@ import 'popups/input_popup.dart';
 /// Helper class that shows popups.
 class Popup {
   /// Shows a dialog with a message.
-  static Future<void> message(BuildContext context, {@required String title, @required String message, String okText: 'OK'}) async {
+  static Future<void> message(BuildContext context, {required String title, required String message, String okText: 'OK'}) async {
     await showDialog(
         context: context,
         barrierDismissible: true,
@@ -27,7 +27,7 @@ class Popup {
   }
 
   /// Shows a dialog that asks a yes/no question. Cancelling the dialog counts as a no.
-  static Future<bool> yesNo(BuildContext context, {@required String title, @required String message, String noMsg: "NEVERMIND", String yesMsg: "OK"}) async {
+  static Future<bool> yesNo(BuildContext context, {required String title, required String message, String noMsg: "NEVERMIND", String yesMsg: "OK"}) async {
     var output = await showDialog(
         context: context,
         barrierDismissible: true,
@@ -57,11 +57,11 @@ class Popup {
   /// Shows a dialog that asks for a text input.
   /// Returns null if the dialog was cancelled.
   /// Returns a string if input was submitted. Empty text if no input was added, but still submitted.
-  static Future<String> input(
+  static Future<String?> input(
     BuildContext context, {
-    @required String title,
-    @required String message,
-    @required String label,
+    required String title,
+    required String message,
+    required String label,
     String initialText: '',
     String cancelMsg: 'NEVERMIND',
     String submitMsg: 'OK',
@@ -85,13 +85,13 @@ class Popup {
   }
 
   /// Show a popup so that the user can change the color.
-  static Future<Color> chooseColor(BuildContext context, {Color initialColor}) async {
+  static Future<Color?> chooseColor(BuildContext context, {required Color initialColor}) async {
     var output = await showDialog<Color>(
         context: context,
         barrierDismissible: true,
         builder: (bc) {
           return ColorPickerPopup(initialColor: initialColor);
         });
-    return output == null ? false : output;
+    return output;
   }
 }

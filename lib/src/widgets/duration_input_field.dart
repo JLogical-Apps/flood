@@ -9,9 +9,9 @@ class DurationInputField extends StatelessWidget {
   final Duration initialDuration;
 
   /// Function to call when the duration is changed.
-  final void Function(Duration) onDurationChange;
+  final void Function(Duration)? onDurationChange;
 
-  const DurationInputField({@required this.initialDuration, this.onDurationChange});
+  const DurationInputField({required this.initialDuration, this.onDurationChange});
 
   @override
   Widget build(BuildContext context) {

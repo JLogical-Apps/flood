@@ -11,13 +11,13 @@ class SmartTextField extends StatelessWidget {
   final String name;
 
   /// The label of the field.
-  final String label;
+  final String? label;
 
   /// The initial text of the field.
   final String initialText;
 
   /// The validator of the text field.
-  final Validator<String> validator;
+  final Validator<String>? validator;
 
   /// The keyboard type to show.
   final TextInputType keyboardType;
@@ -32,11 +32,11 @@ class SmartTextField extends StatelessWidget {
   final bool isEnabled;
 
   /// The line color to use. If null, then uses primaryColor.
-  final Color lineColor;
+  final Color? lineColor;
 
   const SmartTextField({
-    Key key,
-    @required this.name,
+    Key? key,
+    required this.name,
     this.label,
     this.initialText: '',
     this.validator,
@@ -64,7 +64,7 @@ class SmartTextField extends StatelessWidget {
           lineColor: lineColor,
         );
       },
-      validator: validator == null ? null : (value) => validator(value as String),
+      validator: validator == null ? null : (value) => validator?.call((value as String?) ?? ''),
       initialValue: initialText,
     );
   }

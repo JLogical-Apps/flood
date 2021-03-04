@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 /// Text field with additional functionality.
 class InputField extends StatefulWidget {
   /// The controller to use with the field. If [null], a controller is created.
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   /// The label of the input field.
-  final String label;
+  final String? label;
 
   /// The initial text of the input field.
   final String initialText;
@@ -29,35 +29,35 @@ class InputField extends StatefulWidget {
   final bool readonly;
 
   /// The line color of the input field. If null, uses a default theme.
-  final Color lineColor;
+  final Color? lineColor;
 
   /// The keyboard type of the text field.
   final TextInputType keyboardType;
 
   /// Function to call when the text field is submitted.
-  final void Function(String text) onSubmit;
+  final void Function(String text)? onSubmit;
 
   /// Function to call when the text changes.
-  final void Function(String text) onChange;
+  final void Function(String text)? onChange;
 
   /// Function to call to validate the text in the text field.
-  final String Function(String text) validator;
+  final String? Function(String text)? validator;
 
   /// Error text to show.
-  final String errorText;
+  final String? errorText;
 
   const InputField({
-    Key key,
+    Key? key,
     this.controller,
     this.label,
-    this.initialText,
+    this.initialText = '',
     this.maxLength: 0,
     this.maxLines: 1,
     this.obscureText: false,
     this.readonly: false,
     this.enabled: true,
     this.lineColor,
-    this.keyboardType,
+    this.keyboardType = TextInputType.text,
     this.onSubmit,
     this.onChange,
     this.validator,
@@ -69,13 +69,13 @@ class InputField extends StatefulWidget {
 }
 
 class _InputFieldState extends State<InputField> {
-  TextEditingController controller;
+  late TextEditingController controller;
 
   @override
   void initState() {
     super.initState();
     controller = widget.controller ?? TextEditingController();
-    controller.text = widget.initialText ?? '';
+    controller.text = widget.initialText;
   }
 
   @override
@@ -87,7 +87,7 @@ class _InputFieldState extends State<InputField> {
         inputFormatters: [],
         readOnly: widget.readonly,
         controller: controller,
-        maxLength: widget.maxLength == 0 || widget.controller.text.length < widget.maxLength - 10 ? null : widget.maxLength,
+        maxLength: widget.maxLength == 0 || controller.text.length < widget.maxLength - 10 ? null : widget.maxLength,
         cursorColor: widget.lineColor ?? Colors.black,
         obscureText: widget.obscureText,
         style: TextStyle(
@@ -98,9 +98,11 @@ class _InputFieldState extends State<InputField> {
           hintStyle: TextStyle(
             color: widget.lineColor ?? Theme.of(context).primaryColor,
           ),
-          labelStyle: widget.lineColor == null ? null : TextStyle(
-            color: widget.lineColor,
-          ),
+          labelStyle: widget.lineColor == null
+              ? null
+              : TextStyle(
+                  color: widget.lineColor,
+                ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: widget.lineColor ?? Colors.black),
@@ -116,9 +118,9 @@ class _InputFieldState extends State<InputField> {
         onFieldSubmitted: widget.onSubmit,
         onChanged: (s) {
           setState(() {});
-          widget.onChange(s);
+          widget.onChange?.call(s);
         },
-        validator: widget.validator,
+        validator: (s) => widget.validator?.call(s ?? ''),
       ),
     );
   }

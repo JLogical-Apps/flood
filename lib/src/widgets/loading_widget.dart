@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// A centered loading widget.
 class LoadingWidget extends StatelessWidget {
   /// The color of the spinner.
-  final Color color;
+  final Color? color;
 
   const LoadingWidget({this.color});
 

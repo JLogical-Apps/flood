@@ -13,10 +13,10 @@ class ModelLoadingState<T> extends ModelState<T> {}
 class ModelLoadedState<T> extends ModelState<T> {
   final T model;
 
-  const ModelLoadedState({@required this.model});
+  const ModelLoadedState({required this.model});
 
   @override
-  List<Object> get props => [model];
+  List<Object> get props => [model ?? Never];
 }
 
 class ModelErrorState<T> extends ModelState<T> {

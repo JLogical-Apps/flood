@@ -6,7 +6,7 @@ import 'format.dart';
 /// Holds some useful validation functions.
 class Validators {
   /// Validates the given [text] by the given [minLength].
-  static String minLength(String text, {@required int minLength, @required String onEmpty, @required String onShortLength}) {
+  static String? minLength(String text, {required int minLength, required String onEmpty, required String onShortLength}) {
     text = text.trim();
     if (text.isEmpty) return onEmpty;
     if (text.length < minLength) return onShortLength;
@@ -15,7 +15,7 @@ class Validators {
   }
 
   /// Validates the given [text] by it being not empty.
-  static String notEmpty(String text, {@required String onEmpty}) {
+  static String? notEmpty(String text, {required String onEmpty}) {
     text = text.trim();
     if (text.isEmpty) return onEmpty;
 
@@ -23,8 +23,8 @@ class Validators {
   }
 
   /// Validates whether the text can be parsed to a double.
-  static String isDouble(String text, {@required String onInvalidParse, bool cleanCurrency: true, bool cleanCommas: true}) {
-    double parse = text.tryParseDoubleAfterClean(cleanCommas: cleanCommas, cleanCurrency: cleanCurrency);
+  static String? isDouble(String text, {required String onInvalidParse, bool cleanCurrency: true, bool cleanCommas: true}) {
+    double? parse = text.tryParseDoubleAfterClean(cleanCommas: cleanCommas, cleanCurrency: cleanCurrency);
     if (parse == null) {
       return onInvalidParse;
     }
@@ -33,8 +33,8 @@ class Validators {
   }
 
   /// Validates whether the text can be parsed to an int.
-  static String isInt(String text, {@required String onInvalidParse, bool cleanCurrency: true, bool cleanCommas: true}) {
-    int parse = text.tryParseIntAfterClean(cleanCommas: cleanCommas, cleanCurrency: cleanCurrency);
+  static String? isInt(String text, {required String onInvalidParse, bool cleanCurrency: true, bool cleanCommas: true}) {
+    int? parse = text.tryParseIntAfterClean(cleanCommas: cleanCommas, cleanCurrency: cleanCurrency);
     if (parse == null) {
       return onInvalidParse;
     }
@@ -43,7 +43,7 @@ class Validators {
   }
 
   /// Validates the given [text] as an email.
-  static String email(String text, {@required String onEmpty, @required String onInvalid}) {
+  static String? email(String text, {required String onEmpty, required String onInvalid}) {
     text = text.trim();
     if (text.isEmpty) return onEmpty;
 
@@ -54,27 +54,27 @@ class Validators {
   }
 
   /// Validates the given [text] as a password.
-  static String password(String text, {@required String onEmpty, @required String onShortLength}) {
+  static String? password(String text, {required String onEmpty, required String onShortLength}) {
     if (text.isEmpty) return onEmpty;
     if (text.length < 6) return onShortLength;
     return null;
   }
 
   /// Validates for a confirm password box. Ensures the password and confirm password are the same.
-  static String confirmPassword(String text, {@required String passwordText, @required String onEmpty, @required String onNotSame}) {
+  static String? confirmPassword(String text, {required String passwordText, required String onEmpty, required String onNotSame}) {
     if (text.isEmpty) return onEmpty;
     if (text != passwordText) return onNotSame;
     return null;
   }
 
   /// Displays an async error message if [error] is not empty.
-  static String asyncError(String error) {
+  static String? asyncError(String? error) {
     if (error == null) return null;
     return error.isEmpty ? null : error;
   }
 
   /// Validates the given [text] as a url.
-  static String url(String text, {@required String onEmpty, @required String onInvalid}) {
+  static String? url(String text, {required String onEmpty, required String onInvalid}) {
     if (text.isEmpty) return onEmpty;
     try {
       var isAbsolute = Uri.parse(text).isAbsolute;
@@ -85,9 +85,9 @@ class Validators {
   }
 
   /// Handles multiple validators.
-  static String multi(String text, {@required List<String Function(String)> validators}) {
+  static String? multi(String text, {required List<String? Function(String)> validators}) {
     for (var validator in validators) {
-      String err = validator(text);
+      String? err = validator(text);
       if (err != null) return err;
     }
     return null;

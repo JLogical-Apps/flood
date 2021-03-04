@@ -7,16 +7,16 @@ import 'package:jlogical_utils/smartform/smart_form.dart';
 part 'smart_form_cubit.freezed.dart';
 part 'smart_form_state.dart';
 
-typedef FutureOr<String> Validator<T>(T value);
+typedef FutureOr<String?> Validator<T>(T value);
 
 class SmartFormCubit extends Cubit<SmartFormState> {
   /// Function to call when the input is accepted.
-  final FutureOr Function(Map<String, dynamic> data) onAccept;
+  final FutureOr Function(Map<String, dynamic> data)? onAccept;
 
   /// The validator to run after all the fields have validated themselves.
-  final PostValidator postValidator;
+  final PostValidator? postValidator;
 
-  SmartFormCubit({@required this.onAccept, @required this.postValidator})
+  SmartFormCubit({required this.onAccept, required this.postValidator})
       : super(SmartFormState(
           nameToValueMap: {},
           nameToErrorMap: {},
@@ -26,19 +26,19 @@ class SmartFormCubit extends Cubit<SmartFormState> {
         ));
 
   /// Changes the value of the field with [name] to [value].
-  void changeValue({String name, dynamic value}) {
+  void changeValue({required String name, required dynamic value}) {
     Map<String, dynamic> newValues = Map<String, dynamic>.of(state.nameToValueMap);
     newValues[name] = value;
     emit(state.copyWith(nameToValueMap: newValues));
   }
 
   /// Returns the value of the field with [name].
-  dynamic getValue(String name) {
+  dynamic? getValue(String name) {
     return state.nameToValueMap[name];
   }
 
   /// Returns the error of the field with [name].
-  String getError(String name) {
+  String? getError(String name) {
     return state.nameToErrorMap[name];
   }
 
@@ -48,10 +48,13 @@ class SmartFormCubit extends Cubit<SmartFormState> {
     Map<String, String> nameToErrorMap = {};
     bool hasError = false;
     for (var entry in state.nameToValidatorMap.entries) {
-      var error = await entry.value(getValue(entry.key));
-      if (error != null) {
-        hasError = true;
-        nameToErrorMap[entry.key] = error;
+      var validator = entry.value;
+      if (validator != null) {
+        var error = await validator(getValue(entry.key));
+        if (error != null) {
+          hasError = true;
+          nameToErrorMap[entry.key] = error;
+        }
       }
     }
 
@@ -64,15 +67,16 @@ class SmartFormCubit extends Cubit<SmartFormState> {
       return false;
     }
 
-    nameToErrorMap = await postValidator?.call(state.nameToValueMap);
-    hasError = nameToErrorMap != null && nameToErrorMap.isNotEmpty;
+    if (postValidator != null) nameToErrorMap = await postValidator!.call(state.nameToValueMap);
+
+    hasError = nameToErrorMap.isNotEmpty;
 
     if (!hasError) {
       await onAccept?.call(state.nameToValueMap);
     }
 
     emit(state.copyWith(
-      nameToErrorMap: nameToErrorMap ?? {},
+      nameToErrorMap: nameToErrorMap,
       isLoading: false,
     ));
 
@@ -85,18 +89,18 @@ class SmartFormCubit extends Cubit<SmartFormState> {
   }
 
   /// Sets the validator for the field with [name] to [validator].
-  void setValidator({String name, Validator validator}) {
+  void setValidator({required String name, required Validator? validator}) {
     if (state.nameToValidatorMap[name] == validator) {
       return;
     }
 
-    Map<String, Validator> newValidators = Map<String, Validator>.of(state.nameToValidatorMap);
+    Map<String, Validator?> newValidators = Map<String, Validator?>.of(state.nameToValidatorMap);
     newValidators[name] = validator;
     emit(state.copyWith(nameToValidatorMap: newValidators));
   }
 
   /// Sets the initial value for the field with [name] to [validator].
-  void setInitialValue({String name, dynamic value}) {
+  void setInitialValue({required String name, required dynamic value}) {
     if (state.nameToInitialValueMap.containsKey(name)) {
       return;
     }

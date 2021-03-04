@@ -6,10 +6,10 @@ class CategoryCard extends StatelessWidget {
   final Widget category;
 
   /// The leading icon to display.
-  final Widget leading;
+  final Widget? leading;
 
   /// The trailing widget to display. Will replace the expansion widget if [canCollapse] is true.
-  final Widget trailing;
+  final Widget? trailing;
 
   /// The children inside this category.
   final List<Widget> children;
@@ -21,11 +21,11 @@ class CategoryCard extends StatelessWidget {
   final bool initiallyCollapsed;
 
   const CategoryCard({
-    Key key,
-    @required this.category,
-    @required this.leading,
+    Key? key,
+    required this.category,
+    required this.leading,
     this.trailing,
-    @required this.children,
+    required this.children,
     this.canCollapse: false,
     this.initiallyCollapsed: true,
   }) : super(key: key);
@@ -38,15 +38,17 @@ class CategoryCard extends StatelessWidget {
           if (canCollapse)
             ExpansionTile(
               title: DefaultTextStyle(
-                style: Theme.of(context).textTheme.subtitle1,
+                style: Theme.of(context).textTheme.subtitle1!,
                 child: category,
               ),
-              leading: IconTheme(
-                child: leading,
-                data: IconThemeData(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
+              leading: leading == null
+                  ? null
+                  : IconTheme(
+                      child: leading!,
+                      data: IconThemeData(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
               trailing: trailing,
               children: children,
               initiallyExpanded: !initiallyCollapsed,
@@ -54,15 +56,17 @@ class CategoryCard extends StatelessWidget {
           if (!canCollapse) ...[
             ListTile(
               title: DefaultTextStyle(
-                style: Theme.of(context).textTheme.subtitle1,
+                style: Theme.of(context).textTheme.subtitle1!,
                 child: category,
               ),
-              leading: IconTheme(
-                child: leading,
-                data: IconThemeData(
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
+              leading: leading == null
+                  ? null
+                  : IconTheme(
+                      child: leading!,
+                      data: IconThemeData(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
               trailing: trailing,
             ),
             ...children,

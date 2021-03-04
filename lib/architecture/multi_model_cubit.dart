@@ -11,16 +11,16 @@ abstract class MultiModelCubit<M> extends Cubit<MultiModelState<M>> {
 
   /// The command to run when [loadNext] is run.
   /// If [restart], restarts the query.
-  Future<void> Function({bool restart}) _referenceCommand;
+  Future<void> Function({bool restart})? _referenceCommand;
 
   MultiModelCubit() : super(MultiModelInitialState<M>());
 
   /// Loads models using a query list response.
   /// If [refresh], restarts the query.
   /// If [amount] is null, uses the initial amount.
-  Future<void> loadModels(Future<QueryListResponse<Pair<String, M>, dynamic>> queryListResponse(), {bool restart}) async {
+  Future<void> loadModels(Future<QueryListResponse<Pair<String, M>, dynamic>> queryListResponse(), {bool restart = false}) async {
     if (restart) _cursor = null;
-    _referenceCommand = ({bool restart}) async => loadModels(
+    _referenceCommand = ({bool restart = false}) async => loadModels(
           queryListResponse,
           restart: restart,
         );
@@ -32,20 +32,22 @@ abstract class MultiModelCubit<M> extends Cubit<MultiModelState<M>> {
 
   /// Loads the next models from the previous request.
   Future<void> loadNext() async {
-    if (_referenceCommand == null) {
+    var __referenceCommand = _referenceCommand;
+    if (__referenceCommand == null) {
       print('Null reference command in MultiModelCubit');
       return;
     }
-    await _referenceCommand(restart: false);
+    await __referenceCommand(restart: false);
   }
 
   /// Restarts the query.
   Future<void> restart() async {
-    if (_referenceCommand == null) {
+    var __referenceCommand = _referenceCommand;
+    if (__referenceCommand == null) {
       print('Null reference command in MultiModelCubit');
       return;
     }
-    await _referenceCommand(restart: true);
+    await __referenceCommand(restart: true);
   }
 
   Future<void> _loadModels(Future<QueryListResponse<Pair<String, M>, dynamic>> queryListResponse(), bool refresh) async {

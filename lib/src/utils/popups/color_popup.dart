@@ -4,14 +4,14 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 class ColorPickerPopup extends StatefulWidget {
   final Color initialColor;
 
-  const ColorPickerPopup({@required this.initialColor});
+  const ColorPickerPopup({required this.initialColor});
 
   @override
   _ColorPickerPopupState createState() => _ColorPickerPopupState();
 }
 
 class _ColorPickerPopupState extends State<ColorPickerPopup> {
-  Color currColor;
+  late Color currColor;
 
   @override
   void initState() {

@@ -9,7 +9,7 @@ class StoreProvider<T> extends StatelessWidget {
   /// Builder that takes in the store.
   final Widget Function(BuildContext context, T store) builder;
 
-  const StoreProvider({@required this.create, @required this.builder});
+  const StoreProvider({required this.create, required this.builder});
 
   @override
   Widget build(BuildContext context) {

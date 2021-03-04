@@ -14,11 +14,11 @@ class ClickableCard extends StatelessWidget {
   final double elevation;
 
   /// The margin of the card.
-  final EdgeInsets margin;
+  final EdgeInsets? margin;
 
   const ClickableCard({
-    @required this.child,
-    @required this.onTap,
+    required this.child,
+    required this.onTap,
     this.color: Colors.white,
     this.elevation: 0,
     this.margin,
@@ -30,7 +30,7 @@ class ClickableCard extends StatelessWidget {
       color: color,
       margin: margin,
       child: InkWell(
-        borderRadius: (Theme.of(context).cardTheme.shape as RoundedRectangleBorder)?.borderRadius ?? BorderRadius.circular(1),
+        borderRadius: ((Theme.of(context).cardTheme.shape as RoundedRectangleBorder?)?.borderRadius as BorderRadius?) ?? BorderRadius.circular(1),
         child: child,
         onTap: onTap,
       ),

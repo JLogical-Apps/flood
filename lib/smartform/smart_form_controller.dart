@@ -2,7 +2,7 @@ import 'cubit/smart_form_cubit.dart';
 
 /// Optional controller for a smart form.
 class SmartFormController {
-  SmartFormCubit _smartFormCubit;
+  late SmartFormCubit _smartFormCubit;
 
   SmartFormController();
 
@@ -16,11 +16,11 @@ class SmartFormController {
 
   /// Validates the attached SmartForm. Returns whether the validation was successful.
   Future<bool> validate() async {
-    return _smartFormCubit?.validate();
+    return _smartFormCubit.validate();
   }
 
   /// Returns the value of the field with [name].
   dynamic getValue(String name) {
-    return _smartFormCubit?.getValue(name);
+    return _smartFormCubit.getValue(name);
   }
 }

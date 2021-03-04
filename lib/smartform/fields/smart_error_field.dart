@@ -5,7 +5,7 @@ import 'package:jlogical_utils/smartform/fields/smart_field.dart';
 class SmartErrorField extends StatelessWidget {
   final String name;
 
-  const SmartErrorField({@required this.name});
+  const SmartErrorField({required this.name});
 
   @override
   Widget build(BuildContext context) {

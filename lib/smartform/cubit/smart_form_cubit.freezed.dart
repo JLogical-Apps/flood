@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
 part of 'smart_form_cubit.dart';
 
@@ -9,17 +9,19 @@ part of 'smart_form_cubit.dart';
 
 T _$identity<T>(T value) => value;
 
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+
 /// @nodoc
 class _$SmartFormStateTearOff {
   const _$SmartFormStateTearOff();
 
-// ignore: unused_element
   _SmartFormState call(
-      {@required Map<String, dynamic> nameToValueMap,
-      @required Map<String, dynamic> nameToInitialValueMap,
-      @required Map<String, String> nameToErrorMap,
-      @required Map<String, Validator> nameToValidatorMap,
-      @required bool isLoading}) {
+      {required Map<String, dynamic> nameToValueMap,
+      required Map<String, dynamic> nameToInitialValueMap,
+      required Map<String, String> nameToErrorMap,
+      required Map<String, Validator?> nameToValidatorMap,
+      required bool isLoading}) {
     return _SmartFormState(
       nameToValueMap: nameToValueMap,
       nameToInitialValueMap: nameToInitialValueMap,
@@ -31,28 +33,30 @@ class _$SmartFormStateTearOff {
 }
 
 /// @nodoc
-// ignore: unused_element
 const $SmartFormState = _$SmartFormStateTearOff();
 
 /// @nodoc
 mixin _$SmartFormState {
   /// Maps the [name] of a field to its value.
-  Map<String, dynamic> get nameToValueMap;
+  Map<String, dynamic> get nameToValueMap => throw _privateConstructorUsedError;
 
   /// Maps the [name] of a field to its initial value.
-  Map<String, dynamic> get nameToInitialValueMap;
+  Map<String, dynamic> get nameToInitialValueMap =>
+      throw _privateConstructorUsedError;
 
   /// Maps the [name] of a field to its error.
-  Map<String, String> get nameToErrorMap;
+  Map<String, String> get nameToErrorMap => throw _privateConstructorUsedError;
 
   /// Maps the [name] of a field to its validator.
-  Map<String, Validator> get nameToValidatorMap;
+  Map<String, Validator?> get nameToValidatorMap =>
+      throw _privateConstructorUsedError;
 
   /// Whether the form is loading.
-  bool get isLoading;
+  bool get isLoading => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $SmartFormStateCopyWith<SmartFormState> get copyWith;
+  $SmartFormStateCopyWith<SmartFormState> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -64,7 +68,7 @@ abstract class $SmartFormStateCopyWith<$Res> {
       {Map<String, dynamic> nameToValueMap,
       Map<String, dynamic> nameToInitialValueMap,
       Map<String, String> nameToErrorMap,
-      Map<String, Validator> nameToValidatorMap,
+      Map<String, Validator?> nameToValidatorMap,
       bool isLoading});
 }
 
@@ -79,11 +83,11 @@ class _$SmartFormStateCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object nameToValueMap = freezed,
-    Object nameToInitialValueMap = freezed,
-    Object nameToErrorMap = freezed,
-    Object nameToValidatorMap = freezed,
-    Object isLoading = freezed,
+    Object? nameToValueMap = freezed,
+    Object? nameToInitialValueMap = freezed,
+    Object? nameToErrorMap = freezed,
+    Object? nameToValidatorMap = freezed,
+    Object? isLoading = freezed,
   }) {
     return _then(_value.copyWith(
       nameToValueMap: nameToValueMap == freezed
@@ -97,7 +101,7 @@ class _$SmartFormStateCopyWithImpl<$Res>
           : nameToErrorMap as Map<String, String>,
       nameToValidatorMap: nameToValidatorMap == freezed
           ? _value.nameToValidatorMap
-          : nameToValidatorMap as Map<String, Validator>,
+          : nameToValidatorMap as Map<String, Validator?>,
       isLoading: isLoading == freezed ? _value.isLoading : isLoading as bool,
     ));
   }
@@ -114,7 +118,7 @@ abstract class _$SmartFormStateCopyWith<$Res>
       {Map<String, dynamic> nameToValueMap,
       Map<String, dynamic> nameToInitialValueMap,
       Map<String, String> nameToErrorMap,
-      Map<String, Validator> nameToValidatorMap,
+      Map<String, Validator?> nameToValidatorMap,
       bool isLoading});
 }
 
@@ -131,11 +135,11 @@ class __$SmartFormStateCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object nameToValueMap = freezed,
-    Object nameToInitialValueMap = freezed,
-    Object nameToErrorMap = freezed,
-    Object nameToValidatorMap = freezed,
-    Object isLoading = freezed,
+    Object? nameToValueMap = freezed,
+    Object? nameToInitialValueMap = freezed,
+    Object? nameToErrorMap = freezed,
+    Object? nameToValidatorMap = freezed,
+    Object? isLoading = freezed,
   }) {
     return _then(_SmartFormState(
       nameToValueMap: nameToValueMap == freezed
@@ -149,7 +153,7 @@ class __$SmartFormStateCopyWithImpl<$Res>
           : nameToErrorMap as Map<String, String>,
       nameToValidatorMap: nameToValidatorMap == freezed
           ? _value.nameToValidatorMap
-          : nameToValidatorMap as Map<String, Validator>,
+          : nameToValidatorMap as Map<String, Validator?>,
       isLoading: isLoading == freezed ? _value.isLoading : isLoading as bool,
     ));
   }
@@ -158,16 +162,11 @@ class __$SmartFormStateCopyWithImpl<$Res>
 /// @nodoc
 class _$_SmartFormState implements _SmartFormState {
   const _$_SmartFormState(
-      {@required this.nameToValueMap,
-      @required this.nameToInitialValueMap,
-      @required this.nameToErrorMap,
-      @required this.nameToValidatorMap,
-      @required this.isLoading})
-      : assert(nameToValueMap != null),
-        assert(nameToInitialValueMap != null),
-        assert(nameToErrorMap != null),
-        assert(nameToValidatorMap != null),
-        assert(isLoading != null);
+      {required this.nameToValueMap,
+      required this.nameToInitialValueMap,
+      required this.nameToErrorMap,
+      required this.nameToValidatorMap,
+      required this.isLoading});
 
   @override
 
@@ -184,7 +183,7 @@ class _$_SmartFormState implements _SmartFormState {
   @override
 
   /// Maps the [name] of a field to its validator.
-  final Map<String, Validator> nameToValidatorMap;
+  final Map<String, Validator?> nameToValidatorMap;
   @override
 
   /// Whether the form is loading.
@@ -233,33 +232,36 @@ class _$_SmartFormState implements _SmartFormState {
 
 abstract class _SmartFormState implements SmartFormState {
   const factory _SmartFormState(
-      {@required Map<String, dynamic> nameToValueMap,
-      @required Map<String, dynamic> nameToInitialValueMap,
-      @required Map<String, String> nameToErrorMap,
-      @required Map<String, Validator> nameToValidatorMap,
-      @required bool isLoading}) = _$_SmartFormState;
+      {required Map<String, dynamic> nameToValueMap,
+      required Map<String, dynamic> nameToInitialValueMap,
+      required Map<String, String> nameToErrorMap,
+      required Map<String, Validator?> nameToValidatorMap,
+      required bool isLoading}) = _$_SmartFormState;
 
   @override
 
   /// Maps the [name] of a field to its value.
-  Map<String, dynamic> get nameToValueMap;
+  Map<String, dynamic> get nameToValueMap => throw _privateConstructorUsedError;
   @override
 
   /// Maps the [name] of a field to its initial value.
-  Map<String, dynamic> get nameToInitialValueMap;
+  Map<String, dynamic> get nameToInitialValueMap =>
+      throw _privateConstructorUsedError;
   @override
 
   /// Maps the [name] of a field to its error.
-  Map<String, String> get nameToErrorMap;
+  Map<String, String> get nameToErrorMap => throw _privateConstructorUsedError;
   @override
 
   /// Maps the [name] of a field to its validator.
-  Map<String, Validator> get nameToValidatorMap;
+  Map<String, Validator?> get nameToValidatorMap =>
+      throw _privateConstructorUsedError;
   @override
 
   /// Whether the form is loading.
-  bool get isLoading;
+  bool get isLoading => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$SmartFormStateCopyWith<_SmartFormState> get copyWith;
+  _$SmartFormStateCopyWith<_SmartFormState> get copyWith =>
+      throw _privateConstructorUsedError;
 }

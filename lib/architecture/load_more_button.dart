@@ -9,7 +9,7 @@ class LoadMoreButton extends StatelessWidget {
   final MultiModelCubit cubit;
   final MultiModelLoadedState state;
 
-  const LoadMoreButton({@required this.cubit, @required this.state}) : super();
+  const LoadMoreButton({required this.cubit, required this.state}) : super();
 
   @override
   Widget build(BuildContext context) {

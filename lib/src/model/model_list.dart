@@ -32,7 +32,7 @@ abstract class ModelListBase<T> with Store {
   FutureOr<Map<String, T>> Function() loader;
 
   /// Completer so that multiple [load] calls will wait for the initial [load] to complete.
-  Completer _completer;
+  Completer? _completer;
 
   /// Passed in converter that converts entities with ids into a model.
   Model<T> Function(String id, T entity) converter;
@@ -46,14 +46,17 @@ abstract class ModelListBase<T> with Store {
   /// Whether the model contains an error.
   bool get isError => modelsMap is FutureValueError;
 
-  ModelListBase({this.loader, this.converter, Map<String, Model<T>> initialModels}) : modelsMap = initialModels == null ? FutureValue.initial() : FutureValue.loaded(value: initialModels);
+  ModelListBase({required this.loader, required this.converter, Map<String, Model<T>>? initialModels})
+      : modelsMap = initialModels == null ? FutureValue.initial() : FutureValue.loaded(value: initialModels);
 
   /// Loads the models using the loader.
   @action
   Future<void> load() async {
     // If the model is currently loading something, just wait for the previous load to finish.
-    if (_completer != null && !_completer.isCompleted) {
-      return await _completer.future;
+    var completer = _completer;
+    if (completer != null && !completer.isCompleted) {
+      await completer.future;
+      return;
     }
 
     _completer = Completer();
@@ -68,40 +71,40 @@ abstract class ModelListBase<T> with Store {
     });
 
     // Once the model completes loading, notify other [load] calls that the load has finished.
-    _completer.complete();
+    _completer!.complete();
     _completer = null;
   }
 
   /// Returns the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
-  Map<String, Model<T>> get({Map<String, Model<T>> orElse()}) => modelsMap.maybeWhen(
+  Map<String, Model<T>>? get({Map<String, Model<T>>? orElse()?}) => modelsMap.maybeWhen(
         loaded: (data) => data,
         orElse: () => orElse != null ? orElse() : throw Exception('get() called without loaded state in ModelList!'),
       );
 
   /// Returns the ids of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
-  List<String> getIDs({List<String> orElse()}) => get(orElse: () => null)?.keys?.toList() ?? orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!');
+  List<String>? getIDs({List<String>? orElse()?}) => get(orElse: () => null)?.keys.toList() ?? (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
 
   /// Returns the models of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
-  List<Model<T>> getModels({List<Model<T>> orElse()}) =>
-      get(orElse: () => null)?.keys?.toList() ?? orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!');
+  List<Model<T>>? getModels({List<Model<T>>? orElse()?}) =>
+      get(orElse: () => null)?.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
 
   /// Shorthand to getting the model's value.
-  Map<String, Model<T>> call({Map<String, Model<T>> orElse()}) => get(orElse: orElse);
+  Map<String, Model<T>>? call({Map<String, Model<T>>? orElse()?}) => get(orElse: orElse);
 
   /// Waits for the model to finish loading and returns the loaded value of the model, or calls [onError] if an error occurred.
-  Future<Map<String, Model<T>>> complete({Map<String, Model<T>> onError(dynamic obj)}) async {
+  Future<Map<String, Model<T>>?> complete({Map<String, Model<T>>? onError(dynamic obj)?}) async {
     // If still loading, wait for the completer to complete.
     if (isInitial) {
-      await _completer.future;
+      await _completer!.future;
     }
 
     return modelsMap.when(
       initial: () => throw Exception('Model is in initial state after being loaded.'),
       loaded: (data) => data,
-      error: (error) => onError(error),
+      error: (error) => onError?.call(error),
     );
   }
 }
