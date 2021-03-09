@@ -97,16 +97,8 @@ class CustomTheme {
           fontSize: 18,
         ),
       ),
-      primaryColorBrightness: primaryColor == null
-          ? Brightness.dark
-          : useWhiteForeground(primaryColor, bias: 1.5)
-              ? Brightness.dark
-              : Brightness.light,
-      accentColorBrightness: accentColor == null
-          ? Brightness.dark
-          : useWhiteForeground(accentColor, bias: 1.5)
-              ? Brightness.dark
-              : Brightness.light,
+      primaryColorBrightness: useWhiteForeground(primaryColor, bias: 1.5) ? Brightness.dark : Brightness.light,
+      accentColorBrightness: useWhiteForeground(accentColor, bias: 1.5) ? Brightness.dark : Brightness.light,
     );
   }
 
@@ -197,16 +189,8 @@ class CustomTheme {
           fontSize: 18,
         ),
       ),
-      primaryColorBrightness: primaryColor == null
-          ? Brightness.dark
-          : useWhiteForeground(primaryColor, bias: 1.5)
-              ? Brightness.dark
-              : Brightness.light,
-      accentColorBrightness: accentColor == null
-          ? Brightness.dark
-          : useWhiteForeground(accentColor, bias: 1.5)
-              ? Brightness.dark
-              : Brightness.light,
+      primaryColorBrightness: useWhiteForeground(primaryColor, bias: 1.5) ? Brightness.dark : Brightness.light,
+      accentColorBrightness: useWhiteForeground(accentColor, bias: 1.5) ? Brightness.dark : Brightness.light,
     );
     return theme.copyWith(
         appBarTheme: AppBarTheme(

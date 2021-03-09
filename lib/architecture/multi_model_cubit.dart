@@ -4,7 +4,7 @@ import 'package:jlogical_utils/architecture/query_list_response.dart';
 import '../jlogical_utils.dart';
 import 'multi_model_state.dart';
 
-abstract class MultiModelCubit<M> extends Cubit<MultiModelState<M>> {
+abstract class MultiModelCubit<M extends Object> extends Cubit<MultiModelState<M>> {
   /// The cursor for the last request.
   dynamic _cursor;
   dynamic get cursor => _cursor;

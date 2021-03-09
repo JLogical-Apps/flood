@@ -1,12 +1,14 @@
+import 'dart:ffi';
+
 import 'package:equatable/equatable.dart';
 
 /// Stores two elements.
-class Pair<A, B> extends Equatable {
+class Pair<A extends Object, B extends Object> extends Equatable {
   final A first;
   final B second;
 
   const Pair(this.first, this.second);
 
   @override
-  List<Object> get props => [first ?? Never, second ?? Never];
+  List<Object> get props => [first, second];
 }

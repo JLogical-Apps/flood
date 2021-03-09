@@ -5,7 +5,7 @@ import '../jlogical_utils.dart';
 import 'multi_model_cubit.dart';
 import 'multi_model_state.dart';
 
-class MultiModelCubitBuilder<C extends MultiModelCubit<M>, M> extends StatelessWidget {
+class MultiModelCubitBuilder<C extends MultiModelCubit<M>, M extends Object> extends StatelessWidget {
   /// The cubit to build. If null, uses the context to find it.
   final C? cubit;
 
