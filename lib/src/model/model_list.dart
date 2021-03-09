@@ -77,22 +77,32 @@ abstract class ModelListBase<T> with Store {
 
   /// Returns the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
-  Map<String, Model<T>>? get({Map<String, Model<T>>? orElse()?}) => modelsMap.maybeWhen(
+  Map<String, Model<T>> get({Map<String, Model<T>> orElse()?}) => modelsMap.maybeWhen(
         loaded: (data) => data,
         orElse: () => orElse != null ? orElse() : throw Exception('get() called without loaded state in ModelList!'),
       );
 
+  /// Returns the loaded value of the model, or returns [null] if not loaded. Calls [orElse] if model is null and [orElse] is not null.
+  Map<String, Model<T>>? getOrNull({Map<String, Model<T>>? orElse()?}) => modelsMap.maybeWhen(
+        loaded: (data) => data,
+        orElse: () => orElse?.call(),
+      );
+
   /// Returns the ids of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
-  List<String>? getIDs({List<String>? orElse()?}) => get(orElse: () => null)?.keys.toList() ?? (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
+  List<String> getIDs({List<String> orElse()?}) => getOrNull(orElse: () => null)?.keys.toList() ?? (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
+
+  /// Returns the ids of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
+  List<String>? getIDsOrNull({List<String>? orElse()?}) => getOrNull(orElse: () => null)?.keys.toList() ?? orElse?.call();
 
   /// Returns the models of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
   List<Model<T>>? getModels({List<Model<T>>? orElse()?}) =>
-      get(orElse: () => null)?.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
+      getOrNull(orElse: () => null)?.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
 
-  /// Shorthand to getting the model's value.
-  Map<String, Model<T>>? call({Map<String, Model<T>>? orElse()?}) => get(orElse: orElse);
+  /// Returns the models of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
+  List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) =>
+      getOrNull(orElse: () => null)?.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
 
   /// Waits for the model to finish loading and returns the loaded value of the model, or calls [onError] if an error occurred.
   Future<Map<String, Model<T>>?> complete({Map<String, Model<T>>? onError(dynamic obj)?}) async {

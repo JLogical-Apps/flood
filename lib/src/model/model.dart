@@ -54,15 +54,20 @@ abstract class ModelBase<T> with Store {
   }
 
   /// Returns the loaded value of the model, or calls [orElse] if not loaded.
-  T? get({T orElse()?}) {
+  T get({T orElse()?}) {
     return value.maybeWhen(
       loaded: (data) => data,
       orElse: () => orElse != null ? orElse() : throw Exception('get() called without loaded state!'),
     );
   }
 
-  /// Shorthand to getting the model's value.
-  T? call({T orElse()?}) => get(orElse: orElse);
+  /// Returns the loaded value of the model or [null] if not loaded. If [orElse] is not null, calls that instead of returning null.
+  T? getOrNull({T? orElse()?}) {
+    return value.maybeWhen(
+      loaded: (data) => data,
+      orElse: () => orElse?.call(),
+    );
+  }
 
   /// Waits for the model to finish loading and returns the loaded value of the model, or calls [onError] if an error occurred.
   Future<T?> complete({T? onError(dynamic obj)?}) async {
