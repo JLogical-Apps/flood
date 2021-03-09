@@ -200,7 +200,10 @@ class _$FutureValueLoadedCopyWithImpl<T, $Res>
     Object? value = freezed,
   }) {
     return _then(FutureValueLoaded<T>(
-      value: value == freezed ? _value.value : value as T,
+      value: value == freezed
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as T,
     ));
   }
 }

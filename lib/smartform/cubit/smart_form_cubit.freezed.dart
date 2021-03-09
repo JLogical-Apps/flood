@@ -92,17 +92,24 @@ class _$SmartFormStateCopyWithImpl<$Res>
     return _then(_value.copyWith(
       nameToValueMap: nameToValueMap == freezed
           ? _value.nameToValueMap
-          : nameToValueMap as Map<String, dynamic>,
+          : nameToValueMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       nameToInitialValueMap: nameToInitialValueMap == freezed
           ? _value.nameToInitialValueMap
-          : nameToInitialValueMap as Map<String, dynamic>,
+          : nameToInitialValueMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       nameToErrorMap: nameToErrorMap == freezed
           ? _value.nameToErrorMap
-          : nameToErrorMap as Map<String, String>,
+          : nameToErrorMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>,
       nameToValidatorMap: nameToValidatorMap == freezed
           ? _value.nameToValidatorMap
-          : nameToValidatorMap as Map<String, Validator?>,
-      isLoading: isLoading == freezed ? _value.isLoading : isLoading as bool,
+          : nameToValidatorMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, Validator?>,
+      isLoading: isLoading == freezed
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -144,17 +151,24 @@ class __$SmartFormStateCopyWithImpl<$Res>
     return _then(_SmartFormState(
       nameToValueMap: nameToValueMap == freezed
           ? _value.nameToValueMap
-          : nameToValueMap as Map<String, dynamic>,
+          : nameToValueMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       nameToInitialValueMap: nameToInitialValueMap == freezed
           ? _value.nameToInitialValueMap
-          : nameToInitialValueMap as Map<String, dynamic>,
+          : nameToInitialValueMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
       nameToErrorMap: nameToErrorMap == freezed
           ? _value.nameToErrorMap
-          : nameToErrorMap as Map<String, String>,
+          : nameToErrorMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>,
       nameToValidatorMap: nameToValidatorMap == freezed
           ? _value.nameToValidatorMap
-          : nameToValidatorMap as Map<String, Validator?>,
-      isLoading: isLoading == freezed ? _value.isLoading : isLoading as bool,
+          : nameToValidatorMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, Validator?>,
+      isLoading: isLoading == freezed
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
