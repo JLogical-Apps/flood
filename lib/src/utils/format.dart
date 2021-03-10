@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 extension NumberFormatUtil on num {
   /// Formats as an int if possible, otherwise as a double.
   String formatIntOrDouble() {
-    final format = this.toInt() == this ? NumberFormat('#,###', 'en_US') : NumberFormat('#,###.0', 'en_US');
+    final format = this.toInt() == this ? NumberFormat('#,##0', 'en_US') : NumberFormat('#,##0.0', 'en_US');
     return format.format(this.toDouble());
   }
 
