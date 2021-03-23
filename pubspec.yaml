@@ -13,39 +13,30 @@ dependencies:
     sdk: flutter
 
   # Presentation
-  flutter_colorpicker: ^0.4.0-nullsafety.0
+  flutter_colorpicker: ^0.4.0
   flutter_picker: ^2.0.0
-  #expandable: ^4.1.4 # NOT NULL SAFE (has pr)
-  expandable:
-    git:
-      url: https://github.com/edufolly/flutter-expandable.git
+  expandable: ^5.0.1
   loading_overlay: ^0.3.0
-  transparent_image: ^2.0.0-nullsafety.0 
+  transparent_image: ^2.0.0
   cached_network_image: ^3.0.0-nullsafety
 
   # Application
-  flutter_bloc: ^7.0.0-nullsafety.4
+  flutter_bloc: ^7.0.0
   equatable: ^2.0.0
-  mobx: ^2.0.0-nullsafety.3
+  mobx: ^2.0.0-nullsafety.5
   provider: ^5.0.0
   url_launcher: ^6.0.2
 
   # Backend
-  freezed_annotation: ^0.14.0
+  freezed_annotation: ^0.14.1
   intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  build_runner: ^1.11.5 # NOT NULL SAFE # flutter packages pub run build_runner watch
-  freezed: ^0.14.0
-  # mobx_codegen: ^1.1.2 # NOT NULL SAFE
-  mobx_codegen:
-    git:
-      url: https://github.com/mobxjs/mobx.dart.git
-      path: mobx_codegen
-      ref: null_safety
-
+  build_runner: ^1.12.2 # NOT NULL SAFE # flutter packages pub run build_runner watch
+  freezed: ^0.14.1+1
+  mobx_codegen: ^2.0.0-nullsafety.2
 
 flutter:
