@@ -16,7 +16,7 @@ class ModelLoadedState<T> extends ModelState<T> {
   const ModelLoadedState({required this.model});
 
   @override
-  List<Object> get props => [model ?? Never];
+  List<Object> get props => [(model as Object?) ?? Never];
 }
 
 class ModelErrorState<T> extends ModelState<T> {
