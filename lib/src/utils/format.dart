@@ -11,7 +11,11 @@ extension NumberFormatUtil on num {
   /// Formats as a currency.
   String formatCurrency() {
     final format = NumberFormat('#,##0.00', 'en_US');
-    return '\$${format.format(this.toDouble())}';
+    if (this < 0) {
+      return '-\$${format.format(this.toDouble().abs())}';
+    } else {
+      return '\$${format.format(this.toDouble())}';
+    }
   }
 }
 

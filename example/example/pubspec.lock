@@ -21,7 +21,7 @@ packages:
       name: bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.0.0-nullsafety.3"
+    version: "7.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -81,12 +81,10 @@ packages:
   expandable:
     dependency: transitive
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "75ad7cf744be2ef5b40a765a6e43d46e04fd5463"
-      url: "https://github.com/edufolly/flutter-expandable.git"
-    source: git
-    version: "5.0.0"
+      name: expandable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -119,7 +117,7 @@ packages:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.0.0-nullsafety.4"
+    version: "7.0.0"
   flutter_blurhash:
     dependency: transitive
     description:
@@ -140,7 +138,7 @@ packages:
       name: flutter_colorpicker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0-nullsafety.0"
+    version: "0.4.0"
   flutter_picker:
     dependency: transitive
     description:
@@ -164,7 +162,7 @@ packages:
       name: freezed_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.0"
+    version: "0.14.1"
   http:
     dependency: transitive
     description:
@@ -241,7 +239,7 @@ packages:
       name: mobx
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0-nullsafety.3"
+    version: "2.0.0"
   nested:
     dependency: transitive
     description:
@@ -421,7 +419,7 @@ packages:
       name: transparent_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0-nullsafety.0"
+    version: "2.0.0"
   typed_data:
     dependency: transitive
     description:
