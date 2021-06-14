@@ -6,7 +6,7 @@ import 'package:mobx/mobx.dart';
 
 part 'paginated_model_list.g.dart';
 
-class PaginatedModelListStore<T> = PaginatedModelListBase<T> with _$PaginatedModelListStore<T>;
+class PaginatedModelList<T> = PaginatedModelListBase<T> with _$PaginatedModelList<T>;
 
 /// A model list that handles paginating the results.
 /// Use [loadNextPage] to append the next page (if it exists) to the

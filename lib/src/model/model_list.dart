@@ -5,7 +5,7 @@ import 'package:mobx/mobx.dart';
 
 part 'model_list.g.dart';
 
-class ModelListStore<T> = ModelListBase<T> with _$ModelListStore<T>;
+class ModelList<T> = ModelListBase<T> with _$ModelList<T>;
 
 /// Manages a list of models that can be reloaded.
 abstract class ModelListBase<T> extends Model<Map<String, Model<T>>> with Store {
