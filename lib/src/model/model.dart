@@ -9,11 +9,10 @@ part 'model.g.dart';
 class Model<T> extends ModelBase<T> with _$Model<T> {
   Model({required FutureOr<T> loader(), T? initialValue}) : super(loader: loader, initialValue: initialValue);
 
-  factory Model.unloadable({T? initialValue}) => Model(initialValue: initialValue, loader: () => throw Exception('Cannot load unloadable model.'));
+  factory Model.unloadable([T? value]) => Model(initialValue: value, loader: () => throw Exception('Cannot load unloadable model.'));
 }
 
 abstract class ModelBase<T> with Store {
-
   /// The value of the model.
   @observable
   FutureValue<T> value;
