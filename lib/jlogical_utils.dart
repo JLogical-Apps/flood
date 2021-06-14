@@ -3,6 +3,7 @@ export 'src/model/model.dart';
 export 'src/model/model_list.dart';
 export 'src/model/model_store.dart';
 export 'src/model/paginated_model_list.dart';
+export 'src/model/pagination_result.dart';
 export 'src/theme/theme.dart';
 export 'src/utils/format.dart';
 export 'src/utils/pair.dart';
