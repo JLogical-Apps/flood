@@ -56,4 +56,50 @@ abstract class PaginatedModelListBase<T> extends Model<PaginationResult<Model<T>
           this.value = FutureValue.loaded(value: newResult);
         });
   }
+
+  /// Adds a model to the list if it is loaded.
+  /// Throws an exception if not loaded.
+  void addModel(String id, Model<T> model) {
+    var page = get();
+    var results = {
+      ...page.results,
+      ...{id: model}
+    };
+    page = PaginationResult(
+      results: results,
+      nextPageGetter: page.nextPageGetter,
+    );
+    setLoaded(page);
+  }
+
+  /// Removes the model with the given [id].
+  /// Throws an exception if not loaded.
+  void removeModel(String id) {
+    var page = get();
+
+    var results = Map.of(page.results);
+    results.remove(id);
+
+    page = PaginationResult(
+      results: results,
+      nextPageGetter: page.nextPageGetter,
+    );
+    setLoaded(page);
+  }
+
+  /// Sets the model with the [id] to [model].
+  /// Throws an exception if not loaded.
+  void setModel(String id, Model<T> model) {
+    var page = get();
+
+    var results = Map.of(page.results);
+    results[id] = model;
+
+    page = PaginationResult(
+      results: results,
+      nextPageGetter: page.nextPageGetter,
+    );
+
+    setLoaded(page);
+  }
 }

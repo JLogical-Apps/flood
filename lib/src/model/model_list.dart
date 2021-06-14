@@ -54,6 +54,35 @@ abstract class ModelListBase<T> extends Model<Map<String, Model<T>>> with Store 
   /// Returns the models of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
   List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) =>
       getOrNull(orElse: () => null)?.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
+
+  /// Adds a model to the list if it is loaded.
+  /// Throws an exception if not loaded.
+  void addModel(String id, Model<T> model) {
+    var models = get();
+    models = {
+      ...models,
+      ...{id: model}
+    };
+    setLoaded(models);
+  }
+
+  /// Removes the model with the given [id].
+  /// Throws an exception if not loaded.
+  void removeModel(String id) {
+    var models = get();
+    models = Map.of(models);
+    models.remove(id);
+    setLoaded(models);
+  }
+
+  /// Sets the model with the [id] to [model].
+  /// Throws an exception if not loaded.
+  void setModel(String id, Model<T> model) {
+    var models = get();
+    models = Map.of(models);
+    models[id] = model;
+    setLoaded(models);
+  }
 }
 
 /* Deprecated for now unless above-solution does not work.

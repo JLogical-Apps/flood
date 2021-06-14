@@ -81,4 +81,14 @@ abstract class ModelBase<T> with Store {
       error: (error) => onError?.call(error),
     );
   }
+
+  /// Sets the loaded value of this model.
+  void setLoaded(T value) {
+    this.value = FutureValue.loaded(value: value);
+  }
+
+  /// Sets the error value of this model.
+  void setError(Object error) {
+    this.value = FutureValue.error(error: error);
+  }
 }
