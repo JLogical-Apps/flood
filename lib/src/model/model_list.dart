@@ -66,6 +66,16 @@ abstract class ModelListBase<T> extends Model<Map<String, Model<T>>> with Store 
     setLoaded(models);
   }
 
+  /// Adds all the models to the list.
+  void addAllModels(Map<String, Model<T>> models) {
+    var _models = get();
+    _models = {
+      ..._models,
+      ...models,
+    };
+    setLoaded(_models);
+  }
+
   /// Removes the model with the given [id].
   /// Throws an exception if not loaded.
   void removeModel(String id) {

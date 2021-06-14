@@ -72,6 +72,20 @@ abstract class PaginatedModelListBase<T> extends Model<PaginationResult<Model<T>
     setLoaded(page);
   }
 
+  /// Adds all the models to the list.
+  void addAllModels(Map<String, Model<T>> models) {
+    var page = get();
+    var results = {
+      ...page.results,
+      ...models,
+    };
+    page = PaginationResult(
+      results: results,
+      nextPageGetter: page.nextPageGetter,
+    );
+    setLoaded(page);
+  }
+
   /// Removes the model with the given [id].
   /// Throws an exception if not loaded.
   void removeModel(String id) {
