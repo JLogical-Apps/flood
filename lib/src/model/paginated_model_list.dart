@@ -45,12 +45,19 @@ abstract class PaginatedModelListBase<T> extends Model<PaginationResult<Model<T>
 
   /// Returns the models of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
-  List<Model<T>>? getModels({List<Model<T>>? orElse()?}) =>
-      getOrNull(orElse: () => null)?.results.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
+  List<Model<T>> getModels({List<Model<T>> orElse()?}) =>
+      getOrNull(orElse: () => null)?.results.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in PaginatedModelList!'));
 
   /// Returns the models of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
-  List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) =>
-      getOrNull(orElse: () => null)?.results.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
+  List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) => getOrNull(orElse: () => null)?.results.values.toList() ?? orElse?.call();
+
+  /// Returns the results of the loaded pages, or calls [orElse] if not loaded.
+  /// Throws an exception if not loaded and [orElse] is null.
+  List<T> getResults({List<T> orElse()?}) =>
+      getModelsOrNull()?.map((model) => model.get()).toList() ?? (orElse != null ? orElse() : throw Exception('getResults() called without loaded state in PaginatedModelList!'));
+
+  /// Returns the results of the page, or calls [orElse] if [orElse] is not null, or returns [null].
+  List<T>? getResultsOrNull({List<T>? orElse()?}) => getModelsOrNull()?.map((model) => model.get()).toList() ?? orElse?.call();
 
   /// Transforms the pagination results to ones with models.
   static FutureOr<PaginationResult<Model<T>>> _transformer<T>(FutureOr<PaginationResult<T>> loader(), Model<T> converter(T value)) async {

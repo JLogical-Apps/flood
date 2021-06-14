@@ -48,12 +48,11 @@ abstract class ModelListBase<T> extends Model<Map<String, Model<T>>> with Store 
 
   /// Returns the models of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
-  List<Model<T>>? getModels({List<Model<T>>? orElse()?}) =>
+  List<Model<T>> getModels({List<Model<T>> orElse()?}) =>
       getOrNull(orElse: () => null)?.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
 
   /// Returns the models of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
-  List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) =>
-      getOrNull(orElse: () => null)?.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
+  List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) => getOrNull(orElse: () => null)?.values.toList() ?? orElse?.call();
 
   /// Adds a model to the list if it is loaded.
   /// Throws an exception if not loaded.
