@@ -3,9 +3,58 @@ import 'dart:async';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:mobx/mobx.dart';
 
-part 'model_list.g.dart';
+/// Manages a list of models that can be reloaded.
+class ModelList<T> extends Model<Map<String, Model<T>>> {
+  /// [loader] loads the raw list result.
+  /// [converter] converts the list elements to models.
+  /// [initialValues] are optional values to have initially.
+  ModelList({
+    required Future<Map<String, T>> loader(),
+    required Model<T> converter(T value),
+    Map<String, Model<T>>? initialValues,
+  }) : super(
+            initialValue: initialValues,
+            loader: () async {
+              var rawResults = await loader();
+              return rawResults.map((key, value) => MapEntry(key, converter(value)));
+            });
 
-class ModelList<T> = ModelListBase<T> with _$ModelList<T>;
+  /// The ids of the list.
+  @computed
+  FutureValue<List<String>> get ids => value.when(
+        initial: () => FutureValue.initial(),
+        loaded: (map) => FutureValue.loaded(value: map.keys.toList()),
+        error: (error) => FutureValue.error(error: error),
+      );
+
+  /// The models of the list.
+  @computed
+  FutureValue<List<Model<T>>> get models => value.when(
+        initial: () => FutureValue.initial(),
+        loaded: (map) => FutureValue.loaded(value: map.values.toList()),
+        error: (error) => FutureValue.error(error: error),
+      );
+
+  /// Returns the ids of the loaded value of the model, or calls [orElse] if not loaded.
+  /// Throws an exception if not loaded and [orElse] is null.
+  List<String> getIDs({List<String> orElse()?}) => getOrNull(orElse: () => null)?.keys.toList() ?? (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
+
+  /// Returns the ids of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
+  List<String>? getIDsOrNull({List<String>? orElse()?}) => getOrNull(orElse: () => null)?.keys.toList() ?? orElse?.call();
+
+  /// Returns the models of the loaded value of the model, or calls [orElse] if not loaded.
+  /// Throws an exception if not loaded and [orElse] is null.
+  List<Model<T>>? getModels({List<Model<T>>? orElse()?}) =>
+      getOrNull(orElse: () => null)?.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
+
+  /// Returns the models of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
+  List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) =>
+      getOrNull(orElse: () => null)?.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
+}
+
+/* Deprecated for now unless above-solution does not work.
+
+class ModelListf<T> = ModelListBase<T> with _$ModelList<T>;
 
 abstract class ModelListBase<T> with Store {
   /// The ids and models in the list.
@@ -118,3 +167,4 @@ abstract class ModelListBase<T> with Store {
     );
   }
 }
+*/
