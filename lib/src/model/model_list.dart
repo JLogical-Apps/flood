@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:mobx/mobx.dart';
 
+part 'model_list.g.dart';
+
+class ModelListStore<T> = ModelListBase<T> with _$ModelListStore<T>;
+
 /// Manages a list of models that can be reloaded.
-class ModelList<T> extends Model<Map<String, Model<T>>> {
+abstract class ModelListBase<T> extends Model<Map<String, Model<T>>> with Store {
   /// [loader] loads the raw list result.
   /// [converter] converts the list elements to models.
   /// [initialValues] are optional values to have initially.
-  ModelList({
+  ModelListBase({
     required Future<Map<String, T>> loader(),
     required Model<T> converter(T value),
     Map<String, Model<T>>? initialValues,

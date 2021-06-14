@@ -2,17 +2,38 @@ import 'dart:async';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/model/pagination_result.dart';
+import 'package:mobx/mobx.dart';
+
+part 'paginated_model_list.g.dart';
+
+class PaginatedModelListStore<T> = PaginatedModelListBase<T> with _$PaginatedModelListStore<T>;
 
 /// A model list that handles paginating the results.
 /// Use [loadNextPage] to append the next page (if it exists) to the
-class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
+abstract class PaginatedModelListBase<T> extends Model<PaginationResult<Model<T>>> with Store {
   /// [converter] converts values from the page loads to models.
   /// [initialPageLoader] is the loader that is called with [load].
-  PaginatedModelList({required Model<T> converter(T value), required Future<PaginationResult<T>> initialPageLoader()})
+  PaginatedModelListBase({required Model<T> converter(T value), required Future<PaginationResult<T>> initialPageLoader()})
       : super(
           initialValue: null,
           loader: () => _transformer(initialPageLoader, converter),
         );
+
+  /// The models of the list.
+  @computed
+  FutureValue<List<Model<T>>> get models => value.when(
+        initial: () => FutureValue.initial(),
+        loaded: (map) => FutureValue.loaded(value: map.results.values.toList()),
+        error: (error) => FutureValue.error(error: error),
+      );
+
+  /// The results of the list.
+  @computed
+  FutureValue<List<T>> get results => value.when(
+        initial: () => FutureValue.initial(),
+        loaded: (map) => FutureValue.loaded(value: map.results.values.map((model) => model.get()).toList()),
+        error: (error) => FutureValue.error(error: error),
+      );
 
   /// Transforms the pagination results to ones with models.
   static FutureOr<PaginationResult<Model<T>>> _transformer<T>(FutureOr<PaginationResult<T>> loader(), Model<T> converter(T value)) async {
