@@ -21,8 +21,8 @@ class RefreshScaffold extends StatelessWidget {
       body: LiquidPullToRefresh(
         child: body,
         onRefresh: onRefresh,
-        backgroundColor: refresherBackgroundColor ?? Theme.of(context).primaryColor,
-        color: Colors.white,
+        backgroundColor: Colors.white,
+        color: refresherBackgroundColor ?? Theme.of(context).primaryColor,
         animSpeedFactor: 2.5,
         showChildOpacityTransition: false,
       ),
