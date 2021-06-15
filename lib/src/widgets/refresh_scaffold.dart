@@ -9,7 +9,10 @@ class RefreshScaffold extends StatelessWidget {
   /// Function to call when refreshing.
   final Future<void> Function() onRefresh;
 
-  const RefreshScaffold({this.appBar, required this.body, required this.onRefresh}) : super();
+  /// The background color of the refresher.
+  final Color? refresherBackgroundColor;
+
+  const RefreshScaffold({this.appBar, required this.body, required this.onRefresh, this.refresherBackgroundColor}) : super();
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +21,10 @@ class RefreshScaffold extends StatelessWidget {
       body: LiquidPullToRefresh(
         child: body,
         onRefresh: onRefresh,
+        backgroundColor: refresherBackgroundColor ?? Theme.of(context).primaryColor,
+        color: Colors.white,
+        animSpeedFactor: 2.5,
+        showChildOpacityTransition: false,
       ),
     );
   }
