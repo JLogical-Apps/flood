@@ -3,8 +3,7 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 /// Scaffold that has handles pull-to-refresh.
 class RefreshScaffold extends StatelessWidget {
-  final PreferredSize? appBar;
-
+  final PreferredSizeWidget? appBar;
   final Widget body;
 
   /// Function to call when refreshing.
