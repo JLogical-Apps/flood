@@ -28,8 +28,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('rebuiling home page.');
-    return Scaffold(
+    return RefreshScaffold(
       appBar: AppBar(
         title: Text('Home ${DateTime.now().formatTime()}'),
       ),
@@ -243,6 +242,9 @@ class HomePage extends StatelessWidget {
           },
         ),
       ),
+      onRefresh: () async {
+        await Future.delayed(Duration(seconds: 2));
+      },
     );
   }
 }

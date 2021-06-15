@@ -23,6 +23,7 @@ class RefreshScaffold extends StatelessWidget {
       appBar: appBar,
       body: SmartRefresher(
         controller: _refreshController,
+        header: WaterDropMaterialHeader(),
         onRefresh: () async {
           await this.onRefresh();
           _refreshController.refreshCompleted();
