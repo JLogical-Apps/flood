@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/model/pagination_result.dart';
@@ -85,10 +86,7 @@ abstract class PaginatedModelListBase<T> extends Model<PaginationResult<Model<T>
   /// Throws an exception if not loaded.
   void addModel(String id, Model<T> model) {
     var page = get();
-    var results = {
-      ...page.results,
-      ...{id: model}
-    };
+    var results = LinkedHashMap.of(page.results)..addAll({id: model});
     page = PaginationResult(
       results: results,
       nextPageGetter: page.nextPageGetter,
@@ -99,10 +97,7 @@ abstract class PaginatedModelListBase<T> extends Model<PaginationResult<Model<T>
   /// Adds all the models to the list.
   void addAllModels(Map<String, Model<T>> models) {
     var page = get();
-    var results = {
-      ...page.results,
-      ...models,
-    };
+    var results = LinkedHashMap.of(page.results)..addAll(models);
     page = PaginationResult(
       results: results,
       nextPageGetter: page.nextPageGetter,
@@ -115,7 +110,7 @@ abstract class PaginatedModelListBase<T> extends Model<PaginationResult<Model<T>
   void removeModel(String id) {
     var page = get();
 
-    var results = Map.of(page.results);
+    var results = LinkedHashMap.of(page.results);
     results.remove(id);
 
     page = PaginationResult(
@@ -130,7 +125,7 @@ abstract class PaginatedModelListBase<T> extends Model<PaginationResult<Model<T>
   void setModel(String id, Model<T> model) {
     var page = get();
 
-    var results = Map.of(page.results);
+    var results = LinkedHashMap.of(page.results);
     results[id] = model;
 
     page = PaginationResult(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 /// A result that contains pagination results.
 class PaginationResult<T> {
@@ -29,7 +30,7 @@ class PaginationResult<T> {
 
     var nextPage = await _nextPageGetter();
     return PaginationResult(
-      results: {...results, ...nextPage.results},
+      results: LinkedHashMap.of(results)..addAll(nextPage.results),
       nextPageGetter: nextPage.nextPageGetter,
     );
   }
