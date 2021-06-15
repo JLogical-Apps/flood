@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 /// Scaffold that has handles pull-to-refresh.
 class RefreshScaffold extends StatelessWidget {
@@ -12,19 +12,21 @@ class RefreshScaffold extends StatelessWidget {
   /// The background color of the refresher.
   final Color? refresherBackgroundColor;
 
-  const RefreshScaffold({this.appBar, required this.body, required this.onRefresh, this.refresherBackgroundColor}) : super();
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+
+  RefreshScaffold({this.appBar, required this.body, required this.onRefresh, this.refresherBackgroundColor}) : super();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar,
-      body: LiquidPullToRefresh(
+      body: SmartRefresher(
+        controller: _refreshController,
+        onRefresh: () async {
+          await this.onRefresh();
+          _refreshController.loadComplete();
+        },
         child: body,
-        onRefresh: onRefresh,
-        backgroundColor: Colors.white,
-        color: refresherBackgroundColor ?? Theme.of(context).primaryColor,
-        animSpeedFactor: 2.5,
-        showChildOpacityTransition: false,
       ),
     );
   }
