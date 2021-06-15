@@ -5,7 +5,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class RefreshScaffold extends StatelessWidget {
   final PreferredSizeWidget? appBar;
   final Widget body;
-  final Widget? bottomNavigationCard;
+  final Widget? bottomNavigationBar;
 
   /// Function to call when refreshing.
   final Future<void> Function() onRefresh;
@@ -15,7 +15,7 @@ class RefreshScaffold extends StatelessWidget {
 
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
-  RefreshScaffold({this.appBar, required this.body, this.bottomNavigationCard, required this.onRefresh, this.refresherBackgroundColor}) : super();
+  RefreshScaffold({this.appBar, required this.body, this.bottomNavigationBar, required this.onRefresh, this.refresherBackgroundColor}) : super();
 
   @override
   Widget build(BuildContext context) {
