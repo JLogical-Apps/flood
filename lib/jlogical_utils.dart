@@ -21,6 +21,6 @@ export 'src/widgets/input_field.dart';
 export 'src/widgets/loading_widget.dart';
 export 'src/widgets/menu_button.dart';
 export 'src/widgets/navigation_card.dart';
-export 'src/widgets/refresh_scaffold.darts;
+export 'src/widgets/refresh_scaffold.dart';
 export 'src/widgets/smart_image.dart';
 export 'src/widgets/store_provider.dart';
