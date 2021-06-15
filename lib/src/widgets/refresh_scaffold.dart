@@ -24,7 +24,7 @@ class RefreshScaffold extends StatelessWidget {
         controller: _refreshController,
         onRefresh: () async {
           await this.onRefresh();
-          _refreshController.loadComplete();
+          _refreshController.refreshCompleted();
         },
         child: body,
       ),
