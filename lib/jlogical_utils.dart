@@ -7,6 +7,7 @@ export 'src/model/paginated_lists.dart';
 export 'src/model/paginated_model_list.dart';
 export 'src/model/pagination_result.dart';
 export 'src/theme/theme.dart';
+export 'src/utils/file_extensions.dart';
 export 'src/utils/format.dart';
 export 'src/utils/list_extensions.dart';
 export 'src/utils/pair.dart';
