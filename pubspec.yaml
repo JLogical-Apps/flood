@@ -24,7 +24,7 @@ dependencies:
   # Application
   flutter_bloc: ^7.0.0
   equatable: ^2.0.0
-  mobx: ^2.0.0-nullsafety.5
+  flutter_mobx: ^2.0.0
   provider: ^5.0.0
   url_launcher: ^6.0.2
 

@@ -20,7 +20,7 @@ extension ListUtils<T> on List<T> {
 
   /// Returns a copy of the list.
   /// Can provide an optional copier to copy the items in a specific way.
-  List<T> copy([T copier(T)?]) {
+  List<T> copy([T copier(T value)?]) {
     if (copier == null) return List.of(this);
 
     return List.of(map(copier));
