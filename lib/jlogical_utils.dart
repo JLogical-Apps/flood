@@ -14,6 +14,7 @@ export 'src/utils/pair.dart';
 export 'src/utils/popup.dart';
 export 'src/utils/popups/color_popup.dart';
 export 'src/utils/popups/input_popup.dart';
+export 'src/utils/utils.dart';
 export 'src/utils/validators.dart';
 export 'src/widgets/category_card.dart';
 export 'src/widgets/clickable_card.dart';
