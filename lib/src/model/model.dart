@@ -1,21 +1,20 @@
 import 'dart:async';
 
-import 'package:mobx/mobx.dart';
+import 'package:meta/meta.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../jlogical_utils.dart';
 
-part 'model.g.dart';
+class Model<T> {
+  /// The publisher of the value.
+  @protected
+  final BehaviorSubject<FutureValue<T>> subject;
 
-class Model<T> extends ModelBase<T> with _$Model<T> {
-  Model({required FutureOr<T> loader(), T? initialValue}) : super(loader: loader, initialValue: initialValue);
+  /// Stream of the current value.
+  ValueStream<FutureValue<T>> get valueX => subject;
 
-  factory Model.unloadable(T? value) => Model(initialValue: value, loader: () => throw Exception('Cannot load unloadable model.'));
-}
-
-abstract class ModelBase<T> with Store {
-  /// The value of the model.
-  @observable
-  FutureValue<T> value;
+  /// The current value of the model.
+  FutureValue<T> get value => valueX.value;
 
   /// Completer so that multiple [load] calls will wait for the initial [load] to complete.
   Completer? _completer;
@@ -32,13 +31,15 @@ abstract class ModelBase<T> with Store {
   /// Whether the model contains an error.
   bool get isError => value is FutureValueError;
 
-  ModelBase({required this.loader, T? initialValue}) : value = initialValue == null ? FutureValue.initial() : FutureValue.loaded(value: initialValue);
+  Model({required this.loader, T? initialValue}) : subject = BehaviorSubject.seeded(initialValue == null ? FutureValue.initial() : FutureValue.loaded(value: initialValue));
+
+  factory Model.unloadable(T initialValue) => Model(initialValue: initialValue, loader: () => throw Exception('Cannnot load an unloadable model!'));
 
   /// Loads the data for the model using the [loader].
-  @action
   Future<void> load() async {
     // If the model is currently loading something, just wait for the previous load to finish.
     var completer = _completer;
+
     if (completer != null && !completer.isCompleted) {
       await completer.future;
       return;
@@ -47,13 +48,14 @@ abstract class ModelBase<T> with Store {
     _completer = Completer();
 
     if (value is FutureValueError) {
-      value = FutureValue.initial();
+      subject.value = FutureValue.initial();
     }
 
-    value = await FutureValue.guard(() async => await loader());
+    subject.value = await FutureValue.guard(() async => await loader());
 
     // Once the model completes loading, notify other [load] calls that the load has finished.
     _completer!.complete();
+
     _completer = null;
   }
 
@@ -88,11 +90,11 @@ abstract class ModelBase<T> with Store {
 
   /// Sets the loaded value of this model.
   void setLoaded(T value) {
-    this.value = FutureValue.loaded(value: value);
+    subject.value = FutureValue.loaded(value: value);
   }
 
   /// Sets the error value of this model.
   void setError(Object error) {
-    this.value = FutureValue.error(error: error);
+    subject.value = FutureValue.error(error: error);
   }
 }
