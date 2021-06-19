@@ -107,8 +107,8 @@ class _$FutureValueInitialCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
-class _$FutureValueInitial<T> implements FutureValueInitial<T> {
-  const _$FutureValueInitial();
+class _$FutureValueInitial<T> extends FutureValueInitial<T> {
+  const _$FutureValueInitial() : super._();
 
   @override
   String toString() {
@@ -172,8 +172,9 @@ class _$FutureValueInitial<T> implements FutureValueInitial<T> {
   }
 }
 
-abstract class FutureValueInitial<T> implements FutureValue<T> {
+abstract class FutureValueInitial<T> extends FutureValue<T> {
   const factory FutureValueInitial() = _$FutureValueInitial<T>;
+  const FutureValueInitial._() : super._();
 }
 
 /// @nodoc
@@ -209,8 +210,8 @@ class _$FutureValueLoadedCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
-class _$FutureValueLoaded<T> implements FutureValueLoaded<T> {
-  const _$FutureValueLoaded({required this.value});
+class _$FutureValueLoaded<T> extends FutureValueLoaded<T> {
+  const _$FutureValueLoaded({required this.value}) : super._();
 
   @override
   final T value;
@@ -287,8 +288,9 @@ class _$FutureValueLoaded<T> implements FutureValueLoaded<T> {
   }
 }
 
-abstract class FutureValueLoaded<T> implements FutureValue<T> {
+abstract class FutureValueLoaded<T> extends FutureValue<T> {
   const factory FutureValueLoaded({required T value}) = _$FutureValueLoaded<T>;
+  const FutureValueLoaded._() : super._();
 
   T get value => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -326,8 +328,8 @@ class _$FutureValueErrorCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
-class _$FutureValueError<T> implements FutureValueError<T> {
-  const _$FutureValueError({this.error});
+class _$FutureValueError<T> extends FutureValueError<T> {
+  const _$FutureValueError({this.error}) : super._();
 
   @override
   final Object? error;
@@ -403,8 +405,9 @@ class _$FutureValueError<T> implements FutureValueError<T> {
   }
 }
 
-abstract class FutureValueError<T> implements FutureValue<T> {
+abstract class FutureValueError<T> extends FutureValue<T> {
   const factory FutureValueError({Object? error}) = _$FutureValueError<T>;
+  const FutureValueError._() : super._();
 
   Object? get error => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
