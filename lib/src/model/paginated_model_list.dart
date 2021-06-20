@@ -5,6 +5,8 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/model/pagination_result.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'model.dart';
+
 /// A model list that handles paginating the results.
 /// Use [loadNextPage] to append the next page (if it exists) to the
 class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {

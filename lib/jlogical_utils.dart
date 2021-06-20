@@ -1,6 +1,6 @@
 export 'src/model/future_value.dart';
 export 'src/model/load_more_button.dart';
-export 'src/model/model.dart';
+export 'src/model/modelable.dart';
 export 'src/model/model_list.dart';
 export 'src/model/model_store.dart';
 export 'src/model/paginated_lists.dart';
