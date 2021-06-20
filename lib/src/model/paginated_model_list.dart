@@ -19,7 +19,9 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
         );
 
   /// Stream of models of the list.
-  ValueStream<FutureValue<List<Model<T>>>> get modelsX {
+  late ValueStream<FutureValue<List<Model<T>>>> modelsX = _modelsX;
+  
+  ValueStream<FutureValue<List<Model<T>>>> get _modelsX {
     FutureValue<List<Model<T>>> mapper(FutureValue<PaginationResult<Model<T>>> value) => value.when(
           initial: () => FutureValue.initial(),
           loaded: (map) => FutureValue.loaded(value: map.results.values.toList()),
@@ -33,7 +35,9 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   FutureValue<List<Model<T>>> get models => modelsX.value;
 
   /// Stream of the results of the list.
-  ValueStream<FutureValue<List<T>>> get resultsX {
+  late ValueStream<FutureValue<List<T>>> resultsX = _resultsX;
+
+  ValueStream<FutureValue<List<T>>> get _resultsX {
     FutureValue<List<T>> Function(FutureValue<PaginationResult<Model<T>>>) mapper = (value) => value.when(
           initial: () => FutureValue.initial(),
           loaded: (map) => FutureValue.loaded(value: map.results.values.map((model) => model.get()).toList()),
