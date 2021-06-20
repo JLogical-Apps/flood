@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'model.dart';
+
 /// Manages a list of models that can be reloaded.
 class ModelList<T> extends Model<Map<String, Model<T>>> {
   /// [loader] loads the raw list result.

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 /// A button that handles loading more pages in a paginated model list.
@@ -11,16 +10,19 @@ class LoadMoreButton<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(builder: (context) {
-      return paginatedModelList.value.maybeWhen(
-        loaded: (page) => page.hasNextPage ? FutureButton(
-          child: Text('LOAD MORE'),
-          onPressed: () async {
-            await paginatedModelList.loadNextPage();
-          },
-        ) : Container(),
-        orElse: () => Container(),
-      );
-    });
+    return StreamBuilder(
+      stream: paginatedModelList.valueX,
+      builder: (context, snap){
+        return paginatedModelList.value.maybeWhen(
+          loaded: (page) => page.hasNextPage ? FutureButton(
+            child: Text('LOAD MORE'),
+            onPressed: () async {
+              await paginatedModelList.loadNextPage();
+            },
+          ) : Container(),
+          orElse: () => Container(),
+        );
+      },
+    );
   }
 }
