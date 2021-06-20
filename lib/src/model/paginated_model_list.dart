@@ -19,25 +19,28 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
         );
 
   /// Stream of models of the list.
-  ValueStream<FutureValue<List<Model<T>>>> get modelsX => subject.map(
-        (value) => value.when(
+  ValueStream<FutureValue<List<Model<T>>>> get modelsX {
+    FutureValue<List<Model<T>>> mapper(FutureValue<PaginationResult<Model<T>>> value) => value.when(
           initial: () => FutureValue.initial(),
           loaded: (map) => FutureValue.loaded(value: map.results.values.toList()),
           error: (error) => FutureValue.error(error: error),
-        ),
-      );
+        );
+
+    return subject.map(mapper).shareValueSeeded(mapper(subject.value));
+  }
 
   /// The models of the list.
   FutureValue<List<Model<T>>> get models => modelsX.value;
 
   /// Stream of the results of the list.
-  ValueStream<FutureValue<List<T>>> get resultsX => subject.map(
-        (value) => value.when(
+  ValueStream<FutureValue<List<T>>> get resultsX {
+    FutureValue<List<T>> Function(FutureValue<PaginationResult<Model<T>>>) mapper = (value) => value.when(
           initial: () => FutureValue.initial(),
           loaded: (map) => FutureValue.loaded(value: map.results.values.map((model) => model.get()).toList()),
           error: (error) => FutureValue.error(error: error),
-        ),
-      );
+        );
+    return subject.map(mapper).shareValueSeeded(mapper(subject.value));
+  }
 
   /// The results of the list.
   FutureValue<List<T>> get results => resultsX.value;
@@ -45,7 +48,8 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   /// Returns the ids of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
   List<String> getIDs({List<String> orElse()?}) =>
-      getOrNull(orElse: () => null)?.results.keys.toList() ?? (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
+      getOrNull(orElse: () => null)?.results.keys.toList() ??
+      (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
 
   /// Returns the ids of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
   List<String>? getIDsOrNull({List<String>? orElse()?}) => getOrNull(orElse: () => null)?.results.keys.toList() ?? orElse?.call();
@@ -53,7 +57,8 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   /// Returns the models of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
   List<Model<T>> getModels({List<Model<T>> orElse()?}) =>
-      getOrNull(orElse: () => null)?.results.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in PaginatedModelList!'));
+      getOrNull(orElse: () => null)?.results.values.toList() ??
+      (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in PaginatedModelList!'));
 
   /// Returns the models of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
   List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) => getOrNull(orElse: () => null)?.results.values.toList() ?? orElse?.call();
@@ -61,7 +66,8 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   /// Returns the results of the loaded pages, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
   List<T> getResults({List<T> orElse()?}) =>
-      getModelsOrNull()?.map((model) => model.get()).toList() ?? (orElse != null ? orElse() : throw Exception('getResults() called without loaded state in PaginatedModelList!'));
+      getModelsOrNull()?.map((model) => model.get()).toList() ??
+      (orElse != null ? orElse() : throw Exception('getResults() called without loaded state in PaginatedModelList!'));
 
   /// Returns the results of the page, or calls [orElse] if [orElse] is not null, or returns [null].
   List<T>? getResultsOrNull({List<T>? orElse()?}) => getModelsOrNull()?.map((model) => model.get()).toList() ?? orElse?.call();
