@@ -1,3 +1,6 @@
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:rxdart/rxdart.dart';
+
 extension ObjectExtensions on Object {
   /// Casts the object to type [T] if possible. Returns null if not possible.
   T? as<T>() {
@@ -16,4 +19,10 @@ T? guard<T>(T func(), {void onError(dynamic error)?}) {
     onError?.call(e);
     return null;
   }
+}
+
+/// Helper for using a value stream.
+T useValueStream<T>(ValueStream<T> stream) {
+  useStream(stream);
+  return stream.value;
 }

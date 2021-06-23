@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:rxdart/rxdart.dart';
+import '../utils/stream_extensions.dart';
 
 import 'model.dart';
 
@@ -22,31 +23,21 @@ class ModelList<T> extends Model<Map<String, Model<T>>> {
             });
 
   /// Stream of ids of the list.
-  late ValueStream<FutureValue<List<String>>> idsX = _idsX;
-
-  ValueStream<FutureValue<List<String>>> get _idsX {
-    FutureValue<List<String>> mapper(FutureValue<Map<String, Model<T>>> value) => value.when(
-          initial: () => FutureValue.initial(),
-          loaded: (map) => FutureValue.loaded(value: map.keys.toList()),
-          error: (error) => FutureValue.error(error: error),
-        );
-    return subject.map(mapper).shareValueSeeded(mapper(subject.value));
-  }
+  late ValueStream<FutureValue<List<String>>> idsX = subject.mapWithValue((value) => value.when(
+    initial: () => FutureValue.initial(),
+    loaded: (map) => FutureValue.loaded(value: map.keys.toList()),
+    error: (error) => FutureValue.error(error: error),
+  ));
 
   /// The ids of the list.
   FutureValue<List<String>> get ids => idsX.value;
 
   /// Stream of models of the list.
-  late ValueStream<FutureValue<List<Model<T>>>> modelsX = _modelsX;
-
-  ValueStream<FutureValue<List<Model<T>>>> get _modelsX {
-    FutureValue<List<Model<T>>> mapper(FutureValue<Map<String, Model<T>>> value) => value.when(
-          initial: () => FutureValue.initial(),
-          loaded: (map) => FutureValue.loaded(value: map.values.toList()),
-          error: (error) => FutureValue.error(error: error),
-        );
-    return subject.map(mapper).shareValueSeeded(mapper(subject.value));
-  }
+  late ValueStream<FutureValue<List<Model<T>>>> modelsX = subject.mapWithValue((value) => value.when(
+    initial: () => FutureValue.initial(),
+    loaded: (map) => FutureValue.loaded(value: map.values.toList()),
+    error: (error) => FutureValue.error(error: error),
+  ));
 
   /// The models of the list.
   FutureValue<List<Model<T>>> get models => modelsX.value;

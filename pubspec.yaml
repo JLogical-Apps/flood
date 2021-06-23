@@ -23,6 +23,7 @@ dependencies:
 
   # Application
   flutter_bloc: ^7.0.0
+  flutter_hooks: 0.17.0
   equatable: ^2.0.0
   flutter_mobx: ^2.0.0
   provider: ^5.0.0
