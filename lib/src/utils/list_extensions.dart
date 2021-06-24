@@ -48,3 +48,13 @@ extension IterableExtensions<T> on Iterable<T> {
     return orElse?.call();
   }
 }
+
+extension MapExtensions<K, V> on Map<K, V> {
+  /// Returns a copy of the map.
+  /// Can provide an optional key copier or value copier to copy the items in a specific way.
+  Map<K, V> copy({K keyCopier(K value)?, V valueCopier(V value)?}) {
+    if (keyCopier == null && valueCopier == null) return Map.of(this);
+
+    return map((key, value) => MapEntry(keyCopier?.call(key) ?? key, valueCopier?.call(value) ?? value));
+  }
+}
