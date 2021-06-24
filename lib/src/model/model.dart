@@ -5,13 +5,25 @@ import 'package:rxdart/rxdart.dart';
 import '../../jlogical_utils.dart';
 import 'package:meta/meta.dart';
 
-class Model<T> extends Modelable<T>{
+class Model<T>{
   /// The publisher of the value.
   @protected
   final BehaviorSubject<FutureValue<T>> subject;
 
   /// Stream of the current value.
   ValueStream<FutureValue<T>> get valueX => subject;
+
+  /// The current value of the model.
+  FutureValue<T> get value => valueX.value;
+
+  /// Whether the model is in its initial state.
+  bool get isInitial => value is FutureValueInitial;
+
+  /// Whether the model is loaded.
+  bool get isLoaded => value is FutureValueLoaded;
+
+  /// Whether the model contains an error.
+  bool get isError => value is FutureValueError;
 
   /// Completer so that multiple [load] calls will wait for the initial [load] to complete.
   Completer? _completer;
@@ -57,6 +69,23 @@ class Model<T> extends Modelable<T>{
       initial: () => throw Exception('Model is in initial state after being loaded.'),
       loaded: (data) => data,
       error: (error) => onError?.call(error),
+    );
+  }
+
+
+  /// Returns the loaded value of the model, or calls [orElse] if not loaded.
+  T get({T orElse()?}) {
+    return value.maybeWhen(
+      loaded: (data) => data,
+      orElse: () => orElse != null ? orElse() : throw Exception('get() called without loaded state!'),
+    );
+  }
+
+  /// Returns the loaded value of the model or [null] if not loaded. If [orElse] is not null, calls that instead of returning null.
+  T? getOrNull({T? orElse()?}) {
+    return value.maybeWhen(
+      loaded: (data) => data,
+      orElse: () => orElse?.call(),
     );
   }
 

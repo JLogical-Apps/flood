@@ -36,4 +36,17 @@ class FutureValue<T> with _$FutureValue<T> {
         loaded: (value) => FutureValue.loaded(value: mapper(value)),
         error: (error) => FutureValue.error(error: error),
       );
+
+  /// Performs the [action] if the value is loaded.
+  /// Can be chained with [otherwise].
+  FutureValue<T> ifPresent(void action(T value)) {
+    maybeWhen(loaded: action, orElse: () {});
+    return this;
+  }
+
+  /// Performs the [action] if the value is not loaded.
+  /// Usually chained after [ifPresent].
+  void otherwise(void action()) {
+    maybeWhen(loaded: (_) {}, orElse: action);
+  }
 }
