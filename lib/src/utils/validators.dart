@@ -11,8 +11,10 @@ class Validators {
     return null;
   }
 
-  /// Validates the given [text] by it being not empty.
-  static String? notEmpty(String text, {required String onEmpty}) {
+  /// Validates the given [text] by it being not null and not empty.
+  static String? notEmpty(String? text, {required String onEmpty}) {
+    if(text == null) return onEmpty;
+
     text = text.trim();
     if (text.isEmpty) return onEmpty;
 

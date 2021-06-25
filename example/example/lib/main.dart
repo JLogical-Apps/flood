@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/smartform/fields/smart_bool_field.dart';
+import 'package:jlogical_utils/smartform/fields/smart_options_field.dart';
 import 'package:jlogical_utils/smartform/fields/smart_text_field.dart';
 import 'package:jlogical_utils/smartform/smart_form.dart';
 import 'package:jlogical_utils/smartform/smart_form_controller.dart';
@@ -28,7 +29,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshScaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text('Home ${DateTime.now().formatTime()}'),
       ),
@@ -38,7 +39,6 @@ class HomePage extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-
                 ErrorText(
                   'ERROR',
                   error: 'YIKES',
@@ -140,6 +140,7 @@ class HomePage extends StatelessWidget {
                           },
                         ),
                       ),
+
                     ],
                   ),
                 ),
@@ -197,6 +198,16 @@ class HomePage extends StatelessWidget {
                       obscureText: true,
                       // validator: (str) => Validator.password(str, onEmpty: 'Password cannot be empty!', onShortLength: 'Too short!'),
                     ),
+                    SmartOptionsField<String>(
+                      name: 'option',
+                      options: [
+                        'A',
+                        'B',
+                        'C',
+                      ],
+                      label: 'Letter',
+                      validator: (value) => Validators.notEmpty(value, onEmpty: 'Cannot be empty!'),
+                    ),
                     SmartBoolField(
                       name: 'acceptedTerms',
                       child: Text('Accept Terms and Conditions?'),
@@ -234,18 +245,16 @@ class HomePage extends StatelessWidget {
           ),
           postValidator: (data) async {
             await Future.delayed(Duration(seconds: 1));
-            return {
-              'email': 'Email was not found in our database. ',
-            };
+            return {};
           },
           onAccept: (data) {
             print(data);
           },
         ),
       ),
-      onRefresh: () async {
-        await Future.delayed(Duration(seconds: 2));
-      },
+      // onRefresh: () async {
+      //   await Future.delayed(Duration(seconds: 2));
+      // },
     );
   }
 }

@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jlogical_utils/smartform/cubit/smart_form_cubit.dart';
 import 'package:jlogical_utils/smartform/fields/smart_field.dart';
 
-import '../../jlogical_utils.dart';
-
 /// SmartField that handles a list of options.
 class SmartOptionsField<T> extends StatelessWidget {
   /// The name of the field.
@@ -47,31 +45,48 @@ class SmartOptionsField<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _builder = builder ?? (item) => ListTile(title: Text(item.toString()));
+    var _builder = builder ?? (item) => Text(item?.toString() ?? 'None');
     return SmartField<T?>(
       name: name,
       builder: (value, error) {
-        return DropdownButtonFormField<T?>(
-          value: value,
-          items: (options.cast<T?>() + [null])
-              .map((value) => DropdownMenuItem(
-                    value: value,
-                    child: _builder(value),
-                    onTap: () => BlocProvider.of<SmartFormCubit>(context).changeValue(name: name, value: value),
-                  ))
-              .toList(),
+        return Container(
+          margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            border: Border.all(color: error == null ? Colors.black : Colors.red, width: 1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (label != null) Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(label!, style: Theme.of(context).textTheme.button, textAlign: TextAlign.left,),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: DropdownButtonFormField<T?>(
+                  value: value,
+                  hint: Text('Select an option'),
+                  decoration: InputDecoration(
+                    errorText: error,
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                  ),
+                  items: (<T?>[null] + options)
+                      .map((value) => DropdownMenuItem(
+                            value: value,
+                            child: _builder(value),
+                          ))
+                      .toList(),
+                  onChanged: (value) => BlocProvider.of<SmartFormCubit>(context).changeValue(name: name, value: value),
+                ),
+              ),
+            ],
+          ),
         );
-        // return InputField(
-        //   label: label,
-        //   keyboardType: keyboardType,
-        //   initialText: BlocProvider.of<SmartFormCubit>(context).getValue(name),
-        //   onChange: (s) => BlocProvider.of<SmartFormCubit>(context).changeValue(name: name, value: s),
-        //   errorText: error,
-        //   obscureText: obscureText,
-        //   maxLines: maxLines,
-        //   enabled: isEnabled,
-        //   lineColor: lineColor,
-        // );
       },
       validator: validator == null ? null : (value) => validator?.call(value),
       initialValue: initialValue,
