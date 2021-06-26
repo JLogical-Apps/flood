@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jlogical_utils/smartform/smart_form.dart';
+import 'package:jlogical_utils/smartform/smart_form_controller.dart';
 
 import 'popups/color_popup.dart';
 import 'popups/input_popup.dart';
@@ -57,8 +59,7 @@ class Popup {
   /// Shows a dialog that asks for a text input.
   /// Returns null if the dialog was cancelled.
   /// Returns a string if input was submitted. Empty text if no input was added, but still submitted.
-  static Future<String?> input(
-    BuildContext context, {
+  static Future<String?> input(BuildContext context, {
     required String title,
     required String message,
     required String label,
@@ -93,5 +94,48 @@ class Popup {
           return ColorPickerPopup(initialColor: initialColor);
         });
     return output;
+  }
+
+  /// Shows a custom popup.
+  static Future<Map<String, dynamic>?> smartForm(BuildContext context, {
+    required Widget builder(BuildContext context),
+    required String title,
+    PostValidator? postValidator,
+    String noMsg = 'CANCEL',
+    String yesMsg = 'OK',
+  }) async {
+    return await showDialog<Map<String, dynamic>>(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          var controller = SmartFormController();
+          return SmartForm(
+            controller: controller,
+            postValidator: postValidator,
+            child: Builder(
+              builder: (context) =>
+                  AlertDialog(
+                    title: Text(title),
+                    content: builder(context),
+                    actions: [
+                      TextButton(
+                        child: Text(noMsg),
+                        onPressed: () {
+                          Navigator.of(context).pop(null);
+                        },
+                      ),
+                      OutlinedButton(
+                        child: new Text(yesMsg),
+                        onPressed: () async {
+                          if (await controller.validate()) {
+                            Navigator.of(context).pop(controller.data);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+            ),
+          );
+        });
   }
 }

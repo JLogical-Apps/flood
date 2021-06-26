@@ -51,6 +51,44 @@ class HomePage extends StatelessWidget {
                       ButtonBar(
                         children: [
                           ElevatedButton(
+                            child: Text('SMART FORM'),
+                            onPressed: () async {
+                              var input = await Popup.smartForm(
+                                context,
+                                title: 'Envelope',
+                                builder: (context) => Scrollbar(
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        SmartTextField(
+                                          name: 'amount',
+                                          label: 'Amount',
+                                        ),
+                                        SmartOptionsField(
+                                          name: 'from',
+                                          label: 'Envelope From',
+                                          options: ['Tithe', 'Savings'],
+                                        ),
+                                        SmartOptionsField(
+                                          name: 'to',
+                                          label: 'Envelope To',
+                                          options: ['Tithe', 'Savings'],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                postValidator: (data) async {
+                                  if(data['from'] == data['to']){
+                                    return {'from': 'Cannot be the same as to!'};
+                                  }
+                                  return {};
+                                }
+                              );
+                              print(input);
+                            },
+                          ),
+                          ElevatedButton(
                             child: Text('DIALOG'),
                             onPressed: () async {
                               var input = await Popup.input(
@@ -140,7 +178,6 @@ class HomePage extends StatelessWidget {
                           },
                         ),
                       ),
-
                     ],
                   ),
                 ),

@@ -23,4 +23,7 @@ class SmartFormController {
   dynamic getValue(String name) {
     return _smartFormCubit.getValue(name);
   }
+
+  /// Returns the data from the form.
+  Map<String, dynamic> get data => _smartFormCubit.state.nameToValueMap;
 }
