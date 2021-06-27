@@ -5,6 +5,7 @@ import 'package:jlogical_utils/smartform/fields/smart_options_field.dart';
 import 'package:jlogical_utils/smartform/fields/smart_text_field.dart';
 import 'package:jlogical_utils/smartform/smart_form.dart';
 import 'package:jlogical_utils/smartform/smart_form_controller.dart';
+import 'package:jlogical_utils/smartform/smart_form_data_builder.dart';
 
 void main() {
   runApp(MyApp());
@@ -53,38 +54,36 @@ class HomePage extends StatelessWidget {
                           ElevatedButton(
                             child: Text('SMART FORM'),
                             onPressed: () async {
-                              var input = await Popup.smartForm(
-                                context,
-                                title: 'Envelope',
-                                builder: (context) => Scrollbar(
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      children: [
-                                        SmartTextField(
-                                          name: 'amount',
-                                          label: 'Amount',
+                              var input = await Popup.smartForm(context,
+                                  title: 'Envelope',
+                                  builder: (context) => Scrollbar(
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              SmartTextField(
+                                                name: 'amount',
+                                                label: 'Amount',
+                                              ),
+                                              SmartOptionsField(
+                                                name: 'from',
+                                                label: 'Envelope From',
+                                                options: ['Tithe', 'Savings'],
+                                              ),
+                                              SmartOptionsField(
+                                                name: 'to',
+                                                label: 'Envelope To',
+                                                options: ['Tithe', 'Savings'],
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        SmartOptionsField(
-                                          name: 'from',
-                                          label: 'Envelope From',
-                                          options: ['Tithe', 'Savings'],
-                                        ),
-                                        SmartOptionsField(
-                                          name: 'to',
-                                          label: 'Envelope To',
-                                          options: ['Tithe', 'Savings'],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                postValidator: (data) async {
-                                  if(data['from'] == data['to']){
-                                    return {'from': 'Cannot be the same as to!'};
-                                  }
-                                  return {};
-                                }
-                              );
+                                      ),
+                                  postValidator: (data) async {
+                                    if (data['from'] == data['to']) {
+                                      return {'from': 'Cannot be the same as to!'};
+                                    }
+                                    return {};
+                                  });
                               print(input);
                             },
                           ),
@@ -214,21 +213,24 @@ class HomePage extends StatelessWidget {
                     SmartTextField(
                       name: 'username',
                       label: 'Username',
+                      initialText: 'jaboyc',
                     ),
-                    SmartTextField(
-                      name: 'email',
-                      label: 'Email',
-                      keyboardType: TextInputType.emailAddress,
-                      // validator: (str) async {
-                      //   var emailError = Validator.email(str, onEmpty: 'Cannot be empty!', onInvalid: 'Invalid email address.');
-                      //   if (emailError != null) {
-                      //     return emailError;
-                      //   }
-                      //
-                      //   await Future.delayed(Duration(seconds: 1));
-                      //   return null;
-                      // },
-                    ),
+                    SmartFormDataBuilder(builder: (context, data) {
+                      return SmartTextField(
+                        name: 'email',
+                        label: 'Email',
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (str) async {
+                          var emailError = Validators.email(str, onEmpty: 'Cannot be empty!', onInvalid: 'Invalid email address.');
+                          if (emailError != null) {
+                            return emailError;
+                          }
+
+                          await Future.delayed(Duration(seconds: 1));
+                          return null;
+                        },
+                      );
+                    }),
                     SmartTextField(
                       name: 'password',
                       label: 'Password',

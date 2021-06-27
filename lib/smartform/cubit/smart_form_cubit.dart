@@ -90,7 +90,7 @@ class SmartFormCubit extends Cubit<SmartFormState> {
 
   /// Sets the validator for the field with [name] to [validator].
   void setValidator({required String name, required Validator? validator}) {
-    if (state.nameToValidatorMap[name] == validator) {
+    if (state.nameToValidatorMap[name] != null) {
       return;
     }
 
