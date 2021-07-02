@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:rxdart/rxdart.dart';
-import '../utils/stream_extensions.dart';
 
+import '../utils/stream_extensions.dart';
+import 'future_value.dart';
 import 'model.dart';
 
 /// Manages a list of models that can be reloaded.
@@ -24,28 +25,27 @@ class ModelList<T> extends Model<Map<String, Model<T>>> {
 
   /// Stream of ids of the list.
   late ValueStream<FutureValue<List<String>>> idsX = subject.mapWithValue((value) => value.when(
-    initial: () => FutureValue.initial(),
-    loaded: (map) => FutureValue.loaded(value: map.keys.toList()),
-    error: (error) => FutureValue.error(error: error),
-  ));
+        initial: () => FutureValue.initial(),
+        loaded: (map) => FutureValue.loaded(value: map.keys.toList()),
+        error: (error) => FutureValue.error(error: error),
+      ));
 
   /// The ids of the list.
   FutureValue<List<String>> get ids => idsX.value;
 
   /// Stream of models of the list.
   late ValueStream<FutureValue<List<Model<T>>>> modelsX = subject.mapWithValue((value) => value.when(
-    initial: () => FutureValue.initial(),
-    loaded: (map) => FutureValue.loaded(value: map.values.toList()),
-    error: (error) => FutureValue.error(error: error),
-  ));
+        initial: () => FutureValue.initial(),
+        loaded: (map) => FutureValue.loaded(value: map.values.toList()),
+        error: (error) => FutureValue.error(error: error),
+      ));
 
   /// The models of the list.
   FutureValue<List<Model<T>>> get models => modelsX.value;
 
   /// Returns the ids of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
-  List<String> getIDs({List<String> orElse()?}) =>
-      getOrNull(orElse: () => null)?.keys.toList() ?? (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
+  List<String> getIDs({List<String> orElse()?}) => getOrNull(orElse: () => null)?.keys.toList() ?? (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
 
   /// Returns the ids of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
   List<String>? getIDsOrNull({List<String>? orElse()?}) => getOrNull(orElse: () => null)?.keys.toList() ?? orElse?.call();

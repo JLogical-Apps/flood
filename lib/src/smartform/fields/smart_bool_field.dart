@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jlogical_utils/smartform/cubit/smart_form_cubit.dart';
-import 'package:jlogical_utils/smartform/fields/smart_field.dart';
+import 'package:jlogical_utils/src/smartform/cubit/smart_form_cubit.dart';
+import 'package:jlogical_utils/src/smartform/fields/smart_field.dart';
 
 /// Styles for the bool fields.
 enum SmartBoolFieldStyle {

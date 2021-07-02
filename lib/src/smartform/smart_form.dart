@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jlogical_utils/smartform/cubit/smart_form_cubit.dart';
-import 'package:jlogical_utils/smartform/smart_form_controller.dart';
+import 'package:jlogical_utils/src/smartform/smart_form_controller.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
-typedef FutureOr<Map<String, String>> PostValidator(Map<String, dynamic> data);
+import 'cubit/smart_form_cubit.dart';
+
+typedef FutureOr<Map<String, String>?> PostValidator(Map<String, dynamic> data);
 
 /// Form that greatly helps automate forms.
 /// The [children] of the SmartForm will automatically do validation, exporting of data, etc.

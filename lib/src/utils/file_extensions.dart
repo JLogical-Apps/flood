@@ -25,4 +25,18 @@ extension FileExtensions on File {
       return null;
     }
   }
+
+  /// Returns the file after making sure it is created.
+  Future<File> ensureCreated() async {
+    await create(recursive: true);
+    return this;
+  }
+}
+
+extension DirectoryExtensions on Directory {
+  /// Returns the directory after making sure it is created.
+  Future<Directory> ensureCreated() async {
+    await create(recursive: true);
+    return this;
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jlogical_utils/smartform/cubit/smart_form_cubit.dart';
-import 'package:jlogical_utils/smartform/fields/smart_field.dart';
+import 'package:jlogical_utils/src/smartform/cubit/smart_form_cubit.dart';
+import 'package:jlogical_utils/src/smartform/fields/smart_field.dart';
 
 /// SmartField that handles a list of options.
 class SmartOptionsField<T> extends StatelessWidget {
@@ -58,10 +58,15 @@ class SmartOptionsField<T> extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (label != null) Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(label!, style: Theme.of(context).textTheme.button, textAlign: TextAlign.left,),
-              ),
+              if (label != null)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    label!,
+                    style: Theme.of(context).textTheme.button,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: DropdownButtonFormField<T?>(

@@ -5,7 +5,7 @@ import 'cubit/smart_form_cubit.dart';
 
 /// Widget that builds on the data of a smart-form changing.
 class SmartFormDataBuilder extends StatelessWidget {
-  /// Builds a widget in response to smart-form [data].
+  /// Builds a widget in response to smart-form [value].
   final Widget Function(BuildContext context, Map<String, dynamic> data) builder;
 
   const SmartFormDataBuilder({required this.builder});

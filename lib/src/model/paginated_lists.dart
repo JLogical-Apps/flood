@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:uuid/uuid.dart';
 
+import 'models.dart';
+
 /// Util methods for paginating lists.
 class PaginatedLists {
   static const _uuid = Uuid();
@@ -24,11 +26,11 @@ class PaginatedLists {
   }
 }
 
-/// Extensions for paginated lists. 
-extension PaginateListExtensions<T> on List<T>{
+/// Extensions for paginated lists.
+extension PaginateListExtensions<T> on List<T> {
   /// Paginates the list with pages of size [size].
   /// If [idGenerator] is null, then generates a uuid for each item.
-  PaginationResult<T> paginate({ String idGenerator(T)?, int size: 10}){
+  PaginationResult<T> paginate({String idGenerator(T)?, int size: 10}) {
     return PaginatedLists.paginate(items: this, size: size, idGenerator: idGenerator);
   }
 }

@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../jlogical_utils.dart';
-import 'package:meta/meta.dart';
+import 'future_value.dart';
 
-class Model<T>{
+class Model<T> {
   /// The publisher of the value.
   @protected
   final BehaviorSubject<FutureValue<T>> subject;
@@ -71,7 +71,6 @@ class Model<T>{
       error: (error) => onError?.call(error),
     );
   }
-
 
   /// Returns the loaded value of the model, or calls [orElse] if not loaded.
   T get({T orElse()?}) {

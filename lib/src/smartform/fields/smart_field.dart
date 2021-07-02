@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jlogical_utils/smartform/cubit/smart_form_cubit.dart';
+import 'package:jlogical_utils/src/smartform/cubit/smart_form_cubit.dart';
 
 /// Field in a SmartForm that handles data with type [T].
 class SmartField<T> extends StatelessWidget {

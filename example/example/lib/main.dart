@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/smartform/fields/smart_bool_field.dart';
-import 'package:jlogical_utils/smartform/fields/smart_options_field.dart';
-import 'package:jlogical_utils/smartform/fields/smart_text_field.dart';
-import 'package:jlogical_utils/smartform/smart_form.dart';
-import 'package:jlogical_utils/smartform/smart_form_controller.dart';
-import 'package:jlogical_utils/smartform/smart_form_data_builder.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,9 +19,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
-  final SmartFormController controller = SmartFormController();
+final SmartFormController controller = SmartFormController();
 
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,16 +58,16 @@ class HomePage extends StatelessWidget {
                                                 name: 'amount',
                                                 label: 'Amount',
                                               ),
-                                              SmartOptionsField(
-                                                name: 'from',
-                                                label: 'Envelope From',
-                                                options: ['Tithe', 'Savings'],
-                                              ),
-                                              SmartOptionsField(
-                                                name: 'to',
-                                                label: 'Envelope To',
-                                                options: ['Tithe', 'Savings'],
-                                              ),
+                                              // SmartOptionsField(
+                                              //   name: 'from',
+                                              //   label: 'Envelope From',
+                                              //   options: ['Tithe', 'Savings'],
+                                              // ),
+                                              // SmartOptionsField(
+                                              //   name: 'to',
+                                              //   label: 'Envelope To',
+                                              //   options: ['Tithe', 'Savings'],
+                                              // ),
                                             ],
                                           ),
                                         ),
@@ -204,68 +198,71 @@ class HomePage extends StatelessWidget {
                 CategoryCard(
                   category: Text('General'),
                   leading: Icon(Icons.category),
-                  trailing: SmartBoolField(
-                    name: 'bool',
-                    initiallyChecked: true,
-                    child: Container(),
-                  ),
+                  // trailing: SmartBoolField(
+                  //   name: 'bool',
+                  //   initiallyChecked: true,
+                  //   child: Container(),
+                  // ),
                   children: [
-                    SmartTextField(
-                      name: 'username',
-                      label: 'Username',
-                      initialText: 'jaboyc',
-                    ),
-                    SmartFormDataBuilder(builder: (context, data) {
-                      return SmartTextField(
-                        name: 'email',
-                        label: 'Email',
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (str) async {
-                          var emailError = Validators.email(str, onEmpty: 'Cannot be empty!', onInvalid: 'Invalid email address.');
-                          if (emailError != null) {
-                            return emailError;
-                          }
-
-                          await Future.delayed(Duration(seconds: 1));
-                          return null;
-                        },
-                      );
-                    }),
-                    SmartTextField(
-                      name: 'password',
-                      label: 'Password',
-                      obscureText: true,
-                      // validator: (str) => Validator.password(str, onEmpty: 'Password cannot be empty!', onShortLength: 'Too short!'),
-                    ),
-                    SmartOptionsField<String>(
-                      name: 'option',
-                      options: [
-                        'A',
-                        'B',
-                        'C',
-                      ],
-                      label: 'Letter',
-                      validator: (value) => Validators.notEmpty(value, onEmpty: 'Cannot be empty!'),
-                    ),
-                    SmartBoolField(
-                      name: 'acceptedTerms',
-                      child: Text('Accept Terms and Conditions?'),
-                      style: SmartBoolFieldStyle.$switch,
-                      initiallyChecked: false,
-                      validator: (value) async {
-                        if (!value) {
-                          return 'You must accept in order to continue';
-                        }
-
-                        return null;
-                      },
-                    ),
+                    //     SmartTextField(
+                    //       name: 'username',
+                    //       label: 'Username',
+                    //       initialText: 'jaboyc',
+                    //     ),
+                    //     SmartFormDataBuilder(builder: (context, data) {
+                    //       return SmartTextField(
+                    //         name: 'email',
+                    //         label: 'Email',
+                    //         keyboardType: TextInputType.emailAddress,
+                    //         validator: (str) async {
+                    //           var emailError = Validators.email(str, onEmpty: 'Cannot be empty!', onInvalid: 'Invalid email address.');
+                    //           if (emailError != null) {
+                    //             return emailError;
+                    //           }
+                    //
+                    //           await Future.delayed(Duration(seconds: 1));
+                    //           return null;
+                    //         },
+                    //       );
+                    //     }),
+                    //     SmartTextField(
+                    //       name: 'password',
+                    //       label: 'Password',
+                    //       obscureText: true,
+                    //       // validator: (str) => Validator.password(str, onEmpty: 'Password cannot be empty!', onShortLength: 'Too short!'),
+                    //     ),
+                    //     SmartOptionsField<String>(
+                    //       name: 'option',
+                    //       options: [
+                    //         'A',
+                    //         'B',
+                    //         'C',
+                    //       ],
+                    //       label: 'Letter',
+                    //       validator: (value) => Validators.notEmpty(value, onEmpty: 'Cannot be empty!'),
+                    //     ),
+                    //     SmartBoolField(
+                    //       name: 'acceptedTerms',
+                    //       child: Text('Accept Terms and Conditions?'),
+                    //       style: SmartBoolFieldStyle.$switch,
+                    //       initiallyChecked: false,
+                    //       validator: (value) async {
+                    //         if (!value) {
+                    //           return 'You must accept in order to continue';
+                    //         }
+                    //
+                    //         return null;
+                    //       },
+                    //     ),
                     Divider(),
                     ElevatedButton(
                       child: Text('OK'),
                       onPressed: () async {
-                        if (await controller.validate()) {
-                          print('in onPressed');
+                        var results = await controller.validate();
+                        if (results.isValid) {
+                          print('success!');
+                        } else {
+                          print('failure');
                         }
                       },
                     ),
@@ -277,6 +274,9 @@ class HomePage extends StatelessWidget {
                     name: 'test',
                     label: 'Test',
                     lineColor: Colors.white,
+                    validators: [
+                      RequiredValidation<String>(),
+                    ],
                   ),
                 ),
               ],
@@ -284,10 +284,7 @@ class HomePage extends StatelessWidget {
           ),
           postValidator: (data) async {
             await Future.delayed(Duration(seconds: 1));
-            return {};
-          },
-          onAccept: (data) {
-            print(data);
+            return data['test'] == '123' ? {'test': 'failure'} : null;
           },
         ),
       ),

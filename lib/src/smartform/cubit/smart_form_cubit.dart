@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:jlogical_utils/smartform/smart_form.dart';
+
+import '../smart_form.dart';
 
 part 'smart_form_cubit.freezed.dart';
 part 'smart_form_state.dart';
@@ -67,7 +68,7 @@ class SmartFormCubit extends Cubit<SmartFormState> {
       return false;
     }
 
-    if (postValidator != null) nameToErrorMap = await postValidator!.call(state.nameToValueMap);
+    if (postValidator != null) nameToErrorMap = (await postValidator!.call(state.nameToValueMap))!;
 
     hasError = nameToErrorMap.isNotEmpty;
 
