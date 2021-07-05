@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/src/smartform/smart_form.dart';
-import 'package:jlogical_utils/src/smartform/smart_form_controller.dart';
+import 'package:jlogical_utils/src/form/forms.dart';
 
 import 'color_popup.dart';
 import 'input_popup.dart';
@@ -105,8 +104,8 @@ class Popup {
     PostValidator? postValidator,
     String noMsg = 'CANCEL',
     String yesMsg = 'OK',
-  }) async {
-    return await showDialog<Map<String, dynamic>>(
+  }) {
+    return showDialog<Map<String, dynamic>>(
         context: context,
         barrierDismissible: true,
         builder: (context) {
@@ -128,8 +127,9 @@ class Popup {
                   OutlinedButton(
                     child: new Text(yesMsg),
                     onPressed: () async {
-                      if (await controller.validate()) {
-                        Navigator.of(context).pop(controller.data);
+                      var result = await controller.validate();
+                      if (result.isValid) {
+                        Navigator.of(context).pop(result.valueByName);
                       }
                     },
                   ),

@@ -1,6 +1,5 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/form/validation/validation_result.dart';
-import 'package:jlogical_utils/src/smartform/smart_form.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'smart_form_data.dart';

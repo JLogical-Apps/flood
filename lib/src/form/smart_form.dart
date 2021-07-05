@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/src/smartform/smart_form.dart';
 import 'package:provider/provider.dart';
 
 import 'smart_form_controller.dart';
+
+typedef FutureOr<Map<String, String>?> PostValidator(Map<String, dynamic> data);
 
 /// Simplifies the process of creating forms.
 /// Simply give a [controller] and place some [SmartFormField]s as children to get things up and running.

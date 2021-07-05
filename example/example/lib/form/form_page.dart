@@ -16,7 +16,7 @@ class FormPage extends HookWidget {
     var smartFormController = useMemoized(() => SmartFormController());
 
     return Scaffold(
-      appBar: AppBar(title: Text('Forms')),
+      appBar: AppBar(title: Text('FORMS')),
       backgroundColor: backgroundColor,
       body: SmartForm(
         controller: smartFormController,

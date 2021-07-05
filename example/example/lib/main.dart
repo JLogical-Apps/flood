@@ -1,6 +1,8 @@
-import 'package:example/form_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+
+import 'form/form_page.dart';
+import 'repository/repository_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +32,10 @@ class HomePage extends StatelessWidget {
           NavigationCard(
             title: Text('Forms'),
             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => FormPage())),
+          ),
+          NavigationCard(
+            title: Text('Repository'),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => RepositoryPage())),
           ),
         ],
       ),
