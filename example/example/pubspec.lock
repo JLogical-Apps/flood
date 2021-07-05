@@ -119,7 +119,7 @@ packages:
     source: hosted
     version: "0.4.0"
   flutter_hooks:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_hooks
       url: "https://pub.dartlang.org"
@@ -313,7 +313,7 @@ packages:
     source: hosted
     version: "2.0.0"
   rxdart:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: rxdart
       url: "https://pub.dartlang.org"

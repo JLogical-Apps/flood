@@ -11,3 +11,18 @@ T useValueStream<T>(ValueStream<T> stream) {
 void useOneTimeEffect(void Function()? Function() effect) {
   useEffect(effect, [0]);
 }
+
+/// Creates and listens to a BehaviorSubject with the value from [create] and is automatically disposed when the widget is disposed.
+BehaviorSubject<T> useObservable<T>(T create()) {
+  var subject = useMemoized(() => BehaviorSubject.seeded(create()));
+  useOneTimeEffect(() => subject.close);
+  useValueStream(subject);
+  return subject;
+}
+
+/// Creates and listens to a ValueStream from [create] and is automatically disposed when the widget is disposed.
+ValueStream<C> useComputed<V, C>(ValueStream<C> create()) {
+  var stream = useMemoized(create);
+  useValueStream(stream);
+  return stream;
+}

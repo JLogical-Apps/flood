@@ -5,4 +5,5 @@ export 'format.dart';
 export 'hook_utils.dart';
 export 'pair.dart';
 export 'stream_extensions.dart';
+export 'string_extensions.dart';
 export 'util.dart';
