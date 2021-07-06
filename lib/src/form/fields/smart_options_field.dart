@@ -18,7 +18,7 @@ class SmartOptionsField<T> extends SmartFormField<T?> {
     Key? key,
     required String name,
     required this.options,
-    required T initialValue,
+    T? initialValue,
     this.builder,
     this.label,
     List<Validation<T?>>? validators,
