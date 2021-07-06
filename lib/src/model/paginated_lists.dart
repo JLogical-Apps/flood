@@ -9,13 +9,15 @@ import 'models.dart';
 class PaginatedLists {
   static const _uuid = Uuid();
 
+  PaginatedLists._();
+
   /// Paginates the list of [items] with pages of size [size].
   /// If [idGenerator] is null, then generates a uuid for each item.
-  static PaginationResult<T> paginate<T>({required List<T> items, String idGenerator(T)?, required int size}) {
+  static PaginationResult<T> paginate<T>({required List<T> items, String idGenerator(T value)?, required int size}) {
     return _paginate(items: items, idGenerator: idGenerator, size: size, lastIndex: 0);
   }
 
-  static PaginationResult<T> _paginate<T>({required List<T> items, String idGenerator(T)?, required int size, required int lastIndex}) {
+  static PaginationResult<T> _paginate<T>({required List<T> items, String idGenerator(T value)?, required int size, required int lastIndex}) {
     idGenerator ??= (_) => _uuid.v4();
     var maxIndex = lastIndex + size;
     var results = items.getRange(lastIndex, min(items.length, maxIndex)).toList();
@@ -30,7 +32,7 @@ class PaginatedLists {
 extension PaginateListExtensions<T> on List<T> {
   /// Paginates the list with pages of size [size].
   /// If [idGenerator] is null, then generates a uuid for each item.
-  PaginationResult<T> paginate({String idGenerator(T)?, int size: 10}) {
+  PaginationResult<T> paginate({String idGenerator(T value)?, int size: 10}) {
     return PaginatedLists.paginate(items: this, size: size, idGenerator: idGenerator);
   }
 }

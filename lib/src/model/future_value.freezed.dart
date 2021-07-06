@@ -107,6 +107,7 @@ class _$FutureValueInitialCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
+
 class _$FutureValueInitial<T> extends FutureValueInitial<T> {
   const _$FutureValueInitial() : super._();
 
@@ -210,6 +211,7 @@ class _$FutureValueLoadedCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
+
 class _$FutureValueLoaded<T> extends FutureValueLoaded<T> {
   const _$FutureValueLoaded({required this.value}) : super._();
 
@@ -328,6 +330,7 @@ class _$FutureValueErrorCopyWithImpl<T, $Res>
 }
 
 /// @nodoc
+
 class _$FutureValueError<T> extends FutureValueError<T> {
   const _$FutureValueError({this.error}) : super._();
 

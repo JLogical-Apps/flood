@@ -1,4 +1,4 @@
-import 'forms.dart';
+import 'form.dart';
 
 /// Stores the data for a smart form field.
 class SmartFormData<T> {
