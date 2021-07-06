@@ -13,92 +13,91 @@ class WeatherPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var weatherByIdX = useObservable(() => <String, Weather>{});
-
-    // In a production environment, would be using Models instead of loading directly in a page.
-    useOneTimeEffect(() {
-      loadWeathers().then((weathers) => weatherByIdX.value = weathers);
-    });
+    // Normally, you would use a controller to get models. For sake of illustration, a model is created in the ui.
+    var createdWeatherModel = useMemoized(() => PaginatedModelList<Weather>(
+          initialPageLoader: () => weatherRepository.getAll(),
+          converter: (weather) => Model.unloadable(weather),
+          idGenerator: MapperIdGenerator((weather) => weather.location),
+        )..load());
+    var weatherModel = useModel(createdWeatherModel);
 
     return RefreshScaffold(
       appBar: AppBar(
         title: Text('WEATHER'),
       ),
-      body: ScrollColumn.withScrollbar(
-        children: [
-          CategoryCard(
-            category: Text('Weathers'),
-            leading: Icon(Icons.map),
-            children: [
-              ...weatherByIdX.value.entries.map((entry) {
-                var id = entry.key;
-                var weather = entry.value;
-                return ListTile(
-                  title: Text(weather.location),
-                  subtitle: Text('${weather.degreesCelsius.formatIntOrDouble()} degrees'),
-                  leading: weather.isRaining ? Icon(Icons.water) : Icon(Icons.wb_sunny),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () async {
-                      await weatherRepository.delete(id);
-                      loadWeathers().then((weathers) => weatherByIdX.value = weathers);
-                    },
-                  ),
-                );
-              }),
-              ElevatedButton(
-                child: Text('ADD LOCATION'),
-                onPressed: () async {
-                  var result = await Popup.smartForm(
-                    context,
-                    builder: (context) => ScrollColumn.withScrollbar(
-                      children: [
-                        SmartTextField(
-                          name: 'location',
-                          label: 'Location',
-                          validators: [Validation.required()],
-                        ),
-                        SmartTextField(
-                          name: 'degrees',
-                          label: 'Degrees (celsius)',
-                          validators: [
-                            Validation.required(),
-                            Validation.isDouble(),
-                          ],
-                        ),
-                        SmartBoolField(
-                          name: 'isRaining',
-                          child: Text('Is Raining?'),
-                        ),
-                      ],
+      body: weatherModel.value.when(
+        initial: () => LoadingWidget(),
+        error: (error) => Center(child: Text(error.toString())),
+        loaded: (weatherById) => ScrollColumn.withScrollbar(
+          children: [
+            CategoryCard(
+              category: Text('Weathers'),
+              leading: Icon(Icons.map),
+              children: [
+                ...weatherById.results.entries.map((entry) {
+                  var id = entry.key;
+                  var weather = entry.value.get();
+                  return ListTile(
+                    title: Text(weather.location),
+                    subtitle: Text('${weather.degreesCelsius.formatIntOrDouble()} degrees'),
+                    leading: weather.isRaining ? Icon(Icons.water) : Icon(Icons.wb_sunny),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () async {
+                        await weatherRepository.delete(id);
+                        weatherModel.removeModel(id);
+                      },
                     ),
-                    title: 'Add Location',
                   );
-                  if (result == null) return;
+                }),
+                ElevatedButton(
+                  child: Text('ADD LOCATION'),
+                  onPressed: () async {
+                    var result = await Popup.smartForm(
+                      context,
+                      builder: (context) => ScrollColumn.withScrollbar(
+                        children: [
+                          SmartTextField(
+                            name: 'location',
+                            label: 'Location',
+                            validators: [Validation.required()],
+                          ),
+                          SmartTextField(
+                            name: 'degrees',
+                            label: 'Degrees (celsius)',
+                            validators: [
+                              Validation.required(),
+                              Validation.isDouble(),
+                            ],
+                          ),
+                          SmartBoolField(
+                            name: 'isRaining',
+                            child: Text('Is Raining?'),
+                          ),
+                        ],
+                      ),
+                      title: 'Add Location',
+                    );
+                    if (result == null) return;
 
-                  String location = result['location'];
-                  double degrees = double.parse(result['degrees']);
-                  bool isRaining = result['isRaining'];
+                    String location = result['location'];
+                    double degrees = double.parse(result['degrees']);
+                    bool isRaining = result['isRaining'];
 
-                  var weather = Weather(location: location, degreesCelsius: degrees, isRaining: isRaining);
+                    var weather = Weather(location: location, degreesCelsius: degrees, isRaining: isRaining);
 
-                  await weatherRepository.create(weather);
-                  loadWeathers().then((weathers) => weatherByIdX.value = weathers);
-                },
-              ),
-            ],
-          ),
-        ],
+                    await weatherRepository.create(weather);
+                    weatherModel.addData(weather);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
       onRefresh: () async {
-        loadWeathers().then((weathers) => weatherByIdX.value = weathers);
+        weatherModel.load();
       },
     );
-  }
-
-  // Load the weathers from the weather repository.
-  Future<Map<String, Weather>> loadWeathers() async {
-    var weatherEntries = await weatherRepository.getAll();
-    return weatherEntries.results;
   }
 }

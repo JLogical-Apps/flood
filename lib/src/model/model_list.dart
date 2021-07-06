@@ -9,19 +9,29 @@ import 'model.dart';
 
 /// Manages a list of models that can be reloaded.
 class ModelList<T> extends Model<Map<String, Model<T>>> {
+  // Converts the list elements to models.
+  final Model<T> Function(T value) converter;
+
+  /// If not null, can automatically generate ids for models that are added to this list.
+  final IdGenerator<T, String>? idGenerator;
+
   /// [loader] loads the raw list result.
-  /// [converter] converts the list elements to models.
   /// [initialValues] are optional values to have initially.
+  /// [initialData] can be used to prepopulate the list by calling [idGenerator] to get ids and [converter] to convert to models.
   ModelList({
     required Future<Map<String, T>> loader(),
-    required Model<T> converter(T value),
+    required this.converter,
+    this.idGenerator,
     Map<String, Model<T>>? initialValues,
+    List<T>? initialData,
   }) : super(
             initialValue: initialValues,
             loader: () async {
               var rawResults = await loader();
               return rawResults.map((key, value) => MapEntry(key, converter(value)));
-            });
+            }) {
+    if (initialData != null) addAllData(initialData);
+  }
 
   /// Stream of ids of the list.
   late ValueStream<FutureValue<List<String>>> idsX = subject.mapWithValue((value) => value.when(
@@ -69,6 +79,18 @@ class ModelList<T> extends Model<Map<String, Model<T>>> {
     setLoaded(models);
   }
 
+  /// Adds a [data] with an auto-generated id from [idGenerator] and converted to a Model with [converter].
+  /// Returns the generated id.
+  String addData(T data) {
+    if (idGenerator == null) throw Exception('Cannot add data to a ModelList without an idGenerator!');
+
+    var model = converter(data);
+    var id = idGenerator!.getId(data);
+
+    addModel(id, model);
+    return id;
+  }
+
   /// Adds all the models to the list.
   void addAllModels(Map<String, Model<T>> models) {
     var _models = get();
@@ -77,6 +99,16 @@ class ModelList<T> extends Model<Map<String, Model<T>>> {
       ...models,
     };
     setLoaded(_models);
+  }
+
+  /// Adds all the [data] elements with auto-generated ids from [idGenerator] and converted to Models using [converter].
+  void addAllData(List<T> data) {
+    if (idGenerator == null) throw Exception('Cannot add data to a ModelList without an idGenerator!');
+
+    var models = data.map(converter).toList();
+    var ids = data.map(idGenerator!.getId).toList();
+
+    addAllModels(Map.fromIterables(ids, models));
   }
 
   /// Removes the model with the given [id].

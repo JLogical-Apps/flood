@@ -1,6 +1,8 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../jlogical_utils.dart';
+
 /// Helper for using a value stream.
 T useValueStream<T>(ValueStream<T> stream) {
   useStream(stream);
@@ -25,4 +27,10 @@ ValueStream<C> useComputed<V, C>(ValueStream<C> create()) {
   var stream = useMemoized(create);
   useValueStream(stream);
   return stream;
+}
+
+/// Listens to a model.
+M useModel<M extends Model<V>, V>(M model) {
+  useValueStream(model.valueX);
+  return model;
 }

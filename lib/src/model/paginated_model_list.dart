@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:rxdart/rxdart.dart';
@@ -11,10 +10,18 @@ import 'models.dart';
 /// A model list that handles paginating the results.
 /// Use [loadNextPage] to append the next page (if it exists) to the
 class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
-  /// [converter] converts values from the page loads to models.
+  // Converts the list elements to models.
+  final Model<T> Function(T value) converter;
+
+  /// If not null, can automatically generate ids for models that are added to this list.
+  final IdGenerator<T, String>? idGenerator;
+
   /// [initialPageLoader] is the loader that is called with [load].
-  PaginatedModelList({required Model<T> converter(T value), required Future<PaginationResult<T>> initialPageLoader()})
-      : super(
+  PaginatedModelList({
+    required this.converter,
+    required Future<PaginationResult<T>> initialPageLoader(),
+    this.idGenerator,
+  }) : super(
           initialValue: null,
           loader: () => _transformer(initialPageLoader, converter),
         );
@@ -89,7 +96,7 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   /// Throws an exception if not loaded.
   void addModel(String id, Model<T> model) {
     var page = get();
-    var results = LinkedHashMap.of(page.results)..addAll({id: model});
+    var results = page.results.copy()..addAll({id: model});
     page = PaginationResult(
       results: results,
       nextPageGetter: page.nextPageGetter,
@@ -97,15 +104,36 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
     setLoaded(page);
   }
 
+  /// Adds a [data] with an auto-generated id from [idGenerator] and converted to a Model with [converter].
+  /// Returns the generated id.
+  String addData(T data) {
+    if (idGenerator == null) throw Exception('Cannot add data to a PaginatedModelList without an idGenerator!');
+
+    var model = converter(data);
+    var id = idGenerator!.getId(data);
+
+    addModel(id, model);
+    return id;
+  }
+
   /// Adds all the models to the list.
   void addAllModels(Map<String, Model<T>> models) {
     var page = get();
-    var results = LinkedHashMap.of(page.results)..addAll(models);
+    var results = page.results.copy()..addAll(models);
     page = PaginationResult(
       results: results,
       nextPageGetter: page.nextPageGetter,
     );
     setLoaded(page);
+  }
+
+  /// Adds all the [data] elements with auto-generated ids from [idGenerator] and converted to Models using [converter].
+  void addAllData(List<T> data) {
+    if (idGenerator == null) throw Exception('Cannot add data to a PaginatedModelList without an idGenerator!');
+    var models = data.map(converter).toList();
+    var ids = data.map(idGenerator!.getId).toList();
+
+    addAllModels(Map.fromIterables(ids, models));
   }
 
   /// Removes the model with the given [id].
@@ -113,8 +141,7 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   void removeModel(String id) {
     var page = get();
 
-    var results = LinkedHashMap.of(page.results);
-    results.remove(id);
+    var results = page.results.copy()..remove(id);
 
     page = PaginationResult(
       results: results,
@@ -128,7 +155,7 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   void setModel(String id, Model<T> model) {
     var page = get();
 
-    var results = LinkedHashMap.of(page.results);
+    var results = page.results.copy();
     results[id] = model;
 
     page = PaginationResult(

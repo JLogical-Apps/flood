@@ -62,6 +62,8 @@ abstract class FileRepository<T> implements Repository<T, String> {
 
   @override
   Future<PaginationResult<T>> getAll() async {
+    await parentDirectory.ensureCreated();
+
     var fileEntities = await parentDirectory.list().toList();
     var files = fileEntities.whereType<File>();
     var objectByIdEntries = await Future.wait(files.tryMap((file) async {
