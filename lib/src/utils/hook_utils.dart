@@ -14,11 +14,12 @@ void useOneTimeEffect(void Function()? Function() effect) {
   useEffect(effect, [0]);
 }
 
-/// Creates and listens to a BehaviorSubject with the value from [create] and is automatically disposed when the widget is disposed.
-BehaviorSubject<T> useObservable<T>(T create()) {
+/// Creates a BehaviorSubject with the value from [create] and is automatically disposed when the widget is disposed.
+/// If [shouldListen], then will also listen to the BehaviorSubject. If [shouldListen] is changed between builds, it will cause errors.
+BehaviorSubject<T> useObservable<T>(T create(), {bool shouldListen: true}) {
   var subject = useMemoized(() => BehaviorSubject.seeded(create()));
   useOneTimeEffect(() => subject.close);
-  useValueStream(subject);
+  if (shouldListen) useValueStream(subject);
   return subject;
 }
 
@@ -33,4 +34,12 @@ ValueStream<C> useComputed<V, C>(ValueStream<C> create()) {
 M useModel<M extends Model<V>, V>(M model) {
   useValueStream(model.valueX);
   return model;
+}
+
+/// Listens to a stream and disposes of the listener when the widget is disposed.
+void useListen<V>(Stream<V> stream, void onValueChanged(V value)) {
+  useOneTimeEffect(() {
+    var subscription = stream.listen(onValueChanged);
+    return subscription.cancel;
+  });
 }
