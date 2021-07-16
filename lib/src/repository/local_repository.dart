@@ -36,8 +36,19 @@ class LocalRepository<T, R> implements Repository<T, R> {
     dataById.remove(id);
   }
 
+  /// Gets all the elements in the repository with an optional [orderBy] or [filter].
   @override
-  Future<PaginationResult<T>> getAll() async {
-    return PaginationResult(results: dataById.map((key, value) => MapEntry(key.toString(), value)), nextPageGetter: null);
+  Future<PaginationResult<T>> getAll({bool filter(T element)?, int orderBy(T element1, T element2)?}) async {
+    var elementById = dataById.map((key, value) => MapEntry(key.toString(), value));
+
+    if(filter != null)
+      elementById.removeWhere((id, element) => !filter(element));
+
+    if(orderBy != null) {
+      var sortedEntries = elementById.entries.toList()..sort((entry1, entry2) => orderBy(entry1.value, entry2.value));
+      elementById = Map.fromEntries(sortedEntries);
+    }
+
+    return PaginationResult(results: elementById, nextPageGetter: null);
   }
 }

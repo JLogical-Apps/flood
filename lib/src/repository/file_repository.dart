@@ -60,8 +60,9 @@ abstract class FileRepository<T> implements Repository<T, String> {
     await File(path).delete();
   }
 
+  /// Gets all the elements in the repository with an optional [orderBy] or [filter].
   @override
-  Future<PaginationResult<T>> getAll() async {
+  Future<PaginationResult<T>> getAll({bool filter(T element)?, int orderBy(T element1, T element2)?}) async {
     await parentDirectory.ensureCreated();
 
     var fileEntities = await parentDirectory.list().toList();
@@ -71,8 +72,17 @@ abstract class FileRepository<T> implements Repository<T, String> {
       var object = await get(id);
       return MapEntry<String, T>(id, object!);
     }));
-    var objectById = Map.fromEntries(objectByIdEntries);
-    return PaginationResult(results: objectById, nextPageGetter: null);
+    var elementById = Map.fromEntries(objectByIdEntries);
+    
+    if(filter != null)
+      elementById.removeWhere((id, element) => !filter(element));
+
+    if(orderBy != null) {
+      var sortedEntries = elementById.entries.toList()..sort((entry1, entry2) => orderBy(entry1.value, entry2.value));
+      elementById = Map.fromEntries(sortedEntries);
+    }
+
+    return PaginationResult(results: elementById, nextPageGetter: null);
   }
 
   /// Returns the path of the object with [id].
