@@ -34,4 +34,16 @@ class PaginationResult<T> {
       nextPageGetter: nextPage.nextPageGetter,
     );
   }
+
+  /// Maps the pagination result to another type.
+  PaginationResult<R> map<R>({String idMapper(String value)?, required R valueMapper(T value)}) {
+    return PaginationResult(
+        results: results.map((key, value) => MapEntry(idMapper == null ? key : idMapper(key), valueMapper(value))),
+        nextPageGetter: nextPageGetter == null
+            ? null
+            : () async {
+                var nextPage = await nextPageGetter!.call();
+                return nextPage.map(idMapper: idMapper, valueMapper: valueMapper);
+              });
+  }
 }
