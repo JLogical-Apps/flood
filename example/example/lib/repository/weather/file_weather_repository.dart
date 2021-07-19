@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:example/repository/weather/weather_repository.dart';
@@ -12,7 +11,7 @@ class FileWeatherRepository extends JsonFileRepository<Weather> implements Weath
   }) : super(
           parentDirectory: parentDirectory,
           idGenerator: MapperIdGenerator((weather) => weather.location),
-          toJson: (weather) => json.encode(weather.toJson()),
-          fromJson: (_json) => Weather.fromJson(json.decode(_json)),
+          toJson: (weather) => weather.toJson(),
+          fromJson: (json) => Weather.fromJson(json),
         );
 }
