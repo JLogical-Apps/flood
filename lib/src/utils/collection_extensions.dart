@@ -57,4 +57,9 @@ extension MapExtensions<K, V> on Map<K, V> {
 
     return map((key, value) => MapEntry(keyCopier?.call(key) ?? key, valueCopier?.call(value) ?? value));
   }
+
+  /// Simply sets the value of [key] to [value], just like `map[key] = value`
+  void set(K key, V value) {
+    this[key] = value;
+  }
 }
