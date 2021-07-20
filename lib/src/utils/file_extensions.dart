@@ -2,28 +2,28 @@ import 'dart:convert';
 import 'dart:io';
 
 extension FileExtensions on File {
-  /// Reads the json from a file. Returns null if an error occurred.
-  Map<String, dynamic>? readJsonSync({void onError(dynamic error)?}) {
-    try {
-      var text = readAsStringSync();
-      var _json = json.decode(text);
-      return _json;
-    } catch (e) {
-      onError?.call(e);
-      return null;
-    }
+  /// Reads the json from a file. Throws an exception if the file doesn't exist or cannot be parsed to json.
+  Map<String, dynamic> readJsonSync() {
+    var text = readAsStringSync();
+    return json.decode(text);
   }
 
-  /// Reads the json from a file. Returns null if an error occurred.
-  Future<Map<String, dynamic>?> readJson({void onError(dynamic error)?}) async {
-    try {
-      var text = await readAsString();
-      var _json = json.decode(text);
-      return _json;
-    } catch (e) {
-      onError?.call(e);
-      return null;
-    }
+  /// Reads the json from a file. Throws an exception if the file doesn't exist or cannot be parsed to json.
+  Future<Map<String, dynamic>> readJson() async {
+    var text = await readAsString();
+    return json.decode(text);
+  }
+
+  /// Writes the [_json] to the file. Throws an exception if the file doesn't exist.
+  void writeJsonSync(Map<String, dynamic> _json) {
+    var jsonText = json.encode(_json);
+    writeAsStringSync(jsonText);
+  }
+
+  /// Writes the [_json] to the file. Throws an exception if the file doesn't exist.
+  Future<void> writeJson(Map<String, dynamic> _json) async {
+    var jsonText = json.encode(_json);
+    await writeAsString(jsonText);
   }
 
   /// Returns the file after making sure it is created.
