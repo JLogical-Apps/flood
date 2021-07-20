@@ -31,9 +31,12 @@ class Model<T> {
   /// A function that loads data to be stored in the model.
   final FutureOr<T> Function() loader;
 
-  Model({required this.loader, T? initialValue}) : subject = BehaviorSubject.seeded(initialValue == null ? FutureValue.initial() : FutureValue.loaded(value: initialValue));
+  Model({required this.loader, T? initialValue})
+      : subject = BehaviorSubject.seeded(
+            initialValue == null ? FutureValue.initial() : FutureValue.loaded(value: initialValue));
 
-  factory Model.unloadable(T initialValue) => Model(initialValue: initialValue, loader: () => throw Exception('Cannnot load an unloadable model!'));
+  factory Model.unloadable(T initialValue) =>
+      Model(initialValue: initialValue, loader: () => throw Exception('Cannnot load an unloadable model!'));
 
   /// Loads the data for the model using the [loader].
   Future<void> load() async {
@@ -51,7 +54,7 @@ class Model<T> {
       subject.value = FutureValue.initial();
     }
 
-    subject.value = await FutureValue.guard(() async => await loader());
+    subject.value = await FutureValue.guard(() async => await loader(), onError: print);
 
     // Once the model completes loading, notify other [load] calls that the load has finished.
     _completer!.complete();

@@ -15,17 +15,20 @@ class FutureValue<T> with _$FutureValue<T> {
 
   /// Invokes the future and returns the result of it in a loaded future value.
   /// If an exception occurred, returns an error src.model.
-  static Future<FutureValue<T>> guard<T>(Future<T> future()) async {
+  static Future<FutureValue<T>> guard<T>(Future<T> future(), {void onError(dynamic error)?}) async {
     try {
       var data = await future();
       return FutureValue.loaded(value: data);
     } catch (ex) {
+      onError?.call(ex);
       return FutureValue.error(error: ex);
     }
   }
 
   /// Returns the value of the future-value, or [orElse] if in an error/loading state, or throws an exception.
-  T get({T orElse()?}) => maybeWhen(loaded: (value) => value, orElse: () => orElse != null ? orElse() : (throw Exception('Called get() on unloaded state.')));
+  T get({T orElse()?}) => maybeWhen(
+      loaded: (value) => value,
+      orElse: () => orElse != null ? orElse() : (throw Exception('Called get() on unloaded state.')));
 
   /// Returns the the value of the future-value, or null if in an error/loading state.
   T? getOrNull() => maybeWhen(loaded: (value) => value, orElse: () => null);
