@@ -55,18 +55,23 @@ class ModelList<T> extends Model<Map<String, Model<T>>> {
 
   /// Returns the ids of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
-  List<String> getIDs({List<String> orElse()?}) => getOrNull(orElse: () => null)?.keys.toList() ?? (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
+  List<String> getIDs({List<String> orElse()?}) =>
+      getOrNull(orElse: () => null)?.keys.toList() ??
+      (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
 
   /// Returns the ids of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
-  List<String>? getIDsOrNull({List<String>? orElse()?}) => getOrNull(orElse: () => null)?.keys.toList() ?? orElse?.call();
+  List<String>? getIDsOrNull({List<String>? orElse()?}) =>
+      getOrNull(orElse: () => null)?.keys.toList() ?? orElse?.call();
 
   /// Returns the models of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
   List<Model<T>> getModels({List<Model<T>> orElse()?}) =>
-      getOrNull(orElse: () => null)?.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
+      getOrNull(orElse: () => null)?.values.toList() ??
+      (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in ModelList!'));
 
   /// Returns the models of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
-  List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) => getOrNull(orElse: () => null)?.values.toList() ?? orElse?.call();
+  List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) =>
+      getOrNull(orElse: () => null)?.values.toList() ?? orElse?.call();
 
   /// Adds a model to the list if it is loaded.
   /// Throws an exception if not loaded.
@@ -75,6 +80,17 @@ class ModelList<T> extends Model<Map<String, Model<T>>> {
     models = {
       ...models,
       ...{id: model}
+    };
+    setLoaded(models);
+  }
+
+  /// Adds a model to the beginning of the list if it is loaded.
+  /// Throws an exception if not loaded.
+  void addModelToBeginning(String id, Model<T> model) {
+    var page = get();
+    var models = {
+      ...{id: model},
+      ...page,
     };
     setLoaded(models);
   }
@@ -88,6 +104,19 @@ class ModelList<T> extends Model<Map<String, Model<T>>> {
     var id = idGenerator!.getId(data);
 
     addModel(id, model);
+    return id;
+  }
+
+  /// Adds a [data] with an auto-generated id from [idGenerator] and converted to a Model with [converter] at the
+  /// beginning of the list if it is loaded.
+  /// Returns the generated id.
+  String addDataToBeginning(T data) {
+    if (idGenerator == null) throw Exception('Cannot add data to a PaginatedModelList without an idGenerator!');
+
+    var model = converter(data);
+    var id = idGenerator!.getId(data);
+
+    addModelToBeginning(id, model);
     return id;
   }
 

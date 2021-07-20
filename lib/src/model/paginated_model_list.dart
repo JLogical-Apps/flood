@@ -49,29 +49,36 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   /// Returns the ids of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
   List<String> getIDs({List<String> orElse()?}) =>
-      getOrNull(orElse: () => null)?.results.keys.toList() ?? (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
+      getOrNull(orElse: () => null)?.results.keys.toList() ??
+      (orElse != null ? orElse() : throw Exception('getIDs() called without loaded state in ModelList!'));
 
   /// Returns the ids of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
-  List<String>? getIDsOrNull({List<String>? orElse()?}) => getOrNull(orElse: () => null)?.results.keys.toList() ?? orElse?.call();
+  List<String>? getIDsOrNull({List<String>? orElse()?}) =>
+      getOrNull(orElse: () => null)?.results.keys.toList() ?? orElse?.call();
 
   /// Returns the models of the loaded value of the model, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
   List<Model<T>> getModels({List<Model<T>> orElse()?}) =>
-      getOrNull(orElse: () => null)?.results.values.toList() ?? (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in PaginatedModelList!'));
+      getOrNull(orElse: () => null)?.results.values.toList() ??
+      (orElse != null ? orElse() : throw Exception('getModels() called without loaded state in PaginatedModelList!'));
 
   /// Returns the models of the loaded value of the model, or calls [orElse] if [orElse] is not null, or returns [null].
-  List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) => getOrNull(orElse: () => null)?.results.values.toList() ?? orElse?.call();
+  List<Model<T>>? getModelsOrNull({List<Model<T>>? orElse()?}) =>
+      getOrNull(orElse: () => null)?.results.values.toList() ?? orElse?.call();
 
   /// Returns the results of the loaded pages, or calls [orElse] if not loaded.
   /// Throws an exception if not loaded and [orElse] is null.
   List<T> getResults({List<T> orElse()?}) =>
-      getModelsOrNull()?.map((model) => model.get()).toList() ?? (orElse != null ? orElse() : throw Exception('getResults() called without loaded state in PaginatedModelList!'));
+      getModelsOrNull()?.map((model) => model.get()).toList() ??
+      (orElse != null ? orElse() : throw Exception('getResults() called without loaded state in PaginatedModelList!'));
 
   /// Returns the results of the page, or calls [orElse] if [orElse] is not null, or returns [null].
-  List<T>? getResultsOrNull({List<T>? orElse()?}) => getModelsOrNull()?.map((model) => model.get()).toList() ?? orElse?.call();
+  List<T>? getResultsOrNull({List<T>? orElse()?}) =>
+      getModelsOrNull()?.map((model) => model.get()).toList() ?? orElse?.call();
 
   /// Transforms the pagination results to ones with models.
-  static FutureOr<PaginationResult<Model<T>>> _transformer<T>(FutureOr<PaginationResult<T>> loader(), Model<T> converter(T value)) async {
+  static FutureOr<PaginationResult<Model<T>>> _transformer<T>(
+      FutureOr<PaginationResult<T>> loader(), Model<T> converter(T value)) async {
     var page = await loader();
     return PaginationResult(
         results: page.results.map((key, value) => MapEntry(
@@ -104,6 +111,18 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
     setLoaded(page);
   }
 
+  /// Adds a model to the beginning of the list if it is loaded.
+  /// Throws an exception if not loaded.
+  void addModelToBeginning(String id, Model<T> model) {
+    var page = get();
+    var results = {
+      ...{id: model},
+      ...page.results,
+    };
+    page = PaginationResult(results: results, nextPageGetter: page.nextPageGetter);
+    setLoaded(page);
+  }
+
   /// Adds a [data] with an auto-generated id from [idGenerator] and converted to a Model with [converter].
   /// Returns the generated id.
   String addData(T data) {
@@ -113,6 +132,19 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
     var id = idGenerator!.getId(data);
 
     addModel(id, model);
+    return id;
+  }
+
+  /// Adds a [data] with an auto-generated id from [idGenerator] and converted to a Model with [converter] at the
+  /// beginning of the list if it is loaded.
+  /// Returns the generated id.
+  String addDataToBeginning(T data) {
+    if (idGenerator == null) throw Exception('Cannot add data to a PaginatedModelList without an idGenerator!');
+
+    var model = converter(data);
+    var id = idGenerator!.getId(data);
+
+    addModelToBeginning(id, model);
     return id;
   }
 
