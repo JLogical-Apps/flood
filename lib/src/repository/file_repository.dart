@@ -21,7 +21,11 @@ abstract class FileRepository<T> implements Repository<T, String> {
   /// Must start with '.' if not empty.
   final String extension;
 
-  FileRepository({required this.persistenceFactory, required this.parentDirectory, required this.idGenerator, this.extension: '.txt'});
+  FileRepository(
+      {required this.persistenceFactory,
+      required this.parentDirectory,
+      required this.idGenerator,
+      this.extension: '.txt'});
 
   @override
   Future<String> create(T object) async {
@@ -73,11 +77,10 @@ abstract class FileRepository<T> implements Repository<T, String> {
       return MapEntry<String, T>(id, object!);
     }));
     var elementById = Map.fromEntries(objectByIdEntries);
-    
-    if(filter != null)
-      elementById.removeWhere((id, element) => !filter(element));
 
-    if(orderBy != null) {
+    if (filter != null) elementById.removeWhere((id, element) => !filter(element));
+
+    if (orderBy != null) {
       var sortedEntries = elementById.entries.toList()..sort((entry1, entry2) => orderBy(entry1.value, entry2.value));
       elementById = Map.fromEntries(sortedEntries);
     }

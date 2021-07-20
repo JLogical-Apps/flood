@@ -15,7 +15,9 @@ abstract class JsonFileRepository<T> extends FileRepository<T> {
           idGenerator: idGenerator,
           parentDirectory: parentDirectory,
           extension: '.json',
-          persistenceFactory:
-              JsonPersistenceFactory(fromJson: (_json) => json.decode(_json), toJson: (obj) => json.encode(obj)),
+          persistenceFactory: JsonPersistenceFactory(
+            fromJson: (jsonText) => fromJson(json.decode(jsonText)),
+            toJson: (obj) => json.encode(toJson(obj)),
+          ),
         );
 }
