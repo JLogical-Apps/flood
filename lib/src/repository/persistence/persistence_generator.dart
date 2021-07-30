@@ -1,5 +1,5 @@
 /// Generates a persistence format for objects and converts them from persistence.
-abstract class PersistenceFactory<T, P> {
+abstract class PersistenceGenerator<T, P> {
   /// Returns the persistence format for [object].
   P save(T object);
 

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/repository/persistence/json_persistence_factory.dart';
+import 'package:jlogical_utils/src/repository/persistence/json_persistence_generator.dart';
 
 /// File repository that saves objects in json format.
 abstract class JsonFileRepository<T> extends FileRepository<T> {
@@ -15,7 +15,7 @@ abstract class JsonFileRepository<T> extends FileRepository<T> {
           idGenerator: idGenerator,
           parentDirectory: parentDirectory,
           extension: '.json',
-          persistenceFactory: JsonPersistenceFactory(
+          persistenceFactory: JsonPersistenceGenerator(
             fromJson: (jsonText) => fromJson(json.decode(jsonText)),
             toJson: (obj) => json.encode(toJson(obj)),
           ),

@@ -5,4 +5,6 @@ export 'ids/mapper_id_generator.dart';
 export 'ids/uuid_id_generator.dart';
 export 'json_file_repository.dart';
 export 'local_repository.dart';
+export 'persistence/json_persistence_generator.dart';
+export 'persistence/persistence_generator.dart';
 export 'repository.dart';

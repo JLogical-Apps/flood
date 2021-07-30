@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/repository/persistence/persistence_factory.dart';
+import 'package:jlogical_utils/src/repository/persistence/persistence_generator.dart';
 import 'package:path/path.dart';
 
-/// Repository that stores all the data in a file based on a [PersistenceFactory].
+/// Repository that stores all the data in a file based on a [PersistenceGenerator].
 /// The files are named after the id of the object.
 /// The contents of the file are the persisted objects.
 abstract class FileRepository<T> implements Repository<T, String> {
   /// Saves and loads objects to files.
-  final PersistenceFactory<T, String> persistenceFactory;
+  final PersistenceGenerator<T, String> persistenceFactory;
 
   /// The directory to store the files in.
   final Directory parentDirectory;
