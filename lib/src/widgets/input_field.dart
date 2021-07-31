@@ -43,6 +43,9 @@ class InputField extends StatefulWidget {
   /// Function to call when the text changes.
   final void Function(String text)? onChange;
 
+  /// Function to call when the field is tapped on.
+  final void Function()? onTap;
+
   /// Function to call to validate the text in the text field.
   final String? Function(String text)? validator;
 
@@ -66,6 +69,7 @@ class InputField extends StatefulWidget {
     this.onChange,
     this.validator,
     this.errorText,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -126,8 +130,8 @@ class _InputFieldState extends State<InputField> {
           setState(() {});
           widget.onChange?.call(s);
         },
-
         validator: (s) => widget.validator?.call(s ?? ''),
+        onTap: widget.onTap,
       ),
     );
   }

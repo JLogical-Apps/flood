@@ -34,6 +34,17 @@ class FormPage extends HookWidget {
                     Validation.required(),
                   ],
                 ),
+                SmartDateField(
+                  name: 'bornDate',
+                  label: 'Born',
+                  validators: [
+                    Validation.isBeforeNow(),
+                    Validation.isBefore(
+                      latest: DateTime.now().subtract(Duration(days: 365 * 18)),
+                      onBefore: 'Must be 18 or older to sign up.',
+                    ),
+                  ],
+                ),
                 SmartTextField(
                   name: 'age',
                   label: 'Age',

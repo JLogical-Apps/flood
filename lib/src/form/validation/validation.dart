@@ -17,9 +17,9 @@ class Validation<T> {
   /// Creates a simple validation without referencing the controller.
   factory Validation.simple(FutureOr<String?> onValidate(T value)) => Validation((value, _) => onValidate(value));
 
-  /// Composes multiple validations into one.
+  /// combines multiple validations into one.
   /// When validating, it will linearly go through all the validators and if one fails, returns that error message.
-  factory Validation.compose(List<Validation<T>> validators) => Validation((value, controller) {
+  factory Validation.combine(List<Validation<T>> validators) => Validation((value, controller) {
         for (var validator in validators) {
           var error = validator.validate(value, controller);
           if (error != null) return error;
@@ -155,7 +155,9 @@ class Validation<T> {
       Validation.minLength(minLength: 6, onEmpty: onEmpty, onTooShort: (value) => onTooShort);
 
   /// Validates whether the text matches the text of the password field.
-  static Validation<String> isConfirmPassword({required String passwordFieldName, String onEmpty: 'Cannot be empty!', String onInvalid: 'Does not match password!'}) => Validation((value, controller) {
+  static Validation<String> isConfirmPassword(
+          {required String passwordFieldName, String onEmpty: 'Cannot be empty!', String onInvalid: 'Does not match password!'}) =>
+      Validation((value, controller) {
         if (value.isEmpty) {
           return onEmpty;
         }
@@ -194,7 +196,8 @@ class Validation<T> {
   }
 
   /// Validates whether the numeric input is between the range of [minimum] and [maximum] inclusively.
-  static Validation<num> range({required num minimum, required num maximum, String onTooSmall(num value)?, String onTooLarge(num value)?}) => Validation.compose([
+  static Validation<num> range({required num minimum, required num maximum, String onTooSmall(num value)?, String onTooLarge(num value)?}) =>
+      Validation.combine([
         Validation.minimum(minimum: minimum, onTooSmall: onTooSmall),
         Validation.maximum(maximum: maximum, onTooLarge: onTooLarge),
       ]);
@@ -205,6 +208,48 @@ class Validation<T> {
 
   /// Validates whether the numeric input is not negative, meaning it can be zero or positive.
   static Validation<num> isNonNegative({String onNegative: 'Cannot be negative!'}) => Validation.minimum(minimum: 0, onTooSmall: (value) => onNegative);
+
+  /// Validates whether the date is before the [latest] date.
+  static Validation<DateTime> isBefore({required DateTime latest, String? onBefore}) {
+    String _onBefore = onBefore ?? 'Cannot be later than ${latest.formatDate(isLong: false)}!';
+    return Validation.simple((value) {
+      if (!value.isBefore(latest)) {
+        return _onBefore;
+      }
+
+      return null;
+    });
+  }
+
+  /// Validates whether the date is before today.
+  static Validation<DateTime> isBeforeNow({String onBefore: 'Cannot be later than today!'}) => Validation.isBefore(
+        latest: DateTime.now(),
+        onBefore: onBefore,
+      );
+
+  /// Validates whether the date is after the [earliest] date.
+  static Validation<DateTime> isAfter({required DateTime earliest, String? onAfter}) {
+    String _onAfter = onAfter ?? 'Cannot be earlier than ${earliest.formatDate(isLong: false)}';
+    return Validation.simple((value) {
+      if (!value.isAfter(earliest)) {
+        return _onAfter;
+      }
+
+      return null;
+    });
+  }
+
+  /// Validates whether the date is after now.
+  static Validation<DateTime> isAfterNow({String onAfter: 'Cannot be earlier than today!'}) => Validation.isAfter(
+        earliest: DateTime.now(),
+        onAfter: onAfter,
+      );
+
+  static Validation<DateTime> dateRange({required DateTime earliest, required DateTime latest, String? onBeforeEarliest, String? onAfterLatest}) =>
+      Validation.combine([
+        Validation.isAfter(earliest: earliest, onAfter: onAfterLatest),
+        Validation.isBefore(latest: latest, onBefore: onBeforeEarliest),
+      ]);
 }
 
 extension IntValidationExtensions on Validation<int> {
