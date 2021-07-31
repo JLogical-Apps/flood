@@ -12,6 +12,9 @@ class InputField extends StatefulWidget {
   /// The initial text of the input field.
   final String initialText;
 
+  /// The hint text to show if no text has been inputted yet.
+  final String? hintText;
+
   /// The max length of the input field. If [0], no max length.
   /// The max length will be visible to the user when they are 10 characters away from it.
   final int maxLength;
@@ -51,6 +54,7 @@ class InputField extends StatefulWidget {
     this.controller,
     this.label,
     this.initialText = '',
+    this.hintText,
     this.maxLength: 0,
     this.maxLines: 1,
     this.obscureText: false,
@@ -94,9 +98,11 @@ class _InputFieldState extends State<InputField> {
           color: widget.lineColor ?? Colors.black,
         ),
         decoration: InputDecoration(
+          floatingLabelBehavior: FloatingLabelBehavior.always,
           labelText: widget.label,
+          hintText: widget.hintText,
           hintStyle: TextStyle(
-            color: widget.lineColor ?? Theme.of(context).primaryColor,
+            color: widget.lineColor?.withOpacity(0.5) ?? Theme.of(context).primaryColor.withOpacity(0.5),
           ),
           labelStyle: widget.lineColor == null
               ? null
@@ -120,6 +126,7 @@ class _InputFieldState extends State<InputField> {
           setState(() {});
           widget.onChange?.call(s);
         },
+
         validator: (s) => widget.validator?.call(s ?? ''),
       ),
     );

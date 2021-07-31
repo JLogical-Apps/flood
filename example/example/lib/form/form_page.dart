@@ -37,6 +37,7 @@ class FormPage extends HookWidget {
                 SmartTextField(
                   name: 'age',
                   label: 'Age',
+                  suggestedValue: '42',
                   validators: [
                     Validation.required(),
                     Validation.isInteger(),

@@ -10,6 +10,10 @@ class SmartTextField extends SmartFormField<String> {
   /// The label of the field.
   final String? label;
 
+  /// The suggested value to show if no input is typed in.
+  /// Adds this as the value to the SmartFormField if no input has been typed in.
+  final String? suggestedValue;
+
   /// The keyboard type to show.
   final TextInputType keyboardType;
 
@@ -27,6 +31,7 @@ class SmartTextField extends SmartFormField<String> {
     required String name,
     required this.label,
     String? initialValue,
+    this.suggestedValue,
     List<Validation<String>>? validators,
     this.keyboardType: TextInputType.text,
     this.obscureText: false,
@@ -47,6 +52,7 @@ class SmartTextField extends SmartFormField<String> {
       label: label,
       keyboardType: keyboardType,
       initialText: value,
+      hintText: suggestedValue,
       onChange: (text) => smartFormController.setData(name: name, value: text),
       errorText: error,
       obscureText: obscureText,
