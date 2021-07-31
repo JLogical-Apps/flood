@@ -39,7 +39,6 @@ class FormPage extends HookWidget {
                   label: 'Age',
                   suggestedValue: '42',
                   validators: [
-                    Validation.required(),
                     Validation.isInteger(),
                     Validation.range(
                       minimum: 18,
