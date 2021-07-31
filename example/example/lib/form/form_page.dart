@@ -85,6 +85,7 @@ class FormPage extends HookWidget {
                     return SmartOptionsField<String?>(
                       name: 'topping',
                       label: 'Favorite Topping',
+                      canBeNone: true,
                       options: ['Pepperoni', 'Pineapple'],
                       initialValue: null,
                     );

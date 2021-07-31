@@ -14,6 +14,11 @@ class SmartOptionsField<T> extends SmartFormField<T?> {
   /// An optional label for the field.
   final String? label;
 
+  /// Whether a "None" field is shown.
+  /// If [canBeNone] is false and [initialValue] is null,
+  /// shows a "Select..." field.
+  final bool canBeNone;
+
   const SmartOptionsField({
     Key? key,
     required String name,
@@ -21,6 +26,7 @@ class SmartOptionsField<T> extends SmartFormField<T?> {
     T? initialValue,
     this.builder,
     this.label,
+    this.canBeNone: false,
     List<Validation<T?>>? validators,
   }) : super(
           key: key,
@@ -63,7 +69,10 @@ class SmartOptionsField<T> extends SmartFormField<T?> {
                 focusedBorder: InputBorder.none,
                 enabledBorder: InputBorder.none,
               ),
-              items: (<T?>[null] + options)
+              items: [
+                if (canBeNone) null,
+                ...options,
+              ]
                   .map((value) => DropdownMenuItem(
                         value: value,
                         child: _builder(value),
