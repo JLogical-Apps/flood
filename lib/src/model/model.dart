@@ -32,11 +32,9 @@ class Model<T> {
   final FutureOr<T> Function() loader;
 
   Model({required this.loader, T? initialValue})
-      : subject = BehaviorSubject.seeded(
-            initialValue == null ? FutureValue.initial() : FutureValue.loaded(value: initialValue));
+      : subject = BehaviorSubject.seeded(initialValue == null ? FutureValue.initial() : FutureValue.loaded(value: initialValue));
 
-  factory Model.unloadable(T initialValue) =>
-      Model(initialValue: initialValue, loader: () => throw Exception('Cannnot load an unloadable model!'));
+  factory Model.unloadable(T initialValue) => Model(initialValue: initialValue, loader: () => throw Exception('Cannnot load an unloadable model!'));
 
   /// Loads the data for the model using the [loader].
   Future<void> load() async {
@@ -62,17 +60,20 @@ class Model<T> {
     _completer = null;
   }
 
-  /// Waits for the model to finish loading and returns the loaded value of the model, or calls [onError] if an error occurred.
-  Future<T?> complete({T? onError(dynamic obj)?}) async {
-    if (isInitial) {
-      await _completer!.future;
-    }
-
-    return value.when(
-      initial: () => throw Exception('Model is in initial state after being loaded.'),
-      loaded: (data) => data,
-      error: (error) => onError?.call(error),
-    );
+  /// Ensures the model is loaded before returning the loaded value.
+  /// If it is in the initial or error state, calls [load] and returns the value,
+  /// otherwise returns the last loaded value.
+  Future<T?> ensureLoaded({T? onError(dynamic obj)?}) async {
+    return await value.maybeWhen(
+        loaded: (data) => data,
+        orElse: () async {
+          await load();
+          return value.when(
+            initial: () => throw Exception(("Model in initial state after being loaded")),
+            loaded: (data) => data,
+            error: (error) => onError?.call(error),
+          );
+        });
   }
 
   /// Returns the loaded value of the model, or calls [orElse] if not loaded.
