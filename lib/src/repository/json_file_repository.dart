@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -15,9 +14,25 @@ abstract class JsonFileRepository<T> extends FileRepository<T> {
           idGenerator: idGenerator,
           parentDirectory: parentDirectory,
           extension: '.json',
-          persistenceFactory: JsonPersistenceGenerator(
-            fromJson: (jsonText) => fromJson(json.decode(jsonText)),
-            toJson: (obj) => json.encode(toJson(obj)),
+          persistenceGenerator: _LocalJsonPersistenceGenerator(
+            fromJson: (json) => fromJson(json),
+            toJson: (obj) => toJson(obj),
           ),
         );
+}
+
+class _LocalJsonPersistenceGenerator<T> extends JsonPersistenceGenerator<T> {
+  final T Function(Map<String, dynamic> jsonObject) _fromJson;
+  final Map<String, dynamic> Function(T object) _toJson;
+
+  _LocalJsonPersistenceGenerator(
+      {required T fromJson(Map<String, dynamic> jsonObject), required Map<String, dynamic> toJson(T object)})
+      : _fromJson = fromJson,
+        _toJson = toJson;
+
+  @override
+  T fromJson(Map<String, dynamic> json) => this._fromJson(json);
+
+  @override
+  Map<String, dynamic> toJson(T object) => this._toJson(object);
 }

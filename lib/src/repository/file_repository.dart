@@ -9,7 +9,7 @@ import 'package:path/path.dart';
 /// The contents of the file are the persisted objects.
 abstract class FileRepository<T> implements Repository<T, String> {
   /// Saves and loads objects to files.
-  final PersistenceGenerator<T, String> persistenceFactory;
+  final PersistenceGenerator<T, String> persistenceGenerator;
 
   /// The directory to store the files in.
   final Directory parentDirectory;
@@ -22,7 +22,7 @@ abstract class FileRepository<T> implements Repository<T, String> {
   final String extension;
 
   FileRepository(
-      {required this.persistenceFactory,
+      {required this.persistenceGenerator,
       required this.parentDirectory,
       required this.idGenerator,
       this.extension: '.txt'});
@@ -43,7 +43,7 @@ abstract class FileRepository<T> implements Repository<T, String> {
 
     try {
       var content = await file.readAsString();
-      var object = persistenceFactory.load(content);
+      var object = persistenceGenerator.load(content);
       return object;
     } catch (e) {
       return null;
@@ -53,7 +53,7 @@ abstract class FileRepository<T> implements Repository<T, String> {
   @override
   Future<void> save(String id, T object) async {
     var path = getPath(id);
-    var content = persistenceFactory.save(object);
+    var content = persistenceGenerator.save(object);
     var file = await File(path).ensureCreated();
     await file.writeAsString(content);
   }

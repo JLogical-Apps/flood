@@ -1,23 +1,22 @@
+import 'dart:convert';
+
 import 'package:jlogical_utils/src/repository/persistence/persistence_generator.dart';
 
 /// A persistence generator that generates json.
-/// Very useful if applied alongside [json_serializable ] or [freezed].
-class JsonPersistenceGenerator<T> implements PersistenceGenerator<T, String> {
-  /// Maps json to an object.
-  final T Function(String json) fromJson;
-
+abstract class JsonPersistenceGenerator<T> implements PersistenceGenerator<T, String> {
   /// Maps an object to json.
-  final String Function(T object) toJson;
+  Map<String, dynamic> toJson(T object);
 
-  const JsonPersistenceGenerator({required this.fromJson, required this.toJson});
+  /// Maps json to an object.
+  T fromJson(Map<String, dynamic> jsonObject);
 
   @override
   String save(T object) {
-    return toJson(object);
+    return json.encode(toJson(object));
   }
 
   @override
   T load(String storage) {
-    return fromJson(storage);
+    return fromJson(json.decode(storage));
   }
 }
