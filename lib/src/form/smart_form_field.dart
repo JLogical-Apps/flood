@@ -17,21 +17,41 @@ abstract class SmartFormField<T> extends HookWidget {
   /// The validators that validate the field.
   final List<Validation<T>> validators;
 
-  const SmartFormField({Key? key, required this.name, required this.initialValue, this.validators: const []}) : super(key: key);
+  /// Whether the form is enabled.
+  /// If not enabled, FormFields should not allow user input or validation.
+  final bool enabled;
+
+  const SmartFormField({
+    Key? key,
+    required this.name,
+    required this.initialValue,
+    this.validators: const [],
+    this.enabled: true,
+  }) : super(key: key);
 
   /// Builds the form given the [value] and [error].
-  Widget buildForm(BuildContext context, T value, String? error, SmartFormController smartFormController);
+  Widget buildForm(BuildContext context, T value, String? error, bool enabled, SmartFormController smartFormController);
 
   @override
   Widget build(BuildContext context) {
     var smartFormController = context.select((SmartFormController value) => value);
 
     useOneTimeEffect(() {
-      smartFormController.registerFormField(name: name, initialValue: initialValue, validators: validators);
+      smartFormController.registerFormField(name: name, initialValue: initialValue, enabled: enabled, validators: validators);
+    });
+
+    // Update the enabled property in the controller every time this field's [enabled] changes.
+    useEffect(() {
+        smartFormController.setEnabled(name: name, enabled: enabled);
+    }, [enabled]);
+
+    // Set [enabled] to false when the field is disposed.
+    useOneTimeEffect((){
+      return () => smartFormController.setEnabled(name: name, enabled: false);
     });
 
     var smartFormData = useComputed(() => smartFormController.getFormDataX(name)).value;
 
-    return buildForm(context, smartFormData.value, smartFormData.error, smartFormController);
+    return buildForm(context, smartFormData.value, smartFormData.error, enabled, smartFormController);
   }
 }

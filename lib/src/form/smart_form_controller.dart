@@ -21,10 +21,18 @@ class SmartFormController {
   SmartFormController() : _dataByNameX = BehaviorSubject.seeded({});
 
   /// Registers a form field with the controller.
-  void registerFormField<T>({required String name, required T initialValue, required List<Validation<T>> validators}) {
+  void registerFormField<T>({required String name, required T initialValue, required bool enabled, required List<Validation<T>> validators}) {
     if (dataByName.containsKey(name)) return; // If a field with [name] already exists, just take on its value.
 
-    _dataByNameX.value = dataByName.copy()..addAll({name: SmartFormData<T>(value: initialValue, error: null, validators: validators)});
+    _dataByNameX.value = dataByName.copy()
+      ..addAll({
+        name: SmartFormData<T>(
+          value: initialValue,
+          error: null,
+          enabled: enabled,
+          validators: validators,
+        )
+      });
   }
 
   /// Returns the stream of data for the form field of [name].
@@ -39,8 +47,8 @@ class SmartFormController {
 
     var foundError = false;
 
-    // Check each form field's validator.
-    for (var entry in dataByName.entries) {
+    // Check each enabled form field's validator.
+    for (var entry in dataByName.entries.where((entry) => entry.value.enabled)) {
       var name = entry.key;
       var smartFormData = entry.value;
 
@@ -70,11 +78,16 @@ class SmartFormController {
     return ValidationResult.failure();
   }
 
+  /// Returns the value of the form field with the [name].
+  T getData<T>(String name) {
+    return getFormDataX(name).value.value as T;
+  }
+
   /// Sets the value of the form field with [name] to [value].
   void setData<T>({required String name, required T value}) {
     var smartFormData = dataByName[name] ?? (throw Exception('Form field with name: [$name] not found!'));
     var newDataByName = dataByName.copy();
-    newDataByName[name] = smartFormData.copyWith(value: value, error: smartFormData.error);
+    newDataByName[name] = smartFormData.copyWith(value: value, error: smartFormData.error, enabled: smartFormData.enabled);
     _dataByNameX.value = newDataByName;
   }
 
@@ -82,18 +95,26 @@ class SmartFormController {
   void setError({required String name, required String? error}) {
     var smartFormData = dataByName[name] ?? (throw Exception('Form field with name: [$name] not found!'));
     var newDataByName = dataByName.copy();
-    newDataByName[name] = smartFormData.copyWith(value: smartFormData.value, error: error);
+    newDataByName[name] = smartFormData.copyWith(value: smartFormData.value, error: error, enabled: smartFormData.enabled);
     _dataByNameX.value = newDataByName;
   }
 
-  /// Returns the value of the form field with the [name].
-  T getValue<T>(String name) {
-    return getFormDataX(name).value.value as T;
+  /// Sets whether the field is enabled.
+  void setEnabled({required String name, required bool enabled}){
+    var smartFormData = dataByName[name] ?? (throw Exception('Form field with name: [$name] not found!'));
+    var newDataByName = dataByName.copy();
+    newDataByName[name] = smartFormData.copyWith(value: smartFormData.value, error: smartFormData.error, enabled: enabled);
+    _dataByNameX.value = newDataByName;
   }
 
   /// Clears all the errors in the form.
   void _clearErrors() {
-    _dataByNameX.value = dataByName.copy(valueCopier: (smartFormData) => smartFormData.copyWith(value: smartFormData.value, error: null));
+    _dataByNameX.value = dataByName.copy(
+        valueCopier: (smartFormData) => smartFormData.copyWith(
+              value: smartFormData.value,
+              error: null,
+              enabled: smartFormData.enabled,
+            ));
   }
 
   /// Sets the errors of the fields based on the [errors] given.

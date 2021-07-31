@@ -22,15 +22,17 @@ class SmartBoolField extends SmartFormField<bool> {
     bool initiallyChecked: false,
     List<Validation<bool>>? validators,
     this.style: SmartBoolFieldStyle.checkbox,
+    bool enabled: true,
   }) : super(
           key: key,
           name: name,
           initialValue: initiallyChecked,
           validators: validators ?? const [],
+          enabled: enabled,
         );
 
   @override
-  Widget buildForm(BuildContext context, bool value, String? error, SmartFormController smartFormController) {
+  Widget buildForm(BuildContext context, bool value, String? error, bool enabled, SmartFormController smartFormController) {
     return Column(
       children: [
         Row(
@@ -39,16 +41,20 @@ class SmartBoolField extends SmartFormField<bool> {
             style == SmartBoolFieldStyle.checkbox
                 ? Checkbox(
                     value: value,
-                    onChanged: (value) {
-                      smartFormController.setData(name: name, value: value);
-                    },
+                    onChanged: !enabled
+                        ? null
+                        : (value) {
+                            smartFormController.setData(name: name, value: value);
+                          },
                     fillColor: MaterialStateProperty.all(error == null ? Theme.of(context).accentColor : Colors.red),
                   )
                 : Switch(
                     value: value,
-                    onChanged: (value) {
-                      smartFormController.setData(name: name, value: value);
-                    },
+                    onChanged: !enabled
+                        ? null
+                        : (value) {
+                            smartFormController.setData(name: name, value: value);
+                          },
                   ),
             child,
           ],

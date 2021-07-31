@@ -80,18 +80,25 @@ class FormPage extends HookWidget {
                     Validation.required(),
                   ],
                 ),
-                SmartFormUpdateBuilder(builder: (context, controller) {
-                  if (controller.getValue('food') == 'Pizza') {
-                    return SmartOptionsField<String?>(
-                      name: 'topping',
-                      label: 'Favorite Topping',
-                      canBeNone: true,
-                      options: ['Pepperoni', 'Pineapple'],
-                      initialValue: null,
-                    );
-                  }
-                  return Container();
-                }),
+                SmartFormUpdateBuilder(
+                  builder: (context, controller) {
+                    final shouldShow = controller.getData('food') == 'Pizza';
+                    if (shouldShow) {
+                      return SmartOptionsField<String?>(
+                        name: 'topping',
+                        label: 'Favorite Topping',
+                        canBeNone: true,
+                        options: ['Pepperoni', 'Pineapple'],
+                        initialValue: null,
+                        enabled: shouldShow,
+                        validators: [
+                          Validation.required(),
+                        ],
+                      );
+                    }
+                    return Container();
+                  },
+                ),
                 SmartBoolField(
                   name: 'acceptTerms',
                   child: Text('Accept the Terms and Conditions'),

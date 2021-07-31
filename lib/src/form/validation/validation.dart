@@ -160,7 +160,7 @@ class Validation<T> {
           return onEmpty;
         }
 
-        var password = controller.getValue<String>(passwordFieldName);
+        var password = controller.getData<String>(passwordFieldName);
 
         if (value != password) {
           return onInvalid;

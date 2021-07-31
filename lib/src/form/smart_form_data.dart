@@ -12,9 +12,17 @@ class SmartFormData<T> {
   /// The validators of the field.
   final List<Validation<T>> validators;
 
-  const SmartFormData({required this.value, this.error, required this.validators});
+  /// Whether the form is enabled.
+  final bool enabled;
 
-  SmartFormData copyWith({required T value, required String? error}) {
-    return SmartFormData(value: value, error: error, validators: validators);
+  const SmartFormData({
+    required this.value,
+    this.error,
+    required this.validators,
+    required this.enabled,
+  });
+
+  SmartFormData copyWith({required T value, required String? error, required bool enabled}) {
+    return SmartFormData(value: value, error: error, validators: validators, enabled: enabled);
   }
 }

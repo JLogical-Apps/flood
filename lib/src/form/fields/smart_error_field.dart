@@ -14,7 +14,7 @@ class SmartErrorField extends SmartFormField {
         );
 
   @override
-  Widget buildForm(BuildContext context, dynamic value, String? error, SmartFormController smartFormController) {
+  Widget buildForm(BuildContext context, dynamic value, String? error, bool enabled, SmartFormController smartFormController) {
     if (error == null) {
       return SizedBox.shrink();
     } else {

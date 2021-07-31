@@ -27,16 +27,18 @@ class SmartOptionsField<T> extends SmartFormField<T?> {
     this.builder,
     this.label,
     this.canBeNone: false,
+    bool enabled: true,
     List<Validation<T?>>? validators,
   }) : super(
           key: key,
           name: name,
           initialValue: initialValue,
           validators: validators ?? const [],
+          enabled: enabled,
         );
 
   @override
-  Widget buildForm(BuildContext context, T? value, String? error, SmartFormController smartFormController) {
+  Widget buildForm(BuildContext context, T? value, String? error, bool enabled, SmartFormController smartFormController) {
     var _builder = builder ?? (item) => Text(item?.toString() ?? 'None');
     return Container(
       margin: EdgeInsets.all(10),
@@ -78,7 +80,7 @@ class SmartOptionsField<T> extends SmartFormField<T?> {
                         child: _builder(value),
                       ))
                   .toList(),
-              onChanged: (value) => smartFormController.setData(name: name, value: value),
+              onChanged: !enabled ? null : (value) => smartFormController.setData(name: name, value: value),
             ),
           ),
         ],

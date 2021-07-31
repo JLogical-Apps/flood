@@ -19,9 +19,6 @@ class SmartTextField extends SmartFormField<String> {
   /// The number of lines to show.
   final int maxLines;
 
-  /// Whether this is enabled.
-  final bool isEnabled;
-
   /// The line color to use. If null, then uses primaryColor.
   final Color? lineColor;
 
@@ -34,17 +31,18 @@ class SmartTextField extends SmartFormField<String> {
     this.keyboardType: TextInputType.text,
     this.obscureText: false,
     this.maxLines: 1,
-    this.isEnabled: true,
+    bool enabled: true,
     this.lineColor,
   }) : super(
           key: key,
           name: name,
           initialValue: initialValue ?? '',
           validators: validators ?? const [],
+          enabled: enabled,
         );
 
   @override
-  Widget buildForm(BuildContext context, String value, String? error, SmartFormController smartFormController) {
+  Widget buildForm(BuildContext context, String value, String? error, bool enabled, SmartFormController smartFormController) {
     return InputField(
       label: label,
       keyboardType: keyboardType,
@@ -53,8 +51,8 @@ class SmartTextField extends SmartFormField<String> {
       errorText: error,
       obscureText: obscureText,
       maxLines: maxLines,
-      enabled: isEnabled,
       lineColor: lineColor,
+      enabled: enabled,
     );
   }
 }
