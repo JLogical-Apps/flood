@@ -63,6 +63,7 @@ class Model<T> {
   /// Ensures the model is loaded before returning the loaded value.
   /// If it is in the initial or error state, calls [load] and returns the value,
   /// otherwise returns the last loaded value.
+  /// If [onError] is null and an error occurs, just throws the error.
   Future<T?> ensureLoaded({T? onError(dynamic obj)?}) async {
     return await value.maybeWhen(
         loaded: (data) => data,
@@ -71,7 +72,7 @@ class Model<T> {
           return value.when(
             initial: () => throw Exception(("Model in initial state after being loaded")),
             loaded: (data) => data,
-            error: (error) => onError?.call(error),
+            error: (error) => onError == null ? throw error ?? Exception('Error loading model!') : onError(error),
           );
         });
   }
