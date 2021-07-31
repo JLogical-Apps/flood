@@ -1,13 +1,3 @@
-extension IntIterableUtils on Iterable<int> {
-  int getSum() {
-    var value = 0;
-    for (var item in this) {
-      value += item;
-    }
-    return value;
-  }
-}
-
 extension IterableExtensions<T> on Iterable<T> {
   /// Returns the sum of the elements of the iterable based on a property of the items in the list.
   num sumBy(num f(T element)) {
@@ -37,15 +27,6 @@ extension IterableExtensions<T> on Iterable<T> {
         return null;
       }
     }).whereType<R>();
-  }
-
-  /// Returns the first element that satisfies the predicate.
-  /// If no element is found, calls [orElse], or null if not initialized.
-  T? firstWhereOrNull(bool predicate(T value), {T? orElse()?}) {
-    for (var element in this) {
-      if (predicate(element)) return element;
-    }
-    return orElse?.call();
   }
 }
 
