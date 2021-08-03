@@ -70,7 +70,8 @@ class Validation<T> {
       });
 
   /// Validation that checks for a minimum length of a text field.
-  static Validation<String> minLength({required int minLength, String onTooShort(String text)?, String onEmpty: 'Cannot be empty!'}) {
+  static Validation<String> minLength(
+      {required int minLength, String onTooShort(String text)?, String onEmpty: 'Cannot be empty!'}) {
     var _onTooShort = onTooShort ?? (text) => 'Too short! Need ${minLength - text.length} more characters.';
 
     return Validation.simple((value) {
@@ -151,12 +152,15 @@ class Validation<T> {
       });
 
   /// Validates whether the text can be a password by ensuring it is longer than 6 characters.
-  static Validation<String> isPassword({String onEmpty: 'Cannot be empty!', String onTooShort: 'Too short! Need at least 6 characters.'}) =>
+  static Validation<String> isPassword(
+          {String onEmpty: 'Cannot be empty!', String onTooShort: 'Too short! Need at least 6 characters.'}) =>
       Validation.minLength(minLength: 6, onEmpty: onEmpty, onTooShort: (value) => onTooShort);
 
   /// Validates whether the text matches the text of the password field.
   static Validation<String> isConfirmPassword(
-          {required String passwordFieldName, String onEmpty: 'Cannot be empty!', String onInvalid: 'Does not match password!'}) =>
+          {required String passwordFieldName,
+          String onEmpty: 'Cannot be empty!',
+          String onInvalid: 'Does not match password!'}) =>
       Validation((value, controller) {
         if (value.isEmpty) {
           return onEmpty;
@@ -196,7 +200,8 @@ class Validation<T> {
   }
 
   /// Validates whether the numeric input is between the range of [minimum] and [maximum] inclusively.
-  static Validation<num> range({required num minimum, required num maximum, String onTooSmall(num value)?, String onTooLarge(num value)?}) =>
+  static Validation<num> range(
+          {required num minimum, required num maximum, String onTooSmall(num value)?, String onTooLarge(num value)?}) =>
       Validation.combine([
         Validation.minimum(minimum: minimum, onTooSmall: onTooSmall),
         Validation.maximum(maximum: maximum, onTooLarge: onTooLarge),
@@ -207,7 +212,8 @@ class Validation<T> {
       Validation.minimum(minimum: double.minPositive, onTooSmall: (value) => value == 0 ? onZero : onNegative);
 
   /// Validates whether the numeric input is not negative, meaning it can be zero or positive.
-  static Validation<num> isNonNegative({String onNegative: 'Cannot be negative!'}) => Validation.minimum(minimum: 0, onTooSmall: (value) => onNegative);
+  static Validation<num> isNonNegative({String onNegative: 'Cannot be negative!'}) =>
+      Validation.minimum(minimum: 0, onTooSmall: (value) => onNegative);
 
   /// Validates whether the date is before the [latest] date.
   static Validation<DateTime> isBefore({required DateTime latest, String? onBefore}) {
@@ -245,7 +251,8 @@ class Validation<T> {
         onAfter: onAfter,
       );
 
-  static Validation<DateTime> dateRange({required DateTime earliest, required DateTime latest, String? onBeforeEarliest, String? onAfterLatest}) =>
+  static Validation<DateTime> dateRange(
+          {required DateTime earliest, required DateTime latest, String? onBeforeEarliest, String? onAfterLatest}) =>
       Validation.combine([
         Validation.isAfter(earliest: earliest, onAfter: onAfterLatest),
         Validation.isBefore(latest: latest, onBefore: onBeforeEarliest),
@@ -256,10 +263,14 @@ extension IntValidationExtensions on Validation<int> {
   /// Converts the int validation to one applied to a String input field.
   /// This is useful if a SmartTextField needs to have an input validated as an int.
   /// If the text is empty, it *passes* the validation. If this is not desired, add [Validation.required()] before this.
-  Validation<String> fromParsed({String onInvalidParse: 'Invalid integer!'}) => Validation((value, controller) {
+  Validation<String> fromParsed({
+    String onInvalidParse: 'Invalid integer!',
+    bool cleanCommas: true,
+  }) =>
+      Validation((value, controller) {
         if (value.isEmpty) return null;
 
-        int? parse = value.tryParseIntAfterClean(cleanCommas: false, cleanCurrency: false);
+        int? parse = value.tryParseIntAfterClean(cleanCommas: cleanCommas, cleanCurrency: false);
         if (parse == null) {
           return onInvalidParse;
         }
@@ -272,10 +283,15 @@ extension DoubleValidationExtensions on Validation<double> {
   /// Converts the double validation to one applied to a String input field.
   /// This is useful if a SmartTextField needs to have an input validated as a double.
   /// If the text is empty, it *passes* the validation. If this is not desired, add [Validation.required()] before this.
-  Validation<String> fromParsed({String onInvalidParse: 'Invalid number!', bool cleanCurrency: false}) => Validation((value, controller) {
+  Validation<String> fromParsed({
+    String onInvalidParse: 'Invalid number!',
+    bool cleanCommas: true,
+    bool cleanCurrency: true,
+  }) =>
+      Validation((value, controller) {
         if (value.isEmpty) return null;
 
-        double? parse = value.tryParseDoubleAfterClean(cleanCommas: false, cleanCurrency: cleanCurrency);
+        double? parse = value.tryParseDoubleAfterClean(cleanCommas: cleanCommas, cleanCurrency: cleanCurrency);
         if (parse == null) {
           return onInvalidParse;
         }
@@ -288,10 +304,15 @@ extension NumValidationExtensions on Validation<num> {
   /// Converts the numeric validation to one applied to a String input field.
   /// This is useful if a SmartTextField needs to have an input validated as a double.
   /// If the text is empty, it *passes* the validation. If this is not desired, add [Validation.required()] before this.
-  Validation<String> fromParsed({String onInvalidParse: 'Invalid number!', bool cleanCurrency: false}) => Validation((value, controller) {
+  Validation<String> fromParsed({
+    String onInvalidParse: 'Invalid number!',
+    bool cleanCommas: true,
+    bool cleanCurrency: true,
+  }) =>
+      Validation((value, controller) {
         if (value.isEmpty) return null;
 
-        double? parse = value.tryParseDoubleAfterClean(cleanCommas: false, cleanCurrency: cleanCurrency);
+        double? parse = value.tryParseDoubleAfterClean(cleanCommas: cleanCommas, cleanCurrency: cleanCurrency);
         if (parse == null) {
           return onInvalidParse;
         }
