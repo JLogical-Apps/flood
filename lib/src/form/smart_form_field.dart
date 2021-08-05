@@ -37,16 +37,21 @@ abstract class SmartFormField<T> extends HookWidget {
     var smartFormController = context.select((SmartFormController value) => value);
 
     useOneTimeEffect(() {
-      smartFormController.registerFormField(name: name, initialValue: initialValue, enabled: enabled, validators: validators);
+      smartFormController.registerFormField(
+        name: name,
+        initialValue: initialValue,
+        enabled: enabled,
+        validators: validators,
+      );
     });
 
     // Update the enabled property in the controller every time this field's [enabled] changes.
     useEffect(() {
-        smartFormController.setEnabled(name: name, enabled: enabled);
+      smartFormController.setEnabled(name: name, enabled: enabled);
     }, [enabled]);
 
     // Set [enabled] to false when the field is disposed.
-    useOneTimeEffect((){
+    useOneTimeEffect(() {
       return () => smartFormController.setEnabled(name: name, enabled: false);
     });
 

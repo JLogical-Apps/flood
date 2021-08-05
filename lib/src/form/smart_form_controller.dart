@@ -21,7 +21,12 @@ class SmartFormController {
   SmartFormController() : _dataByNameX = BehaviorSubject.seeded({});
 
   /// Registers a form field with the controller.
-  void registerFormField<T>({required String name, required T initialValue, required bool enabled, required List<Validation<T>> validators}) {
+  void registerFormField<T>({
+    required String name,
+    required T initialValue,
+    required bool enabled,
+    required List<Validation<T>> validators,
+  }) {
     if (dataByName.containsKey(name)) return; // If a field with [name] already exists, just take on its value.
 
     _dataByNameX.value = dataByName.copy()
@@ -37,7 +42,8 @@ class SmartFormController {
 
   /// Returns the stream of data for the form field of [name].
   ValueStream<SmartFormData<T>> getFormDataX<T>(String name) {
-    return _dataByNameX.mapWithValue((dataByName) => (dataByName[name] ?? (throw Exception('Cannot find form field with name: [$name]'))) as SmartFormData<T>);
+    return _dataByNameX.mapWithValue((dataByName) =>
+        (dataByName[name] ?? (throw Exception('Cannot find form field with name: [$name]'))) as SmartFormData<T>);
   }
 
   /// Validates the fields in the form.
@@ -87,23 +93,37 @@ class SmartFormController {
   void setData<T>({required String name, required T value}) {
     var smartFormData = dataByName[name] ?? (throw Exception('Form field with name: [$name] not found!'));
     var newDataByName = dataByName.copy();
-    newDataByName[name] = smartFormData.copyWith(value: value, error: smartFormData.error, enabled: smartFormData.enabled);
+    newDataByName[name] = smartFormData.copyWith(
+      value: value,
+      error: smartFormData.error,
+      enabled: smartFormData.enabled,
+    );
     _dataByNameX.value = newDataByName;
+  }
+
+  /// Returns the error of the form field with the [name].
+  String? getError(String name) {
+    return getFormDataX(name).value.error;
   }
 
   /// Sets the error of the form field with [name] to [error].
   void setError({required String name, required String? error}) {
     var smartFormData = dataByName[name] ?? (throw Exception('Form field with name: [$name] not found!'));
     var newDataByName = dataByName.copy();
-    newDataByName[name] = smartFormData.copyWith(value: smartFormData.value, error: error, enabled: smartFormData.enabled);
+    newDataByName[name] =
+        smartFormData.copyWith(value: smartFormData.value, error: error, enabled: smartFormData.enabled);
     _dataByNameX.value = newDataByName;
   }
 
   /// Sets whether the field is enabled.
-  void setEnabled({required String name, required bool enabled}){
+  void setEnabled({required String name, required bool enabled}) {
     var smartFormData = dataByName[name] ?? (throw Exception('Form field with name: [$name] not found!'));
     var newDataByName = dataByName.copy();
-    newDataByName[name] = smartFormData.copyWith(value: smartFormData.value, error: smartFormData.error, enabled: enabled);
+    newDataByName[name] = smartFormData.copyWith(
+      value: smartFormData.value,
+      error: smartFormData.error,
+      enabled: enabled,
+    );
     _dataByNameX.value = newDataByName;
   }
 

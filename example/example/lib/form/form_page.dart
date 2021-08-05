@@ -115,12 +115,37 @@ class FormPage extends HookWidget {
                   child: Text('Accept the Terms and Conditions'),
                   validators: [Validation.required(onEmpty: 'Must be accepted to create an account!')],
                 ),
+                SmartRadioGroup(
+                  group: 'type',
+                  // initialValue: 'payment',
+                  validators: [
+                    Validation.required(),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SmartRadioOptionField(
+                      radioValue: 'payment',
+                      group: 'type',
+                      label: Text('Payment'),
+                    ),
+                    SmartRadioOptionField(
+                      radioValue: 'refund',
+                      group: 'type',
+                      label: Text('Refund'),
+                    ),
+                  ],
+                ),
+                SmartErrorField(name: 'type'),
               ],
             ),
             SmartErrorField(name: 'network'), // Show a network error if the email starts with 'a'.
             FutureButton(
               child: Text('SIGN UP'),
               onPressed: () async {
+                print(smartFormController.getData('type'));
+
                 // Wait one second just for dramatic effect.
                 await Future.delayed(Duration(seconds: 1));
 
