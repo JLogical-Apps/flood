@@ -35,6 +35,26 @@ class PaginationResult<T> {
     );
   }
 
+  /// Collects the results from this page and all other pages into one map.
+  /// Warning, this might take a while if there are many upcoming pages.
+  Future<Map<String, T>> collectAllResults() async {
+    var results = this.results;
+    var nextPageGetter = this.nextPageGetter;
+
+    while (nextPageGetter != null) {
+      final nextPage = await nextPageGetter();
+
+      results = {
+        ...results,
+        ...nextPage.results,
+      };
+
+      nextPageGetter = nextPage.nextPageGetter;
+    }
+
+    return results;
+  }
+
   /// Maps the pagination result to another type.
   PaginationResult<R> map<R>({String idMapper(String value)?, required R valueMapper(T value)}) {
     return PaginationResult(
