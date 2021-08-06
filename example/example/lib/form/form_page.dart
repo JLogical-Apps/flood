@@ -71,7 +71,9 @@ class FormPage extends HookWidget {
                 SmartTextField(
                   name: 'password',
                   label: 'Password',
-                  validators: [Validation.isPassword()],
+                  validators: [
+                    Validation.isPassword(),
+                  ],
                   obscureText: true,
                   keyboardType: TextInputType.visiblePassword,
                 ),
@@ -87,6 +89,7 @@ class FormPage extends HookWidget {
                   label: 'Favorite Food',
                   options: ['Pizza', 'Burger', 'Jalapeno'],
                   initialValue: null,
+                  canBeNone: false,
                   validators: [
                     Validation.required(),
                   ],

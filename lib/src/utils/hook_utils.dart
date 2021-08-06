@@ -30,8 +30,8 @@ ValueStream<C> useComputed<V, C>(ValueStream<C> create()) {
   return stream;
 }
 
-/// Listens to a model.
-M useModel<M extends Model<V>, V>(M model) {
+/// Listens to an async loadable.
+M useModel<M extends AsyncLoadable<V>, V>(M model) {
   useValueStream(model.valueX);
   return model;
 }

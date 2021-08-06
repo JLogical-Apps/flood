@@ -5,4 +5,5 @@ export 'model_list.dart';
 export 'model_store.dart';
 export 'paginated_lists.dart';
 export 'paginated_model_list.dart';
+export 'async_loadable.dart';
 export 'pagination_result.dart';
