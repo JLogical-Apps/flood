@@ -30,8 +30,11 @@ class FutureValue<T> with _$FutureValue<T> {
       loaded: (value) => value,
       orElse: () => orElse != null ? orElse() : (throw Exception('Called get() on unloaded state.')));
 
-  /// Returns the the value of the future-value, or null if in an error/loading state.
-  T? getOrNull() => maybeWhen(loaded: (value) => value, orElse: () => null);
+  /// Returns the the value of the future-value. If it is in an error/loading state, calls [orElse] if not null, or returns null.
+  T? getOrNull({T? orElse()?}) => maybeWhen(
+        loaded: (value) => value,
+        orElse: () => orElse?.call(),
+      );
 
   /// Maps this future-value to one of another type if there is a value present.
   FutureValue<R> mapIfPresent<R>(R mapper(T value)) => when(
