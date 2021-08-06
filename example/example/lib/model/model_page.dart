@@ -10,14 +10,14 @@ class ModelPage extends HookWidget {
   final Model<int> randomNumberModel = Model<int>(
     loader: () async {
       await Future.delayed(Duration(seconds: 1));
-      return Random().nextInt(10);
+      return Random().nextInt(100);
     },
   );
 
   /// This model's value is based off [randomNumberModel].
   /// Whenever this model is loaded, it actually just loads [randomNumberModel],
   /// but the changes in [randomNumberModel] is instantly reflected into this model.
-  late final isEvenModel = randomNumberModel.map((value) => value.isEven)..ensureLoaded();
+  late final isEvenModel = randomNumberModel.map((value) => value.isEven);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,10 @@ class ModelPage extends HookWidget {
     return RefreshScaffold(
       // Updating either [randomNumberModel] or [isEvenModel] will rebuild the page.
       // onRefresh: () => randomNumberModel.load(),
-      onRefresh: () => isEvenModel.load(),
+      onRefresh: () async {
+        await isEvenModel.load();
+        print('here');
+      },
       body: Center(
         child: maybeIsEven.when(
           initial: () => LoadingWidget(),

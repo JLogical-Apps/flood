@@ -7,7 +7,6 @@ import '../../jlogical_utils.dart';
 
 /// An async value that can be loaded.
 abstract class AsyncLoadable<T> {
-
   /// The stream of async values.
   ValueStream<FutureValue<T>> get valueX;
 
@@ -52,7 +51,6 @@ abstract class AsyncLoadable<T> {
     return loadedValue;
   }
 
-
   /// Ensures the model is loaded before returning the loaded value.
   /// If it is in the initial or error state, calls [load] and returns the value,
   /// otherwise returns the last loaded value.
@@ -79,10 +77,8 @@ abstract class AsyncLoadable<T> {
   /// Maps this to another async loadable.
   /// Whenever the mapped async loadable calls [load()], it simply calls this async loadable's [load()].
   /// Whenever this async loadable gets an updated value, the value is instantly reflected in the mapped value.
-  AsyncLoadable<R> map<R>(R mapper(T value)) {
-    return MappedModel(
-      loader: () async => mapper((await load()).get()),
-      valueX: valueX.mapWithValue((value) => value.mapIfPresent(mapper)),
-    );
-  }
+  AsyncLoadable<R> map<R>(R mapper(T value)) => MappedModel(
+        mapper: mapper,
+        parent: this,
+      );
 }
