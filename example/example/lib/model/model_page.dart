@@ -26,10 +26,7 @@ class ModelPage extends HookWidget {
     return RefreshScaffold(
       // Updating either [randomNumberModel] or [isEvenModel] will rebuild the page.
       // onRefresh: () => randomNumberModel.load(),
-      onRefresh: () async {
-        await isEvenModel.load();
-        print('here');
-      },
+      onRefresh: () => isEvenModel.load(),
       body: Center(
         child: maybeIsEven.when(
           initial: () => LoadingWidget(),
