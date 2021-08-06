@@ -1,6 +1,7 @@
 export 'async_loadable.dart';
 export 'future_value.dart';
 export 'load_more_button.dart';
+export 'mapped_model.dart';
 export 'model.dart';
 export 'model_builder.dart';
 export 'model_list.dart';
