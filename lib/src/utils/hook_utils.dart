@@ -32,6 +32,7 @@ ValueStream<C> useComputed<V, C>(ValueStream<C> create()) {
 
 /// Listens to an async loadable.
 M useModel<M extends AsyncLoadable<V>, V>(M model) {
+  model.ensureLoaded();
   useValueStream(model.valueX);
   return model;
 }
