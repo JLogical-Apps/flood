@@ -15,7 +15,7 @@ class MappedModel<T, R> extends AsyncLoadable<R> {
 
   /// This model gets its value stream from its parent.
   @override
-  ValueStream<FutureValue<R>> get valueX => parent.valueX.mapWithValue((value) => value.mapIfPresent(mapper));
+  late final ValueStream<FutureValue<R>> valueX = parent.valueX.mapWithValue((value) => value.mapIfPresent(mapper));
 
   final AsyncLoadable<T> parent;
   final R Function(T value) mapper;
