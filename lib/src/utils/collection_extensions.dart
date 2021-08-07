@@ -43,4 +43,9 @@ extension MapExtensions<K, V> on Map<K, V> {
   void set(K key, V value) {
     this[key] = value;
   }
+
+  /// Maps the key-value pairs of this map into an iterable.
+  Iterable<R> mapToIterable<R>(R mapper(K key, V value)) {
+    return entries.map((entry) => mapper(entry.key, entry.value));
+  }
 }
