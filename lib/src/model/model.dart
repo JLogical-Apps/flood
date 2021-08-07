@@ -46,4 +46,9 @@ class Model<T> extends AsyncLoadable<T> {
   void setError(Object error) {
     subject.value = FutureValue.error(error: error);
   }
+
+  /// Clears the value of the model, forcing it to be reloaded before a value can be retrieved.
+  void clear() {
+    subject.value = FutureValue.initial();
+  }
 }
