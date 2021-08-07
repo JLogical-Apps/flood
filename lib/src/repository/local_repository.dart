@@ -12,7 +12,12 @@ class LocalRepository<T, R> implements Repository<T, R> {
   /// Generates ids for each of the objects in the repository.
   final IdGenerator<T, R> idGenerator;
 
-  LocalRepository({List<T>? initialValues, required this.idGenerator}) : dataById = Map.fromEntries((initialValues ?? []).map((value) => MapEntry(idGenerator.getId(value), value)));
+  /// The default sorter that will be used for [getAll] if none is provided.
+  /// If [null], then the sort is
+  final int Function(T element1, T element2)? defaultSorter;
+
+  LocalRepository({List<T>? initialValues, required this.idGenerator, this.defaultSorter})
+      : dataById = Map.fromEntries((initialValues ?? []).map((value) => MapEntry(idGenerator.getId(value), value)));
 
   @override
   Future<R> create(T object) async {
@@ -39,13 +44,14 @@ class LocalRepository<T, R> implements Repository<T, R> {
   /// Gets all the elements in the repository with an optional [orderBy] or [filter].
   @override
   Future<PaginationResult<T>> getAll({bool filter(T element)?, int orderBy(T element1, T element2)?}) async {
+    orderBy ??= defaultSorter;
+
     var elementById = dataById.map((key, value) => MapEntry(key.toString(), value));
 
-    if(filter != null)
-      elementById.removeWhere((id, element) => !filter(element));
+    if (filter != null) elementById.removeWhere((id, element) => !filter(element));
 
-    if(orderBy != null) {
-      var sortedEntries = elementById.entries.toList()..sort((entry1, entry2) => orderBy(entry1.value, entry2.value));
+    if (orderBy != null) {
+      var sortedEntries = elementById.entries.toList()..sort((entry1, entry2) => orderBy!(entry1.value, entry2.value));
       elementById = Map.fromEntries(sortedEntries);
     }
 

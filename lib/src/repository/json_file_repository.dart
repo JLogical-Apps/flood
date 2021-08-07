@@ -10,6 +10,7 @@ abstract class JsonFileRepository<T> extends FileRepository<T> {
     required IdGenerator<T, String> idGenerator,
     required T Function(Map<String, dynamic> json) fromJson,
     required Map<String, dynamic> Function(T object) toJson,
+    int defaultSorter(T element1, T element2)?,
   }) : super(
           idGenerator: idGenerator,
           parentDirectory: parentDirectory,
@@ -18,6 +19,7 @@ abstract class JsonFileRepository<T> extends FileRepository<T> {
             fromJson: (json) => fromJson(json),
             toJson: (obj) => toJson(obj),
           ),
+          defaultSorter: defaultSorter,
         );
 }
 

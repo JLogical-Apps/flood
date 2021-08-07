@@ -21,11 +21,17 @@ abstract class FileRepository<T> implements Repository<T, String> {
   /// Must start with '.' if not empty.
   final String extension;
 
-  FileRepository(
-      {required this.persistenceGenerator,
-      required this.parentDirectory,
-      required this.idGenerator,
-      this.extension: '.txt'});
+  /// The default sorter that will be used for [getAll] if none is provided.
+  /// If [null], then the sort is
+  final int Function(T element1, T element2)? defaultSorter;
+
+  FileRepository({
+    required this.persistenceGenerator,
+    required this.parentDirectory,
+    required this.idGenerator,
+    this.extension: '.txt',
+    this.defaultSorter,
+  });
 
   @override
   Future<String> create(T object) async {
@@ -67,6 +73,8 @@ abstract class FileRepository<T> implements Repository<T, String> {
   /// Gets all the elements in the repository with an optional [orderBy] or [filter].
   @override
   Future<PaginationResult<T>> getAll({bool filter(T element)?, int orderBy(T element1, T element2)?}) async {
+    orderBy ??= defaultSorter;
+
     await parentDirectory.ensureCreated();
 
     var fileEntities = await parentDirectory.list().toList();
@@ -81,7 +89,7 @@ abstract class FileRepository<T> implements Repository<T, String> {
     if (filter != null) elementById.removeWhere((id, element) => !filter(element));
 
     if (orderBy != null) {
-      var sortedEntries = elementById.entries.toList()..sort((entry1, entry2) => orderBy(entry1.value, entry2.value));
+      var sortedEntries = elementById.entries.toList()..sort((entry1, entry2) => orderBy!(entry1.value, entry2.value));
       elementById = Map.fromEntries(sortedEntries);
     }
 
