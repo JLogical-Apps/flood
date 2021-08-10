@@ -32,32 +32,40 @@ class SmartBoolField extends SmartFormField<bool> {
         );
 
   @override
-  Widget buildForm(BuildContext context, bool value, String? error, bool enabled, SmartFormController smartFormController) {
+  Widget buildForm(
+      BuildContext context, bool value, String? error, bool enabled, SmartFormController smartFormController) {
     return Column(
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            style == SmartBoolFieldStyle.checkbox
-                ? Checkbox(
-                    value: value,
-                    onChanged: !enabled
-                        ? null
-                        : (value) {
-                            smartFormController.setData(name: name, value: value);
-                          },
-                    fillColor: MaterialStateProperty.all(error == null ? Theme.of(context).accentColor : Colors.red),
-                  )
-                : Switch(
-                    value: value,
-                    onChanged: !enabled
-                        ? null
-                        : (value) {
-                            smartFormController.setData(name: name, value: value);
-                          },
-                  ),
-            child,
-          ],
+        GestureDetector(
+          onTap: () => smartFormController.setData(name: name, value: !value),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                style == SmartBoolFieldStyle.checkbox
+                    ? Checkbox(
+                        value: value,
+                        onChanged: !enabled
+                            ? null
+                            : (value) {
+                                smartFormController.setData(name: name, value: value);
+                              },
+                        fillColor:
+                            MaterialStateProperty.all(error == null ? Theme.of(context).accentColor : Colors.red),
+                      )
+                    : Switch(
+                        value: value,
+                        onChanged: !enabled
+                            ? null
+                            : (value) {
+                                smartFormController.setData(name: name, value: value);
+                              },
+                      ),
+                child,
+              ],
+            ),
+          ),
         ),
         if (error != null)
           Text(

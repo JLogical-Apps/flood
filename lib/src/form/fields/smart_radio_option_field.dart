@@ -36,20 +36,26 @@ class SmartRadioOptionField<T> extends SmartFormField<bool> {
 
     return Column(
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Radio<T?>(
-              groupValue: smartFormController.getData(group),
-              value: radioValue,
-              onChanged: (value) => smartFormController.setData(name: group, value: value),
-              fillColor: MaterialStateProperty.all(inError ? Colors.red : Theme.of(context).accentColor),
+        GestureDetector(
+          onTap: () => smartFormController.setData(name: group, value: radioValue),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Radio<T?>(
+                  groupValue: smartFormController.getData(group),
+                  value: radioValue,
+                  onChanged: (value) => smartFormController.setData(name: group, value: value),
+                  fillColor: MaterialStateProperty.all(inError ? Colors.red : Theme.of(context).accentColor),
+                ),
+                DefaultTextStyle(
+                  style: Theme.of(context).textTheme.button!,
+                  child: label,
+                ),
+              ],
             ),
-            GestureDetector(
-              child: label,
-              onTap: () => smartFormController.setData(name: group, value: this.radioValue),
-            ),
-          ],
+          ),
         ),
         if (error != null)
           Text(
