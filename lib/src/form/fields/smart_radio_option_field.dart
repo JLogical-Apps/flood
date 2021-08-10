@@ -45,7 +45,10 @@ class SmartRadioOptionField<T> extends SmartFormField<bool> {
               onChanged: (value) => smartFormController.setData(name: group, value: value),
               fillColor: MaterialStateProperty.all(inError ? Colors.red : Theme.of(context).accentColor),
             ),
-            label,
+            GestureDetector(
+              child: label,
+              onTap: () => smartFormController.setData(name: group, value: this.radioValue),
+            ),
           ],
         ),
         if (error != null)
