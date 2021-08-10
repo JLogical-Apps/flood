@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -11,7 +12,7 @@ import 'models.dart';
 /// Use [loadNextPage] to append the next page (if it exists) to the
 class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   // Converts the list elements to models.
-  final Model<T> Function(T value) converter;
+  final Model<T> Function(String id, T value) converter;
 
   /// If not null, can automatically generate ids for models that are added to this list.
   final IdGenerator<T, String>? idGenerator;
@@ -78,12 +79,12 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
 
   /// Transforms the pagination results to ones with models.
   static FutureOr<PaginationResult<Model<T>>> _transformer<T>(
-      FutureOr<PaginationResult<T>> loader(), Model<T> converter(T value)) async {
+      FutureOr<PaginationResult<T>> loader(), Model<T> converter(String id, T value)) async {
     var page = await loader();
     return PaginationResult(
-        results: page.results.map((key, value) => MapEntry(
-              key,
-              converter(value),
+        results: page.results.map((id, value) => MapEntry(
+              id,
+              converter(id, value),
             )),
         nextPageGetter: page.hasNextPage ? (() => _transformer(page.nextPageGetter!, converter)) : null);
   }
@@ -128,8 +129,8 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   String addData(T data) {
     if (idGenerator == null) throw Exception('Cannot add data to a PaginatedModelList without an idGenerator!');
 
-    var model = converter(data);
     var id = idGenerator!.getId(data);
+    var model = converter(id, data);
 
     addModel(id, model);
     return id;
@@ -141,8 +142,8 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   String addDataToBeginning(T data) {
     if (idGenerator == null) throw Exception('Cannot add data to a PaginatedModelList without an idGenerator!');
 
-    var model = converter(data);
     var id = idGenerator!.getId(data);
+    var model = converter(id, data);
 
     addModelToBeginning(id, model);
     return id;
@@ -162,8 +163,8 @@ class PaginatedModelList<T> extends Model<PaginationResult<Model<T>>> {
   /// Adds all the [data] elements with auto-generated ids from [idGenerator] and converted to Models using [converter].
   void addAllData(List<T> data) {
     if (idGenerator == null) throw Exception('Cannot add data to a PaginatedModelList without an idGenerator!');
-    var models = data.map(converter).toList();
     var ids = data.map(idGenerator!.getId).toList();
+    var models = data.mapIndexed((index, value) => converter(ids[index], value)).toList();
 
     addAllModels(Map.fromIterables(ids, models));
   }

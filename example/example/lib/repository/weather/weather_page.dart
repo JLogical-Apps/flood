@@ -16,7 +16,7 @@ class WeatherPage extends HookWidget {
     // Normally, you would use a controller to get models. For sake of illustration, a model is created in the ui.
     var createdWeatherModel = useMemoized(() => PaginatedModelList<Weather>(
           initialPageLoader: () => weatherRepository.getAll(),
-          converter: (weather) => Model.unloadable(weather),
+          converter: (_, weather) => Model.unloadable(weather),
           idGenerator: MapperIdGenerator((weather) => weather.location),
         )..load());
     var weatherModel = useModel(createdWeatherModel);
