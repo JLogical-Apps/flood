@@ -35,7 +35,7 @@ class ModelBuilder<V> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maybeValue = useModel(model..ensureLoaded()).value;
+    final maybeValue = useModel(model).value;
     return maybeValue.when(
       initial: () => loadingWidget,
       loaded: builder,
