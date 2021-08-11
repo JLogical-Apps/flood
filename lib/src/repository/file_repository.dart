@@ -34,6 +34,11 @@ abstract class FileRepository<T> implements Repository<T, String> {
   });
 
   @override
+  Future<String> generateId() async {
+    return idGenerator.getId(null);
+  }
+
+  @override
   Future<String> create(T object) async {
     var id = idGenerator.getId(object);
     await save(id, object);

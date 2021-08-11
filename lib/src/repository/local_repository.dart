@@ -20,6 +20,11 @@ class LocalRepository<T, R> implements Repository<T, R> {
       : dataById = Map.fromEntries((initialValues ?? []).map((value) => MapEntry(idGenerator.getId(value), value)));
 
   @override
+  Future<R> generateId() async {
+    return idGenerator.getId(null);
+  }
+
+  @override
   Future<R> create(T object) async {
     var id = idGenerator.getId(object);
     dataById[id] = object;

@@ -5,6 +5,9 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 /// [T] is the type of object this repository gets.
 /// [R] is the type of id associated with each object.
 abstract class Repository<T, R> {
+  /// Generates and returns a new id to use.
+  Future<R> generateId();
+
   /// Creates a new object in the repository and returns its id.
   Future<R> create(T object);
 
@@ -12,6 +15,7 @@ abstract class Repository<T, R> {
   Future<T?> get(R id);
 
   /// Saves [object] with [id] in the repository.
+  /// If the [id] is not in the repository yet, the save will be treated like [create].
   Future<void> save(R id, T object);
 
   /// Deletes the object with [id] from the repository.

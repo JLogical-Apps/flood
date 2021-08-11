@@ -3,5 +3,5 @@
 /// [R] is the type of ids this will generate.
 abstract class IdGenerator<T, R> {
   /// Generates an id for [object].
-  R getId(T object);
+  R getId(T? object);
 }

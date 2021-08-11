@@ -7,7 +7,7 @@ class IncrementalIdGenerator<T> extends IdGenerator<T, int> {
   IncrementalIdGenerator([int initialId = 0]) : _count = initialId;
 
   @override
-  int getId(T object) {
+  int getId(T? object) {
     return _count++;
   }
 }
@@ -22,7 +22,7 @@ class PrefixedIncrementalIdGenerator<T> extends IdGenerator<T, String> {
   PrefixedIncrementalIdGenerator({required this.prefix, int initialId: 0}) : _count = initialId;
 
   @override
-  String getId(T object) {
+  String getId(T? object) {
     return prefix + (_count++).toString();
   }
 }

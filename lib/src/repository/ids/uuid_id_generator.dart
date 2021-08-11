@@ -7,7 +7,7 @@ class UuidIdGenerator<T> extends IdGenerator<T, String> {
   final uuid = Uuid();
 
   @override
-  String getId(T object) {
+  String getId(T? object) {
     return uuid.v4();
   }
 }
