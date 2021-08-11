@@ -49,3 +49,15 @@ extension MapExtensions<K, V> on Map<K, V> {
     return entries.map((entry) => mapper(entry.key, entry.value));
   }
 }
+
+extension IterableEntriesExtensions<K, V> on Iterable<MapEntry<K, V>> {
+  /// Maps the entries to another iterable.
+  Iterable<R> mapEntries<R>(R mapper(K key, V value)) {
+    return map((entry) => mapper(entry.key, entry.value));
+  }
+
+  /// Maps the entries to a map.
+  Map<K2, V2> mapToMap<K2, V2>(MapEntry<K2, V2> mapper(K key, V value)) {
+    return Map.fromEntries(mapEntries(mapper));
+  }
+}
