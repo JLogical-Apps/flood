@@ -14,7 +14,7 @@ extension StringExtensions on String {
     if (index == -1) {
       return '';
     }
-    return substring(index);
+    return substring(index + 1);
   }
 
   /// Returns everything before the first instance of [pattern]. If this doesn't contain [pattern], then returns a blank string.
