@@ -23,7 +23,9 @@ class Model<T> extends AsyncLoadable<T> {
             initialValue == null ? FutureValue.initial() : FutureValue.loaded(value: initialValue));
 
   factory Model.unloadable(T initialValue) =>
-      Model(initialValue: initialValue, loader: () => throw Exception('Cannnot load an unloadable model!'));
+      Model(initialValue: initialValue, loader: () => throw Exception('Cannot load an unloadable model!'));
+
+  factory Model.constant(T initialValue) => Model(initialValue: initialValue, loader: () => initialValue);
 
   @override
   Future<FutureValue<T>> load() async {
