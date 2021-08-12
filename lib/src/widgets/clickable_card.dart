@@ -8,7 +8,7 @@ class ClickableCard extends StatelessWidget {
   final Color color;
 
   /// Callback for when it is tapped.
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   /// The elevation of the card.
   final double elevation;
@@ -30,7 +30,8 @@ class ClickableCard extends StatelessWidget {
       color: color,
       margin: margin,
       child: InkWell(
-        borderRadius: ((Theme.of(context).cardTheme.shape as RoundedRectangleBorder?)?.borderRadius as BorderRadius?) ?? BorderRadius.circular(1),
+        borderRadius: ((Theme.of(context).cardTheme.shape as RoundedRectangleBorder?)?.borderRadius as BorderRadius?) ??
+            BorderRadius.circular(1),
         child: child,
         onTap: onTap,
       ),
