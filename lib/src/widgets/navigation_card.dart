@@ -25,6 +25,9 @@ class NavigationCard extends StatelessWidget {
   /// Whether the link is external. This will render the trailing icon differently.
   final bool isExternalLink;
 
+  /// The margin of the card.
+  final EdgeInsets? margin;
+
   NavigationCard({
     Key? key,
     required this.title,
@@ -34,6 +37,7 @@ class NavigationCard extends StatelessWidget {
     this.color,
     this.fillColor: false,
     this.isExternalLink: false,
+    this.margin,
   }) : super(key: key);
 
   /// Creates a navigation card to open up the given [url].
@@ -46,6 +50,7 @@ class NavigationCard extends StatelessWidget {
     this.color,
     this.fillColor: false,
     this.isExternalLink: true,
+    this.margin,
   }) : super(key: key) {
     onTap = () async {
       if (await canLaunch(url)) {
@@ -64,7 +69,9 @@ class NavigationCard extends StatelessWidget {
 
   Color _getIconColor(BuildContext context) {
     if (fillColor) {
-      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5) ? Theme.of(context).primaryIconTheme.color! : Theme.of(context).iconTheme.color!;
+      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5)
+          ? Theme.of(context).primaryIconTheme.color!
+          : Theme.of(context).iconTheme.color!;
     } else {
       return color ?? Theme.of(context).primaryColor;
     }
@@ -72,7 +79,9 @@ class NavigationCard extends StatelessWidget {
 
   TextStyle _getTitleTextStyle(BuildContext context) {
     if (fillColor) {
-      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5) ? Theme.of(context).primaryTextTheme.subtitle1! : Theme.of(context).textTheme.subtitle1!;
+      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5)
+          ? Theme.of(context).primaryTextTheme.subtitle1!
+          : Theme.of(context).textTheme.subtitle1!;
     } else {
       return Theme.of(context).textTheme.subtitle1!.copyWith(color: color ?? Theme.of(context).primaryColor);
     }
@@ -80,7 +89,9 @@ class NavigationCard extends StatelessWidget {
 
   TextStyle _getSubtitleTextStyle(BuildContext context) {
     if (fillColor) {
-      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5) ? Theme.of(context).primaryTextTheme.bodyText2! : Theme.of(context).textTheme.bodyText2!;
+      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5)
+          ? Theme.of(context).primaryTextTheme.bodyText2!
+          : Theme.of(context).textTheme.bodyText2!;
     } else {
       return Theme.of(context).textTheme.bodyText2!;
     }
@@ -121,6 +132,7 @@ class NavigationCard extends StatelessWidget {
         ),
         onTap: onTap,
       ),
+      margin: margin,
     );
   }
 }
