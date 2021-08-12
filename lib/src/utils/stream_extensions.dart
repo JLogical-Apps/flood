@@ -5,6 +5,11 @@ extension ValueStreamExtensions<T> on ValueStream<T> {
   ValueStream<S> mapWithValue<S>(S convert(T value)) {
     return map(convert).publishValueSeeded(convert(value)).autoConnect();
   }
+
+  /// Maps this value stream to value streams, and listens only to the latest created stream.
+  ValueStream<S> switchMapWithValue<S>(ValueStream<S> convert(T value)) {
+    return switchMap(convert).publishValueSeeded(convert(value).value).autoConnect();
+  }
 }
 
 extension IterableValueStreamExtensions<T> on Iterable<ValueStream<T>> {
