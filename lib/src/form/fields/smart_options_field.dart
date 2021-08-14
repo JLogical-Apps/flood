@@ -38,7 +38,13 @@ class SmartOptionsField<T> extends SmartFormField<T?> {
         );
 
   @override
-  Widget buildForm(BuildContext context, T? value, String? error, bool enabled, SmartFormController smartFormController) {
+  Widget buildForm(
+    BuildContext context,
+    T? value,
+    String? error,
+    bool enabled,
+    SmartFormController smartFormController,
+  ) {
     var _builder = builder ?? (item) => Text(item?.toString() ?? 'None');
     return Container(
       margin: EdgeInsets.all(10),
@@ -61,6 +67,7 @@ class SmartOptionsField<T> extends SmartFormField<T?> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField<T?>(
+              isExpanded: true,
               value: value,
               hint: Text('Select an option'),
               decoration: InputDecoration(
