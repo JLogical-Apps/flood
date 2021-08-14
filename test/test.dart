@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jlogical_utils/src/repository/persistence/yaml_persistence_generator.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 
 void main() {
   test('yaml', () {

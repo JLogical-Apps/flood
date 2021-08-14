@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/persistence/ids/id_generator.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../utils/stream_extensions.dart';

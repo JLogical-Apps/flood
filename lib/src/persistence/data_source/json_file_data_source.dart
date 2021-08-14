@@ -1,25 +1,21 @@
 import 'dart:io';
 
-import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/repository/persistence/json_persistence_generator.dart';
+import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 
-/// File repository that saves objects in json format.
-abstract class JsonFileRepository<T> extends FileRepository<T> {
-  JsonFileRepository({
-    required Directory parentDirectory,
-    required IdGenerator<T, String> idGenerator,
+import '../../../jlogical_utils.dart';
+
+/// File data source that saves its data in json.
+class JsonFileDataSource<T> extends FileDataSource<T> {
+  JsonFileDataSource({
+    required File file,
     required T Function(Map<String, dynamic> json) fromJson,
     required Map<String, dynamic> Function(T object) toJson,
-    int defaultSorter(T element1, T element2)?,
   }) : super(
-          idGenerator: idGenerator,
-          parentDirectory: parentDirectory,
-          extension: '.json',
+          file: file,
           persistenceGenerator: _LocalJsonPersistenceGenerator(
             fromJson: (json) => fromJson(json),
             toJson: (obj) => toJson(obj),
           ),
-          defaultSorter: defaultSorter,
         );
 }
 

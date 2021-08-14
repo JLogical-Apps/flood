@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:jlogical_utils/src/repository/persistence/persistence_generator.dart';
 import 'package:json2yaml/json2yaml.dart';
 import 'package:yaml/yaml.dart';
+
+import '../persistence.dart';
 
 /// A persistence generator that generates yaml. Currently does not support saving to yaml, only reading from yaml.
 abstract class YamlPersistenceGenerator<T> implements PersistenceGenerator<T, String> {

@@ -1,6 +1,6 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-/// A repository is a special service that creates, reads, updates, and deletes data.
+/// A repository is a special service that creates, reads, updates, and deletes data mapped by ids.
 /// Some repositories do not have the capabilities to implement all the methods and may throw [UnimplementedError].
 /// [T] is the type of object this repository gets.
 /// [R] is the type of id associated with each object.

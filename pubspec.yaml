@@ -22,11 +22,12 @@ dependencies:
   transparent_image: ^2.0.0
 
   # Application
+  equatable: ^2.0.3
   flutter_bloc: ^7.0.1
   flutter_hooks: ^0.18.0
-  equatable: ^2.0.3
   flutter_mobx: ^2.0.0
   provider: ^5.0.0
+  shared_preferences: ^2.0.6
   url_launcher: ^6.0.2
 
   # Backend
