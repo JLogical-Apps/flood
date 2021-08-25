@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../jlogical_utils.dart';
-import '../../style_accent.dart';
 
 class StyledContent extends StyledWidget {
-  final StyleAccent styledContentAccent;
-
   final String? header;
   final String? content;
 
@@ -18,7 +15,6 @@ class StyledContent extends StyledWidget {
 
   const StyledContent({
     Key? key,
-    this.styledContentAccent: StyleAccent.plain,
     this.header,
     this.content,
     this.lead,

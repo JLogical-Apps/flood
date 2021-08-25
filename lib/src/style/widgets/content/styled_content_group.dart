@@ -10,7 +10,7 @@ class StyledContentGroup extends StyledWidget {
   final Widget? lead;
   final Widget? trailing;
 
-  final StyleAccent styledContentAccent;
+  final Emphasis styledContentAccent;
 
   final void Function()? onTap;
 
@@ -20,7 +20,7 @@ class StyledContentGroup extends StyledWidget {
     this.content,
     this.lead,
     this.trailing,
-    this.styledContentAccent: StyleAccent.plain,
+    this.styledContentAccent: Emphasis.low,
     this.onTap,
   }) : super(key: key);
 

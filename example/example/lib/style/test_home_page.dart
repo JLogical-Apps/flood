@@ -18,7 +18,7 @@ class TestHomePage extends StatelessWidget {
             content: 'This is a test as to whether the content body looks decent at all right now :-)',
             lead: StyledIcon(Icons.calendar_today),
             onTap: () => print('hey'),
-            styledContentAccent: StyleAccent.plain,
+            styledContentAccent: Emphasis.low,
             children: [
               ButtonBar(
                 children: [

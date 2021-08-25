@@ -1,5 +1,5 @@
-enum StyleAccent {
-  primary,
-  accent,
-  plain,
+enum Emphasis {
+  high,
+  medium,
+  low,
 }

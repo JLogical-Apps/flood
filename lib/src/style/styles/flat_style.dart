@@ -40,7 +40,10 @@ class FlatStyle extends Style {
             contentBackgroundColor ?? (backgroundColor.isLight ? backgroundColor.darken() : backgroundColor.lighten());
 
   @override
-  StyleContext get initialStyleContext => StyleContext(backgroundColor: backgroundColor);
+  StyleContext get initialStyleContext => StyleContext(
+        backgroundColor: backgroundColor,
+        emphasis: Emphasis.low,
+      );
 
   @override
   Widget onboardingPage(
@@ -329,13 +332,13 @@ class FlatStyle extends Style {
         child: child,
       );
 
-  Color colorFromStyleAccent(StyleAccent accent) {
+  Color colorFromStyleAccent(Emphasis accent) {
     switch (accent) {
-      case StyleAccent.primary:
+      case Emphasis.high:
         return primaryColor;
-      case StyleAccent.accent:
+      case Emphasis.medium:
         return accentColor;
-      case StyleAccent.plain:
+      case Emphasis.low:
         return contentBackgroundColor;
     }
   }

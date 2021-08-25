@@ -18,34 +18,37 @@ abstract class Style {
 
   // === PAGES ===
 
-  Widget onboardingPage(StyleContext styleContext, StyledOnboardingPage onboardingPage);
+  Widget onboardingPage(StyleContext styleContext, StyledOnboardingPage onboardingPage) => throw UnimplementedError();
 
   // === TEXT ===
 
-  Widget titleText(StyleContext styleContext, StyledTitleText titleText);
+  Widget titleText(StyleContext styleContext, StyledTitleText titleText) => throw UnimplementedError();
 
-  Widget headerText(StyleContext styleContext, StyledHeaderText headerText);
+  Widget headerText(StyleContext styleContext, StyledHeaderText headerText) => throw UnimplementedError();
 
-  Widget contentHeaderText(StyleContext styleContext, StyledContentHeaderText contentHeaderText);
+  Widget contentHeaderText(StyleContext styleContext, StyledContentHeaderText contentHeaderText) =>
+      throw UnimplementedError();
 
-  Widget contentSubtitleText(StyleContext styleContext, StyledContentSubtitleText contentSubtitleText);
+  Widget contentSubtitleText(StyleContext styleContext, StyledContentSubtitleText contentSubtitleText) =>
+      throw UnimplementedError();
 
-  Widget bodyText(StyleContext styleContext, StyledBodyText bodyText);
+  Widget bodyText(StyleContext styleContext, StyledBodyText bodyText) => throw UnimplementedError();
 
-  Widget buttonText(StyleContext styleContext, StyledButtonText buttonText);
+  Widget buttonText(StyleContext styleContext, StyledButtonText buttonText) => throw UnimplementedError();
 
   // === INPUT ===
 
-  Widget primaryButton(StyleContext styleContext, StyledPrimaryButton primaryButton);
+  Widget primaryButton(StyleContext styleContext, StyledPrimaryButton primaryButton) => throw UnimplementedError();
 
-  Widget secondaryButton(StyleContext styleContext, StyledSecondaryButton secondaryButton);
+  Widget secondaryButton(StyleContext styleContext, StyledSecondaryButton secondaryButton) =>
+      throw UnimplementedError();
 
   // === CONTENT ===
-  Widget content(StyleContext styleContext, StyledContent content);
+  Widget content(StyleContext styleContext, StyledContent content) => throw UnimplementedError();
 
-  Widget contentGroup(StyleContext styleContext, StyledContentGroup contentGroup);
+  Widget contentGroup(StyleContext styleContext, StyledContentGroup contentGroup) => throw UnimplementedError();
 
   // === MISC ===
 
-  Widget icon(StyleContext styleContext, StyledIcon icon);
+  Widget icon(StyleContext styleContext, StyledIcon icon) => throw UnimplementedError();
 }

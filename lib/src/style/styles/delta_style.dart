@@ -28,7 +28,10 @@ class DeltaStyle extends FlatStyle {
         );
 
   @override
-  StyleContext get initialStyleContext => StyleContext(backgroundColor: backgroundColor);
+  StyleContext get initialStyleContext => StyleContext(
+        backgroundColor: backgroundColor,
+        emphasis: Emphasis.low,
+      );
 
   @override
   Widget onboardingPage(
