@@ -34,10 +34,6 @@ class TestHomePage extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: StyledNavBar(
-          pageNames: ['Test 1', 'Hello World'],
-          pages: [],
-        ),
       ),
     );
   }

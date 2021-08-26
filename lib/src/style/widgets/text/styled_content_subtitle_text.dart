@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
 
-class StyledContentSubtitleText extends StyledWidget {
-  final String text;
-
-  const StyledContentSubtitleText(this.text, {Key? key}) : super(key: key);
+class StyledContentSubtitleText extends StyledText {
+  const StyledContentSubtitleText(String text, {Key? key}) : super(key: key, text: text);
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {

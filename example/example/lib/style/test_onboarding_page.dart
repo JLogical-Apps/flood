@@ -30,7 +30,7 @@ class TestOnboardingPage extends StatelessWidget {
               header: 'This is some sample content.',
               lead: StyledIcon(Icons.edit),
             ),
-            header: StyledHeaderText('Here is some Header text'),
+            header: StyledSubtitleText('Here is some Header text'),
           ),
         ],
         onComplete: () {

@@ -8,8 +8,6 @@ import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
 class DeltaStyle extends FlatStyle {
-  late final Color backgroundColor2 = TinyColor(backgroundColor).mix(input: primaryColor, amount: 20).color;
-
   DeltaStyle({
     Color primaryColor: Colors.green,
     Color accentColor: Colors.purple,
@@ -50,9 +48,9 @@ class DeltaStyle extends FlatStyle {
                 config: CustomConfig(
                   gradients: [
                     [primaryColor, Color(0xEEF44336)],
-                    [primaryColorDarker, Color(0x77E57373)],
+                    [contentBackgroundColor, Color(0x77E57373)],
                     [accentColor, Color(0x66FF9800)],
-                    [accentColor.mix(primaryColorDarker), Color(0x55FFEB3B)]
+                    [accentColor.mix(contentBackgroundColor), Color(0x55FFEB3B)]
                   ],
                   durations: [70000, 38440, 20800, 12000],
                   heightPercentages: [0.40, 0.43, 0.4, 0.50],
@@ -143,7 +141,7 @@ class DeltaStyle extends FlatStyle {
                     count: onboardingPage.sections.length,
                     effect: WormEffect(
                       activeDotColor: backgroundColor,
-                      dotColor: primaryColor.lighten(),
+                      dotColor: contentBackgroundColor,
                     ),
                   ),
                 ),

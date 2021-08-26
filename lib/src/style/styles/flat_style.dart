@@ -9,7 +9,6 @@ import 'package:jlogical_utils/src/style/widgets/content/styled_content.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content_group.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/styled_icon.dart';
-import 'package:jlogical_utils/src/style/widgets/styled_nav_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -17,7 +16,6 @@ import '../style_context_provider.dart';
 
 class FlatStyle extends Style {
   final Color primaryColor;
-  late final Color primaryColorDarker = TinyColor(primaryColor).darken(40).color;
 
   final Color accentColor;
 
@@ -139,7 +137,7 @@ class FlatStyle extends Style {
                       count: onboardingPage.sections.length,
                       effect: WormEffect(
                         activeDotColor: primaryColor,
-                        dotColor: primaryColorDarker,
+                        dotColor: contentBackgroundColor,
                       ),
                     ),
                   ),
@@ -171,7 +169,7 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget headerText(StyleContext styleContext, StyledHeaderText headerText) {
+  Widget subtitleText(StyleContext styleContext, StyledSubtitleText headerText) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
@@ -232,7 +230,7 @@ class FlatStyle extends Style {
 
   @override
   Widget buttonText(StyleContext styleContext, StyledButtonText buttonText) {
-    var color = buttonText.textColor;
+    var color = buttonText.fontColorOverride;
     if (color == null) {
       final neutralColor = styleContext.isDarkBackground ? Colors.white : Colors.black;
       switch (styleContext.emphasis) {
@@ -282,27 +280,27 @@ class FlatStyle extends Style {
         case Emphasis.medium:
           return button.icon == null
               ? OutlinedButton(
-                  child: StyledButtonText(button.text, textColor: color),
+                  child: StyledButtonText(button.text, fontColorOverride: color),
                   onPressed: button.onTap,
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
                 )
               : OutlinedButton.icon(
                   onPressed: button.onTap,
                   icon: StyledIcon(button.icon!),
-                  label: StyledButtonText(button.text, textColor: color),
+                  label: StyledButtonText(button.text, fontColorOverride: color),
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
                 );
         case Emphasis.low:
           return button.icon == null
               ? TextButton(
-                  child: StyledButtonText(button.text, textColor: color),
+                  child: StyledButtonText(button.text, fontColorOverride: color),
                   onPressed: button.onTap,
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
                 )
               : TextButton.icon(
                   onPressed: button.onTap,
                   icon: StyledIcon(button.icon!, color: color),
-                  label: StyledButtonText(button.text, textColor: color),
+                  label: StyledButtonText(button.text, fontColorOverride: color),
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
                 );
       }
@@ -378,31 +376,5 @@ class FlatStyle extends Style {
       case Emphasis.low:
         return contentBackgroundColor;
     }
-  }
-
-  @override
-  Widget navBar(StyleContext styleContext, StyledNavBar navBar) {
-    final items = <BottomNavigationBarItem>[];
-
-    for (int i = 0; i < navBar.pageNames.length; i++) {
-      items.add(
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.edit,
-            color: primaryColorDarker,
-          ),
-          activeIcon: Icon(
-            Icons.edit,
-            color: primaryColor,
-          ),
-          label: navBar.pageNames[i],
-        ),
-      );
-    }
-
-    return BottomNavigationBar(
-      items: items,
-      backgroundColor: backgroundColor,
-    );
   }
 }
