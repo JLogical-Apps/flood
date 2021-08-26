@@ -9,6 +9,7 @@ import 'package:jlogical_utils/src/style/widgets/content/styled_content.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content_group.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/styled_icon.dart';
+import 'package:jlogical_utils/src/style/widgets/styled_nav_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -234,7 +235,7 @@ class FlatStyle extends Style {
     var color = buttonText.textColor;
     if (color == null) {
       final neutralColor = styleContext.isDarkBackground ? Colors.white : Colors.black;
-      switch(styleContext.emphasis){
+      switch (styleContext.emphasis) {
         case Emphasis.high:
           color = neutralColor;
           break;
@@ -258,48 +259,50 @@ class FlatStyle extends Style {
   @override
   Widget button(StyleContext styleContext, StyledButton button) {
     final color = button.color ?? primaryColor;
-    final neutral = color.isDark ? Colors.white : Colors.black;
     final emphasis = button.emphasis ?? styleContext.emphasis;
 
     Widget _buttonWidget() {
       switch (emphasis) {
         case Emphasis.high:
-          return button.icon == null
-              ? ElevatedButton(
-                  child: StyledButtonText(button.text),
-                  onPressed: button.onTap,
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(color)),
-                )
-              : ElevatedButton.icon(
-                  onPressed: button.onTap,
-                  icon: StyledIcon(button.icon!),
-                  label: StyledButtonText(button.text),
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(backgroundColor)),
-                );
+          return StyleContextProvider(
+            styleContext: styleContext.copyWith(backgroundColor: color, emphasis: button.emphasis),
+            child: button.icon == null
+                ? ElevatedButton(
+                    child: StyledButtonText(button.text),
+                    onPressed: button.onTap,
+                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all(color)),
+                  )
+                : ElevatedButton.icon(
+                    onPressed: button.onTap,
+                    icon: StyledIcon(button.icon!),
+                    label: StyledButtonText(button.text),
+                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all(color)),
+                  ),
+          );
         case Emphasis.medium:
           return button.icon == null
               ? OutlinedButton(
-                  child: StyledButtonText(button.text),
-                  onPressed: button.onTap,
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(backgroundColor)),
-                )
-              : OutlinedButton.icon(
-                  onPressed: button.onTap,
-                  icon: StyledIcon(button.icon!),
-                  label: StyledButtonText(button.text),
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(backgroundColor)),
-                );
-        case Emphasis.low:
-          return button.icon == null
-              ? OutlinedButton(
-                  child: StyledButtonText(button.text),
+                  child: StyledButtonText(button.text, textColor: color),
                   onPressed: button.onTap,
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
                 )
               : OutlinedButton.icon(
                   onPressed: button.onTap,
                   icon: StyledIcon(button.icon!),
-                  label: StyledButtonText(button.text),
+                  label: StyledButtonText(button.text, textColor: color),
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+                );
+        case Emphasis.low:
+          return button.icon == null
+              ? TextButton(
+                  child: StyledButtonText(button.text, textColor: color),
+                  onPressed: button.onTap,
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+                )
+              : TextButton.icon(
+                  onPressed: button.onTap,
+                  icon: StyledIcon(button.icon!, color: color),
+                  label: StyledButtonText(button.text, textColor: color),
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
                 );
       }
@@ -375,5 +378,31 @@ class FlatStyle extends Style {
       case Emphasis.low:
         return contentBackgroundColor;
     }
+  }
+
+  @override
+  Widget navBar(StyleContext styleContext, StyledNavBar navBar) {
+    final items = <BottomNavigationBarItem>[];
+
+    for (int i = 0; i < navBar.pageNames.length; i++) {
+      items.add(
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.edit,
+            color: primaryColorDarker,
+          ),
+          activeIcon: Icon(
+            Icons.edit,
+            color: primaryColor,
+          ),
+          label: navBar.pageNames[i],
+        ),
+      );
+    }
+
+    return BottomNavigationBar(
+      items: items,
+      backgroundColor: backgroundColor,
+    );
   }
 }

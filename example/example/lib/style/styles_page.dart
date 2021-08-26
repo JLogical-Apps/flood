@@ -30,9 +30,9 @@ class StylesPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => TestOnboardingPage(
                       style: FlatStyle(
-                          backgroundColor: Color(0xFF030413),
-                          primaryColor: Colors.green,
-                          accentColor: Color(0xFF1C7D75)),
+                          backgroundColor: Color(0xFF030D0E),
+                          primaryColor: Color(0xff298ea7),
+                          accentColor: Color(0xFF321B71)),
                       styleName: 'Flat Dark',
                     ))),
           ),
@@ -42,7 +42,7 @@ class StylesPage extends StatelessWidget {
                 builder: (_) => TestOnboardingPage(
                       style: DeltaStyle(
                           backgroundColor: Color(0xFF172434),
-                          primaryColor: Color(0xFF88df91),
+                          primaryColor: Color(0xff4dac55),
                           accentColor: Color(0xFF0ab0bc)),
                       styleName: 'Delta',
                     ))),

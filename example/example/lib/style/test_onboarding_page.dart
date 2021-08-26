@@ -25,25 +25,10 @@ class TestOnboardingPage extends StatelessWidget {
             ),
           ),
           OnboardingPageSection(
-            title: StyledTitleText('Create an Account'),
-            description: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                StyledBodyText('Let\'s go ahead and get you registered.'),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    StyledButton(
-                      text: 'Sign Up',
-                      onTap: () {},
-                    ),
-                    StyledButton(
-                      text: 'Log In',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ],
+            title: StyledTitleText('Features'),
+            description: StyledContent(
+              header: 'This is some sample content.',
+              lead: StyledIcon(Icons.edit),
             ),
             header: StyledHeaderText('Here is some Header text'),
           ),

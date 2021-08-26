@@ -30,9 +30,13 @@ class TestHomePage extends StatelessWidget {
                     onTap: () {},
                   ),
                 ],
-              )
+              ),
             ],
           ),
+        ),
+        bottomNavigationBar: StyledNavBar(
+          pageNames: ['Test 1', 'Hello World'],
+          pages: [],
         ),
       ),
     );

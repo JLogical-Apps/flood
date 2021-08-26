@@ -8,7 +8,7 @@ class StyleContext {
 
   const StyleContext({required this.backgroundColor, required this.emphasis});
 
-  bool get isDarkBackground => backgroundColor.computeLuminance() < 0.5;
+  bool get isDarkBackground => backgroundColor.computeLuminance() < 0.66;
 
   StyleContext copyWith({Color? backgroundColor, Emphasis? emphasis}) {
     return StyleContext(

@@ -4,6 +4,7 @@ import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content_group.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_onboarding_page.dart';
 import 'package:jlogical_utils/src/style/widgets/styled_icon.dart';
+import 'package:jlogical_utils/src/style/widgets/styled_nav_bar.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_content_header_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_header_text.dart';
 
@@ -45,4 +46,6 @@ abstract class Style {
   // === MISC ===
 
   Widget icon(StyleContext styleContext, StyledIcon icon) => throw UnimplementedError();
+
+  Widget navBar(StyleContext styleContext, StyledNavBar navBar) => throw UnimplementedError();
 }

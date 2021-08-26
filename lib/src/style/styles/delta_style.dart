@@ -99,12 +99,10 @@ class DeltaStyle extends FlatStyle {
                         if (onboardingPage.onSkip != null)
                           animatedFadeIn(
                             isVisible: page.value < onboardingPage.sections.length - 1,
-                            child: TextButton(
-                              child: StyledButtonText(
-                                'Skip',
-                                textColor: backgroundColor,
-                              ),
-                              onPressed: page.value < onboardingPage.sections.length - 1
+                            child: StyledButton.low(
+                              text: 'Skip',
+                              color: backgroundColor,
+                              onTap: page.value < onboardingPage.sections.length - 1
                                   ? () => onboardingPage.onSkip!()
                                   : null,
                             ),
@@ -115,17 +113,15 @@ class DeltaStyle extends FlatStyle {
                         AnimatedSwitcher(
                           duration: Duration(milliseconds: 400),
                           child: page.value == onboardingPage.sections.length - 1
-                              ? StyledButton(
+                              ? StyledButton.high(
                                   text: 'Done',
                                   onTap: onboardingPage.onComplete,
                                   color: backgroundColor,
                                 )
-                              : TextButton(
-                                  child: StyledButtonText(
-                                    'Next',
-                                    textColor: backgroundColor,
-                                  ),
-                                  onPressed: page.value < onboardingPage.sections.length - 1
+                              : StyledButton.low(
+                                  text: 'Next',
+                                  color: backgroundColor,
+                                  onTap: page.value < onboardingPage.sections.length - 1
                                       ? () => pageController.animateToPage(
                                             page.value + 1,
                                             duration: Duration(milliseconds: 400),

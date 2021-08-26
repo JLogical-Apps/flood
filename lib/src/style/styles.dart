@@ -1,5 +1,5 @@
-export 'style.dart';
 export 'emphasis.dart';
+export 'style.dart';
 export 'style_context.dart';
 export 'style_provider.dart';
 export 'styled_widget.dart';
@@ -10,6 +10,7 @@ export 'widgets/content/styled_content_group.dart';
 export 'widgets/input/styled_button.dart';
 export 'widgets/pages/styled_onboarding_page.dart';
 export 'widgets/styled_icon.dart';
+export 'widgets/styled_nav_bar.dart';
 export 'widgets/text/styled_body_text.dart';
 export 'widgets/text/styled_button_text.dart';
 export 'widgets/text/styled_content_header_text.dart';
