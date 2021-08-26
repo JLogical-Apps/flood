@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/style/style_accent.dart';
+import 'package:jlogical_utils/src/style/emphasis.dart';
+import 'package:jlogical_utils/src/style/emphasis_provider.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content_group.dart';
-import 'package:jlogical_utils/src/style/widgets/input/styled_primary_button.dart';
-import 'package:jlogical_utils/src/style/widgets/input/styled_secondary_button.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/styled_icon.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -59,83 +59,87 @@ class FlatStyle extends Style {
           backgroundColor: backgroundColor,
           body: Stack(
             children: [
-              Column(
-                children: [
-                  Expanded(
-                    child: PageView(
-                      controller: pageController,
-                      allowImplicitScrolling: true,
-                      scrollBehavior: CupertinoScrollBehavior(),
-                      onPageChanged: (_page) => page.value = _page,
-                      children: onboardingPage.sections
-                          .map((section) => SafeArea(
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: Center(child: section.header),
-                                      flex: 1,
-                                    ),
-                                    Expanded(
-                                      child: Center(child: section.title),
-                                      flex: 1,
-                                    ),
-                                    Expanded(
-                                      child: Center(child: section.description),
-                                      flex: 2,
-                                    ),
-                                  ],
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        if (onboardingPage.onSkip != null)
-                          animatedFadeIn(
-                            isVisible: page.value < onboardingPage.sections.length - 1,
-                            child: StyledSecondaryButton(
-                              text: 'Skip',
-                              onTap: page.value < onboardingPage.sections.length - 1
-                                  ? () => onboardingPage.onSkip!()
-                                  : null,
-                            ),
-                          ),
-                        Expanded(
-                          child: Container(),
-                        ),
-                        AnimatedSwitcher(
-                          duration: Duration(milliseconds: 400),
-                          child: page.value == onboardingPage.sections.length - 1
-                              ? StyledPrimaryButton(
-                                  text: 'Done',
-                                  onTap: onboardingPage.onComplete,
-                                )
-                              : StyledSecondaryButton(
-                                  text: 'Next',
-                                  onTap: () => pageController.animateToPage(
-                                    page.value + 1,
-                                    duration: Duration(milliseconds: 400),
-                                    curve: Curves.easeInOutCubic,
+              SafeArea(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: PageView(
+                        controller: pageController,
+                        allowImplicitScrolling: true,
+                        scrollBehavior: CupertinoScrollBehavior(),
+                        onPageChanged: (_page) => page.value = _page,
+                        children: onboardingPage.sections
+                            .map((section) => SafeArea(
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        child: Center(child: section.header),
+                                        flex: 1,
+                                      ),
+                                      Expanded(
+                                        child: Center(child: section.title),
+                                        flex: 1,
+                                      ),
+                                      Expanded(
+                                        child: Center(child: section.description),
+                                        flex: 2,
+                                      ),
+                                    ],
                                   ),
-                                ),
-                        ),
-                      ],
+                                ))
+                            .toList(),
+                      ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          if (onboardingPage.onSkip != null)
+                            animatedFadeIn(
+                              isVisible: page.value < onboardingPage.sections.length - 1,
+                              child: StyledButton.low(
+                                text: 'Skip',
+                                onTap: page.value < onboardingPage.sections.length - 1
+                                    ? () => onboardingPage.onSkip!()
+                                    : null,
+                              ),
+                            ),
+                          Expanded(
+                            child: Container(),
+                          ),
+                          AnimatedSwitcher(
+                            duration: Duration(milliseconds: 400),
+                            child: page.value == onboardingPage.sections.length - 1
+                                ? StyledButton.high(
+                                    text: 'Done',
+                                    onTap: onboardingPage.onComplete,
+                                  )
+                                : StyledButton.low(
+                                    text: 'Next',
+                                    onTap: () => pageController.animateToPage(
+                                      page.value + 1,
+                                      duration: Duration(milliseconds: 400),
+                                      curve: Curves.easeInOutCubic,
+                                    ),
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Positioned.fill(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AnimatedSmoothIndicator(
-                    activeIndex: page.value,
-                    count: onboardingPage.sections.length,
-                    effect: WormEffect(
-                      activeDotColor: primaryColor,
-                      dotColor: primaryColorDarker,
+                child: SafeArea(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedSmoothIndicator(
+                      activeIndex: page.value,
+                      count: onboardingPage.sections.length,
+                      effect: WormEffect(
+                        activeDotColor: primaryColor,
+                        dotColor: primaryColorDarker,
+                      ),
                     ),
                   ),
                 ),
@@ -227,61 +231,91 @@ class FlatStyle extends Style {
 
   @override
   Widget buttonText(StyleContext styleContext, StyledButtonText buttonText) {
+    var color = buttonText.textColor;
+    if (color == null) {
+      final neutralColor = styleContext.isDarkBackground ? Colors.white : Colors.black;
+      switch(styleContext.emphasis){
+        case Emphasis.high:
+          color = neutralColor;
+          break;
+        case Emphasis.medium:
+          color = primaryColor;
+          break;
+        case Emphasis.low:
+          color = primaryColor;
+      }
+    }
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
         buttonText.text.toUpperCase(),
         textAlign: TextAlign.center,
-        style: TextStyle(color: buttonText.textColor),
+        style: TextStyle(color: color),
       ),
     );
   }
 
   @override
-  Widget primaryButton(StyleContext styleContext, StyledPrimaryButton primaryButton) {
-    final backgroundColor = primaryButton.color ?? primaryColor;
+  Widget button(StyleContext styleContext, StyledButton button) {
+    final color = button.color ?? primaryColor;
+    final neutral = color.isDark ? Colors.white : Colors.black;
+    final emphasis = button.emphasis ?? styleContext.emphasis;
 
-    return StyleContextProvider(
-      styleContext: styleContext.copyWith(backgroundColor: backgroundColor),
-      child: primaryButton.icon == null
-          ? ElevatedButton(
-              child: StyledButtonText(primaryButton.text),
-              onPressed: primaryButton.onTap,
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(backgroundColor)),
-            )
-          : ElevatedButton.icon(
-              onPressed: primaryButton.onTap,
-              icon: StyledIcon(primaryButton.icon!),
-              label: StyledButtonText(primaryButton.text),
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(backgroundColor)),
-            ),
-    );
-  }
+    Widget _buttonWidget() {
+      switch (emphasis) {
+        case Emphasis.high:
+          return button.icon == null
+              ? ElevatedButton(
+                  child: StyledButtonText(button.text),
+                  onPressed: button.onTap,
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(color)),
+                )
+              : ElevatedButton.icon(
+                  onPressed: button.onTap,
+                  icon: StyledIcon(button.icon!),
+                  label: StyledButtonText(button.text),
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(backgroundColor)),
+                );
+        case Emphasis.medium:
+          return button.icon == null
+              ? OutlinedButton(
+                  child: StyledButtonText(button.text),
+                  onPressed: button.onTap,
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(backgroundColor)),
+                )
+              : OutlinedButton.icon(
+                  onPressed: button.onTap,
+                  icon: StyledIcon(button.icon!),
+                  label: StyledButtonText(button.text),
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(backgroundColor)),
+                );
+        case Emphasis.low:
+          return button.icon == null
+              ? OutlinedButton(
+                  child: StyledButtonText(button.text),
+                  onPressed: button.onTap,
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+                )
+              : OutlinedButton.icon(
+                  onPressed: button.onTap,
+                  icon: StyledIcon(button.icon!),
+                  label: StyledButtonText(button.text),
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+                );
+      }
+    }
 
-  @override
-  Widget secondaryButton(StyleContext styleContext, StyledSecondaryButton secondaryButton) {
-    final foregroundColor = secondaryButton.color ?? primaryColor;
-
-    return StyleContextProvider(
-      styleContext: styleContext.copyWith(backgroundColor: backgroundColor),
-      child: secondaryButton.icon == null
-          ? OutlinedButton(
-              child: StyledButtonText(secondaryButton.text, textColor: foregroundColor),
-              onPressed: secondaryButton.onTap,
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
-            )
-          : OutlinedButton.icon(
-              onPressed: secondaryButton.onTap,
-              icon: StyledIcon(secondaryButton.icon!, color: foregroundColor),
-              label: StyledButtonText(secondaryButton.text, textColor: foregroundColor),
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
-            ),
-    );
+    return button.emphasis == null
+        ? _buttonWidget()
+        : EmphasisProvider(
+            emphasis: button.emphasis!,
+            child: _buttonWidget(),
+          );
   }
 
   @override
   Widget content(StyleContext styleContext, StyledContent content) {
-    final cardColor = colorFromStyleAccent(content.styledContentAccent);
+    final cardColor = colorFromStyleAccent(styleContext.emphasis);
     return ClickableCard(
       color: cardColor,
       onTap: content.onTap,
@@ -307,7 +341,7 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget contentGroup(StyleContext styleContext, StyledContentGroup contentGroup) {
+  Widget contentGroup(StyleContext styleContext, StyledCategory contentGroup) {
     // TODO: implement contentGroup
     throw UnimplementedError();
   }

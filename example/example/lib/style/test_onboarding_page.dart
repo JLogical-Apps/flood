@@ -33,11 +33,11 @@ class TestOnboardingPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    StyledPrimaryButton(
+                    StyledButton(
                       text: 'Sign Up',
                       onTap: () {},
                     ),
-                    StyledSecondaryButton(
+                    StyledButton(
                       text: 'Log In',
                       onTap: () {},
                     ),

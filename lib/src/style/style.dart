@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content_group.dart';
-import 'package:jlogical_utils/src/style/widgets/input/styled_primary_button.dart';
-import 'package:jlogical_utils/src/style/widgets/input/styled_secondary_button.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_onboarding_page.dart';
 import 'package:jlogical_utils/src/style/widgets/styled_icon.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_content_header_text.dart';
@@ -37,16 +35,12 @@ abstract class Style {
   Widget buttonText(StyleContext styleContext, StyledButtonText buttonText) => throw UnimplementedError();
 
   // === INPUT ===
-
-  Widget primaryButton(StyleContext styleContext, StyledPrimaryButton primaryButton) => throw UnimplementedError();
-
-  Widget secondaryButton(StyleContext styleContext, StyledSecondaryButton secondaryButton) =>
-      throw UnimplementedError();
+  Widget button(StyleContext styleContext, StyledButton primaryButton) => throw UnimplementedError();
 
   // === CONTENT ===
   Widget content(StyleContext styleContext, StyledContent content) => throw UnimplementedError();
 
-  Widget contentGroup(StyleContext styleContext, StyledContentGroup contentGroup) => throw UnimplementedError();
+  Widget contentGroup(StyleContext styleContext, StyledCategory contentGroup) => throw UnimplementedError();
 
   // === MISC ===
 

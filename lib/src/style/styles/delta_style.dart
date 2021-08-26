@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/style/widgets/input/styled_primary_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:wave/config.dart';
@@ -116,7 +115,7 @@ class DeltaStyle extends FlatStyle {
                         AnimatedSwitcher(
                           duration: Duration(milliseconds: 400),
                           child: page.value == onboardingPage.sections.length - 1
-                              ? StyledPrimaryButton(
+                              ? StyledButton(
                                   text: 'Done',
                                   onTap: onboardingPage.onComplete,
                                   color: backgroundColor,

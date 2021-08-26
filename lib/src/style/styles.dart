@@ -1,5 +1,5 @@
 export 'style.dart';
-export 'style_accent.dart';
+export 'emphasis.dart';
 export 'style_context.dart';
 export 'style_provider.dart';
 export 'styled_widget.dart';
@@ -7,8 +7,7 @@ export 'styles/delta_style.dart';
 export 'styles/flat_style.dart';
 export 'widgets/content/styled_content.dart';
 export 'widgets/content/styled_content_group.dart';
-export 'widgets/input/styled_primary_button.dart';
-export 'widgets/input/styled_secondary_button.dart';
+export 'widgets/input/styled_button.dart';
 export 'widgets/pages/styled_onboarding_page.dart';
 export 'widgets/styled_icon.dart';
 export 'widgets/text/styled_body_text.dart';

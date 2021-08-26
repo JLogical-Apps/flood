@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:jlogical_utils/src/style/style_accent.dart';
+import 'package:jlogical_utils/src/style/emphasis.dart';
 
 import '../../../../jlogical_utils.dart';
 
-class StyledContentGroup extends StyledWidget {
+class StyledCategory extends StyledWidget {
   final String? header;
   final String? content;
 
@@ -14,7 +14,7 @@ class StyledContentGroup extends StyledWidget {
 
   final void Function()? onTap;
 
-  const StyledContentGroup({
+  const StyledCategory({
     Key? key,
     this.header,
     this.content,
