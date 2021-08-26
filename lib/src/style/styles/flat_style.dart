@@ -4,12 +4,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/style/emphasis.dart';
-import 'package:jlogical_utils/src/style/emphasis_provider.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content_group.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
 import 'package:jlogical_utils/src/style/widgets/styled_icon.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -17,12 +17,13 @@ import '../style_context_provider.dart';
 
 class FlatStyle extends Style {
   final Color primaryColor;
+  final Color primaryColorSoft;
 
   final Color accentColor;
+  final Color accentColorSoft;
 
   final Color backgroundColor;
-
-  final Color contentBackgroundColor;
+  final Color backgroundColorSoft;
 
   final String titleFontFamily;
   final String subtitleFontFamily;
@@ -30,20 +31,20 @@ class FlatStyle extends Style {
 
   FlatStyle({
     this.primaryColor: Colors.blue,
+    Color? primaryColorSoft,
     this.accentColor: Colors.pink,
+    Color? accentColorSoft,
     this.backgroundColor: Colors.white,
-    Color? contentBackgroundColor,
+    Color? backgroundColorSoft,
     this.titleFontFamily: 'Montserrat',
     this.subtitleFontFamily: 'Quicksand',
     this.bodyFontFamily: 'Lato',
-  }) : this.contentBackgroundColor =
-            contentBackgroundColor ?? (backgroundColor.isLight ? backgroundColor.darken() : backgroundColor.lighten());
+  })  : this.primaryColorSoft = primaryColorSoft ?? softenColor(primaryColor),
+        this.accentColorSoft = accentColorSoft ?? softenColor(accentColor),
+        this.backgroundColorSoft = backgroundColorSoft ?? softenColor(backgroundColor);
 
   @override
-  StyleContext get initialStyleContext => StyleContext(
-        backgroundColor: backgroundColor,
-        emphasis: Emphasis.low,
-      );
+  StyleContext get initialStyleContext => styleContextFromBackground(backgroundColor);
 
   @override
   Widget onboardingPage(
@@ -138,7 +139,7 @@ class FlatStyle extends Style {
                       count: onboardingPage.sections.length,
                       effect: WormEffect(
                         activeDotColor: primaryColor,
-                        dotColor: contentBackgroundColor,
+                        dotColor: styleContext.backgroundColorSoft,
                       ),
                     ),
                   ),
@@ -152,167 +153,175 @@ class FlatStyle extends Style {
     );
   }
 
-  @override
-  Widget titleText(StyleContext styleContext, StyledTitleText titleText) {
+  Widget rawStyledText({
+    required StyledText styledText,
+    required String fontFamily,
+    String? text,
+    Color? fontColor,
+    double? fontSize,
+    FontWeight? fontWeight,
+    FontStyle? fontStyle,
+    double? letterSpacing,
+    TextAlign? textAlign,
+    EdgeInsets? padding,
+  }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: styledText.paddingOverride ?? padding ?? EdgeInsets.zero,
       child: Text(
-        titleText.text.toUpperCase(),
-        textAlign: TextAlign.center,
-        style: GoogleFonts.getFont(titleFontFamily).copyWith(
-          color: primaryColor,
-          fontSize: 46,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 3,
+        text ?? styledText.text,
+        textAlign: styledText.textAlignOverride ?? textAlign,
+        style: GoogleFonts.getFont(styledText.fontFamilyOverride ?? fontFamily).copyWith(
+          color: styledText.fontColorOverride ?? fontColor,
+          fontSize: styledText.fontSizeOverride ?? fontSize,
+          fontWeight: styledText.fontWeightOverride ?? fontWeight,
+          letterSpacing: styledText.letterSpacingOverride ?? letterSpacing,
         ),
       ),
     );
   }
 
   @override
-  Widget subtitleText(StyleContext styleContext, StyledSubtitleText headerText) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        headerText.text,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.getFont(subtitleFontFamily).copyWith(
-          color: styleContext.isDarkBackground ? Colors.white54 : Colors.black38,
-          fontSize: 28,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
+  Widget titleText(StyleContext styleContext, StyledTitleText titleText) {
+    return rawStyledText(
+      styledText: titleText,
+      text: titleText.text.toUpperCase(),
+      fontFamily: titleFontFamily,
+      padding: const EdgeInsets.all(8),
+      fontColor: primaryColor,
+      fontSize: 48,
+      textAlign: TextAlign.center,
+      letterSpacing: 3,
+    );
+  }
+
+  @override
+  Widget subtitleText(StyleContext styleContext, StyledSubtitleText subtitleText) {
+    return rawStyledText(
+      styledText: subtitleText,
+      fontFamily: subtitleFontFamily,
+      padding: const EdgeInsets.all(8),
+      fontColor: styleContext.foregroundColor,
+      fontSize: 28,
+      textAlign: TextAlign.center,
     );
   }
 
   @override
   Widget contentHeaderText(StyleContext styleContext, StyledContentHeaderText contentHeaderText) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        contentHeaderText.text,
-        style: GoogleFonts.getFont(subtitleFontFamily).copyWith(
-          color: styleContext.isDarkBackground ? Colors.white : Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-        ),
-      ),
+    return rawStyledText(
+      styledText: contentHeaderText,
+      fontFamily: subtitleFontFamily,
+      padding: const EdgeInsets.all(8),
+      fontColor: styleContext.primaryColor,
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
     );
   }
 
   @override
   Widget contentSubtitleText(StyleContext styleContext, StyledContentSubtitleText contentSubtitleText) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        contentSubtitleText.text,
-        style: GoogleFonts.getFont(bodyFontFamily).copyWith(
-          color: styleContext.isDarkBackground ? Colors.white70 : Colors.black87,
-          fontSize: 16,
-        ),
-      ),
+    return rawStyledText(
+      styledText: contentSubtitleText,
+      fontFamily: bodyFontFamily,
+      padding: const EdgeInsets.all(8),
+      fontColor: styleContext.foregroundColorSoft,
+      fontSize: 16,
     );
   }
 
   @override
   Widget bodyText(StyleContext styleContext, StyledBodyText bodyText) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        bodyText.text,
-        textAlign: TextAlign.left,
-        style: GoogleFonts.getFont(bodyFontFamily).copyWith(
-          color: styleContext.isDarkBackground ? Colors.white70 : Colors.black87,
-          fontSize: 18,
-        ),
-      ),
+    return rawStyledText(
+      styledText: bodyText,
+      fontFamily: bodyFontFamily,
+      padding: const EdgeInsets.all(8),
+      fontColor: styleContext.foregroundColor,
+      fontSize: 18,
     );
   }
 
   @override
   Widget buttonText(StyleContext styleContext, StyledButtonText buttonText) {
-    var color = buttonText.fontColorOverride;
-    if (color == null) {
-      final neutralColor = styleContext.isDarkBackground ? Colors.white : Colors.black;
-      switch (styleContext.emphasis) {
-        case Emphasis.high:
-          color = neutralColor;
-          break;
-        case Emphasis.medium:
-          color = primaryColor;
-          break;
-        case Emphasis.low:
-          color = primaryColor;
-      }
-    }
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(
-        buttonText.text.toUpperCase(),
-        textAlign: TextAlign.center,
-        style: TextStyle(color: color),
-      ),
+    return rawStyledText(
+      styledText: buttonText,
+      text: buttonText.text.toUpperCase(),
+      fontFamily: bodyFontFamily,
+      fontWeight: FontWeight.w600,
+      textAlign: TextAlign.center,
+      padding: const EdgeInsets.all(8),
+      fontColor: styleContext.foregroundColor,
+      fontSize: 12,
+      letterSpacing: 1,
     );
   }
 
   @override
   Widget button(StyleContext styleContext, StyledButton button) {
-    final color = button.color ?? primaryColor;
-    final emphasis = button.emphasis ?? styleContext.emphasis;
-
-    Widget _buttonWidget() {
-      switch (emphasis) {
-        case Emphasis.high:
-          return StyleContextProvider(
-            styleContext: styleContext.copyWith(backgroundColor: color, emphasis: button.emphasis),
-            child: button.icon == null
-                ? ElevatedButton(
-                    child: StyledButtonText(button.text),
-                    onPressed: button.onTap,
-                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all(color)),
-                  )
-                : ElevatedButton.icon(
-                    onPressed: button.onTap,
-                    icon: StyledIcon(button.icon!),
-                    label: StyledButtonText(button.text),
-                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all(color)),
-                  ),
-          );
-        case Emphasis.medium:
-          return button.icon == null
-              ? OutlinedButton(
-                  child: StyledButtonText(button.text, fontColorOverride: color),
+    return button.emphasis.map(
+      high: () {
+        final backgroundColor = button.color ?? styleContext.primaryColor;
+        return StyleContextProvider(
+          styleContext: styleContextFromBackground(backgroundColor),
+          child: button.icon == null
+              ? ElevatedButton(
+                  child: StyledButtonText(button.text),
                   onPressed: button.onTap,
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.primaryColor),
+                  ),
                 )
-              : OutlinedButton.icon(
+              : ElevatedButton.icon(
                   onPressed: button.onTap,
                   icon: StyledIcon(button.icon!),
-                  label: StyledButtonText(button.text, fontColorOverride: color),
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
-                );
-        case Emphasis.low:
-          return button.icon == null
-              ? TextButton(
-                  child: StyledButtonText(button.text, fontColorOverride: color),
+                  label: StyledButtonText(button.text),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.primaryColor),
+                  ),
+                ),
+        );
+      },
+      medium: () {
+        return StyleContextProvider(
+          styleContext: styleContextFromBackground(backgroundColor),
+          child: button.icon == null
+              ? ElevatedButton(
+                  child: StyledButtonText(button.text),
                   onPressed: button.onTap,
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
+                  ),
                 )
-              : TextButton.icon(
+              : ElevatedButton.icon(
                   onPressed: button.onTap,
-                  icon: StyledIcon(button.icon!, color: color),
-                  label: StyledButtonText(button.text, fontColorOverride: color),
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
-                );
-      }
-    }
-
-    return button.emphasis == null
-        ? _buttonWidget()
-        : EmphasisProvider(
-            emphasis: button.emphasis!,
-            child: _buttonWidget(),
-          );
+                  icon: StyledIcon(button.icon!),
+                  label: StyledButtonText(button.text),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
+                  ),
+                ),
+        );
+      },
+      low: () {
+        return button.icon == null
+            ? TextButton(
+                child: StyledButtonText(
+                  button.text,
+                  textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.primaryColor),
+                ),
+                onPressed: button.onTap,
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+              )
+            : TextButton.icon(
+                onPressed: button.onTap,
+                icon: StyledIcon(button.icon!, color: button.color ?? styleContext.primaryColor),
+                label: StyledButtonText(
+                  button.text,
+                  textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.primaryColor),
+                ),
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+              );
+      },
+    );
   }
 
   @override
@@ -321,17 +330,18 @@ class FlatStyle extends Style {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (textField.label != null) StyledContentSubtitleText(textField.label!),
           TextFormField(
             initialValue: textField.initialValue,
             style: GoogleFonts.getFont(bodyFontFamily).copyWith(
-              color: contentBackgroundColor.isDark ? Colors.white : Colors.black,
+              color: styleContext.foregroundColor,
             ),
             decoration: InputDecoration(
               prefixIcon: textField.leading,
               suffixIcon: textField.trailing,
-              fillColor: contentBackgroundColor,
+              fillColor: styleContext.backgroundColorSoft,
               filled: true,
               errorText: textField.errorText,
               border: OutlineInputBorder(
@@ -342,7 +352,7 @@ class FlatStyle extends Style {
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
                   width: 0.5,
-                  color: Colors.white,
+                  color: styleContext.foregroundColorSoft,
                 ),
               ),
               errorBorder: OutlineInputBorder(
@@ -378,14 +388,13 @@ class FlatStyle extends Style {
 
   @override
   Widget content(StyleContext styleContext, StyledContent content) {
-    final cardColor = colorFromStyleAccent(styleContext.emphasis);
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: ClickableCard(
-        color: cardColor,
+        color: styleContext.backgroundColorSoft,
         onTap: content.onTap,
         child: StyleContextProvider(
-          styleContext: styleContext.copyWith(backgroundColor: cardColor),
+          styleContext: styleContextFromBackground(styleContext.backgroundColorSoft),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -414,13 +423,11 @@ class FlatStyle extends Style {
 
   @override
   Widget icon(StyleContext styleContext, StyledIcon icon) {
-    final iconColor = icon.color ?? (styleContext.isDarkBackground ? Colors.white : Colors.black);
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Icon(
         icon.iconData,
-        color: iconColor,
+        color: icon.color ?? styleContext.foregroundColor,
         size: icon.size,
       ),
     );
@@ -432,14 +439,38 @@ class FlatStyle extends Style {
         child: child,
       );
 
-  Color colorFromStyleAccent(Emphasis accent) {
-    switch (accent) {
-      case Emphasis.high:
-        return primaryColor;
-      case Emphasis.medium:
-        return accentColor;
-      case Emphasis.low:
-        return contentBackgroundColor;
-    }
+  static Color softenColor(Color color) {
+    return color.computeLuminance() < 0.5 ? color.lighten() : color.darken();
+  }
+
+  Color getSoftenedColor(Color color) {
+    if (color == primaryColor)
+      return primaryColorSoft;
+    else if (color == primaryColorSoft)
+      return primaryColor;
+    else if (color == accentColor)
+      return accentColorSoft;
+    else if (color == accentColorSoft)
+      return accentColor;
+    else if (color == backgroundColor)
+      return backgroundColorSoft;
+    else if (color == backgroundColorSoft)
+      return backgroundColor;
+    else
+      return softenColor(color);
+  }
+
+  StyleContext styleContextFromBackground(Color backgroundColor) {
+    final foregroundColor = backgroundColor.computeLuminance() < 0.5 ? Colors.white : Colors.black;
+    return StyleContext(
+      backgroundColor: backgroundColor,
+      backgroundColorSoft: getSoftenedColor(backgroundColor),
+      foregroundColor: foregroundColor,
+      foregroundColorSoft: getSoftenedColor(foregroundColor),
+      primaryColor: primaryColor,
+      primaryColorSoft: getSoftenedColor(primaryColor),
+      accentColor: accentColor,
+      accentColorSoft: getSoftenedColor(accentColor),
+    );
   }
 }

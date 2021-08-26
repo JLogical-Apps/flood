@@ -23,7 +23,7 @@ class TestHomePage extends StatelessWidget {
               children: [
                 ButtonBar(
                   children: [
-                    StyledButton.high(
+                    StyledButton.medium(
                       text: 'Sign Up',
                       onTap: () {},
                     ),

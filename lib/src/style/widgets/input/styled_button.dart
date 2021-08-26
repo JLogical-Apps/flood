@@ -8,7 +8,7 @@ class StyledButton extends StyledWidget {
 
   final void Function()? onTap;
 
-  final Emphasis? emphasis;
+  final Emphasis emphasis;
 
   const StyledButton({
     Key? key,
@@ -16,7 +16,7 @@ class StyledButton extends StyledWidget {
     this.icon,
     this.color,
     required this.onTap,
-    this.emphasis,
+    required this.emphasis,
   }) : super(key: key);
 
   const StyledButton.low({

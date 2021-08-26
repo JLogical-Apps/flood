@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../../jlogical_utils.dart';
-
 class StyleContext {
   final Color backgroundColor;
-  final Emphasis emphasis;
+  final Color backgroundColorSoft;
 
-  const StyleContext({required this.backgroundColor, required this.emphasis});
+  final Color foregroundColor;
+  final Color foregroundColorSoft;
+
+  final Color primaryColor;
+  final Color primaryColorSoft;
+
+  final Color accentColor;
+  final Color accentColorSoft;
+
+  const StyleContext({
+    required this.backgroundColor,
+    required this.backgroundColorSoft,
+    required this.foregroundColor,
+    required this.foregroundColorSoft,
+    required this.primaryColor,
+    required this.primaryColorSoft,
+    required this.accentColor,
+    required this.accentColorSoft,
+  });
 
   bool get isDarkBackground => backgroundColor.computeLuminance() < 0.66;
-
-  StyleContext copyWith({Color? backgroundColor, Emphasis? emphasis}) {
-    return StyleContext(
-      backgroundColor: backgroundColor ?? this.backgroundColor,
-      emphasis: emphasis ?? this.emphasis,
-    );
-  }
 }

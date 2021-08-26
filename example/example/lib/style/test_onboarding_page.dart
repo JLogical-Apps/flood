@@ -1,4 +1,5 @@
 import 'package:example/style/test_home_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -26,9 +27,49 @@ class TestOnboardingPage extends StatelessWidget {
           ),
           OnboardingPageSection(
             title: StyledTitleText('Features'),
-            description: StyledContent(
-              header: 'This is some sample content.',
-              lead: StyledIcon(Icons.edit),
+            description: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                StyledContent(
+                  header: 'This is some sample content.',
+                  content: 'Test 123',
+                  lead: StyledIcon(Icons.edit),
+                  children: [
+                    ButtonBar(
+                      children: [
+                        StyledButton.high(
+                          text: 'High',
+                          onTap: () {},
+                        ),
+                        StyledButton.medium(
+                          text: 'Medium',
+                          onTap: () {},
+                        ),
+                        StyledButton.low(
+                          text: 'Low',
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                ButtonBar(
+                  children: [
+                    StyledButton.high(
+                      text: 'High',
+                      onTap: () {},
+                    ),
+                    StyledButton.medium(
+                      text: 'Medium',
+                      onTap: () {},
+                    ),
+                    StyledButton.low(
+                      text: 'Low',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ],
             ),
             header: StyledSubtitleText('Here is some Header text'),
           ),
