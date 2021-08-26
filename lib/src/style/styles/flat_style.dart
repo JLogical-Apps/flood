@@ -8,6 +8,7 @@ import 'package:jlogical_utils/src/style/emphasis_provider.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content_group.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
 import 'package:jlogical_utils/src/style/widgets/styled_icon.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -315,27 +316,91 @@ class FlatStyle extends Style {
   }
 
   @override
+  Widget textField(StyleContext styleContext, StyledTextField textField) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (textField.label != null) StyledContentSubtitleText(textField.label!),
+          TextFormField(
+            initialValue: textField.initialValue,
+            style: GoogleFonts.getFont(bodyFontFamily).copyWith(
+              color: contentBackgroundColor.isDark ? Colors.white : Colors.black,
+            ),
+            decoration: InputDecoration(
+              prefixIcon: textField.leading,
+              suffixIcon: textField.trailing,
+              fillColor: contentBackgroundColor,
+              filled: true,
+              errorText: textField.errorText,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  width: 0.5,
+                  color: Colors.white,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  width: 1,
+                  color: Colors.red,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  width: 1,
+                  color: Colors.red,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  width: 1,
+                  color: primaryColor,
+                ),
+              ),
+            ),
+            cursorColor: primaryColor,
+            onTap: textField.onTap,
+            onChanged: textField.onChanged,
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
   Widget content(StyleContext styleContext, StyledContent content) {
     final cardColor = colorFromStyleAccent(styleContext.emphasis);
-    return ClickableCard(
-      color: cardColor,
-      onTap: content.onTap,
-      child: StyleContextProvider(
-        styleContext: styleContext.copyWith(backgroundColor: cardColor),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: content.header == null ? null : StyledContentHeaderText(content.header!),
-              subtitle: content.content == null ? null : StyledContentSubtitleText(content.content!),
-              leading: content.lead,
-              trailing: content.trailing,
-            ),
-            if (content.children.isNotEmpty) ...[
-              Divider(),
-              ...content.children,
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: ClickableCard(
+        color: cardColor,
+        onTap: content.onTap,
+        child: StyleContextProvider(
+          styleContext: styleContext.copyWith(backgroundColor: cardColor),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: content.header == null ? null : StyledContentHeaderText(content.header!),
+                subtitle: content.content == null ? null : StyledContentSubtitleText(content.content!),
+                leading: content.lead,
+                trailing: content.trailing,
+              ),
+              if (content.children.isNotEmpty) ...[
+                Divider(),
+                ...content.children,
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
