@@ -15,6 +15,6 @@ class StyledBodyText extends StyledText {
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.bodyText(styleContext, this);
+    return style.bodyText(context, styleContext, this);
   }
 }

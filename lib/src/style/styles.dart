@@ -7,6 +7,7 @@ export 'styles/delta_style.dart';
 export 'styles/flat_style.dart';
 export 'widgets/content/styled_content.dart';
 export 'widgets/content/styled_content_group.dart';
+export 'widgets/input/action_item.dart';
 export 'widgets/input/styled_button.dart';
 export 'widgets/input/styled_text_field.dart';
 export 'widgets/pages/styled_onboarding_page.dart';

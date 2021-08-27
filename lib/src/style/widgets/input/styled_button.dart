@@ -48,6 +48,6 @@ class StyledButton extends StyledWidget {
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.button(styleContext, this);
+    return style.button(context, styleContext, this);
   }
 }

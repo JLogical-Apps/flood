@@ -51,5 +51,6 @@ class MenuItem {
   final Color color;
   final Function onPressed;
 
-  const MenuItem({required this.text, this.description, this.icon, this.color: Colors.black87, required this.onPressed});
+  const MenuItem(
+      {required this.text, this.description, this.icon, this.color: Colors.black87, required this.onPressed});
 }

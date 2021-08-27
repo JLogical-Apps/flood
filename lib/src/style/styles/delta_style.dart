@@ -27,6 +27,7 @@ class DeltaStyle extends FlatStyle {
 
   @override
   Widget onboardingPage(
+    BuildContext context,
     StyleContext styleContext,
     StyledOnboardingPage onboardingPage,
   ) {

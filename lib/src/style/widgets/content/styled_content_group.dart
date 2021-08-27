@@ -26,6 +26,6 @@ class StyledCategory extends StyledWidget {
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.contentGroup(styleContext, this);
+    return style.contentGroup(context, styleContext, this);
   }
 }

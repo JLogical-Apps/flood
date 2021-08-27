@@ -41,7 +41,7 @@ class FlatStyle extends Style {
   StyleContext get initialStyleContext => styleContextFromBackground(backgroundColor);
 
   @override
-  Widget page(StyleContext styleContext, StyledPage styledPage) {
+  Widget page(BuildContext context, StyleContext styleContext, StyledPage styledPage) {
     return Scaffold(
       backgroundColor: styleContext.backgroundColor,
       appBar: AppBar(
@@ -49,6 +49,14 @@ class FlatStyle extends Style {
         title: styledPage.title != null ? StyledContentHeaderText(styledPage.title!) : null,
         foregroundColor: styleContext.emphasisColor,
         iconTheme: IconThemeData(color: styleContext.emphasisColor),
+        actions: [
+          if (styledPage.actions.isNotEmpty)
+            actionButton(
+              context,
+              actions: styledPage.actions,
+              color: styleContext.emphasisColor,
+            ),
+        ],
       ),
       body: styledPage.body,
     );
@@ -56,6 +64,7 @@ class FlatStyle extends Style {
 
   @override
   Widget onboardingPage(
+    BuildContext context,
     StyleContext styleContext,
     StyledOnboardingPage onboardingPage,
   ) {
@@ -193,7 +202,7 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget titleText(StyleContext styleContext, StyledTitleText titleText) {
+  Widget titleText(BuildContext context, StyleContext styleContext, StyledTitleText titleText) {
     return rawStyledText(
       styledText: titleText,
       text: titleText.text.toUpperCase(),
@@ -207,7 +216,7 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget subtitleText(StyleContext styleContext, StyledSubtitleText subtitleText) {
+  Widget subtitleText(BuildContext context, StyleContext styleContext, StyledSubtitleText subtitleText) {
     return rawStyledText(
       styledText: subtitleText,
       fontFamily: subtitleFontFamily,
@@ -219,7 +228,7 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget contentHeaderText(StyleContext styleContext, StyledContentHeaderText contentHeaderText) {
+  Widget contentHeaderText(BuildContext context, StyleContext styleContext, StyledContentHeaderText contentHeaderText) {
     return rawStyledText(
       styledText: contentHeaderText,
       fontFamily: subtitleFontFamily,
@@ -231,7 +240,8 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget contentSubtitleText(StyleContext styleContext, StyledContentSubtitleText contentSubtitleText) {
+  Widget contentSubtitleText(
+      BuildContext context, StyleContext styleContext, StyledContentSubtitleText contentSubtitleText) {
     return rawStyledText(
       styledText: contentSubtitleText,
       fontFamily: bodyFontFamily,
@@ -242,7 +252,7 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget bodyText(StyleContext styleContext, StyledBodyText bodyText) {
+  Widget bodyText(BuildContext context, StyleContext styleContext, StyledBodyText bodyText) {
     return rawStyledText(
       styledText: bodyText,
       fontFamily: bodyFontFamily,
@@ -253,7 +263,7 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget buttonText(StyleContext styleContext, StyledButtonText buttonText) {
+  Widget buttonText(BuildContext context, StyleContext styleContext, StyledButtonText buttonText) {
     return rawStyledText(
       styledText: buttonText,
       text: buttonText.text.toUpperCase(),
@@ -268,7 +278,7 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget button(StyleContext styleContext, StyledButton button) {
+  Widget button(BuildContext context, StyleContext styleContext, StyledButton button) {
     return button.emphasis.map(
       high: () {
         final backgroundColor = button.color ?? styleContext.emphasisColor;
@@ -353,7 +363,7 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget textField(StyleContext styleContext, StyledTextField textField) {
+  Widget textField(BuildContext context, StyleContext styleContext, StyledTextField textField) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -415,13 +425,14 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget content(StyleContext styleContext, StyledContent content) {
+  Widget content(BuildContext context, StyleContext styleContext, StyledContent content) {
     // Flat Style treats low and medium emphasis contents as the same.
     final backgroundColor = content.emphasis.map(
       low: () => styleContext.backgroundColorSoft,
       medium: () => styleContext.backgroundColorSoft,
       high: () => styleContext.emphasisColor,
     );
+
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: ClickableCard(
@@ -437,7 +448,13 @@ class FlatStyle extends Style {
                 title: content.header == null ? null : StyledContentHeaderText(content.header!),
                 subtitle: content.content == null ? null : StyledContentSubtitleText(content.content!),
                 leading: content.lead,
-                trailing: content.trailing,
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (content.trailing != null) content.trailing!,
+                    if (content.actions.isNotEmpty) actionButton(context, actions: content.actions),
+                  ],
+                ),
               ),
               if (content.children.isNotEmpty) ...[
                 Divider(),
@@ -451,13 +468,13 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget contentGroup(StyleContext styleContext, StyledCategory contentGroup) {
+  Widget contentGroup(BuildContext context, StyleContext styleContext, StyledCategory contentGroup) {
     // TODO: implement contentGroup
     throw UnimplementedError();
   }
 
   @override
-  Widget icon(StyleContext styleContext, StyledIcon icon) {
+  Widget icon(BuildContext context, StyleContext styleContext, StyledIcon icon) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Icon(
@@ -466,6 +483,20 @@ class FlatStyle extends Style {
         size: icon.size,
       ),
     );
+  }
+
+  Widget actionButton(BuildContext context, {required List<ActionItem> actions, Color? color}) {
+    return MenuButton(
+        child: StyledIcon(Icons.more_vert, color: color),
+        items: actions
+            .map((action) => MenuItem(
+                  text: action.name,
+                  description: action.description,
+                  color: action.color ?? primaryColor,
+                  icon: action.icon,
+                  onPressed: action.onPerform ?? () {},
+                ))
+            .toList());
   }
 
   Widget animatedFadeIn({required bool isVisible, required Widget child}) => AnimatedOpacity(

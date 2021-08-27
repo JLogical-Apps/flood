@@ -13,7 +13,7 @@ class StyledOnboardingPage extends StyledWidget {
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.onboardingPage(styleContext, this);
+    return style.onboardingPage(context, styleContext, this);
   }
 }
 

@@ -24,6 +24,6 @@ class StyledTextField extends StyledWidget {
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.textField(styleContext, this);
+    return style.textField(context, styleContext, this);
   }
 }

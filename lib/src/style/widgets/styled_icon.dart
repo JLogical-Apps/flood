@@ -12,6 +12,6 @@ class StyledIcon extends StyledWidget {
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.icon(styleContext, this);
+    return style.icon(context, styleContext, this);
   }
 }

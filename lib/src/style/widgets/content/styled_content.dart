@@ -10,6 +10,7 @@ class StyledContent extends StyledWidget {
   final Widget? trailing;
 
   final List<Widget> children;
+  final List<ActionItem> actions;
 
   final void Function()? onTap;
 
@@ -22,6 +23,7 @@ class StyledContent extends StyledWidget {
     this.lead,
     this.trailing,
     this.children: const [],
+    this.actions: const [],
     this.onTap,
     required this.emphasis,
   }) : super(key: key);
@@ -33,6 +35,7 @@ class StyledContent extends StyledWidget {
     this.lead,
     this.trailing,
     this.children: const [],
+    this.actions: const [],
     this.onTap,
   })  : emphasis = Emphasis.low,
         super(key: key);
@@ -44,6 +47,7 @@ class StyledContent extends StyledWidget {
     this.lead,
     this.trailing,
     this.children: const [],
+    this.actions: const [],
     this.onTap,
   })  : emphasis = Emphasis.medium,
         super(key: key);
@@ -55,12 +59,13 @@ class StyledContent extends StyledWidget {
     this.lead,
     this.trailing,
     this.children: const [],
+    this.actions: const [],
     this.onTap,
   })  : emphasis = Emphasis.high,
         super(key: key);
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.content(styleContext, this);
+    return style.content(context, styleContext, this);
   }
 }

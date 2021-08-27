@@ -12,6 +12,17 @@ class TestHomePage extends StatelessWidget {
       style: style,
       child: StyledPage(
         title: 'Welcome',
+        actions: [
+          ActionItem(
+            name: 'Edit',
+            color: Colors.orange,
+            lead: StyledIcon(Icons.edit),
+            description: 'Edit nothing. XD',
+            onPerform: () {
+              print('Ouch you poked me!');
+            },
+          )
+        ],
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -19,6 +30,17 @@ class TestHomePage extends StatelessWidget {
               header: 'This is a high emphasis content',
               lead: StyledIcon(Icons.calendar_today),
               onTap: () => print('hey'),
+              actions: [
+                ActionItem(
+                  name: 'Save',
+                  color: Colors.blue,
+                  description: 'This does nothing yet.',
+                  lead: StyledIcon(Icons.save),
+                  onPerform: () {
+                    print('SAVING');
+                  },
+                ),
+              ],
             ),
             StyledContent.low(
               header: 'Test of Content',

@@ -18,37 +18,47 @@ abstract class Style {
 
   // === PAGES ===
 
-  Widget page(StyleContext styleContext, StyledPage styledPage) => throw UnimplementedError();
+  Widget page(BuildContext context, StyleContext styleContext, StyledPage styledPage) => throw UnimplementedError();
 
-  Widget onboardingPage(StyleContext styleContext, StyledOnboardingPage onboardingPage) => throw UnimplementedError();
+  Widget onboardingPage(BuildContext context, StyleContext styleContext, StyledOnboardingPage onboardingPage) =>
+      throw UnimplementedError();
 
   // === TEXT ===
 
-  Widget titleText(StyleContext styleContext, StyledTitleText titleText) => throw UnimplementedError();
-
-  Widget subtitleText(StyleContext styleContext, StyledSubtitleText headerText) => throw UnimplementedError();
-
-  Widget contentHeaderText(StyleContext styleContext, StyledContentHeaderText contentHeaderText) =>
+  Widget titleText(BuildContext context, StyleContext styleContext, StyledTitleText titleText) =>
       throw UnimplementedError();
 
-  Widget contentSubtitleText(StyleContext styleContext, StyledContentSubtitleText contentSubtitleText) =>
+  Widget subtitleText(BuildContext context, StyleContext styleContext, StyledSubtitleText headerText) =>
       throw UnimplementedError();
 
-  Widget bodyText(StyleContext styleContext, StyledBodyText bodyText) => throw UnimplementedError();
+  Widget contentHeaderText(
+          BuildContext context, StyleContext styleContext, StyledContentHeaderText contentHeaderText) =>
+      throw UnimplementedError();
 
-  Widget buttonText(StyleContext styleContext, StyledButtonText buttonText) => throw UnimplementedError();
+  Widget contentSubtitleText(
+          BuildContext context, StyleContext styleContext, StyledContentSubtitleText contentSubtitleText) =>
+      throw UnimplementedError();
+
+  Widget bodyText(BuildContext context, StyleContext styleContext, StyledBodyText bodyText) =>
+      throw UnimplementedError();
+
+  Widget buttonText(BuildContext context, StyleContext styleContext, StyledButtonText buttonText) =>
+      throw UnimplementedError();
 
   // === INPUT ===
-  Widget button(StyleContext styleContext, StyledButton primaryButton) => throw UnimplementedError();
+  Widget button(BuildContext context, StyleContext styleContext, StyledButton primaryButton) =>
+      throw UnimplementedError();
 
-  Widget textField(StyleContext styleContext, StyledTextField textField) => throw UnimplementedError();
+  Widget textField(BuildContext context, StyleContext styleContext, StyledTextField textField) =>
+      throw UnimplementedError();
 
   // === CONTENT ===
-  Widget content(StyleContext styleContext, StyledContent content) => throw UnimplementedError();
+  Widget content(BuildContext context, StyleContext styleContext, StyledContent content) => throw UnimplementedError();
 
-  Widget contentGroup(StyleContext styleContext, StyledCategory contentGroup) => throw UnimplementedError();
+  Widget contentGroup(BuildContext context, StyleContext styleContext, StyledCategory contentGroup) =>
+      throw UnimplementedError();
 
   // === MISC ===
 
-  Widget icon(StyleContext styleContext, StyledIcon icon) => throw UnimplementedError();
+  Widget icon(BuildContext context, StyleContext styleContext, StyledIcon icon) => throw UnimplementedError();
 }

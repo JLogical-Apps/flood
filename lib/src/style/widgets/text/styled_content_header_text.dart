@@ -15,6 +15,6 @@ class StyledContentHeaderText extends StyledText {
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.contentHeaderText(styleContext, this);
+    return style.contentHeaderText(context, styleContext, this);
   }
 }

@@ -13,6 +13,6 @@ class StyledContentSubtitleText extends StyledText {
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.contentSubtitleText(styleContext, this);
+    return style.contentSubtitleText(context, styleContext, this);
   }
 }

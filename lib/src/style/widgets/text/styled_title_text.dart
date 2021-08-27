@@ -13,6 +13,6 @@ class StyledTitleText extends StyledText {
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.titleText(styleContext, this);
+    return style.titleText(context, styleContext, this);
   }
 }

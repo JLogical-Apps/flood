@@ -13,6 +13,6 @@ class StyledButtonText extends StyledText {
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.buttonText(styleContext, this);
+    return style.buttonText(context, styleContext, this);
   }
 }
