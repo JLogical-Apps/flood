@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/style_context_provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:wave/config.dart';
@@ -68,9 +69,12 @@ class DeltaStyle extends FlatStyle {
                           .map((section) => SafeArea(
                                 child: Column(
                                   children: [
-                                    Expanded(
-                                      child: Center(child: section.header),
-                                      flex: 1,
+                                    StyleContextProvider(
+                                      styleContext: styleContextFromBackground(backgroundColor),
+                                      child: Expanded(
+                                        child: Center(child: section.header),
+                                        flex: 1,
+                                      ),
                                     ),
                                     Expanded(
                                       child: Center(child: section.title),
@@ -79,6 +83,9 @@ class DeltaStyle extends FlatStyle {
                                     Expanded(
                                       child: Center(child: section.description),
                                       flex: 2,
+                                    ),
+                                    SizedBox(
+                                      height: 55,
                                     ),
                                   ],
                                 ),

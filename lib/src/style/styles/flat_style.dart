@@ -102,6 +102,9 @@ class FlatStyle extends Style {
                                         child: Center(child: section.description),
                                         flex: 2,
                                       ),
+                                      SizedBox(
+                                        height: 55,
+                                      ),
                                     ],
                                   ),
                                 ))
@@ -195,6 +198,7 @@ class FlatStyle extends Style {
           color: styledText.fontColorOverride ?? fontColor,
           fontSize: styledText.fontSizeOverride ?? fontSize,
           fontWeight: styledText.fontWeightOverride ?? fontWeight,
+          fontStyle: styledText.fontStyleOverride ?? fontStyle,
           letterSpacing: styledText.letterSpacingOverride ?? letterSpacing,
         ),
       ),
@@ -208,7 +212,7 @@ class FlatStyle extends Style {
       text: titleText.text.toUpperCase(),
       fontFamily: titleFontFamily,
       padding: const EdgeInsets.all(8),
-      fontColor: primaryColor,
+      fontColor: styleContext.emphasisColor,
       fontSize: 48,
       textAlign: TextAlign.center,
       letterSpacing: 3,

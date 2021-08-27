@@ -23,8 +23,7 @@ class TestHomePage extends StatelessWidget {
             },
           )
         ],
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        body: ScrollColumn(
           children: [
             StyledContent.high(
               header: 'This is a high emphasis content',

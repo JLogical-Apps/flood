@@ -10,7 +10,7 @@ class StyledCategory extends StyledWidget {
   final Widget? lead;
   final Widget? trailing;
 
-  final Emphasis styledContentAccent;
+  final Emphasis emphasis;
 
   final void Function()? onTap;
 
@@ -20,7 +20,7 @@ class StyledCategory extends StyledWidget {
     this.content,
     this.lead,
     this.trailing,
-    this.styledContentAccent: Emphasis.low,
+    this.emphasis: Emphasis.low,
     this.onTap,
   }) : super(key: key);
 
