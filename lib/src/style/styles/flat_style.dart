@@ -7,8 +7,10 @@ import 'package:jlogical_utils/src/style/emphasis.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_category.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
 import 'package:jlogical_utils/src/style/widgets/styled_icon.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_error_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -425,6 +427,43 @@ class FlatStyle extends Style {
           ),
         ],
       ),
+    );
+  }
+
+  @override
+  Widget checkbox(BuildContext context, StyleContext styleContext, StyledCheckbox checkbox) {
+    final checkColor = checkbox.hasError ? Colors.red : styleContext.emphasisColor;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (checkbox.label != null)
+              GestureDetector(
+                child: StyledBodyText(checkbox.label!),
+                onTap: checkbox.onChanged != null ? () => checkbox.onChanged!(!checkbox.value) : null,
+              ),
+            Checkbox(
+              value: checkbox.value,
+              onChanged: checkbox.onChanged != null ? (value) => checkbox.onChanged!(value ?? false) : null,
+              overlayColor: MaterialStateProperty.all(styleContext.foregroundColor.withOpacity(0.2)),
+              fillColor: MaterialStateProperty.all(checkColor),
+              checkColor: checkbox.hasError
+                  ? styleContextFromBackground(checkColor).foregroundColor
+                  : styleContextFromBackground(checkColor).emphasisColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(2),
+              ),
+              side: BorderSide(
+                color: checkbox.hasError ? Colors.red : styleContext.emphasisColorSoft,
+                width: 2,
+              ),
+            ),
+          ],
+        ),
+        if (checkbox.errorText != null) StyledErrorText(checkbox.errorText!),
+      ],
     );
   }
 

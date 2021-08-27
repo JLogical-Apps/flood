@@ -1,10 +1,11 @@
 import 'package:example/style/test_home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
-class TestOnboardingPage extends StatelessWidget {
+class TestOnboardingPage extends HookWidget {
   final Style style;
 
   final String styleName;
@@ -13,6 +14,7 @@ class TestOnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final checkboxValue = useState(false);
     return StyleProvider(
       style: style,
       child: StyledOnboardingPage(
@@ -266,6 +268,22 @@ class TestOnboardingPage extends StatelessWidget {
                     StyledTextField(
                       label: 'Name',
                       initialValue: 'John Doe',
+                    ),
+                  ],
+                ),
+                Divider(),
+                StyledCheckbox(
+                  label: 'Accept Terms and Conditions',
+                  value: checkboxValue.value,
+                  onChanged: (value) => checkboxValue.value = value,
+                ),
+                Divider(),
+                StyledCategory.high(
+                  children: [
+                    StyledCheckbox(
+                      label: 'Accept Terms and Conditions',
+                      value: checkboxValue.value,
+                      onChanged: (value) => checkboxValue.value = value,
                     ),
                   ],
                 ),

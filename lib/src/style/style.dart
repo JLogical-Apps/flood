@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_category.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_onboarding_page.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_page.dart';
@@ -50,6 +51,9 @@ abstract class Style {
       throw UnimplementedError();
 
   Widget textField(BuildContext context, StyleContext styleContext, StyledTextField textField) =>
+      throw UnimplementedError();
+
+  Widget checkbox(BuildContext context, StyleContext styleContext, StyledCheckbox checkbox) =>
       throw UnimplementedError();
 
   // === CONTENT ===

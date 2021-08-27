@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class TestHomePage extends StatelessWidget {
+class TestHomePage extends HookWidget {
   final Style style;
 
   const TestHomePage({Key? key, required this.style}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final checkboxValue = useState(false);
     return StyleProvider(
       style: style,
       child: StyledPage(
@@ -64,6 +66,11 @@ class TestHomePage extends StatelessWidget {
             StyledTextField(
               label: 'Name',
               leading: StyledIcon(Icons.person),
+            ),
+            StyledCheckbox(
+              label: 'Accept Terms and Conditions',
+              value: checkboxValue.value,
+              onChanged: (value) => checkboxValue.value = value,
             ),
           ],
         ),
