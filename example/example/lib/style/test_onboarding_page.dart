@@ -27,6 +27,10 @@ class TestOnboardingPage extends StatelessWidget {
             ),
           ),
           OnboardingPageSection(
+            header: StyledIcon(
+              Icons.text_fields,
+              size: 40,
+            ),
             title: StyledTitleText('Text'),
             description: ScrollColumn.withScrollbar(
               children: [
@@ -65,12 +69,12 @@ class TestOnboardingPage extends StatelessWidget {
                 )
               ],
             ),
-            header: StyledIcon(
-              Icons.text_fields,
-              size: 40,
-            ),
           ),
           OnboardingPageSection(
+            header: StyledIcon(
+              Icons.smart_button,
+              size: 40,
+            ),
             title: StyledTitleText('Buttons'),
             description: ScrollColumn.withScrollbar(
               children: [
@@ -119,12 +123,12 @@ class TestOnboardingPage extends StatelessWidget {
                 ),
               ],
             ),
-            header: StyledIcon(
-              Icons.smart_button,
-              size: 40,
-            ),
           ),
           OnboardingPageSection(
+            header: StyledIcon(
+              Icons.article,
+              size: 40,
+            ),
             title: StyledTitleText('Content'),
             description: ScrollColumn.withScrollbar(
               children: [
@@ -177,9 +181,95 @@ class TestOnboardingPage extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          OnboardingPageSection(
             header: StyledIcon(
-              Icons.article,
+              Icons.list_alt,
               size: 40,
+            ),
+            title: StyledTitleText('Categories'),
+            description: ScrollColumn.withScrollbar(
+              children: [
+                StyledBodyText(
+                    'Categories are a container for a group of Contents, or any other Widgets. They help visualize a specific group of related widgets.'),
+                Divider(),
+                StyledCategory.low(
+                  header: 'Todo List',
+                  children: [
+                    StyledContent.low(header: 'Item 1'),
+                    StyledContent.low(header: 'Item 2'),
+                    StyledContent.low(header: 'Item 3'),
+                  ],
+                ),
+                Divider(),
+                StyledCategory.medium(
+                  header: 'Todo List',
+                  content: 'Your list of todos to complete by the end of today.',
+                  children: [
+                    StyledContent.low(header: 'Item 1'),
+                    StyledContent.low(header: 'Item 2'),
+                    StyledContent.low(header: 'Item 3'),
+                  ],
+                ),
+                Divider(),
+                StyledCategory.high(
+                  header: 'Todo List',
+                  lead: StyledIcon(Icons.check_outlined),
+                  actions: [
+                    ActionItem(
+                      name: 'Complete All',
+                    ),
+                  ],
+                  children: [
+                    StyledContent.low(header: 'Item 1'),
+                    StyledContent.low(header: 'Item 2'),
+                    StyledContent.low(header: 'Item 3'),
+                  ],
+                ),
+                StyledCategory.high(
+                  header: 'Grid',
+                  children: [
+                    GridView.count(
+                      crossAxisCount: 2,
+                      children: [
+                        StyledContent.low(header: 'Item 1'),
+                        StyledContent.low(header: 'Item 2'),
+                        StyledContent.low(header: 'Item 2'),
+                        StyledContent.low(header: 'Item 3'),
+                      ],
+                      childAspectRatio: 100 / 50,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          OnboardingPageSection(
+            header: StyledIcon(
+              Icons.extension,
+              size: 40,
+            ),
+            title: StyledTitleText('Other'),
+            description: ScrollColumn.withScrollbar(
+              children: [
+                StyledBodyText('Here are some other styled widgets as well.'),
+                Divider(),
+                StyledTextField(
+                  label: 'Name',
+                  initialValue: 'John Doe',
+                ),
+                Divider(),
+                StyledCategory.high(
+                  children: [
+                    StyledTextField(
+                      label: 'Name',
+                      initialValue: 'John Doe',
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ],

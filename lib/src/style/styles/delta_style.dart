@@ -47,7 +47,7 @@ class DeltaStyle extends FlatStyle {
                     [primaryColor, Color(0xEEF44336)],
                     [backgroundColorSoft.mix(accentColor), Color(0x77E57373)],
                     [accentColor.compliment.mix(backgroundColor).darken(), Color(0x66FF9800)],
-                    [primaryColorSoft.mix(backgroundColorSoft).darken(), Color(0x55FFEB3B)]
+                    [primaryColorSoft.mix(backgroundColorSoft), Color(0x55FFEB3B)]
                   ],
                   durations: [70000, 38440, 20800, 12000],
                   heightPercentages: [0.40, 0.43, 0.4, 0.50],
@@ -85,7 +85,7 @@ class DeltaStyle extends FlatStyle {
                                       flex: 2,
                                     ),
                                     SizedBox(
-                                      height: 55,
+                                      height: 60,
                                     ),
                                   ],
                                 ),
