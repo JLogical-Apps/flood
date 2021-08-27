@@ -6,8 +6,14 @@ class StyledTextField extends StyledWidget {
   final Widget? leading;
   final Widget? trailing;
 
-  final String? initialValue;
+  final String? initialText;
+  final String? hintText;
   final String? errorText;
+
+  final TextInputType? keyboardType;
+  final bool obscureText;
+  final int maxLines;
+  final bool enabled;
 
   final void Function(String value)? onChanged;
   final void Function()? onTap;
@@ -16,8 +22,13 @@ class StyledTextField extends StyledWidget {
     this.label,
     this.leading,
     this.trailing,
-    this.initialValue,
+    this.initialText,
+    this.hintText,
     this.errorText,
+    this.keyboardType,
+    this.obscureText: false,
+    this.maxLines: 1,
+    this.enabled: true,
     this.onChanged,
     this.onTap,
   });

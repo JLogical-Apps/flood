@@ -260,14 +260,14 @@ class TestOnboardingPage extends HookWidget {
                 StyledDivider(),
                 StyledTextField(
                   label: 'Name',
-                  initialValue: 'John Doe',
+                  initialText: 'John Doe',
                 ),
                 StyledDivider(),
                 StyledCategory.high(
                   children: [
                     StyledTextField(
                       label: 'Name',
-                      initialValue: 'John Doe',
+                      initialText: 'John Doe',
                     ),
                   ],
                 ),

@@ -63,15 +63,6 @@ class TestHomePage extends HookWidget {
                 ),
               ],
             ),
-            StyledTextField(
-              label: 'Name',
-              leading: StyledIcon(Icons.person),
-            ),
-            StyledCheckbox(
-              label: 'Accept Terms and Conditions',
-              value: checkboxValue.value,
-              onChanged: (value) => checkboxValue.value = value,
-            ),
           ],
         ),
       ),

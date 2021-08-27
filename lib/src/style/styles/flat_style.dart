@@ -379,7 +379,7 @@ class FlatStyle extends Style {
         children: [
           if (textField.label != null) StyledContentSubtitleText(textField.label!),
           TextFormField(
-            initialValue: textField.initialValue,
+            initialValue: textField.initialText,
             style: GoogleFonts.getFont(bodyFontFamily).copyWith(
               color: styleContext.foregroundColor,
             ),
@@ -421,10 +421,16 @@ class FlatStyle extends Style {
                   color: styleContext.emphasisColor,
                 ),
               ),
+              hintText: textField.hintText,
+              hintStyle: GoogleFonts.getFont(bodyFontFamily).copyWith(
+                color: styleContext.emphasisColorSoft,
+                fontStyle: FontStyle.italic,
+              ),
             ),
             cursorColor: primaryColor,
             onTap: textField.onTap,
             onChanged: textField.onChanged,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
           ),
         ],
       ),
