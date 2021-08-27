@@ -38,14 +38,14 @@ class TestOnboardingPage extends HookWidget {
               children: [
                 StyledBodyText(
                     'There are a couple different types of texts to choose from. Texts will adapt their color based on the background they are on.'),
-                Divider(),
+                StyledDivider(),
                 StyledTitleText('Title'),
                 StyledSubtitleText('Subtitle'),
                 StyledContentHeaderText('Content Header'),
                 StyledContentSubtitleText('Content Subtitle'),
                 StyledBodyText('Body'),
                 StyledButtonText('Button'),
-                Divider(),
+                StyledDivider(),
                 StyledContent.high(
                   header: 'Text in vibrant background',
                   children: [
@@ -57,7 +57,7 @@ class TestOnboardingPage extends HookWidget {
                     StyledButtonText('Button'),
                   ],
                 ),
-                Divider(),
+                StyledDivider(),
                 StyledBodyText('You can also perform overrides to text to have complete customization of it.'),
                 StyledBodyText(
                   'I am big and italic even though I am a body text.',
@@ -81,7 +81,7 @@ class TestOnboardingPage extends HookWidget {
             description: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText('Buttons determine their colors based on an emphasis.'),
-                Divider(),
+                StyledDivider(),
                 ButtonBar(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -103,7 +103,7 @@ class TestOnboardingPage extends HookWidget {
                     ),
                   ],
                 ),
-                Divider(),
+                StyledDivider(),
                 StyledBodyText('Buttons can have icons and have custom colors as well.'),
                 StyledButton.high(
                   text: 'Delete',
@@ -136,7 +136,7 @@ class TestOnboardingPage extends HookWidget {
               children: [
                 StyledBodyText('Content essentially is a container that holds data about... something.'),
                 StyledBodyText('Like buttons, Contents also change their appearance based on their emphasis.'),
-                Divider(),
+                StyledDivider(),
                 StyledContent.low(
                   header: 'Entertainment',
                   content: '\$25.24',
@@ -161,7 +161,7 @@ class TestOnboardingPage extends HookWidget {
                     print('You clicked me!');
                   },
                 ),
-                Divider(),
+                StyledDivider(),
                 StyledBodyText('Content can also have actions associated with them.'),
                 StyledContent.low(
                   header: 'Insurance',
@@ -194,7 +194,7 @@ class TestOnboardingPage extends HookWidget {
               children: [
                 StyledBodyText(
                     'Categories are a container for a group of Contents, or any other Widgets. They help visualize a specific group of related widgets.'),
-                Divider(),
+                StyledDivider(),
                 StyledCategory.low(
                   header: 'Todo List',
                   children: [
@@ -203,7 +203,7 @@ class TestOnboardingPage extends HookWidget {
                     StyledContent.low(header: 'Item 3'),
                   ],
                 ),
-                Divider(),
+                StyledDivider(),
                 StyledCategory.medium(
                   header: 'Todo List',
                   content: 'Your list of todos to complete by the end of today.',
@@ -213,7 +213,7 @@ class TestOnboardingPage extends HookWidget {
                     StyledContent.low(header: 'Item 3'),
                   ],
                 ),
-                Divider(),
+                StyledDivider(),
                 StyledCategory.high(
                   header: 'Todo List',
                   lead: StyledIcon(Icons.check_outlined),
@@ -257,12 +257,12 @@ class TestOnboardingPage extends HookWidget {
             description: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText('Here are some other styled widgets as well.'),
-                Divider(),
+                StyledDivider(),
                 StyledTextField(
                   label: 'Name',
                   initialValue: 'John Doe',
                 ),
-                Divider(),
+                StyledDivider(),
                 StyledCategory.high(
                   children: [
                     StyledTextField(
@@ -271,13 +271,13 @@ class TestOnboardingPage extends HookWidget {
                     ),
                   ],
                 ),
-                Divider(),
+                StyledDivider(),
                 StyledCheckbox(
                   label: 'Accept Terms and Conditions',
                   value: checkboxValue.value,
                   onChanged: (value) => checkboxValue.value = value,
                 ),
-                Divider(),
+                StyledDivider(),
                 StyledCategory.high(
                   children: [
                     StyledCheckbox(

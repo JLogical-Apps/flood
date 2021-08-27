@@ -9,7 +9,8 @@ import 'package:jlogical_utils/src/style/widgets/content/styled_content.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
-import 'package:jlogical_utils/src/style/widgets/styled_icon.dart';
+import 'package:jlogical_utils/src/style/widgets/misc/styled_divider.dart';
+import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_error_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -45,9 +46,9 @@ class FlatStyle extends Style {
   @override
   Widget page(BuildContext context, StyleContext styleContext, StyledPage styledPage) {
     return Scaffold(
-      backgroundColor: styleContext.backgroundColor,
+      backgroundColor: styledPage.backgroundColor ?? styleContext.backgroundColor,
       appBar: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: styledPage.backgroundColor ?? styleContext.backgroundColor,
         title: styledPage.title != null ? StyledContentHeaderText(styledPage.title!) : null,
         foregroundColor: styleContext.emphasisColor,
         iconTheme: IconThemeData(color: styleContext.emphasisColor),
@@ -624,6 +625,13 @@ class FlatStyle extends Style {
         color: icon.color ?? styleContext.foregroundColor,
         size: icon.size,
       ),
+    );
+  }
+
+  @override
+  Widget divider(BuildContext context, StyleContext styleContext, StyledDivider divider) {
+    return Divider(
+      color: styleContext.backgroundColorSoft.withOpacity(0.4),
     );
   }
 

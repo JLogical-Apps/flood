@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../jlogical_utils.dart';
+import '../../../../jlogical_utils.dart';
 
 class StyledIcon extends StyledWidget {
   final IconData iconData;
