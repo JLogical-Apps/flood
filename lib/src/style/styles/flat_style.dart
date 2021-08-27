@@ -91,45 +91,24 @@ class FlatStyle extends Style {
                             .toList(),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          if (onboardingPage.onSkip != null)
-                            animatedFadeIn(
-                              isVisible: page.value < onboardingPage.sections.length - 1,
-                              child: StyledButton.low(
-                                text: 'Skip',
-                                onTap: page.value < onboardingPage.sections.length - 1
-                                    ? () => onboardingPage.onSkip!()
-                                    : null,
-                              ),
-                            ),
-                          Expanded(
-                            child: Container(),
-                          ),
-                          AnimatedSwitcher(
-                            duration: Duration(milliseconds: 400),
-                            child: page.value == onboardingPage.sections.length - 1
-                                ? StyledButton.high(
-                                    text: 'Done',
-                                    onTap: onboardingPage.onComplete,
-                                  )
-                                : StyledButton.low(
-                                    text: 'Next',
-                                    onTap: () => pageController.animateToPage(
-                                      page.value + 1,
-                                      duration: Duration(milliseconds: 400),
-                                      curve: Curves.easeInOutCubic,
-                                    ),
-                                  ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
+              if (onboardingPage.onSkip != null)
+                Positioned(
+                  bottom: 10,
+                  left: 10,
+                  width: 100,
+                  child: SafeArea(
+                    child: animatedFadeIn(
+                      isVisible: page.value < onboardingPage.sections.length - 1,
+                      child: StyledButton.low(
+                        text: 'Skip',
+                        onTap: page.value < onboardingPage.sections.length - 1 ? () => onboardingPage.onSkip!() : null,
+                      ),
+                    ),
+                  ),
+                ),
               Positioned.fill(
                 child: SafeArea(
                   child: Align(
@@ -145,6 +124,31 @@ class FlatStyle extends Style {
                   ),
                 ),
                 bottom: 20,
+              ),
+              Positioned(
+                bottom: 10,
+                right: 10,
+                width: 100,
+                child: SafeArea(
+                  child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 400),
+                    child: page.value == onboardingPage.sections.length - 1
+                        ? StyledButton.high(
+                            key: ValueKey('done'), // Key is needed for AnimatedSwitcher to fade between buttons.
+                            text: 'Done',
+                            onTap: onboardingPage.onComplete,
+                          )
+                        : StyledButton.low(
+                            key: ValueKey('next'),
+                            text: 'Next',
+                            onTap: () => pageController.animateToPage(
+                              page.value + 1,
+                              duration: Duration(milliseconds: 400),
+                              curve: Curves.easeInOutCubic,
+                            ),
+                          ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -440,7 +444,7 @@ class FlatStyle extends Style {
       );
 
   static Color softenColor(Color color) {
-    return color.computeLuminance() < 0.5 ? color.lighten() : color.darken();
+    return color.computeLuminance() < 0.5 ? color.lighten() : color.darken(15);
   }
 
   Color getSoftenedColor(Color color) {

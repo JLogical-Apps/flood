@@ -84,62 +84,66 @@ class DeltaStyle extends FlatStyle {
                           .toList(),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        if (onboardingPage.onSkip != null)
-                          animatedFadeIn(
-                            isVisible: page.value < onboardingPage.sections.length - 1,
-                            child: StyledButton.low(
-                              text: 'Skip',
-                              color: backgroundColor,
-                              onTap: page.value < onboardingPage.sections.length - 1
-                                  ? () => onboardingPage.onSkip!()
-                                  : null,
-                            ),
-                          ),
-                        Expanded(
-                          child: Container(),
-                        ),
-                        AnimatedSwitcher(
-                          duration: Duration(milliseconds: 400),
-                          child: page.value == onboardingPage.sections.length - 1
-                              ? StyledButton.high(
-                                  text: 'Done',
-                                  onTap: onboardingPage.onComplete,
-                                  color: backgroundColor,
-                                )
-                              : StyledButton.low(
-                                  text: 'Next',
-                                  color: backgroundColor,
-                                  onTap: page.value < onboardingPage.sections.length - 1
-                                      ? () => pageController.animateToPage(
-                                            page.value + 1,
-                                            duration: Duration(milliseconds: 400),
-                                            curve: Curves.easeInOutCubic,
-                                          )
-                                      : null,
-                                ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
+              if (onboardingPage.onSkip != null)
+                Positioned(
+                  bottom: 10,
+                  left: 10,
+                  width: 100,
+                  child: SafeArea(
+                    child: animatedFadeIn(
+                      isVisible: page.value < onboardingPage.sections.length - 1,
+                      child: StyledButton.low(
+                        text: 'Skip',
+                        onTap: page.value < onboardingPage.sections.length - 1 ? () => onboardingPage.onSkip!() : null,
+                        color: backgroundColor,
+                      ),
+                    ),
+                  ),
+                ),
               Positioned.fill(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AnimatedSmoothIndicator(
-                    activeIndex: page.value,
-                    count: onboardingPage.sections.length,
-                    effect: WormEffect(
-                      activeDotColor: backgroundColor,
-                      dotColor: backgroundColorSoft,
+                child: SafeArea(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedSmoothIndicator(
+                      activeIndex: page.value,
+                      count: onboardingPage.sections.length,
+                      effect: WormEffect(
+                        activeDotColor: backgroundColor,
+                        dotColor: styleContext.backgroundColorSoft,
+                      ),
                     ),
                   ),
                 ),
                 bottom: 20,
+              ),
+              Positioned(
+                bottom: 10,
+                right: 10,
+                width: 100,
+                child: SafeArea(
+                  child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 400),
+                    child: page.value == onboardingPage.sections.length - 1
+                        ? StyledButton.high(
+                            key: ValueKey('done'), // Key is needed for AnimatedSwitcher to fade between buttons.
+                            text: 'Done',
+                            color: backgroundColor,
+                            onTap: onboardingPage.onComplete,
+                          )
+                        : StyledButton.low(
+                            key: ValueKey('next'),
+                            text: 'Next',
+                            color: backgroundColor,
+                            onTap: () => pageController.animateToPage(
+                              page.value + 1,
+                              duration: Duration(milliseconds: 400),
+                              curve: Curves.easeInOutCubic,
+                            ),
+                          ),
+                  ),
+                ),
               ),
             ],
           ),
