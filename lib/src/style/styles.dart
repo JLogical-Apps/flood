@@ -10,6 +10,7 @@ export 'widgets/content/styled_content_group.dart';
 export 'widgets/input/styled_button.dart';
 export 'widgets/input/styled_text_field.dart';
 export 'widgets/pages/styled_onboarding_page.dart';
+export 'widgets/pages/styled_page.dart';
 export 'widgets/styled_icon.dart';
 export 'widgets/text/styled_body_text.dart';
 export 'widgets/text/styled_button_text.dart';

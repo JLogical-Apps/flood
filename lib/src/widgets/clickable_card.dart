@@ -7,6 +7,8 @@ class ClickableCard extends StatelessWidget {
   /// The background color of the card.
   final Color color;
 
+  final Color? splashColor;
+
   /// Callback for when it is tapped.
   final VoidCallback? onTap;
 
@@ -20,6 +22,7 @@ class ClickableCard extends StatelessWidget {
     required this.child,
     required this.onTap,
     this.color: Colors.white,
+    this.splashColor,
     this.elevation: 0,
     this.margin,
   });
@@ -34,6 +37,7 @@ class ClickableCard extends StatelessWidget {
             BorderRadius.circular(1),
         child: child,
         onTap: onTap,
+        splashColor: splashColor,
       ),
     );
   }

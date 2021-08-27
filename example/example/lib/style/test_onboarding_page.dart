@@ -30,7 +30,7 @@ class TestOnboardingPage extends StatelessWidget {
             description: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                StyledContent(
+                StyledContent.low(
                   header: 'This is some sample content.',
                   content: 'Test 123',
                   lead: StyledIcon(Icons.edit),

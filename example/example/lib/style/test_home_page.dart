@@ -10,12 +10,17 @@ class TestHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StyleProvider(
       style: style,
-      child: Scaffold(
-        backgroundColor: (style as dynamic).backgroundColor,
+      child: StyledPage(
+        title: 'Welcome',
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            StyledContent(
+            StyledContent.high(
+              header: 'This is a high emphasis content',
+              lead: StyledIcon(Icons.calendar_today),
+              onTap: () => print('hey'),
+            ),
+            StyledContent.low(
               header: 'Test of Content',
               content: 'This is a test as to whether the content body looks decent at all right now :-)',
               lead: StyledIcon(Icons.calendar_today),

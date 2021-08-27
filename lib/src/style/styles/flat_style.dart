@@ -19,9 +19,6 @@ class FlatStyle extends Style {
   final Color primaryColor;
   final Color primaryColorSoft;
 
-  final Color accentColor;
-  final Color accentColorSoft;
-
   final Color backgroundColor;
   final Color backgroundColorSoft;
 
@@ -32,19 +29,30 @@ class FlatStyle extends Style {
   FlatStyle({
     this.primaryColor: Colors.blue,
     Color? primaryColorSoft,
-    this.accentColor: Colors.pink,
-    Color? accentColorSoft,
     this.backgroundColor: Colors.white,
     Color? backgroundColorSoft,
     this.titleFontFamily: 'Montserrat',
     this.subtitleFontFamily: 'Quicksand',
     this.bodyFontFamily: 'Lato',
   })  : this.primaryColorSoft = primaryColorSoft ?? softenColor(primaryColor),
-        this.accentColorSoft = accentColorSoft ?? softenColor(accentColor),
         this.backgroundColorSoft = backgroundColorSoft ?? softenColor(backgroundColor);
 
   @override
   StyleContext get initialStyleContext => styleContextFromBackground(backgroundColor);
+
+  @override
+  Widget page(StyleContext styleContext, StyledPage styledPage) {
+    return Scaffold(
+      backgroundColor: styleContext.backgroundColor,
+      appBar: AppBar(
+        backgroundColor: backgroundColor,
+        title: styledPage.title != null ? StyledContentHeaderText(styledPage.title!) : null,
+        foregroundColor: styleContext.emphasisColor,
+        iconTheme: IconThemeData(color: styleContext.emphasisColor),
+      ),
+      body: styledPage.body,
+    );
+  }
 
   @override
   Widget onboardingPage(
@@ -216,7 +224,7 @@ class FlatStyle extends Style {
       styledText: contentHeaderText,
       fontFamily: subtitleFontFamily,
       padding: const EdgeInsets.all(8),
-      fontColor: styleContext.primaryColor,
+      fontColor: styleContext.emphasisColor,
       fontSize: 18,
       fontWeight: FontWeight.bold,
     );
@@ -263,7 +271,7 @@ class FlatStyle extends Style {
   Widget button(StyleContext styleContext, StyledButton button) {
     return button.emphasis.map(
       high: () {
-        final backgroundColor = button.color ?? styleContext.primaryColor;
+        final backgroundColor = button.color ?? styleContext.emphasisColor;
         return StyleContextProvider(
           styleContext: styleContextFromBackground(backgroundColor),
           child: button.icon == null
@@ -271,7 +279,9 @@ class FlatStyle extends Style {
                   child: StyledButtonText(button.text),
                   onPressed: button.onTap,
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.primaryColor),
+                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.emphasisColor),
+                    overlayColor: MaterialStateProperty.all(
+                        softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.8)),
                   ),
                 )
               : ElevatedButton.icon(
@@ -279,7 +289,9 @@ class FlatStyle extends Style {
                   icon: StyledIcon(button.icon!),
                   label: StyledButtonText(button.text),
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.primaryColor),
+                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.emphasisColor),
+                    overlayColor: MaterialStateProperty.all(
+                        softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.8)),
                   ),
                 ),
         );
@@ -293,6 +305,8 @@ class FlatStyle extends Style {
                   onPressed: button.onTap,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
+                    overlayColor: MaterialStateProperty.all(
+                        softenColor(button.color ?? styleContext.backgroundColorSoft).withOpacity(0.8)),
                   ),
                 )
               : ElevatedButton.icon(
@@ -301,6 +315,8 @@ class FlatStyle extends Style {
                   label: StyledButtonText(button.text),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
+                    overlayColor: MaterialStateProperty.all(
+                        softenColor(button.color ?? styleContext.backgroundColorSoft).withOpacity(0.8)),
                   ),
                 ),
         );
@@ -310,19 +326,27 @@ class FlatStyle extends Style {
             ? TextButton(
                 child: StyledButtonText(
                   button.text,
-                  textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.primaryColor),
+                  textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.emphasisColor),
                 ),
                 onPressed: button.onTap,
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                  overlayColor: MaterialStateProperty.all(
+                      softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.3)),
+                ),
               )
             : TextButton.icon(
                 onPressed: button.onTap,
-                icon: StyledIcon(button.icon!, color: button.color ?? styleContext.primaryColor),
+                icon: StyledIcon(button.icon!, color: button.color ?? styleContext.emphasisColor),
                 label: StyledButtonText(
                   button.text,
-                  textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.primaryColor),
+                  textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.emphasisColor),
                 ),
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.transparent)),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                  overlayColor: MaterialStateProperty.all(
+                      softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.3)),
+                ),
               );
       },
     );
@@ -392,13 +416,20 @@ class FlatStyle extends Style {
 
   @override
   Widget content(StyleContext styleContext, StyledContent content) {
+    // Flat Style treats low and medium emphasis contents as the same.
+    final backgroundColor = content.emphasis.map(
+      low: () => styleContext.backgroundColorSoft,
+      medium: () => styleContext.backgroundColorSoft,
+      high: () => styleContext.emphasisColor,
+    );
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: ClickableCard(
-        color: styleContext.backgroundColorSoft,
+        color: backgroundColor,
+        splashColor: softenColor(backgroundColor).withOpacity(0.8),
         onTap: content.onTap,
         child: StyleContextProvider(
-          styleContext: styleContextFromBackground(styleContext.backgroundColorSoft),
+          styleContext: styleContextFromBackground(backgroundColor),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -444,7 +475,7 @@ class FlatStyle extends Style {
       );
 
   static Color softenColor(Color color) {
-    return color.computeLuminance() < 0.5 ? color.lighten() : color.darken(15);
+    return color.computeLuminance() < 0.5 ? color.lighten() : color.darken(12);
   }
 
   Color getSoftenedColor(Color color) {
@@ -452,10 +483,6 @@ class FlatStyle extends Style {
       return primaryColorSoft;
     else if (color == primaryColorSoft)
       return primaryColor;
-    else if (color == accentColor)
-      return accentColorSoft;
-    else if (color == accentColorSoft)
-      return accentColor;
     else if (color == backgroundColor)
       return backgroundColorSoft;
     else if (color == backgroundColorSoft)
@@ -465,16 +492,22 @@ class FlatStyle extends Style {
   }
 
   StyleContext styleContextFromBackground(Color backgroundColor) {
+    final isVibrantBackground = _isVibrant(backgroundColor);
+
     final foregroundColor = backgroundColor.computeLuminance() < 0.5 ? Colors.white : Colors.black;
+    final emphasisColor = !isVibrantBackground ? primaryColor : foregroundColor;
+
     return StyleContext(
       backgroundColor: backgroundColor,
       backgroundColorSoft: getSoftenedColor(backgroundColor),
       foregroundColor: foregroundColor,
       foregroundColorSoft: getSoftenedColor(foregroundColor),
-      primaryColor: primaryColor,
-      primaryColorSoft: getSoftenedColor(primaryColor),
-      accentColor: accentColor,
-      accentColorSoft: getSoftenedColor(accentColor),
+      emphasisColor: emphasisColor,
+      emphasisColorSoft: getSoftenedColor(emphasisColor),
     );
+  }
+
+  bool _isVibrant(Color color) {
+    return color == primaryColor || color == primaryColorSoft;
   }
 }

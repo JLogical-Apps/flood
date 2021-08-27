@@ -4,6 +4,7 @@ import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content_group.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_onboarding_page.dart';
+import 'package:jlogical_utils/src/style/widgets/pages/styled_page.dart';
 import 'package:jlogical_utils/src/style/widgets/styled_icon.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_content_header_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_subtitle_text.dart';
@@ -16,6 +17,8 @@ abstract class Style {
   StyleContext get initialStyleContext;
 
   // === PAGES ===
+
+  Widget page(StyleContext styleContext, StyledPage styledPage) => throw UnimplementedError();
 
   Widget onboardingPage(StyleContext styleContext, StyledOnboardingPage onboardingPage) => throw UnimplementedError();
 

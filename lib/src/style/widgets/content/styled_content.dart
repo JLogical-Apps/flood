@@ -13,15 +13,51 @@ class StyledContent extends StyledWidget {
 
   final void Function()? onTap;
 
+  final Emphasis emphasis;
+
   const StyledContent({
     Key? key,
     this.header,
     this.content,
     this.lead,
     this.trailing,
-    this.onTap,
     this.children: const [],
+    this.onTap,
+    required this.emphasis,
   }) : super(key: key);
+
+  const StyledContent.low({
+    Key? key,
+    this.header,
+    this.content,
+    this.lead,
+    this.trailing,
+    this.children: const [],
+    this.onTap,
+  })  : emphasis = Emphasis.low,
+        super(key: key);
+
+  const StyledContent.medium({
+    Key? key,
+    this.header,
+    this.content,
+    this.lead,
+    this.trailing,
+    this.children: const [],
+    this.onTap,
+  })  : emphasis = Emphasis.medium,
+        super(key: key);
+
+  const StyledContent.high({
+    Key? key,
+    this.header,
+    this.content,
+    this.lead,
+    this.trailing,
+    this.children: const [],
+    this.onTap,
+  })  : emphasis = Emphasis.high,
+        super(key: key);
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {

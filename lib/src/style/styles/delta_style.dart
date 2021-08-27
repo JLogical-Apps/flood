@@ -8,16 +8,17 @@ import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
 class DeltaStyle extends FlatStyle {
+  final Color accentColor;
+
   DeltaStyle({
     Color primaryColor: Colors.green,
-    Color accentColor: Colors.purple,
     Color backgroundColor: Colors.white,
+    this.accentColor: Colors.purple,
     String titleFontFamily: 'Montserrat',
     String subtitleFontFamily: 'Quicksand',
     String bodyFontFamily: 'Lato',
   }) : super(
           primaryColor: primaryColor,
-          accentColor: accentColor,
           backgroundColor: backgroundColor,
           titleFontFamily: titleFontFamily,
           subtitleFontFamily: subtitleFontFamily,
@@ -42,9 +43,9 @@ class DeltaStyle extends FlatStyle {
                 config: CustomConfig(
                   gradients: [
                     [primaryColor, Color(0xEEF44336)],
-                    [backgroundColorSoft, Color(0x77E57373)],
-                    [accentColor, Color(0x66FF9800)],
-                    [accentColor.mix(backgroundColorSoft), Color(0x55FFEB3B)]
+                    [backgroundColorSoft.mix(accentColor), Color(0x77E57373)],
+                    [accentColor.compliment.mix(backgroundColor).darken(), Color(0x66FF9800)],
+                    [primaryColorSoft.mix(backgroundColorSoft).darken(), Color(0x55FFEB3B)]
                   ],
                   durations: [70000, 38440, 20800, 12000],
                   heightPercentages: [0.40, 0.43, 0.4, 0.50],

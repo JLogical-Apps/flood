@@ -7,21 +7,16 @@ class StyleContext {
   final Color foregroundColor;
   final Color foregroundColorSoft;
 
-  final Color primaryColor;
-  final Color primaryColorSoft;
-
-  final Color accentColor;
-  final Color accentColorSoft;
+  final Color emphasisColor;
+  final Color emphasisColorSoft;
 
   const StyleContext({
     required this.backgroundColor,
     required this.backgroundColorSoft,
     required this.foregroundColor,
     required this.foregroundColorSoft,
-    required this.primaryColor,
-    required this.primaryColorSoft,
-    required this.accentColor,
-    required this.accentColorSoft,
+    required this.emphasisColor,
+    required this.emphasisColorSoft,
   });
 
   bool get isDarkBackground => backgroundColor.computeLuminance() < 0.66;
