@@ -64,7 +64,7 @@ abstract class Style {
   // === CONTENT ===
   Widget content(BuildContext context, StyleContext styleContext, StyledContent content) => throw UnimplementedError();
 
-  Widget contentGroup(BuildContext context, StyleContext styleContext, StyledCategory contentGroup) =>
+  Widget category(BuildContext context, StyleContext styleContext, StyledCategory contentGroup) =>
       throw UnimplementedError();
 
   // === MISC ===

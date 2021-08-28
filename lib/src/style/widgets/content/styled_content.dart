@@ -12,6 +12,8 @@ class StyledContent extends StyledWidget {
   final List<Widget> children;
   final List<ActionItem> actions;
 
+  final Color? emphasisColorOverride;
+
   final void Function()? onTap;
 
   final Emphasis emphasis;
@@ -24,6 +26,7 @@ class StyledContent extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.emphasisColorOverride,
     this.onTap,
     required this.emphasis,
   }) : super(key: key);
@@ -36,6 +39,7 @@ class StyledContent extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.emphasisColorOverride,
     this.onTap,
   })  : emphasis = Emphasis.low,
         super(key: key);
@@ -48,6 +52,7 @@ class StyledContent extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.emphasisColorOverride,
     this.onTap,
   })  : emphasis = Emphasis.medium,
         super(key: key);
@@ -60,6 +65,7 @@ class StyledContent extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.emphasisColorOverride,
     this.onTap,
   })  : emphasis = Emphasis.high,
         super(key: key);

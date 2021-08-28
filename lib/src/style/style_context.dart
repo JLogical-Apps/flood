@@ -20,4 +20,22 @@ class StyleContext {
   });
 
   bool get isDarkBackground => backgroundColor.computeLuminance() < 0.66;
+
+  StyleContext copyWith({
+    Color? backgroundColor,
+    Color? backgroundColorSoft,
+    Color? foregroundColor,
+    Color? foregroundColorSoft,
+    Color? emphasisColor,
+    Color? emphasisColorSoft,
+  }) {
+    return StyleContext(
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      backgroundColorSoft: backgroundColorSoft ?? this.backgroundColorSoft,
+      foregroundColor: foregroundColor ?? this.foregroundColor,
+      foregroundColorSoft: foregroundColorSoft ?? this.foregroundColorSoft,
+      emphasisColor: emphasisColor ?? this.emphasisColor,
+      emphasisColorSoft: emphasisColorSoft ?? this.emphasisColorSoft,
+    );
+  }
 }

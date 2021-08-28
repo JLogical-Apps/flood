@@ -558,12 +558,19 @@ class FlatStyle extends Style {
       high: () => styleContext.emphasisColor,
     );
 
+    final newStyleContext = content.emphasisColorOverride == null
+        ? styleContextFromBackground(backgroundColor)
+        : styleContextFromBackground(backgroundColor).copyWith(
+            emphasisColor: content.emphasisColorOverride,
+            emphasisColorSoft: softenColor(content.emphasisColorOverride!),
+          );
+
     return ClickableCard(
       color: backgroundColor,
       splashColor: softenColor(backgroundColor).withOpacity(0.8),
       onTap: content.onTap,
       child: StyleContextProvider(
-        styleContext: styleContextFromBackground(backgroundColor),
+        styleContext: newStyleContext,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -594,38 +601,48 @@ class FlatStyle extends Style {
   }
 
   @override
-  Widget contentGroup(BuildContext context, StyleContext styleContext, StyledCategory contentGroup) {
-    return contentGroup.emphasis.map(
+  Widget category(BuildContext context, StyleContext styleContext, StyledCategory category) {
+    StyleContext styleContextWithEmphasisOverride(StyleContext styleContext) {
+      if (category.emphasisColorOverride == null) return styleContext;
+      return styleContext.copyWith(
+        emphasisColor: category.emphasisColorOverride!,
+        emphasisColorSoft: softenColor(category.emphasisColorOverride!),
+      );
+    }
+
+    final emphasisColor = category.emphasisColorOverride ?? styleContext.emphasisColor;
+
+    return category.emphasis.map(
       high: () {
         return ClickableCard(
-          color: styleContext.emphasisColor,
-          onTap: contentGroup.onTap,
+          color: emphasisColor,
+          onTap: category.onTap,
           child: StyleContextProvider(
-            styleContext: styleContextFromBackground(styleContext.emphasisColor),
+            styleContext: styleContextWithEmphasisOverride(styleContextFromBackground(styleContext.emphasisColor)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (contentGroup.header != null ||
-                    contentGroup.content != null ||
-                    contentGroup.lead != null ||
-                    contentGroup.trailing != null)
+                if (category.header != null ||
+                    category.content != null ||
+                    category.lead != null ||
+                    category.trailing != null)
                   ListTile(
-                    title: contentGroup.header != null
-                        ? StyledContentHeaderText(contentGroup.header!)
-                        : (contentGroup.content != null ? StyledContentSubtitleText(contentGroup.content!) : null),
-                    subtitle: (contentGroup.header != null && contentGroup.content != null)
-                        ? StyledContentSubtitleText(contentGroup.content!)
+                    title: category.header != null
+                        ? StyledContentHeaderText(category.header!)
+                        : (category.content != null ? StyledContentSubtitleText(category.content!) : null),
+                    subtitle: (category.header != null && category.content != null)
+                        ? StyledContentSubtitleText(category.content!)
                         : null,
-                    leading: contentGroup.lead,
+                    leading: category.lead,
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (contentGroup.trailing != null) contentGroup.trailing!,
-                        if (contentGroup.actions.isNotEmpty) actionButton(context, actions: contentGroup.actions),
+                        if (category.trailing != null) category.trailing!,
+                        if (category.actions.isNotEmpty) actionButton(context, actions: category.actions),
                       ],
                     ),
                   ),
-                ...contentGroup.children
+                ...category.children
               ],
             ),
           ),
@@ -634,64 +651,68 @@ class FlatStyle extends Style {
       medium: () {
         return ClickableCard(
           color: styleContext.backgroundColorSoft,
-          onTap: contentGroup.onTap,
+          onTap: category.onTap,
           child: StyleContextProvider(
-            styleContext: styleContextFromBackground(styleContext.backgroundColorSoft),
+            styleContext:
+                styleContextWithEmphasisOverride(styleContextFromBackground(styleContext.backgroundColorSoft)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (contentGroup.header != null ||
-                    contentGroup.content != null ||
-                    contentGroup.lead != null ||
-                    contentGroup.trailing != null)
+                if (category.header != null ||
+                    category.content != null ||
+                    category.lead != null ||
+                    category.trailing != null)
                   ListTile(
-                    title: contentGroup.header != null
-                        ? StyledContentHeaderText(contentGroup.header!)
-                        : (contentGroup.content != null ? StyledContentHeaderText(contentGroup.content!) : null),
-                    subtitle: (contentGroup.header != null && contentGroup.content != null)
-                        ? StyledContentSubtitleText(contentGroup.content!)
+                    title: category.header != null
+                        ? StyledContentHeaderText(category.header!)
+                        : (category.content != null ? StyledContentHeaderText(category.content!) : null),
+                    subtitle: (category.header != null && category.content != null)
+                        ? StyledContentSubtitleText(category.content!)
                         : null,
-                    leading: contentGroup.lead,
+                    leading: category.lead,
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (contentGroup.trailing != null) contentGroup.trailing!,
-                        if (contentGroup.actions.isNotEmpty) actionButton(context, actions: contentGroup.actions),
+                        if (category.trailing != null) category.trailing!,
+                        if (category.actions.isNotEmpty) actionButton(context, actions: category.actions),
                       ],
                     ),
                   ),
-                ...contentGroup.children
+                ...category.children
               ],
             ),
           ),
         );
       },
       low: () {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (contentGroup.header != null ||
-                contentGroup.content != null ||
-                contentGroup.lead != null ||
-                contentGroup.trailing != null)
-              ListTile(
-                title: contentGroup.header != null
-                    ? StyledContentHeaderText(contentGroup.header!)
-                    : (contentGroup.content != null ? StyledContentHeaderText(contentGroup.content!) : null),
-                subtitle: (contentGroup.header != null && contentGroup.content != null)
-                    ? StyledContentSubtitleText(contentGroup.content!)
-                    : null,
-                leading: contentGroup.lead,
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (contentGroup.trailing != null) contentGroup.trailing!,
-                    if (contentGroup.actions.isNotEmpty) actionButton(context, actions: contentGroup.actions),
-                  ],
+        return StyleContextProvider(
+          styleContext: styleContextWithEmphasisOverride(styleContext),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (category.header != null ||
+                  category.content != null ||
+                  category.lead != null ||
+                  category.trailing != null)
+                ListTile(
+                  title: category.header != null
+                      ? StyledContentHeaderText(category.header!)
+                      : (category.content != null ? StyledContentHeaderText(category.content!) : null),
+                  subtitle: (category.header != null && category.content != null)
+                      ? StyledContentSubtitleText(category.content!)
+                      : null,
+                  leading: category.lead,
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (category.trailing != null) category.trailing!,
+                      if (category.actions.isNotEmpty) actionButton(context, actions: category.actions),
+                    ],
+                  ),
                 ),
-              ),
-            ...contentGroup.children
-          ],
+              ...category.children
+            ],
+          ),
         );
       },
     );

@@ -64,7 +64,7 @@ class TestHomePage extends HookWidget {
               onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => TestLoginPage(style: style))),
               trailing: StyledIcon(Icons.chevron_right),
             ),
-            StyledContent.medium(
+            StyledCategory.medium(
               header: 'Budget',
               content: '\$252.49',
               lead: StyledIcon(Icons.attach_money),
@@ -73,7 +73,7 @@ class TestHomePage extends HookWidget {
                   crossAxisCount: 2,
                   physics: NeverScrollableScrollPhysics(),
                   children: envelopes
-                      .map((envelope) => StyledCategory.medium(
+                      .map((envelope) => StyledContent.medium(
                             header: envelope['name']!.as<String>(),
                             content: (envelope['amount']!.as<int>()! / 100).formatCurrency(),
                             trailing: StyledIcon(
@@ -86,13 +86,14 @@ class TestHomePage extends HookWidget {
                 ),
               ],
             ),
-            StyledContent.medium(
+            StyledCategory.medium(
               header: 'Transactions',
               lead: StyledIcon(Icons.compare_arrows),
               children: transactions
-                  .map((transaction) => StyledCategory.medium(
+                  .map((transaction) => StyledContent.medium(
                         header: transaction['name']!.as<String>()! + ' - ' + transaction['envelopeName']!.as<String>()!,
                         content: (transaction['amount']!.as<int>()! / 100).formatCurrency(),
+                        emphasisColorOverride: Colors.redAccent,
                       ))
                   .toList(),
             ),

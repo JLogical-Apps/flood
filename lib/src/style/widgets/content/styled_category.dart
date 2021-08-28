@@ -13,6 +13,8 @@ class StyledCategory extends StyledWidget {
   final List<Widget> children;
   final List<ActionItem> actions;
 
+  final Color? emphasisColorOverride;
+
   final Emphasis emphasis;
 
   final void Function()? onTap;
@@ -25,6 +27,7 @@ class StyledCategory extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.emphasisColorOverride,
     this.emphasis: Emphasis.low,
     this.onTap,
   }) : super(key: key);
@@ -37,6 +40,7 @@ class StyledCategory extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.emphasisColorOverride,
     this.onTap,
   }) : emphasis = Emphasis.low;
 
@@ -48,6 +52,7 @@ class StyledCategory extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.emphasisColorOverride,
     this.onTap,
   }) : emphasis = Emphasis.medium;
 
@@ -59,11 +64,12 @@ class StyledCategory extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.emphasisColorOverride,
     this.onTap,
   }) : emphasis = Emphasis.high;
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.contentGroup(context, styleContext, this);
+    return style.category(context, styleContext, this);
   }
 }
