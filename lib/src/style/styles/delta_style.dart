@@ -44,10 +44,10 @@ class DeltaStyle extends FlatStyle {
               WaveWidget(
                 config: CustomConfig(
                   gradients: [
-                    [primaryColor, Color(0xEEF44336)],
-                    [backgroundColorSoft.mix(accentColor), Color(0x77E57373)],
-                    [accentColor.compliment.mix(backgroundColor).darken(), Color(0x66FF9800)],
-                    [primaryColorSoft.mix(backgroundColorSoft), Color(0x55FFEB3B)]
+                    [primaryColor.mix(backgroundColorSoft), accentColor.darken()],
+                    [backgroundColorSoft.mix(accentColor.darken()).mix(primaryColor), accentColor.lighten().mix(primaryColor)],
+                    [accentColor.darken().mix(backgroundColor).mix(primaryColor).darken(), accentColor.mix(primaryColorSoft).darken()],
+                    [primaryColorSoft.mix(backgroundColorSoft), primaryColor.darken()]
                   ],
                   durations: [70000, 38440, 20800, 12000],
                   heightPercentages: [0.40, 0.43, 0.4, 0.50],

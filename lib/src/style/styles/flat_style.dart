@@ -9,6 +9,7 @@ import 'package:jlogical_utils/src/style/widgets/content/styled_content.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_dropdown.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_radio.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_divider.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
@@ -50,7 +51,14 @@ class FlatStyle extends Style {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
-        title: styledPage.title != null ? StyledContentHeaderText(styledPage.title!) : null,
+        title: styledPage.title != null
+            ? StyledContentHeaderText(
+                styledPage.title!,
+                textOverrides: StyledTextOverrides(
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            : null,
         foregroundColor: styleContext.emphasisColor,
         iconTheme: IconThemeData(color: styleContext.emphasisColor),
         actions: [
@@ -245,7 +253,7 @@ class FlatStyle extends Style {
       fontFamily: subtitleFontFamily,
       padding: const EdgeInsets.all(8),
       fontColor: styleContext.emphasisColor,
-      fontSize: 18,
+      fontSize: 17,
       fontWeight: FontWeight.bold,
     );
   }
@@ -546,6 +554,38 @@ class FlatStyle extends Style {
         ),
         if (checkbox.errorText != null) StyledErrorText(checkbox.errorText!),
       ],
+    );
+  }
+
+  Widget radio<T>(BuildContext context, StyleContext styleContext, StyledRadio<T> radio) {
+    return GestureDetector(
+      onTap: radio.onChanged != null ? () => radio.onChanged!(radio.radioValue) : null,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              if (radio.label != null)
+                StyledContentSubtitleText(
+                  radio.label!,
+                  textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
+                ),
+              Radio<T>(
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                value: radio.radioValue,
+                groupValue: radio.groupValue,
+                onChanged: radio.onChanged != null ? (value) => radio.onChanged!(value as T) : null,
+                fillColor: radio.hasError
+                    ? MaterialStateProperty.all(Colors.red)
+                    : MaterialStateProperty.resolveWith((states) => states.contains(MaterialState.selected)
+                        ? styleContext.emphasisColor
+                        : styleContext.foregroundColor),
+              ),
+            ],
+          ),
+          if (radio.hasError) StyledErrorText(radio.errorText!),
+        ],
+      ),
     );
   }
 

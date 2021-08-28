@@ -47,6 +47,23 @@ class TestLoginPage extends HookWidget {
                       Validation.required(),
                     ],
                   ),
+                  SmartRadioGroup(group: 'gender'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      StyledSmartRadioOptionField<String>(
+                        group: 'gender',
+                        radioValue: 'male',
+                        label: 'Male',
+                        validators: [Validation.required()],
+                      ),
+                      StyledSmartRadioOptionField<String>(
+                        group: 'gender',
+                        radioValue: 'female',
+                        label: 'Female',
+                      ),
+                    ],
+                  ),
                   StyledSmartBoolField(
                     name: 'acceptTerms',
                     label: 'Accept Terms and Conditions?',
