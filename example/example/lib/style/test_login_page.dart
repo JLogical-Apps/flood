@@ -12,11 +12,58 @@ class TestLoginPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final smartFormController = useMemoized(() => SmartFormController());
     return StyleProvider(
       style: style,
       child: StyledPage(
-        body: ScrollColumn.withScrollbar(
-          children: [],
+        body: SmartForm(
+          controller: smartFormController,
+          child: ScrollColumn.withScrollbar(
+            children: [
+              StyledCategory.medium(
+                header: 'Login',
+                children: [
+                  StyledSmartTextField(
+                    name: 'username',
+                    label: 'Username',
+                    validators: [
+                      Validation.required(),
+                    ],
+                  ),
+                  StyledSmartTextField(
+                    name: 'password',
+                    label: 'Password',
+                    obscureText: true,
+                    keyboardType: TextInputType.visiblePassword,
+                    validators: [
+                      Validation.required(),
+                    ],
+                  ),
+                  StyledSmartBoolField(
+                    name: 'acceptTerms',
+                    label: 'Accept Terms and Conditions?',
+                    validators: [
+                      Validation.required(onEmpty: 'Must be accepted to log in!'),
+                    ],
+                  ),
+                  ButtonBar(
+                    children: [
+                      StyledButton.high(
+                        text: 'Sign Up',
+                        onTap: () {},
+                      ),
+                      StyledButton.low(
+                        text: 'Log In',
+                        onTap: () {
+                          smartFormController.validate();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

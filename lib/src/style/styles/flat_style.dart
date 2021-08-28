@@ -20,10 +20,12 @@ import '../style_context_provider.dart';
 
 class FlatStyle extends Style {
   final Color primaryColor;
-  final Color primaryColorSoft;
+
+  Color get primaryColorSoft => softenColor(primaryColor);
 
   final Color backgroundColor;
-  final Color backgroundColorSoft;
+
+  Color get backgroundColorSoft => softenColor(backgroundColor);
 
   final String titleFontFamily;
   final String subtitleFontFamily;
@@ -31,24 +33,22 @@ class FlatStyle extends Style {
 
   FlatStyle({
     this.primaryColor: Colors.blue,
-    Color? primaryColorSoft,
     this.backgroundColor: Colors.white,
-    Color? backgroundColorSoft,
     this.titleFontFamily: 'Montserrat',
     this.subtitleFontFamily: 'Quicksand',
     this.bodyFontFamily: 'Lato',
-  })  : this.primaryColorSoft = primaryColorSoft ?? softenColor(primaryColor),
-        this.backgroundColorSoft = backgroundColorSoft ?? softenColor(backgroundColor);
+  });
 
   @override
   StyleContext get initialStyleContext => styleContextFromBackground(backgroundColor);
 
   @override
   Widget page(BuildContext context, StyleContext styleContext, StyledPage styledPage) {
+    final backgroundColor = styledPage.backgroundColor ?? styleContext.backgroundColor;
     return Scaffold(
-      backgroundColor: styledPage.backgroundColor ?? styleContext.backgroundColor,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: styledPage.backgroundColor ?? styleContext.backgroundColor,
+        backgroundColor: backgroundColor,
         title: styledPage.title != null ? StyledContentHeaderText(styledPage.title!) : null,
         foregroundColor: styleContext.emphasisColor,
         iconTheme: IconThemeData(color: styleContext.emphasisColor),
@@ -61,7 +61,10 @@ class FlatStyle extends Style {
             ),
         ],
       ),
-      body: styledPage.body,
+      body: StyleContextProvider(
+        styleContext: styleContextFromBackground(backgroundColor),
+        child: styledPage.body,
+      ),
     );
   }
 
@@ -289,16 +292,21 @@ class FlatStyle extends Style {
     return button.emphasis.map(
       high: () {
         final backgroundColor = button.color ?? styleContext.emphasisColor;
+        final newStyleContext = styleContextFromBackground(backgroundColor);
         return StyleContextProvider(
-          styleContext: styleContextFromBackground(backgroundColor),
+          styleContext: newStyleContext,
           child: button.icon == null
               ? ElevatedButton(
-                  child: StyledButtonText(button.text),
+                  child: StyledButtonText(
+                    button.text,
+                    textOverrides: StyledTextOverrides(
+                      fontColor: newStyleContext.emphasisColor,
+                    ),
+                  ),
                   onPressed: button.onTap,
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.emphasisColor),
-                    overlayColor: MaterialStateProperty.all(
-                        softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.8)),
+                    backgroundColor: MaterialStateProperty.all(backgroundColor),
+                    overlayColor: MaterialStateProperty.all(softenColor(backgroundColor).withOpacity(0.8)),
                   ),
                 )
               : ElevatedButton.icon(
@@ -383,6 +391,7 @@ class FlatStyle extends Style {
             style: GoogleFonts.getFont(bodyFontFamily).copyWith(
               color: styleContext.foregroundColor,
             ),
+            obscureText: textField.obscureText,
             decoration: InputDecoration(
               prefixIcon: textField.leading,
               suffixIcon: textField.trailing,
@@ -644,6 +653,10 @@ class FlatStyle extends Style {
   Widget actionButton(BuildContext context, {required List<ActionItem> actions, Color? color}) {
     return MenuButton(
         child: StyledIcon(Icons.more_vert, color: color),
+        foregroundColor: styleContextFromBackground(softenColor(backgroundColorSoft)).foregroundColor,
+        backgroundColor: softenColor(backgroundColorSoft),
+        elevation: 10,
+        fontFamily: subtitleFontFamily,
         items: actions
             .map((action) => MenuItem(
                   text: action.name,
@@ -662,39 +675,26 @@ class FlatStyle extends Style {
       );
 
   static Color softenColor(Color color) {
-    return color.computeLuminance() < 0.5 ? color.lighten() : color.darken(12);
-  }
-
-  Color getSoftenedColor(Color color) {
-    if (color == primaryColor)
-      return primaryColorSoft;
-    else if (color == primaryColorSoft)
-      return primaryColor;
-    else if (color == backgroundColor)
-      return backgroundColorSoft;
-    else if (color == backgroundColorSoft)
-      return backgroundColor;
-    else
-      return softenColor(color);
+    return color.computeLuminance() < 0.5 ? color.lighten() : color.darken(5);
   }
 
   StyleContext styleContextFromBackground(Color backgroundColor) {
-    final isVibrantBackground = _isVibrant(backgroundColor);
+    final isPrimaryBackground = _isPrimaryColor(backgroundColor);
 
     final foregroundColor = backgroundColor.computeLuminance() < 0.5 ? Colors.white : Colors.black;
-    final emphasisColor = !isVibrantBackground ? primaryColor : foregroundColor;
+    final emphasisColor = !isPrimaryBackground ? primaryColor : foregroundColor;
 
     return StyleContext(
       backgroundColor: backgroundColor,
-      backgroundColorSoft: getSoftenedColor(backgroundColor),
+      backgroundColorSoft: softenColor(backgroundColor),
       foregroundColor: foregroundColor,
-      foregroundColorSoft: getSoftenedColor(foregroundColor),
+      foregroundColorSoft: softenColor(foregroundColor),
       emphasisColor: emphasisColor,
-      emphasisColorSoft: getSoftenedColor(emphasisColor),
+      emphasisColorSoft: softenColor(emphasisColor),
     );
   }
 
-  bool _isVibrant(Color color) {
-    return color == primaryColor || color == primaryColorSoft;
+  bool _isPrimaryColor(Color color) {
+    return color == primaryColor || color == primaryColorSoft || color == softenColor(primaryColorSoft);
   }
 }
