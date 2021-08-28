@@ -8,6 +8,7 @@ import 'package:jlogical_utils/src/style/widgets/content/styled_category.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_dropdown.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_divider.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
@@ -362,7 +363,7 @@ class FlatStyle extends Style {
               )
             : TextButton.icon(
                 onPressed: button.onTap,
-                icon: StyledIcon.medium(button.icon!, color: button.color ?? styleContext.emphasisColor),
+                icon: StyledIcon.medium(button.icon!, colorOverride: button.color ?? styleContext.emphasisColor),
                 label: StyledButtonText(
                   button.text,
                   textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.emphasisColor),
@@ -440,6 +441,71 @@ class FlatStyle extends Style {
             onTap: textField.onTap,
             onChanged: textField.onChanged,
             keyboardType: TextInputType.numberWithOptions(decimal: true),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget dropdown<T>(BuildContext context, StyleContext styleContext, StyledDropdown<T> dropdown) {
+    final _builder = dropdown.builder ??
+        (item) => StyledBodyText(
+              item?.toString() ?? 'None',
+              textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
+            );
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (dropdown.label != null)
+            StyledContentSubtitleText(
+              dropdown.label!,
+            ),
+          DropdownButtonFormField<T?>(
+            isExpanded: true,
+            value: dropdown.value,
+            dropdownColor: softenColor(styleContext.backgroundColorSoft),
+            hint: StyledBodyText(
+              'Select an option',
+              textOverrides: StyledTextOverrides(
+                fontColor: styleContext.emphasisColor,
+                padding: EdgeInsets.zero,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            icon: StyledIcon(
+              Icons.arrow_drop_down,
+              paddingOverride: EdgeInsets.zero,
+            ),
+            style: GoogleFonts.getFont(bodyFontFamily).copyWith(color: styleContext.foregroundColor),
+            decoration: InputDecoration(
+              errorText: dropdown.errorText,
+              filled: true,
+              fillColor: styleContext.backgroundColorSoft,
+              focusedBorder: InputBorder.none,
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: styleContext.foregroundColor,
+                    width: 0.5,
+                  )),
+            ),
+            items: [
+              if (dropdown.canBeNone) null,
+              ...dropdown.options,
+            ]
+                .map((value) => DropdownMenuItem(
+                      value: value,
+                      child: StyleProvider(
+                        style: this,
+                        child: _builder(value),
+                      ),
+                    ))
+                .toList(),
+            onChanged: dropdown.onChanged,
           ),
         ],
       ),
@@ -633,14 +699,14 @@ class FlatStyle extends Style {
 
   @override
   Widget icon(BuildContext context, StyleContext styleContext, StyledIcon icon) {
-    final color = icon.color ??
+    final color = icon.colorOverride ??
         icon.emphasis.map(
           high: () => styleContext.emphasisColor,
           medium: () => styleContext.foregroundColor,
           low: () => styleContext.backgroundColorSoft,
         );
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: icon.paddingOverride ?? const EdgeInsets.all(8.0),
       child: Icon(
         icon.iconData,
         color: color,
@@ -658,7 +724,7 @@ class FlatStyle extends Style {
 
   Widget actionButton(BuildContext context, {required List<ActionItem> actions, Color? color}) {
     return MenuButton(
-        child: StyledIcon.medium(Icons.more_vert, color: color),
+        child: StyledIcon.medium(Icons.more_vert, colorOverride: color),
         foregroundColor: styleContextFromBackground(softenColor(backgroundColorSoft)).foregroundColor,
         backgroundColor: softenColor(backgroundColorSoft),
         elevation: 10,

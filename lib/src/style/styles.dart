@@ -14,6 +14,8 @@ export 'widgets/form/styled_smart_text_field.dart';
 export 'widgets/form/styled_smart_bool_field.dart';
 export 'widgets/form/styled_smart_error_field.dart';
 export 'widgets/input/styled_checkbox.dart';
+export 'widgets/input/styled_dropdown.dart';
+export 'widgets/form/styled_smart_options_field.dart';
 export 'widgets/input/styled_text_field.dart';
 export 'widgets/misc/styled_divider.dart';
 export 'widgets/misc/styled_icon.dart';

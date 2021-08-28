@@ -39,6 +39,14 @@ class TestLoginPage extends HookWidget {
                       Validation.required(),
                     ],
                   ),
+                  StyledSmartOptionsField(
+                    name: 'favoriteFood',
+                    label: 'Favorite Food',
+                    options: ['Pizza', 'Hamburger', 'Pineapples'],
+                    validators: [
+                      Validation.required(),
+                    ],
+                  ),
                   StyledSmartBoolField(
                     name: 'acceptTerms',
                     label: 'Accept Terms and Conditions?',

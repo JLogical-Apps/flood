@@ -6,40 +6,46 @@ class StyledIcon extends StyledWidget {
   final IconData iconData;
 
   final double? size;
-  final Color? color;
+
+  final Color? colorOverride;
+  final EdgeInsets? paddingOverride;
 
   final Emphasis emphasis;
 
   const StyledIcon(
     this.iconData, {
     Key? key,
-    this.color,
     this.size,
-    this.emphasis : Emphasis.medium,
+    this.colorOverride,
+    this.paddingOverride,
+    this.emphasis: Emphasis.medium,
   }) : super(key: key);
 
   const StyledIcon.low(
     this.iconData, {
     Key? key,
-    this.color,
     this.size,
+    this.colorOverride,
+    this.paddingOverride,
   })  : emphasis = Emphasis.low,
         super(key: key);
 
   const StyledIcon.medium(
-      this.iconData, {
-        Key? key,
-        this.color,
-        this.size,
-      })  : emphasis = Emphasis.medium,
+    this.iconData, {
+    Key? key,
+    this.size,
+    this.colorOverride,
+    this.paddingOverride,
+  })  : emphasis = Emphasis.medium,
         super(key: key);
 
   const StyledIcon.high(
-      this.iconData, {
-        Key? key,
-        this.color,
-        this.size,
-      })  : emphasis = Emphasis.high,
+    this.iconData, {
+    Key? key,
+    this.size,
+    this.colorOverride,
+    this.paddingOverride,
+  })  : emphasis = Emphasis.high,
         super(key: key);
 
   @override
