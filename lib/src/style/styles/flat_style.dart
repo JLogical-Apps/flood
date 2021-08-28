@@ -311,7 +311,7 @@ class FlatStyle extends Style {
                 )
               : ElevatedButton.icon(
                   onPressed: button.onTap,
-                  icon: StyledIcon(button.icon!),
+                  icon: StyledIcon.medium(button.icon!),
                   label: StyledButtonText(button.text),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.emphasisColor),
@@ -336,7 +336,7 @@ class FlatStyle extends Style {
                 )
               : ElevatedButton.icon(
                   onPressed: button.onTap,
-                  icon: StyledIcon(button.icon!),
+                  icon: StyledIcon.medium(button.icon!),
                   label: StyledButtonText(button.text),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
@@ -362,7 +362,7 @@ class FlatStyle extends Style {
               )
             : TextButton.icon(
                 onPressed: button.onTap,
-                icon: StyledIcon(button.icon!, color: button.color ?? styleContext.emphasisColor),
+                icon: StyledIcon.medium(button.icon!, color: button.color ?? styleContext.emphasisColor),
                 label: StyledButtonText(
                   button.text,
                   textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.emphasisColor),
@@ -633,11 +633,17 @@ class FlatStyle extends Style {
 
   @override
   Widget icon(BuildContext context, StyleContext styleContext, StyledIcon icon) {
+    final color = icon.color ??
+        icon.emphasis.map(
+          high: () => styleContext.emphasisColor,
+          medium: () => styleContext.foregroundColor,
+          low: () => styleContext.backgroundColorSoft,
+        );
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Icon(
         icon.iconData,
-        color: icon.color ?? styleContext.foregroundColor,
+        color: color,
         size: icon.size,
       ),
     );
@@ -652,7 +658,7 @@ class FlatStyle extends Style {
 
   Widget actionButton(BuildContext context, {required List<ActionItem> actions, Color? color}) {
     return MenuButton(
-        child: StyledIcon(Icons.more_vert, color: color),
+        child: StyledIcon.medium(Icons.more_vert, color: color),
         foregroundColor: styleContextFromBackground(softenColor(backgroundColorSoft)).foregroundColor,
         backgroundColor: softenColor(backgroundColorSoft),
         elevation: 10,
