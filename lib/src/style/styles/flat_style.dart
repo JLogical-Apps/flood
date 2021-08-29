@@ -718,6 +718,9 @@ class FlatStyle extends Style {
             emphasisColorSoft: softenColor(content.emphasisColorOverride!),
           );
 
+    final header = content.header != null ? StyledContentHeaderText(content.header!) : content.headerWidget;
+    final body = content.content != null ? StyledContentSubtitleText(content.content!) : content.contentWidget;
+
     return ClickableCard(
       color: backgroundColor,
       splashColor: softenColor(backgroundColor).withOpacity(0.8),
@@ -728,12 +731,8 @@ class FlatStyle extends Style {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: content.header != null
-                  ? StyledContentHeaderText(content.header!)
-                  : (content.content != null ? StyledContentSubtitleText(content.content!) : null),
-              subtitle: (content.header != null && content.content != null)
-                  ? StyledContentSubtitleText(content.content!)
-                  : null,
+              title: header != null ? header : body,
+              subtitle: header != null ? body : null,
               leading: content.lead,
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -770,6 +769,9 @@ class FlatStyle extends Style {
 
     final emphasisColor = category.emphasisColorOverride ?? styleContext.emphasisColor;
 
+    final header = category.header != null ? StyledContentHeaderText(category.header!) : category.headerWidget;
+    final body = category.content != null ? StyledContentSubtitleText(category.content!) : category.contentWidget;
+
     return category.emphasis.map(
       high: () {
         return ClickableCard(
@@ -780,17 +782,10 @@ class FlatStyle extends Style {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (category.header != null ||
-                    category.content != null ||
-                    category.lead != null ||
-                    category.trailing != null)
+                if (header != null || body != null || category.lead != null || category.trailing != null)
                   ListTile(
-                    title: category.header != null
-                        ? StyledContentHeaderText(category.header!)
-                        : (category.content != null ? StyledContentSubtitleText(category.content!) : null),
-                    subtitle: (category.header != null && category.content != null)
-                        ? StyledContentSubtitleText(category.content!)
-                        : null,
+                    title: header != null ? header : body,
+                    subtitle: header != null ? body : null,
                     leading: category.lead,
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -821,17 +816,10 @@ class FlatStyle extends Style {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (category.header != null ||
-                    category.content != null ||
-                    category.lead != null ||
-                    category.trailing != null)
+                if (header != null || body != null || category.lead != null || category.trailing != null)
                   ListTile(
-                    title: category.header != null
-                        ? StyledContentHeaderText(category.header!)
-                        : (category.content != null ? StyledContentHeaderText(category.content!) : null),
-                    subtitle: (category.header != null && category.content != null)
-                        ? StyledContentSubtitleText(category.content!)
-                        : null,
+                    title: header != null ? header : body,
+                    subtitle: header != null ? body : null,
                     leading: category.lead,
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -858,17 +846,10 @@ class FlatStyle extends Style {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (category.header != null ||
-                  category.content != null ||
-                  category.lead != null ||
-                  category.trailing != null)
+              if (header != null || body != null || category.lead != null || category.trailing != null)
                 ListTile(
-                  title: category.header != null
-                      ? StyledContentHeaderText(category.header!)
-                      : (category.content != null ? StyledContentHeaderText(category.content!) : null),
-                  subtitle: (category.header != null && category.content != null)
-                      ? StyledContentSubtitleText(category.content!)
-                      : null,
+                  title: header != null ? header : body,
+                  subtitle: header != null ? body : null,
                   leading: category.lead,
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,

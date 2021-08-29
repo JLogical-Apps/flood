@@ -5,7 +5,10 @@ import '../../../../jlogical_utils.dart';
 
 class StyledCategory extends StyledWidget {
   final String? header;
+  final Widget? headerWidget;
+
   final String? content;
+  final Widget? contentWidget;
 
   final Widget? lead;
   final Widget? trailing;
@@ -22,7 +25,9 @@ class StyledCategory extends StyledWidget {
   const StyledCategory({
     Key? key,
     this.header,
+    this.headerWidget,
     this.content,
+    this.contentWidget,
     this.lead,
     this.trailing,
     this.children: const [],
@@ -35,7 +40,9 @@ class StyledCategory extends StyledWidget {
   const StyledCategory.low({
     Key? key,
     this.header,
+    this.headerWidget,
     this.content,
+    this.contentWidget,
     this.lead,
     this.trailing,
     this.children: const [],
@@ -47,7 +54,9 @@ class StyledCategory extends StyledWidget {
   const StyledCategory.medium({
     Key? key,
     this.header,
+    this.headerWidget,
     this.content,
+    this.contentWidget,
     this.lead,
     this.trailing,
     this.children: const [],
@@ -59,7 +68,9 @@ class StyledCategory extends StyledWidget {
   const StyledCategory.high({
     Key? key,
     this.header,
+    this.headerWidget,
     this.content,
+    this.contentWidget,
     this.lead,
     this.trailing,
     this.children: const [],
