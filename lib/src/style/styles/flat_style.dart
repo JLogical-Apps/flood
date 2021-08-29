@@ -14,6 +14,7 @@ import 'package:jlogical_utils/src/style/widgets/input/styled_radio.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_divider.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
+import 'package:jlogical_utils/src/style/widgets/pages/styled_tabbed_page.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_error_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -76,6 +77,59 @@ class FlatStyle extends Style {
         child: styledPage.body,
       ),
     );
+  }
+
+  Widget tabbedPage(
+    BuildContext context,
+    StyleContext styleContext,
+    StyledTabbedPage tabbedPage,
+  ) {
+    return HookBuilder(builder: (_) {
+      final pageController = usePageController();
+      final pageIndex = useState(0);
+      final page = tabbedPage.pages[pageIndex.value];
+      final backgroundColor = page.backgroundColor ?? tabbedPage.backgroundColor ?? styleContext.backgroundColor;
+
+      return Scaffold(
+        backgroundColor: backgroundColor,
+        appBar: AppBar(
+          backgroundColor: backgroundColor,
+          title: page.title != null
+              ? StyledContentHeaderText(
+                  page.title!,
+                  textOverrides: StyledTextOverrides(
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              : null,
+        ),
+        body: PageView(
+          controller: pageController,
+          onPageChanged: (_page) => pageIndex.value = _page,
+          children: tabbedPage.pages.map((page) => page.body).toList(),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: styleContext.backgroundColorSoft,
+          currentIndex: pageIndex.value,
+          onTap: (index) => pageController.animateToPage(
+            index,
+            duration: Duration(milliseconds: 400),
+            curve: Curves.easeInOutCubic,
+          ),
+          items: tabbedPage.pages
+              .map((page) => BottomNavigationBarItem(
+                    icon: page.icon ?? Container(),
+                    backgroundColor: styleContext.backgroundColorSoft,
+                    label: page.title,
+                  ))
+              .toList(),
+          selectedLabelStyle: GoogleFonts.getFont(subtitleFontFamily).copyWith(),
+          unselectedLabelStyle: GoogleFonts.getFont(subtitleFontFamily).copyWith(),
+          selectedItemColor: styleContextFromBackground(backgroundColor).emphasisColor,
+          unselectedItemColor: styleContextFromBackground(backgroundColor).foregroundColorSoft,
+        ),
+      );
+    });
   }
 
   @override

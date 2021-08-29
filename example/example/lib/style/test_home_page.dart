@@ -43,62 +43,66 @@ class TestHomePage extends HookWidget {
     ];
     return StyleProvider(
       style: style,
-      child: StyledPage(
-        title: 'Budget',
-        actions: [
-          ActionItem(
-            name: 'Create',
-            color: Colors.green,
-            lead: StyledIcon(Icons.add),
-            description: 'Create a new envelope.',
-            onPerform: () {
-              print('Ouch you poked me!');
-            },
-          )
-        ],
-        body: ScrollColumn.withScrollbar(
-          children: [
-            StyledContent.high(
-              header: 'Create Transaction',
-              lead: StyledIcon(Icons.compare_arrows),
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => TestLoginPage(style: style))),
-              trailing: StyledIcon(Icons.chevron_right),
-            ),
-            StyledCategory.medium(
-              header: 'Budget',
-              content: '\$252.49',
-              lead: StyledIcon(Icons.attach_money),
+      child: StyledTabbedPage(
+        pages: [
+          StyledTab(
+            title: 'Budget',
+            icon: Icon(Icons.attach_money),
+            body: ScrollColumn.withScrollbar(
               children: [
-                GridView.count(
-                  crossAxisCount: 2,
-                  physics: NeverScrollableScrollPhysics(),
-                  children: envelopes
-                      .map((envelope) => StyledContent.medium(
-                            header: envelope['name']!.as<String>(),
-                            content: (envelope['amount']!.as<int>()! / 100).formatCurrency(),
-                            trailing: StyledIcon(
-                              Icons.chevron_right,
-                            ),
-                          ))
-                      .toList(),
-                  childAspectRatio: 100 / 50,
-                  shrinkWrap: true,
+                StyledContent.high(
+                  header: 'Create Transaction',
+                  lead: StyledIcon(Icons.compare_arrows),
+                  onTap: () =>
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => TestLoginPage(style: style))),
+                  trailing: StyledIcon(Icons.chevron_right),
+                ),
+                StyledCategory.medium(
+                  header: 'Budget',
+                  content: '\$252.49',
+                  lead: StyledIcon(Icons.attach_money),
+                  children: [
+                    GridView.count(
+                      crossAxisCount: 2,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: envelopes
+                          .map((envelope) => StyledContent.medium(
+                                header: envelope['name']!.as<String>(),
+                                content: (envelope['amount']!.as<int>()! / 100).formatCurrency(),
+                                trailing: StyledIcon(
+                                  Icons.chevron_right,
+                                ),
+                              ))
+                          .toList(),
+                      childAspectRatio: 100 / 50,
+                      shrinkWrap: true,
+                    ),
+                  ],
                 ),
               ],
             ),
-            StyledCategory.medium(
-              header: 'Transactions',
-              lead: StyledIcon(Icons.compare_arrows),
-              children: transactions
-                  .map((transaction) => StyledContent.medium(
-                        header: transaction['name']!.as<String>()! + ' - ' + transaction['envelopeName']!.as<String>()!,
-                        content: (transaction['amount']!.as<int>()! / 100).formatCurrency(),
-                        emphasisColorOverride: Colors.redAccent,
-                      ))
-                  .toList(),
+          ),
+          StyledTab(
+            title: 'Transactions',
+            icon: Icon(Icons.compare_arrows),
+            body: ScrollColumn.withScrollbar(
+              children: [
+                StyledCategory.medium(
+                  header: 'Transactions',
+                  lead: StyledIcon(Icons.compare_arrows),
+                  children: transactions
+                      .map((transaction) => StyledContent.medium(
+                    header:
+                    transaction['name']!.as<String>()! + ' - ' + transaction['envelopeName']!.as<String>()!,
+                    content: (transaction['amount']!.as<int>()! / 100).formatCurrency(),
+                    emphasisColorOverride: Colors.redAccent,
+                  ))
+                      .toList(),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

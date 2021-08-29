@@ -11,6 +11,7 @@ import 'package:jlogical_utils/src/style/widgets/misc/styled_divider.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_onboarding_page.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_page.dart';
+import 'package:jlogical_utils/src/style/widgets/pages/styled_tabbed_page.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_content_header_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_subtitle_text.dart';
 
@@ -23,7 +24,10 @@ abstract class Style {
 
   // === PAGES ===
 
-  Widget page(BuildContext context, StyleContext styleContext, StyledPage styledPage) => throw UnimplementedError();
+  Widget page(BuildContext context, StyleContext styleContext, StyledPage page) => throw UnimplementedError();
+
+  Widget tabbedPage(BuildContext context, StyleContext styleContext, StyledTabbedPage tabbedPage) =>
+      throw UnimplementedError();
 
   Widget onboardingPage(BuildContext context, StyleContext styleContext, StyledOnboardingPage onboardingPage) =>
       throw UnimplementedError();

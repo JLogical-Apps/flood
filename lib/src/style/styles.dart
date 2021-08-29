@@ -25,6 +25,8 @@ export 'widgets/misc/styled_divider.dart';
 export 'widgets/misc/styled_icon.dart';
 export 'widgets/pages/styled_onboarding_page.dart';
 export 'widgets/pages/styled_page.dart';
+export 'widgets/pages/styled_tabbed_page.dart';
+export 'widgets/pages/styled_tab.dart';
 export 'widgets/text/styled_body_text.dart';
 export 'widgets/text/styled_button_text.dart';
 export 'widgets/text/styled_content_header_text.dart';
