@@ -15,7 +15,7 @@ class StyledTabbedPage extends StyledWidget {
     required this.pages,
     this.title,
     this.backgroundColor,
-    this.actions: const [],
+    this.actions,
   });
 
   @override

@@ -47,6 +47,17 @@ class TestHomePage extends HookWidget {
         pages: [
           StyledTab(
             title: 'Budget',
+            actions: [
+              ActionItem(
+                name: 'Create Envelope',
+                color: Colors.green,
+                description: 'Create a new envelope.',
+                lead: StyledIcon(Icons.create),
+                onPerform: () {
+                  print('hey');
+                },
+              ),
+            ],
             icon: Icon(Icons.attach_money),
             body: ScrollColumn.withScrollbar(
               children: [
@@ -92,11 +103,11 @@ class TestHomePage extends HookWidget {
                   lead: StyledIcon(Icons.compare_arrows),
                   children: transactions
                       .map((transaction) => StyledContent.medium(
-                    header:
-                    transaction['name']!.as<String>()! + ' - ' + transaction['envelopeName']!.as<String>()!,
-                    content: (transaction['amount']!.as<int>()! / 100).formatCurrency(),
-                    emphasisColorOverride: Colors.redAccent,
-                  ))
+                            header:
+                                transaction['name']!.as<String>()! + ' - ' + transaction['envelopeName']!.as<String>()!,
+                            content: (transaction['amount']!.as<int>()! / 100).formatCurrency(),
+                            emphasisColorOverride: Colors.redAccent,
+                          ))
                       .toList(),
                 ),
               ],

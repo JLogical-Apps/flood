@@ -19,7 +19,7 @@ class StylesPage extends StatelessWidget {
                 builder: (_) => TestOnboardingPage(
                       style: FlatStyle(
                         backgroundColor: Color(0xFFEEEEEE),
-                        primaryColor: Colors.blue,
+                        primaryColor: Color(0xff4dac55),
                       ),
                       styleName: 'Flat Light',
                     ))),

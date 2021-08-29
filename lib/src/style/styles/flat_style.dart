@@ -67,6 +67,7 @@ class FlatStyle extends Style {
           if (styledPage.actions.isNotEmpty)
             actionButton(
               context,
+              styleContext: styleContext,
               actions: styledPage.actions,
               color: styleContext.emphasisColor,
             ),
@@ -88,20 +89,32 @@ class FlatStyle extends Style {
       final pageController = usePageController();
       final pageIndex = useState(0);
       final page = tabbedPage.pages[pageIndex.value];
-      final backgroundColor = page.backgroundColor ?? tabbedPage.backgroundColor ?? styleContext.backgroundColor;
+
+      final backgroundColor = tabbedPage.backgroundColor ?? page.backgroundColor ?? styleContext.backgroundColor;
+      final title = tabbedPage.title ?? page.title;
+      final actions = tabbedPage.actions ?? page.actions ?? [];
 
       return Scaffold(
         backgroundColor: backgroundColor,
         appBar: AppBar(
           backgroundColor: backgroundColor,
-          title: page.title != null
-              ? StyledContentHeaderText(
-                  page.title!,
-                  textOverrides: StyledTextOverrides(
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              : null,
+          title: StyledContentHeaderText(
+            title,
+            textOverrides: StyledTextOverrides(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          foregroundColor: styleContext.emphasisColor,
+          iconTheme: IconThemeData(color: styleContext.emphasisColor),
+          actions: [
+            if (actions.isNotEmpty)
+              actionButton(
+                context,
+                styleContext: styleContext,
+                actions: actions,
+                color: styleContext.emphasisColor,
+              ),
+          ],
         ),
         body: PageView(
           controller: pageController,
@@ -726,7 +739,12 @@ class FlatStyle extends Style {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (content.trailing != null) content.trailing!,
-                  if (content.actions.isNotEmpty) actionButton(context, actions: content.actions),
+                  if (content.actions.isNotEmpty)
+                    actionButton(
+                      context,
+                      styleContext: styleContext,
+                      actions: content.actions,
+                    ),
                 ],
               ),
             ),
@@ -778,7 +796,12 @@ class FlatStyle extends Style {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (category.trailing != null) category.trailing!,
-                        if (category.actions.isNotEmpty) actionButton(context, actions: category.actions),
+                        if (category.actions.isNotEmpty)
+                          actionButton(
+                            context,
+                            styleContext: styleContext,
+                            actions: category.actions,
+                          ),
                       ],
                     ),
                   ),
@@ -814,7 +837,12 @@ class FlatStyle extends Style {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (category.trailing != null) category.trailing!,
-                        if (category.actions.isNotEmpty) actionButton(context, actions: category.actions),
+                        if (category.actions.isNotEmpty)
+                          actionButton(
+                            context,
+                            styleContext: styleContext,
+                            actions: category.actions,
+                          ),
                       ],
                     ),
                   ),
@@ -846,7 +874,12 @@ class FlatStyle extends Style {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (category.trailing != null) category.trailing!,
-                      if (category.actions.isNotEmpty) actionButton(context, actions: category.actions),
+                      if (category.actions.isNotEmpty)
+                        actionButton(
+                          context,
+                          styleContext: styleContext,
+                          actions: category.actions,
+                        ),
                     ],
                   ),
                 ),
@@ -883,22 +916,90 @@ class FlatStyle extends Style {
     );
   }
 
-  Widget actionButton(BuildContext context, {required List<ActionItem> actions, Color? color}) {
-    return MenuButton(
-        child: StyledIcon.medium(Icons.more_vert, colorOverride: color),
-        foregroundColor: styleContextFromBackground(softenColor(backgroundColorSoft)).foregroundColor,
-        backgroundColor: softenColor(backgroundColorSoft),
-        elevation: 10,
-        fontFamily: subtitleFontFamily,
-        items: actions
-            .map((action) => MenuItem(
-                  text: action.name,
-                  description: action.description,
-                  color: action.color ?? primaryColor,
-                  icon: action.icon,
-                  onPressed: action.onPerform ?? () {},
-                ))
-            .toList());
+  Widget actionButton(
+    BuildContext context, {
+    required StyleContext styleContext,
+    required List<ActionItem> actions,
+    Color? color,
+  }) {
+    return IconButton(
+      icon: StyledIcon(
+        Icons.more_vert,
+        colorOverride: color,
+        paddingOverride: EdgeInsets.zero,
+      ),
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+            ),
+          ),
+          builder: (_) {
+            return StyleProvider(
+              style: this,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: styleContextFromBackground(styleContext.backgroundColorSoft).backgroundColorSoft,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: actions
+                            .map<Widget>((action) => Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    splashColor: styleContext.backgroundColorSoft,
+                                    onTap: () {
+                                      action.onPerform?.call();
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: ListTile(
+                                      title: StyledContentSubtitleText(
+                                        action.name,
+                                        textOverrides: StyledTextOverrides(fontColor: action.color),
+                                      ),
+                                      subtitle: action.description != null ? StyledBodyText(action.description!) : null,
+                                      leading: action.icon != null
+                                          ? StyledIcon(action.icon!, colorOverride: action.color)
+                                          : action.lead,
+                                    ),
+                                  ),
+                                ))
+                            .toList() +
+                        [SafeArea(child: Container())],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+    // return MenuButton(
+    //     child: StyledIcon.medium(Icons.more_vert, colorOverride: color),
+    //     foregroundColor: styleContextFromBackground(softenColor(backgroundColorSoft)).foregroundColor,
+    //     backgroundColor: softenColor(backgroundColorSoft),
+    //     elevation: 10,
+    //     fontFamily: subtitleFontFamily,
+    //     items: actions
+    //         .map((action) =>
+    //         MenuItem(
+    //           text: action.name,
+    //           description: action.description,
+    //           color: action.color ?? primaryColor,
+    //           icon: action.icon,
+    //           onPressed: action.onPerform ?? () {},
+    //         ))
+    //         .toList());
   }
 
   Widget animatedFadeIn({required bool isVisible, required Widget child}) => AnimatedOpacity(
