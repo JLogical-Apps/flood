@@ -3,6 +3,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_category.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_date_field.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_dropdown.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_radio.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
@@ -62,6 +63,9 @@ abstract class Style {
   Widget radio<T>(BuildContext context, StyleContext styleContext, StyledRadio<T> radio) => throw UnimplementedError();
 
   Widget dropdown<T>(BuildContext context, StyleContext styleContext, StyledDropdown<T> checkbox) =>
+      throw UnimplementedError();
+
+  Widget dateField(BuildContext context, StyleContext styleContext, StyledDateField dateField) =>
       throw UnimplementedError();
 
   // === CONTENT ===

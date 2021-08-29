@@ -19,6 +19,7 @@ class StyledTextField extends StyledWidget {
   final void Function()? onTap;
 
   StyledTextField({
+    Key? key,
     this.label,
     this.leading,
     this.trailing,
@@ -31,7 +32,7 @@ class StyledTextField extends StyledWidget {
     this.enabled: true,
     this.onChanged,
     this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {

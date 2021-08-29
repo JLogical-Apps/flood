@@ -47,6 +47,11 @@ class TestLoginPage extends HookWidget {
                       Validation.required(),
                     ],
                   ),
+                  StyledSmartDateField(
+                    name: 'dob',
+                    label: 'Date of Birth',
+                    validators: [Validation.isBeforeNow()],
+                  ),
                   SmartRadioGroup(group: 'gender'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

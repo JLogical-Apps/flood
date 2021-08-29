@@ -8,6 +8,7 @@ import 'package:jlogical_utils/src/style/widgets/content/styled_category.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_content.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_date_field.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_dropdown.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_radio.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
@@ -400,6 +401,7 @@ class FlatStyle extends Style {
             style: GoogleFonts.getFont(bodyFontFamily).copyWith(
               color: styleContext.foregroundColor,
             ),
+            readOnly: !textField.enabled,
             obscureText: textField.obscureText,
             decoration: InputDecoration(
               prefixIcon: textField.leading,
@@ -586,6 +588,50 @@ class FlatStyle extends Style {
           if (radio.hasError) StyledErrorText(radio.errorText!),
         ],
       ),
+    );
+  }
+
+  Widget dateField(BuildContext context, StyleContext styleContext, StyledDateField dateField) {
+    final initialDate = dateField.initialDate ?? DateTime.now();
+    return StyledTextField(
+      key: ObjectKey(initialDate),
+      label: dateField.label,
+      errorText: dateField.errorText,
+      leading: dateField.leading ?? StyledIcon(Icons.calendar_today),
+      initialText: initialDate.formatDate(isLong: false),
+      enabled: false,
+      onTap: dateField.onChanged != null
+          ? () async {
+              final result = await showDatePicker(
+                context: context,
+                builder: (context, child) {
+                  return Theme(
+                    data: ThemeData.light().copyWith(
+                      colorScheme: ColorScheme.dark(
+                        primary: styleContext.emphasisColor,
+                        onPrimary: styleContextFromBackground(styleContext.emphasisColor).foregroundColor,
+                        surface: styleContext.emphasisColor,
+                        onSurface: styleContext.foregroundColor,
+                      ),
+                      dialogTheme: DialogTheme(
+                        backgroundColor: styleContext.backgroundColorSoft,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    child: child ?? Container(),
+                  );
+                },
+                initialDate: initialDate,
+                firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+                lastDate: DateTime.now().add(
+                  Duration(days: 1000),
+                ),
+              );
+              if (result != null) dateField.onChanged!(result);
+            }
+          : null,
     );
   }
 
