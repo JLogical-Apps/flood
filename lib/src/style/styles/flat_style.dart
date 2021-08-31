@@ -260,6 +260,20 @@ class FlatStyle extends Style {
     );
   }
 
+  @override
+  Widget dialog(BuildContext context, StyleContext styleContext, StyledDialog dialog) {
+    return StyleProvider(
+      style: this,
+      child: Container(
+        color: styleContext.backgroundColorSoft,
+        child: StyledCategory(
+          header: dialog.title,
+          children: [dialog.body],
+        ),
+      ),
+    );
+  }
+
   Widget rawStyledText({
     required StyledText styledText,
     required String fontFamily,
@@ -319,7 +333,7 @@ class FlatStyle extends Style {
     return rawStyledText(
       styledText: contentHeaderText,
       fontFamily: subtitleFontFamily,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       fontColor: styleContext.emphasisColor,
       fontSize: 17,
       fontWeight: FontWeight.bold,
@@ -332,7 +346,7 @@ class FlatStyle extends Style {
     return rawStyledText(
       styledText: contentSubtitleText,
       fontFamily: bodyFontFamily,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       fontColor: styleContext.foregroundColorSoft,
       fontSize: 16,
     );
@@ -343,7 +357,7 @@ class FlatStyle extends Style {
     return rawStyledText(
       styledText: bodyText,
       fontFamily: bodyFontFamily,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       fontColor: styleContext.foregroundColor,
       fontSize: 18,
     );
@@ -357,7 +371,7 @@ class FlatStyle extends Style {
       fontFamily: bodyFontFamily,
       fontWeight: FontWeight.w600,
       textAlign: TextAlign.center,
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       fontColor: styleContext.foregroundColor,
       fontSize: 12,
       letterSpacing: 1,
@@ -881,7 +895,7 @@ class FlatStyle extends Style {
           low: () => styleContext.backgroundColorSoft,
         );
     return Padding(
-      padding: icon.paddingOverride ?? const EdgeInsets.all(8.0),
+      padding: icon.paddingOverride ?? const EdgeInsets.all(4.0),
       child: Icon(
         icon.iconData,
         color: color,
@@ -895,6 +909,64 @@ class FlatStyle extends Style {
     return Divider(
       color: styleContext.backgroundColorSoft.withOpacity(0.4),
     );
+  }
+
+  @override
+  Future<T> showDialog<T>({required BuildContext context, required StyledDialog dialog}) async {
+    final styleContext = initialStyleContext;
+    return await showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      backgroundColor: Colors.transparent,
+      builder: (_) {
+        return StyleProvider(
+          style: this,
+          child: ScrollColumn(
+            children: [
+              Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                    ),
+                    color: styleContext.backgroundColorSoft,
+                  ),
+                  child: StyleContextProvider(
+                    styleContext: styleContextFromBackground(styleContext.backgroundColorSoft),
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: StyledCategory(
+                        header: dialog.title,
+                        children: [dialog.body],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Future<T?> navigateTo<T>({required BuildContext context, required Widget Function() page}) {
+    return Navigator.of(context).push(MaterialPageRoute(builder: (_) => page()));
+  }
+
+  @override
+  void navigateBack<T>({required BuildContext context, T? result}) {
+    Navigator.of(context).pop(result);
+  }
+
+  @override
+  void navigateReplacement({required BuildContext context, required Widget Function() newPage}) {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => newPage()));
   }
 
   Widget actionButton(
@@ -940,8 +1012,8 @@ class FlatStyle extends Style {
                                   child: InkWell(
                                     splashColor: styleContext.backgroundColorSoft,
                                     onTap: () {
-                                      action.onPerform?.call();
                                       Navigator.of(context).pop();
+                                      action.onPerform?.call();
                                     },
                                     child: ListTile(
                                       title: StyledContentSubtitleText(
@@ -965,22 +1037,6 @@ class FlatStyle extends Style {
         );
       },
     );
-    // return MenuButton(
-    //     child: StyledIcon.medium(Icons.more_vert, colorOverride: color),
-    //     foregroundColor: styleContextFromBackground(softenColor(backgroundColorSoft)).foregroundColor,
-    //     backgroundColor: softenColor(backgroundColorSoft),
-    //     elevation: 10,
-    //     fontFamily: subtitleFontFamily,
-    //     items: actions
-    //         .map((action) =>
-    //         MenuItem(
-    //           text: action.name,
-    //           description: action.description,
-    //           color: action.color ?? primaryColor,
-    //           icon: action.icon,
-    //           onPressed: action.onPerform ?? () {},
-    //         ))
-    //         .toList());
   }
 
   Widget animatedFadeIn({required bool isVisible, required Widget child}) => AnimatedOpacity(
@@ -999,13 +1055,16 @@ class FlatStyle extends Style {
     final foregroundColor = backgroundColor.computeLuminance() < 0.5 ? Colors.white : Colors.black;
     final emphasisColor = !isPrimaryBackground ? primaryColor : foregroundColor;
 
+    final backgroundColorSoft = softenColor(backgroundColor);
+
     return StyleContext(
       backgroundColor: backgroundColor,
-      backgroundColorSoft: softenColor(backgroundColor),
+      backgroundColorSoft: backgroundColorSoft,
       foregroundColor: foregroundColor,
       foregroundColorSoft: softenColor(foregroundColor),
       emphasisColor: emphasisColor,
       emphasisColorSoft: softenColor(emphasisColor),
+      getSoftened: () => styleContextFromBackground(backgroundColorSoft),
     );
   }
 

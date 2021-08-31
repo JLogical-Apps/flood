@@ -14,6 +14,7 @@ import 'package:jlogical_utils/src/style/widgets/pages/styled_page.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_tabbed_page.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_content_header_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_subtitle_text.dart';
+import 'package:provider/provider.dart';
 
 import 'widgets/content/styled_content.dart';
 
@@ -31,6 +32,8 @@ abstract class Style {
 
   Widget onboardingPage(BuildContext context, StyleContext styleContext, StyledOnboardingPage onboardingPage) =>
       throw UnimplementedError();
+
+  Widget dialog(BuildContext context, StyleContext styleContext, StyledDialog dialog) => throw UnimplementedError();
 
   // === TEXT ===
 
@@ -83,4 +86,22 @@ abstract class Style {
   Widget icon(BuildContext context, StyleContext styleContext, StyledIcon icon) => throw UnimplementedError();
 
   Widget divider(BuildContext context, StyleContext styleContext, StyledDivider divider) => throw UnimplementedError();
+
+  // === ACTIONS ===
+
+  Future<T> showDialog<T>({required BuildContext context, required StyledDialog dialog}) => throw UnimplementedError();
+
+  Future<T?> navigateTo<T>({required BuildContext context, required Widget Function() page}) =>
+      throw UnimplementedError();
+
+  void navigateBack<T>({required BuildContext context, T? result}) => throw UnimplementedError();
+
+  void navigateReplacement({required BuildContext context, required Widget Function() newPage}) =>
+      throw UnimplementedError();
+}
+
+extension BuildContextExtensions on BuildContext {
+  Style style() {
+    return Provider.of<Style>(this);
+  }
 }

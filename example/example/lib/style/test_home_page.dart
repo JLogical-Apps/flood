@@ -1,4 +1,3 @@
-import 'package:example/style/test_login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -54,7 +53,28 @@ class TestHomePage extends HookWidget {
                 description: 'Create a new envelope.',
                 lead: StyledIcon(Icons.create),
                 onPerform: () {
-                  print('hey');
+                  final controller = SmartFormController();
+                  style.showDialog(
+                    context: context,
+                    dialog: StyledDialog(
+                      body: SmartForm(
+                        controller: controller,
+                        child: ScrollColumn.withScrollbar(
+                          children: [
+                            StyledSmartTextField(
+                              name: 'name',
+                              label: 'Name',
+                            ),
+                            StyledButton.high(
+                              text: 'Save',
+                              onTap: () {},
+                              icon: Icons.save,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
                 },
               ),
             ],
@@ -64,8 +84,58 @@ class TestHomePage extends HookWidget {
                 StyledContent.high(
                   header: 'Create Transaction',
                   lead: StyledIcon(Icons.compare_arrows),
-                  onTap: () =>
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => TestLoginPage(style: style))),
+                  onTap: () {
+                    final smartFormController = SmartFormController();
+                    style.showDialog(
+                      context: context,
+                      dialog: StyledDialog(
+                        title: 'Create Transaction',
+                        body: SmartForm(
+                          controller: smartFormController,
+                          child: Column(
+                            children: [
+                              StyledSmartTextField(
+                                name: 'name',
+                                label: 'Name',
+                              ),
+                              StyledSmartTextField(
+                                name: 'amount',
+                                label: 'Amount (\$)',
+                              ),
+                              StyledSmartDateField(
+                                name: 'date',
+                                label: 'Transaction Date',
+                              ),
+                              StyledSmartTextField(
+                                name: 'notes',
+                                label: 'Notes',
+                                maxLines: 3,
+                              ),
+                              SmartRadioGroup(
+                                group: 'type',
+                                initialValue: 'payment',
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  StyledSmartRadioOptionField(radioValue: 'payment', group: 'type', label: 'Payment'),
+                                  StyledSmartRadioOptionField(radioValue: 'refund', group: 'type', label: 'Refund'),
+                                ],
+                              ),
+                              StyledButton.high(
+                                text: 'Save',
+                                onTap: () {
+                                  style.navigateBack(context: context);
+                                },
+                                icon: Icons.save,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                    // return style.navigateTo(context: context, page: () => TestLoginPage(style: style));
+                  },
                   trailing: StyledIcon(Icons.chevron_right),
                 ),
                 StyledCategory.medium(

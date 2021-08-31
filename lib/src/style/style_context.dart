@@ -10,6 +10,8 @@ class StyleContext {
   final Color emphasisColor;
   final Color emphasisColorSoft;
 
+  final StyleContext Function() getSoftened;
+
   const StyleContext({
     required this.backgroundColor,
     required this.backgroundColorSoft,
@@ -17,6 +19,7 @@ class StyleContext {
     required this.foregroundColorSoft,
     required this.emphasisColor,
     required this.emphasisColorSoft,
+    required this.getSoftened,
   });
 
   bool get isDarkBackground => backgroundColor.computeLuminance() < 0.66;
@@ -36,6 +39,7 @@ class StyleContext {
       foregroundColorSoft: foregroundColorSoft ?? this.foregroundColorSoft,
       emphasisColor: emphasisColor ?? this.emphasisColor,
       emphasisColorSoft: emphasisColorSoft ?? this.emphasisColorSoft,
+      getSoftened: getSoftened,
     );
   }
 }
