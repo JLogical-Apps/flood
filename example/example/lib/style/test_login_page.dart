@@ -21,7 +21,7 @@ class TestLoginPage extends HookWidget {
           child: ScrollColumn.withScrollbar(
             children: [
               StyledCategory.medium(
-                header: 'Login',
+                headerText: 'Login',
                 children: [
                   StyledSmartTextField(
                     name: 'username',
@@ -80,11 +80,11 @@ class TestLoginPage extends HookWidget {
                     children: [
                       StyledButton.high(
                         text: 'Sign Up',
-                        onTap: () {},
+                        onTapped: () {},
                       ),
                       StyledButton.low(
                         text: 'Log In',
-                        onTap: () {
+                        onTapped: () {
                           smartFormController.validate();
                         },
                       ),

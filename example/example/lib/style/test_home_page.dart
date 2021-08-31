@@ -52,7 +52,7 @@ class TestHomePage extends HookWidget {
                 name: 'Create Envelope',
                 color: Colors.green,
                 description: 'Create a new envelope.',
-                lead: StyledIcon(Icons.create),
+                leading: StyledIcon(Icons.create),
                 onPerform: () {
                   final controller = SmartFormController();
                   style.showDialog(
@@ -68,7 +68,7 @@ class TestHomePage extends HookWidget {
                             ),
                             StyledButton.high(
                               text: 'Save',
-                              onTap: () {},
+                              onTapped: () {},
                               icon: Icons.save,
                             ),
                           ],
@@ -81,7 +81,7 @@ class TestHomePage extends HookWidget {
               ActionItem(
                 name: 'Login',
                 color: Colors.blue,
-                lead: StyledIcon(Icons.face),
+                leading: StyledIcon(Icons.face),
                 onPerform: () {
                   style.navigateTo(context: context, page: () => TestLoginPage(style: style));
                 },
@@ -91,14 +91,14 @@ class TestHomePage extends HookWidget {
             body: ScrollColumn.withScrollbar(
               children: [
                 StyledContent.high(
-                  header: 'Create Transaction',
-                  lead: StyledIcon(Icons.compare_arrows),
-                  onTap: () {
+                  headerText: 'Create Transaction',
+                  leading: StyledIcon(Icons.compare_arrows),
+                  onTapped: () {
                     final smartFormController = SmartFormController();
                     style.showDialog(
                       context: context,
                       dialog: StyledDialog(
-                        title: 'Create Transaction',
+                        titleText: 'Create Transaction',
                         body: SmartForm(
                           controller: smartFormController,
                           child: Column(
@@ -134,7 +134,7 @@ class TestHomePage extends HookWidget {
                               ),
                               StyledButton.high(
                                 text: 'Save',
-                                onTap: () {
+                                onTapped: () {
                                   style.navigateBack(context: context);
                                 },
                                 icon: Icons.save,
@@ -149,17 +149,17 @@ class TestHomePage extends HookWidget {
                   trailing: StyledIcon(Icons.chevron_right),
                 ),
                 StyledCategory.medium(
-                  header: 'Budget',
-                  content: '\$252.49',
-                  lead: StyledIcon(Icons.attach_money),
+                  headerText: 'Budget',
+                  bodyText: '\$252.49',
+                  leading: StyledIcon(Icons.attach_money),
                   children: [
                     GridView.count(
                       crossAxisCount: 2,
                       physics: NeverScrollableScrollPhysics(),
                       children: envelopes
                           .map((envelope) => StyledContent.medium(
-                                header: envelope['name']!.as<String>(),
-                                content: (envelope['amount']!.as<int>()! / 100).formatCurrency(),
+                                headerText: envelope['name']!.as<String>(),
+                                bodyText: (envelope['amount']!.as<int>()! / 100).formatCurrency(),
                                 trailing: StyledIcon(
                                   Icons.chevron_right,
                                 ),
@@ -179,13 +179,13 @@ class TestHomePage extends HookWidget {
             body: ScrollColumn.withScrollbar(
               children: [
                 StyledCategory.medium(
-                  header: 'Transactions',
-                  lead: StyledIcon(Icons.compare_arrows),
+                  headerText: 'Transactions',
+                  leading: StyledIcon(Icons.compare_arrows),
                   children: transactions
                       .map((transaction) => StyledContent.medium(
-                            header:
+                            headerText:
                                 transaction['name']!.as<String>()! + ' - ' + transaction['envelopeName']!.as<String>()!,
-                            content: (transaction['amount']!.as<int>()! / 100).formatCurrency(),
+                            bodyText: (transaction['amount']!.as<int>()! / 100).formatCurrency(),
                             emphasisColorOverride: Colors.redAccent,
                           ))
                       .toList(),

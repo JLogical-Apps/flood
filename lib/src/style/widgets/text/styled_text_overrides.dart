@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Contains overrides for [StyledText]s. If a value is null, then the value isn't overridden.
 class StyledTextOverrides {
   final Color? fontColor;
   final double? fontSize;

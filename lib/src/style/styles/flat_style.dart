@@ -118,6 +118,7 @@ class FlatStyle extends Style {
         ),
         body: PageView(
           controller: pageController,
+          scrollBehavior: CupertinoScrollBehavior(),
           onPageChanged: (_page) => pageIndex.value = _page,
           children: tabbedPage.pages.map((page) => page.body).toList(),
         ),
@@ -136,8 +137,8 @@ class FlatStyle extends Style {
                     label: page.title,
                   ))
               .toList(),
-          selectedLabelStyle: GoogleFonts.getFont(subtitleFontFamily).copyWith(),
-          unselectedLabelStyle: GoogleFonts.getFont(subtitleFontFamily).copyWith(),
+          selectedLabelStyle: GoogleFonts.getFont(subtitleFontFamily),
+          unselectedLabelStyle: GoogleFonts.getFont(subtitleFontFamily),
           selectedItemColor: styleContextFromBackground(backgroundColor).emphasisColor,
           unselectedItemColor: styleContextFromBackground(backgroundColor).foregroundColorSoft,
         ),
@@ -182,7 +183,7 @@ class FlatStyle extends Style {
                                         flex: 1,
                                       ),
                                       Expanded(
-                                        child: Center(child: section.description),
+                                        child: Center(child: section.body),
                                         flex: 2,
                                       ),
                                       SizedBox(
@@ -207,7 +208,8 @@ class FlatStyle extends Style {
                       isVisible: page.value < onboardingPage.sections.length - 1,
                       child: StyledButton.low(
                         text: 'Skip',
-                        onTap: page.value < onboardingPage.sections.length - 1 ? () => onboardingPage.onSkip!() : null,
+                        onTapped:
+                            page.value < onboardingPage.sections.length - 1 ? () => onboardingPage.onSkip!() : null,
                       ),
                     ),
                   ),
@@ -239,12 +241,12 @@ class FlatStyle extends Style {
                         ? StyledButton.high(
                             key: ValueKey('done'), // Key is needed for AnimatedSwitcher to fade between buttons.
                             text: 'Done',
-                            onTap: onboardingPage.onComplete,
+                            onTapped: onboardingPage.onComplete,
                           )
                         : StyledButton.low(
                             key: ValueKey('next'),
                             text: 'Next',
-                            onTap: () => pageController.animateToPage(
+                            onTapped: () => pageController.animateToPage(
                               page.value + 1,
                               duration: Duration(milliseconds: 400),
                               curve: Curves.easeInOutCubic,
@@ -260,6 +262,7 @@ class FlatStyle extends Style {
     );
   }
 
+  /// A text that uses the values provided unless overridden by the [styledText]'s [StyledTextOverride].
   Widget rawStyledText({
     required StyledText styledText,
     required String fontFamily,
@@ -380,14 +383,14 @@ class FlatStyle extends Style {
                       fontColor: newStyleContext.emphasisColor,
                     ),
                   ),
-                  onPressed: button.onTap,
+                  onPressed: button.onTapped,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(backgroundColor),
                     overlayColor: MaterialStateProperty.all(softenColor(backgroundColor).withOpacity(0.8)),
                   ),
                 )
               : ElevatedButton.icon(
-                  onPressed: button.onTap,
+                  onPressed: button.onTapped,
                   icon: StyledIcon.medium(button.icon!),
                   label: StyledButtonText(button.text),
                   style: ButtonStyle(
@@ -404,7 +407,7 @@ class FlatStyle extends Style {
           child: button.icon == null
               ? ElevatedButton(
                   child: StyledButtonText(button.text),
-                  onPressed: button.onTap,
+                  onPressed: button.onTapped,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
                     overlayColor: MaterialStateProperty.all(
@@ -412,7 +415,7 @@ class FlatStyle extends Style {
                   ),
                 )
               : ElevatedButton.icon(
-                  onPressed: button.onTap,
+                  onPressed: button.onTapped,
                   icon: StyledIcon.medium(button.icon!),
                   label: StyledButtonText(button.text),
                   style: ButtonStyle(
@@ -430,7 +433,7 @@ class FlatStyle extends Style {
                   button.text,
                   textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.emphasisColor),
                 ),
-                onPressed: button.onTap,
+                onPressed: button.onTapped,
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.transparent),
                   overlayColor: MaterialStateProperty.all(
@@ -438,7 +441,7 @@ class FlatStyle extends Style {
                 ),
               )
             : TextButton.icon(
-                onPressed: button.onTap,
+                onPressed: button.onTapped,
                 icon: StyledIcon.medium(button.icon!, colorOverride: button.color ?? styleContext.emphasisColor),
                 label: StyledButtonText(
                   button.text,
@@ -660,7 +663,7 @@ class FlatStyle extends Style {
   }
 
   Widget dateField(BuildContext context, StyleContext styleContext, StyledDateField dateField) {
-    final initialDate = dateField.initialDate ?? DateTime.now();
+    final initialDate = dateField.date ?? DateTime.now();
     return StyledTextField(
       key: ObjectKey(initialDate),
       label: dateField.label,
@@ -676,13 +679,13 @@ class FlatStyle extends Style {
                   return Theme(
                     data: ThemeData.light().copyWith(
                       colorScheme: ColorScheme.dark(
-                        primary: styleContext.emphasisColor,
-                        onPrimary: styleContextFromBackground(styleContext.emphasisColor).foregroundColor,
-                        surface: styleContext.emphasisColor,
-                        onSurface: styleContext.foregroundColor,
+                        primary: primaryColor,
+                        onPrimary: styleContextFromBackground(primaryColor).foregroundColor,
+                        surface: primaryColor,
+                        onSurface: initialStyleContext.foregroundColor,
                       ),
                       dialogTheme: DialogTheme(
-                        backgroundColor: styleContext.backgroundColorSoft,
+                        backgroundColor: backgroundColorSoft,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -716,16 +719,15 @@ class FlatStyle extends Style {
         ? styleContextFromBackground(backgroundColor)
         : styleContextFromBackground(backgroundColor).copyWith(
             emphasisColor: content.emphasisColorOverride,
-            emphasisColorSoft: softenColor(content.emphasisColorOverride!),
           );
 
-    final header = content.header != null ? StyledContentHeaderText(content.header!) : content.headerWidget;
-    final body = content.content != null ? StyledContentSubtitleText(content.content!) : content.contentWidget;
+    final header = content.headerText != null ? StyledContentHeaderText(content.headerText!) : content.header;
+    final body = content.bodyText != null ? StyledContentSubtitleText(content.bodyText!) : content.body;
 
     return ClickableCard(
       color: backgroundColor,
       splashColor: softenColor(backgroundColor).withOpacity(0.8),
-      onTap: content.onTap,
+      onTap: content.onTapped,
       child: StyleContextProvider(
         styleContext: newStyleContext,
         child: Column(
@@ -734,7 +736,7 @@ class FlatStyle extends Style {
             ListTile(
               title: header != null ? header : body,
               subtitle: header != null ? body : null,
-              leading: content.lead,
+              leading: content.leading,
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -764,30 +766,29 @@ class FlatStyle extends Style {
       if (category.emphasisColorOverride == null) return styleContext;
       return styleContext.copyWith(
         emphasisColor: category.emphasisColorOverride!,
-        emphasisColorSoft: softenColor(category.emphasisColorOverride!),
       );
     }
 
     final emphasisColor = category.emphasisColorOverride ?? styleContext.emphasisColor;
 
-    final header = category.header != null ? StyledContentHeaderText(category.header!) : category.headerWidget;
-    final body = category.content != null ? StyledContentSubtitleText(category.content!) : category.contentWidget;
+    final header = category.headerText != null ? StyledContentHeaderText(category.headerText!) : category.header;
+    final body = category.bodyText != null ? StyledContentSubtitleText(category.bodyText!) : category.body;
 
     return category.emphasis.map(
       high: () {
         return ClickableCard(
           color: emphasisColor,
-          onTap: category.onTap,
+          onTap: category.onTapped,
           child: StyleContextProvider(
             styleContext: styleContextWithEmphasisOverride(styleContextFromBackground(styleContext.emphasisColor)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (header != null || body != null || category.lead != null || category.trailing != null)
+                if (header != null || body != null || category.leading != null || category.trailing != null)
                   ListTile(
                     title: header != null ? header : body,
                     subtitle: header != null ? body : null,
-                    leading: category.lead,
+                    leading: category.leading,
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -810,18 +811,18 @@ class FlatStyle extends Style {
       medium: () {
         return ClickableCard(
           color: styleContext.backgroundColorSoft,
-          onTap: category.onTap,
+          onTap: category.onTapped,
           child: StyleContextProvider(
             styleContext:
                 styleContextWithEmphasisOverride(styleContextFromBackground(styleContext.backgroundColorSoft)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (header != null || body != null || category.lead != null || category.trailing != null)
+                if (header != null || body != null || category.leading != null || category.trailing != null)
                   ListTile(
                     title: header != null ? header : body,
                     subtitle: header != null ? body : null,
-                    leading: category.lead,
+                    leading: category.leading,
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -847,11 +848,11 @@ class FlatStyle extends Style {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (header != null || body != null || category.lead != null || category.trailing != null)
+              if (header != null || body != null || category.leading != null || category.trailing != null)
                 ListTile(
                   title: header != null ? header : body,
                   subtitle: header != null ? body : null,
-                  leading: category.lead,
+                  leading: category.leading,
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -927,7 +928,7 @@ class FlatStyle extends Style {
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: StyledCategory(
-                        header: dialog.title,
+                        headerText: dialog.titleText,
                         children: [dialog.body],
                       ),
                     ),
@@ -969,93 +970,70 @@ class FlatStyle extends Style {
         paddingOverride: EdgeInsets.zero,
       ),
       onPressed: () {
-        showModalBottomSheet(
+        showDialog(
           context: context,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12),
-              topRight: Radius.circular(12),
+          dialog: StyledDialog(
+            body: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: actions
+                      .map<Widget>((action) => Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              splashColor: styleContext.backgroundColorSoft,
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                action.onPerform?.call();
+                              },
+                              child: ListTile(
+                                title: StyledContentSubtitleText(
+                                  action.name,
+                                  textOverrides: StyledTextOverrides(fontColor: action.color),
+                                ),
+                                subtitle: action.description != null ? StyledBodyText(action.description!) : null,
+                                leading: action.icon != null
+                                    ? StyledIcon(action.icon!, colorOverride: action.color)
+                                    : action.leading,
+                              ),
+                            ),
+                          ))
+                      .toList() +
+                  [SafeArea(child: Container())],
             ),
           ),
-          builder: (_) {
-            return StyleProvider(
-              style: this,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: styleContextFromBackground(styleContext.backgroundColorSoft).backgroundColorSoft,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: actions
-                            .map<Widget>((action) => Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    splashColor: styleContext.backgroundColorSoft,
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                      action.onPerform?.call();
-                                    },
-                                    child: ListTile(
-                                      title: StyledContentSubtitleText(
-                                        action.name,
-                                        textOverrides: StyledTextOverrides(fontColor: action.color),
-                                      ),
-                                      subtitle: action.description != null ? StyledBodyText(action.description!) : null,
-                                      leading: action.icon != null
-                                          ? StyledIcon(action.icon!, colorOverride: action.color)
-                                          : action.lead,
-                                    ),
-                                  ),
-                                ))
-                            .toList() +
-                        [SafeArea(child: Container())],
-                  ),
-                ),
-              ),
-            );
-          },
         );
       },
     );
   }
 
+  /// Animates the opacity of [child] whenever [isVisible] changes.
   Widget animatedFadeIn({required bool isVisible, required Widget child}) => AnimatedOpacity(
         opacity: isVisible ? 1 : 0,
         duration: Duration(milliseconds: 400),
         child: child,
       );
 
-  static Color softenColor(Color color) {
-    return color.computeLuminance() < 0.5 ? color.lighten() : color.darken(5);
-  }
-
+  /// Generates a [StyleContext] from the [backgroundColor].
   StyleContext styleContextFromBackground(Color backgroundColor) {
     final isPrimaryBackground = _isPrimaryColor(backgroundColor);
 
     final foregroundColor = backgroundColor.computeLuminance() < 0.5 ? Colors.white : Colors.black;
     final emphasisColor = !isPrimaryBackground ? primaryColor : foregroundColor;
 
-    final backgroundColorSoft = softenColor(backgroundColor);
-
     return StyleContext(
       backgroundColor: backgroundColor,
-      backgroundColorSoft: backgroundColorSoft,
       foregroundColor: foregroundColor,
-      foregroundColorSoft: softenColor(foregroundColor),
       emphasisColor: emphasisColor,
-      emphasisColorSoft: softenColor(emphasisColor),
-      getSoftened: () => styleContextFromBackground(backgroundColorSoft),
+      getSoftened: (color) => softenColor(color),
     );
   }
 
+  /// Whether the [color] is derived from [primaryColor].
   bool _isPrimaryColor(Color color) {
     return color == primaryColor || color == primaryColorSoft || color == softenColor(primaryColorSoft);
+  }
+
+  /// Softens colors by making light colors darker and dark colors lighter.
+  static Color softenColor(Color color) {
+    return color.computeLuminance() < 0.5 ? color.lighten() : color.darken(5);
   }
 }

@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class StyledButton extends StyledWidget {
+  /// The text of the button.
   final String text;
+
+  /// The icon to display next to [text].
   final IconData? icon;
+
+  /// The color to override the emphasis color of the button.
   final Color? color;
 
-  final void Function()? onTap;
+  /// Action to perform when the button is tapped.
+  final void Function()? onTapped;
 
   final Emphasis emphasis;
 
@@ -15,7 +21,7 @@ class StyledButton extends StyledWidget {
     required this.text,
     this.icon,
     this.color,
-    required this.onTap,
+    required this.onTapped,
     required this.emphasis,
   }) : super(key: key);
 
@@ -24,7 +30,7 @@ class StyledButton extends StyledWidget {
     required this.text,
     this.icon,
     this.color,
-    required this.onTap,
+    required this.onTapped,
   })  : emphasis = Emphasis.low,
         super(key: key);
 
@@ -33,7 +39,7 @@ class StyledButton extends StyledWidget {
     required this.text,
     this.icon,
     this.color,
-    required this.onTap,
+    required this.onTapped,
   })  : emphasis = Emphasis.medium,
         super(key: key);
 
@@ -42,7 +48,7 @@ class StyledButton extends StyledWidget {
     required this.text,
     this.icon,
     this.color,
-    required this.onTap,
+    required this.onTapped,
   })  : emphasis = Emphasis.high,
         super(key: key);
 

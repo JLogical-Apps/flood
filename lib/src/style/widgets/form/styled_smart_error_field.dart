@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../jlogical_utils.dart';
 
+/// Styled SmartErrorField that uses a [StyledErrorText].
 class StyledSmartErrorField extends SmartFormField {
   const StyledSmartErrorField({
     Key? key,

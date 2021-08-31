@@ -15,13 +15,17 @@ class TestOnboardingPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final checkboxValue = useState(false);
+    final date = useState(DateTime.now());
+    final favoriteFood = useState('Pizza');
+    final gender = useState('male');
+
     return StyleProvider(
       style: style,
       child: StyledOnboardingPage(
         sections: [
           OnboardingPageSection(
             title: StyledTitleText(styleName),
-            description: StyledBodyText(
+            body: StyledBodyText(
                 'This is a sample onboarding page with the $styleName theme. The logo above is just for sample purposes. Scroll through to see a demo of the style.'),
             header: Image.asset(
               'assets/logo_foreground.png',
@@ -34,7 +38,7 @@ class TestOnboardingPage extends HookWidget {
               size: 40,
             ),
             title: StyledTitleText('Text'),
-            description: ScrollColumn.withScrollbar(
+            body: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText(
                     'There are a couple different types of texts to choose from. Texts will adapt their color based on the background they are on.'),
@@ -47,7 +51,7 @@ class TestOnboardingPage extends HookWidget {
                 StyledButtonText('Button'),
                 StyledDivider(),
                 StyledContent.high(
-                  header: 'Text in vibrant background',
+                  headerText: 'Text in vibrant background',
                   children: [
                     StyledTitleText('Title'),
                     StyledSubtitleText('Subtitle'),
@@ -78,27 +82,27 @@ class TestOnboardingPage extends HookWidget {
               size: 40,
             ),
             title: StyledTitleText('Buttons'),
-            description: ScrollColumn.withScrollbar(
+            body: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText('Buttons determine their colors based on an emphasis.'),
                 StyledDivider(),
                 ButtonBar(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    StyledButton.high(text: 'High', onTap: () {}),
-                    StyledButton.medium(text: 'Med', onTap: () {}),
-                    StyledButton.low(text: 'Low', onTap: () {}),
+                    StyledButton.high(text: 'High', onTapped: () {}),
+                    StyledButton.medium(text: 'Med', onTapped: () {}),
+                    StyledButton.low(text: 'Low', onTapped: () {}),
                   ],
                 ),
                 StyledContent.high(
-                  header: 'Buttons in vibrant background',
+                  headerText: 'Buttons in vibrant background',
                   children: [
                     ButtonBar(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        StyledButton.high(text: 'High', onTap: () {}),
-                        StyledButton.medium(text: 'Med', onTap: () {}),
-                        StyledButton.low(text: 'Low', onTap: () {}),
+                        StyledButton.high(text: 'High', onTapped: () {}),
+                        StyledButton.medium(text: 'Med', onTapped: () {}),
+                        StyledButton.low(text: 'Low', onTapped: () {}),
                       ],
                     ),
                   ],
@@ -109,19 +113,19 @@ class TestOnboardingPage extends HookWidget {
                   text: 'Delete',
                   color: Colors.red.darken(30),
                   icon: Icons.delete,
-                  onTap: () {},
+                  onTapped: () {},
                 ),
                 StyledButton.medium(
                   text: 'Save',
                   color: Colors.blue.darken(30),
                   icon: Icons.save,
-                  onTap: () {},
+                  onTapped: () {},
                 ),
                 StyledButton.low(
                   text: 'Cancel',
                   color: Colors.orange,
                   icon: Icons.exit_to_app,
-                  onTap: () {},
+                  onTapped: () {},
                 ),
               ],
             ),
@@ -132,52 +136,52 @@ class TestOnboardingPage extends HookWidget {
               size: 40,
             ),
             title: StyledTitleText('Content'),
-            description: ScrollColumn.withScrollbar(
+            body: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText('Content essentially is a container that holds data about... something.'),
                 StyledBodyText('Like buttons, Contents also change their appearance based on their emphasis.'),
                 StyledDivider(),
                 StyledContent.low(
-                  header: 'Entertainment',
-                  content: '\$25.24',
+                  headerText: 'Entertainment',
+                  bodyText: '\$25.24',
                 ),
                 StyledContent.high(
-                  header: 'Budget Summary',
-                  content: 'Total Amount: \$592.42',
+                  headerText: 'Budget Summary',
+                  bodyText: 'Total Amount: \$592.42',
                   children: [
                     StyledBodyText('This is a child of the content'),
                     StyledContent.low(
-                      header: 'Envelopes',
-                      content: '4',
-                      lead: StyledIcon(Icons.mail),
+                      headerText: 'Envelopes',
+                      bodyText: '4',
+                      leading: StyledIcon(Icons.mail),
                     ),
                     StyledContent.low(
-                      header: 'Transactions Last Month',
-                      content: '41',
-                      lead: StyledIcon(Icons.show_chart),
+                      headerText: 'Transactions Last Month',
+                      bodyText: '41',
+                      leading: StyledIcon(Icons.show_chart),
                     ),
                   ],
-                  onTap: () {
+                  onTapped: () {
                     print('You clicked me!');
                   },
                 ),
                 StyledDivider(),
                 StyledBodyText('Content can also have actions associated with them.'),
                 StyledContent.low(
-                  header: 'Insurance',
-                  content: '\$82.02',
+                  headerText: 'Insurance',
+                  bodyText: '\$82.02',
                   actions: [
                     ActionItem(
                       name: 'Edit',
                       description: 'Edit the envelope.',
                       color: Colors.orange,
-                      lead: StyledIcon(Icons.edit),
+                      leading: StyledIcon(Icons.edit),
                       onPerform: () {
                         print('This does not actually do anything.');
                       },
                     )
                   ],
-                  onTap: () {
+                  onTapped: () {
                     print('You clicked me!');
                   },
                 ),
@@ -190,54 +194,53 @@ class TestOnboardingPage extends HookWidget {
               size: 40,
             ),
             title: StyledTitleText('Categories'),
-            description: ScrollColumn.withScrollbar(
+            body: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText(
                     'Categories are a container for a group of Contents, or any other Widgets. They help visualize a specific group of related widgets.'),
                 StyledDivider(),
                 StyledCategory.low(
-                  header: 'Todo List',
+                  headerText: 'Todo List',
                   children: [
-                    StyledContent.low(header: 'Item 1'),
-                    StyledContent.low(header: 'Item 2'),
-                    StyledContent.low(header: 'Item 3'),
+                    StyledContent.low(headerText: 'Item 1'),
+                    StyledContent.low(headerText: 'Item 2'),
+                    StyledContent.low(headerText: 'Item 3'),
                   ],
                 ),
                 StyledDivider(),
                 StyledCategory.medium(
-                  header: 'Todo List',
-                  content: 'Your list of todos to complete by the end of today.',
+                  headerText: 'Todo List',
+                  bodyText: 'Your list of todos to complete by the end of today.',
                   children: [
-                    StyledContent.low(header: 'Item 1'),
-                    StyledContent.low(header: 'Item 2'),
-                    StyledContent.low(header: 'Item 3'),
+                    StyledContent.low(headerText: 'Item 1'),
+                    StyledContent.low(headerText: 'Item 2'),
+                    StyledContent.low(headerText: 'Item 3'),
                   ],
                 ),
                 StyledDivider(),
                 StyledCategory.high(
-                  header: 'Todo List',
-                  lead: StyledIcon(Icons.check_outlined),
+                  headerText: 'Todo List',
+                  leading: StyledIcon(Icons.check_outlined),
                   actions: [
                     ActionItem(
                       name: 'Complete All',
                     ),
                   ],
                   children: [
-                    StyledContent.low(header: 'Item 1'),
-                    StyledContent.low(header: 'Item 2'),
-                    StyledContent.low(header: 'Item 3'),
+                    StyledContent.low(headerText: 'Item 1'),
+                    StyledContent.low(headerText: 'Item 2'),
+                    StyledContent.low(headerText: 'Item 3'),
                   ],
                 ),
                 StyledCategory.high(
-                  header: 'Grid',
+                  headerText: 'Grid',
                   children: [
                     GridView.count(
                       crossAxisCount: 2,
                       children: [
-                        StyledContent.low(header: 'Item 1'),
-                        StyledContent.low(header: 'Item 2'),
-                        StyledContent.low(header: 'Item 2'),
-                        StyledContent.low(header: 'Item 3'),
+                        StyledContent.low(headerText: 'Item 1'),
+                        StyledContent.low(headerText: 'Item 2'),
+                        StyledContent.low(headerText: 'Item 3'),
                       ],
                       childAspectRatio: 100 / 50,
                       shrinkWrap: true,
@@ -254,7 +257,7 @@ class TestOnboardingPage extends HookWidget {
               size: 40,
             ),
             title: StyledTitleText('Other'),
-            description: ScrollColumn.withScrollbar(
+            body: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText('Here are some other styled widgets as well.'),
                 StyledDivider(),
@@ -284,6 +287,80 @@ class TestOnboardingPage extends HookWidget {
                       label: 'Accept Terms and Conditions',
                       value: checkboxValue.value,
                       onChanged: (value) => checkboxValue.value = value,
+                    ),
+                  ],
+                ),
+                StyledDivider(),
+                StyledDateField(
+                  label: 'Date',
+                  date: DateTime.now(),
+                  onChanged: (value) => date.value = value,
+                ),
+                StyledDivider(),
+                StyledCategory.high(
+                  children: [
+                    StyledDateField(
+                      label: 'Date',
+                      date: DateTime.now(),
+                      onChanged: (value) => date.value = value,
+                    ),
+                  ],
+                ),
+                StyledDivider(),
+                StyledDropdown<String>(
+                  label: 'Favorite Food',
+                  value: 'Pizza',
+                  options: ['Pizza', 'Ice Cream', 'Soggy Waffles'],
+                  onChanged: (value) => favoriteFood.value = value!,
+                ),
+                StyledDivider(),
+                StyledCategory.high(
+                  children: [
+                    StyledDropdown<String>(
+                      label: 'Favorite Food',
+                      value: 'Pizza',
+                      options: ['Pizza', 'Ice Cream', 'Soggy Waffles'],
+                      onChanged: (value) => favoriteFood.value = value!,
+                    ),
+                  ],
+                ),
+                StyledDivider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    StyledRadio<String>(
+                      label: 'Male',
+                      radioValue: 'male',
+                      groupValue: gender.value,
+                      onChanged: (value) => gender.value = value,
+                    ),
+                    StyledRadio<String>(
+                      label: 'Female',
+                      radioValue: 'female',
+                      groupValue: gender.value,
+                      onChanged: (value) => gender.value = value,
+                    ),
+                  ],
+                ),
+                StyledDivider(),
+                StyledCategory.high(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        StyledRadio<String>(
+                          label: 'Male',
+                          radioValue: 'male',
+                          groupValue: gender.value,
+                          onChanged: (value) => gender.value = value,
+                        ),
+                        StyledRadio<String>(
+                          label: 'Female',
+                          radioValue: 'female',
+                          groupValue: gender.value,
+                          onChanged: (value) => gender.value = value,
+                        ),
+                      ],
                     ),
                   ],
                 ),

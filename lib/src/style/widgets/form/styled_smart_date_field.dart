@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../../../jlogical_utils.dart';
 
+/// Styled SmartDateField that uses a [StyledDateField].
 class StyledSmartDateField extends SmartFormField<DateTime> {
-  /// The label of the field.
+  /// The label for the field.
   final String? label;
 
   StyledSmartDateField({
@@ -24,10 +25,9 @@ class StyledSmartDateField extends SmartFormField<DateTime> {
       BuildContext context, DateTime value, String? error, bool enabled, SmartFormController smartFormController) {
     return StyledDateField(
       label: label,
-      enabled: enabled,
       errorText: error,
-      initialDate: value,
-      onChanged: (value) => smartFormController.setData(name: name, value: value),
+      date: value,
+      onChanged: enabled ? (value) => smartFormController.setData(name: name, value: value) : null,
     );
   }
 }

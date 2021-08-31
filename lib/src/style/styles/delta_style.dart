@@ -8,7 +8,9 @@ import 'package:tinycolor2/tinycolor2.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 
+/// Extends [FlatStyle] with overridden styles.
 class DeltaStyle extends FlatStyle {
+  /// The accent color that accents the primary color.
   final Color accentColor;
 
   DeltaStyle({
@@ -45,8 +47,14 @@ class DeltaStyle extends FlatStyle {
                 config: CustomConfig(
                   gradients: [
                     [primaryColor.mix(backgroundColorSoft), accentColor.darken()],
-                    [backgroundColorSoft.mix(accentColor.darken()).mix(primaryColor), accentColor.lighten().mix(primaryColor)],
-                    [accentColor.darken().mix(backgroundColor).mix(primaryColor).darken(), accentColor.mix(primaryColorSoft).darken()],
+                    [
+                      backgroundColorSoft.mix(accentColor.darken()).mix(primaryColor),
+                      accentColor.lighten().mix(primaryColor)
+                    ],
+                    [
+                      accentColor.darken().mix(backgroundColor).mix(primaryColor).darken(),
+                      accentColor.mix(primaryColorSoft).darken()
+                    ],
                     [primaryColorSoft.mix(backgroundColorSoft), primaryColor.darken()]
                   ],
                   durations: [70000, 38440, 20800, 12000],
@@ -81,7 +89,7 @@ class DeltaStyle extends FlatStyle {
                                       flex: 1,
                                     ),
                                     Expanded(
-                                      child: Center(child: section.description),
+                                      child: Center(child: section.body),
                                       flex: 2,
                                     ),
                                     SizedBox(
@@ -105,7 +113,8 @@ class DeltaStyle extends FlatStyle {
                       isVisible: page.value < onboardingPage.sections.length - 1,
                       child: StyledButton.low(
                         text: 'Skip',
-                        onTap: page.value < onboardingPage.sections.length - 1 ? () => onboardingPage.onSkip!() : null,
+                        onTapped:
+                            page.value < onboardingPage.sections.length - 1 ? () => onboardingPage.onSkip!() : null,
                         color: backgroundColor,
                       ),
                     ),
@@ -139,13 +148,13 @@ class DeltaStyle extends FlatStyle {
                             key: ValueKey('done'), // Key is needed for AnimatedSwitcher to fade between buttons.
                             text: 'Done',
                             color: backgroundColor,
-                            onTap: onboardingPage.onComplete,
+                            onTapped: onboardingPage.onComplete,
                           )
                         : StyledButton.low(
-                            key: ValueKey('next'),
+                            key: ValueKey('next'), // Key is needed for AnimatedSwitcher to fade between buttons.
                             text: 'Next',
                             color: backgroundColor,
-                            onTap: () => pageController.animateToPage(
+                            onTapped: () => pageController.animateToPage(
                               page.value + 1,
                               duration: Duration(milliseconds: 400),
                               curve: Curves.easeInOutCubic,

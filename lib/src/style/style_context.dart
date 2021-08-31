@@ -1,44 +1,39 @@
 import 'package:flutter/material.dart';
 
+/// Contains information for how a [Style] should render a [StyledWidget].
+/// Each of the colors have a soft variant, which is a color similar to the main color with some slight contrast.
 class StyleContext {
   final Color backgroundColor;
-  final Color backgroundColorSoft;
-
   final Color foregroundColor;
-  final Color foregroundColorSoft;
-
   final Color emphasisColor;
-  final Color emphasisColorSoft;
 
-  final StyleContext Function() getSoftened;
+  Color get backgroundColorSoft => getSoftened(backgroundColor);
 
-  const StyleContext({
-    required this.backgroundColor,
-    required this.backgroundColorSoft,
-    required this.foregroundColor,
-    required this.foregroundColorSoft,
-    required this.emphasisColor,
-    required this.emphasisColorSoft,
-    required this.getSoftened,
-  });
+  Color get foregroundColorSoft => getSoftened(foregroundColor);
+
+  Color get emphasisColorSoft => getSoftened(emphasisColor);
+
+  /// Function to convert a [color] to a softened version of that color.
+  final Color Function(Color color) getSoftened;
 
   bool get isDarkBackground => backgroundColor.computeLuminance() < 0.66;
 
+  const StyleContext({
+    required this.backgroundColor,
+    required this.foregroundColor,
+    required this.emphasisColor,
+    required this.getSoftened,
+  });
+
   StyleContext copyWith({
     Color? backgroundColor,
-    Color? backgroundColorSoft,
     Color? foregroundColor,
-    Color? foregroundColorSoft,
     Color? emphasisColor,
-    Color? emphasisColorSoft,
   }) {
     return StyleContext(
       backgroundColor: backgroundColor ?? this.backgroundColor,
-      backgroundColorSoft: backgroundColorSoft ?? this.backgroundColorSoft,
       foregroundColor: foregroundColor ?? this.foregroundColor,
-      foregroundColorSoft: foregroundColorSoft ?? this.foregroundColorSoft,
       emphasisColor: emphasisColor ?? this.emphasisColor,
-      emphasisColorSoft: emphasisColorSoft ?? this.emphasisColorSoft,
       getSoftened: getSoftened,
     );
   }

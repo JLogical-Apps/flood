@@ -5,9 +5,13 @@ import '../../../../jlogical_utils.dart';
 class StyledIcon extends StyledWidget {
   final IconData iconData;
 
+  /// The size of the icon. If null, a default value is used.
   final double? size;
 
+  /// If not null, overrides the color of the icon.
   final Color? colorOverride;
+
+  /// If not null, overrides the padding of the icon.
   final EdgeInsets? paddingOverride;
 
   final Emphasis emphasis;

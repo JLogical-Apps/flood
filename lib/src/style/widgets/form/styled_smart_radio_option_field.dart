@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-/// A radio button that is connected to a radio group.
+/// Styled SmartRadioOptionField that uses a [StyledRadio].
+/// This should be used in conjunction with [SmartRadioGroup].
 class StyledSmartRadioOptionField<T> extends SmartFormField<bool> {
   /// The value to assign to the group when this is selected.
   final T radioValue;

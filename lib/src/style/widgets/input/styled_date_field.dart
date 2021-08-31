@@ -6,20 +6,21 @@ class StyledDateField extends StyledWidget {
   final Widget? leading;
   final Widget? trailing;
 
-  final DateTime? initialDate;
+  /// The value of the date field.
+  final DateTime? date;
+
+  /// If not null, then the error associated with this date field.
   final String? errorText;
 
-  final bool enabled;
-
+  /// Action to perform when the date is changed.
   final void Function(DateTime value)? onChanged;
 
   StyledDateField({
     this.label,
     this.leading,
     this.trailing,
-    this.initialDate,
+    this.date,
     this.errorText,
-    this.enabled: true,
     this.onChanged,
   });
 

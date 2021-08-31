@@ -2,11 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class StyledPage extends StyledWidget {
+  /// The title of the page.
   final String? title;
+
   final Widget body;
 
+  /// If not null, overrides the background of the page.
   final Color? backgroundColor;
 
+  /// Actions that can be performed associated with the page.
   final List<ActionItem> actions;
 
   const StyledPage({
