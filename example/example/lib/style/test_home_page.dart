@@ -1,3 +1,4 @@
+import 'package:example/style/test_login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -77,6 +78,14 @@ class TestHomePage extends HookWidget {
                   );
                 },
               ),
+              ActionItem(
+                name: 'Login',
+                color: Colors.blue,
+                lead: StyledIcon(Icons.face),
+                onPerform: () {
+                  style.navigateTo(context: context, page: () => TestLoginPage(style: style));
+                },
+              ),
             ],
             icon: Icon(Icons.attach_money),
             body: ScrollColumn.withScrollbar(
@@ -110,6 +119,7 @@ class TestHomePage extends HookWidget {
                                 name: 'notes',
                                 label: 'Notes',
                                 maxLines: 3,
+                                keyboardType: TextInputType.multiline,
                               ),
                               SmartRadioGroup(
                                 group: 'type',

@@ -260,20 +260,6 @@ class FlatStyle extends Style {
     );
   }
 
-  @override
-  Widget dialog(BuildContext context, StyleContext styleContext, StyledDialog dialog) {
-    return StyleProvider(
-      style: this,
-      child: Container(
-        color: styleContext.backgroundColorSoft,
-        child: StyledCategory(
-          header: dialog.title,
-          children: [dialog.body],
-        ),
-      ),
-    );
-  }
-
   Widget rawStyledText({
     required StyledText styledText,
     required String fontFamily,
@@ -531,7 +517,8 @@ class FlatStyle extends Style {
             cursorColor: primaryColor,
             onTap: textField.onTap,
             onChanged: textField.onChanged,
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            maxLines: textField.maxLines,
+            keyboardType: textField.keyboardType,
           ),
         ],
       ),

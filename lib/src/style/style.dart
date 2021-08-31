@@ -33,8 +33,6 @@ abstract class Style {
   Widget onboardingPage(BuildContext context, StyleContext styleContext, StyledOnboardingPage onboardingPage) =>
       throw UnimplementedError();
 
-  Widget dialog(BuildContext context, StyleContext styleContext, StyledDialog dialog) => throw UnimplementedError();
-
   // === TEXT ===
 
   Widget titleText(BuildContext context, StyleContext styleContext, StyledTitleText titleText) =>
