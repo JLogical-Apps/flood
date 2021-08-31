@@ -1,10 +1,20 @@
-extension ObjectExtensions on Object {
-  /// Casts the object to type [T] if possible. Returns null if not possible.
-  T? as<T>() {
-    if (this is T) {
-      return this as T;
+extension ObjectExtensions<T> on T {
+  /// Casts the object to type [R] if possible. Returns null if not possible.
+  R? as<R>() {
+    if (this is R) {
+      return this as R;
     }
     return null;
+  }
+}
+
+extension NullableObjectExtensions<T> on T? {
+  /// If this is null, returns null. Otherwise, maps it by using [mapper].
+  R? mapIfNonNull<R>(R mapper(T value)) {
+    if(this == null){
+      return null;
+    }
+    return mapper(this!);
   }
 }
 

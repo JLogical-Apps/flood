@@ -373,16 +373,20 @@ class FlatStyle extends Style {
       high: () {
         final backgroundColor = button.color ?? styleContext.emphasisColor;
         final newStyleContext = styleContextFromBackground(backgroundColor);
+
+        final child = button.text.mapIfNonNull((text) => StyledButtonText(
+                  text,
+                  textOverrides: StyledTextOverrides(fontColor: newStyleContext.emphasisColor),
+                )) ??
+            button.child;
+
+        final leading = button.icon.mapIfNonNull((icon) => StyledIcon.medium(button.icon!)) ?? button.leading;
+
         return StyleContextProvider(
           styleContext: newStyleContext,
-          child: button.icon == null
+          child: leading == null
               ? ElevatedButton(
-                  child: StyledButtonText(
-                    button.text,
-                    textOverrides: StyledTextOverrides(
-                      fontColor: newStyleContext.emphasisColor,
-                    ),
-                  ),
+                  child: child,
                   onPressed: button.onTapped,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(backgroundColor),
@@ -391,8 +395,8 @@ class FlatStyle extends Style {
                 )
               : ElevatedButton.icon(
                   onPressed: button.onTapped,
-                  icon: StyledIcon.medium(button.icon!),
-                  label: StyledButtonText(button.text),
+                  icon: leading,
+                  label: child ?? Container(),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.emphasisColor),
                     overlayColor: MaterialStateProperty.all(
@@ -402,11 +406,14 @@ class FlatStyle extends Style {
         );
       },
       medium: () {
+        final child = button.text.mapIfNonNull((text) => StyledButtonText(text)) ?? button.child;
+        final leading = button.icon.mapIfNonNull((icon) => StyledIcon.medium(button.icon!)) ?? button.leading;
+
         return StyleContextProvider(
           styleContext: styleContextFromBackground(backgroundColor),
-          child: button.icon == null
+          child: leading == null
               ? ElevatedButton(
-                  child: StyledButtonText(button.text),
+                  child: child,
                   onPressed: button.onTapped,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
@@ -416,8 +423,8 @@ class FlatStyle extends Style {
                 )
               : ElevatedButton.icon(
                   onPressed: button.onTapped,
-                  icon: StyledIcon.medium(button.icon!),
-                  label: StyledButtonText(button.text),
+                  icon: leading,
+                  label: child ?? Container(),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
                     overlayColor: MaterialStateProperty.all(
@@ -427,12 +434,21 @@ class FlatStyle extends Style {
         );
       },
       low: () {
-        return button.icon == null
-            ? TextButton(
-                child: StyledButtonText(
-                  button.text,
+        final child = button.text.mapIfNonNull((text) => StyledButtonText(
+                  text,
                   textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.emphasisColor),
-                ),
+                )) ??
+            button.child;
+
+        final leading = button.icon.mapIfNonNull((icon) => StyledIcon.medium(
+                  button.icon!,
+                  colorOverride: button.color ?? styleContext.emphasisColor,
+                )) ??
+            button.leading;
+
+        return leading == null
+            ? TextButton(
+                child: child ?? Container(),
                 onPressed: button.onTapped,
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.transparent),
@@ -442,11 +458,8 @@ class FlatStyle extends Style {
               )
             : TextButton.icon(
                 onPressed: button.onTapped,
-                icon: StyledIcon.medium(button.icon!, colorOverride: button.color ?? styleContext.emphasisColor),
-                label: StyledButtonText(
-                  button.text,
-                  textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.emphasisColor),
-                ),
+                icon: leading,
+                label: child ?? Container(),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.transparent),
                   overlayColor: MaterialStateProperty.all(
@@ -1075,10 +1088,11 @@ class FlatStyle extends Style {
 
   /// Generates a [StyleContext] from the [backgroundColor].
   StyleContext styleContextFromBackground(Color backgroundColor) {
-    final isPrimaryBackground = _isPrimaryColor(backgroundColor);
+    final isBackgroundVariant = _isBackgroundVariant(backgroundColor);
+    final isNeutralBackground = _isNeutralColor(backgroundColor);
 
     final foregroundColor = backgroundColor.computeLuminance() < 0.5 ? Colors.white : Colors.black;
-    final emphasisColor = !isPrimaryBackground ? primaryColor : foregroundColor;
+    final emphasisColor = (isBackgroundVariant || isNeutralBackground) ? primaryColor : foregroundColor;
 
     return StyleContext(
       backgroundColor: backgroundColor,
@@ -1088,9 +1102,15 @@ class FlatStyle extends Style {
     );
   }
 
-  /// Whether the [color] is derived from [primaryColor].
-  bool _isPrimaryColor(Color color) {
-    return color == primaryColor || color == primaryColorSoft || color == softenColor(primaryColorSoft);
+  /// Whether the [color] is derived from [backgroundColor].
+  bool _isBackgroundVariant(Color color) {
+    return color == backgroundColor || color == backgroundColorSoft || color == softenColor(backgroundColorSoft);
+  }
+
+  /// Whether the [color] is a neutral color.
+  bool _isNeutralColor(Color color) {
+    final luminance = color.computeLuminance();
+    return luminance < 0.05 || luminance > 0.95;
   }
 
   /// Softens colors by making light colors darker and dark colors lighter.
