@@ -20,7 +20,8 @@ class SmartDateField extends SmartFormField<DateTime> {
         );
 
   @override
-  Widget buildForm(BuildContext context, DateTime value, String? error, bool enabled, SmartFormController smartFormController) {
+  Widget buildForm(
+      BuildContext context, DateTime value, String? error, bool enabled, SmartFormController smartFormController) {
     return InputField(
       key: ValueKey(value),
       readonly: true,
@@ -28,9 +29,15 @@ class SmartDateField extends SmartFormField<DateTime> {
       enabled: enabled,
       errorText: error,
       label: label ?? '',
+
       onTap: () async {
+        print('test');
         final result = await showDatePicker(
-            context: context, initialDate: value, firstDate: DateTime.fromMillisecondsSinceEpoch(0), lastDate: DateTime.now().add(Duration(days: 1000)));
+          context: context,
+          initialDate: value,
+          firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+          lastDate: DateTime.now().add(Duration(days: 1000)),
+        );
         if (result != null) smartFormController.setData(name: name, value: result);
       },
     );

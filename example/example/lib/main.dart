@@ -1,4 +1,5 @@
 import 'package:example/model/model_page.dart';
+import 'package:example/style/styles_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -41,7 +42,11 @@ class HomePage extends StatelessWidget {
           NavigationCard(
             title: Text('Models'),
             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ModelPage())),
-          )
+          ),
+          NavigationCard(
+            title: Text('Style'),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => StylesPage())),
+          ),
         ],
       ),
     );
