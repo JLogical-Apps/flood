@@ -364,6 +364,40 @@ class TestOnboardingPage extends HookWidget {
                     ),
                   ],
                 ),
+                StyledDivider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    StyledChip.low(
+                      text: 'Low',
+                    ),
+                    StyledChip.medium(
+                      text: 'Medium',
+                    ),
+                    StyledChip.high(
+                      text: 'High',
+                    ),
+                  ],
+                ),
+                StyledDivider(),
+                StyledCategory.high(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        StyledChip.low(
+                          text: 'Low',
+                        ),
+                        StyledChip.medium(
+                          text: 'Medium',
+                        ),
+                        StyledChip.high(
+                          text: 'High',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

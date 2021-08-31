@@ -893,6 +893,67 @@ class FlatStyle extends Style {
   }
 
   @override
+  Widget chip(BuildContext context, StyleContext styleContext, StyledChip chip) {
+    final backgroundColor = chip.color ??
+        chip.emphasis.map<Color>(
+          high: () => styleContext.emphasisColor,
+          medium: () => styleContext.backgroundColorSoft,
+          low: () => styleContext.backgroundColorSoft,
+        );
+
+    final newStyleContext = styleContextFromBackground(backgroundColor);
+
+    final foregroundColor = chip.emphasis.map<Color>(
+      high: () => newStyleContext.emphasisColor,
+      medium: () => newStyleContext.emphasisColor,
+      low: () => newStyleContext.foregroundColor,
+    );
+
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: StyleContextProvider(
+        styleContext: newStyleContext,
+        child: chip.onTapped == null
+            ? Chip(
+                backgroundColor: backgroundColor,
+                label: StyledButtonText(
+                  chip.text,
+                  textOverrides: StyledTextOverrides(
+                    fontColor: foregroundColor,
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
+                avatar: chip.icon != null
+                    ? StyledIcon.medium(
+                        chip.icon!,
+                        colorOverride: foregroundColor,
+                        paddingOverride: EdgeInsets.zero,
+                      )
+                    : null,
+              )
+            : ActionChip(
+                backgroundColor: backgroundColor,
+                label: StyledButtonText(
+                  chip.text,
+                  textOverrides: StyledTextOverrides(
+                    fontColor: foregroundColor,
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
+                avatar: chip.icon != null
+                    ? StyledIcon.medium(
+                        chip.icon!,
+                        colorOverride: foregroundColor,
+                        paddingOverride: EdgeInsets.zero,
+                      )
+                    : null,
+                onPressed: chip.onTapped!,
+              ),
+      ),
+    );
+  }
+
+  @override
   Widget divider(BuildContext context, StyleContext styleContext, StyledDivider divider) {
     return Divider(
       color: styleContext.backgroundColorSoft.withOpacity(0.4),
