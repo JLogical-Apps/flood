@@ -391,6 +391,8 @@ class FlatStyle extends Style {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(backgroundColor),
                     overlayColor: MaterialStateProperty.all(softenColor(backgroundColor).withOpacity(0.8)),
+                    shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                   ),
                 )
               : ElevatedButton.icon(
@@ -401,6 +403,8 @@ class FlatStyle extends Style {
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.emphasisColor),
                     overlayColor: MaterialStateProperty.all(
                         softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.8)),
+                    shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                   ),
                 ),
         );
@@ -419,6 +423,8 @@ class FlatStyle extends Style {
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
                     overlayColor: MaterialStateProperty.all(
                         softenColor(button.color ?? styleContext.backgroundColorSoft).withOpacity(0.8)),
+                    shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                   ),
                 )
               : ElevatedButton.icon(
@@ -429,6 +435,8 @@ class FlatStyle extends Style {
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
                     overlayColor: MaterialStateProperty.all(
                         softenColor(button.color ?? styleContext.backgroundColorSoft).withOpacity(0.8)),
+                    shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                   ),
                 ),
         );
@@ -454,6 +462,8 @@ class FlatStyle extends Style {
                   backgroundColor: MaterialStateProperty.all(Colors.transparent),
                   overlayColor: MaterialStateProperty.all(
                       softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.3)),
+                  shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                 ),
               )
             : TextButton.icon(
@@ -464,6 +474,8 @@ class FlatStyle extends Style {
                   backgroundColor: MaterialStateProperty.all(Colors.transparent),
                   overlayColor: MaterialStateProperty.all(
                       softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.3)),
+                  shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                 ),
               );
       },
@@ -739,6 +751,7 @@ class FlatStyle extends Style {
 
     return ClickableCard(
       color: backgroundColor,
+      borderRadius: content.borderRadius,
       splashColor: softenColor(backgroundColor).withOpacity(0.8),
       onTap: content.onTapped,
       child: StyleContextProvider(
@@ -791,6 +804,7 @@ class FlatStyle extends Style {
       high: () {
         return ClickableCard(
           color: emphasisColor,
+          borderRadius: category.borderRadius,
           onTap: category.onTapped,
           child: StyleContextProvider(
             styleContext: styleContextWithEmphasisOverride(styleContextFromBackground(styleContext.emphasisColor)),
@@ -824,6 +838,7 @@ class FlatStyle extends Style {
       medium: () {
         return ClickableCard(
           color: styleContext.backgroundColorSoft,
+          borderRadius: category.borderRadius,
           onTap: category.onTapped,
           child: StyleContextProvider(
             styleContext:
