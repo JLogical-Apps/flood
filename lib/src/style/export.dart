@@ -1,6 +1,7 @@
 export 'emphasis.dart';
 export 'style.dart';
 export 'style_context.dart';
+export 'style_context_provider.dart';
 export 'style_provider.dart';
 export 'styled_widget.dart';
 export 'styles/delta_style.dart';
