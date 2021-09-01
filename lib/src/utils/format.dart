@@ -19,6 +19,13 @@ extension NumberFormatUtil on num {
   }
 }
 
+extension IntFormatUtil on int {
+  /// Formats this amount of cents as currency.
+  String formatCentsAsCurrency() {
+    return (this / 100).formatCurrency();
+  }
+}
+
 /// Extension methods for parsing numbers.
 extension NumberParseUtil on String {
   /// Parses the string after cleaning up some user inputs.
