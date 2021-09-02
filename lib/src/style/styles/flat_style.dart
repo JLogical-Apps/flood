@@ -287,6 +287,8 @@ class FlatStyle extends Style {
           fontStyle: styledText.fontStyleOverride ?? fontStyle,
           letterSpacing: styledText.letterSpacingOverride ?? letterSpacing,
         ),
+        overflow: styledText.overflowOverride ?? TextOverflow.ellipsis,
+        maxLines: styledText.maxLinesOverride ?? 1,
       ),
     );
   }

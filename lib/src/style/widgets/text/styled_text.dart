@@ -26,5 +26,9 @@ abstract class StyledText extends StyledWidget {
 
   TextAlign? get textAlignOverride => overrides?.textAlign;
 
+  TextOverflow? get overflowOverride => overrides?.textOverflow;
+
+  int? get maxLinesOverride => overrides?.maxLines;
+
   EdgeInsets? get paddingOverride => overrides?.padding;
 }
