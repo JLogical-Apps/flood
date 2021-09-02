@@ -941,7 +941,7 @@ class FlatStyle extends Style {
     );
 
     return Padding(
-      padding: EdgeInsets.all(8),
+      padding: chip.paddingOverride ?? EdgeInsets.all(4),
       child: StyleContextProvider(
         styleContext: newStyleContext,
         child: chip.onTapped == null
