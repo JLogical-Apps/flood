@@ -10,6 +10,7 @@ class StyledTextOverrides {
   final double? letterSpacing;
   final TextAlign? textAlign;
   final TextOverflow? textOverflow;
+  final TextDecoration? textDecoration;
   final int? maxLines;
   final EdgeInsets? padding;
 
@@ -22,6 +23,7 @@ class StyledTextOverrides {
     this.letterSpacing,
     this.textAlign,
     this.textOverflow,
+    this.textDecoration,
     this.maxLines,
     this.padding,
   });
