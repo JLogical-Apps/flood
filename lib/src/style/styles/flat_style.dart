@@ -302,9 +302,9 @@ class FlatStyle extends Style {
       fontFamily: titleFontFamily,
       padding: const EdgeInsets.all(8),
       fontColor: styleContext.emphasisColor,
-      fontSize: 48,
+      fontSize: 38,
       textAlign: TextAlign.center,
-      letterSpacing: 3,
+      letterSpacing: 2.5,
     );
   }
 
@@ -327,7 +327,7 @@ class FlatStyle extends Style {
       fontFamily: subtitleFontFamily,
       padding: const EdgeInsets.all(4),
       fontColor: styleContext.emphasisColor,
-      fontSize: 17,
+      fontSize: 16,
       fontWeight: FontWeight.bold,
     );
   }
@@ -340,7 +340,7 @@ class FlatStyle extends Style {
       fontFamily: bodyFontFamily,
       padding: const EdgeInsets.all(4),
       fontColor: styleContext.foregroundColorSoft,
-      fontSize: 16,
+      fontSize: 14,
     );
   }
 
@@ -351,7 +351,7 @@ class FlatStyle extends Style {
       fontFamily: bodyFontFamily,
       padding: const EdgeInsets.all(4),
       fontColor: styleContext.foregroundColor,
-      fontSize: 18,
+      fontSize: 14,
     );
   }
 
