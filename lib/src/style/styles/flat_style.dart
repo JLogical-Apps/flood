@@ -779,10 +779,7 @@ class FlatStyle extends Style {
                 ],
               ),
             ),
-            if (content.children.isNotEmpty) ...[
-              Divider(),
-              ...content.children,
-            ],
+            ...content.children,
           ],
         ),
       ),
