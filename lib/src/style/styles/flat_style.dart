@@ -614,7 +614,12 @@ class FlatStyle extends Style {
                       ),
                     ))
                 .toList(),
-            onChanged: dropdown.onChanged,
+            onChanged: dropdown.onChanged != null
+                ? (value) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    dropdown.onChanged!(value);
+                  }
+                : null,
           ),
         ],
       ),
@@ -728,6 +733,9 @@ class FlatStyle extends Style {
                   Duration(days: 1000),
                 ),
               );
+
+              FocusScope.of(context).requestFocus(FocusNode());
+
               if (result != null) dateField.onChanged!(result);
             }
           : null,
