@@ -134,6 +134,6 @@ abstract class Style {
 extension BuildContextExtensions on BuildContext {
   /// Returns the style above this widget in the widget tree.
   Style style() {
-    return Provider.of<Style>(this);
+    return Provider.of<Style>(this, listen: false);
   }
 }
