@@ -3,7 +3,10 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class StyledPage extends StyledWidget {
   /// The title of the page.
-  final String? title;
+  final String? titleText;
+
+  /// If [titleText] is null, display this as the title of the page.
+  final Widget? title;
 
   final Widget body;
 
@@ -16,7 +19,14 @@ class StyledPage extends StyledWidget {
   /// Callback for when the user refreshes the page.
   final Future<void> Function()? onRefresh;
 
-  const StyledPage({this.title, required this.body, this.backgroundColor, this.actions: const [], this.onRefresh});
+  const StyledPage({
+    this.titleText,
+    this.title,
+    required this.body,
+    this.backgroundColor,
+    this.actions: const [],
+    this.onRefresh,
+  });
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {

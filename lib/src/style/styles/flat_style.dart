@@ -57,14 +57,13 @@ class FlatStyle extends Style {
           backgroundColor: backgroundColor,
           appBar: AppBar(
             backgroundColor: backgroundColor,
-            title: styledPage.title != null
-                ? StyledContentHeaderText(
-                    styledPage.title!,
-                    textOverrides: StyledTextOverrides(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                : null,
+            title: styledPage.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
+                      titleText,
+                      textOverrides: StyledTextOverrides(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )) ??
+                styledPage.title,
             foregroundColor: styleContext.emphasisColor,
             iconTheme: IconThemeData(color: styleContext.emphasisColor),
             actions: [
