@@ -16,6 +16,10 @@ class TestLoginPage extends HookWidget {
     return StyleProvider(
       style: style,
       child: StyledPage(
+        onRefresh: () async {
+          await Future.delayed(Duration(seconds: 1));
+          print('hey');
+        },
         body: SmartForm(
           controller: smartFormController,
           child: ScrollColumn.withScrollbar(

@@ -13,12 +13,10 @@ class StyledPage extends StyledWidget {
   /// Actions that can be performed associated with the page.
   final List<ActionItem> actions;
 
-  const StyledPage({
-    this.title,
-    required this.body,
-    this.backgroundColor,
-    this.actions: const [],
-  });
+  /// Callback for when the user refreshes the page.
+  final Future<void> Function()? onRefresh;
+
+  const StyledPage({this.title, required this.body, this.backgroundColor, this.actions: const [], this.onRefresh});
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {

@@ -17,6 +17,7 @@ import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_tabbed_page.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_error_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -49,34 +50,53 @@ class FlatStyle extends Style {
   @override
   Widget page(BuildContext context, StyleContext styleContext, StyledPage styledPage) {
     final backgroundColor = styledPage.backgroundColor ?? styleContext.backgroundColor;
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: backgroundColor,
-        title: styledPage.title != null
-            ? StyledContentHeaderText(
-                styledPage.title!,
-                textOverrides: StyledTextOverrides(
-                  fontWeight: FontWeight.bold,
+    return HookBuilder(
+      builder: (context) {
+        final refreshController = useMemoized(() => RefreshController(initialRefresh: false));
+        return Scaffold(
+          backgroundColor: backgroundColor,
+          appBar: AppBar(
+            backgroundColor: backgroundColor,
+            title: styledPage.title != null
+                ? StyledContentHeaderText(
+                    styledPage.title!,
+                    textOverrides: StyledTextOverrides(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : null,
+            foregroundColor: styleContext.emphasisColor,
+            iconTheme: IconThemeData(color: styleContext.emphasisColor),
+            actions: [
+              if (styledPage.actions.isNotEmpty)
+                actionButton(
+                  context,
+                  styleContext: styleContext,
+                  actions: styledPage.actions,
+                  color: styleContext.emphasisColor,
                 ),
-              )
-            : null,
-        foregroundColor: styleContext.emphasisColor,
-        iconTheme: IconThemeData(color: styleContext.emphasisColor),
-        actions: [
-          if (styledPage.actions.isNotEmpty)
-            actionButton(
-              context,
-              styleContext: styleContext,
-              actions: styledPage.actions,
-              color: styleContext.emphasisColor,
+            ],
+          ),
+          body: StyleContextProvider(
+            styleContext: styleContextFromBackground(backgroundColor),
+            child: SmartRefresher(
+              controller: refreshController,
+              header: WaterDropMaterialHeader(
+                color: styleContext.emphasisColor,
+                backgroundColor: styleContext.backgroundColorSoft,
+              ),
+              enablePullDown: styledPage.onRefresh != null,
+              onRefresh: styledPage.onRefresh != null
+                  ? () async {
+                      await styledPage.onRefresh!();
+                      refreshController.refreshCompleted();
+                    }
+                  : null,
+              child: styledPage.body,
             ),
-        ],
-      ),
-      body: StyleContextProvider(
-        styleContext: styleContextFromBackground(backgroundColor),
-        child: styledPage.body,
-      ),
+          ),
+        );
+      },
     );
   }
 
