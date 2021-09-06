@@ -17,6 +17,8 @@ import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_tabbed_page.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_error_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text_span.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text_style.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -32,16 +34,22 @@ class FlatStyle extends Style {
 
   Color get backgroundColorSoft => softenColor(backgroundColor);
 
-  final String titleFontFamily;
-  final String subtitleFontFamily;
-  final String bodyFontFamily;
+  final StyledTextStyle? titleTextStyleOverride;
+  final StyledTextStyle? subtitleTextStyleOverride;
+  final StyledTextStyle? contentHeaderTextStyleOverride;
+  final StyledTextStyle? contentSubtitleTextStyleOverride;
+  final StyledTextStyle? bodyTextStyleOverride;
+  final StyledTextStyle? buttonTextStyleOverride;
 
   FlatStyle({
     this.primaryColor: Colors.blue,
     this.backgroundColor: Colors.white,
-    this.titleFontFamily: 'Montserrat',
-    this.subtitleFontFamily: 'Quicksand',
-    this.bodyFontFamily: 'Lato',
+    this.titleTextStyleOverride,
+    this.subtitleTextStyleOverride,
+    this.contentHeaderTextStyleOverride,
+    this.contentSubtitleTextStyleOverride,
+    this.bodyTextStyleOverride,
+    this.buttonTextStyleOverride,
   });
 
   @override
@@ -158,8 +166,8 @@ class FlatStyle extends Style {
                     label: page.title,
                   ))
               .toList(),
-          selectedLabelStyle: GoogleFonts.getFont(subtitleFontFamily),
-          unselectedLabelStyle: GoogleFonts.getFont(subtitleFontFamily),
+          selectedLabelStyle: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)),
+          unselectedLabelStyle: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)),
           selectedItemColor: styleContextFromBackground(backgroundColor).emphasisColor,
           unselectedItemColor: styleContextFromBackground(backgroundColor).foregroundColorSoft,
         ),
@@ -283,119 +291,107 @@ class FlatStyle extends Style {
     );
   }
 
-  /// A text that uses the values provided unless overridden by the [styledText]'s [StyledTextOverride].
-  Widget rawStyledText({
-    required StyleContext styleContext,
-    required StyledText styledText,
-    required String fontFamily,
-    String? text,
-    Color? fontColor,
-    double? fontSize,
-    FontWeight? fontWeight,
-    FontStyle? fontStyle,
-    double? letterSpacing,
-    TextAlign? textAlign,
-    EdgeInsets? padding,
-  }) {
-    final nonDensePadding = styledText.paddingOverride ?? padding ?? EdgeInsets.zero;
+  @override
+  StyledTextStyle titleTextStyle(StyleContext styleContext) =>
+      titleTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Montserrat',
+        fontColor: styleContext.emphasisColor,
+        fontSize: 38,
+        textAlign: TextAlign.center,
+        letterSpacing: 2.5,
+        padding: const EdgeInsets.all(8),
+        transformer: (text) => text.toUpperCase(),
+      );
+
+  @override
+  StyledTextStyle subtitleTextStyle(StyleContext styleContext) =>
+      subtitleTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Quicksand',
+        fontColor: styleContext.foregroundColor,
+        fontSize: 28,
+        textAlign: TextAlign.center,
+        padding: const EdgeInsets.all(8),
+      );
+
+  @override
+  StyledTextStyle contentHeaderTextStyle(StyleContext styleContext) =>
+      contentHeaderTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Quicksand',
+        fontColor: styleContext.emphasisColor,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        padding: const EdgeInsets.all(4),
+      );
+
+  @override
+  StyledTextStyle contentSubtitleTextStyle(StyleContext styleContext) =>
+      contentSubtitleTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Lato',
+        fontColor: styleContext.foregroundColorSoft,
+        fontSize: 14,
+        padding: const EdgeInsets.all(4),
+      );
+
+  @override
+  StyledTextStyle bodyTextStyle(StyleContext styleContext) =>
+      bodyTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Lato',
+        fontColor: styleContext.foregroundColor,
+        fontSize: 14,
+        padding: const EdgeInsets.all(4),
+      );
+
+  @override
+  StyledTextStyle buttonTextStyle(StyleContext styleContext) =>
+      bodyTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Lato',
+        fontColor: styleContext.foregroundColor,
+        fontSize: 12,
+        padding: const EdgeInsets.all(4),
+        fontWeight: FontWeight.w600,
+        textAlign: TextAlign.center,
+        transformer: (text) => text.toUpperCase(),
+      );
+
+  Widget text(BuildContext context, StyleContext styleContext, StyledText text) {
+    final textStyle = text.getStyle(this, styleContext);
     return Padding(
-      padding: !styleContext.isDense ? nonDensePadding : EdgeInsets.zero,
+      padding: text.paddingOverride ?? textStyle.padding,
       child: Text(
-        text ?? styledText.text,
-        textAlign: styledText.textAlignOverride ?? textAlign,
-        style: GoogleFonts.getFont(styledText.fontFamilyOverride ?? fontFamily).copyWith(
-          color: styledText.fontColorOverride ?? fontColor,
-          fontSize: styledText.fontSizeOverride ?? fontSize,
-          fontWeight: styledText.fontWeightOverride ?? fontWeight,
-          fontStyle: styledText.fontStyleOverride ?? fontStyle,
-          letterSpacing: styledText.letterSpacingOverride ?? letterSpacing,
-          decoration: styledText.decorationOverride ?? TextDecoration.none,
+        textStyle.transformer.mapIfNonNull((transformer) => transformer(text.text)) ?? text.text,
+        textAlign: text.textAlignOverride ?? textStyle.textAlign,
+        style: GoogleFonts.getFont(text.fontFamilyOverride ?? textStyle.fontFamily).copyWith(
+          color: text.fontColorOverride ?? textStyle.fontColor,
+          fontSize: text.fontSizeOverride ?? textStyle.fontSize,
+          fontWeight: text.fontWeightOverride ?? textStyle.fontWeight,
+          fontStyle: text.fontStyleOverride ?? textStyle.fontStyle,
+          letterSpacing: text.letterSpacingOverride ?? textStyle.letterSpacing,
+          decoration: text.decorationOverride ?? TextDecoration.none,
         ),
-        overflow: styledText.overflowOverride ?? TextOverflow.clip,
-        maxLines: styledText.maxLinesOverride,
+        overflow: text.overflowOverride ?? TextOverflow.clip,
+        maxLines: text.maxLinesOverride,
       ),
     );
   }
 
-  @override
-  Widget titleText(BuildContext context, StyleContext styleContext, StyledTitleText titleText) {
-    return rawStyledText(
-      styleContext: styleContext,
-      styledText: titleText,
-      text: titleText.text.toUpperCase(),
-      fontFamily: titleFontFamily,
-      padding: const EdgeInsets.all(8),
-      fontColor: styleContext.emphasisColor,
-      fontSize: 38,
-      textAlign: TextAlign.center,
-      letterSpacing: 2.5,
-    );
-  }
-
-  @override
-  Widget subtitleText(BuildContext context, StyleContext styleContext, StyledSubtitleText subtitleText) {
-    return rawStyledText(
-      styleContext: styleContext,
-      styledText: subtitleText,
-      fontFamily: subtitleFontFamily,
-      padding: const EdgeInsets.all(8),
-      fontColor: styleContext.foregroundColor,
-      fontSize: 28,
-      textAlign: TextAlign.center,
-    );
-  }
-
-  @override
-  Widget contentHeaderText(BuildContext context, StyleContext styleContext, StyledContentHeaderText contentHeaderText) {
-    return rawStyledText(
-      styleContext: styleContext,
-      styledText: contentHeaderText,
-      fontFamily: subtitleFontFamily,
-      padding: const EdgeInsets.all(4),
-      fontColor: styleContext.emphasisColor,
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-    );
-  }
-
-  @override
-  Widget contentSubtitleText(
-      BuildContext context, StyleContext styleContext, StyledContentSubtitleText contentSubtitleText) {
-    return rawStyledText(
-      styleContext: styleContext,
-      styledText: contentSubtitleText,
-      fontFamily: bodyFontFamily,
-      padding: const EdgeInsets.all(4),
-      fontColor: styleContext.foregroundColorSoft,
-      fontSize: 14,
-    );
-  }
-
-  @override
-  Widget bodyText(BuildContext context, StyleContext styleContext, StyledBodyText bodyText) {
-    return rawStyledText(
-      styleContext: styleContext,
-      styledText: bodyText,
-      fontFamily: bodyFontFamily,
-      padding: const EdgeInsets.all(4),
-      fontColor: styleContext.foregroundColor,
-      fontSize: 14,
-    );
-  }
-
-  @override
-  Widget buttonText(BuildContext context, StyleContext styleContext, StyledButtonText buttonText) {
-    return rawStyledText(
-      styleContext: styleContext,
-      styledText: buttonText,
-      text: buttonText.text.toUpperCase(),
-      fontFamily: bodyFontFamily,
-      fontWeight: FontWeight.w600,
-      textAlign: TextAlign.center,
-      padding: const EdgeInsets.all(4),
-      fontColor: styleContext.foregroundColor,
-      fontSize: 12,
-      letterSpacing: 1,
+  Widget textSpan(BuildContext context, StyleContext styleContext, StyledTextSpan textSpan) {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: Text.rich(TextSpan(
+          children: textSpan.children
+              .map((text) => TextSpan(
+                  text: text.text,
+                  style: toTextStyle(
+                    styledTextStyle: text.getStyle(this, styleContext),
+                    overrides: text.overrides,
+                  )))
+              .toList())),
     );
   }
 
@@ -525,7 +521,7 @@ class FlatStyle extends Style {
           if (textField.label != null) StyledContentSubtitleText(textField.label!),
           TextFormField(
             initialValue: textField.initialText,
-            style: GoogleFonts.getFont(bodyFontFamily).copyWith(
+            style: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(
               color: styleContext.foregroundColor,
             ),
             readOnly: !textField.enabled,
@@ -569,7 +565,7 @@ class FlatStyle extends Style {
                 ),
               ),
               hintText: textField.hintText,
-              hintStyle: GoogleFonts.getFont(bodyFontFamily).copyWith(
+              hintStyle: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(
                 color: styleContext.emphasisColorSoft,
                 fontStyle: FontStyle.italic,
               ),
@@ -618,7 +614,8 @@ class FlatStyle extends Style {
               Icons.arrow_drop_down,
               paddingOverride: EdgeInsets.zero,
             ),
-            style: GoogleFonts.getFont(bodyFontFamily).copyWith(color: styleContext.foregroundColor),
+            style:
+                toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(color: styleContext.foregroundColor),
             decoration: InputDecoration(
               errorText: dropdown.errorText,
               filled: true,
@@ -1168,5 +1165,16 @@ class FlatStyle extends Style {
   /// Softens colors by making light colors darker and dark colors lighter.
   static Color softenColor(Color color) {
     return color.computeLuminance() < 0.5 ? color.lighten() : color.darken(5);
+  }
+
+  /// Converts a [styledTextStyle] to a [TextStyle] with optional overrides from [overrides].
+  static TextStyle toTextStyle({required StyledTextStyle styledTextStyle, StyledTextOverrides? overrides}) {
+    return GoogleFonts.getFont(overrides?.fontFamily ?? styledTextStyle.fontFamily).copyWith(
+      color: overrides?.fontColor ?? styledTextStyle.fontColor,
+      fontSize: overrides?.fontSize ?? styledTextStyle.fontSize,
+      fontWeight: overrides?.fontWeight ?? styledTextStyle.fontWeight,
+      fontStyle: overrides?.fontStyle ?? styledTextStyle.fontStyle,
+      letterSpacing: overrides?.letterSpacing ?? styledTextStyle.letterSpacing,
+    );
   }
 }

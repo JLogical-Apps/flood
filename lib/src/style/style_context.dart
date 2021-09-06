@@ -7,9 +7,6 @@ class StyleContext {
   final Color foregroundColor;
   final Color emphasisColor;
 
-  /// Whether the styled widgets should compose themselves in a dense format.
-  final bool isDense;
-
   Color get backgroundColorSoft => getSoftened(backgroundColor);
 
   Color get foregroundColorSoft => getSoftened(foregroundColor);
@@ -26,21 +23,18 @@ class StyleContext {
     required this.foregroundColor,
     required this.emphasisColor,
     required this.getSoftened,
-    this.isDense: false,
   });
 
   StyleContext copyWith({
     Color? backgroundColor,
     Color? foregroundColor,
     Color? emphasisColor,
-    bool? isDense,
   }) {
     return StyleContext(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       foregroundColor: foregroundColor ?? this.foregroundColor,
       emphasisColor: emphasisColor ?? this.emphasisColor,
       getSoftened: getSoftened,
-      isDense: isDense ?? this.isDense,
     );
   }
 }

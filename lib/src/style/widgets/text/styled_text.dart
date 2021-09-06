@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_overrides.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text_style.dart';
 
 abstract class StyledText extends StyledWidget {
   final String text;
@@ -11,6 +12,14 @@ abstract class StyledText extends StyledWidget {
     required this.text,
     this.overrides,
   }) : super(key: key);
+
+  @override
+  Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
+    return style.text(context, styleContext, this);
+  }
+
+  /// The root text style for the text.
+  StyledTextStyle getStyle(Style style, StyleContext styleContext);
 
   Color? get fontColorOverride => overrides?.fontColor;
 

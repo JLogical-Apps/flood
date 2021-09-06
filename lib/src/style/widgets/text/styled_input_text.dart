@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text_style.dart';
 
-class StyledInputText extends StyledWidget {
-  final String text;
-
-  final Color? color;
-
-  const StyledInputText(this.text, {Key? key, this.color}) : super(key: key);
+class StyledInputText extends StyledText {
+  const StyledInputText(String text, {Key? key, StyledTextOverrides? textOverrides})
+      : super(
+          key: key,
+          text: text,
+          overrides: textOverrides,
+        );
 
   @override
-  Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return StyledBodyText(
-      text,
-      textOverrides: StyledTextOverrides(
-        fontWeight: FontWeight.bold,
-        fontColor: color ?? styleContext.emphasisColor,
-      ),
-    );
+  StyledTextStyle getStyle(Style style, StyleContext styleContext) {
+    return style.bodyTextStyle(styleContext).copyWith(
+          fontColor: styleContext.emphasisColor,
+          fontWeight: FontWeight.bold,
+        );
   }
 }

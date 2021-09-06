@@ -170,38 +170,6 @@ class TestHomePage extends HookWidget {
                     ),
                   ],
                 ),
-                Wrap(
-                  children: [
-                    StyledBodyText('This is text that is '),
-                    StyledBodyText(
-                      'NOT',
-                      textOverrides: StyledTextOverrides(fontWeight: FontWeight.bold),
-                    ),
-                    StyledBodyText(' dense. '),
-                    StyledBodyText(
-                      'Dense',
-                      textOverrides: StyledTextOverrides(fontColor: Colors.orange),
-                    ),
-                    StyledBodyText(' will shrink padding of text widgets.'),
-                  ],
-                ),
-                Dense(
-                  child: Wrap(
-                    children: [
-                      StyledBodyText('This is text that is '),
-                      StyledBodyText(
-                        'ACTUALLY',
-                        textOverrides: StyledTextOverrides(fontWeight: FontWeight.bold),
-                      ),
-                      StyledBodyText(' dense. '),
-                      StyledBodyText(
-                        'Dense',
-                        textOverrides: StyledTextOverrides(fontColor: Colors.orange),
-                      ),
-                      StyledBodyText(' will shrink padding of text widgets.'),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),

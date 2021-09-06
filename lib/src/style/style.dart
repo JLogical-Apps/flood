@@ -13,11 +13,12 @@ import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_onboarding_page.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_page.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_tabbed_page.dart';
-import 'package:jlogical_utils/src/style/widgets/text/styled_content_header_text.dart';
-import 'package:jlogical_utils/src/style/widgets/text/styled_subtitle_text.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text_span.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/content/styled_content.dart';
+import 'widgets/text/styled_text_style.dart';
 
 /// Abstract class for all styles.
 /// The Style defines all the building blocks of what a style should look like.
@@ -44,30 +45,21 @@ abstract class Style {
 
   // === TEXT ===
 
-  /// Text to be displayed as a title.
-  Widget titleText(BuildContext context, StyleContext styleContext, StyledTitleText titleText) =>
-      throw UnimplementedError();
+  StyledTextStyle titleTextStyle(StyleContext styleContext) => throw UnimplementedError();
 
-  /// Text to be displayed under the title.
-  Widget subtitleText(BuildContext context, StyleContext styleContext, StyledSubtitleText headerText) =>
-      throw UnimplementedError();
+  StyledTextStyle subtitleTextStyle(StyleContext styleContext) => throw UnimplementedError();
 
-  /// Text to be displayed as a header to content.
-  Widget contentHeaderText(
-          BuildContext context, StyleContext styleContext, StyledContentHeaderText contentHeaderText) =>
-      throw UnimplementedError();
+  StyledTextStyle contentHeaderTextStyle(StyleContext styleContext) => throw UnimplementedError();
 
-  /// Text to be displayed as a subtitle to content.
-  Widget contentSubtitleText(
-          BuildContext context, StyleContext styleContext, StyledContentSubtitleText contentSubtitleText) =>
-      throw UnimplementedError();
+  StyledTextStyle contentSubtitleTextStyle(StyleContext styleContext) => throw UnimplementedError();
 
-  /// Text to be displayed in a body.
-  Widget bodyText(BuildContext context, StyleContext styleContext, StyledBodyText bodyText) =>
-      throw UnimplementedError();
+  StyledTextStyle bodyTextStyle(StyleContext styleContext) => throw UnimplementedError();
 
-  /// Text to be displayed in a button.
-  Widget buttonText(BuildContext context, StyleContext styleContext, StyledButtonText buttonText) =>
+  StyledTextStyle buttonTextStyle(StyleContext styleContext) => throw UnimplementedError();
+
+  Widget text(BuildContext context, StyleContext styleContext, StyledText text) => throw UnimplementedError();
+
+  Widget textSpan(BuildContext context, StyleContext styleContext, StyledTextSpan textSpan) =>
       throw UnimplementedError();
 
   // === INPUT ===

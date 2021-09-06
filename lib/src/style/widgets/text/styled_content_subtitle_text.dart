@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_overrides.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text_style.dart';
 
 class StyledContentSubtitleText extends StyledText {
   const StyledContentSubtitleText(String text, {Key? key, StyledTextOverrides? textOverrides})
@@ -12,7 +13,7 @@ class StyledContentSubtitleText extends StyledText {
         );
 
   @override
-  Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return style.contentSubtitleText(context, styleContext, this);
+  StyledTextStyle getStyle(Style style, StyleContext styleContext) {
+    return style.contentSubtitleTextStyle(styleContext);
   }
 }

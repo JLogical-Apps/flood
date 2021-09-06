@@ -17,15 +17,9 @@ class DeltaStyle extends FlatStyle {
     Color primaryColor: Colors.green,
     Color backgroundColor: Colors.white,
     this.accentColor: Colors.purple,
-    String titleFontFamily: 'Montserrat',
-    String subtitleFontFamily: 'Quicksand',
-    String bodyFontFamily: 'Lato',
   }) : super(
           primaryColor: primaryColor,
           backgroundColor: backgroundColor,
-          titleFontFamily: titleFontFamily,
-          subtitleFontFamily: subtitleFontFamily,
-          bodyFontFamily: bodyFontFamily,
         );
 
   @override
