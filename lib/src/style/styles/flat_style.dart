@@ -1049,9 +1049,15 @@ class FlatStyle extends Style {
                   child: StyleContextProvider(
                     styleContext: styleContextFromBackground(styleContext.backgroundColorSoft),
                     child: Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(2),
                       child: StyledCategory(
-                        headerText: dialog.titleText,
+                        header: dialog.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
+                              titleText,
+                              textOverrides: StyledTextOverrides(
+                                textAlign: TextAlign.center,
+                                padding: EdgeInsets.zero,
+                              ),
+                            )),
                         children: [dialog.body],
                       ),
                     ),

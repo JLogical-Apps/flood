@@ -13,18 +13,24 @@ class StyledDialog<T> {
   /// The body of the dialog.
   final Widget body;
 
+  /// Transforms the result of the popped value.
+  /// If null, the dialog simply returns the popped value.
+  final T Function(dynamic result)? resultTransformer;
+
   const StyledDialog({
     this.titleText,
     this.title,
     required this.body,
+    this.resultTransformer,
   });
 
-  Future<T?> show(BuildContext context) async {
+  Future<T> show(BuildContext context) async {
     final style = context.style();
-    final result = await style.showDialog<T?>(
+    final poppedValue = await style.showDialog(
       context: context,
       dialog: this,
     );
+    T result = resultTransformer.mapIfNonNull((transformer) => transformer(poppedValue)) ?? poppedValue;
     return result;
   }
 
@@ -34,6 +40,7 @@ class StyledDialog<T> {
     Widget? title,
     required List<Widget> children,
     String confirmText: 'Ok',
+    String cancelText: 'Cancel',
   }) {
     final style = context.style();
     final smartFormController = SmartFormController();
@@ -41,16 +48,29 @@ class StyledDialog<T> {
     return StyledDialog(
       titleText: titleText,
       title: title,
+      resultTransformer: (value) => value == true,
       body: SmartForm(
         controller: smartFormController,
         child: Column(
           children: [
             ...children,
-            StyledButton.high(
-              text: confirmText,
-              onTapped: () {
-                style.navigateBack(context: context, result: true);
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                StyledButton.low(
+                  text: cancelText,
+                  onTapped: () {
+                    style.navigateBack(context: context, result: false);
+                  },
+                ),
+                SizedBox(width: 20),
+                StyledButton.high(
+                  text: confirmText,
+                  onTapped: () {
+                    style.navigateBack(context: context, result: true);
+                  },
+                ),
+              ],
             ),
           ],
         ),
