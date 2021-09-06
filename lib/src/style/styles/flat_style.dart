@@ -78,21 +78,23 @@ class FlatStyle extends Style {
           ),
           body: StyleContextProvider(
             styleContext: styleContextFromBackground(backgroundColor),
-            child: SmartRefresher(
-              controller: refreshController,
-              header: WaterDropMaterialHeader(
-                color: styleContext.emphasisColor,
-                backgroundColor: styleContext.backgroundColorSoft,
-              ),
-              enablePullDown: styledPage.onRefresh != null,
-              onRefresh: styledPage.onRefresh != null
-                  ? () async {
-                      await styledPage.onRefresh!();
-                      refreshController.refreshCompleted();
-                    }
-                  : null,
-              child: styledPage.body,
-            ),
+            child: styledPage.onRefresh == null
+                ? styledPage.body
+                : SmartRefresher(
+                    controller: refreshController,
+                    header: WaterDropMaterialHeader(
+                      color: styleContext.emphasisColor,
+                      backgroundColor: styleContext.backgroundColorSoft,
+                    ),
+                    enablePullDown: styledPage.onRefresh != null,
+                    onRefresh: styledPage.onRefresh != null
+                        ? () async {
+                            await styledPage.onRefresh!();
+                            refreshController.refreshCompleted();
+                          }
+                        : null,
+                    child: styledPage.body,
+                  ),
           ),
         );
       },
