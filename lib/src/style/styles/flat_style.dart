@@ -1052,12 +1052,13 @@ class FlatStyle extends Style {
                       padding: EdgeInsets.all(2),
                       child: StyledCategory(
                         header: dialog.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
-                              titleText,
-                              textOverrides: StyledTextOverrides(
-                                textAlign: TextAlign.center,
-                                padding: EdgeInsets.zero,
-                              ),
-                            )),
+                                  titleText,
+                                  textOverrides: StyledTextOverrides(
+                                    textAlign: TextAlign.center,
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                )) ??
+                            dialog.title,
                         children: [dialog.body],
                       ),
                     ),
