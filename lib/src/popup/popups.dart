@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/src/form/form.dart';
+import 'package:jlogical_utils/src/form/export.dart';
 
 import 'color_popup.dart';
 import 'input_popup.dart';
@@ -7,7 +7,8 @@ import 'input_popup.dart';
 /// Helper class that shows popups.
 class Popup {
   /// Shows a dialog with a message.
-  static Future<void> message(BuildContext context, {required String title, required String message, String okText: 'OK'}) async {
+  static Future<void> message(BuildContext context,
+      {required String title, required String message, String okText: 'OK'}) async {
     await showDialog(
         context: context,
         barrierDismissible: true,
@@ -28,7 +29,8 @@ class Popup {
   }
 
   /// Shows a dialog that asks a yes/no question. Cancelling the dialog counts as a no.
-  static Future<bool> yesNo(BuildContext context, {required String title, required String message, String noMsg: "NEVERMIND", String yesMsg: "OK"}) async {
+  static Future<bool> yesNo(BuildContext context,
+      {required String title, required String message, String noMsg: "NEVERMIND", String yesMsg: "OK"}) async {
     var output = await showDialog(
         context: context,
         barrierDismissible: true,
