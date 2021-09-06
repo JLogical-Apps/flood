@@ -24,20 +24,17 @@ class TestOnboardingPage extends HookWidget {
       child: StyledOnboardingPage(
         sections: [
           OnboardingPageSection(
-            title: StyledTitleText(styleName),
-            body: StyledBodyText(
-                'This is a sample onboarding page with the $styleName theme. The logo above is just for sample purposes. Scroll through to see a demo of the style.'),
+            titleText: styleName,
+            bodyText:
+                'This is a sample onboarding page with the $styleName theme. The logo above is just for sample purposes. Scroll through to see a demo of the style.',
             header: Image.asset(
               'assets/logo_foreground.png',
               width: 400,
             ),
           ),
           OnboardingPageSection(
-            header: StyledIcon(
-              Icons.text_fields,
-              size: 40,
-            ),
-            title: StyledTitleText('Text'),
+            headerIcon: Icons.text_fields,
+            titleText: 'Text',
             body: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText(
@@ -77,11 +74,8 @@ class TestOnboardingPage extends HookWidget {
             ),
           ),
           OnboardingPageSection(
-            header: StyledIcon(
-              Icons.smart_button,
-              size: 40,
-            ),
-            title: StyledTitleText('Buttons'),
+            headerIcon: Icons.smart_button,
+            titleText: 'Buttons',
             body: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText('Buttons determine their colors based on an emphasis.'),
@@ -131,11 +125,8 @@ class TestOnboardingPage extends HookWidget {
             ),
           ),
           OnboardingPageSection(
-            header: StyledIcon(
-              Icons.article,
-              size: 40,
-            ),
-            title: StyledTitleText('Content'),
+            headerIcon: Icons.article,
+            titleText: 'Content',
             body: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText('Content essentially is a container that holds data about... something.'),
@@ -189,11 +180,8 @@ class TestOnboardingPage extends HookWidget {
             ),
           ),
           OnboardingPageSection(
-            header: StyledIcon(
-              Icons.list_alt,
-              size: 40,
-            ),
-            title: StyledTitleText('Categories'),
+            headerIcon: Icons.list_alt,
+            titleText: 'Categories',
             body: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText(
@@ -252,11 +240,8 @@ class TestOnboardingPage extends HookWidget {
             ),
           ),
           OnboardingPageSection(
-            header: StyledIcon(
-              Icons.extension,
-              size: 40,
-            ),
-            title: StyledTitleText('Other'),
+            headerIcon: Icons.extension,
+            titleText: 'Other',
             body: ScrollColumn.withScrollbar(
               children: [
                 StyledBodyText('Here are some other styled widgets as well.'),

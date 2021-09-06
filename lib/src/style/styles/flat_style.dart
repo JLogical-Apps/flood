@@ -203,16 +203,35 @@ class FlatStyle extends Style {
                             .map((section) => SafeArea(
                                   child: Column(
                                     children: [
-                                      Expanded(
-                                        child: Center(child: section.header),
-                                        flex: 1,
+                                      StyleContextProvider(
+                                        styleContext: styleContextFromBackground(backgroundColor),
+                                        child: Expanded(
+                                          child: Center(
+                                              child: section.headerIcon.mapIfNonNull((icon) => StyledIcon.high(
+                                                        icon,
+                                                        size: 60,
+                                                      )) ??
+                                                  section.header),
+                                          flex: 1,
+                                        ),
                                       ),
                                       Expanded(
-                                        child: Center(child: section.title),
+                                        child: Center(
+                                            child: section.titleText.mapIfNonNull((text) => StyledTitleText(
+                                                      text,
+                                                    )) ??
+                                                section.title),
                                         flex: 1,
                                       ),
+                                      SizedBox(
+                                        height: 40,
+                                      ),
                                       Expanded(
-                                        child: Center(child: section.body),
+                                        child: Center(
+                                            child: section.bodyText.mapIfNonNull((text) => StyledBodyText(
+                                                      text,
+                                                    )) ??
+                                                section.body),
                                         flex: 2,
                                       ),
                                       SizedBox(

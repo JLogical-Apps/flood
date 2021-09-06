@@ -22,9 +22,21 @@ class StyledOnboardingPage extends StyledWidget {
 }
 
 class OnboardingPageSection {
-  final Widget header;
-  final Widget title;
-  final Widget body;
+  final IconData? headerIcon;
+  final Widget? header;
 
-  const OnboardingPageSection({required this.header, required this.title, required this.body});
+  final String? titleText;
+  final Widget? title;
+
+  final String? bodyText;
+  final Widget? body;
+
+  const OnboardingPageSection({
+    this.headerIcon,
+    this.header,
+    this.titleText,
+    this.title,
+    this.bodyText,
+    this.body,
+  });
 }
