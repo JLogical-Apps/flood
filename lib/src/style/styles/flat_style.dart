@@ -800,18 +800,20 @@ class FlatStyle extends Style {
               title: header != null ? header : body,
               subtitle: header != null ? body : null,
               leading: content.leading,
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (content.trailing != null) content.trailing!,
-                  if (content.actions.isNotEmpty)
-                    actionButton(
-                      context,
-                      styleContext: styleContext,
-                      actions: content.actions,
-                    ),
-                ],
-              ),
+              trailing: content.trailing != null || content.actions.isNotEmpty
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (content.trailing != null) content.trailing!,
+                        if (content.actions.isNotEmpty)
+                          actionButton(
+                            context,
+                            styleContext: styleContext,
+                            actions: content.actions,
+                          ),
+                      ],
+                    )
+                  : null,
             ),
             ...content.children,
           ],
@@ -850,18 +852,20 @@ class FlatStyle extends Style {
                     title: header != null ? header : body,
                     subtitle: header != null ? body : null,
                     leading: category.leading,
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (category.trailing != null) category.trailing!,
-                        if (category.actions.isNotEmpty)
-                          actionButton(
-                            context,
-                            styleContext: styleContext,
-                            actions: category.actions,
-                          ),
-                      ],
-                    ),
+                    trailing: category.trailing != null || category.actions.isNotEmpty
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (category.trailing != null) category.trailing!,
+                              if (category.actions.isNotEmpty)
+                                actionButton(
+                                  context,
+                                  styleContext: styleContext,
+                                  actions: category.actions,
+                                ),
+                            ],
+                          )
+                        : null,
                   ),
                 ...category.children
               ],
@@ -881,21 +885,25 @@ class FlatStyle extends Style {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (header != null || body != null || category.leading != null || category.trailing != null)
-                  ListTile(
-                    title: header != null ? header : body,
-                    subtitle: header != null ? body : null,
-                    leading: category.leading,
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (category.trailing != null) category.trailing!,
-                        if (category.actions.isNotEmpty)
-                          actionButton(
-                            context,
-                            styleContext: styleContext,
-                            actions: category.actions,
-                          ),
-                      ],
+                  Container(
+                    child: ListTile(
+                      title: header != null ? header : body,
+                      subtitle: header != null ? body : null,
+                      leading: category.leading,
+                      trailing: category.trailing != null || category.actions.isNotEmpty
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (category.trailing != null) category.trailing!,
+                                if (category.actions.isNotEmpty)
+                                  actionButton(
+                                    context,
+                                    styleContext: styleContext,
+                                    actions: category.actions,
+                                  ),
+                              ],
+                            )
+                          : null,
                     ),
                   ),
                 ...category.children
@@ -915,18 +923,20 @@ class FlatStyle extends Style {
                   title: header != null ? header : body,
                   subtitle: header != null ? body : null,
                   leading: category.leading,
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (category.trailing != null) category.trailing!,
-                      if (category.actions.isNotEmpty)
-                        actionButton(
-                          context,
-                          styleContext: styleContext,
-                          actions: category.actions,
-                        ),
-                    ],
-                  ),
+                  trailing: category.trailing != null || category.actions.isNotEmpty
+                      ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (category.trailing != null) category.trailing!,
+                            if (category.actions.isNotEmpty)
+                              actionButton(
+                                context,
+                                styleContext: styleContext,
+                                actions: category.actions,
+                              ),
+                          ],
+                        )
+                      : null,
                 ),
               ...category.children
             ],
