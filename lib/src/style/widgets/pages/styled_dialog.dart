@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 
 /// Not a widget. Used to provide information for [Style.showDialog].
-class StyledDialog {
+class StyledDialog<T> {
   /// The title of the dialog.
   final String? titleText;
 
@@ -16,4 +18,52 @@ class StyledDialog {
     this.title,
     required this.body,
   });
+
+  Future<T?> show(BuildContext context) async {
+    final style = context.style();
+    final result = await style.showDialog<T?>(
+      context: context,
+      dialog: this,
+    );
+    return result;
+  }
+
+  /// Wraps a styled dialog around a smart form and returns the data from the samrt form.
+  static StyledDialog<Map<String, dynamic>?> smartForm({
+    required BuildContext context,
+    String? titleText,
+    Widget? title,
+    required Widget body,
+    Widget Function(SmartFormController controller)? confirmButtonBuilder,
+  }) {
+    final style = context.style();
+    final smartFormController = SmartFormController();
+
+    final _confirmButtonBuilder = confirmButtonBuilder ??
+        (controller) => StyledButton.high(
+              text: 'Save',
+              icon: Icons.save,
+              onTapped: () async {
+                final result = await controller.validate();
+                if (result.isValid) {
+                  style.navigateBack(context: context, result: result.valueByName);
+                }
+              },
+            );
+    final confirmButton = _confirmButtonBuilder(smartFormController);
+
+    return StyledDialog(
+      titleText: titleText,
+      title: title,
+      body: SmartForm(
+        controller: smartFormController,
+        child: Column(
+          children: [
+            body,
+            confirmButton,
+          ],
+        ),
+      ),
+    );
+  }
 }

@@ -8,7 +8,6 @@ export 'fields/smart_text_field.dart';
 export 'smart_form.dart';
 export 'smart_form_controller.dart';
 export 'smart_form_data.dart';
-export 'smart_form_extensions.dart';
 export 'smart_form_field.dart';
 export 'smart_form_update_builder.dart';
 export 'validation/validation.dart';
