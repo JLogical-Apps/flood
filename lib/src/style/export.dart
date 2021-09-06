@@ -26,6 +26,7 @@ export 'widgets/misc/styled_chip.dart';
 export 'widgets/misc/styled_divider.dart';
 export 'widgets/misc/styled_icon.dart';
 export 'widgets/misc/styled_loading_indicator.dart';
+export 'widgets/modifier/dense.dart';
 export 'widgets/pages/styled_dialog.dart';
 export 'widgets/pages/styled_error_page.dart';
 export 'widgets/pages/styled_loading_page.dart';

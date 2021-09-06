@@ -285,6 +285,7 @@ class FlatStyle extends Style {
 
   /// A text that uses the values provided unless overridden by the [styledText]'s [StyledTextOverride].
   Widget rawStyledText({
+    required StyleContext styleContext,
     required StyledText styledText,
     required String fontFamily,
     String? text,
@@ -296,8 +297,9 @@ class FlatStyle extends Style {
     TextAlign? textAlign,
     EdgeInsets? padding,
   }) {
+    final nonDensePadding = styledText.paddingOverride ?? padding ?? EdgeInsets.zero;
     return Padding(
-      padding: styledText.paddingOverride ?? padding ?? EdgeInsets.zero,
+      padding: !styleContext.isDense ? nonDensePadding : EdgeInsets.zero,
       child: Text(
         text ?? styledText.text,
         textAlign: styledText.textAlignOverride ?? textAlign,
@@ -318,6 +320,7 @@ class FlatStyle extends Style {
   @override
   Widget titleText(BuildContext context, StyleContext styleContext, StyledTitleText titleText) {
     return rawStyledText(
+      styleContext: styleContext,
       styledText: titleText,
       text: titleText.text.toUpperCase(),
       fontFamily: titleFontFamily,
@@ -332,6 +335,7 @@ class FlatStyle extends Style {
   @override
   Widget subtitleText(BuildContext context, StyleContext styleContext, StyledSubtitleText subtitleText) {
     return rawStyledText(
+      styleContext: styleContext,
       styledText: subtitleText,
       fontFamily: subtitleFontFamily,
       padding: const EdgeInsets.all(8),
@@ -344,6 +348,7 @@ class FlatStyle extends Style {
   @override
   Widget contentHeaderText(BuildContext context, StyleContext styleContext, StyledContentHeaderText contentHeaderText) {
     return rawStyledText(
+      styleContext: styleContext,
       styledText: contentHeaderText,
       fontFamily: subtitleFontFamily,
       padding: const EdgeInsets.all(4),
@@ -357,6 +362,7 @@ class FlatStyle extends Style {
   Widget contentSubtitleText(
       BuildContext context, StyleContext styleContext, StyledContentSubtitleText contentSubtitleText) {
     return rawStyledText(
+      styleContext: styleContext,
       styledText: contentSubtitleText,
       fontFamily: bodyFontFamily,
       padding: const EdgeInsets.all(4),
@@ -368,6 +374,7 @@ class FlatStyle extends Style {
   @override
   Widget bodyText(BuildContext context, StyleContext styleContext, StyledBodyText bodyText) {
     return rawStyledText(
+      styleContext: styleContext,
       styledText: bodyText,
       fontFamily: bodyFontFamily,
       padding: const EdgeInsets.all(4),
@@ -379,6 +386,7 @@ class FlatStyle extends Style {
   @override
   Widget buttonText(BuildContext context, StyleContext styleContext, StyledButtonText buttonText) {
     return rawStyledText(
+      styleContext: styleContext,
       styledText: buttonText,
       text: buttonText.text.toUpperCase(),
       fontFamily: bodyFontFamily,
