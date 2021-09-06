@@ -28,7 +28,7 @@ class StyledDialog<T> {
     return result;
   }
 
-  /// Wraps a styled dialog around a smart form and returns the data from the samrt form.
+  /// Wraps a styled dialog around a smart form and returns the data from the smart form.
   static StyledDialog<Map<String, dynamic>?> smartForm({
     required BuildContext context,
     String? titleText,
