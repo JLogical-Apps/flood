@@ -128,4 +128,9 @@ extension BuildContextExtensions on BuildContext {
   Style style() {
     return Provider.of<Style>(this, listen: false);
   }
+
+  /// Returns the StyleContext above this widget in the widget tree.
+  StyleContext styleContext() {
+    return Provider.of<StyleContext>(this, listen: false);
+  }
 }

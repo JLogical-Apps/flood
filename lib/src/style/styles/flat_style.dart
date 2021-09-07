@@ -124,6 +124,7 @@ class FlatStyle extends Style {
       final backgroundColor = tabbedPage.backgroundColor ?? page.backgroundColor ?? styleContext.backgroundColor;
       final title = tabbedPage.title ?? page.title;
       final actions = tabbedPage.actions ?? page.actions ?? [];
+      final tabColor = tabbedPage.tabsColor ?? styleContext.backgroundColorSoft;
 
       return Scaffold(
         backgroundColor: backgroundColor,
@@ -156,7 +157,8 @@ class FlatStyle extends Style {
           children: tabbedPage.pages.map((page) => page.body).toList(),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: styleContext.backgroundColorSoft,
+          backgroundColor: tabColor,
+          elevation: 0,
           currentIndex: pageIndex.value,
           onTap: (index) => pageController.animateToPage(
             index,
@@ -166,7 +168,7 @@ class FlatStyle extends Style {
           items: tabbedPage.pages
               .map((page) => BottomNavigationBarItem(
                     icon: page.icon ?? Container(),
-                    backgroundColor: styleContext.backgroundColorSoft,
+                    backgroundColor: tabColor,
                     label: page.title,
                   ))
               .toList(),

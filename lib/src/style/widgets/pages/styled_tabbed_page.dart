@@ -12,6 +12,9 @@ class StyledTabbedPage extends StyledWidget {
   /// If not null, overrides the background color of the page.
   final Color? backgroundColor;
 
+  /// If not null, overrides the background color of the tabs.
+  final Color? tabsColor;
+
   /// Overrides the currently selected tab's actions.
   final List<ActionItem>? actions;
 
@@ -19,6 +22,7 @@ class StyledTabbedPage extends StyledWidget {
     required this.pages,
     this.title,
     this.backgroundColor,
+    this.tabsColor,
     this.actions,
   });
 
