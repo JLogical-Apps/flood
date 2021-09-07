@@ -135,6 +135,8 @@ class FlatStyle extends Style {
               fontWeight: FontWeight.bold,
             ),
           ),
+          elevation: 0,
+          centerTitle: true,
           foregroundColor: styleContext.emphasisColor,
           iconTheme: IconThemeData(color: styleContext.emphasisColor),
           actions: [
