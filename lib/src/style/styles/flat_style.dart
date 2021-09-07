@@ -640,17 +640,24 @@ class FlatStyle extends Style {
             style:
                 toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(color: styleContext.foregroundColor),
             decoration: InputDecoration(
-              errorText: dropdown.errorText,
-              filled: true,
-              fillColor: styleContext.backgroundColorSoft,
-              focusedBorder: InputBorder.none,
-              enabledBorder: OutlineInputBorder(
+                errorText: dropdown.errorText,
+                filled: true,
+                fillColor: styleContext.backgroundColorSoft,
+                focusedBorder: InputBorder.none,
+                enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: styleContext.foregroundColor,
                     width: 0.5,
-                  )),
-            ),
+                  ),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: Colors.red,
+                    width: 1,
+                  ),
+                )),
             items: [
               if (dropdown.canBeNone) null,
               ...dropdown.options,
@@ -812,7 +819,7 @@ class FlatStyle extends Style {
       elevation: 0,
       margin: EdgeInsets.all(8),
       color: backgroundColor,
-      borderRadius: content.borderRadius,
+      borderRadius: content.borderRadius ?? BorderRadius.circular(12),
       splashColor: softenColor(backgroundColor).withOpacity(0.8),
       onTap: content.onTapped,
       child: StyleContextProvider(

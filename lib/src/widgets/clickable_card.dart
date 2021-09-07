@@ -35,6 +35,7 @@ class ClickableCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: color,
+      elevation: elevation,
       margin: margin,
       shape: RoundedRectangleBorder(
         borderRadius: borderRadius ?? BorderRadius.circular(12),
