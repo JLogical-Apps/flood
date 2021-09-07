@@ -1003,7 +1003,10 @@ class FlatStyle extends Style {
                       padding: EdgeInsets.all(8),
                       child: StyledCategory(
                         headerText: dialog.titleText,
-                        children: [dialog.body],
+                        children: [
+                          dialog.body,
+                          SafeArea(child: Container()),
+                        ],
                       ),
                     ),
                   ),
