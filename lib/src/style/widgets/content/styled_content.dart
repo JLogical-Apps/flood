@@ -27,6 +27,9 @@ class StyledContent extends StyledWidget {
   /// Actions that can be performed associated with the category.
   final List<ActionItem> actions;
 
+  /// If non-null, overrides the background color.
+  final Color? backgroundColorOverride;
+
   /// If non-null, overrides children's emphasis color.
   final Color? emphasisColorOverride;
 
@@ -48,6 +51,7 @@ class StyledContent extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.backgroundColorOverride,
     this.emphasisColorOverride,
     this.borderRadius,
     this.emphasis: Emphasis.low,
@@ -64,6 +68,7 @@ class StyledContent extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.backgroundColorOverride,
     this.emphasisColorOverride,
     this.borderRadius,
     this.onTapped,
@@ -80,6 +85,7 @@ class StyledContent extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.backgroundColorOverride,
     this.emphasisColorOverride,
     this.borderRadius,
     this.onTapped,
@@ -96,6 +102,7 @@ class StyledContent extends StyledWidget {
     this.trailing,
     this.children: const [],
     this.actions: const [],
+    this.backgroundColorOverride,
     this.emphasisColorOverride,
     this.borderRadius,
     this.onTapped,

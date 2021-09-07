@@ -790,17 +790,16 @@ class FlatStyle extends Style {
   @override
   Widget content(BuildContext context, StyleContext styleContext, StyledContent content) {
     // Flat Style treats low and medium emphasis contents as the same.
-    final backgroundColor = content.emphasis.map(
-      low: () => styleContext.backgroundColorSoft,
-      medium: () => styleContext.backgroundColorSoft,
-      high: () => styleContext.emphasisColor,
-    );
+    final backgroundColor = content.backgroundColorOverride ??
+        content.emphasis.map<Color>(
+          low: () => styleContext.backgroundColorSoft,
+          medium: () => styleContext.backgroundColorSoft,
+          high: () => styleContext.emphasisColor,
+        );
 
-    final newStyleContext = content.emphasisColorOverride == null
-        ? styleContextFromBackground(backgroundColor)
-        : styleContextFromBackground(backgroundColor).copyWith(
-            emphasisColor: content.emphasisColorOverride,
-          );
+    final newStyleContext = styleContextFromBackground(backgroundColor).copyWith(
+      emphasisColor: content.emphasisColorOverride,
+    );
 
     final header = content.headerText != null ? StyledContentHeaderText(content.headerText!) : content.header;
     final body = content.bodyText != null ? StyledContentSubtitleText(content.bodyText!) : content.body;
@@ -815,25 +814,26 @@ class FlatStyle extends Style {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(
-              title: header != null ? header : body,
-              subtitle: header != null ? body : null,
-              leading: content.leading,
-              trailing: content.trailing != null || content.actions.isNotEmpty
-                  ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (content.trailing != null) content.trailing!,
-                        if (content.actions.isNotEmpty)
-                          actionButton(
-                            context,
-                            styleContext: styleContext,
-                            actions: content.actions,
-                          ),
-                      ],
-                    )
-                  : null,
-            ),
+            if (header != null || content.leading != null || content.trailing != null || content.actions.isNotEmpty)
+              ListTile(
+                title: header != null ? header : body,
+                subtitle: header != null ? body : null,
+                leading: content.leading,
+                trailing: content.trailing != null || content.actions.isNotEmpty
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (content.trailing != null) content.trailing!,
+                          if (content.actions.isNotEmpty)
+                            actionButton(
+                              context,
+                              styleContext: styleContext,
+                              actions: content.actions,
+                            ),
+                        ],
+                      )
+                    : null,
+              ),
             ...content.children,
           ],
         ),
@@ -1176,7 +1176,7 @@ class FlatStyle extends Style {
     final isBackgroundVariant = _isBackgroundVariant(backgroundColor);
     final isNeutralBackground = _isNeutralColor(backgroundColor);
 
-    final foregroundColor = backgroundColor.computeLuminance() < 0.5 ? Colors.white : Colors.black;
+    final foregroundColor = backgroundColor.computeLuminance() < 0.6 ? Colors.white : Colors.black;
     final emphasisColor = (isBackgroundVariant || isNeutralBackground) ? primaryColor : foregroundColor;
 
     return StyleContext(
