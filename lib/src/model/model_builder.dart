@@ -33,6 +33,22 @@ class ModelBuilder<V> extends HookWidget {
     this.errorBuilder: _scaffoldErrorBuilder,
   });
 
+  ModelBuilder.styled({
+    Key? key,
+    required this.model,
+    required this.builder,
+    this.loadingWidget: const StyledLoadingIndicator(),
+    this.errorBuilder: _styledErrorBuilder,
+  }) : super(key: key);
+
+  ModelBuilder.styledPage({
+    Key? key,
+    required this.model,
+    required this.builder,
+    this.loadingWidget: const StyledLoadingPage(),
+    this.errorBuilder: _styledScaffoldErrorBuilder,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final maybeValue = useModel(model).value;
@@ -51,4 +67,12 @@ class ModelBuilder<V> extends HookWidget {
       );
 
   static Widget _scaffoldErrorBuilder(dynamic error) => ErrorScaffold(error: error);
+
+  static Widget _styledErrorBuilder(dynamic error) => StyledErrorText(error.toString());
+
+  static Widget _styledScaffoldErrorBuilder(dynamic error) => StyledPage(
+        body: Center(
+          child: StyledErrorText(error.toString()),
+        ),
+      );
 }

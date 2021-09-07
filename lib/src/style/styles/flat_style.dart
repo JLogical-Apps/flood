@@ -17,6 +17,9 @@ import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_tabbed_page.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_error_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text_span.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text_style.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -31,16 +34,22 @@ class FlatStyle extends Style {
 
   Color get backgroundColorSoft => softenColor(backgroundColor);
 
-  final String titleFontFamily;
-  final String subtitleFontFamily;
-  final String bodyFontFamily;
+  final StyledTextStyle? titleTextStyleOverride;
+  final StyledTextStyle? subtitleTextStyleOverride;
+  final StyledTextStyle? contentHeaderTextStyleOverride;
+  final StyledTextStyle? contentSubtitleTextStyleOverride;
+  final StyledTextStyle? bodyTextStyleOverride;
+  final StyledTextStyle? buttonTextStyleOverride;
 
   FlatStyle({
     this.primaryColor: Colors.blue,
     this.backgroundColor: Colors.white,
-    this.titleFontFamily: 'Montserrat',
-    this.subtitleFontFamily: 'Quicksand',
-    this.bodyFontFamily: 'Lato',
+    this.titleTextStyleOverride,
+    this.subtitleTextStyleOverride,
+    this.contentHeaderTextStyleOverride,
+    this.contentSubtitleTextStyleOverride,
+    this.bodyTextStyleOverride,
+    this.buttonTextStyleOverride,
   });
 
   @override
@@ -49,34 +58,56 @@ class FlatStyle extends Style {
   @override
   Widget page(BuildContext context, StyleContext styleContext, StyledPage styledPage) {
     final backgroundColor = styledPage.backgroundColor ?? styleContext.backgroundColor;
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
-        backgroundColor: backgroundColor,
-        title: styledPage.title != null
-            ? StyledContentHeaderText(
-                styledPage.title!,
-                textOverrides: StyledTextOverrides(
-                  fontWeight: FontWeight.bold,
+    return HookBuilder(
+      builder: (context) {
+        final refreshController = useMemoized(() => RefreshController(initialRefresh: false));
+        return Scaffold(
+          backgroundColor: backgroundColor,
+          appBar: AppBar(
+            backgroundColor: backgroundColor,
+            title: styledPage.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
+                      titleText,
+                      textOverrides: StyledTextOverrides(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )) ??
+                styledPage.title,
+            elevation: 0,
+            centerTitle: true,
+            foregroundColor: styleContext.emphasisColor,
+            iconTheme: IconThemeData(color: styleContext.emphasisColor),
+            actions: [
+              if (styledPage.actions.isNotEmpty)
+                actionButton(
+                  context,
+                  styleContext: styleContext,
+                  actions: styledPage.actions,
+                  color: styleContext.emphasisColor,
                 ),
-              )
-            : null,
-        foregroundColor: styleContext.emphasisColor,
-        iconTheme: IconThemeData(color: styleContext.emphasisColor),
-        actions: [
-          if (styledPage.actions.isNotEmpty)
-            actionButton(
-              context,
-              styleContext: styleContext,
-              actions: styledPage.actions,
-              color: styleContext.emphasisColor,
-            ),
-        ],
-      ),
-      body: StyleContextProvider(
-        styleContext: styleContextFromBackground(backgroundColor),
-        child: styledPage.body,
-      ),
+            ],
+          ),
+          body: StyleContextProvider(
+            styleContext: styleContextFromBackground(backgroundColor),
+            child: styledPage.onRefresh == null
+                ? styledPage.body
+                : SmartRefresher(
+                    controller: refreshController,
+                    header: WaterDropMaterialHeader(
+                      color: styleContext.emphasisColor,
+                      backgroundColor: styleContext.backgroundColorSoft,
+                    ),
+                    enablePullDown: styledPage.onRefresh != null,
+                    onRefresh: styledPage.onRefresh != null
+                        ? () async {
+                            await styledPage.onRefresh!();
+                            refreshController.refreshCompleted();
+                          }
+                        : null,
+                    child: styledPage.body,
+                  ),
+          ),
+        );
+      },
     );
   }
 
@@ -104,6 +135,8 @@ class FlatStyle extends Style {
               fontWeight: FontWeight.bold,
             ),
           ),
+          elevation: 0,
+          centerTitle: true,
           foregroundColor: styleContext.emphasisColor,
           iconTheme: IconThemeData(color: styleContext.emphasisColor),
           actions: [
@@ -137,8 +170,8 @@ class FlatStyle extends Style {
                     label: page.title,
                   ))
               .toList(),
-          selectedLabelStyle: GoogleFonts.getFont(subtitleFontFamily),
-          unselectedLabelStyle: GoogleFonts.getFont(subtitleFontFamily),
+          selectedLabelStyle: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)),
+          unselectedLabelStyle: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)),
           selectedItemColor: styleContextFromBackground(backgroundColor).emphasisColor,
           unselectedItemColor: styleContextFromBackground(backgroundColor).foregroundColorSoft,
         ),
@@ -174,16 +207,35 @@ class FlatStyle extends Style {
                             .map((section) => SafeArea(
                                   child: Column(
                                     children: [
-                                      Expanded(
-                                        child: Center(child: section.header),
-                                        flex: 1,
+                                      StyleContextProvider(
+                                        styleContext: styleContextFromBackground(backgroundColor),
+                                        child: Expanded(
+                                          child: Center(
+                                              child: section.headerIcon.mapIfNonNull((icon) => StyledIcon.high(
+                                                        icon,
+                                                        size: 60,
+                                                      )) ??
+                                                  section.header),
+                                          flex: 1,
+                                        ),
                                       ),
                                       Expanded(
-                                        child: Center(child: section.title),
+                                        child: Center(
+                                            child: section.titleText.mapIfNonNull((text) => StyledTitleText(
+                                                      text,
+                                                    )) ??
+                                                section.title),
                                         flex: 1,
                                       ),
+                                      SizedBox(
+                                        height: 40,
+                                      ),
                                       Expanded(
-                                        child: Center(child: section.body),
+                                        child: Center(
+                                            child: section.bodyText.mapIfNonNull((text) => StyledBodyText(
+                                                      text,
+                                                    )) ??
+                                                section.body),
                                         flex: 2,
                                       ),
                                       SizedBox(
@@ -262,108 +314,107 @@ class FlatStyle extends Style {
     );
   }
 
-  /// A text that uses the values provided unless overridden by the [styledText]'s [StyledTextOverride].
-  Widget rawStyledText({
-    required StyledText styledText,
-    required String fontFamily,
-    String? text,
-    Color? fontColor,
-    double? fontSize,
-    FontWeight? fontWeight,
-    FontStyle? fontStyle,
-    double? letterSpacing,
-    TextAlign? textAlign,
-    EdgeInsets? padding,
-  }) {
+  @override
+  StyledTextStyle titleTextStyle(StyleContext styleContext) =>
+      titleTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Montserrat',
+        fontColor: styleContext.emphasisColor,
+        fontSize: 38,
+        textAlign: TextAlign.center,
+        letterSpacing: 2.5,
+        padding: const EdgeInsets.all(8),
+        transformer: (text) => text.toUpperCase(),
+      );
+
+  @override
+  StyledTextStyle subtitleTextStyle(StyleContext styleContext) =>
+      subtitleTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Quicksand',
+        fontColor: styleContext.foregroundColor,
+        fontSize: 28,
+        textAlign: TextAlign.center,
+        padding: const EdgeInsets.all(8),
+      );
+
+  @override
+  StyledTextStyle contentHeaderTextStyle(StyleContext styleContext) =>
+      contentHeaderTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Quicksand',
+        fontColor: styleContext.emphasisColor,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        padding: const EdgeInsets.all(4),
+      );
+
+  @override
+  StyledTextStyle contentSubtitleTextStyle(StyleContext styleContext) =>
+      contentSubtitleTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Lato',
+        fontColor: styleContext.foregroundColorSoft,
+        fontSize: 14,
+        padding: const EdgeInsets.all(4),
+      );
+
+  @override
+  StyledTextStyle bodyTextStyle(StyleContext styleContext) =>
+      bodyTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Lato',
+        fontColor: styleContext.foregroundColor,
+        fontSize: 14,
+        padding: const EdgeInsets.all(4),
+      );
+
+  @override
+  StyledTextStyle buttonTextStyle(StyleContext styleContext) =>
+      bodyTextStyleOverride ??
+      StyledTextStyle(
+        fontFamily: 'Lato',
+        fontColor: styleContext.foregroundColor,
+        fontSize: 12,
+        padding: const EdgeInsets.all(4),
+        fontWeight: FontWeight.w600,
+        textAlign: TextAlign.center,
+        transformer: (text) => text.toUpperCase(),
+      );
+
+  Widget text(BuildContext context, StyleContext styleContext, StyledText text) {
+    final textStyle = text.getStyle(this, styleContext);
     return Padding(
-      padding: styledText.paddingOverride ?? padding ?? EdgeInsets.zero,
+      padding: text.paddingOverride ?? textStyle.padding,
       child: Text(
-        text ?? styledText.text,
-        textAlign: styledText.textAlignOverride ?? textAlign,
-        style: GoogleFonts.getFont(styledText.fontFamilyOverride ?? fontFamily).copyWith(
-          color: styledText.fontColorOverride ?? fontColor,
-          fontSize: styledText.fontSizeOverride ?? fontSize,
-          fontWeight: styledText.fontWeightOverride ?? fontWeight,
-          fontStyle: styledText.fontStyleOverride ?? fontStyle,
-          letterSpacing: styledText.letterSpacingOverride ?? letterSpacing,
+        textStyle.transformer.mapIfNonNull((transformer) => transformer(text.text)) ?? text.text,
+        textAlign: text.textAlignOverride ?? textStyle.textAlign,
+        style: GoogleFonts.getFont(text.fontFamilyOverride ?? textStyle.fontFamily).copyWith(
+          color: text.fontColorOverride ?? textStyle.fontColor,
+          fontSize: text.fontSizeOverride ?? textStyle.fontSize,
+          fontWeight: text.fontWeightOverride ?? textStyle.fontWeight,
+          fontStyle: text.fontStyleOverride ?? textStyle.fontStyle,
+          letterSpacing: text.letterSpacingOverride ?? textStyle.letterSpacing,
+          decoration: text.decorationOverride ?? TextDecoration.none,
         ),
+        overflow: text.overflowOverride ?? TextOverflow.clip,
+        maxLines: text.maxLinesOverride,
       ),
     );
   }
 
-  @override
-  Widget titleText(BuildContext context, StyleContext styleContext, StyledTitleText titleText) {
-    return rawStyledText(
-      styledText: titleText,
-      text: titleText.text.toUpperCase(),
-      fontFamily: titleFontFamily,
-      padding: const EdgeInsets.all(8),
-      fontColor: styleContext.emphasisColor,
-      fontSize: 48,
-      textAlign: TextAlign.center,
-      letterSpacing: 3,
-    );
-  }
-
-  @override
-  Widget subtitleText(BuildContext context, StyleContext styleContext, StyledSubtitleText subtitleText) {
-    return rawStyledText(
-      styledText: subtitleText,
-      fontFamily: subtitleFontFamily,
-      padding: const EdgeInsets.all(8),
-      fontColor: styleContext.foregroundColor,
-      fontSize: 28,
-      textAlign: TextAlign.center,
-    );
-  }
-
-  @override
-  Widget contentHeaderText(BuildContext context, StyleContext styleContext, StyledContentHeaderText contentHeaderText) {
-    return rawStyledText(
-      styledText: contentHeaderText,
-      fontFamily: subtitleFontFamily,
-      padding: const EdgeInsets.all(4),
-      fontColor: styleContext.emphasisColor,
-      fontSize: 17,
-      fontWeight: FontWeight.bold,
-    );
-  }
-
-  @override
-  Widget contentSubtitleText(
-      BuildContext context, StyleContext styleContext, StyledContentSubtitleText contentSubtitleText) {
-    return rawStyledText(
-      styledText: contentSubtitleText,
-      fontFamily: bodyFontFamily,
-      padding: const EdgeInsets.all(4),
-      fontColor: styleContext.foregroundColorSoft,
-      fontSize: 16,
-    );
-  }
-
-  @override
-  Widget bodyText(BuildContext context, StyleContext styleContext, StyledBodyText bodyText) {
-    return rawStyledText(
-      styledText: bodyText,
-      fontFamily: bodyFontFamily,
-      padding: const EdgeInsets.all(4),
-      fontColor: styleContext.foregroundColor,
-      fontSize: 18,
-    );
-  }
-
-  @override
-  Widget buttonText(BuildContext context, StyleContext styleContext, StyledButtonText buttonText) {
-    return rawStyledText(
-      styledText: buttonText,
-      text: buttonText.text.toUpperCase(),
-      fontFamily: bodyFontFamily,
-      fontWeight: FontWeight.w600,
-      textAlign: TextAlign.center,
-      padding: const EdgeInsets.all(4),
-      fontColor: styleContext.foregroundColor,
-      fontSize: 12,
-      letterSpacing: 1,
+  Widget textSpan(BuildContext context, StyleContext styleContext, StyledTextSpan textSpan) {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: Text.rich(TextSpan(
+          children: textSpan.children
+              .map((text) => TextSpan(
+                  text: text.text,
+                  style: toTextStyle(
+                    styledTextStyle: text.getStyle(this, styleContext),
+                    overrides: text.overrides,
+                  )))
+              .toList())),
     );
   }
 
@@ -391,6 +442,8 @@ class FlatStyle extends Style {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(backgroundColor),
                     overlayColor: MaterialStateProperty.all(softenColor(backgroundColor).withOpacity(0.8)),
+                    shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                   ),
                 )
               : ElevatedButton.icon(
@@ -401,6 +454,8 @@ class FlatStyle extends Style {
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.emphasisColor),
                     overlayColor: MaterialStateProperty.all(
                         softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.8)),
+                    shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                   ),
                 ),
         );
@@ -419,6 +474,8 @@ class FlatStyle extends Style {
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
                     overlayColor: MaterialStateProperty.all(
                         softenColor(button.color ?? styleContext.backgroundColorSoft).withOpacity(0.8)),
+                    shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                   ),
                 )
               : ElevatedButton.icon(
@@ -429,6 +486,8 @@ class FlatStyle extends Style {
                     backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
                     overlayColor: MaterialStateProperty.all(
                         softenColor(button.color ?? styleContext.backgroundColorSoft).withOpacity(0.8)),
+                    shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                   ),
                 ),
         );
@@ -454,6 +513,8 @@ class FlatStyle extends Style {
                   backgroundColor: MaterialStateProperty.all(Colors.transparent),
                   overlayColor: MaterialStateProperty.all(
                       softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.3)),
+                  shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                 ),
               )
             : TextButton.icon(
@@ -464,6 +525,8 @@ class FlatStyle extends Style {
                   backgroundColor: MaterialStateProperty.all(Colors.transparent),
                   overlayColor: MaterialStateProperty.all(
                       softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.3)),
+                  shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                 ),
               );
       },
@@ -481,7 +544,7 @@ class FlatStyle extends Style {
           if (textField.label != null) StyledContentSubtitleText(textField.label!),
           TextFormField(
             initialValue: textField.initialText,
-            style: GoogleFonts.getFont(bodyFontFamily).copyWith(
+            style: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(
               color: styleContext.foregroundColor,
             ),
             readOnly: !textField.enabled,
@@ -525,7 +588,7 @@ class FlatStyle extends Style {
                 ),
               ),
               hintText: textField.hintText,
-              hintStyle: GoogleFonts.getFont(bodyFontFamily).copyWith(
+              hintStyle: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(
                 color: styleContext.emphasisColorSoft,
                 fontStyle: FontStyle.italic,
               ),
@@ -574,19 +637,27 @@ class FlatStyle extends Style {
               Icons.arrow_drop_down,
               paddingOverride: EdgeInsets.zero,
             ),
-            style: GoogleFonts.getFont(bodyFontFamily).copyWith(color: styleContext.foregroundColor),
+            style:
+                toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(color: styleContext.foregroundColor),
             decoration: InputDecoration(
-              errorText: dropdown.errorText,
-              filled: true,
-              fillColor: styleContext.backgroundColorSoft,
-              focusedBorder: InputBorder.none,
-              enabledBorder: OutlineInputBorder(
+                errorText: dropdown.errorText,
+                filled: true,
+                fillColor: styleContext.backgroundColorSoft,
+                focusedBorder: InputBorder.none,
+                enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: styleContext.foregroundColor,
                     width: 0.5,
-                  )),
-            ),
+                  ),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: Colors.red,
+                    width: 1,
+                  ),
+                )),
             items: [
               if (dropdown.canBeNone) null,
               ...dropdown.options,
@@ -599,7 +670,12 @@ class FlatStyle extends Style {
                       ),
                     ))
                 .toList(),
-            onChanged: dropdown.onChanged,
+            onChanged: dropdown.onChanged != null
+                ? (value) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    dropdown.onChanged!(value);
+                  }
+                : null,
           ),
         ],
       ),
@@ -713,6 +789,9 @@ class FlatStyle extends Style {
                   Duration(days: 1000),
                 ),
               );
+
+              FocusScope.of(context).requestFocus(FocusNode());
+
               if (result != null) dateField.onChanged!(result);
             }
           : null,
@@ -722,23 +801,25 @@ class FlatStyle extends Style {
   @override
   Widget content(BuildContext context, StyleContext styleContext, StyledContent content) {
     // Flat Style treats low and medium emphasis contents as the same.
-    final backgroundColor = content.emphasis.map(
-      low: () => styleContext.backgroundColorSoft,
-      medium: () => styleContext.backgroundColorSoft,
-      high: () => styleContext.emphasisColor,
-    );
+    final backgroundColor = content.backgroundColorOverride ??
+        content.emphasis.map<Color>(
+          low: () => styleContext.backgroundColorSoft,
+          medium: () => styleContext.backgroundColorSoft,
+          high: () => styleContext.emphasisColor,
+        );
 
-    final newStyleContext = content.emphasisColorOverride == null
-        ? styleContextFromBackground(backgroundColor)
-        : styleContextFromBackground(backgroundColor).copyWith(
-            emphasisColor: content.emphasisColorOverride,
-          );
+    final newStyleContext = styleContextFromBackground(backgroundColor).copyWith(
+      emphasisColor: content.emphasisColorOverride,
+    );
 
     final header = content.headerText != null ? StyledContentHeaderText(content.headerText!) : content.header;
     final body = content.bodyText != null ? StyledContentSubtitleText(content.bodyText!) : content.body;
 
     return ClickableCard(
+      elevation: 0,
+      margin: EdgeInsets.all(8),
       color: backgroundColor,
+      borderRadius: content.borderRadius ?? BorderRadius.circular(12),
       splashColor: softenColor(backgroundColor).withOpacity(0.8),
       onTap: content.onTapped,
       child: StyleContextProvider(
@@ -746,27 +827,27 @@ class FlatStyle extends Style {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(
-              title: header != null ? header : body,
-              subtitle: header != null ? body : null,
-              leading: content.leading,
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (content.trailing != null) content.trailing!,
-                  if (content.actions.isNotEmpty)
-                    actionButton(
-                      context,
-                      styleContext: styleContext,
-                      actions: content.actions,
-                    ),
-                ],
+            if (header != null || content.leading != null || content.trailing != null || content.actions.isNotEmpty)
+              ListTile(
+                title: header != null ? header : body,
+                subtitle: header != null ? body : null,
+                leading: content.leading,
+                trailing: content.trailing != null || content.actions.isNotEmpty
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (content.trailing != null) content.trailing!,
+                          if (content.actions.isNotEmpty)
+                            actionButton(
+                              context,
+                              styleContext: styleContext,
+                              actions: content.actions,
+                            ),
+                        ],
+                      )
+                    : null,
               ),
-            ),
-            if (content.children.isNotEmpty) ...[
-              Divider(),
-              ...content.children,
-            ],
+            ...content.children,
           ],
         ),
       ),
@@ -790,7 +871,10 @@ class FlatStyle extends Style {
     return category.emphasis.map(
       high: () {
         return ClickableCard(
+          elevation: 0,
+          margin: EdgeInsets.all(8),
           color: emphasisColor,
+          borderRadius: category.borderRadius,
           onTap: category.onTapped,
           child: StyleContextProvider(
             styleContext: styleContextWithEmphasisOverride(styleContextFromBackground(styleContext.emphasisColor)),
@@ -802,18 +886,20 @@ class FlatStyle extends Style {
                     title: header != null ? header : body,
                     subtitle: header != null ? body : null,
                     leading: category.leading,
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (category.trailing != null) category.trailing!,
-                        if (category.actions.isNotEmpty)
-                          actionButton(
-                            context,
-                            styleContext: styleContext,
-                            actions: category.actions,
-                          ),
-                      ],
-                    ),
+                    trailing: category.trailing != null || category.actions.isNotEmpty
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (category.trailing != null) category.trailing!,
+                              if (category.actions.isNotEmpty)
+                                actionButton(
+                                  context,
+                                  styleContext: styleContext,
+                                  actions: category.actions,
+                                ),
+                            ],
+                          )
+                        : null,
                   ),
                 ...category.children
               ],
@@ -823,7 +909,10 @@ class FlatStyle extends Style {
       },
       medium: () {
         return ClickableCard(
+          elevation: 0,
+          margin: EdgeInsets.all(8),
           color: styleContext.backgroundColorSoft,
+          borderRadius: category.borderRadius,
           onTap: category.onTapped,
           child: StyleContextProvider(
             styleContext:
@@ -832,21 +921,25 @@ class FlatStyle extends Style {
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (header != null || body != null || category.leading != null || category.trailing != null)
-                  ListTile(
-                    title: header != null ? header : body,
-                    subtitle: header != null ? body : null,
-                    leading: category.leading,
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (category.trailing != null) category.trailing!,
-                        if (category.actions.isNotEmpty)
-                          actionButton(
-                            context,
-                            styleContext: styleContext,
-                            actions: category.actions,
-                          ),
-                      ],
+                  Container(
+                    child: ListTile(
+                      title: header != null ? header : body,
+                      subtitle: header != null ? body : null,
+                      leading: category.leading,
+                      trailing: category.trailing != null || category.actions.isNotEmpty
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (category.trailing != null) category.trailing!,
+                                if (category.actions.isNotEmpty)
+                                  actionButton(
+                                    context,
+                                    styleContext: styleContext,
+                                    actions: category.actions,
+                                  ),
+                              ],
+                            )
+                          : null,
                     ),
                   ),
                 ...category.children
@@ -866,18 +959,20 @@ class FlatStyle extends Style {
                   title: header != null ? header : body,
                   subtitle: header != null ? body : null,
                   leading: category.leading,
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (category.trailing != null) category.trailing!,
-                      if (category.actions.isNotEmpty)
-                        actionButton(
-                          context,
-                          styleContext: styleContext,
-                          actions: category.actions,
-                        ),
-                    ],
-                  ),
+                  trailing: category.trailing != null || category.actions.isNotEmpty
+                      ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (category.trailing != null) category.trailing!,
+                            if (category.actions.isNotEmpty)
+                              actionButton(
+                                context,
+                                styleContext: styleContext,
+                                actions: category.actions,
+                              ),
+                          ],
+                        )
+                      : null,
                 ),
               ...category.children
             ],
@@ -923,7 +1018,7 @@ class FlatStyle extends Style {
     );
 
     return Padding(
-      padding: EdgeInsets.all(8),
+      padding: chip.paddingOverride ?? EdgeInsets.all(4),
       child: StyleContextProvider(
         styleContext: newStyleContext,
         child: chip.onTapped == null
@@ -1000,13 +1095,17 @@ class FlatStyle extends Style {
                   child: StyleContextProvider(
                     styleContext: styleContextFromBackground(styleContext.backgroundColorSoft),
                     child: Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(2),
                       child: StyledCategory(
-                        headerText: dialog.titleText,
-                        children: [
-                          dialog.body,
-                          SafeArea(child: Container()),
-                        ],
+                        header: dialog.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
+                                  titleText,
+                                  textOverrides: StyledTextOverrides(
+                                    textAlign: TextAlign.center,
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                )) ??
+                            dialog.title,
+                        children: [dialog.body],
                       ),
                     ),
                   ),
@@ -1094,7 +1193,7 @@ class FlatStyle extends Style {
     final isBackgroundVariant = _isBackgroundVariant(backgroundColor);
     final isNeutralBackground = _isNeutralColor(backgroundColor);
 
-    final foregroundColor = backgroundColor.computeLuminance() < 0.5 ? Colors.white : Colors.black;
+    final foregroundColor = backgroundColor.computeLuminance() < 0.6 ? Colors.white : Colors.black;
     final emphasisColor = (isBackgroundVariant || isNeutralBackground) ? primaryColor : foregroundColor;
 
     return StyleContext(
@@ -1119,5 +1218,16 @@ class FlatStyle extends Style {
   /// Softens colors by making light colors darker and dark colors lighter.
   static Color softenColor(Color color) {
     return color.computeLuminance() < 0.5 ? color.lighten() : color.darken(5);
+  }
+
+  /// Converts a [styledTextStyle] to a [TextStyle] with optional overrides from [overrides].
+  static TextStyle toTextStyle({required StyledTextStyle styledTextStyle, StyledTextOverrides? overrides}) {
+    return GoogleFonts.getFont(overrides?.fontFamily ?? styledTextStyle.fontFamily).copyWith(
+      color: overrides?.fontColor ?? styledTextStyle.fontColor,
+      fontSize: overrides?.fontSize ?? styledTextStyle.fontSize,
+      fontWeight: overrides?.fontWeight ?? styledTextStyle.fontWeight,
+      fontStyle: overrides?.fontStyle ?? styledTextStyle.fontStyle,
+      letterSpacing: overrides?.letterSpacing ?? styledTextStyle.letterSpacing,
+    );
   }
 }

@@ -16,8 +16,6 @@ class StyleContext {
   /// Function to convert a [color] to a softened version of that color.
   final Color Function(Color color) getSoftened;
 
-  bool get isDarkBackground => backgroundColor.computeLuminance() < 0.66;
-
   const StyleContext({
     required this.backgroundColor,
     required this.foregroundColor,

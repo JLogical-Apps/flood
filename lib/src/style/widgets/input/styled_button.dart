@@ -17,6 +17,9 @@ class StyledButton extends StyledWidget {
   /// The color to override the emphasis color of the button.
   final Color? color;
 
+  /// If non-null, overrides the border radius of the content.
+  final BorderRadius? borderRadius;
+
   /// Action to perform when the button is tapped.
   final void Function()? onTapped;
 
@@ -29,6 +32,7 @@ class StyledButton extends StyledWidget {
     this.icon,
     this.leading,
     this.color,
+    this.borderRadius,
     required this.onTapped,
     required this.emphasis,
   }) : super(key: key);
@@ -40,6 +44,7 @@ class StyledButton extends StyledWidget {
     this.icon,
     this.leading,
     this.color,
+    this.borderRadius,
     required this.onTapped,
   })  : emphasis = Emphasis.low,
         super(key: key);
@@ -51,6 +56,7 @@ class StyledButton extends StyledWidget {
     this.icon,
     this.leading,
     this.color,
+    this.borderRadius,
     required this.onTapped,
   })  : emphasis = Emphasis.medium,
         super(key: key);
@@ -62,6 +68,7 @@ class StyledButton extends StyledWidget {
     this.icon,
     this.leading,
     this.color,
+    this.borderRadius,
     required this.onTapped,
   })  : emphasis = Emphasis.high,
         super(key: key);

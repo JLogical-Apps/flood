@@ -18,6 +18,9 @@ class ClickableCard extends StatelessWidget {
   /// The margin of the card.
   final EdgeInsets? margin;
 
+  /// The border radius of the card. If null, defaults to circular of radius 12.
+  final BorderRadius? borderRadius;
+
   const ClickableCard({
     required this.child,
     required this.onTap,
@@ -25,15 +28,21 @@ class ClickableCard extends StatelessWidget {
     this.splashColor,
     this.elevation: 0,
     this.margin,
+    this.borderRadius,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       color: color,
+      elevation: elevation,
       margin: margin,
+      shape: RoundedRectangleBorder(
+        borderRadius: borderRadius ?? BorderRadius.circular(12),
+      ),
       child: InkWell(
-        borderRadius: ((Theme.of(context).cardTheme.shape as RoundedRectangleBorder?)?.borderRadius as BorderRadius?) ??
+        borderRadius: borderRadius ??
+            ((Theme.of(context).cardTheme.shape as RoundedRectangleBorder?)?.borderRadius as BorderRadius?) ??
             BorderRadius.circular(1),
         child: child,
         onTap: onTap,

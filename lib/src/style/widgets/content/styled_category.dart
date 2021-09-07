@@ -27,6 +27,9 @@ class StyledCategory extends StyledWidget {
   /// If non-null, overrides children's emphasis color.
   final Color? emphasisColorOverride;
 
+  /// If non-null, overrides the border radius of the content.
+  final BorderRadius? borderRadius;
+
   final Emphasis emphasis;
 
   /// Action to perform when this category is tapped.
@@ -43,6 +46,7 @@ class StyledCategory extends StyledWidget {
     this.children: const [],
     this.actions: const [],
     this.emphasisColorOverride,
+    this.borderRadius,
     this.emphasis: Emphasis.low,
     this.onTapped,
   }) : super(key: key);
@@ -58,6 +62,7 @@ class StyledCategory extends StyledWidget {
     this.children: const [],
     this.actions: const [],
     this.emphasisColorOverride,
+    this.borderRadius,
     this.onTapped,
   })  : emphasis = Emphasis.low,
         super(key: key);
@@ -73,6 +78,7 @@ class StyledCategory extends StyledWidget {
     this.children: const [],
     this.actions: const [],
     this.emphasisColorOverride,
+    this.borderRadius,
     this.onTapped,
   })  : emphasis = Emphasis.medium,
         super(key: key);
@@ -88,6 +94,7 @@ class StyledCategory extends StyledWidget {
     this.children: const [],
     this.actions: const [],
     this.emphasisColorOverride,
+    this.borderRadius,
     this.onTapped,
   })  : emphasis = Emphasis.high,
         super(key: key);

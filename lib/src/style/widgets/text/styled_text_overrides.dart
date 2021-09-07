@@ -9,6 +9,9 @@ class StyledTextOverrides {
   final FontStyle? fontStyle;
   final double? letterSpacing;
   final TextAlign? textAlign;
+  final TextOverflow? textOverflow;
+  final TextDecoration? textDecoration;
+  final int? maxLines;
   final EdgeInsets? padding;
 
   const StyledTextOverrides({
@@ -19,6 +22,9 @@ class StyledTextOverrides {
     this.fontStyle,
     this.letterSpacing,
     this.textAlign,
+    this.textOverflow,
+    this.textDecoration,
+    this.maxLines,
     this.padding,
   });
 }

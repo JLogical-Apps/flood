@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
 
-class StyledErrorText extends StatelessWidget {
-  final String text;
+import 'styled_text_style.dart';
 
-  const StyledErrorText(this.text, {Key? key}) : super(key: key);
+class StyledErrorText extends StyledText {
+  const StyledErrorText(String text, {Key? key, StyledTextOverrides? textOverrides})
+      : super(
+          key: key,
+          text: text,
+          overrides: textOverrides,
+        );
 
   @override
-  Widget build(BuildContext context) {
-    return StyledBodyText(
-      text,
-      textOverrides: StyledTextOverrides(fontColor: Colors.red, padding: EdgeInsets.zero),
-    );
+  StyledTextStyle getStyle(Style style, StyleContext styleContext) {
+    return style.bodyTextStyle(styleContext).copyWith(
+          fontColor: Colors.red,
+        );
   }
 }

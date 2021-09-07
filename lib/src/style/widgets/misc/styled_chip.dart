@@ -11,6 +11,9 @@ class StyledChip extends StyledWidget {
   /// The color to override the emphasis color of the chip.
   final Color? color;
 
+  /// If non-null, overrides the padding of this chip.
+  final EdgeInsets? paddingOverride;
+
   /// Action to perform when the chip is tapped.
   final void Function()? onTapped;
 
@@ -21,6 +24,7 @@ class StyledChip extends StyledWidget {
     required this.text,
     this.icon,
     this.color,
+    this.paddingOverride,
     required this.onTapped,
     required this.emphasis,
   }) : super(key: key);
@@ -30,6 +34,7 @@ class StyledChip extends StyledWidget {
     required this.text,
     this.icon,
     this.color,
+    this.paddingOverride,
     this.onTapped,
   })  : emphasis = Emphasis.low,
         super(key: key);
@@ -39,6 +44,7 @@ class StyledChip extends StyledWidget {
     required this.text,
     this.icon,
     this.color,
+    this.paddingOverride,
     this.onTapped,
   })  : emphasis = Emphasis.medium,
         super(key: key);
@@ -48,6 +54,7 @@ class StyledChip extends StyledWidget {
     required this.text,
     this.icon,
     this.color,
+    this.paddingOverride,
     this.onTapped,
   })  : emphasis = Emphasis.high,
         super(key: key);

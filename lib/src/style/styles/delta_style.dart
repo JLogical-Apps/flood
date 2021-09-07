@@ -17,15 +17,9 @@ class DeltaStyle extends FlatStyle {
     Color primaryColor: Colors.green,
     Color backgroundColor: Colors.white,
     this.accentColor: Colors.purple,
-    String titleFontFamily: 'Montserrat',
-    String subtitleFontFamily: 'Quicksand',
-    String bodyFontFamily: 'Lato',
   }) : super(
           primaryColor: primaryColor,
           backgroundColor: backgroundColor,
-          titleFontFamily: titleFontFamily,
-          subtitleFontFamily: subtitleFontFamily,
-          bodyFontFamily: bodyFontFamily,
         );
 
   @override
@@ -80,16 +74,33 @@ class DeltaStyle extends FlatStyle {
                                     StyleContextProvider(
                                       styleContext: styleContextFromBackground(backgroundColor),
                                       child: Expanded(
-                                        child: Center(child: section.header),
+                                        child: Center(
+                                            child: section.headerIcon.mapIfNonNull((icon) => StyledIcon.medium(
+                                                      icon,
+                                                      size: 60,
+                                                    )) ??
+                                                section.header),
                                         flex: 1,
                                       ),
                                     ),
                                     Expanded(
-                                      child: Center(child: section.title),
+                                      child: Center(
+                                          child: section.titleText.mapIfNonNull((text) => StyledTitleText(
+                                                    text,
+                                                  )) ??
+                                              section.title),
                                       flex: 1,
                                     ),
+                                    SizedBox(
+                                      height: 40,
+                                    ),
                                     Expanded(
-                                      child: Center(child: section.body),
+                                      child: Center(
+                                          child: section.bodyText.mapIfNonNull((text) => StyledBodyText(
+                                                    text,
+                                                    textOverrides: StyledTextOverrides(fontSize: 16),
+                                                  )) ??
+                                              section.body),
                                       flex: 2,
                                     ),
                                     SizedBox(
