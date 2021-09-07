@@ -1105,7 +1105,7 @@ class FlatStyle extends Style {
                                   ),
                                 )) ??
                             dialog.title,
-                        children: [dialog.body],
+                        children: [dialog.body, SafeArea(child: Container(),)],
                       ),
                     ),
                   ),
