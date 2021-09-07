@@ -72,6 +72,8 @@ class FlatStyle extends Style {
                       ),
                     )) ??
                 styledPage.title,
+            elevation: 0,
+            centerTitle: true,
             foregroundColor: styleContext.emphasisColor,
             iconTheme: IconThemeData(color: styleContext.emphasisColor),
             actions: [
@@ -805,6 +807,8 @@ class FlatStyle extends Style {
     final body = content.bodyText != null ? StyledContentSubtitleText(content.bodyText!) : content.body;
 
     return ClickableCard(
+      elevation: 0,
+      margin: EdgeInsets.all(8),
       color: backgroundColor,
       borderRadius: content.borderRadius,
       splashColor: softenColor(backgroundColor).withOpacity(0.8),
@@ -858,6 +862,8 @@ class FlatStyle extends Style {
     return category.emphasis.map(
       high: () {
         return ClickableCard(
+          elevation: 0,
+          margin: EdgeInsets.all(8),
           color: emphasisColor,
           borderRadius: category.borderRadius,
           onTap: category.onTapped,
@@ -894,6 +900,8 @@ class FlatStyle extends Style {
       },
       medium: () {
         return ClickableCard(
+          elevation: 0,
+          margin: EdgeInsets.all(8),
           color: styleContext.backgroundColorSoft,
           borderRadius: category.borderRadius,
           onTap: category.onTapped,
