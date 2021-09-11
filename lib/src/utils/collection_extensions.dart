@@ -60,4 +60,9 @@ extension IterableEntriesExtensions<K, V> on Iterable<MapEntry<K, V>> {
   Map<K2, V2> mapToMap<K2, V2>(MapEntry<K2, V2> mapper(K key, V value)) {
     return Map.fromEntries(mapEntries(mapper));
   }
+
+  /// Converts the entries to a map.
+  Map<K, V> toMap() {
+    return Map.fromEntries(this);
+  }
 }
