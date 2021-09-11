@@ -52,8 +52,8 @@ abstract class AsyncLoadable<T> {
   }
 
   /// Ensures the model is loaded before returning the loaded value.
-  /// If it is in the initial or error state, calls [load] and returns the value,
-  /// otherwise returns the last loaded value.
+  /// If it is in the initial or error state, calls [load] and returns the value
+  /// (or null), otherwise returns the last loaded value.
   /// If [onError] is null and an error occurs, just throws the error.
   Future<T?> ensureLoaded({T? onError(dynamic obj)?}) async {
     return await value.maybeWhen(
@@ -66,6 +66,15 @@ abstract class AsyncLoadable<T> {
             error: (error) => onError == null ? throw error ?? Exception('Error loading model!') : onError(error),
           );
         });
+  }
+
+  /// Ensures the model is loaded before returning the loaded state.
+  /// If it is in the initial or error state, calls [load] and returns the value
+  /// (or throws an exception), otherwise returns the last loaded value.
+  /// If [onError] is null and an error occurs, just throws the error.
+  Future<T> ensureLoadedAndGet({T onError(dynamic error)?}) async {
+    await ensureLoaded(onError: onError);
+    return get();
   }
 
   /// Returns the loaded value of the model, or calls [orElse] if not loaded.
