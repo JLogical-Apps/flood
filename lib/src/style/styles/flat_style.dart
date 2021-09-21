@@ -1107,7 +1107,12 @@ class FlatStyle extends Style {
                                   ),
                                 )) ??
                             dialog.title,
-                        children: [dialog.body, SafeArea(child: Container(),)],
+                        children: [
+                          dialog.body,
+                          SafeArea(
+                            child: Container(),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -1121,8 +1126,8 @@ class FlatStyle extends Style {
   }
 
   @override
-  Future<T?> navigateTo<T>({required BuildContext context, required Widget Function() page}) {
-    return Navigator.of(context).push(MaterialPageRoute(builder: (_) => page()));
+  Future<T?> navigateTo<T>({required BuildContext context, required Widget Function(BuildContext context) page}) {
+    return Navigator.of(context).push(MaterialPageRoute(builder: page));
   }
 
   @override
@@ -1131,8 +1136,8 @@ class FlatStyle extends Style {
   }
 
   @override
-  void navigateReplacement({required BuildContext context, required Widget Function() newPage}) {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => newPage()));
+  void navigateReplacement({required BuildContext context, required Widget Function(BuildContext context) newPage}) {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: newPage));
   }
 
   Widget actionButton(

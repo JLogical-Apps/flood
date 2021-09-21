@@ -112,14 +112,14 @@ abstract class Style {
   Future<T> showDialog<T>({required BuildContext context, required StyledDialog dialog}) => throw UnimplementedError();
 
   /// Navigates to the [page] and returns the value given when [navigateBack] is called.
-  Future<T?> navigateTo<T>({required BuildContext context, required Widget Function() page}) =>
+  Future<T?> navigateTo<T>({required BuildContext context, required Widget Function(BuildContext context) page}) =>
       throw UnimplementedError();
 
   /// Navigates back and returns an optional [result].
   void navigateBack<T>({required BuildContext context, T? result}) => throw UnimplementedError();
 
   /// Replaces the current page with [newPage].
-  void navigateReplacement({required BuildContext context, required Widget Function() newPage}) =>
+  void navigateReplacement({required BuildContext context, required Widget Function(BuildContext context) newPage}) =>
       throw UnimplementedError();
 }
 

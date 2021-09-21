@@ -84,7 +84,7 @@ class TestHomePage extends HookWidget {
                   color: Colors.blue,
                   leading: StyledIcon(Icons.face),
                   onPerform: () {
-                    style.navigateTo(context: context, page: () => TestLoginPage(style: style));
+                    style.navigateTo(context: context, page: (context) => TestLoginPage(style: style));
                   },
                 ),
               ],

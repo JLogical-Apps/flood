@@ -387,8 +387,8 @@ class TestOnboardingPage extends HookWidget {
             ),
           ),
         ],
-        onComplete: () => style.navigateReplacement(context: context, newPage: () => TestHomePage(style: style)),
-        onSkip: () => style.navigateReplacement(context: context, newPage: () => TestHomePage(style: style)),
+        onComplete: () => style.navigateReplacement(context: context, newPage: (context) => TestHomePage(style: style)),
+        onSkip: () => style.navigateReplacement(context: context, newPage: (context) => TestHomePage(style: style)),
       ),
     );
   }
