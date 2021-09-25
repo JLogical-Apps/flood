@@ -51,6 +51,13 @@ abstract class AsyncLoadable<T> {
     return loadedValue;
   }
 
+  /// If the model is in its initial state, load it.
+  Future<void> ensureLoadingStarted() async {
+    if (value is FutureValueInitial) {
+      await load();
+    }
+  }
+
   /// Ensures the model is loaded before returning the loaded value.
   /// If it is in the initial or error state, calls [load] and returns the value
   /// (or null), otherwise returns the last loaded value.
