@@ -56,9 +56,9 @@ class PaginationResult<T> {
   }
 
   /// Maps the pagination result to another type.
-  PaginationResult<R> map<R>({String idMapper(String value)?, required R valueMapper(T value)}) {
+  PaginationResult<R> map<R>({String idMapper(String value)?, required R valueMapper(String id, T value)}) {
     return PaginationResult(
-        results: results.map((key, value) => MapEntry(idMapper == null ? key : idMapper(key), valueMapper(value))),
+        results: results.map((id, value) => MapEntry(idMapper == null ? id : idMapper(id), valueMapper(id, value))),
         nextPageGetter: nextPageGetter == null
             ? null
             : () async {
