@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:jlogical_utils/jlogical_utils.dart';
+
 /// A result that contains pagination results.
 class PaginationResult<T> {
   /// The results mapped to their id.
@@ -64,6 +66,25 @@ class PaginationResult<T> {
             : () async {
                 var nextPage = await nextPageGetter!.call();
                 return nextPage.map(idMapper: idMapper, valueMapper: valueMapper);
+              });
+  }
+
+  /// Maps the pagination result to another type with a mapper that can be async.
+  Future<PaginationResult<R>> asyncMap<R>({
+    FutureOr<String> idMapper(String value)?,
+    required FutureOr<R> valueMapper(String id, T value),
+  }) async {
+    return PaginationResult(
+        results: (await Future.wait(
+          results.mapToIterable((id, value) async =>
+              MapEntry(idMapper == null ? id : (await idMapper(id)), await valueMapper(id, value))),
+        ))
+            .toMap(),
+        nextPageGetter: nextPageGetter == null
+            ? null
+            : () async {
+                var nextPage = await nextPageGetter!.call();
+                return nextPage.asyncMap(idMapper: idMapper, valueMapper: valueMapper);
               });
   }
 }
