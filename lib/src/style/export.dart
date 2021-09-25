@@ -40,6 +40,7 @@ export 'widgets/text/styled_content_subtitle_text.dart';
 export 'widgets/text/styled_error_text.dart';
 export 'widgets/text/styled_input_text.dart';
 export 'widgets/text/styled_subtitle_text.dart';
+export 'widgets/text/styled_text.dart';
 export 'widgets/text/styled_text_overrides.dart';
 export 'widgets/text/styled_text_span.dart';
 export 'widgets/text/styled_title_text.dart';
