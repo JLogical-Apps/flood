@@ -46,8 +46,9 @@ class ModelBuilder<V> extends HookWidget {
     required this.model,
     required this.builder,
     this.loadingWidget: const StyledLoadingPage(),
-    this.errorBuilder: _styledScaffoldErrorBuilder,
-  }) : super(key: key);
+    Widget Function(dynamic error)? errorBuilder,
+  })  : this.errorBuilder = errorBuilder ?? ((error) => _styledScaffoldErrorBuilder(error, model)),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +71,10 @@ class ModelBuilder<V> extends HookWidget {
 
   static Widget _styledErrorBuilder(dynamic error) => StyledErrorText(error.toString());
 
-  static Widget _styledScaffoldErrorBuilder(dynamic error) => StyledPage(
+  static Widget _styledScaffoldErrorBuilder<V>(dynamic error, AsyncLoadable<V> model) => StyledPage(
         body: Center(
           child: StyledErrorText(error.toString()),
         ),
+        onRefresh: model.load,
       );
 }
