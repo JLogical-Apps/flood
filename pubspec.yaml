@@ -1,5 +1,5 @@
 name: jlogical_utils
-description: Utils for JLogical. 
+description: Utils for JLogical.
 version: 0.0.1
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -44,6 +44,11 @@ dependencies:
   rxdart: ^0.27.1
   uuid: 3.0.4
   yaml: ^3.1.0
+
+  # Firebase
+  cloud_firestore: ^2.5.3
+  firebase_auth: ^3.1.1
+  firebase_core: ^1.6.0
 
 
 dev_dependencies:
