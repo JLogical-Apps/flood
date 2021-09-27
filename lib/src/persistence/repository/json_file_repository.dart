@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../persistence.dart';
+import '../export.dart';
 
 /// File repository that saves objects in json format.
 abstract class JsonFileRepository<T> extends FileRepository<T> {

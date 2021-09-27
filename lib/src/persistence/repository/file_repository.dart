@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:path/path.dart';
 
-import '../persistence.dart';
+import '../export.dart';
 
 /// Repository that stores all the data in a file based on a [PersistenceGenerator].
 /// The files are named after the id of the object.

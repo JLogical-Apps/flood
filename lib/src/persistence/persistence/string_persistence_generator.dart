@@ -1,4 +1,4 @@
-import '../persistence.dart';
+import '../export.dart';
 
 /// A persistence generator that generates json.
 abstract class StringPersistenceGenerator<T> implements PersistenceGenerator<T, String> {

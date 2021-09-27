@@ -12,6 +12,7 @@ export 'persistence/persistence_generator.dart';
 export 'persistence/string_persistence_generator.dart';
 export 'persistence/yaml_persistence_generator.dart';
 export 'repository/file_repository.dart';
+export 'repository/firestore_repository.dart';
 export 'repository/json_file_repository.dart';
 export 'repository/local_repository.dart';
 export 'repository/repository.dart';

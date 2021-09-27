@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../jlogical_utils.dart';
-import '../persistence.dart';
+import '../export.dart';
 
 /// Repository that stores all the data as a map locally.
 class LocalRepository<T, R> implements Repository<T, R> {
