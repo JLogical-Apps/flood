@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -21,7 +23,7 @@ class StyledButton extends StyledWidget {
   final BorderRadius? borderRadius;
 
   /// Action to perform when the button is tapped.
-  final void Function()? onTapped;
+  final FutureOr<void> Function()? onTapped;
 
   final Emphasis emphasis;
 

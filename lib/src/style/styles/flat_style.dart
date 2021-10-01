@@ -422,115 +422,124 @@ class FlatStyle extends Style {
 
   @override
   Widget button(BuildContext context, StyleContext styleContext, StyledButton button) {
-    return button.emphasis.map(
-      high: () {
-        final backgroundColor = button.color ?? styleContext.emphasisColor;
-        final newStyleContext = styleContextFromBackground(backgroundColor);
+    return HookBuilder(
+      builder: (context) {
+        final isLoading = useState(false);
 
-        final child = button.text.mapIfNonNull((text) => StyledButtonText(
-                  text,
-                  textOverrides: StyledTextOverrides(fontColor: newStyleContext.emphasisColor),
-                )) ??
-            button.child;
+        return button.emphasis.map(
+          high: () {
+            final backgroundColor = button.color ?? styleContext.emphasisColor;
+            final newStyleContext = styleContextFromBackground(backgroundColor);
 
-        final leading = button.icon.mapIfNonNull((icon) => StyledIcon.medium(button.icon!)) ?? button.leading;
+            final child = button.text.mapIfNonNull((text) => StyledButtonText(
+                      text,
+                      textOverrides: StyledTextOverrides(fontColor: newStyleContext.emphasisColor),
+                    )) ??
+                button.child;
 
-        return StyleContextProvider(
-          styleContext: newStyleContext,
-          child: leading == null
-              ? ElevatedButton(
-                  child: child,
-                  onPressed: button.onTapped,
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(backgroundColor),
-                    overlayColor: MaterialStateProperty.all(softenColor(backgroundColor).withOpacity(0.8)),
-                    shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
-                  ),
-                )
-              : ElevatedButton.icon(
-                  onPressed: button.onTapped,
-                  icon: leading,
-                  label: child ?? Container(),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.emphasisColor),
-                    overlayColor: MaterialStateProperty.all(
-                        softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.8)),
-                    shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
-                  ),
-                ),
+            final leading = button.icon.mapIfNonNull((icon) => StyledIcon.medium(button.icon!)) ?? button.leading;
+
+            return StyleContextProvider(
+              styleContext: newStyleContext,
+              child: leading == null
+                  ? ElevatedButton(
+                      child: _loadingCrossFade(
+                        isLoading: isLoading.value,
+                        child: child ?? Container(),
+                      ),
+                      onPressed: button.onTapped,
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(backgroundColor),
+                        overlayColor: MaterialStateProperty.all(softenColor(backgroundColor).withOpacity(0.8)),
+                        shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
+                      ),
+                    )
+                  : ElevatedButton.icon(
+                      onPressed: button.onTapped,
+                      icon: leading,
+                      label: child ?? Container(),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.emphasisColor),
+                        overlayColor: MaterialStateProperty.all(
+                            softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.8)),
+                        shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
+                      ),
+                    ),
+            );
+          },
+          medium: () {
+            final child = button.text.mapIfNonNull((text) => StyledButtonText(text)) ?? button.child;
+            final leading = button.icon.mapIfNonNull((icon) => StyledIcon.medium(button.icon!)) ?? button.leading;
+
+            return StyleContextProvider(
+              styleContext: styleContextFromBackground(backgroundColor),
+              child: leading == null
+                  ? ElevatedButton(
+                      child: child,
+                      onPressed: button.onTapped,
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
+                        overlayColor: MaterialStateProperty.all(
+                            softenColor(button.color ?? styleContext.backgroundColorSoft).withOpacity(0.8)),
+                        shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
+                      ),
+                    )
+                  : ElevatedButton.icon(
+                      onPressed: button.onTapped,
+                      icon: leading,
+                      label: child ?? Container(),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
+                        overlayColor: MaterialStateProperty.all(
+                            softenColor(button.color ?? styleContext.backgroundColorSoft).withOpacity(0.8)),
+                        shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
+                      ),
+                    ),
+            );
+          },
+          low: () {
+            final child = button.text.mapIfNonNull((text) => StyledButtonText(
+                      text,
+                      textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.emphasisColor),
+                    )) ??
+                button.child;
+
+            final leading = button.icon.mapIfNonNull((icon) => StyledIcon.medium(
+                      button.icon!,
+                      colorOverride: button.color ?? styleContext.emphasisColor,
+                    )) ??
+                button.leading;
+
+            return leading == null
+                ? TextButton(
+                    child: child ?? Container(),
+                    onPressed: button.onTapped,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                      overlayColor: MaterialStateProperty.all(
+                          softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.3)),
+                      shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
+                    ),
+                  )
+                : TextButton.icon(
+                    onPressed: button.onTapped,
+                    icon: leading,
+                    label: child ?? Container(),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                      overlayColor: MaterialStateProperty.all(
+                          softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.3)),
+                      shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
+                    ),
+                  );
+          },
         );
-      },
-      medium: () {
-        final child = button.text.mapIfNonNull((text) => StyledButtonText(text)) ?? button.child;
-        final leading = button.icon.mapIfNonNull((icon) => StyledIcon.medium(button.icon!)) ?? button.leading;
-
-        return StyleContextProvider(
-          styleContext: styleContextFromBackground(backgroundColor),
-          child: leading == null
-              ? ElevatedButton(
-                  child: child,
-                  onPressed: button.onTapped,
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
-                    overlayColor: MaterialStateProperty.all(
-                        softenColor(button.color ?? styleContext.backgroundColorSoft).withOpacity(0.8)),
-                    shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
-                  ),
-                )
-              : ElevatedButton.icon(
-                  onPressed: button.onTapped,
-                  icon: leading,
-                  label: child ?? Container(),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
-                    overlayColor: MaterialStateProperty.all(
-                        softenColor(button.color ?? styleContext.backgroundColorSoft).withOpacity(0.8)),
-                    shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
-                  ),
-                ),
-        );
-      },
-      low: () {
-        final child = button.text.mapIfNonNull((text) => StyledButtonText(
-                  text,
-                  textOverrides: StyledTextOverrides(fontColor: button.color ?? styleContext.emphasisColor),
-                )) ??
-            button.child;
-
-        final leading = button.icon.mapIfNonNull((icon) => StyledIcon.medium(
-                  button.icon!,
-                  colorOverride: button.color ?? styleContext.emphasisColor,
-                )) ??
-            button.leading;
-
-        return leading == null
-            ? TextButton(
-                child: child ?? Container(),
-                onPressed: button.onTapped,
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                  overlayColor: MaterialStateProperty.all(
-                      softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.3)),
-                  shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
-                ),
-              )
-            : TextButton.icon(
-                onPressed: button.onTapped,
-                icon: leading,
-                label: child ?? Container(),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                  overlayColor: MaterialStateProperty.all(
-                      softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.3)),
-                  shape: MaterialStateProperty.all(
-                      RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
-                ),
-              );
       },
     );
   }
@@ -1220,6 +1229,18 @@ class FlatStyle extends Style {
   bool _isNeutralColor(Color color) {
     final luminance = color.computeLuminance();
     return luminance < 0.05 || luminance > 0.95;
+  }
+
+  /// An AnimatedCrossFade that fades between [child] and a loading indicator depending on whether [isLoading] is true.
+  Widget _loadingCrossFade({required bool isLoading, required Widget child}) {
+    return Builder(
+      builder: (context) => AnimatedCrossFade(
+        duration: Duration(milliseconds: 110),
+        crossFadeState: isLoading ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+        firstChild: child,
+        secondChild: StyledLoadingIndicator(),
+      ),
+    );
   }
 
   /// Softens colors by making light colors darker and dark colors lighter.
