@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "292956870819",
+    "project_id": "jlogical-utils",
+    "storage_bucket": "jlogical-utils.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292956870819:android:4c261a13bd41dbfcb94716",
+        "android_client_info": {
+          "package_name": "com.jlogical.utils"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "292956870819-9ca3phbfnh6k7s14262jagomtuamt62r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKgBnVO1UzNHTPQtsw6wnQXICqiMqIyL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "292956870819-9ca3phbfnh6k7s14262jagomtuamt62r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -42,7 +42,7 @@ abstract class FirestoreRepository<T> extends Repository<T, String> {
     final doc = collection.doc(id);
 
     final snap = await doc.get();
-    return await _getDataFromDocumentSnapshot(snap);
+    return _getDataFromDocumentSnapshot(snap);
   }
 
   @override
