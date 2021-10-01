@@ -88,8 +88,9 @@ class TestLoginPage extends HookWidget {
                       ),
                       StyledButton.low(
                         text: 'Log In',
-                        onTapped: () {
-                          smartFormController.validate();
+                        onTapped: () async {
+                          await Future.delayed(Duration(seconds: 1));
+                          await smartFormController.validate();
                         },
                       ),
                     ],

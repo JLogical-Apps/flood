@@ -425,6 +425,14 @@ class FlatStyle extends Style {
     return HookBuilder(
       builder: (context) {
         final isLoading = useState(false);
+        final isMounted = useIsMounted();
+        final onTapped = button.onTapped.mapIfNonNull((onTapped) => () async {
+              if (isLoading.value) return;
+
+              isLoading.value = true;
+              await onTapped();
+              if (isMounted()) isLoading.value = false;
+            });
 
         return button.emphasis.map(
           high: () {
@@ -447,7 +455,7 @@ class FlatStyle extends Style {
                         isLoading: isLoading.value,
                         child: child ?? Container(),
                       ),
-                      onPressed: button.onTapped,
+                      onPressed: onTapped,
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(backgroundColor),
                         overlayColor: MaterialStateProperty.all(softenColor(backgroundColor).withOpacity(0.8)),
@@ -456,8 +464,11 @@ class FlatStyle extends Style {
                       ),
                     )
                   : ElevatedButton.icon(
-                      onPressed: button.onTapped,
-                      icon: leading,
+                      onPressed: onTapped,
+                      icon: _loadingCrossFade(
+                        isLoading: isLoading.value,
+                        child: leading,
+                      ),
                       label: child ?? Container(),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.emphasisColor),
@@ -473,12 +484,18 @@ class FlatStyle extends Style {
             final child = button.text.mapIfNonNull((text) => StyledButtonText(text)) ?? button.child;
             final leading = button.icon.mapIfNonNull((icon) => StyledIcon.medium(button.icon!)) ?? button.leading;
 
+            final newStyleContext = styleContextFromBackground(backgroundColor);
+
             return StyleContextProvider(
-              styleContext: styleContextFromBackground(backgroundColor),
+              styleContext: newStyleContext,
               child: leading == null
                   ? ElevatedButton(
-                      child: child,
-                      onPressed: button.onTapped,
+                      child: _loadingCrossFade(
+                        loadingIndicatorColor: newStyleContext.foregroundColor,
+                        isLoading: isLoading.value,
+                        child: child ?? Container(),
+                      ),
+                      onPressed: onTapped,
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
                         overlayColor: MaterialStateProperty.all(
@@ -488,8 +505,12 @@ class FlatStyle extends Style {
                       ),
                     )
                   : ElevatedButton.icon(
-                      onPressed: button.onTapped,
-                      icon: leading,
+                      onPressed: onTapped,
+                      icon: _loadingCrossFade(
+                        loadingIndicatorColor: newStyleContext.foregroundColor,
+                        isLoading: isLoading.value,
+                        child: leading,
+                      ),
                       label: child ?? Container(),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.backgroundColorSoft),
@@ -516,8 +537,11 @@ class FlatStyle extends Style {
 
             return leading == null
                 ? TextButton(
-                    child: child ?? Container(),
-                    onPressed: button.onTapped,
+                    child: _loadingCrossFade(
+                      isLoading: isLoading.value,
+                      child: child ?? Container(),
+                    ),
+                    onPressed: onTapped,
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.transparent),
                       overlayColor: MaterialStateProperty.all(
@@ -527,8 +551,11 @@ class FlatStyle extends Style {
                     ),
                   )
                 : TextButton.icon(
-                    onPressed: button.onTapped,
-                    icon: leading,
+                    onPressed: onTapped,
+                    icon: _loadingCrossFade(
+                      isLoading: isLoading.value,
+                      child: leading,
+                    ),
                     label: child ?? Container(),
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.transparent),
@@ -1232,13 +1259,20 @@ class FlatStyle extends Style {
   }
 
   /// An AnimatedCrossFade that fades between [child] and a loading indicator depending on whether [isLoading] is true.
-  Widget _loadingCrossFade({required bool isLoading, required Widget child}) {
-    return Builder(
-      builder: (context) => AnimatedCrossFade(
-        duration: Duration(milliseconds: 110),
-        crossFadeState: isLoading ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-        firstChild: child,
-        secondChild: StyledLoadingIndicator(),
+  Widget _loadingCrossFade({Color? loadingIndicatorColor, required bool isLoading, required Widget child}) {
+    return AnimatedCrossFade(
+      duration: Duration(milliseconds: 110),
+      crossFadeState: isLoading ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+      firstChild: child,
+      secondChild: Padding(
+        padding: EdgeInsets.all(4),
+        child: SizedBox(
+          width: 24,
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: StyledLoadingIndicator(color: loadingIndicatorColor),
+          ),
+        ),
       ),
     );
   }

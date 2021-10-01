@@ -70,9 +70,8 @@ class TestHomePage extends HookWidget {
                               StyledButton.high(
                                 text: 'Save',
                                 onTapped: () async {
-                                  await Future.delayed(Duration(seconds: 3));
+                                  await Future.delayed(Duration(seconds: 1));
                                 },
-                                icon: Icons.save,
                               ),
                             ],
                           ),
