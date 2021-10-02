@@ -14,6 +14,9 @@ class StyledSmartTextField extends SmartFormField<String> {
   /// The keyboard type to show.
   final TextInputType keyboardType;
 
+  /// The capitalization to use for the text field.
+  final TextCapitalization textCapitalization;
+
   /// Whether to obscure the text.
   final bool obscureText;
 
@@ -28,6 +31,7 @@ class StyledSmartTextField extends SmartFormField<String> {
     this.suggestedValue,
     List<Validation<String>>? validators,
     this.keyboardType: TextInputType.text,
+    this.textCapitalization: TextCapitalization.sentences,
     this.obscureText: false,
     this.maxLines: 1,
     bool enabled: true,
@@ -51,6 +55,7 @@ class StyledSmartTextField extends SmartFormField<String> {
       errorText: error,
       obscureText: obscureText,
       maxLines: maxLines,
+      textCapitalization: textCapitalization,
       enabled: enabled,
     );
   }

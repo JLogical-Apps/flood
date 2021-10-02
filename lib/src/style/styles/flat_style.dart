@@ -636,6 +636,7 @@ class FlatStyle extends Style {
             onChanged: textField.onChanged,
             maxLines: textField.maxLines,
             keyboardType: textField.keyboardType,
+            textCapitalization: textField.textCapitalization ?? TextCapitalization.sentences,
           ),
         ],
       ),

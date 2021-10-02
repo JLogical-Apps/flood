@@ -11,6 +11,7 @@ class StyledTextField extends StyledWidget {
   final String? errorText;
 
   final TextInputType? keyboardType;
+  final TextCapitalization? textCapitalization;
   final bool obscureText;
   final int maxLines;
   final bool enabled;
@@ -27,6 +28,7 @@ class StyledTextField extends StyledWidget {
     this.hintText,
     this.errorText,
     this.keyboardType,
+    this.textCapitalization,
     this.obscureText: false,
     this.maxLines: 1,
     this.enabled: true,
