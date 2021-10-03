@@ -64,8 +64,8 @@ class FlatStyle extends Style {
         final refreshController = useMemoized(() => RefreshController(initialRefresh: false));
         return Scaffold(
           backgroundColor: backgroundColor,
-          appBar: AppBar(
-            backgroundColor: backgroundColor,
+          appBar: _styledAppBar(
+            context,
             title: styledPage.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
                       titleText,
                       textOverrides: StyledTextOverrides(
@@ -73,19 +73,7 @@ class FlatStyle extends Style {
                       ),
                     )) ??
                 styledPage.title,
-            elevation: 0,
-            centerTitle: true,
-            foregroundColor: styleContext.emphasisColor,
-            iconTheme: IconThemeData(color: styleContext.emphasisColor),
-            actions: [
-              if (styledPage.actions.isNotEmpty)
-                actionButton(
-                  context,
-                  styleContext: styleContext,
-                  actions: styledPage.actions,
-                  color: styleContext.emphasisColor,
-                ),
-            ],
+            actions: styledPage.actions,
           ),
           body: StyleContextProvider(
             styleContext: styleContextFromBackground(backgroundColor),
@@ -112,6 +100,27 @@ class FlatStyle extends Style {
     );
   }
 
+  AppBar _styledAppBar(BuildContext context, {Widget? title, List<ActionItem> actions: const []}) {
+    final styleContext = context.styleContext();
+    return AppBar(
+      backgroundColor: styleContext.backgroundColor,
+      title: title,
+      elevation: 0,
+      centerTitle: true,
+      foregroundColor: styleContext.emphasisColor,
+      iconTheme: IconThemeData(color: styleContext.emphasisColor),
+      actions: [
+        if (actions.isNotEmpty)
+          actionButton(
+            context,
+            styleContext: styleContext,
+            actions: actions,
+            color: styleContext.emphasisColor,
+          ),
+      ],
+    );
+  }
+
   Widget tabbedPage(
     BuildContext context,
     StyleContext styleContext,
@@ -129,27 +138,15 @@ class FlatStyle extends Style {
 
       return Scaffold(
         backgroundColor: backgroundColor,
-        appBar: AppBar(
-          backgroundColor: backgroundColor,
+        appBar: _styledAppBar(
+          context,
           title: StyledContentHeaderText(
             title,
             textOverrides: StyledTextOverrides(
               fontWeight: FontWeight.bold,
             ),
           ),
-          elevation: 0,
-          centerTitle: true,
-          foregroundColor: styleContext.emphasisColor,
-          iconTheme: IconThemeData(color: styleContext.emphasisColor),
-          actions: [
-            if (actions.isNotEmpty)
-              actionButton(
-                context,
-                styleContext: styleContext,
-                actions: actions,
-                color: styleContext.emphasisColor,
-              ),
-          ],
+          actions: actions,
         ),
         body: PageView(
           controller: pageController,
@@ -1129,42 +1126,54 @@ class FlatStyle extends Style {
   @override
   Future<T> showDialog<T>({required BuildContext context, required StyledDialog dialog}) async {
     final styleContext = initialStyleContext;
+
+    final title = dialog.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
+              titleText,
+              textOverrides: StyledTextOverrides(
+                textAlign: TextAlign.center,
+                padding: EdgeInsets.zero,
+              ),
+            )) ??
+        dialog.title;
     return await showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints.loose(Size(
+        MediaQuery.of(context).size.width,
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top,
+      )),
+      enableDrag: false,
+      backgroundColor: Colors.white,
       builder: (_) {
         return StyleProvider(
           style: this,
-          child: ScrollColumn(
-            children: [
-              Padding(
-                padding: MediaQuery.of(context).viewInsets,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12),
-                    ),
-                    color: styleContext.backgroundColorSoft,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
                   ),
-                  child: StyleContextProvider(
-                    styleContext: styleContextFromBackground(styleContext.backgroundColorSoft),
-                    child: Padding(
+                  color: styleContext.backgroundColorSoft,
+                ),
+                child: StyleContextProvider(
+                  styleContext: styleContextFromBackground(styleContext.backgroundColorSoft),
+                  child: Builder(
+                    builder: (context) => Padding(
                       padding: EdgeInsets.all(2),
-                      child: StyledCategory(
-                        header: dialog.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
-                                  titleText,
-                                  textOverrides: StyledTextOverrides(
-                                    textAlign: TextAlign.center,
-                                    padding: EdgeInsets.zero,
-                                  ),
-                                )) ??
-                            dialog.title,
+                      child: Column(
                         children: [
+                          SizedBox(height: 3),
+                          if (title != null)
+                            _styledAppBar(
+                              context,
+                              title: title,
+                            ),
                           dialog.body,
                           SafeArea(
                             child: Container(),
@@ -1175,7 +1184,7 @@ class FlatStyle extends Style {
                   ),
                 ),
               ),
-            ],
+            ),
           ),
         );
       },
