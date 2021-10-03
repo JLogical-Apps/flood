@@ -1130,6 +1130,7 @@ class FlatStyle extends Style {
   Future<T> showDialog<T>({required BuildContext context, required StyledDialog dialog}) async {
     final styleContext = initialStyleContext;
     return await showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
