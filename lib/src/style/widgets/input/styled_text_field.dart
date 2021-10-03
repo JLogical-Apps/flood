@@ -13,6 +13,7 @@ class StyledTextField extends StyledWidget {
   final TextInputType? keyboardType;
   final TextCapitalization? textCapitalization;
   final bool obscureText;
+  final int? maxLength;
   final int maxLines;
   final bool enabled;
 
@@ -30,6 +31,7 @@ class StyledTextField extends StyledWidget {
     this.keyboardType,
     this.textCapitalization,
     this.obscureText: false,
+    this.maxLength,
     this.maxLines: 1,
     this.enabled: true,
     this.onChanged,

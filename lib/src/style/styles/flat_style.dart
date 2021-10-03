@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -587,6 +588,24 @@ class FlatStyle extends Style {
             ),
             readOnly: !textField.enabled,
             obscureText: textField.obscureText,
+            maxLength: textField.maxLength,
+            maxLengthEnforcement: MaxLengthEnforcement.none,
+            buildCounter: (context, {required int currentLength, required bool isFocused, int? maxLength}) {
+              if (maxLength == null) {
+                return null;
+              }
+
+              final delta = maxLength - currentLength;
+
+              return delta < 20
+                  ? StyledBodyText(
+                      '$currentLength / $maxLength',
+                      textOverrides: StyledTextOverrides(
+                        fontColor: currentLength > maxLength ? Colors.red : null,
+                      ),
+                    )
+                  : null;
+            },
             decoration: InputDecoration(
               prefixIcon: textField.leading,
               suffixIcon: textField.trailing,

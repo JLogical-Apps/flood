@@ -20,10 +20,13 @@ class StyledSmartTextField extends SmartFormField<String> {
   /// Whether to obscure the text.
   final bool obscureText;
 
+  /// The maximum length of characters in the field. If null, no limit is enforced.
+  final int? maxLength;
+
   /// The number of lines to show.
   final int maxLines;
 
-  const StyledSmartTextField({
+  StyledSmartTextField({
     Key? key,
     required String name,
     required this.label,
@@ -33,13 +36,17 @@ class StyledSmartTextField extends SmartFormField<String> {
     this.keyboardType: TextInputType.text,
     this.textCapitalization: TextCapitalization.sentences,
     this.obscureText: false,
+    this.maxLength,
     this.maxLines: 1,
     bool enabled: true,
   }) : super(
           key: key,
           name: name,
           initialValue: initialValue ?? '',
-          validators: validators ?? const [],
+          validators: (validators ?? const []) +
+              [
+                if (maxLength != null) Validation.maxLength(maxLength: maxLength),
+              ],
           enabled: enabled,
         );
 
@@ -54,6 +61,7 @@ class StyledSmartTextField extends SmartFormField<String> {
       onChanged: (text) => smartFormController.setData(name: name, value: text),
       errorText: error,
       obscureText: obscureText,
+      maxLength: maxLength,
       maxLines: maxLines,
       textCapitalization: textCapitalization,
       enabled: enabled,

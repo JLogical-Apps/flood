@@ -66,10 +66,12 @@ class TestHomePage extends HookWidget {
                               StyledSmartTextField(
                                 name: 'name',
                                 label: 'Name',
+                                maxLength: 25,
                               ),
                               StyledButton.high(
                                 text: 'Save',
                                 onTapped: () async {
+                                  await controller.validate();
                                   await Future.delayed(Duration(seconds: 1));
                                 },
                               ),
