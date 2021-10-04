@@ -745,7 +745,6 @@ class FlatStyle extends Style {
               textOverrides: StyledTextOverrides(
                 padding: EdgeInsets.all(8),
                 maxLines: 3,
-                textAlign: TextAlign.right,
               ),
             )) ??
         checkbox.label;
@@ -756,13 +755,6 @@ class FlatStyle extends Style {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (label != null)
-              Flexible(
-                child: GestureDetector(
-                  child: label,
-                  onTap: checkbox.onChanged != null ? () => checkbox.onChanged!(!checkbox.value) : null,
-                ),
-              ),
             Checkbox(
               value: checkbox.value,
               onChanged: checkbox.onChanged != null ? (value) => checkbox.onChanged!(value ?? false) : null,
@@ -779,6 +771,13 @@ class FlatStyle extends Style {
                 width: 2,
               ),
             ),
+            if (label != null)
+              Flexible(
+                child: GestureDetector(
+                  child: label,
+                  onTap: checkbox.onChanged != null ? () => checkbox.onChanged!(!checkbox.value) : null,
+                ),
+              ),
           ],
         ),
         if (checkbox.errorText != null) StyledErrorText(checkbox.errorText!),
