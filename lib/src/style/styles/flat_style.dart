@@ -740,16 +740,28 @@ class FlatStyle extends Style {
   @override
   Widget checkbox(BuildContext context, StyleContext styleContext, StyledCheckbox checkbox) {
     final checkColor = checkbox.hasError ? Colors.red : styleContext.emphasisColor;
+    final label = checkbox.labelText.mapIfNonNull((label) => StyledBodyText(
+              label,
+              textOverrides: StyledTextOverrides(
+                padding: EdgeInsets.all(8),
+                maxLines: 3,
+                textAlign: TextAlign.right,
+              ),
+            )) ??
+        checkbox.label;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (checkbox.label != null)
-              GestureDetector(
-                child: StyledBodyText(checkbox.label!),
-                onTap: checkbox.onChanged != null ? () => checkbox.onChanged!(!checkbox.value) : null,
+            if (label != null)
+              Flexible(
+                child: GestureDetector(
+                  child: label,
+                  onTap: checkbox.onChanged != null ? () => checkbox.onChanged!(!checkbox.value) : null,
+                ),
               ),
             Checkbox(
               value: checkbox.value,

@@ -4,12 +4,15 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 /// Styled SmartBoolField that uses a [StyledCheckbox].
 class StyledSmartBoolField extends SmartFormField<bool> {
   /// The label for the field.
-  final String label;
+  final String? labelText;
+
+  final Widget? label;
 
   const StyledSmartBoolField({
     Key? key,
     required String name,
-    required this.label,
+    this.labelText,
+    this.label,
     bool initiallyChecked: false,
     List<Validation<bool>>? validators,
     bool enabled: true,
@@ -26,6 +29,7 @@ class StyledSmartBoolField extends SmartFormField<bool> {
       BuildContext context, bool value, String? error, bool enabled, SmartFormController smartFormController) {
     return StyledCheckbox(
       value: value,
+      labelText: labelText,
       label: label,
       errorText: error,
       onChanged: (value) => smartFormController.setData(name: name, value: value),

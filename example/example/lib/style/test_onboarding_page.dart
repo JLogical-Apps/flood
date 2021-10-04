@@ -261,7 +261,7 @@ class TestOnboardingPage extends HookWidget {
                 ),
                 StyledDivider(),
                 StyledCheckbox(
-                  label: 'Accept Terms and Conditions',
+                  labelText: 'Accept Terms and Conditions',
                   value: checkboxValue.value,
                   onChanged: (value) => checkboxValue.value = value,
                 ),
@@ -269,7 +269,7 @@ class TestOnboardingPage extends HookWidget {
                 StyledCategory.high(
                   children: [
                     StyledCheckbox(
-                      label: 'Accept Terms and Conditions',
+                      labelText: 'Accept Terms and Conditions',
                       value: checkboxValue.value,
                       onChanged: (value) => checkboxValue.value = value,
                     ),

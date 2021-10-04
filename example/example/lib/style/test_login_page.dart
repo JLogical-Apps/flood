@@ -18,7 +18,6 @@ class TestLoginPage extends HookWidget {
       child: StyledPage(
         onRefresh: () async {
           await Future.delayed(Duration(seconds: 1));
-          print('hey');
         },
         body: SmartForm(
           controller: smartFormController,
@@ -75,7 +74,7 @@ class TestLoginPage extends HookWidget {
                   ),
                   StyledSmartBoolField(
                     name: 'acceptTerms',
-                    label: 'Accept Terms and Conditions?',
+                    labelText: 'Accept Terms and Conditions?',
                     validators: [
                       Validation.required(onEmpty: 'Must be accepted to log in!'),
                     ],
