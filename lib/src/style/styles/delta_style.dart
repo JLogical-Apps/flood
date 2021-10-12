@@ -165,11 +165,13 @@ class DeltaStyle extends FlatStyle {
                             key: ValueKey('next'), // Key is needed for AnimatedSwitcher to fade between buttons.
                             text: 'Next',
                             color: backgroundColor,
-                            onTapped: () => pageController.animateToPage(
-                              page.value + 1,
-                              duration: Duration(milliseconds: 400),
-                              curve: Curves.easeInOutCubic,
-                            ),
+                            onTapped: () {
+                              pageController.animateToPage(
+                                page.value + 1,
+                                duration: Duration(milliseconds: 400),
+                                curve: Curves.easeInOutCubic,
+                              );
+                            },
                           ),
                   ),
                 ),

@@ -298,11 +298,13 @@ class FlatStyle extends Style {
                         : StyledButton.low(
                             key: ValueKey('next'),
                             text: 'Next',
-                            onTapped: () => pageController.animateToPage(
-                              page.value + 1,
-                              duration: Duration(milliseconds: 400),
-                              curve: Curves.easeInOutCubic,
-                            ),
+                            onTapped: () {
+                              pageController.animateToPage(
+                                page.value + 1,
+                                duration: Duration(milliseconds: 400),
+                                curve: Curves.easeInOutCubic,
+                              );
+                            },
                           ),
                   ),
                 ),
