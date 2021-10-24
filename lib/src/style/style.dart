@@ -62,6 +62,9 @@ abstract class Style {
   Widget textSpan(BuildContext context, StyleContext styleContext, StyledTextSpan textSpan) =>
       throw UnimplementedError();
 
+  TextStyle toTextStyle({required StyledTextStyle styledTextStyle, StyledTextOverrides? overrides}) =>
+      throw UnimplementedError();
+
   // === INPUT ===
   /// A button. This should respond to the button having different emphases.
   Widget button(BuildContext context, StyleContext styleContext, StyledButton primaryButton) =>

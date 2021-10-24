@@ -17,6 +17,7 @@ dependencies:
   cached_network_image: ^3.0.0
   expandable: ^5.0.1
   flutter_colorpicker: ^0.5.0
+  flutter_markdown: ^0.6.8
   flutter_picker: ^2.0.2
   google_fonts: ^2.1.0
   loading_overlay: ^0.3.0

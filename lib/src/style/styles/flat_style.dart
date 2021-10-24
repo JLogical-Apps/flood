@@ -420,6 +420,17 @@ class FlatStyle extends Style {
     );
   }
 
+  /// Converts a [styledTextStyle] to a [TextStyle] with optional overrides from [overrides].
+  TextStyle toTextStyle({required StyledTextStyle styledTextStyle, StyledTextOverrides? overrides}) {
+    return GoogleFonts.getFont(overrides?.fontFamily ?? styledTextStyle.fontFamily).copyWith(
+      color: overrides?.fontColor ?? styledTextStyle.fontColor,
+      fontSize: overrides?.fontSize ?? styledTextStyle.fontSize,
+      fontWeight: overrides?.fontWeight ?? styledTextStyle.fontWeight,
+      fontStyle: overrides?.fontStyle ?? styledTextStyle.fontStyle,
+      letterSpacing: overrides?.letterSpacing ?? styledTextStyle.letterSpacing,
+    );
+  }
+
   @override
   Widget button(BuildContext context, StyleContext styleContext, StyledButton button) {
     return HookBuilder(
@@ -1323,16 +1334,5 @@ class FlatStyle extends Style {
   /// Softens colors by making light colors darker and dark colors lighter.
   static Color softenColor(Color color) {
     return color.computeLuminance() < 0.5 ? color.lighten() : color.darken(5);
-  }
-
-  /// Converts a [styledTextStyle] to a [TextStyle] with optional overrides from [overrides].
-  static TextStyle toTextStyle({required StyledTextStyle styledTextStyle, StyledTextOverrides? overrides}) {
-    return GoogleFonts.getFont(overrides?.fontFamily ?? styledTextStyle.fontFamily).copyWith(
-      color: overrides?.fontColor ?? styledTextStyle.fontColor,
-      fontSize: overrides?.fontSize ?? styledTextStyle.fontSize,
-      fontWeight: overrides?.fontWeight ?? styledTextStyle.fontWeight,
-      fontStyle: overrides?.fontStyle ?? styledTextStyle.fontStyle,
-      letterSpacing: overrides?.letterSpacing ?? styledTextStyle.letterSpacing,
-    );
   }
 }
