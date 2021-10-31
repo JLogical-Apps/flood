@@ -59,3 +59,4 @@ dev_dependencies:
   freezed: ^0.14.2
 
 flutter:
+  uses-material-design: true
