@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 
+import 'entities/colors.dart';
 import 'entities/envelope.dart';
 import 'entities/lucky_numbers.dart';
 
@@ -46,6 +47,28 @@ void main() {
     final luckyNumbersEntity = Entity.fromState<LuckyNumbers>(state)!;
 
     expect(luckyNumbersEntity.state, state);
-    expect(luckyNumbersEntity.luckyNumbers.value, luckyNumbers);
+    expect(luckyNumbersEntity.luckyNumbersProperty.value, luckyNumbers);
+  });
+
+  test('state inflation of entity that has a map.', () {
+    AppContext.global = AppContext(
+      entityRegistrations: [
+        EntityRegistration<Colors>(() => Colors()),
+      ],
+    );
+
+    const colors = {'red': 0, 'orange': 1, 'yellow': 2, 'green' : 3, 'blue': 4, 'purple': 5};
+
+    final state = State(
+      id: 'id0',
+      values: {
+        'colors': colors,
+      },
+    );
+
+    final colorsEntity = Entity.fromState<Colors>(state)!;
+
+    expect(colorsEntity.state, state);
+    expect(colorsEntity.colorsProperty.value, colors);
   });
 }

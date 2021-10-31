@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:jlogical_utils/src/pond/entity/entity.dart';
+import 'package:jlogical_utils/src/pond/type_state_serializers/bool_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/int_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/string_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
@@ -11,20 +12,20 @@ class AppContext {
   final List<TypeStateSerializer> typeStateSerializers;
 
   AppContext({required this.entityRegistrations, List<TypeStateSerializer>? typeStateSerializers})
-      : this.typeStateSerializers = typeStateSerializers ?? defaultTypeStateSerializers;
+      : this.typeStateSerializers = typeStateSerializers ?? defaultTypeStateSerializerProviders;
 
   E? constructEntity<E extends Entity>() {
     return entityRegistrations.firstWhereOrNull((registration) => registration.entityType == E)?.onCreate() as E?;
   }
 
   TypeStateSerializer<T> getTypeStateSerializerByType<T>() {
-    return typeStateSerializers.firstWhere((typeStateSerializer) => typeStateSerializer.type == T)
-        as TypeStateSerializer<T>;
+    return typeStateSerializers.firstWhere((serializer) => serializer.type == T) as TypeStateSerializer<T>;
   }
 
-  static List<TypeStateSerializer> get defaultTypeStateSerializers => [
+  static List<TypeStateSerializer> get defaultTypeStateSerializerProviders => [
         IntTypeStateSerializer(),
         StringTypeStateSerializer(),
+        BoolTypeStateSerializer(),
       ];
 }
 

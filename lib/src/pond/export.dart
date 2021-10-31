@@ -2,6 +2,7 @@ export 'context/app_context.dart';
 export 'entity/entity.dart';
 export 'property/int_property.dart';
 export 'property/list_property.dart';
+export 'property/map_property.dart';
 export 'property/property.dart';
 export 'property/string_property.dart';
 export 'property/with_global_type_serializer.dart';

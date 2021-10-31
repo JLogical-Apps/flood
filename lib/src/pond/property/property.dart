@@ -7,7 +7,7 @@ abstract class Property<T> {
 
   Property({required this.name, T? initialValue}) : this.value = initialValue;
 
-  TypeStateSerializer<T> get typeStateSerializer;
+  TypeStateSerializer get typeStateSerializer;
 
   dynamic toStateValue() => value.mapIfNonNull((value) => typeStateSerializer.onSerialize(value));
 
