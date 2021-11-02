@@ -5,6 +5,8 @@ import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'entities/color.dart';
 import 'entities/envelope.dart';
 import 'entities/lucky_numbers.dart';
+import 'entities/palette.dart';
+import 'entities/palette_stats.dart';
 import 'entities/user_avatar.dart';
 
 void main() {
@@ -73,7 +75,7 @@ void main() {
     expect(color.rgbProperty.value, rgb);
   });
 
-  test('state inflation of record that has a reference to a value object.', () {
+  test('state inflation of record that has a value object.', () {
     AppContext.global = AppContext(
       valueObjectRegistrations: [
         ValueObjectRegistration<Color>(() => Color()),
@@ -96,5 +98,71 @@ void main() {
 
     expect(userAvatar.state, state);
     expect(userAvatar.colorProperty.value, color);
+  });
+
+  test('state inflation of record that has a list of value objects.', () {
+    AppContext.global = AppContext(
+      entityRegistrations: [
+        EntityRegistration<Palette>(() => Palette()),
+      ],
+      valueObjectRegistrations: [
+        ValueObjectRegistration<Color>(() => Color()),
+      ],
+    );
+
+    const white = {'r': 255, 'g': 255, 'b': 255};
+    const black = {'r': 0, 'g': 0, 'b': 0};
+
+    final state = State(
+      values: {
+        'colors': [
+          {
+            'rgb': white,
+          },
+          {
+            'rgb': black,
+          },
+        ],
+      },
+    );
+
+    final palette = Entity.fromState<Palette>(state)!;
+    final whiteColor = Color()..rgbProperty.value = white;
+    final blackColor = Color()..rgbProperty.value = black;
+
+    expect(palette.state, state);
+    expect(palette.colorsProperty.value, [whiteColor, blackColor]);
+  });
+
+  test('state inflation of record that has a map with value objects.', () {
+    AppContext.global = AppContext(
+      valueObjectRegistrations: [
+        ValueObjectRegistration<Color>(() => Color()),
+        ValueObjectRegistration<PaletteStats>(() => PaletteStats()),
+      ],
+    );
+
+    const white = {'r': 255, 'g': 255, 'b': 255};
+    const black = {'r': 0, 'g': 0, 'b': 0};
+
+    final state = State(
+      values: {
+        'colorUses': {
+          {
+            'rgb': white,
+          }: 4,
+          {
+            'rgb': black,
+          }: 2,
+        },
+      },
+    );
+
+    final paletteStats = ValueObject.fromState<PaletteStats>(state)!;
+    final whiteColor = Color()..rgbProperty.value = white;
+    final blackColor = Color()..rgbProperty.value = black;
+
+    expect(paletteStats.state, state);
+    expect(paletteStats.colorUses.value, {whiteColor: 4, blackColor: 2});
   });
 }

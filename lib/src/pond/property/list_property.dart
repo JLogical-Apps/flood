@@ -11,7 +11,7 @@ class ListProperty<T> extends Property<List<T>> {
 }
 
 class ListTypeStateSerializer<T> extends TypeStateSerializer<List<T>> {
-  final TypeStateSerializer<T> itemTypeStateSerializer = AppContext.global.getTypeStateSerializerByType<T>();
+  TypeStateSerializer itemTypeStateSerializer = AppContext.global.getTypeStateSerializerByRuntimeType(T);
 
   @override
   dynamic onSerialize(List<T> value) {
@@ -24,6 +24,6 @@ class ListTypeStateSerializer<T> extends TypeStateSerializer<List<T>> {
 
     return object
         .mapIfNonNull((object) => object.as<List>())
-        .mapIfNonNull((list) => list.map((element) => itemTypeStateSerializer.onDeserialize(element)!).toList());
+        .mapIfNonNull((list) => list.map((element) => itemTypeStateSerializer.onDeserialize(element) as T).toList());
   }
 }
