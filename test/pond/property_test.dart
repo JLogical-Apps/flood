@@ -5,6 +5,7 @@ import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'entities/color.dart';
 import 'entities/envelope.dart';
 import 'entities/lucky_numbers.dart';
+import 'entities/user_avatar.dart';
 
 void main() {
   test('state inflation on simple entity.', () {
@@ -29,7 +30,7 @@ void main() {
     expect(envelope.amountProperty.value, 24 * 100);
   });
 
-  test('state inflation of state that has a list', () {
+  test('state inflation of record that has a list', () {
     AppContext.global = AppContext(
       entityRegistrations: [
         EntityRegistration<LuckyNumbers>(() => LuckyNumbers()),
@@ -51,7 +52,7 @@ void main() {
     expect(luckyNumbersEntity.luckyNumbersProperty.value, luckyNumbers);
   });
 
-  test('state inflation of value object that has a map.', () {
+  test('state inflation of record that has a map.', () {
     AppContext.global = AppContext(
       valueObjectRegistrations: [
         ValueObjectRegistration<Color>(() => Color()),
@@ -66,13 +67,34 @@ void main() {
       },
     );
 
-    final colorValueObject = ValueObject.fromState<Color>(state)!;
+    final color = ValueObject.fromState<Color>(state)!;
 
-    expect(colorValueObject.state, state);
-    expect(colorValueObject.rgbProperty.value, rgb);
+    expect(color.state, state);
+    expect(color.rgbProperty.value, rgb);
   });
 
-  test('state inflation of entity that has a reference to a value object.', () {
+  test('state inflation of record that has a reference to a value object.', () {
+    AppContext.global = AppContext(
+      valueObjectRegistrations: [
+        ValueObjectRegistration<Color>(() => Color()),
+        ValueObjectRegistration<UserAvatar>(() => UserAvatar()),
+      ],
+    );
 
+    const rgb = {'r': 0, 'g': 152, 'b': 19};
+
+    final state = State(
+      values: {
+        'color': {
+          'rgb': rgb,
+        },
+      },
+    );
+
+    final userAvatar = ValueObject.fromState<UserAvatar>(state)!;
+    final color = Color()..rgbProperty.value = rgb;
+
+    expect(userAvatar.state, state);
+    expect(userAvatar.colorProperty.value, color);
   });
 }
