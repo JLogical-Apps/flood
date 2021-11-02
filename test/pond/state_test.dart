@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/pond/value_object/value_object.dart';
+import 'package:jlogical_utils/src/pond/record/value_object.dart';
 
 import 'entities/color.dart';
 import 'entities/envelope.dart';
@@ -70,5 +70,9 @@ void main() {
 
     expect(colorValueObject.state, state);
     expect(colorValueObject.rgbProperty.value, rgb);
+  });
+
+  test('state inflation of entity that has a reference to a value object.', () {
+
   });
 }

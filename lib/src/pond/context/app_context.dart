@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
-import 'package:jlogical_utils/src/pond/entity/entity.dart';
+import 'package:jlogical_utils/src/pond/record/entity.dart';
+import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/bool_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/int_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/string_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
-import 'package:jlogical_utils/src/pond/value_object/value_object.dart';
 
 class AppContext {
   static late AppContext global = AppContext();
@@ -24,8 +24,9 @@ class AppContext {
   }
 
   V? constructValueObject<V extends ValueObject>() {
-    return valueObjectRegistrations.firstWhereOrNull((registration) => registration.valueObjectType == V)?.onCreate()
-        as V?;
+    return valueObjectRegistrations
+        .firstWhereOrNull((registration) => registration.valueObjectType == V)
+        ?.onCreate() as V?;
   }
 
   TypeStateSerializer<T> getTypeStateSerializerByType<T>() {
