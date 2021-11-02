@@ -9,14 +9,14 @@ class ValueObjectProperty<V extends ValueObject> extends Property<V> {
   ValueObjectProperty({required String name, V? initialValue}) : super(name: name, initialValue: initialValue);
 
   @override
-  TypeStateSerializer<ValueObject> get typeStateSerializer => ValueObjectTypeStateSerializer<V>();
+  TypeStateSerializer<V> get typeStateSerializer => ValueObjectTypeStateSerializer<V>();
 }
 
-class ValueObjectTypeStateSerializer<V extends ValueObject> extends TypeStateSerializer<ValueObject>
+class ValueObjectTypeStateSerializer<V extends ValueObject> extends TypeStateSerializer<V>
     with WithStatefulTypeStateSerializer {
 
   @override
-  ValueObject? onDeserialize(dynamic value) {
+  V? onDeserialize(dynamic value) {
     return State.extractFrom(value).mapIfNonNull((state) => ValueObject.fromState<V>(state));
   }
 }

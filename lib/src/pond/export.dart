@@ -4,6 +4,7 @@ export 'property/list_property.dart';
 export 'property/map_property.dart';
 export 'property/property.dart';
 export 'property/value_object_property.dart';
+export 'property/reference_property.dart';
 export 'property/string_property.dart';
 export 'property/with_global_type_serializer.dart';
 export 'property/with_id_properties_state.dart';

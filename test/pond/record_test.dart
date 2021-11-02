@@ -12,7 +12,6 @@ void main() {
     expect(
       envelope.state,
       State(
-        id: null,
         values: {
           'name': 'Tithe',
           'amount': 24 * 100,

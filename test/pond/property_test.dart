@@ -7,6 +7,7 @@ import 'entities/envelope.dart';
 import 'entities/lucky_numbers.dart';
 import 'entities/palette.dart';
 import 'entities/palette_stats.dart';
+import 'entities/transaction.dart';
 import 'entities/user_avatar.dart';
 
 void main() {
@@ -164,5 +165,33 @@ void main() {
 
     expect(paletteStats.state, state);
     expect(paletteStats.colorUses.value, {whiteColor: 4, blackColor: 2});
+  });
+
+  test('state inflation of record that has a reference to an entity.', () {
+    AppContext.global = AppContext(entityRegistrations: [
+      EntityRegistration<Envelope>(() => Envelope()),
+      EntityRegistration<Transaction>(() => Transaction()),
+    ]);
+
+    final state = State(
+      id: 'transaction1',
+      values: {
+        'envelope': 'envelope1',
+      },
+    );
+
+    final transaction = Entity.fromState<Transaction>(state)!;
+    expect(transaction.state, state);
+
+    final envelope = Envelope()..id = 'envelope2';
+
+    transaction.envelopeProperty.reference = envelope;
+    final newState = State(
+      id: 'transaction1',
+      values: {
+        'envelope': 'envelope2',
+      },
+    );
+    expect(transaction.state, newState);
   });
 }
