@@ -10,7 +10,7 @@ extension ObjectExtensions<T> on T {
 
 extension NullableObjectExtensions<T> on T? {
   /// If this is null, returns null. Otherwise, maps it by using [mapper].
-  R? mapIfNonNull<R>(R mapper(T value)) {
+  R? mapIfNonNull<R>(R? mapper(T value)) {
     if(this == null){
       return null;
     }

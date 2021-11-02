@@ -23,7 +23,7 @@ class ListTypeStateSerializer<T> extends TypeStateSerializer<List<T>> {
     Object? object = value;
 
     return object
-        ?.as<List>()
+        .mapIfNonNull((object) => object.as<List>())
         .mapIfNonNull((list) => list.map((element) => itemTypeStateSerializer.onDeserialize(element)!).toList());
   }
 }

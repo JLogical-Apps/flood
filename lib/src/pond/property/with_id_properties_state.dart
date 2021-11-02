@@ -5,9 +5,9 @@ mixin WithIdPropertiesState on Entity {
   List<Property> get properties => [];
 
   State get state => State(
-    id: id,
-    values: properties.map((property) => MapEntry(property.name, property.toStateValue())).toMap(),
-  );
+        id: id,
+        values: properties.map((property) => MapEntry(property.name, property.toStateValue())).toMap(),
+      );
 
   set state(State state) {
     properties

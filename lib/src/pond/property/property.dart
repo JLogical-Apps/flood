@@ -14,13 +14,5 @@ abstract class Property<T> {
   void fromStateValue(dynamic stateValue) => value = typeStateSerializer.onDeserialize(stateValue);
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Property && runtimeType == other.runtimeType && name == other.name && value == other.value;
-
-  @override
-  int get hashCode => name.hashCode ^ value.hashCode;
-
-  @override
   String toString() => 'Property<$T>{name = $name, value = $value}';
 }

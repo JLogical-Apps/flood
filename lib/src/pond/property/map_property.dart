@@ -27,7 +27,7 @@ class MapTypeStateSerializer<K, V> extends TypeStateSerializer<Map<K, V>> {
   Map<K, V>? onDeserialize(dynamic value) {
     Object? object = value;
 
-    return object?.as<Map>().mapIfNonNull((list) => list.map((key, value) =>
+    return object.mapIfNonNull((object) => object.as<Map>()).mapIfNonNull((list) => list.map((key, value) =>
         MapEntry(keyTypeStateSerializer.onDeserialize(key)!, valueTypeStateSerializer.onDeserialize(value)!)));
   }
 }
