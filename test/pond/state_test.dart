@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/pond/value_object/value_object.dart';
 
-import 'entities/colors.dart';
+import 'entities/color.dart';
 import 'entities/envelope.dart';
 import 'entities/lucky_numbers.dart';
 
@@ -28,7 +29,7 @@ void main() {
     expect(envelope.amountProperty.value, 24 * 100);
   });
 
-  test('state inflation of entity that has a list', () {
+  test('state inflation of state that has a list', () {
     AppContext.global = AppContext(
       entityRegistrations: [
         EntityRegistration<LuckyNumbers>(() => LuckyNumbers()),
@@ -50,25 +51,24 @@ void main() {
     expect(luckyNumbersEntity.luckyNumbersProperty.value, luckyNumbers);
   });
 
-  test('state inflation of entity that has a map.', () {
+  test('state inflation of value object that has a map.', () {
     AppContext.global = AppContext(
-      entityRegistrations: [
-        EntityRegistration<Colors>(() => Colors()),
+      valueObjectRegistrations: [
+        ValueObjectRegistration<Color>(() => Color()),
       ],
     );
 
-    const colors = {'red': 0, 'orange': 1, 'yellow': 2, 'green' : 3, 'blue': 4, 'purple': 5};
+    const rgb = {'r': 0, 'g': 152, 'b': 19};
 
     final state = State(
-      id: 'id0',
       values: {
-        'colors': colors,
+        'rgb': rgb,
       },
     );
 
-    final colorsEntity = Entity.fromState<Colors>(state)!;
+    final colorValueObject = ValueObject.fromState<Color>(state)!;
 
-    expect(colorsEntity.state, state);
-    expect(colorsEntity.colorsProperty.value, colors);
+    expect(colorValueObject.state, state);
+    expect(colorValueObject.rgbProperty.value, rgb);
   });
 }

@@ -5,7 +5,7 @@ import 'package:jlogical_utils/src/utils/collection_extensions.dart';
 mixin WithPropertiesState {
   List<Property> get properties => [];
 
-  State generatePropertiesState(String? id) => State(
+  State generatePropertiesState([String? id]) => State(
         id: id,
         values: properties.map((property) => MapEntry(property.name, property.toStateValue())).toMap(),
       );

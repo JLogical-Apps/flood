@@ -4,18 +4,28 @@ import 'package:jlogical_utils/src/pond/type_state_serializers/bool_type_state_s
 import 'package:jlogical_utils/src/pond/type_state_serializers/int_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/string_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
+import 'package:jlogical_utils/src/pond/value_object/value_object.dart';
 
 class AppContext {
-  static late AppContext global = AppContext(entityRegistrations: []);
+  static late AppContext global = AppContext();
 
   final List<EntityRegistration> entityRegistrations;
+  final List<ValueObjectRegistration> valueObjectRegistrations;
   final List<TypeStateSerializer> typeStateSerializers;
 
-  AppContext({required this.entityRegistrations, List<TypeStateSerializer>? typeStateSerializers})
-      : this.typeStateSerializers = typeStateSerializers ?? defaultTypeStateSerializerProviders;
+  AppContext({
+    this.entityRegistrations: const [],
+    this.valueObjectRegistrations: const [],
+    List<TypeStateSerializer>? typeStateSerializers,
+  }) : this.typeStateSerializers = typeStateSerializers ?? defaultTypeStateSerializerProviders;
 
   E? constructEntity<E extends Entity>() {
     return entityRegistrations.firstWhereOrNull((registration) => registration.entityType == E)?.onCreate() as E?;
+  }
+
+  V? constructValueObject<V extends ValueObject>() {
+    return valueObjectRegistrations.firstWhereOrNull((registration) => registration.valueObjectType == V)?.onCreate()
+        as V?;
   }
 
   TypeStateSerializer<T> getTypeStateSerializerByType<T>() {
@@ -35,4 +45,12 @@ class EntityRegistration<E extends Entity> {
   const EntityRegistration(this.onCreate);
 
   Type get entityType => E;
+}
+
+class ValueObjectRegistration<V extends ValueObject> {
+  final V Function() onCreate;
+
+  const ValueObjectRegistration(this.onCreate);
+
+  Type get valueObjectType => V;
 }

@@ -13,3 +13,8 @@ export 'type_state_serializers/int_type_state_serializer.dart';
 export 'type_state_serializers/string_type_state_serializer.dart';
 export 'type_state_serializers/type_state_serializer.dart';
 export 'type_state_serializers/with_implicit_state_serializer.dart';
+
+/**
+    TODO
+    Null value in list and map.
+ */
