@@ -1,7 +1,9 @@
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/utils/collection_extensions.dart';
 
-mixin WithIdPropertiesState on Entity {
+mixin WithIdPropertiesState on Record {
+  String? get id;
+
   List<Property> get properties => [];
 
   State get state => State(

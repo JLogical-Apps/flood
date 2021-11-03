@@ -1,6 +1,6 @@
 import 'package:jlogical_utils/src/pond/export.dart';
 
-class Envelope extends Entity with WithIdPropertiesState {
+class Envelope extends Entity {
   late final StringProperty nameProperty = StringProperty(name: 'name');
   late final IntProperty amountProperty = IntProperty(name: 'amount');
 

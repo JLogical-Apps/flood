@@ -1,5 +1,5 @@
 import 'package:jlogical_utils/src/pond/property/context/property_context_provider.dart';
-import 'package:jlogical_utils/src/pond/record/value_object_immutable_violation_error.dart';
+import 'package:jlogical_utils/src/pond/record/immutability_violation_error.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 

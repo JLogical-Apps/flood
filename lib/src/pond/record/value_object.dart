@@ -6,12 +6,12 @@ import 'package:jlogical_utils/src/pond/validation/validation_state.dart';
 import 'package:jlogical_utils/src/pond/validation/with_validators.dart';
 
 abstract class ValueObject extends Record with WithValidators, WithPropertiesState implements PropertyContextProvider {
-  static V? fromState<V extends ValueObject>(State state) {
-    return AppContext.global.constructValueObject<V>()..state = state;
-  }
-
   ValueObject() {
     properties.forEach((property) => property.registerPropertyContextProvider(this));
+  }
+
+  static V? fromState<V extends ValueObject>(State state) {
+    return AppContext.global.constructValueObject<V>()..state = state;
   }
 
   PropertyContext? create(Property property) {
