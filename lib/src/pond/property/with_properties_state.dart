@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
@@ -15,4 +16,6 @@ mixin WithPropertiesState on Record {
         .where((property) => state.values.containsKey(property.name))
         .forEach((property) => property.fromStateValue(state.values[property.name]));
   }
+
+  List<Validator> get validators => [];
 }
