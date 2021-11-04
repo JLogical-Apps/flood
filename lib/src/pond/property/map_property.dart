@@ -3,8 +3,14 @@ import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 import 'package:jlogical_utils/src/utils/util.dart';
 
+import 'validation/property_validator.dart';
+
 class MapProperty<K, V> extends Property<Map<K, V>> {
-  MapProperty({required String name, Map<K, V>? initialValue}) : super(name: name, initialValue: initialValue);
+  MapProperty({
+    required String name,
+    Map<K, V>? initialValue,
+    List<PropertyValidator<Map<K, V>>>? validators,
+  }) : super(name: name, initialValue: initialValue, validators: validators);
 
   @override
   TypeStateSerializer<Map<K, V>> get typeStateSerializer => MapTypeStateSerializer();

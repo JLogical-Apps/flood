@@ -1,18 +1,24 @@
 import 'package:jlogical_utils/src/pond/property/context/property_context_provider.dart';
+import 'package:jlogical_utils/src/pond/property/validation/property_validator.dart';
 import 'package:jlogical_utils/src/pond/record/immutability_violation_error.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/validation/validation_exception.dart';
+import 'package:jlogical_utils/src/pond/validation/validator.dart';
+import '../state/state.dart';
 
-abstract class Property<T> {
+abstract class Property<T> implements Validator {
   final String name;
 
-  late T _value;
+  final List<PropertyValidator<T>> validators;
 
-  T get value => _value;
+  T? _value;
 
-  set value(T value) {
+  T? get value => _value;
+
+  set value(T? value) {
     final canChange = _propertyContextProvider
-            .mapIfNonNull((propertyContextProvider) => propertyContextProvider.create(this))
+            .mapIfNonNull((propertyContextProvider) => propertyContextProvider.createPropertyContext(this))
             .mapIfNonNull((propertyContext) => propertyContext.canChange) ??
         true;
 
@@ -23,15 +29,17 @@ abstract class Property<T> {
     _value = value;
   }
 
-  PropertyContextProvider? _propertyContextProvider;
-  void registerPropertyContextProvider(PropertyContextProvider propertyContextProvider){
-    _propertyContextProvider = propertyContextProvider;
-  }
-
-  Property({required this.name, T? initialValue}) {
+  Property({required this.name, List<PropertyValidator<T>>? validators, T? initialValue})
+      : this.validators = validators ?? const [] {
     if (initialValue != null) {
       _value = initialValue;
     }
+  }
+
+  PropertyContextProvider? _propertyContextProvider;
+
+  void registerPropertyContextProvider(PropertyContextProvider propertyContextProvider) {
+    _propertyContextProvider = propertyContextProvider;
   }
 
   TypeStateSerializer get typeStateSerializer;
@@ -40,6 +48,16 @@ abstract class Property<T> {
 
   void fromStateValue(dynamic stateValue) => _value = typeStateSerializer.onDeserialize(stateValue);
 
+  void validate(State state) {
+    return validators.forEach((propertyValidator) {
+      try {
+        propertyValidator.validateProperty(value);
+      } on Exception catch (e) {
+        throw ValidationException(failedValidator: this, errorMessage: e.toString());
+      }
+    });
+  }
+
   @override
-  String toString() => 'Property<$T>{name = $name, value = $value}';
+  String toString() => '$runtimeType{name = $name, value = $value}';
 }

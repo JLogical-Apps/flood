@@ -23,7 +23,7 @@ abstract class Entity extends Record
       ..state = state;
   }
 
-  PropertyContext? create(Property property) {
+  PropertyContext createPropertyContext(Property property) {
     return PropertyContext(canChange: true);
   }
 

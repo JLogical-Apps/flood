@@ -1,3 +1,5 @@
+import '../state/state.dart';
+
 abstract class Validator {
-  bool validate();
+  void validate(State value);
 }

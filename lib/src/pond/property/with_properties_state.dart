@@ -17,5 +17,5 @@ mixin WithPropertiesState on Record {
         .forEach((property) => property.fromStateValue(state.values[property.name]));
   }
 
-  List<Validator> get validators => [];
+  List<Validator> get validators => properties;
 }

@@ -14,7 +14,7 @@ abstract class ValueObject extends Record with WithValidators, WithPropertiesSta
     return AppContext.global.constructValueObject<V>()..state = state;
   }
 
-  PropertyContext? create(Property property) {
+  PropertyContext createPropertyContext(Property property) {
     return PropertyContext(
       canChange: validationState == ValidationState.unvalidated,
     );
