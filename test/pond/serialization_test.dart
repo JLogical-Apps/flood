@@ -74,4 +74,16 @@ void main() {
     final nullableListSerializer = ListTypeStateSerializer<int?>();
     expect(nullableListSerializer.onDeserialize([null, 4]), [null, 4]);
   });
+
+  test('serializing maps', () {
+    final nonNullListSerializer = MapTypeStateSerializer<int, String>();
+    expect(nonNullListSerializer.onDeserialize({1: 'one', '2': 'two'}), {1: 'one', 2: 'two'});
+    expect(nonNullListSerializer.onDeserialize({}), {});
+    expect(() => nonNullListSerializer.onDeserialize(['hello world']), throwsA(isA<Exception>()));
+    expect(() => nonNullListSerializer.onDeserialize({'hello world': 1}), throwsA(isA<FormatException>()));
+    expect(() => nonNullListSerializer.onDeserialize({0: null}), throwsA(isA<Error>()));
+
+    final nullableListSerializer = MapTypeStateSerializer<int, String?>();
+    expect(nullableListSerializer.onDeserialize({0: null}), {0: null});
+  });
 }

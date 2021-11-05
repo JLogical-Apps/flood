@@ -34,7 +34,7 @@ class MapTypeStateSerializer<K, V> extends TypeStateSerializer<Map<K, V>> {
     Object? object = value;
 
     return object.mapIfNonNull((object) => object.as<Map>()).mapIfNonNull((list) => list.map((key, value) =>
-            MapEntry(keyTypeStateSerializer.onDeserialize(key)!, valueTypeStateSerializer.onDeserialize(value)!))) ??
+            MapEntry(keyTypeStateSerializer.onDeserialize(key), valueTypeStateSerializer.onDeserialize(value)))) ??
         (throw Exception('Cannot deserialize map from $value'));
   }
 }
