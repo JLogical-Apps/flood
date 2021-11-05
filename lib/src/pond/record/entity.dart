@@ -17,7 +17,7 @@ abstract class Entity extends Record
     properties.forEach((property) => property.registerPropertyContextProvider(this));
   }
 
-  static E? fromState<E extends Entity>(State state) {
+  static E fromState<E extends Entity>(State state) {
     return AppContext.global.constructEntity<E>()
       ..id = state.id
       ..state = state;

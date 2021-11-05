@@ -1,4 +1,4 @@
-import 'package:collection/src/iterable_extensions.dart';
+import 'package:collection/collection.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
@@ -54,22 +54,31 @@ class AppContext {
       return valueObjectRegistration;
     }
 
+    final nullableValueObjectRegistration = valueObjectRegistrations
+        .firstWhereOrNull((registration) => registration.nullableValueObjectType == type)
+        .mapIfNonNull((registration) => NullableTypeStateSerializer(
+            RuntimeValueObjectTypeStateSerializer(valueObjectType: registration.valueObjectType)));
+
+    if (nullableValueObjectRegistration != null) {
+      return nullableValueObjectRegistration;
+    }
+
     throw Exception('Unable to find a type state serializer for type [$type]');
   }
 
   static List<TypeStateSerializer> get coreTypeStateSerializers => [
         IntTypeStateSerializer(),
+        DoubleTypeStateSerializer(),
         StringTypeStateSerializer(),
         BoolTypeStateSerializer(),
-        DoubleTypeStateSerializer(),
       ];
 
-  static List<TypeStateSerializer> get nullableCoreTypeStateSerializers =>[
-    NullableTypeStateSerializer<int?>(IntTypeStateSerializer()),
-    NullableTypeStateSerializer<String?>(StringTypeStateSerializer()),
-    NullableTypeStateSerializer<bool?>(BoolTypeStateSerializer()),
-    NullableTypeStateSerializer<double?>(DoubleTypeStateSerializer()),
-  ];
+  static List<TypeStateSerializer> get nullableCoreTypeStateSerializers => [
+        NullableTypeStateSerializer<int?>(IntTypeStateSerializer()),
+        NullableTypeStateSerializer<double?>(DoubleTypeStateSerializer()),
+        NullableTypeStateSerializer<String?>(StringTypeStateSerializer()),
+        NullableTypeStateSerializer<bool?>(BoolTypeStateSerializer()),
+      ];
 }
 
 class EntityRegistration<E extends Entity> {
@@ -80,12 +89,14 @@ class EntityRegistration<E extends Entity> {
   Type get entityType => E;
 }
 
-class ValueObjectRegistration<V extends ValueObject> {
+class ValueObjectRegistration<V extends ValueObject, NullableV extends ValueObject?> {
   final V Function() onCreate;
 
   const ValueObjectRegistration(this.onCreate);
 
   Type get valueObjectType => V;
+
+  Type get nullableValueObjectType => NullableV;
 }
 
 class RuntimeValueObjectTypeStateSerializer extends TypeStateSerializer<ValueObject> {

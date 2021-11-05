@@ -10,7 +10,7 @@ abstract class ValueObject extends Record with WithValidators, WithPropertiesSta
     properties.forEach((property) => property.registerPropertyContextProvider(this));
   }
 
-  static V? fromState<V extends ValueObject>(State state) {
+  static V fromState<V extends ValueObject>(State state) {
     return AppContext.global.constructValueObject<V>()..state = state;
   }
 

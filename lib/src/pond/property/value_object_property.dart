@@ -20,11 +20,15 @@ class ValueObjectTypeStateSerializer<V extends ValueObject> extends TypeStateSer
     with WithStatefulTypeStateSerializer {
   @override
   V onDeserialize(dynamic value) {
+    if (value == null) {
+      throw ArgumentError.notNull('value');
+    }
+
     final state = State.extractFrom(value);
-    if(state == null){
+    if (state == null) {
       throw FormatException('Cannot extract state from $value');
     }
 
-    return ValueObject.fromState<V>(state) ?? (throw Exception('Cannot generate ValueObject from $state'));
+    return ValueObject.fromState<V>(state);
   }
 }

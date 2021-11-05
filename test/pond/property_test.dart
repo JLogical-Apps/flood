@@ -27,7 +27,7 @@ void main() {
       },
     );
 
-    final envelope = Entity.fromState<Envelope>(state)!;
+    final envelope = Entity.fromState<Envelope>(state);
 
     expect(envelope.state, state);
     expect(envelope.nameProperty.value, 'Tithe');
@@ -50,7 +50,7 @@ void main() {
       },
     );
 
-    final luckyNumbersEntity = Entity.fromState<LuckyNumbers>(state)!;
+    final luckyNumbersEntity = Entity.fromState<LuckyNumbers>(state);
 
     expect(luckyNumbersEntity.state, state);
     expect(luckyNumbersEntity.luckyNumbersProperty.value, luckyNumbers);
@@ -59,7 +59,7 @@ void main() {
   test('state inflation of record that has a map.', () {
     AppContext.global = AppContext(
       valueObjectRegistrations: [
-        ValueObjectRegistration<Color>(() => Color()),
+        ValueObjectRegistration<Color, Color?>(() => Color()),
       ],
     );
 
@@ -71,7 +71,7 @@ void main() {
       },
     );
 
-    final color = ValueObject.fromState<Color>(state)!;
+    final color = ValueObject.fromState<Color>(state);
 
     expect(color.state, state);
     expect(color.rgbProperty.value, rgb);
@@ -80,8 +80,8 @@ void main() {
   test('state inflation of record that has a value object.', () {
     AppContext.global = AppContext(
       valueObjectRegistrations: [
-        ValueObjectRegistration<Color>(() => Color()),
-        ValueObjectRegistration<UserAvatar>(() => UserAvatar()),
+        ValueObjectRegistration<Color, Color?>(() => Color()),
+        ValueObjectRegistration<UserAvatar, UserAvatar?>(() => UserAvatar()),
       ],
     );
 
@@ -95,7 +95,7 @@ void main() {
       },
     );
 
-    final userAvatar = ValueObject.fromState<UserAvatar>(state)!;
+    final userAvatar = ValueObject.fromState<UserAvatar>(state);
     final color = Color()..rgbProperty.value = rgb;
 
     expect(userAvatar.state, state);
@@ -108,7 +108,7 @@ void main() {
         EntityRegistration<Palette>(() => Palette()),
       ],
       valueObjectRegistrations: [
-        ValueObjectRegistration<Color>(() => Color()),
+        ValueObjectRegistration<Color, Color?>(() => Color()),
       ],
     );
 
@@ -128,7 +128,7 @@ void main() {
       },
     );
 
-    final palette = Entity.fromState<Palette>(state)!;
+    final palette = Entity.fromState<Palette>(state);
     final whiteColor = Color()..rgbProperty.value = white;
     final blackColor = Color()..rgbProperty.value = black;
 
@@ -139,8 +139,8 @@ void main() {
   test('state inflation of record that has a map with value objects.', () {
     AppContext.global = AppContext(
       valueObjectRegistrations: [
-        ValueObjectRegistration<Color>(() => Color()),
-        ValueObjectRegistration<PaletteStats>(() => PaletteStats()),
+        ValueObjectRegistration<Color, Color?>(() => Color()),
+        ValueObjectRegistration<PaletteStats, PaletteStats?>(() => PaletteStats()),
       ],
     );
 
@@ -160,7 +160,7 @@ void main() {
       },
     );
 
-    final paletteStats = ValueObject.fromState<PaletteStats>(state)!;
+    final paletteStats = ValueObject.fromState<PaletteStats>(state);
     final whiteColor = Color()..rgbProperty.value = white;
     final blackColor = Color()..rgbProperty.value = black;
 
@@ -181,7 +181,7 @@ void main() {
       },
     );
 
-    final transaction = Entity.fromState<Transaction>(state)!;
+    final transaction = Entity.fromState<Transaction>(state);
     expect(transaction.state, state);
 
     final envelope = Envelope()..id = 'envelope2';
