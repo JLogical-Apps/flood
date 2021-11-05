@@ -18,8 +18,9 @@ class AppContext {
   AppContext({
     this.entityRegistrations: const [],
     this.valueObjectRegistrations: const [],
-    List<TypeStateSerializer>? typeStateSerializers,
-  }) : this.typeStateSerializers = typeStateSerializers ?? defaultTypeStateSerializer;
+    List<TypeStateSerializer> additionalTypeStateSerializers: const [],
+  }) : this.typeStateSerializers =
+            coreTypeStateSerializers + nullableCoreTypeStateSerializers + additionalTypeStateSerializers;
 
   E constructEntity<E extends Entity>() {
     return entityRegistrations.firstWhere((registration) => registration.entityType == E).onCreate() as E;
@@ -56,11 +57,19 @@ class AppContext {
     throw Exception('Unable to find a type state serializer for type [$type]');
   }
 
-  static List<TypeStateSerializer> get defaultTypeStateSerializer => [
+  static List<TypeStateSerializer> get coreTypeStateSerializers => [
         IntTypeStateSerializer(),
         StringTypeStateSerializer(),
         BoolTypeStateSerializer(),
+        DoubleTypeStateSerializer(),
       ];
+
+  static List<TypeStateSerializer> get nullableCoreTypeStateSerializers =>[
+    NullableTypeStateSerializer<int?>(IntTypeStateSerializer()),
+    NullableTypeStateSerializer<String?>(StringTypeStateSerializer()),
+    NullableTypeStateSerializer<bool?>(BoolTypeStateSerializer()),
+    NullableTypeStateSerializer<double?>(DoubleTypeStateSerializer()),
+  ];
 }
 
 class EntityRegistration<E extends Entity> {

@@ -24,11 +24,11 @@ class ListTypeStateSerializer<T> extends TypeStateSerializer<List<T>> {
   }
 
   @override
-  List<T>? onDeserialize(dynamic value) {
+  List<T> onDeserialize(dynamic value) {
     Object? object = value;
 
-    return object
-        .mapIfNonNull((object) => object.as<List>())
-        .mapIfNonNull((list) => list.map((element) => itemTypeStateSerializer.onDeserialize(element) as T).toList());
+    return object.mapIfNonNull((object) => object.as<List>()).mapIfNonNull(
+            (list) => list.map((element) => itemTypeStateSerializer.onDeserialize(element) as T).toList()) ??
+        (throw Exception('Cannot deserialize list from $value'));
   }
 }

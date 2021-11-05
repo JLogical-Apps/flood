@@ -3,7 +3,6 @@ import 'package:jlogical_utils/src/pond/property/validation/property_validator.d
 import 'package:jlogical_utils/src/pond/property/with_stateful_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
-import 'package:jlogical_utils/src/utils/util.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 
 class ValueObjectProperty<V extends ValueObject> extends Property<V> {
@@ -20,7 +19,12 @@ class ValueObjectProperty<V extends ValueObject> extends Property<V> {
 class ValueObjectTypeStateSerializer<V extends ValueObject> extends TypeStateSerializer<V>
     with WithStatefulTypeStateSerializer {
   @override
-  V? onDeserialize(dynamic value) {
-    return State.extractFrom(value).mapIfNonNull((state) => ValueObject.fromState<V>(state));
+  V onDeserialize(dynamic value) {
+    final state = State.extractFrom(value);
+    if(state == null){
+      throw FormatException('Cannot extract state from $value');
+    }
+
+    return ValueObject.fromState<V>(state) ?? (throw Exception('Cannot generate ValueObject from $state'));
   }
 }
