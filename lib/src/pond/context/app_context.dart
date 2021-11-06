@@ -22,8 +22,8 @@ class AppContext {
   }) : this.typeStateSerializers =
             coreTypeStateSerializers + nullableCoreTypeStateSerializers + additionalTypeStateSerializers;
 
-  E constructEntity<E extends Entity>() {
-    return entityRegistrations.firstWhere((registration) => registration.entityType == E).onCreate() as E;
+  E constructEntity<V extends ValueObject, E extends Entity<V>>(V initialState) {
+    return entityRegistrations.firstWhere((registration) => registration.entityType == E).onCreate(initialState) as E;
   }
 
   V constructValueObject<V extends ValueObject>() {
@@ -81,8 +81,8 @@ class AppContext {
       ];
 }
 
-class EntityRegistration<E extends Entity> {
-  final E Function() onCreate;
+class EntityRegistration<V extends ValueObject, E extends Entity<V>> {
+  final E Function(V initialState) onCreate;
 
   const EntityRegistration(this.onCreate);
 

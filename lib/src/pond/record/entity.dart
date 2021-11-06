@@ -1,31 +1,18 @@
-import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/pond/property/context/property_context.dart';
-import 'package:jlogical_utils/src/pond/property/context/property_context_provider.dart';
-import 'package:jlogical_utils/src/pond/record/record.dart';
-import 'package:jlogical_utils/src/pond/state/state.dart';
-import 'package:jlogical_utils/src/pond/validation/with_validators.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'has_id.dart';
 
-abstract class Entity extends Record
-    with WithValidators, WithIdPropertiesState
-    implements HasId, PropertyContextProvider {
+abstract class Entity<V extends ValueObject> implements HasId {
   String? id;
 
-  Entity({this.id}) {
-    properties.forEach((property) => property.registerPropertyContextProvider(this));
-  }
+  BehaviorSubject<V> _stateX;
 
-  static E fromState<E extends Entity>(State state) {
-    return AppContext.global.constructEntity<E>()
-      ..id = state.id
-      ..state = state;
-  }
+  V get state => _stateX.value;
 
-  PropertyContext createPropertyContext(Property property) {
-    return PropertyContext(canChange: true);
-  }
+  set state(V value) => _stateX.value = value;
+
+  Entity({required V initialState}) : _stateX = BehaviorSubject.seeded(initialState);
 
   @override
   bool operator ==(Object other) =>

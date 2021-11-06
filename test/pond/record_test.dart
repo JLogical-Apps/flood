@@ -4,9 +4,10 @@ import 'package:jlogical_utils/src/pond/record/immutability_violation_error.dart
 
 import 'entities/color.dart';
 import 'entities/envelope.dart';
+import 'entities/envelope_entity.dart';
 
 void main() {
-  test('simple entity has proper state.', () {
+  test('simple value object has proper state.', () {
     final envelope = Envelope()
       ..nameProperty.value = 'Tithe'
       ..amountProperty.value = 24 * 100;
@@ -34,32 +35,35 @@ void main() {
   });
 
   test('equality of Entities is their id.', () {
-    final originalEnvelope = Envelope()
-      ..id = 'envelope'
-      ..nameProperty.value = 'A'
-      ..amountProperty.value = 204 * 100;
+    final originalEnvelope = EnvelopeEntity(
+        initialEnvelope: Envelope()
+          ..nameProperty.value = 'A'
+          ..amountProperty.value = 204 * 100)
+      ..id = 'envelope';
 
-    final envelopeWithSameIdDifferentContent = Envelope()
-      ..id = 'envelope'
-      ..nameProperty.value = 'B'
-      ..amountProperty.value = 24 * 100;
+    final envelopeWithSameIdDifferentContent = EnvelopeEntity(
+        initialEnvelope: Envelope()
+          ..nameProperty.value = 'B'
+          ..amountProperty.value = 24 * 100)
+      ..id = 'envelope';
 
-    final envelopeWithDifferentIdSameContent = Envelope()
-      ..id = 'something_different'
-      ..nameProperty.value = 'A'
-      ..amountProperty.value = 204 * 100;
+    final envelopeWithDifferentIdSameContent = EnvelopeEntity(
+        initialEnvelope: Envelope()
+          ..nameProperty.value = 'A'
+          ..amountProperty.value = 204 * 100)
+      ..id = 'something_different';
 
     expect(originalEnvelope, equals(envelopeWithSameIdDifferentContent));
     expect(originalEnvelope, isNot(equals(envelopeWithDifferentIdSameContent)));
   });
 
   test('can change properties of Entity after validation.', () {
-    final envelope = Envelope()
-      ..nameProperty.value = 'Tithe'
-      ..amountProperty.value = 25 * 100
-      ..validate();
+    final envelope = EnvelopeEntity(
+        initialEnvelope: Envelope()
+          ..nameProperty.value = 'Tithe'
+          ..amountProperty.value = 25 * 100);
 
-    expect(() => envelope.amountProperty.value = 10 * 100, returnsNormally);
+    expect(() => envelope.changeName('Giving'), returnsNormally);
   });
 
   test('cannot change properties of ValueObjects once validated.', () {

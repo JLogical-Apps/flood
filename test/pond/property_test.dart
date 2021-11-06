@@ -5,6 +5,7 @@ import 'package:jlogical_utils/src/pond/validation/validation_exception.dart';
 
 import 'entities/color.dart';
 import 'entities/envelope.dart';
+import 'entities/envelope_entity.dart';
 import 'entities/lucky_numbers.dart';
 import 'entities/palette.dart';
 import 'entities/palette_stats.dart';
@@ -12,22 +13,19 @@ import 'entities/transaction.dart';
 import 'entities/user_avatar.dart';
 
 void main() {
-  test('state inflation on simple entity.', () {
-    AppContext.global = AppContext(
-      entityRegistrations: [
-        EntityRegistration<Envelope>(() => Envelope()),
-      ],
-    );
+  test('state inflation on simple ValueObject.', () {
+    AppContext.global = AppContext(valueObjectRegistrations: [
+      ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
+    ]);
 
     final state = State(
-      id: 'id0',
       values: {
         'name': 'Tithe',
         'amount': 24 * 100,
       },
     );
 
-    final envelope = Entity.fromState<Envelope>(state);
+    final envelope = ValueObject.fromState<Envelope>(state);
 
     expect(envelope.state, state);
     expect(envelope.nameProperty.value, 'Tithe');
@@ -36,21 +34,20 @@ void main() {
 
   test('state inflation of record that has a list', () {
     AppContext.global = AppContext(
-      entityRegistrations: [
-        EntityRegistration<LuckyNumbers>(() => LuckyNumbers()),
+      valueObjectRegistrations: [
+        ValueObjectRegistration<LuckyNumbers, LuckyNumbers?>(() => LuckyNumbers()),
       ],
     );
 
     const luckyNumbers = [4, 8, 15, 16, 23, 42];
 
     final state = State(
-      id: 'id0',
       values: {
         'luckyNumbers': luckyNumbers,
       },
     );
 
-    final luckyNumbersEntity = Entity.fromState<LuckyNumbers>(state);
+    final luckyNumbersEntity = ValueObject.fromState<LuckyNumbers>(state);
 
     expect(luckyNumbersEntity.state, state);
     expect(luckyNumbersEntity.luckyNumbersProperty.value, luckyNumbers);
@@ -104,10 +101,8 @@ void main() {
 
   test('state inflation of record that has a list of value objects.', () {
     AppContext.global = AppContext(
-      entityRegistrations: [
-        EntityRegistration<Palette>(() => Palette()),
-      ],
       valueObjectRegistrations: [
+        ValueObjectRegistration<Palette, Palette?>(() => Palette()),
         ValueObjectRegistration<Color, Color?>(() => Color()),
       ],
     );
@@ -128,7 +123,7 @@ void main() {
       },
     );
 
-    final palette = Entity.fromState<Palette>(state);
+    final palette = ValueObject.fromState<Palette>(state);
     final whiteColor = Color()..rgbProperty.value = white;
     final blackColor = Color()..rgbProperty.value = black;
 
@@ -169,26 +164,24 @@ void main() {
   });
 
   test('state inflation of record that has a reference to an entity.', () {
-    AppContext.global = AppContext(entityRegistrations: [
-      EntityRegistration<Envelope>(() => Envelope()),
-      EntityRegistration<Transaction>(() => Transaction()),
+    AppContext.global = AppContext(valueObjectRegistrations: [
+      ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
+      ValueObjectRegistration<Transaction, Transaction?>(() => Transaction()),
     ]);
 
     final state = State(
-      id: 'transaction1',
       values: {
         'envelope': 'envelope1',
       },
     );
 
-    final transaction = Entity.fromState<Transaction>(state);
+    final transaction = ValueObject.fromState<Transaction>(state);
     expect(transaction.state, state);
 
-    final envelope = Envelope()..id = 'envelope2';
+    final envelope = EnvelopeEntity(initialEnvelope: Envelope())..id = 'envelope2';
 
     transaction.envelopeProperty.reference = envelope;
     final newState = State(
-      id: 'transaction1',
       values: {
         'envelope': 'envelope2',
       },
