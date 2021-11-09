@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
@@ -14,11 +15,13 @@ class AppContext {
   final List<EntityRegistration> entityRegistrations;
   final List<ValueObjectRegistration> valueObjectRegistrations;
   final List<TypeStateSerializer> typeStateSerializers;
+  final Database database;
 
   AppContext({
     this.entityRegistrations: const [],
     this.valueObjectRegistrations: const [],
     List<TypeStateSerializer> additionalTypeStateSerializers: const [],
+    this.database: const Database(repositories: []),
   }) : this.typeStateSerializers =
             coreTypeStateSerializers + nullableCoreTypeStateSerializers + additionalTypeStateSerializers;
 

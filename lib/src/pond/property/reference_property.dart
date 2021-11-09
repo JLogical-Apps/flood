@@ -1,17 +1,36 @@
+import 'package:jlogical_utils/src/pond/context/resolvable.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/property/validation/property_validator.dart';
-import 'package:jlogical_utils/src/pond/record/has_id.dart';
 
-class ReferenceProperty<R extends HasId> extends Property<String> with WithGlobalTypeSerializer {
-  ReferenceProperty({required String name, R? initialValue, List<PropertyValidator<String>>? validators})
-      : super(name: name, initialValue: initialValue?.id, validators: validators);
+class ReferenceProperty<E extends Entity> extends Property<String> with WithGlobalTypeSerializer implements Resolvable {
+  ReferenceProperty({
+    required String name,
+    E? initialReference,
+    String? initialValue,
+    List<PropertyValidator<String>>? validators,
+  }) : super(name: name, initialValue: initialReference?.id ?? initialValue, validators: validators);
 
-  set reference(R reference) {
-    final id = reference.id;
-    if (id == null) {
-      throw Exception('Cannot set a property to reference something with a null id!');
+  E? _reference;
+
+  E? get reference => _reference;
+
+  set reference(E? reference) {
+    if (reference != null && reference.id == null) {
+      throw Exception('Cannot set a property to reference an entity with a null id!');
     }
-    value = id;
+
+    _reference = reference;
+    value = reference?.id;
+  }
+
+  Future resolve(AppContext context) async {
+    final referenceId = value;
+    if (referenceId == null) {
+      return;
+    }
+
+    final entityRepository = context.database.getRepository<E>();
+    _reference = await entityRepository.getOrNull(referenceId);
   }
 }

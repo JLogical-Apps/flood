@@ -3,9 +3,9 @@ import 'package:jlogical_utils/src/pond/export.dart';
 import 'envelope.dart';
 
 class EnvelopeEntity extends Entity<Envelope> {
-  EnvelopeEntity({required Envelope initialEnvelope}) : super(initialState: initialEnvelope);
+  EnvelopeEntity({required Envelope initialEnvelope}) : super(initialValue: initialEnvelope);
 
   void changeName(String newName) {
-    state = state.withNameChanged(newName);
+    value = value.withNameChanged(newName);
   }
 }

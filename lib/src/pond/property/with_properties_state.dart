@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/pond/context/resolvable.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
@@ -18,4 +19,11 @@ mixin WithPropertiesState on Record {
   }
 
   List<Validator> get validators => properties;
+
+  Future resolve(AppContext context) async {
+    return Future.wait(properties
+        .where((property) => property is Resolvable)
+        .map((property) => property as Resolvable)
+        .map((resolvableProperty) => resolvableProperty.resolve(context)));
+  }
 }
