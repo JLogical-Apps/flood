@@ -1,8 +1,11 @@
 import 'package:jlogical_utils/src/pond/export.dart';
 
 class Envelope extends ValueObject {
-  late final StringProperty nameProperty = StringProperty(name: 'name');
-  late final IntProperty amountProperty = IntProperty(name: 'amount');
+  static const namePropertyName = 'name';
+  static const amountPropertyName = 'amount';
+
+  late final StringProperty nameProperty = StringProperty(name: namePropertyName);
+  late final IntProperty amountProperty = IntProperty(name: amountPropertyName);
 
   List<Property> get properties => [nameProperty, amountProperty];
 

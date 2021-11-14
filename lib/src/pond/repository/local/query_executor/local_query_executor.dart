@@ -4,6 +4,7 @@ import 'package:jlogical_utils/src/pond/query/reducer/query/query_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/request/query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/query/local_where_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_all_query_request_reducer.dart';
 
 import 'reducer/query/local_from_query_reducer.dart';
@@ -15,6 +16,7 @@ class LocalQueryExecutor implements QueryExecutor {
 
   List<QueryReducer<Query, Iterable<Record>>> getQueryReducers() => [
         LocalFromQueryReducer(recordById: recordById),
+        LocalWhereQueryReducer(),
       ];
 
   List<QueryRequestReducer<dynamic, R, dynamic, List<Record>>> getQueryRequestReducers<R extends Record>() => [

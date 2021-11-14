@@ -5,7 +5,6 @@ import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/query/where_query.dart';
 import 'package:jlogical_utils/src/utils/marker.dart';
 
-import 'all_query.dart';
 import 'from_query.dart';
 
 @marker
@@ -16,15 +15,11 @@ abstract class Query<R extends Record> {
 
   Type get recordType => R;
 
-  static Query fromAll() {
-    return AllQuery();
-  }
-
   static Query<R> from<R extends Record>() {
     return FromQuery<R>();
   }
 
-  Query<R> where<R extends Record>(String stateField, {dynamic isEqualTo}) {
+  Query<R> where(String stateField, {dynamic isEqualTo}) {
     if (isEqualTo != null) {
       return WhereQuery(
         queryPredicate: EqualsQueryPredicate(stateField: stateField, isEqualTo: isEqualTo),
