@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/with_id_generator.dart';
-import 'package:jlogical_utils/src/pond/repository/with_local_record_repository.dart';
+import 'package:jlogical_utils/src/pond/repository/local/with_local_entity_repository.dart';
 
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';

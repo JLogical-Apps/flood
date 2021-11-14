@@ -7,4 +7,5 @@ export 'pair.dart';
 export 'stream_extensions.dart';
 export 'stream_utils.dart';
 export 'string_extensions.dart';
+export 'types.dart';
 export 'util.dart';

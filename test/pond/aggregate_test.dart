@@ -3,7 +3,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/with_id_generator.dart';
-import 'package:jlogical_utils/src/pond/repository/with_local_record_repository.dart';
+import 'package:jlogical_utils/src/pond/repository/local/with_local_entity_repository.dart';
 
 import 'entities/budget.dart';
 import 'entities/budget_aggregate.dart';
