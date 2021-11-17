@@ -1,9 +1,9 @@
 import 'package:jlogical_utils/src/pond/query/predicate/equals_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/query_predicate.dart';
-import 'package:jlogical_utils/src/pond/query/reducer/predicate/equals_query_predicate_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_equals_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 
-class LocalEqualsQueryPredicateReducer extends EqualsQueryPredicateReducer<Iterable<Record>> {
+class LocalEqualsQueryPredicateReducer extends AbstractEqualsQueryPredicateReducer<Iterable<Record>> {
   @override
   Iterable<Record> reduce({required Iterable<Record> aggregate, required QueryPredicate queryPredicate}) {
     final equalsQueryPredicate = queryPredicate as EqualsQueryPredicate;

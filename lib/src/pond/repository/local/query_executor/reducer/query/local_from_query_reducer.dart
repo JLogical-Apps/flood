@@ -1,8 +1,8 @@
 import 'package:jlogical_utils/src/pond/query/query.dart';
-import 'package:jlogical_utils/src/pond/query/reducer/query/from_query_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_from_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 
-class LocalFromQueryReducer extends FromQueryReducer<Iterable<Record>> {
+class LocalFromQueryReducer extends AbstractFromQueryReducer<Iterable<Record>> {
   final Map<String, Record> recordById;
 
   const LocalFromQueryReducer({required this.recordById});
