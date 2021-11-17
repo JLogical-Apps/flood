@@ -1,6 +1,6 @@
-import 'package:jlogical_utils/src/pond/query/predicate/query_predicate.dart';
+import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
 
-class EqualsQueryPredicate extends QueryPredicate {
+class EqualsQueryPredicate extends AbstractQueryPredicate {
   final String stateField;
 
   final dynamic isEqualTo;

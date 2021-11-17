@@ -3,10 +3,10 @@ import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/utils/marker.dart';
 
 @marker
-abstract class QueryRequest<R extends Record, T> {
+abstract class AbstractQueryRequest<R extends Record, T> {
   final Query<R> query;
 
-  const QueryRequest({required this.query});
+  const AbstractQueryRequest({required this.query});
 
   List<Query> getQueryChain() {
     var queries = <Query>[];

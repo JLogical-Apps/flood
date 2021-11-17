@@ -1,7 +1,7 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/equals_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
-import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/where_query.dart';
 import 'package:jlogical_utils/src/utils/marker.dart';
 
@@ -30,7 +30,7 @@ abstract class Query<R extends Record> {
     throw Exception('One of the predicates must not be null!');
   }
 
-  QueryRequest<R, List<R>> all() {
+  AbstractQueryRequest<R, List<R>> all() {
     return AllQueryRequest<R>(query: this);
   }
 }

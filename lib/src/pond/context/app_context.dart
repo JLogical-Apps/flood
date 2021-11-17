@@ -21,9 +21,10 @@ class AppContext {
     this.entityRegistrations: const [],
     this.valueObjectRegistrations: const [],
     List<TypeStateSerializer> additionalTypeStateSerializers: const [],
-    this.database: const Database(repositories: []),
-  }) : this.typeStateSerializers =
-            coreTypeStateSerializers + nullableCoreTypeStateSerializers + additionalTypeStateSerializers;
+    Database? database,
+  })  : this.typeStateSerializers =
+            coreTypeStateSerializers + nullableCoreTypeStateSerializers + additionalTypeStateSerializers,
+        this.database = database ?? Database(repositories: []);
 
   E constructEntity<V extends ValueObject, E extends Entity<V>>(V initialState) {
     return entityRegistrations.firstWhere((registration) => registration.entityType == E).onCreate(initialState) as E;
