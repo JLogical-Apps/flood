@@ -98,7 +98,11 @@ class DeltaStyle extends FlatStyle {
                                       child: Center(
                                           child: section.bodyText.mapIfNonNull((text) => StyledBodyText(
                                                     text,
-                                                    textOverrides: StyledTextOverrides(fontSize: 16),
+                                                    textOverrides: StyledTextOverrides(
+                                                      fontSize: 16,
+                                                      padding: EdgeInsets.all(12),
+                                                      textAlign: TextAlign.center,
+                                                    ),
                                                   )) ??
                                               section.body),
                                       flex: 2,
