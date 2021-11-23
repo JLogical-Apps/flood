@@ -19,20 +19,20 @@ class FutureValue<T> with _$FutureValue<T> {
   /// Invokes the future and returns the result of it in a loaded future value.
   /// If an exception occurred, returns an error src.model.
   static Future<FutureValue<T>> guard<T>(Future<T> future(), {void onError(dynamic error)?}) async {
-    dynamic error;
-    final value = await runZonedGuarded(
+    late FutureValue<T> value;
+    await runZonedGuarded(
       () async {
         var data = await future();
-        return data;
+        value = FutureValue.loaded(value: data);
       },
       (_error, stackTrack) {
         print(_error);
         print(stackTrack);
         onError?.call(_error);
-        error = _error;
+        value = FutureValue.error(error: _error);
       },
     );
-    return value == null ? FutureValue.error(error: error) : FutureValue.loaded(value: value);
+    return value;
   }
 
   /// Returns the value of the future-value, or [orElse] if in an error/loading state, or throws an exception.
