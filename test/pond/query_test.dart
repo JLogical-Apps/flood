@@ -61,10 +61,10 @@ void main() {
 }
 
 void _populateRepositories() {
-  envelopes.map((envelope) => EnvelopeEntity(initialEnvelope: envelope)).forEach(envelopeRepository.create);
-  budgets.map((budget) => BudgetEntity(initialBudget: budget)).forEach(budgetRepository.create);
+  envelopes.map((envelope) => EnvelopeEntity(initialEnvelope: envelope)).forEach(envelopeRepository.createIsolated);
+  budgets.map((budget) => BudgetEntity(initialBudget: budget)).forEach(budgetRepository.createIsolated);
 }
 
-class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator;
+class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;
 
-class LocalBudgetRepository = EntityRepository<BudgetEntity> with WithLocalEntityRepository, WithIdGenerator;
+class LocalBudgetRepository = EntityRepository<BudgetEntity> with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;

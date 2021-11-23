@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/with_id_generator.dart';
 import 'package:jlogical_utils/src/pond/repository/local/with_local_entity_repository.dart';
@@ -14,26 +15,26 @@ void main() {
           ..nameProperty.value = 'Tithe'
           ..amountProperty.value = 24 * 100);
 
-    await envelopeRepository.create(envelopeEntity);
+    await envelopeRepository.createIsolated(envelopeEntity);
 
-    EnvelopeEntity? retrievedEnvelopeEntity = await envelopeRepository.get(envelopeEntity.id!);
+    EnvelopeEntity? retrievedEnvelopeEntity = await envelopeRepository.getIsolated(envelopeEntity.id!);
 
     expect(envelopeEntity, equals(retrievedEnvelopeEntity));
     expect(envelopeEntity.state, equals(retrievedEnvelopeEntity.state));
 
     envelopeEntity.changeName('Giving');
-    envelopeRepository.save(envelopeEntity);
+    envelopeRepository.saveIsolated(envelopeEntity);
 
-    retrievedEnvelopeEntity = await envelopeRepository.get(envelopeEntity.id!);
+    retrievedEnvelopeEntity = await envelopeRepository.getIsolated(envelopeEntity.id!);
 
     expect(envelopeEntity, equals(retrievedEnvelopeEntity));
     expect(envelopeEntity.state, equals(retrievedEnvelopeEntity.state));
 
-    await envelopeRepository.delete(envelopeEntity.id!);
+    await envelopeRepository.deleteIsolated(envelopeEntity.id!);
 
-    retrievedEnvelopeEntity = await envelopeRepository.getOrNull(envelopeEntity.id!);
+    retrievedEnvelopeEntity = await envelopeRepository.getOrNullIsolated(envelopeEntity.id!);
     expect(retrievedEnvelopeEntity, isNull);
   });
 }
 
-class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator;
+class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;

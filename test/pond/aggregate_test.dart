@@ -28,14 +28,15 @@ void main() {
       ],
     );
 
-    final ownerEntity = UserEntity(initialUser: User()..nameProperty.value = 'Jake')..id = 'jake';
-    await database.getRepository<UserEntity>().save(ownerEntity);
+    final ownerEntity = UserEntity(initialUser: User()..nameProperty.value = 'Jake');
+    await database.getRepository<UserEntity>().createIsolated(ownerEntity);
+    final ownerId = ownerEntity.id;
 
     final budgetAggregate = BudgetAggregate(
         budgetEntity: BudgetEntity(
             initialBudget: Budget()
               ..nameProperty.value = 'Budget'
-              ..ownerProperty.value = 'jake'));
+              ..ownerProperty.value = ownerId));
     await budgetAggregate.resolve();
 
     final ownerReference = budgetAggregate.entity.value.ownerProperty.reference;
@@ -45,6 +46,8 @@ void main() {
   });
 }
 
-class LocalUserRepository = EntityRepository<UserEntity> with WithLocalEntityRepository, WithIdGenerator;
+class LocalUserRepository = EntityRepository<UserEntity>
+    with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;
 
-class LocalBudgetRepository = EntityRepository<BudgetEntity> with WithLocalEntityRepository, WithIdGenerator;
+class LocalBudgetRepository = EntityRepository<BudgetEntity>
+    with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;

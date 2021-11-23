@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/pond/record/value_object.dart';
-import 'package:jlogical_utils/src/pond/validation/validation_exception.dart';
 
 import 'entities/color.dart';
 import 'entities/envelope.dart';
@@ -166,7 +164,7 @@ void main() {
   test('state inflation of record that has a reference to an entity.', () {
     AppContext.global = AppContext(valueObjectRegistrations: [
       ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
-      ValueObjectRegistration<Transaction, Transaction?>(() => Transaction()),
+      ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(() => EnvelopeTransaction()),
     ]);
 
     final state = State(
@@ -175,7 +173,7 @@ void main() {
       },
     );
 
-    final transaction = ValueObject.fromState<Transaction>(state);
+    final transaction = ValueObject.fromState<EnvelopeTransaction>(state);
     expect(transaction.state, state);
 
     final envelope = EnvelopeEntity(initialEnvelope: Envelope())..id = 'envelope2';

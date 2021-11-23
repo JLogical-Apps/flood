@@ -1,24 +1,58 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/query_executor.dart';
+import 'package:jlogical_utils/src/pond/transaction/transaction_builder.dart';
+import 'package:jlogical_utils/src/pond/transaction/transaction_executor.dart';
 
-abstract class EntityRepository<E extends Entity> implements QueryExecutor {
-  Future<String> generateId(E entity);
+abstract class EntityRepository<E extends Entity> implements QueryExecutor, TransactionExecutor {
+  Future<String> generateId(E entity, {required Transaction transaction});
 
-  Future<void> save(E entity);
+  Future<void> save(E entity, {required Transaction transaction});
 
-  Future<E?> getOrNull(String id);
+  Future<E?> getOrNull(String id, {required Transaction transaction});
 
-  Future<void> delete(String id);
+  Future<void> delete(String id, {required Transaction transaction});
 
-  Future<E> get(String id) async {
-    return (await getOrNull(id)) ?? (throw Exception('Cannot find $E with id: $id'));
+  Future<E> get(String id, {required Transaction transaction}) async {
+    return (await getOrNull(id, transaction: transaction)) ?? (throw Exception('Cannot find $E with id: $id'));
   }
 
-  Future<void> create(E entity) async {
-    final id = await generateId(entity);
+  Future<void> create(E entity, {required Transaction transaction}) async {
+    final id = await generateId(entity, transaction: transaction);
     entity.id = id;
-    await save(entity);
+    await save(entity, transaction: transaction);
+  }
+
+  Future<String> generateIdIsolated(E entity) {
+    final transaction = TransactionBuilder((tr) => tr.generateId(entity)).build();
+    return transaction.execute(this);
+  }
+
+  Future<void> saveIsolated(E entity) {
+    final transaction = TransactionBuilder((tr) => tr.generateId(entity)).build();
+    return transaction.execute(this);
+  }
+
+  Future<E?> getOrNullIsolated(String id) {
+    final transaction = TransactionBuilder((tr) => tr.getOrNull<E>(id)).build();
+    return transaction.execute(this);
+  }
+
+  Future<void> deleteIsolated(String id) {
+    final transaction = TransactionBuilder((tr) => tr.delete(id)).build();
+    return transaction.execute(this);
+  }
+
+  Future<E> getIsolated(String id) {
+    final transaction = TransactionBuilder((tr) => tr.get<E>(id)).build();
+    return transaction.execute(this);
+  }
+
+  Future<void> createIsolated(E entity) {
+    final transaction = TransactionBuilder((tr) => tr.create(entity)).build();
+    return transaction.execute(this);
   }
 
   Type get entityType => E;
+
+  EntityRepository get repository => this;
 }

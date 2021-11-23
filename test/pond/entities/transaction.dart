@@ -2,7 +2,7 @@ import 'package:jlogical_utils/src/pond/export.dart';
 
 import 'envelope_entity.dart';
 
-class Transaction extends ValueObject {
+class EnvelopeTransaction extends ValueObject {
   late final ReferenceProperty<EnvelopeEntity> envelopeProperty = ReferenceProperty(name: 'envelope');
 
   @override
