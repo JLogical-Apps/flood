@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction_builder.dart';
@@ -51,6 +53,8 @@ void main() {
 
     final envelopeId = envelopeEntity.id!;
 
+    final transactionsCompleter = Completer();
+
     final transactionGiving = TransactionBuilder((t) async {
       final envelopeEntity = await t.get<EnvelopeEntity>(envelopeId);
 
@@ -71,11 +75,44 @@ void main() {
       envelopeEntity.changeName('Car');
 
       await t.save(envelopeEntity);
+
+      transactionsCompleter.complete();
     }).build();
 
-    await Future.wait([transactionGiving.execute(envelopeRepository), transactionCar.execute(envelopeRepository)]);
+    envelopeRepository.executeTransaction(transactionGiving);
+    envelopeRepository.executeTransaction(transactionCar);
+
+    await transactionsCompleter.future;
 
     expect(envelopeEntity.value.nameProperty.value, 'Car');
+  });
+
+  test('reverting on exception.', () async {
+    var envelopeEntity = EnvelopeEntity(
+        initialEnvelope: Envelope()
+          ..nameProperty.value = 'Tithe'
+          ..amountProperty.value = 24 * 100);
+
+    await envelopeRepository.createIsolated(envelopeEntity);
+
+    final envelopeId = envelopeEntity.id!;
+
+    final transactionGiving = TransactionBuilder((t) async {
+      final envelopeEntity = await t.get<EnvelopeEntity>(envelopeId);
+      envelopeEntity.changeName('Giving');
+
+      await t.save(envelopeEntity);
+
+      expect(envelopeEntity.value.nameProperty.value, 'Giving');
+
+      throw Exception('Force a revert');
+    }).build();
+
+    await envelopeRepository.executeTransaction(transactionGiving);
+
+    envelopeEntity = await envelopeRepository.getIsolated(envelopeId);
+
+    expect(envelopeEntity.value.nameProperty.value, 'Tithe');
   });
 }
 

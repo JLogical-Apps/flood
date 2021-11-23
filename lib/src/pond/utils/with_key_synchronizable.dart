@@ -4,44 +4,33 @@ import 'package:collection/collection.dart';
 import 'package:jlogical_utils/src/pond/utils/synchronizable.dart';
 
 mixin WithKeySynchronizable<L> implements Synchronizable<L> {
-  Map<L, _LockCompleter> _lockCompleters = {};
+  Map<L, Completer> _lockCompleters = {};
 
-  L? get _currentLock => _lockCompleters.keys.firstOrNull;
+  L? _currentLock;
 
   @override
   Future<void> lock(L lock) async {
-    if(_currentLock == lock) {
+    if (_currentLock == lock) {
+      return;
+    } else if (_currentLock == null) {
+      _currentLock = lock;
       return;
     }
 
-    final currentLockCompleter = _lockCompleters[lock];
-    if(currentLockCompleter != null) {
-      await currentLockCompleter.future;
-    }
-
-    final lockCompleter = _LockCompleter();
-    _lockCompleters[lock] = lockCompleter;
-
+    final lockCompleter = _lockCompleters.putIfAbsent(lock, () => Completer());
     await lockCompleter.future;
   }
 
   @override
   void unlock(L lock) {
-    final lockCompleter = _lockCompleters[lock];
-    if(lockCompleter != null) {
-      lockCompleter.completer.complete();
+    if (_currentLock != lock) {
+      return;
     }
 
-    _lockCompleters.remove(lock);
-  }
-}
-
-class _LockCompleter {
-  final Completer completer = Completer();
-
-  late Future<void> future = completer.future;
-
-  void unlock() {
-    completer.complete();
+    final newLock = _lockCompleters.keys.firstOrNull;
+    if (newLock != null) {
+      _lockCompleters[newLock]!.complete();
+      _lockCompleters.remove(newLock);
+    }
   }
 }
