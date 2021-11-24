@@ -1,9 +1,13 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/query_executor.dart';
+import 'package:jlogical_utils/src/pond/record/entity.dart';
+import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction_builder.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction_executor.dart';
+import 'package:jlogical_utils/src/pond/utils/with_key_synchronizable.dart';
 
-abstract class EntityRepository<E extends Entity> implements QueryExecutor, TransactionExecutor {
+abstract class EntityRepository<E extends Entity>
+    with WithKeySynchronizable<Transaction>
+    implements QueryExecutor, TransactionExecutor {
   Future<String> generateId(E entity, {required Transaction transaction});
 
   Future<void> save(E entity, {required Transaction transaction});
@@ -28,7 +32,7 @@ abstract class EntityRepository<E extends Entity> implements QueryExecutor, Tran
   }
 
   Future<void> saveIsolated(E entity) {
-    final transaction = TransactionBuilder((tr) => tr.generateId(entity)).build();
+    final transaction = TransactionBuilder((tr) => tr.save(entity)).build();
     return transaction.execute(this);
   }
 

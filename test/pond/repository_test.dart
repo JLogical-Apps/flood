@@ -9,6 +9,15 @@ import 'entities/envelope_entity.dart';
 
 void main() {
   test('basic repository functions.', () async {
+    AppContext.global = AppContext(
+      entityRegistrations: [
+        EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
+      ],
+      valueObjectRegistrations: [
+        ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
+      ],
+    );
+
     final envelopeRepository = LocalEnvelopeRepository();
     final envelopeEntity = EnvelopeEntity(
         initialEnvelope: Envelope()
@@ -37,4 +46,4 @@ void main() {
   });
 }
 
-class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;
+class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator;

@@ -3,9 +3,10 @@ import 'package:jlogical_utils/src/pond/export.dart';
 
 class State extends Equatable {
   final String? id;
+  final String? type;
   final Map<String, dynamic> values;
 
-  const State({this.id, required this.values});
+  const State({this.id, this.type, required this.values});
 
   static State? extractFrom(dynamic value) {
     if (value is State) {
@@ -19,6 +20,14 @@ class State extends Equatable {
     }
 
     return null;
+  }
+
+  State copyWith({String? id, Map<String, dynamic>? values, String? type}) {
+    return State(
+      id: id ?? this.id,
+      values: values ?? this.values,
+      type: type ?? this.type,
+    );
   }
 
   @override

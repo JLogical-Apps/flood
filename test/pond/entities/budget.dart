@@ -1,5 +1,6 @@
 import 'package:jlogical_utils/src/pond/export.dart';
 
+import 'user.dart';
 import 'user_entity.dart';
 
 class Budget extends ValueObject {

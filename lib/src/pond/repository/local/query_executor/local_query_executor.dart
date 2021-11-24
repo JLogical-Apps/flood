@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/patterns/resolver/resolver.dart';
 import 'package:jlogical_utils/src/patterns/resolver/wrapper_resolver.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
@@ -12,12 +13,12 @@ import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/
 import 'reducer/query/local_from_query_reducer.dart';
 
 class LocalQueryExecutor implements QueryExecutor {
-  final Map<String, Record> recordById;
+  final Map<String, State> stateById;
 
-  const LocalQueryExecutor({required this.recordById});
+  const LocalQueryExecutor({required this.stateById});
 
   Resolver<Query, AbstractQueryReducer<Query, Iterable<Record>>> getQueryReducerResolver() => WrapperResolver([
-        LocalFromQueryReducer(recordById: recordById),
+        LocalFromQueryReducer(stateById: stateById),
         LocalWhereQueryReducer(),
       ]);
 

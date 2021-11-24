@@ -41,6 +41,17 @@ void main() {
   });
 
   test('all from a type.', () async {
+    AppContext.global = AppContext(
+      entityRegistrations: [
+        EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
+        EntityRegistration<BudgetEntity, Budget>((budget) => BudgetEntity(initialBudget: budget)),
+      ],
+      valueObjectRegistrations: [
+        ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
+        ValueObjectRegistration<Budget, Budget?>(() => Budget()),
+      ],
+    );
+
     final allEnvelopesQuery = Query.from<EnvelopeEntity>().all();
     final resultEnvelopeEntities = await database.executeQuery(allEnvelopesQuery);
     final resultEnvelopeValueObjects = resultEnvelopeEntities.map((envelopeEntity) => envelopeEntity.value).toList();
@@ -65,6 +76,6 @@ void _populateRepositories() {
   budgets.map((budget) => BudgetEntity(initialBudget: budget)).forEach(budgetRepository.createIsolated);
 }
 
-class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;
+class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator;
 
-class LocalBudgetRepository = EntityRepository<BudgetEntity> with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;
+class LocalBudgetRepository = EntityRepository<BudgetEntity> with WithLocalEntityRepository, WithIdGenerator;

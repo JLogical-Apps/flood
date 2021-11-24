@@ -1,8 +1,8 @@
 import 'package:jlogical_utils/src/persistence/ids/id_generator.dart';
 import 'package:jlogical_utils/src/persistence/ids/incremental_id_generator.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
-import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
+import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 
 mixin WithIdGenerator<E extends Entity> on EntityRepository<E> {
   late IdGenerator<E, String> _idGenerator = idGenerator;

@@ -11,6 +11,14 @@ void main() {
   late LocalEnvelopeRepository envelopeRepository;
   setUp(() {
     envelopeRepository = LocalEnvelopeRepository();
+    AppContext.global = AppContext(
+      entityRegistrations: [
+        EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
+      ],
+      valueObjectRegistrations: [
+        ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
+      ],
+    );
   });
   test('basic repository actions.', () {
     final transaction = TransactionBuilder((t) async {
@@ -44,7 +52,7 @@ void main() {
   });
 
   test('locking', () async {
-    final envelopeEntity = EnvelopeEntity(
+    var envelopeEntity = EnvelopeEntity(
         initialEnvelope: Envelope()
           ..nameProperty.value = 'Tithe'
           ..amountProperty.value = 24 * 100);
@@ -84,6 +92,8 @@ void main() {
 
     await transactionsCompleter.future;
 
+    envelopeEntity = await envelopeRepository.getIsolated(envelopeId);
+
     expect(envelopeEntity.value.nameProperty.value, 'Car');
   });
 
@@ -116,5 +126,4 @@ void main() {
   });
 }
 
-class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;
+class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator;

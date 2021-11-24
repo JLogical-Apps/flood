@@ -20,13 +20,13 @@ void main() {
       ],
     );
 
-    AppContext.global = AppContext(
-      database: database,
-      entityRegistrations: [
-        EntityRegistration<Budget, BudgetEntity>((value) => BudgetEntity(initialBudget: value)),
-        EntityRegistration<User, UserEntity>((value) => UserEntity(initialUser: value)),
-      ],
-    );
+    AppContext.global = AppContext(database: database, entityRegistrations: [
+      EntityRegistration<BudgetEntity, Budget>((value) => BudgetEntity(initialBudget: value)),
+      EntityRegistration<UserEntity, User>((value) => UserEntity(initialUser: value)),
+    ], valueObjectRegistrations: [
+      ValueObjectRegistration<Budget, Budget?>(() => Budget()),
+      ValueObjectRegistration<User, User?>(() => User()),
+    ]);
 
     final ownerEntity = UserEntity(initialUser: User()..nameProperty.value = 'Jake');
     await database.getRepository<UserEntity>().createIsolated(ownerEntity);
@@ -46,8 +46,6 @@ void main() {
   });
 }
 
-class LocalUserRepository = EntityRepository<UserEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;
+class LocalUserRepository = EntityRepository<UserEntity> with WithLocalEntityRepository, WithIdGenerator;
 
-class LocalBudgetRepository = EntityRepository<BudgetEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;
+class LocalBudgetRepository = EntityRepository<BudgetEntity> with WithLocalEntityRepository, WithIdGenerator;
