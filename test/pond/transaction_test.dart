@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/transaction/transaction_builder.dart';
 
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
@@ -11,9 +10,17 @@ void main() {
   late LocalEnvelopeRepository envelopeRepository;
   setUp(() {
     envelopeRepository = LocalEnvelopeRepository();
+    AppContext.global = AppContext(
+      entityRegistrations: [
+        EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
+      ],
+      valueObjectRegistrations: [
+        ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
+      ],
+    );
   });
   test('basic repository actions.', () {
-    final transaction = TransactionBuilder((t) async {
+    final transaction = Transaction((t) async {
       final envelopeEntity = EnvelopeEntity(
           initialEnvelope: Envelope()
             ..nameProperty.value = 'Tithe'
@@ -38,13 +45,13 @@ void main() {
 
       retrievedEnvelopeEntity = await t.getOrNull<EnvelopeEntity>(envelopeEntity.id!);
       expect(retrievedEnvelopeEntity, isNull);
-    }).build();
+    });
 
     envelopeRepository.executeTransaction(transaction);
   });
 
   test('locking', () async {
-    final envelopeEntity = EnvelopeEntity(
+    var envelopeEntity = EnvelopeEntity(
         initialEnvelope: Envelope()
           ..nameProperty.value = 'Tithe'
           ..amountProperty.value = 24 * 100);
@@ -55,7 +62,7 @@ void main() {
 
     final transactionsCompleter = Completer();
 
-    final transactionGiving = TransactionBuilder((t) async {
+    final transactionGiving = Transaction((t) async {
       final envelopeEntity = await t.get<EnvelopeEntity>(envelopeId);
 
       expect(envelopeEntity.value.nameProperty.value, 'Tithe');
@@ -65,9 +72,9 @@ void main() {
       await Future.delayed(Duration(milliseconds: 100));
 
       await t.save(envelopeEntity);
-    }).build();
+    });
 
-    final transactionCar = TransactionBuilder((t) async {
+    final transactionCar = Transaction((t) async {
       final envelopeEntity = await t.get<EnvelopeEntity>(envelopeId);
 
       expect(envelopeEntity.value.nameProperty.value, 'Giving');
@@ -77,12 +84,14 @@ void main() {
       await t.save(envelopeEntity);
 
       transactionsCompleter.complete();
-    }).build();
+    });
 
     envelopeRepository.executeTransaction(transactionGiving);
     envelopeRepository.executeTransaction(transactionCar);
 
     await transactionsCompleter.future;
+
+    envelopeEntity = await envelopeRepository.getIsolated(envelopeId);
 
     expect(envelopeEntity.value.nameProperty.value, 'Car');
   });
@@ -97,7 +106,7 @@ void main() {
 
     final envelopeId = envelopeEntity.id!;
 
-    final transactionGiving = TransactionBuilder((t) async {
+    final transactionGiving = Transaction((t) async {
       final envelopeEntity = await t.get<EnvelopeEntity>(envelopeId);
       envelopeEntity.changeName('Giving');
 
@@ -106,7 +115,7 @@ void main() {
       expect(envelopeEntity.value.nameProperty.value, 'Giving');
 
       throw Exception('Force a revert');
-    }).build();
+    });
 
     await envelopeRepository.executeTransaction(transactionGiving);
 
@@ -116,5 +125,4 @@ void main() {
   });
 }
 
-class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithKeySynchronizable<Transaction>;
+class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator;

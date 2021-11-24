@@ -26,8 +26,15 @@ class AppContext {
             coreTypeStateSerializers + nullableCoreTypeStateSerializers + additionalTypeStateSerializers,
         this.database = database ?? Database(repositories: []);
 
-  E constructEntity<V extends ValueObject, E extends Entity<V>>(V initialState) {
-    return entityRegistrations.firstWhere((registration) => registration.entityType == E).onCreate(initialState) as E;
+  E constructEntity<E extends Entity<V>, V extends ValueObject>(V initialState) {
+    final registration =
+        entityRegistrations.firstWhere((registration) => registration.entityType == E) as EntityRegistration<E, V>;
+    return registration.create(initialState);
+  }
+
+  Entity constructEntityRuntime(Type entityType, ValueObject initialState) {
+    final registration = entityRegistrations.firstWhere((registration) => registration.entityType == entityType);
+    return registration.create(initialState);
   }
 
   V constructValueObject<V extends ValueObject>() {
@@ -38,6 +45,44 @@ class AppContext {
     return valueObjectRegistrations
         .firstWhere((registration) => registration.valueObjectType == valueObjectType)
         .onCreate();
+  }
+
+  ValueObject? constructValueObjectFromStateOrNull(State state) {
+    final type = state.type;
+    if (type == null) {
+      return null;
+    }
+
+    final entityRegistration =
+        entityRegistrations.firstWhereOrNull((registration) => registration.entityType.toString() == state.type);
+
+    if (entityRegistration == null) {
+      return null;
+    }
+
+    final valueObjectType = entityRegistration.valueObjectType;
+
+    final valueObjectRegistration =
+        valueObjectRegistrations.firstWhereOrNull((registration) => registration.valueObjectType == valueObjectType);
+    final valueObject = valueObjectRegistration?.onCreate();
+    valueObject?.state = state;
+
+    return valueObject;
+  }
+
+  Entity? constructEntityFromStateOrNull(State state) {
+    final valueObject = constructValueObjectFromStateOrNull(state);
+    if (valueObject == null) {
+      return null;
+    }
+
+    final entityRegistration =
+        entityRegistrations.firstWhereOrNull((registration) => registration.entityType.toString() == state.type);
+
+    final entity = entityRegistration?.create(valueObject);
+    entity?.id = state.id;
+
+    return entity;
   }
 
   TypeStateSerializer<T> getTypeStateSerializerByType<T>() {
@@ -85,12 +130,16 @@ class AppContext {
       ];
 }
 
-class EntityRegistration<V extends ValueObject, E extends Entity<V>> {
+class EntityRegistration<E extends Entity<V>, V extends ValueObject> {
   final E Function(V initialState) onCreate;
 
   const EntityRegistration(this.onCreate);
 
+  E create(V initialState) => onCreate(initialState);
+
   Type get entityType => E;
+
+  Type get valueObjectType => V;
 }
 
 class ValueObjectRegistration<V extends ValueObject, NullableV extends ValueObject?> {

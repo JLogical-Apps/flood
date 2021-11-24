@@ -6,6 +6,7 @@ import 'package:jlogical_utils/src/pond/query/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/utils/collection_extensions.dart';
 import 'package:jlogical_utils/src/utils/types.dart';

@@ -15,7 +15,7 @@ extension Default on TransactionExecutor {
   Future<void> executeTransaction(Transaction transaction) async {
     await lock(transaction);
     try {
-      transaction.execute(repository);
+      await transaction.execute(repository);
     } catch (e) {
       await revert();
     } finally {

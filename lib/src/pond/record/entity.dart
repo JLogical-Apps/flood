@@ -16,13 +16,14 @@ abstract class Entity<V extends ValueObject> extends Record implements HasId, Re
 
   Entity({required V initialValue}) : _valueX = BehaviorSubject.seeded(initialValue);
 
-  State get state => value.state;
+  State get state => value.state.copyWith(id: id, type: runtimeType.toString());
+
   set state(State state) => value.state = state;
 
   void onValidate() => value.onValidate();
 
   ValidationState get validationState => value.validationState;
-  
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) || other is Entity && runtimeType == other.runtimeType && id == other.id;
@@ -33,5 +34,13 @@ abstract class Entity<V extends ValueObject> extends Record implements HasId, Re
   @override
   Future resolve(AppContext context) {
     return value.resolve(context);
+  }
+
+  static E? fromStateOrNull<E extends Entity>(State state) {
+    return AppContext.global.constructEntityFromStateOrNull(state) as E?;
+  }
+
+  static Entity? fromStateRuntimeOrNull({required State state}) {
+    return AppContext.global.constructEntityFromStateOrNull(state);
   }
 }

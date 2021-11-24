@@ -5,7 +5,7 @@ import 'package:jlogical_utils/src/pond/transaction/transaction_body.dart';
 
 import 'transaction_runner.dart';
 
-abstract class Transaction<V> {
+class Transaction<V> {
   final TransactionBody<V> body;
 
   Transaction(FutureOr<V> onExecute(TransactionRunner runner)) : body = TransactionBody<V>(onExecute: onExecute);
