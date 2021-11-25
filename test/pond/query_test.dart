@@ -72,8 +72,8 @@ void main() {
 }
 
 void _populateRepositories() {
-  envelopes.map((envelope) => EnvelopeEntity(initialEnvelope: envelope)).forEach(envelopeRepository.createIsolated);
-  budgets.map((budget) => BudgetEntity(initialBudget: budget)).forEach(budgetRepository.createIsolated);
+  envelopes.map((envelope) => EnvelopeEntity(initialEnvelope: envelope)).forEach(envelopeRepository.create);
+  budgets.map((budget) => BudgetEntity(initialBudget: budget)).forEach(budgetRepository.create);
 }
 
 class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator;

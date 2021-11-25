@@ -10,7 +10,7 @@ mixin WithIdGenerator<E extends Entity> on EntityRepository<E> {
   IdGenerator<E, String> get idGenerator => PrefixedIncrementalIdGenerator(prefix: E.toString());
 
   @override
-  Future<String> generateId(E entity, {required Transaction transaction}) async {
+  Future<String> generateId(E entity, {Transaction? transaction}) async {
     return _idGenerator.getId(entity);
   }
 }

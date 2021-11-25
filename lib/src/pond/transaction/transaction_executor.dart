@@ -12,12 +12,15 @@ abstract class TransactionExecutor extends Synchronizable<Transaction> {
 }
 
 extension Default on TransactionExecutor {
-  Future<void> executeTransaction(Transaction transaction) async {
+  Future<V?> executeTransaction<V>(Transaction<V> transaction) async {
     await lock(transaction);
     try {
-      await transaction.execute(repository);
+      final value = await transaction.execute(repository);
+      await commit();
+      return value;
     } catch (e) {
       await revert();
+      return null;
     } finally {
       unlock(transaction);
     }

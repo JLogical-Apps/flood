@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
-import 'package:jlogical_utils/src/pond/repository/with_id_generator.dart';
 import 'package:jlogical_utils/src/pond/repository/local/with_local_entity_repository.dart';
+import 'package:jlogical_utils/src/pond/repository/with_id_generator.dart';
 
 import 'entities/budget.dart';
 import 'entities/budget_aggregate.dart';
@@ -29,7 +29,7 @@ void main() {
     ]);
 
     final ownerEntity = UserEntity(initialUser: User()..nameProperty.value = 'Jake');
-    await database.getRepository<UserEntity>().createIsolated(ownerEntity);
+    await database.getRepository<UserEntity>().create(ownerEntity);
     final ownerId = ownerEntity.id;
 
     final budgetAggregate = BudgetAggregate(

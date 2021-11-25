@@ -31,6 +31,6 @@ class ReferenceProperty<E extends Entity> extends Property<String> with WithGlob
     }
 
     final entityRepository = context.database.getRepository<E>();
-    _reference = await entityRepository.getOrNullIsolated(referenceId);
+    _reference = await entityRepository.getOrNull(referenceId);
   }
 }

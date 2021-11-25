@@ -56,7 +56,7 @@ void main() {
           ..nameProperty.value = 'Tithe'
           ..amountProperty.value = 24 * 100);
 
-    await envelopeRepository.createIsolated(envelopeEntity);
+    await envelopeRepository.create(envelopeEntity);
 
     final envelopeId = envelopeEntity.id!;
 
@@ -91,7 +91,7 @@ void main() {
 
     await transactionsCompleter.future;
 
-    envelopeEntity = await envelopeRepository.getIsolated(envelopeId);
+    envelopeEntity = await envelopeRepository.get(envelopeId);
 
     expect(envelopeEntity.value.nameProperty.value, 'Car');
   });
@@ -102,7 +102,7 @@ void main() {
           ..nameProperty.value = 'Tithe'
           ..amountProperty.value = 24 * 100);
 
-    await envelopeRepository.createIsolated(envelopeEntity);
+    await envelopeRepository.create(envelopeEntity);
 
     final envelopeId = envelopeEntity.id!;
 
@@ -119,9 +119,66 @@ void main() {
 
     await envelopeRepository.executeTransaction(transactionGiving);
 
-    envelopeEntity = await envelopeRepository.getIsolated(envelopeId);
+    envelopeEntity = await envelopeRepository.get(envelopeId);
 
     expect(envelopeEntity.value.nameProperty.value, 'Tithe');
+  });
+
+  test('transaction commit saves when done.', () async {
+    final transactionCreate = Transaction((t) async {
+      final envelopeEntity = EnvelopeEntity(
+          initialEnvelope: Envelope()
+            ..nameProperty.value = 'Tithe'
+            ..amountProperty.value = 24 * 100);
+
+      await t.create(envelopeEntity);
+
+      return envelopeEntity.id;
+    });
+
+    final envelopeId = await envelopeRepository.executeTransaction(transactionCreate);
+
+    final envelopeEntity = await envelopeRepository.get(envelopeId!);
+
+    expect(envelopeEntity, isNotNull);
+  });
+
+  test('simultaneous read/write while transaction running.', () async {
+    final otherStuffCompleter = Completer();
+
+    final titheEnvelopeEntity = EnvelopeEntity(
+        initialEnvelope: Envelope()
+          ..nameProperty.value = 'Tithe'
+          ..amountProperty.value = 24 * 100);
+
+    await envelopeRepository.create(titheEnvelopeEntity);
+
+    final titheEnvelopeId = titheEnvelopeEntity.id!;
+
+    final deleteTitheTransaction = Transaction((t) async {
+      await t.delete(titheEnvelopeId);
+
+      await otherStuffCompleter.future;
+
+      final transactionEnvelope = await t.getOrNull<EnvelopeEntity>(titheEnvelopeId);
+      expect(transactionEnvelope, isNull);
+
+      final repositoryEnvelope = await envelopeRepository.get(titheEnvelopeId);
+      expect(repositoryEnvelope.value.nameProperty.value, 'Giving');
+    });
+
+    Future modifyTitheEnvelope() async {
+      final envelopeEntity = await envelopeRepository.get(titheEnvelopeId);
+      envelopeEntity.changeName('Giving');
+      await envelopeRepository.save(envelopeEntity);
+
+      otherStuffCompleter.complete();
+    }
+
+    await Future.wait([envelopeRepository.executeTransaction(deleteTitheTransaction), modifyTitheEnvelope()]);
+
+    final titheEnvelope = await envelopeRepository.getOrNull(titheEnvelopeId);
+    expect(titheEnvelope, isNull);
   });
 }
 
