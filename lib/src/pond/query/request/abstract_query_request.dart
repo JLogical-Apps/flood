@@ -1,12 +1,14 @@
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/utils/marker.dart';
 
 @marker
 abstract class AbstractQueryRequest<R extends Record, T> {
   final Query<R> query;
+  final Transaction? transaction;
 
-  const AbstractQueryRequest({required this.query});
+  const AbstractQueryRequest({required this.query, this.transaction});
 
   List<Query> getQueryChain() {
     var queries = <Query>[];

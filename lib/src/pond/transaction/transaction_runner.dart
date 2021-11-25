@@ -1,4 +1,6 @@
+import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
+import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 
@@ -30,5 +32,9 @@ class TransactionRunner {
 
   Future<void> create(Entity entity) {
     return repository.create(entity, transaction: transaction);
+  }
+
+  Future<T> executeQuery<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) {
+    return repository.executeQuery(queryRequest);
   }
 }
