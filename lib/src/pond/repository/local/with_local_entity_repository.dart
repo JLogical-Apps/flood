@@ -11,17 +11,29 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
 
   @override
   Future<E?> save(E entity, {required Transaction transaction}) async {
+    if (transaction != _currentTransaction) {
+      _startTransaction(transaction);
+    }
+
     final id = entity.id ?? (throw Exception('Cannot save entity that has a null id!'));
     _stateById[id] = entity.state;
   }
 
   @override
   Future<E?> getOrNull(String id, {required Transaction transaction}) async {
+    if (transaction != _currentTransaction) {
+      _startTransaction(transaction);
+    }
+
     return _stateById[id].mapIfNonNull((state) => Entity.fromStateOrNull<E>(state));
   }
 
   @override
   Future<void> delete(String id, {required Transaction transaction}) async {
+    if (transaction != _currentTransaction) {
+      _startTransaction(transaction);
+    }
+
     _stateById.remove(id);
   }
 
@@ -32,7 +44,9 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
 
   @override
   Future<void> commit() async {
-    _currentTransaction.mapIfNonNull((currentTransaction) => unlock(currentTransaction));
+    if(_currentTransaction == null) {
+      throw Exception('Can only commit if a transaction has started!');
+    }
 
     _currentTransaction = null;
     _precommitState = null;
@@ -45,4 +59,15 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
 
     await commit();
   }
+
+  void _startTransaction(Transaction transaction) {
+    _currentTransaction = transaction;
+    _precommitState = {..._stateById};
+  }
 }
+
+/*
+Can read/write without transaction.
+Does not interfere with currently running transaction.
+Writing to transaction is only visible to the transaction until committed.
+ */
