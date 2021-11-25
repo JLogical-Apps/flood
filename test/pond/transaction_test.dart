@@ -117,7 +117,9 @@ void main() {
       throw Exception('Force a revert');
     });
 
-    await envelopeRepository.executeTransaction(transactionGiving);
+    try {
+      await envelopeRepository.executeTransaction(transactionGiving);
+    } on Exception {}
 
     envelopeEntity = await envelopeRepository.get(envelopeId);
 
@@ -179,6 +181,33 @@ void main() {
 
     final titheEnvelope = await envelopeRepository.getOrNull(titheEnvelopeId);
     expect(titheEnvelope, isNull);
+  });
+
+  test('query in transaction.', () async {
+    final titheEnvelopeEntity = EnvelopeEntity(
+        initialEnvelope: Envelope()
+          ..nameProperty.value = 'Tithe'
+          ..amountProperty.value = 24 * 100);
+
+    await envelopeRepository.create(titheEnvelopeEntity);
+
+    final modifyTitheTransaction = Transaction((t) async {
+      final envelopesQuery = Query.from<EnvelopeEntity>().all();
+      var envelopes = await t.executeQuery(envelopesQuery);
+      var titheEnvelope = envelopes.first;
+
+      expect(titheEnvelope, isNotNull);
+
+      titheEnvelope.changeName('Giving');
+      t.save(titheEnvelope);
+
+      envelopes = await t.executeQuery(envelopesQuery);
+      titheEnvelope = envelopes.first;
+
+      expect(titheEnvelope.value.nameProperty.value, 'Giving');
+    });
+
+    await envelopeRepository.executeTransaction(modifyTitheTransaction);
   });
 }
 

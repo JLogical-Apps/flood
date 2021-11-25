@@ -28,7 +28,7 @@ class LocalQueryExecutor implements QueryExecutor {
           ]);
 
   @override
-  Future<T> executeQuery<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) async {
+  Future<T> executeQuery<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest, {Transaction? transaction}) async {
     final queryChain = queryRequest.getQueryChain();
 
     // [aggregate] represents all the records that match the query.

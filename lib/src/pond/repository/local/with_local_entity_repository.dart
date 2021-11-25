@@ -52,19 +52,22 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
   }
 
   @override
-  Future<T> executeQuery<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) async {
-    return LocalQueryExecutor(stateById: _stateById).executeQuery(queryRequest);
+  Future<T> executeQuery<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest, {Transaction? transaction}) async {
+    _startTransactionIfNew(transaction);
+
+    late Map<String, State> stateById;
+    if (transaction == null) {
+      stateById = _stateById;
+    } else if (transaction == _currentTransaction) {
+      stateById = _getCommittedStateById();
+    }
+
+    return LocalQueryExecutor(stateById: stateById).executeQuery(queryRequest);
   }
 
   @override
   Future<void> commit() async {
-    final pendingTransactionChange =
-        _pendingTransactionChange ?? (throw Exception('Can only commit if a transaction has started!'));
-
-    final newStateById = {..._stateById};
-    newStateById.addAll(pendingTransactionChange.stateChangesById);
-    newStateById.removeWhere((id, state) => pendingTransactionChange.stateIdDeletes.contains(id));
-    _stateById = newStateById;
+    _stateById = _getCommittedStateById();
   }
 
   @override
@@ -78,6 +81,16 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
     if (transaction != null && transaction != _currentTransaction) {
       _pendingTransactionChange = _TransactionPendingChanges(transaction: transaction);
     }
+  }
+
+  Map<String, State> _getCommittedStateById() {
+    final pendingTransactionChange =
+        _pendingTransactionChange ?? (throw Exception('Can only commit if a transaction has started!'));
+
+    final committedStateById = {..._stateById};
+    committedStateById.addAll(pendingTransactionChange.stateChangesById);
+    committedStateById.removeWhere((id, state) => pendingTransactionChange.stateIdDeletes.contains(id));
+    return committedStateById;
   }
 }
 
