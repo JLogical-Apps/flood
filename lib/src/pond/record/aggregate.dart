@@ -14,4 +14,11 @@ abstract class Aggregate<E extends Entity> {
     final appContext = AppContext.global;
     return Future.wait(resolvables.map((resolvable) => resolvable.resolve(appContext)));
   }
+
+  Future<void> save([Entity? entityToSave]) async {
+    entityToSave ??= entity;
+
+    final appContext = AppContext.global;
+    appContext.database.save(entityToSave);
+  }
 }

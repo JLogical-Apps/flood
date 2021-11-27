@@ -12,6 +12,7 @@ export 'property/with_global_type_serializer.dart';
 export 'property/with_id_properties_state.dart';
 export 'property/with_properties_state.dart';
 export 'query/query.dart';
+export 'record/aggregate.dart';
 export 'record/entity.dart';
 export 'record/record.dart';
 export 'record/value_object.dart';

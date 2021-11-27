@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:jlogical_utils/src/pond/context/resolvable.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/property/context/property_context.dart';
@@ -6,7 +7,9 @@ import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/validation/validation_state.dart';
 import 'package:jlogical_utils/src/pond/validation/with_validators.dart';
 
-abstract class ValueObject extends Record with WithValidators, WithPropertiesState implements PropertyContextProvider, Resolvable {
+abstract class ValueObject extends Record
+    with EquatableMixin, WithValidators, WithPropertiesState
+    implements PropertyContextProvider, Resolvable {
   ValueObject() {
     properties.forEach((property) => property.registerPropertyContextProvider(this));
   }
@@ -22,9 +25,5 @@ abstract class ValueObject extends Record with WithValidators, WithPropertiesSta
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is ValueObject && runtimeType == other.runtimeType && state == other.state;
-
-  @override
-  int get hashCode => state.hashCode;
+  List<Object?> get props => properties;
 }

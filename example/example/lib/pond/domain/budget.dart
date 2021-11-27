@@ -5,4 +5,8 @@ class Budget extends ValueObject {
 
   @override
   List<Property> get properties => [nameProperty];
+
+  Budget withNameChanged(String newName) {
+    return Budget()..nameProperty.value = newName;
+  }
 }

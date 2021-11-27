@@ -6,8 +6,8 @@ import 'package:jlogical_utils/src/pond/query/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
-import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
+import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/utils/collection_extensions.dart';
 import 'package:jlogical_utils/src/utils/types.dart';
 
@@ -38,6 +38,18 @@ class Database
     }
 
     throw Exception('Unable to find repository to handle query request with record of type $R');
+  }
+
+  Future<void> save<E extends Entity>(E entity, {Transaction? transaction}) {
+    return getRepository<E>().save(entity, transaction: transaction);
+  }
+
+  Future<Entity?> getOrNull<E extends Entity>(String id, {Transaction? transaction}) {
+    return getRepository<E>().getOrNull(id, transaction: transaction);
+  }
+
+  Future<void> delete<E extends Entity>(String id, {Transaction? transaction}) {
+    return getRepository<E>().delete(id, transaction: transaction);
   }
 }
 

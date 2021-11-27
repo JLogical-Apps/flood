@@ -1,13 +1,15 @@
+import 'package:equatable/equatable.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/property/context/property_context_provider.dart';
 import 'package:jlogical_utils/src/pond/property/validation/property_validator.dart';
 import 'package:jlogical_utils/src/pond/record/immutability_violation_error.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/validation/validation_exception.dart';
 import 'package:jlogical_utils/src/pond/validation/validator.dart';
+
 import '../state/state.dart';
 
-abstract class Property<T> implements Validator {
+abstract class Property<T> with EquatableMixin implements Validator {
   final String name;
 
   final List<PropertyValidator<T>> validators;
@@ -60,4 +62,7 @@ abstract class Property<T> implements Validator {
 
   @override
   String toString() => '$runtimeType{name = $name, value = $value}';
+
+  @override
+  List<Object?> get props => [name, value];
 }
