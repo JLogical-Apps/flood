@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
@@ -8,7 +10,8 @@ import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
 
 void main() {
-  test('basic repository functions.', () async {
+  late LocalEnvelopeRepository envelopeRepository;
+  setUp(() {
     AppContext.global = AppContext(
       entityRegistrations: [
         EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
@@ -18,7 +21,10 @@ void main() {
       ],
     );
 
-    final envelopeRepository = LocalEnvelopeRepository();
+    envelopeRepository = LocalEnvelopeRepository();
+  });
+
+  test('basic repository functions.', () async {
     final envelopeEntity = EnvelopeEntity(
         initialEnvelope: Envelope()
           ..nameProperty.value = 'Tithe'
@@ -43,6 +49,45 @@ void main() {
 
     retrievedEnvelopeEntity = await envelopeRepository.getOrNull(envelopeEntity.id!);
     expect(retrievedEnvelopeEntity, isNull);
+  });
+
+  test('get streams.', () async {
+    expect(envelopeRepository.getXOrNull('abc'), isNull);
+
+    final envelopeEntity = EnvelopeEntity(
+        initialEnvelope: Envelope()
+          ..nameProperty.value = 'Tithe'
+          ..amountProperty.value = 24 * 100);
+
+    await envelopeRepository.create(envelopeEntity);
+
+    final envelopeId = envelopeEntity.id!;
+
+    final envelopeX = envelopeRepository.getXOrNull(envelopeId)!;
+    Future<EnvelopeEntity> getStreamValue() async {
+      final completer = Completer();
+      late EnvelopeEntity envelope;
+      late StreamSubscription sub;
+      sub = envelopeX.listen((event) {
+        envelope = event.get();
+        completer.complete();
+        sub.cancel();
+      });
+      await completer.future;
+      return envelope;
+    }
+    var retrievedEnvelope = await getStreamValue();
+
+    expect(retrievedEnvelope, envelopeEntity);
+    expect(retrievedEnvelope.state, envelopeEntity.state);
+
+    envelopeEntity.changeName('Giving');
+    await envelopeRepository.save(envelopeEntity);
+
+    retrievedEnvelope = await getStreamValue();
+
+    expect(retrievedEnvelope, envelopeEntity);
+    expect(retrievedEnvelope.state, envelopeEntity.state);
   });
 }
 

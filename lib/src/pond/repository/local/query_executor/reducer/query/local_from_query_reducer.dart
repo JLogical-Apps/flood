@@ -12,6 +12,6 @@ class LocalFromQueryReducer extends AbstractFromQueryReducer<Iterable<Record>> {
   Iterable<Record> reduce({required Iterable<Record>? aggregate, required Query query}) {
     return stateById.values
         .where((state) => state.type == query.recordType.toString())
-        .map((state) => Entity.fromStateRuntimeOrNull(state: state)!);
+        .map((state) => Entity.fromState(state));
   }
 }

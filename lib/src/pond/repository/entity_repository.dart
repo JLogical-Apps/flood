@@ -1,8 +1,10 @@
+import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/pond/query/query_executor.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction_executor.dart';
 import 'package:jlogical_utils/src/pond/utils/with_key_synchronizable.dart';
+import 'package:rxdart/rxdart.dart';
 
 abstract class EntityRepository<E extends Entity>
     with WithKeySynchronizable<Transaction>
@@ -12,6 +14,8 @@ abstract class EntityRepository<E extends Entity>
   Future<void> save(E entity, {Transaction? transaction});
 
   Future<E?> getOrNull(String id, {Transaction? transaction});
+
+  ValueStream<FutureValue<E>>? getXOrNull(String id);
 
   Future<void> delete(String id, {Transaction? transaction});
 

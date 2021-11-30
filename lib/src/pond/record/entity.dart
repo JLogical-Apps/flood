@@ -34,8 +34,8 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
     return AppContext.global.constructEntityFromStateOrNull(state) as E?;
   }
 
-  static Entity? fromStateRuntimeOrNull({required State state}) {
-    return AppContext.global.constructEntityFromStateOrNull(state);
+  static E fromState<E extends Entity>(State state) {
+    return fromStateOrNull(state) ?? (throw Exception('Unable to convert state [$state] to a $E entity.'));
   }
 
   @override
