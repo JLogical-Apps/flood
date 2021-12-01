@@ -23,6 +23,10 @@ abstract class EntityRepository<E extends Entity>
     return (await getOrNull(id, transaction: transaction)) ?? (throw Exception('Cannot find $E with id: $id'));
   }
 
+  ValueStream<FutureValue<E>> getX(String id) {
+    return getXOrNull(id) ?? (throw Exception('Cannot find $E with id: $id'));
+  }
+
   Future<void> create(E entity, {Transaction? transaction}) async {
     final id = await generateId(entity, transaction: transaction);
     entity.id = id;

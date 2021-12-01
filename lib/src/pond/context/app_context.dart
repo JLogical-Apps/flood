@@ -14,15 +14,18 @@ class AppContext {
 
   final List<EntityRegistration> entityRegistrations;
   final List<ValueObjectRegistration> valueObjectRegistrations;
-  final List<TypeStateSerializer> typeStateSerializers;
+  final List<AggregateRegistration> aggregateRegistrations;
   final Database database;
+
+  final List<TypeStateSerializer> _typeStateSerializers;
 
   AppContext({
     this.entityRegistrations: const [],
     this.valueObjectRegistrations: const [],
-    List<TypeStateSerializer> additionalTypeStateSerializers: const [],
+    this.aggregateRegistrations: const [],
     Database? database,
-  })  : this.typeStateSerializers =
+    List<TypeStateSerializer> additionalTypeStateSerializers: const [],
+  })  : this._typeStateSerializers =
             coreTypeStateSerializers + nullableCoreTypeStateSerializers + additionalTypeStateSerializers,
         this.database = database ?? Database(repositories: []);
 
@@ -85,12 +88,20 @@ class AppContext {
     return entity;
   }
 
+  Aggregate constructAggregateFromEntityRuntime(Type aggregateType, Entity entity) {
+    return aggregateRegistrations.firstWhere((registration) => registration.aggregateType == aggregateType).onCreate(entity);
+  }
+
+  Type getEntityTypeFromAggregate<A>() {
+    return aggregateRegistrations.firstWhere((registration) => registration.aggregateType == A).entityType;
+  }
+
   TypeStateSerializer<T> getTypeStateSerializerByType<T>() {
-    return typeStateSerializers.firstWhere((serializer) => serializer.type == T) as TypeStateSerializer<T>;
+    return _typeStateSerializers.firstWhere((serializer) => serializer.type == T) as TypeStateSerializer<T>;
   }
 
   TypeStateSerializer getTypeStateSerializerByRuntimeType(Type type) {
-    final typeStateSerializer = typeStateSerializers.firstWhereOrNull((serializer) => serializer.type == type);
+    final typeStateSerializer = _typeStateSerializers.firstWhereOrNull((serializer) => serializer.type == type);
     if (typeStateSerializer != null) {
       return typeStateSerializer;
     }
@@ -150,6 +161,16 @@ class ValueObjectRegistration<V extends ValueObject, NullableV extends ValueObje
   Type get valueObjectType => V;
 
   Type get nullableValueObjectType => NullableV;
+}
+
+class AggregateRegistration<A extends Aggregate<E>, E extends Entity> {
+  final A Function(E entity) onCreate;
+
+  const AggregateRegistration(this.onCreate);
+
+  Type get aggregateType => A;
+
+  Type get entityType => E;
 }
 
 class RuntimeValueObjectTypeStateSerializer extends TypeStateSerializer<ValueObject> {
