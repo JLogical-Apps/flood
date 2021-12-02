@@ -12,9 +12,13 @@ import 'entities/user_avatar.dart';
 
 void main() {
   test('state inflation on simple ValueObject.', () {
-    AppContext.global = AppContext(valueObjectRegistrations: [
-      ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
-    ]);
+    AppContext.global = AppContext(
+      registration: AppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
+        ],
+      ),
+    );
 
     final state = State(
       values: {
@@ -32,9 +36,11 @@ void main() {
 
   test('state inflation of record that has a list', () {
     AppContext.global = AppContext(
-      valueObjectRegistrations: [
-        ValueObjectRegistration<LuckyNumbers, LuckyNumbers?>(() => LuckyNumbers()),
-      ],
+      registration: AppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<LuckyNumbers, LuckyNumbers?>(() => LuckyNumbers()),
+        ],
+      ),
     );
 
     const luckyNumbers = [4, 8, 15, 16, 23, 42];
@@ -53,9 +59,11 @@ void main() {
 
   test('state inflation of record that has a map.', () {
     AppContext.global = AppContext(
-      valueObjectRegistrations: [
-        ValueObjectRegistration<Color, Color?>(() => Color()),
-      ],
+      registration: AppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Color, Color?>(() => Color()),
+        ],
+      ),
     );
 
     const rgb = {'r': 0, 'g': 152, 'b': 19};
@@ -74,10 +82,12 @@ void main() {
 
   test('state inflation of record that has a value object.', () {
     AppContext.global = AppContext(
-      valueObjectRegistrations: [
-        ValueObjectRegistration<Color, Color?>(() => Color()),
-        ValueObjectRegistration<UserAvatar, UserAvatar?>(() => UserAvatar()),
-      ],
+      registration: AppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Color, Color?>(() => Color()),
+          ValueObjectRegistration<UserAvatar, UserAvatar?>(() => UserAvatar()),
+        ],
+      ),
     );
 
     const rgb = {'r': 0, 'g': 152, 'b': 19};
@@ -99,10 +109,12 @@ void main() {
 
   test('state inflation of record that has a list of value objects.', () {
     AppContext.global = AppContext(
-      valueObjectRegistrations: [
-        ValueObjectRegistration<Palette, Palette?>(() => Palette()),
-        ValueObjectRegistration<Color, Color?>(() => Color()),
-      ],
+      registration: AppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Palette, Palette?>(() => Palette()),
+          ValueObjectRegistration<Color, Color?>(() => Color()),
+        ],
+      ),
     );
 
     const white = {'r': 255, 'g': 255, 'b': 255};
@@ -131,10 +143,12 @@ void main() {
 
   test('state inflation of record that has a map with value objects.', () {
     AppContext.global = AppContext(
-      valueObjectRegistrations: [
-        ValueObjectRegistration<Color, Color?>(() => Color()),
-        ValueObjectRegistration<PaletteStats, PaletteStats?>(() => PaletteStats()),
-      ],
+      registration: AppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Color, Color?>(() => Color()),
+          ValueObjectRegistration<PaletteStats, PaletteStats?>(() => PaletteStats()),
+        ],
+      ),
     );
 
     const white = {'r': 255, 'g': 255, 'b': 255};
@@ -162,10 +176,14 @@ void main() {
   });
 
   test('state inflation of record that has a reference to an entity.', () {
-    AppContext.global = AppContext(valueObjectRegistrations: [
-      ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
-      ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(() => EnvelopeTransaction()),
-    ]);
+    AppContext.global = AppContext(
+      registration: AppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
+          ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(() => EnvelopeTransaction()),
+        ],
+      ),
+    );
 
     final state = State(
       values: {

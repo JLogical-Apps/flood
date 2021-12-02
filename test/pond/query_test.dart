@@ -42,14 +42,16 @@ void main() {
 
   test('all from a type.', () async {
     AppContext.global = AppContext(
-      entityRegistrations: [
-        EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
-        EntityRegistration<BudgetEntity, Budget>((budget) => BudgetEntity(initialBudget: budget)),
-      ],
-      valueObjectRegistrations: [
-        ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
-        ValueObjectRegistration<Budget, Budget?>(() => Budget()),
-      ],
+      registration: AppRegistration(
+        entityRegistrations: [
+          EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
+          EntityRegistration<BudgetEntity, Budget>((budget) => BudgetEntity(initialBudget: budget)),
+        ],
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
+          ValueObjectRegistration<Budget, Budget?>(() => Budget()),
+        ],
+      ),
     );
 
     final allEnvelopesQuery = Query.from<EnvelopeEntity>().all();

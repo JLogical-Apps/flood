@@ -1,4 +1,4 @@
-import 'package:jlogical_utils/src/pond/context/resolvable.dart';
+import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';

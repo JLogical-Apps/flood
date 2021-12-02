@@ -33,15 +33,18 @@ class PondPage extends HookWidget {
 
   void _initPond() {
     AppContext.global = AppContext(
-      valueObjectRegistrations: [
-        ValueObjectRegistration<Budget, Budget?>(() => Budget()),
-      ],
-      entityRegistrations: [
-        EntityRegistration<BudgetEntity, Budget>((value) => BudgetEntity(initialBudget: value)),
-      ],
-      aggregateRegistrations: [
-        AggregateRegistration<BudgetAggregate, BudgetEntity>((entity) => BudgetAggregate(initialBudgetEntity: entity)),
-      ],
+      registration: AppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Budget, Budget?>(() => Budget()),
+        ],
+        entityRegistrations: [
+          EntityRegistration<BudgetEntity, Budget>((value) => BudgetEntity(initialBudget: value)),
+        ],
+        aggregateRegistrations: [
+          AggregateRegistration<BudgetAggregate, BudgetEntity>(
+              (entity) => BudgetAggregate(initialBudgetEntity: entity)),
+        ],
+      ),
       database: Database(
         repositories: [
           LocalBudgetRepository(),

@@ -19,7 +19,7 @@ class Database
   @override
   final Resolver<Entity, EntityRepository> resolver;
 
-  Database({required this.repositories}) : resolver = _EntityRepositoryResolver(repositories: repositories);
+  Database({this.repositories: const []}) : resolver = _EntityRepositoryResolver(repositories: repositories);
 
   EntityRepository<E> getRepository<E extends Entity>() {
     return getRepositoryRuntime(E) as EntityRepository<E>;

@@ -11,12 +11,14 @@ void main() {
   setUp(() {
     envelopeRepository = LocalEnvelopeRepository();
     AppContext.global = AppContext(
-      entityRegistrations: [
-        EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
-      ],
-      valueObjectRegistrations: [
-        ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
-      ],
+      registration: AppRegistration(
+        entityRegistrations: [
+          EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
+        ],
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
+        ],
+      ),
     );
   });
   test('basic repository actions.', () {

@@ -20,13 +20,19 @@ void main() {
       ],
     );
 
-    AppContext.global = AppContext(database: database, entityRegistrations: [
-      EntityRegistration<BudgetEntity, Budget>((value) => BudgetEntity(initialBudget: value)),
-      EntityRegistration<UserEntity, User>((value) => UserEntity(initialUser: value)),
-    ], valueObjectRegistrations: [
-      ValueObjectRegistration<Budget, Budget?>(() => Budget()),
-      ValueObjectRegistration<User, User?>(() => User()),
-    ]);
+    AppContext.global = AppContext(
+      database: database,
+      registration: AppRegistration(
+        entityRegistrations: [
+          EntityRegistration<BudgetEntity, Budget>((value) => BudgetEntity(initialBudget: value)),
+          EntityRegistration<UserEntity, User>((value) => UserEntity(initialUser: value)),
+        ],
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Budget, Budget?>(() => Budget()),
+          ValueObjectRegistration<User, User?>(() => User()),
+        ],
+      ),
+    );
 
     final ownerEntity = UserEntity(initialUser: User()..nameProperty.value = 'Jake');
     await database.getRepository<UserEntity>().create(ownerEntity);

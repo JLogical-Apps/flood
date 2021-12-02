@@ -13,12 +13,14 @@ void main() {
   late LocalEnvelopeRepository envelopeRepository;
   setUp(() {
     AppContext.global = AppContext(
-      entityRegistrations: [
-        EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
-      ],
-      valueObjectRegistrations: [
-        ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
-      ],
+      registration: AppRegistration(
+        entityRegistrations: [
+          EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
+        ],
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
+        ],
+      ),
     );
 
     envelopeRepository = LocalEnvelopeRepository();
@@ -76,6 +78,7 @@ void main() {
       await completer.future;
       return envelope;
     }
+
     var retrievedEnvelope = await getStreamValue();
 
     expect(retrievedEnvelope, envelopeEntity);

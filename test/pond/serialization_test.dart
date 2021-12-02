@@ -67,9 +67,13 @@ void main() {
   });
 
   test('serializing value objects', () {
-    AppContext.global = AppContext(valueObjectRegistrations: [
-      ValueObjectRegistration<Color, Color?>(() => Color()),
-    ]);
+    AppContext.global = AppContext(
+      registration: AppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Color, Color?>(() => Color()),
+        ],
+      ),
+    );
 
     final white = Color()..rgbProperty.value = {'r': 255, 'g': 255, 'b': 255};
     final colorSerializer = ValueObjectTypeStateSerializer<Color>();
@@ -92,9 +96,13 @@ void main() {
   });
 
   test('serializing lists', () {
-    AppContext.global = AppContext(valueObjectRegistrations: [
-      ValueObjectRegistration<Color, Color?>(() => Color()),
-    ]);
+    AppContext.global = AppContext(
+      registration: AppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<Color, Color?>(() => Color()),
+        ],
+      ),
+    );
 
     final nonNullListSerializer = ListTypeStateSerializer<int>();
     expect(nonNullListSerializer.onDeserialize(['2', 4]), [2, 4]);

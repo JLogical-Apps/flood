@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:jlogical_utils/src/pond/context/resolvable.dart';
+import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/property/context/property_context.dart';
 import 'package:jlogical_utils/src/pond/property/context/property_context_provider.dart';

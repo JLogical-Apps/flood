@@ -1,5 +1,5 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/context/resolvable.dart';
+import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
 
 import 'entity.dart';
 
