@@ -17,8 +17,8 @@ class MapProperty<K, V> extends Property<Map<K, V>> {
 }
 
 class MapTypeStateSerializer<K, V> extends TypeStateSerializer<Map<K, V>> {
-  final TypeStateSerializer keyTypeStateSerializer = AppContext.global.getTypeStateSerializerByRuntimeType(K);
-  final TypeStateSerializer valueTypeStateSerializer = AppContext.global.getTypeStateSerializerByRuntimeType(V);
+  final TypeStateSerializer keyTypeStateSerializer = AppContext.global.getTypeStateSerializerByTypeRuntime(K);
+  final TypeStateSerializer valueTypeStateSerializer = AppContext.global.getTypeStateSerializerByTypeRuntime(V);
 
   @override
   dynamic onSerialize(Map<K, V> value) {

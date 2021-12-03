@@ -33,7 +33,7 @@ class PondPage extends HookWidget {
 
   void _initPond() {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         valueObjectRegistrations: [
           ValueObjectRegistration<Budget, Budget?>(() => Budget()),
         ],

@@ -22,7 +22,7 @@ void main() {
 
     AppContext.global = AppContext(
       database: database,
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         entityRegistrations: [
           EntityRegistration<BudgetEntity, Budget>((value) => BudgetEntity(initialBudget: value)),
           EntityRegistration<UserEntity, User>((value) => UserEntity(initialUser: value)),

@@ -3,20 +3,20 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 FutureValue<A>? useAggregate<A extends Aggregate>(String? id) {
   final valueX = useMemoized(() {
-    if(id == null) {
+    if (id == null) {
       return null;
     }
 
     final appContext = AppContext.global;
     final database = appContext.database;
 
-    final entityType = appContext.getEntityTypeFromAggregate<A>();
+    final entityType = appContext.getEntityTypeFromAggregate(A);
     final repository = database.getRepositoryRuntime(entityType);
 
     final entityX = repository.getX(id);
 
-    return entityX.mapWithValue((maybeEntity) =>
-        maybeEntity.mapIfPresent((entity) => appContext.constructAggregateFromEntityRuntime(A, entity) as A));
+    return entityX.mapWithValue(
+        (maybeEntity) => maybeEntity.mapIfPresent((entity) => appContext.constructAggregateFromEntity<A>(entity)));
   }, [id]);
 
   return useValueStreamOrNull(valueX);

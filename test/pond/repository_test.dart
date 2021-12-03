@@ -13,7 +13,7 @@ void main() {
   late LocalEnvelopeRepository envelopeRepository;
   setUp(() {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         entityRegistrations: [
           EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
         ],

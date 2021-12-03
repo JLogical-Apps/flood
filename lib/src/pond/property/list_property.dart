@@ -16,7 +16,7 @@ class ListProperty<T> extends Property<List<T>> {
 }
 
 class ListTypeStateSerializer<T> extends TypeStateSerializer<List<T>> {
-  TypeStateSerializer itemTypeStateSerializer = AppContext.global.getTypeStateSerializerByRuntimeType(T);
+  TypeStateSerializer itemTypeStateSerializer = AppContext.global.appRegistration.getTypeStateSerializerByTypeRuntime(T);
 
   @override
   dynamic onSerialize(List<T> value) {

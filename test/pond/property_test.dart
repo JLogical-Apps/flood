@@ -13,7 +13,7 @@ import 'entities/user_avatar.dart';
 void main() {
   test('state inflation on simple ValueObject.', () {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         valueObjectRegistrations: [
           ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
         ],
@@ -36,7 +36,7 @@ void main() {
 
   test('state inflation of record that has a list', () {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         valueObjectRegistrations: [
           ValueObjectRegistration<LuckyNumbers, LuckyNumbers?>(() => LuckyNumbers()),
         ],
@@ -59,7 +59,7 @@ void main() {
 
   test('state inflation of record that has a map.', () {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
         ],
@@ -82,7 +82,7 @@ void main() {
 
   test('state inflation of record that has a value object.', () {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
           ValueObjectRegistration<UserAvatar, UserAvatar?>(() => UserAvatar()),
@@ -109,7 +109,7 @@ void main() {
 
   test('state inflation of record that has a list of value objects.', () {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         valueObjectRegistrations: [
           ValueObjectRegistration<Palette, Palette?>(() => Palette()),
           ValueObjectRegistration<Color, Color?>(() => Color()),
@@ -143,7 +143,7 @@ void main() {
 
   test('state inflation of record that has a map with value objects.', () {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
           ValueObjectRegistration<PaletteStats, PaletteStats?>(() => PaletteStats()),
@@ -177,7 +177,7 @@ void main() {
 
   test('state inflation of record that has a reference to an entity.', () {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         valueObjectRegistrations: [
           ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
           ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(() => EnvelopeTransaction()),

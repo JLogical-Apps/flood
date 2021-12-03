@@ -68,7 +68,7 @@ void main() {
 
   test('serializing value objects', () {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
         ],
@@ -97,7 +97,7 @@ void main() {
 
   test('serializing lists', () {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
         ],

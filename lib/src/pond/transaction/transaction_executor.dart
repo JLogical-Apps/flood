@@ -11,7 +11,7 @@ abstract class TransactionExecutor extends Synchronizable<Transaction> {
   Future<void> revert();
 }
 
-extension Default on TransactionExecutor {
+extension DefaultTransactionExecutor on TransactionExecutor {
   Future<V> executeTransaction<V>(Transaction<V> transaction) async {
     await lock(transaction);
     try {

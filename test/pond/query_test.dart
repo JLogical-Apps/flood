@@ -42,7 +42,7 @@ void main() {
 
   test('all from a type.', () async {
     AppContext.global = AppContext(
-      registration: AppRegistration(
+      registration: ExplicitAppRegistration(
         entityRegistrations: [
           EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
           EntityRegistration<BudgetEntity, Budget>((budget) => BudgetEntity(initialBudget: budget)),

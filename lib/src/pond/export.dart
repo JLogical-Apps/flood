@@ -1,5 +1,6 @@
 export 'context/app_context.dart';
-export 'context/app_registration.dart';
+export 'context/registration/app_registration.dart';
+export 'context/registration/explicit_app_registration.dart';
 export 'database/database.dart';
 export 'property/double_property.dart';
 export 'property/int_property.dart';
