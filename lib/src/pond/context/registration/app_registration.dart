@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/record/aggregate.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
@@ -16,6 +17,8 @@ abstract class AppRegistration {
   Type getEntityTypeFromAggregate(Type aggregateType);
 
   TypeStateSerializer getTypeStateSerializerByTypeRuntime(Type type);
+
+  Database get database;
 }
 
 extension DefaultAppRegistration on AppRegistration {

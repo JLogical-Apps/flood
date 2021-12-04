@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
+import 'package:jlogical_utils/src/pond/database/database.dart';
+import 'package:jlogical_utils/src/pond/database/entity_database.dart';
 import 'package:jlogical_utils/src/pond/record/aggregate.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
@@ -18,17 +20,20 @@ class ExplicitAppRegistration implements AppRegistration {
   final List<ValueObjectRegistration> valueObjectRegistrations;
   final List<AggregateRegistration> aggregateRegistrations;
   final List<TypeStateSerializer> typeStateSerializers;
+  final Database database;
 
   ExplicitAppRegistration({
     this.entityRegistrations: const [],
     this.valueObjectRegistrations: const [],
     this.aggregateRegistrations: const [],
+    Database? database,
     List<TypeStateSerializer>? additionalTypeStateSerializers,
-  }) : typeStateSerializers = [
+  })  : typeStateSerializers = [
           ..._coreTypeStateSerializers,
           ..._nullableCoreTypeStateSerializers,
           ...?additionalTypeStateSerializers,
-        ];
+        ],
+        this.database = database ?? EntityDatabase(repositories: []);
 
   static List<TypeStateSerializer> get _coreTypeStateSerializers => [
         IntTypeStateSerializer(),
@@ -86,9 +91,7 @@ class ExplicitAppRegistration implements AppRegistration {
         ?.onCreate(entity);
   }
 
-  Entity? constructEntityFromStateOrNull(State state) {
-
-  }
+  Entity? constructEntityFromStateOrNull(State state) {}
 
   Type getEntityTypeFromAggregate(Type aggregateType) {
     return aggregateRegistrations

@@ -8,10 +8,9 @@ FutureValue<A>? useAggregate<A extends Aggregate>(String? id) {
     }
 
     final appContext = AppContext.global;
-    final database = appContext.database;
 
     final entityType = appContext.getEntityTypeFromAggregate(A);
-    final repository = database.getRepositoryRuntime(entityType);
+    final repository = appContext.getRepositoryRuntime(entityType);
 
     final entityX = repository.getX(id);
 
