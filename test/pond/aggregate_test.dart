@@ -13,15 +13,7 @@ import 'entities/user_entity.dart';
 
 void main() {
   test('resolving aggregate.', () async {
-    final database = Database(
-      repositories: [
-        LocalUserRepository(),
-        LocalBudgetRepository(),
-      ],
-    );
-
     AppContext.global = AppContext(
-      database: database,
       registration: ExplicitAppRegistration(
         entityRegistrations: [
           EntityRegistration<BudgetEntity, Budget>((value) => BudgetEntity(initialBudget: value)),
@@ -31,11 +23,17 @@ void main() {
           ValueObjectRegistration<Budget, Budget?>(() => Budget()),
           ValueObjectRegistration<User, User?>(() => User()),
         ],
+        database: EntityDatabase(
+          repositories: [
+            LocalUserRepository(),
+            LocalBudgetRepository(),
+          ],
+        ),
       ),
     );
 
     final ownerEntity = UserEntity(initialUser: User()..nameProperty.value = 'Jake');
-    await database.getRepository<UserEntity>().create(ownerEntity);
+    await AppContext.global.getRepository<UserEntity>().create(ownerEntity);
     final ownerId = ownerEntity.id;
 
     final budgetAggregate = BudgetAggregate(

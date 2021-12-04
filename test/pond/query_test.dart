@@ -35,7 +35,7 @@ void main() {
   setUp(() {
     envelopeRepository = LocalEnvelopeRepository();
     budgetRepository = LocalBudgetRepository();
-    database = Database(repositories: [envelopeRepository, budgetRepository]);
+    database = EntityDatabase(repositories: [envelopeRepository, budgetRepository]);
 
     _populateRepositories();
   });

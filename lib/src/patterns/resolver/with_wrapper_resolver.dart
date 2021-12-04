@@ -5,7 +5,7 @@ mixin WithWrapperResolver<In, OutWrapper extends Wrapper<In>> implements Resolve
   List<OutWrapper> get wrappers;
 
   @override
-  OutWrapper resolve<V extends In>(V input) {
+  OutWrapper resolve(In input) {
     return wrappers.firstWhere((wrapper) => wrapper.shouldWrap(input));
   }
 }

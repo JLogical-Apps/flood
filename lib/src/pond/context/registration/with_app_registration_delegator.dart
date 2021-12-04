@@ -1,4 +1,5 @@
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
+import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/record/aggregate.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
@@ -31,4 +32,6 @@ mixin WithAppRegistrationDelegator implements AppRegistration {
   TypeStateSerializer getTypeStateSerializerByTypeRuntime(Type type) {
     return appRegistration.getTypeStateSerializerByTypeRuntime(type);
   }
+
+  Database get database => appRegistration.database;
 }

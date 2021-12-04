@@ -44,11 +44,11 @@ class PondPage extends HookWidget {
           AggregateRegistration<BudgetAggregate, BudgetEntity>(
               (entity) => BudgetAggregate(initialBudgetEntity: entity)),
         ],
-      ),
-      database: Database(
-        repositories: [
-          LocalBudgetRepository(),
-        ],
+        database: EntityDatabase(
+          repositories: [
+            LocalBudgetRepository(),
+          ],
+        ),
       ),
     );
   }
