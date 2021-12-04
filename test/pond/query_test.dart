@@ -1,4 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jlogical_utils/src/pond/context/registration/database_app_registration.dart';
+import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
+import 'package:jlogical_utils/src/pond/context/registration/with_domain_registrations_provider.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 
 import 'entities/budget.dart';
@@ -27,57 +30,59 @@ List<Budget> budgets = [
     ..ownerProperty.value = 'Jake',
 ];
 
-late LocalEnvelopeRepository envelopeRepository;
-late LocalBudgetRepository budgetRepository;
-late Database database;
-
 void main() {
   setUp(() {
-    envelopeRepository = LocalEnvelopeRepository();
-    budgetRepository = LocalBudgetRepository();
-    database = EntityDatabase(repositories: [envelopeRepository, budgetRepository]);
+    AppContext.global = AppContext(
+        registration: DatabaseAppRegistration(repositories: [LocalEnvelopeRepository(), LocalBudgetRepository()]));
 
     _populateRepositories();
   });
 
   test('all from a type.', () async {
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
-        entityRegistrations: [
-          EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
-          EntityRegistration<BudgetEntity, Budget>((budget) => BudgetEntity(initialBudget: budget)),
-        ],
-        valueObjectRegistrations: [
-          ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
-          ValueObjectRegistration<Budget, Budget?>(() => Budget()),
-        ],
-      ),
-    );
-
     final allEnvelopesQuery = Query.from<EnvelopeEntity>().all();
-    final resultEnvelopeEntities = await database.executeQuery(allEnvelopesQuery);
+    final resultEnvelopeEntities = await AppContext.global.executeQuery(allEnvelopesQuery);
     final resultEnvelopeValueObjects = resultEnvelopeEntities.map((envelopeEntity) => envelopeEntity.value).toList();
     expect(resultEnvelopeValueObjects, envelopes);
 
     final allBudgetsQuery = Query.from<BudgetEntity>().all();
-    final resultBudgetEntities = await database.executeQuery(allBudgetsQuery);
+    final resultBudgetEntities = await AppContext.global.executeQuery(allBudgetsQuery);
     final resultBudgetValueObjects = resultBudgetEntities.map((budgetEntity) => budgetEntity.value).toList();
     expect(resultBudgetValueObjects, budgets);
   });
 
   test('with condition', () async {
     final emptyEnvelopesQuery = Query.from<EnvelopeEntity>().where(Envelope.amountPropertyName, isEqualTo: 0).all();
-    final resultEnvelopeEntities = await database.executeQuery(emptyEnvelopesQuery);
+    final resultEnvelopeEntities = await AppContext.global.executeQuery(emptyEnvelopesQuery);
     final resultEnvelopeValueObjects = resultEnvelopeEntities.map((envelopeEntity) => envelopeEntity.value).toList();
     expect(resultEnvelopeValueObjects, envelopes.where((envelope) => envelope.amountProperty.value == 0).toList());
   });
 }
 
 void _populateRepositories() {
-  envelopes.map((envelope) => EnvelopeEntity(initialEnvelope: envelope)).forEach(envelopeRepository.create);
-  budgets.map((budget) => BudgetEntity(initialBudget: budget)).forEach(budgetRepository.create);
+  envelopes
+      .map((envelope) => EnvelopeEntity(initialEnvelope: envelope))
+      .forEach((entity) => AppContext.global.create<EnvelopeEntity>(entity));
+  budgets
+      .map((budget) => BudgetEntity(initialBudget: budget))
+      .forEach((entity) => AppContext.global.create<BudgetEntity>(entity));
 }
 
-class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator;
+class LocalEnvelopeRepository extends EntityRepository<EnvelopeEntity>
+    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>
+    implements RegistrationsProvider {
+  @override
+  EnvelopeEntity createEntity(Envelope initialValue) => EnvelopeEntity(initialEnvelope: initialValue);
 
-class LocalBudgetRepository = EntityRepository<BudgetEntity> with WithLocalEntityRepository, WithIdGenerator;
+  @override
+  Envelope createValueObject() => Envelope();
+}
+
+class LocalBudgetRepository extends EntityRepository<BudgetEntity>
+    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<Budget, BudgetEntity>
+    implements RegistrationsProvider {
+  @override
+  BudgetEntity createEntity(Budget initialValue) => BudgetEntity(initialBudget: initialValue);
+
+  @override
+  Budget createValueObject() => Budget();
+}

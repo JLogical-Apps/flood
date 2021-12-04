@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
+import 'package:jlogical_utils/src/pond/context/registration/with_domain_registrations_provider.dart';
 
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
@@ -213,4 +215,12 @@ void main() {
   });
 }
 
-class LocalEnvelopeRepository = EntityRepository<EnvelopeEntity> with WithLocalEntityRepository, WithIdGenerator;
+class LocalEnvelopeRepository extends EntityRepository<EnvelopeEntity>
+    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>
+    implements RegistrationsProvider {
+  @override
+  EnvelopeEntity createEntity(Envelope initialValue) => EnvelopeEntity(initialEnvelope: initialValue);
+
+  @override
+  Envelope createValueObject() => Envelope();
+}

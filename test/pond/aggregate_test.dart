@@ -1,5 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/context/registration/database_app_registration.dart';
+import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
+import 'package:jlogical_utils/src/pond/context/registration/with_domain_registrations_provider.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/local/with_local_entity_repository.dart';
@@ -14,26 +17,14 @@ import 'entities/user_entity.dart';
 void main() {
   test('resolving aggregate.', () async {
     AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
-        entityRegistrations: [
-          EntityRegistration<BudgetEntity, Budget>((value) => BudgetEntity(initialBudget: value)),
-          EntityRegistration<UserEntity, User>((value) => UserEntity(initialUser: value)),
-        ],
-        valueObjectRegistrations: [
-          ValueObjectRegistration<Budget, Budget?>(() => Budget()),
-          ValueObjectRegistration<User, User?>(() => User()),
-        ],
-        database: EntityDatabase(
-          repositories: [
-            LocalUserRepository(),
-            LocalBudgetRepository(),
-          ],
-        ),
-      ),
+      registration: DatabaseAppRegistration(repositories: [
+        LocalUserRepository(),
+        LocalBudgetRepository(),
+      ]),
     );
 
     final ownerEntity = UserEntity(initialUser: User()..nameProperty.value = 'Jake');
-    await AppContext.global.getRepository<UserEntity>().create(ownerEntity);
+    await AppContext.global.create<UserEntity>(ownerEntity);
     final ownerId = ownerEntity.id;
 
     final budgetAggregate = BudgetAggregate(
@@ -50,6 +41,22 @@ void main() {
   });
 }
 
-class LocalUserRepository = EntityRepository<UserEntity> with WithLocalEntityRepository, WithIdGenerator;
+class LocalUserRepository extends EntityRepository<UserEntity>
+    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<User, UserEntity>
+    implements RegistrationsProvider {
+  @override
+  UserEntity createEntity(User initialValue) => UserEntity(initialUser: initialValue);
 
-class LocalBudgetRepository = EntityRepository<BudgetEntity> with WithLocalEntityRepository, WithIdGenerator;
+  @override
+  User createValueObject() => User();
+}
+
+class LocalBudgetRepository extends EntityRepository<BudgetEntity>
+    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<Budget, BudgetEntity>
+    implements RegistrationsProvider {
+  @override
+  BudgetEntity createEntity(Budget initialValue) => BudgetEntity(initialBudget: initialValue);
+
+  @override
+  Budget createValueObject() => Budget();
+}
