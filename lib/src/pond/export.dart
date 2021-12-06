@@ -1,5 +1,8 @@
 export 'context/app_context.dart';
 export 'context/registration/app_registration.dart';
+export 'context/registration/database_app_registration.dart';
+export 'context/registration/registrations_provider.dart';
+export 'context/registration/with_domain_registrations_provider.dart';
 export 'context/registration/explicit_app_registration.dart';
 export 'database/database.dart';
 export 'database/entity_database.dart';

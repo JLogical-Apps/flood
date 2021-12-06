@@ -16,7 +16,7 @@ class PondPage extends HookWidget {
 
       () async {
         final budgetEntity = BudgetEntity(initialBudget: Budget()..nameProperty.value = 'Budget A');
-        await AppContext.global.database.getRepository<BudgetEntity>().create(budgetEntity);
+        await AppContext.global.create<BudgetEntity>(budgetEntity);
         budgetId.value = budgetEntity.id;
       }();
     });
@@ -33,25 +33,25 @@ class PondPage extends HookWidget {
 
   void _initPond() {
     AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
-        valueObjectRegistrations: [
-          ValueObjectRegistration<Budget, Budget?>(() => Budget()),
+      registration: DatabaseAppRegistration(
+        repositories: [
+          LocalBudgetRepository(),
         ],
-        entityRegistrations: [
-          EntityRegistration<BudgetEntity, Budget>((value) => BudgetEntity(initialBudget: value)),
-        ],
-        aggregateRegistrations: [
-          AggregateRegistration<BudgetAggregate, BudgetEntity>(
-              (entity) => BudgetAggregate(initialBudgetEntity: entity)),
-        ],
-        database: EntityDatabase(
-          repositories: [
-            LocalBudgetRepository(),
-          ],
-        ),
       ),
     );
   }
 }
 
-class LocalBudgetRepository = EntityRepository<BudgetEntity> with WithLocalEntityRepository, WithIdGenerator;
+class LocalBudgetRepository extends EntityRepository<BudgetEntity>
+    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<Budget, BudgetEntity>
+    implements RegistrationsProvider {
+  @override
+  BudgetEntity createEntity(Budget initialValue) {
+    return BudgetEntity(initialBudget: initialValue);
+  }
+
+  @override
+  Budget createValueObject() {
+    return Budget();
+  }
+}
