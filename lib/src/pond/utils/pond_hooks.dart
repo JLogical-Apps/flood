@@ -1,5 +1,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
+import 'package:jlogical_utils/src/pond/utils/query_controller.dart';
 
 FutureValue<A>? useAggregate<A extends Aggregate>(String? id) {
   final valueX = useMemoized(() {
@@ -19,4 +21,8 @@ FutureValue<A>? useAggregate<A extends Aggregate>(String? id) {
   }, [id]);
 
   return useValueStreamOrNull(valueX);
+}
+
+QueryController<R, T> useQuery<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) {
+  return useMemoized(() => QueryController(queryRequest: queryRequest));
 }

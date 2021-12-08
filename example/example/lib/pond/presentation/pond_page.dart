@@ -1,5 +1,4 @@
 import 'package:example/pond/domain/budget.dart';
-import 'package:example/pond/domain/budget_aggregate.dart';
 import 'package:example/pond/domain/budget_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,25 +9,45 @@ class PondPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final budgetId = useState<String?>(null);
     useOneTimeEffect(() {
       _initPond();
-
-      () async {
-        final budgetEntity = BudgetEntity(initialBudget: Budget()..nameProperty.value = 'Budget A');
-        await AppContext.global.create<BudgetEntity>(budgetEntity);
-        budgetId.value = budgetEntity.id;
-      }();
     });
-    final maybeAggregate = useAggregate<BudgetAggregate>('abc');
-    final aggregate = maybeAggregate?.getOrNull();
-    return Scaffold(
-      body: Center(
-        child: aggregate == null
-            ? Text('No Budget found')
-            : Text('Budget name: ${aggregate.entity.value.nameProperty.value}'),
-      ),
-    );
+    final budgetsQuery = useQuery(Query.from<BudgetEntity>().all());
+    return StyleProvider(
+        style: DeltaStyle(backgroundColor: Color(0xff071238)),
+        child: Builder(
+          builder: (context) => ModelBuilder.styledPage(
+            model: budgetsQuery.model,
+            builder: (List<BudgetEntity> budgets) => StyledPage(
+              onRefresh: budgetsQuery.reload,
+              titleText: 'Home',
+              body: StyledCategory.medium(
+                headerText: 'Budgets',
+                children: [
+                  ...budgets.map((budget) => StyledContent(
+                        headerText: budget.value.nameProperty.value ?? 'N/A',
+                        actions: [
+                          ActionItem(
+                            name: 'Edit',
+                            onPerform: () {
+                              budget.value.nameProperty.value = budget.value.nameProperty.value! + 'A';
+                              AppContext.global.save<BudgetEntity>(budget);
+                            },
+                          )
+                        ],
+                      )),
+                  StyledButton.high(
+                    text: 'Create',
+                    onTapped: () {
+                      final budgetEntity = BudgetEntity(initialBudget: Budget()..nameProperty.value = 'A');
+                      AppContext.global.create<BudgetEntity>(budgetEntity);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 
   void _initPond() {
