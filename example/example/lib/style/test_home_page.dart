@@ -151,6 +151,12 @@ class TestHomePage extends HookWidget {
                                   trailing: StyledIcon(
                                     Icons.chevron_right,
                                   ),
+                                  actions: [
+                                    ActionItem(
+                                      name: 'Test',
+                                      type: ActionItemType.primary,
+                                    ),
+                                  ],
                                 ))
                             .toList(),
                         childAspectRatio: 100 / 50,

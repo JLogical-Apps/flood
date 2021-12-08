@@ -12,6 +12,9 @@ class ClickableCard extends StatelessWidget {
   /// Callback for when it is tapped.
   final VoidCallback? onTap;
 
+  /// Callback for when it is long-pressed.
+  final VoidCallback? onLongPress;
+
   /// The elevation of the card.
   final double elevation;
 
@@ -24,6 +27,7 @@ class ClickableCard extends StatelessWidget {
   const ClickableCard({
     required this.child,
     required this.onTap,
+    this.onLongPress,
     this.color: Colors.white,
     this.splashColor,
     this.elevation: 0,
@@ -46,6 +50,7 @@ class ClickableCard extends StatelessWidget {
             BorderRadius.circular(1),
         child: child,
         onTap: onTap,
+        onLongPress: onLongPress,
         splashColor: splashColor,
       ),
     );

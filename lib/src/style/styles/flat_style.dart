@@ -894,6 +894,9 @@ class FlatStyle extends Style {
     final header = content.headerText != null ? StyledContentHeaderText(content.headerText!) : content.header;
     final body = content.bodyText != null ? StyledContentSubtitleText(content.bodyText!) : content.body;
 
+    final primaryActions = content.actions.where((action) => action.type == ActionItemType.primary).toList();
+    final secondaryActions = content.actions.where((action) => action.type == ActionItemType.secondary).toList();
+
     return ClickableCard(
       elevation: 0,
       margin: EdgeInsets.all(8),
@@ -901,12 +904,19 @@ class FlatStyle extends Style {
       borderRadius: content.borderRadius ?? BorderRadius.circular(12),
       splashColor: softenColor(backgroundColor).withOpacity(0.8),
       onTap: content.onTapped,
+      onLongPress: secondaryActions.isEmpty
+          ? null
+          : () => _showActionsDialog(
+                context,
+                styleContext: newStyleContext,
+                actions: secondaryActions,
+              ),
       child: StyleContextProvider(
         styleContext: newStyleContext,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (header != null || content.leading != null || content.trailing != null || content.actions.isNotEmpty)
+            if (header != null || content.leading != null || content.trailing != null || primaryActions.isNotEmpty)
               ListTile(
                 title: header != null ? header : body,
                 subtitle: header != null ? body : null,
@@ -920,7 +930,7 @@ class FlatStyle extends Style {
                             actionButton(
                               context,
                               styleContext: styleContext,
-                              actions: content.actions,
+                              actions: primaryActions,
                             ),
                         ],
                       )
@@ -1230,6 +1240,44 @@ class FlatStyle extends Style {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: newPage));
   }
 
+  Future<void> _showActionsDialog(
+    BuildContext context, {
+    required List<ActionItem> actions,
+    required StyleContext styleContext,
+  }) {
+    return showDialog(
+      context: context,
+      dialog: StyledDialog(
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: actions
+                  .map<Widget>((action) => Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          splashColor: styleContext.backgroundColorSoft,
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            action.onPerform?.call();
+                          },
+                          child: ListTile(
+                            title: StyledContentSubtitleText(
+                              action.name,
+                              textOverrides: StyledTextOverrides(fontColor: action.color),
+                            ),
+                            subtitle: action.description != null ? StyledBodyText(action.description!) : null,
+                            leading: action.icon != null
+                                ? StyledIcon(action.icon!, colorOverride: action.color)
+                                : action.leading,
+                          ),
+                        ),
+                      ))
+                  .toList() +
+              [SafeArea(child: Container())],
+        ),
+      ),
+    );
+  }
+
   Widget actionButton(
     BuildContext context, {
     required StyleContext styleContext,
@@ -1243,36 +1291,10 @@ class FlatStyle extends Style {
         paddingOverride: EdgeInsets.zero,
       ),
       onPressed: () {
-        showDialog(
-          context: context,
-          dialog: StyledDialog(
-            body: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: actions
-                      .map<Widget>((action) => Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              splashColor: styleContext.backgroundColorSoft,
-                              onTap: () {
-                                Navigator.of(context).pop();
-                                action.onPerform?.call();
-                              },
-                              child: ListTile(
-                                title: StyledContentSubtitleText(
-                                  action.name,
-                                  textOverrides: StyledTextOverrides(fontColor: action.color),
-                                ),
-                                subtitle: action.description != null ? StyledBodyText(action.description!) : null,
-                                leading: action.icon != null
-                                    ? StyledIcon(action.icon!, colorOverride: action.color)
-                                    : action.leading,
-                              ),
-                            ),
-                          ))
-                      .toList() +
-                  [SafeArea(child: Container())],
-            ),
-          ),
+        _showActionsDialog(
+          context,
+          actions: actions,
+          styleContext: styleContext,
         );
       },
     );
