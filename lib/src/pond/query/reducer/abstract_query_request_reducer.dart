@@ -3,8 +3,8 @@ import 'package:jlogical_utils/src/patterns/wrapper/wrapper.dart';
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 
-abstract class AbstractQueryRequestReducer<Q extends AbstractQueryRequest<R, T>, R extends Record, T, C>
-    with WithSubtypeWrapper<Q, AbstractQueryRequest<R, T>>
+abstract class AbstractQueryRequestReducer<QR extends AbstractQueryRequest<R, T>, R extends Record, T, C>
+    with WithSubtypeWrapper<QR, AbstractQueryRequest<R, T>>
     implements Wrapper<AbstractQueryRequest<R, T>> {
-  T reduce({required C aggregate, required AbstractQueryRequest<R, T> queryRequest});
+  T reduce({required C accumulation, required QR queryRequest});
 }

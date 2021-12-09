@@ -1,13 +1,23 @@
-import 'package:jlogical_utils/src/pond/query/reducer/request/abstract_all_query_request_reducer.dart';
-import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
+import 'package:jlogical_utils/src/model/future_value.dart';
+import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:rxdart/rxdart.dart';
 
-class LocalAllQueryRequestReducer<R extends Record> extends AbstractAllQueryRequestReducer<R, List<Record>> {
+import 'abstract_local_query_request_reducer.dart';
+
+class LocalAllQueryRequestReducer<R extends Record>
+    extends AbstractLocalQueryRequestReducer<AllQueryRequest<R>, R, List<Record>> {
   @override
   List<R> reduce({
-    required List<Record> aggregate,
-    required AbstractQueryRequest<R, List<R>> queryRequest,
+    required List<Record> accumulation,
+    required AllQueryRequest<R> queryRequest,
   }) {
-    return aggregate.cast<R>().toList();
+    return accumulation.cast<R>().toList();
+  }
+
+  @override
+  ValueStream<FutureValue<List<Record>>> reduceX(AllQueryRequest<R> queryRequest) {
+    // TODO: implement reduceX
+    throw UnimplementedError();
   }
 }

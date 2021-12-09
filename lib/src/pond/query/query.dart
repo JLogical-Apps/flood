@@ -1,7 +1,7 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/equals_query_predicate.dart';
-import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/where_query.dart';
 import 'package:jlogical_utils/src/utils/marker.dart';
 
@@ -32,5 +32,16 @@ abstract class Query<R extends Record> {
 
   AbstractQueryRequest<R, List<R>> all() {
     return AllQueryRequest<R>(query: this);
+  }
+
+  /// Returns the list of queries in the query chain starting with the root and ending at this query.
+  List<Query> getQueryChain() {
+    var queries = <Query>[];
+    Query? _query = this;
+    while (_query != null) {
+      queries.add(_query);
+      _query = _query.parent;
+    }
+    return queries.reversed.toList();
   }
 }
