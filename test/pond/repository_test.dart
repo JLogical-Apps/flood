@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/context/registration/database_app_registration.dart';
@@ -61,20 +59,7 @@ void main() {
     final envelopeId = envelopeEntity.id!;
 
     final envelopeX = AppContext.global.getXOrNull<EnvelopeEntity>(envelopeId)!;
-    Future<EnvelopeEntity> getStreamValue() async {
-      final completer = Completer();
-      late EnvelopeEntity envelope;
-      late StreamSubscription sub;
-      sub = envelopeX.listen((event) {
-        envelope = event.get();
-        completer.complete();
-        sub.cancel();
-      });
-      await completer.future;
-      return envelope;
-    }
-
-    var retrievedEnvelope = await getStreamValue();
+    var retrievedEnvelope = (await envelopeX.getCurrentValue()).get();
 
     expect(retrievedEnvelope, envelopeEntity);
     expect(retrievedEnvelope.state, envelopeEntity.state);
@@ -82,7 +67,7 @@ void main() {
     envelopeEntity.changeName('Giving');
     await AppContext.global.save<EnvelopeEntity>(envelopeEntity);
 
-    retrievedEnvelope = await getStreamValue();
+    retrievedEnvelope = (await envelopeX.getCurrentValue()).get();
 
     expect(retrievedEnvelope, envelopeEntity);
     expect(retrievedEnvelope.state, envelopeEntity.state);

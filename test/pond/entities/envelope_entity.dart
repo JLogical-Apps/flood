@@ -6,6 +6,10 @@ class EnvelopeEntity extends Entity<Envelope> {
   EnvelopeEntity({required Envelope initialEnvelope}) : super(initialValue: initialEnvelope);
 
   void changeName(String newName) {
-    value = value.withNameChanged(newName);
+    value = value.copyWith(name: newName);
+  }
+
+  void changeAmount(int newAmount) {
+    value = value.copyWith(amount: newAmount);
   }
 }

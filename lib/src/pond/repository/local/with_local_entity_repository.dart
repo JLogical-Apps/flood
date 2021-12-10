@@ -5,11 +5,13 @@ import 'package:jlogical_utils/src/pond/repository/local/query_executor/local_qu
 import 'package:rxdart/rxdart.dart';
 
 mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
-  Map<String, BehaviorSubject<State>> _stateXById = Map();
-
-  Map<String, State> get _stateById => _stateXById.map((id, stateX) => MapEntry(id, stateX.value));
+  BehaviorSubject<Map<String, State>> _stateByIdX = BehaviorSubject.seeded({});
 
   _TransactionPendingChanges? _pendingTransactionChange;
+
+  Map<String, State> get _stateById => _stateByIdX.value;
+
+  set _stateById(Map<String, State> value) => _stateByIdX.value = value;
 
   @override
   Future<E?> save(E entity, {Transaction? transaction}) async {
@@ -20,8 +22,7 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
     if (transaction != null) {
       _pendingTransactionChange!.stateChangesById[id] = entity.state;
     } else {
-      final stateStream = _stateXById.putIfAbsent(id, () => BehaviorSubject());
-      stateStream.value = entity.state;
+      _stateById = _stateById.copy()..set(id, entity.state);
     }
   }
 
@@ -39,13 +40,21 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
       state = _pendingTransactionChange!.stateChangesById[id];
     }
 
-    state ??= _stateXById[id]?.value;
+    state ??= _stateById[id];
 
     return state.mapIfNonNull((state) => Entity.fromStateOrNull<E>(state));
   }
 
   ValueStream<FutureValue<E>>? getXOrNull(String id) {
-    return _stateXById[id]?.mapWithValue((state) => FutureValue.loaded(value: Entity.fromState<E>(state)));
+    final state = _stateById[id];
+    if (state == null) {
+      return null;
+    }
+
+    return _stateByIdX.mapWithValue((stateById) {
+      return stateById[id].mapIfNonNull((state) => FutureValue.loaded(value: Entity.fromState<E>(state))) ??
+          FutureValue.error(error: 'No state found with id [$id]');
+    });
   }
 
   @override
@@ -55,13 +64,20 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
     if (transaction != null) {
       _pendingTransactionChange!.stateIdDeletes.add(id);
     } else {
-      _stateXById.remove(id);
+      _stateById = _stateById.copy()..remove(id);
     }
   }
 
   @override
-  Future<T> executeQuery<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest,
-      {Transaction? transaction}) async {
+  ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) {
+    return _stateByIdX.switchMapWithValue((stateById) => executeQuery(queryRequest).asValueStream());
+  }
+
+  @override
+  Future<T> executeQuery<R extends Record, T>(
+    AbstractQueryRequest<R, T> queryRequest, {
+    Transaction? transaction,
+  }) async {
     _startTransactionIfNew(transaction);
 
     late Map<String, State> stateById;
@@ -79,11 +95,12 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
     final pendingTransactionChange =
         _pendingTransactionChange ?? (throw Exception('Can only commit if a transaction has started!'));
 
-    pendingTransactionChange.stateChangesById.forEach((id, state) {
-      final stateX = _stateXById.putIfAbsent(id, () => BehaviorSubject());
-      stateX.value = state;
-    });
-    _stateXById.removeWhere((id, state) => pendingTransactionChange.stateIdDeletes.contains(id));
+    var newStateById = _stateById.copy();
+
+    newStateById.addAll(pendingTransactionChange.stateChangesById);
+    newStateById.removeWhere((id, state) => pendingTransactionChange.stateIdDeletes.contains(id));
+
+    _stateById = newStateById;
   }
 
   @override

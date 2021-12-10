@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
@@ -5,6 +6,7 @@ import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/utils/utils.dart';
+import 'package:rxdart/rxdart.dart';
 
 class EntityDatabase implements Database {
   final Map<Type, EntityRepository> _repositoryByType;
@@ -15,6 +17,16 @@ class EntityDatabase implements Database {
   @override
   EntityRepository getRepositoryRuntimeOrNull(Type entityType) {
     return _repositoryByType[entityType] ?? (throw Exception('Could not find repository for entity $entityType'));
+  }
+
+  @override
+  ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) {
+    if (isSubtype<R, Entity>()) {
+      final entityRepository = getRepositoryRuntime(R);
+      return entityRepository.executeQueryX(queryRequest);
+    }
+
+    throw Exception('Unable to find repository to handle query request with record of type $R');
   }
 
   @override

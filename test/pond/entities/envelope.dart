@@ -9,9 +9,9 @@ class Envelope extends ValueObject {
 
   List<Property> get properties => [nameProperty, amountProperty];
 
-  Envelope withNameChanged(String newName) {
+  Envelope copyWith({String? name, int? amount}) {
     return Envelope()
-      ..nameProperty.value = newName
-      ..amountProperty.value = amountProperty.value;
+      ..nameProperty.value = name ?? nameProperty.value
+      ..amountProperty.value = amount ?? amountProperty.value;
   }
 }

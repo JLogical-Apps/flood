@@ -1,15 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/pond/context/registration/database_app_registration.dart';
 import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
 import 'package:jlogical_utils/src/pond/context/registration/with_domain_registrations_provider.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/utils/stream_extensions.dart';
 
 import 'entities/budget.dart';
 import 'entities/budget_entity.dart';
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
 
-List<Envelope> envelopes = [
+late List<Envelope> envelopes = [
   Envelope()
     ..nameProperty.value = 'Tithe'
     ..amountProperty.value = 24 * 100,
@@ -55,6 +57,35 @@ void main() {
     final resultEnvelopeEntities = await AppContext.global.executeQuery(emptyEnvelopesQuery);
     final resultEnvelopeValueObjects = resultEnvelopeEntities.map((envelopeEntity) => envelopeEntity.value).toList();
     expect(resultEnvelopeValueObjects, envelopes.where((envelope) => envelope.amountProperty.value == 0).toList());
+  });
+
+  test('as stream', () async {
+    final emptyEnvelopesQuery = Query.from<EnvelopeEntity>().where(Envelope.amountPropertyName, isEqualTo: 0).all();
+    final resultEnvelopeEntitiesX = AppContext.global.executeQueryX(emptyEnvelopesQuery);
+    expect(resultEnvelopeEntitiesX.value, FutureValue<List<EnvelopeEntity>>.initial());
+
+    await expectLater(
+      resultEnvelopeEntitiesX
+          .mapWithValue((value) => value.getOrNull()?.map((envelopeEntity) => envelopeEntity.value).toList())
+          .where((value) => value != null)
+          .map((value) => value!),
+      emits(envelopes.where((envelope) => envelope.amountProperty.value == 0).toList()),
+    );
+
+    final emptyEnvelopes = (await resultEnvelopeEntitiesX.getCurrentValue()).get();
+    final emptyEnvelope = emptyEnvelopes.first;
+
+    emptyEnvelope.changeAmount(2 * 100); // Not empty anymore.
+
+    await AppContext.global.save<EnvelopeEntity>(emptyEnvelope);
+
+    await expectLater(
+      resultEnvelopeEntitiesX
+          .mapWithValue((value) => value.getOrNull()?.map((envelopeEntity) => envelopeEntity.value).toList())
+          .where((value) => value != null)
+          .map((value) => value!.length),
+      emitsThrough(1), // Use emitsThrough instead of emits because of async issue.
+    );
   });
 }
 
