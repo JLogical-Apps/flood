@@ -24,5 +24,7 @@ FutureValue<A>? useAggregate<A extends Aggregate>(String? id) {
 }
 
 QueryController<R, T> useQuery<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) {
-  return useMemoized(() => QueryController(queryRequest: queryRequest));
+  final queryController = useMemoized(() => QueryController(queryRequest: queryRequest));
+  useModel(queryController.model);
+  return queryController;
 }

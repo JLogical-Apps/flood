@@ -14,7 +14,7 @@ class PondPage extends HookWidget {
     });
     final budgetsQuery = useQuery(Query.from<BudgetEntity>().all());
     return StyleProvider(
-        style: DeltaStyle(backgroundColor: Color(0xff071238)),
+        style: DeltaStyle(backgroundColor: Color(0xff030818)),
         child: Builder(
           builder: (context) => ModelBuilder.styledPage(
             model: budgetsQuery.model,
@@ -29,11 +29,27 @@ class PondPage extends HookWidget {
                         actions: [
                           ActionItem(
                             name: 'Edit',
-                            onPerform: () {
-                              budget.value.nameProperty.value = budget.value.nameProperty.value! + 'A';
+                            onPerform: () async {
+                              final edit = await StyledDialog.smartForm(context: context, titleText: 'Edit', children: [
+                                StyledSmartTextField(
+                                  name: 'name',
+                                  label: 'Name',
+                                  suggestedValue: budget.value.nameProperty.value,
+                                ),
+                              ]).show(context);
+                              if (edit == null) {
+                                return;
+                              }
+
+                              budget.value.nameProperty.value = edit['name'];
                               AppContext.global.save<BudgetEntity>(budget);
                             },
-                          )
+                          ),
+                          ActionItem(
+                              name: 'Delete',
+                              onPerform: () {
+                                AppContext.global.delete<BudgetEntity>(budget.id!);
+                              }),
                         ],
                       )),
                   StyledButton.high(
