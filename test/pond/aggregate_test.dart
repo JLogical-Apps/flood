@@ -3,7 +3,6 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/context/registration/database_app_registration.dart';
 import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
 import 'package:jlogical_utils/src/pond/context/registration/with_domain_registrations_provider.dart';
-import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/local/with_local_entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/with_id_generator.dart';
@@ -24,7 +23,7 @@ void main() {
     );
 
     final ownerEntity = UserEntity(initialUser: User()..nameProperty.value = 'Jake');
-    await AppContext.global.create<UserEntity>(ownerEntity);
+    await ownerEntity.create();
     final ownerId = ownerEntity.id;
 
     final budgetAggregate = BudgetAggregate(

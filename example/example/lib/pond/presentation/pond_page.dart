@@ -1,4 +1,5 @@
 import 'package:example/pond/domain/budget.dart';
+import 'package:example/pond/domain/budget_aggregate.dart';
 import 'package:example/pond/domain/budget_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -42,21 +43,17 @@ class PondPage extends HookWidget {
                               }
 
                               budget.value.nameProperty.value = edit['name'];
-                              AppContext.global.save<BudgetEntity>(budget);
+                              budget.save();
                             },
                           ),
-                          ActionItem(
-                              name: 'Delete',
-                              onPerform: () {
-                                AppContext.global.delete<BudgetEntity>(budget.id!);
-                              }),
+                          ActionItem(name: 'Delete', onPerform: () => budget.delete()),
                         ],
                       )),
                   StyledButton.high(
                     text: 'Create',
                     onTapped: () {
                       final budgetEntity = BudgetEntity(initialBudget: Budget()..nameProperty.value = 'A');
-                      AppContext.global.create<BudgetEntity>(budgetEntity);
+                      budgetEntity.create();
                     },
                   ),
                 ],
@@ -89,4 +86,8 @@ class LocalBudgetRepository extends EntityRepository<BudgetEntity>
   Budget createValueObject() {
     return Budget();
   }
+
+  @override
+  AggregateRegistration<BudgetAggregate, BudgetEntity> get aggregateRegistration =>
+      AggregateRegistration((entity) => BudgetAggregate(initialBudgetEntity: entity));
 }

@@ -1,4 +1,4 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
 
 import 'entity.dart';
@@ -17,8 +17,6 @@ abstract class Aggregate<E extends Entity> {
 
   Future<void> save([Entity? entityToSave]) async {
     entityToSave ??= entity;
-
-    final appContext = AppContext.global;
-    appContext.database.save(entityToSave);
+    await entityToSave.save();
   }
 }

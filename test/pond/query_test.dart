@@ -77,7 +77,7 @@ void main() {
 
     emptyEnvelope.changeAmount(2 * 100); // Not empty anymore.
 
-    await AppContext.global.save<EnvelopeEntity>(emptyEnvelope);
+    await emptyEnvelope.save();
 
     await expectLater(
       resultEnvelopeEntitiesX
@@ -90,12 +90,8 @@ void main() {
 }
 
 void _populateRepositories() {
-  envelopes
-      .map((envelope) => EnvelopeEntity(initialEnvelope: envelope))
-      .forEach((entity) => AppContext.global.create<EnvelopeEntity>(entity));
-  budgets
-      .map((budget) => BudgetEntity(initialBudget: budget))
-      .forEach((entity) => AppContext.global.create<BudgetEntity>(entity));
+  envelopes.map((envelope) => EnvelopeEntity(initialEnvelope: envelope)).forEach((entity) => entity.create());
+  budgets.map((budget) => BudgetEntity(initialBudget: budget)).forEach((entity) => entity.create());
 }
 
 class LocalEnvelopeRepository extends EntityRepository<EnvelopeEntity>

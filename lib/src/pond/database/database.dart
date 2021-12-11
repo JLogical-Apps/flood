@@ -18,8 +18,8 @@ extension DefaultDatabase on Database {
     return getRepositoryRuntime(E) as EntityRepository<E>;
   }
 
-  Future<void> save<E extends Entity>(E entity, {Transaction? transaction}) {
-    return getRepository<E>().save(entity, transaction: transaction);
+  Future<void> save(Entity entity, {Transaction? transaction}) {
+    return getRepositoryRuntime(entity.runtimeType).save(entity, transaction: transaction);
   }
 
   Future<E?> getOrNull<E extends Entity>(String id, {Transaction? transaction}) {
@@ -38,11 +38,12 @@ extension DefaultDatabase on Database {
     return getRepository<E>().getX(id);
   }
 
-  Future<void> delete<E extends Entity>(String id, {Transaction? transaction}) {
-    return getRepository<E>().delete(id, transaction: transaction);
+  Future<void> delete(Entity entity, {Transaction? transaction}) {
+    final id = entity.id ?? (throw Exception('Cannot delete an entity that has not been saved!'));
+    return getRepositoryRuntime(entity.runtimeType).delete(id, transaction: transaction);
   }
 
-  Future<void> create<E extends Entity>(E entity, {Transaction? transaction}) {
-    return getRepository<E>().create(entity, transaction: transaction);
+  Future<void> create(Entity entity, {Transaction? transaction}) {
+    return getRepositoryRuntime(entity.runtimeType).create(entity, transaction: transaction);
   }
 }

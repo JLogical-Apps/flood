@@ -25,7 +25,7 @@ void main() {
           ..nameProperty.value = 'Tithe'
           ..amountProperty.value = 24 * 100);
 
-    await AppContext.global.create<EnvelopeEntity>(envelopeEntity);
+    await envelopeEntity.create();
 
     EnvelopeEntity? retrievedEnvelopeEntity = await AppContext.global.get<EnvelopeEntity>(envelopeEntity.id!);
 
@@ -33,14 +33,14 @@ void main() {
     expect(envelopeEntity.state, equals(retrievedEnvelopeEntity.state));
 
     envelopeEntity.changeName('Giving');
-    AppContext.global.save(envelopeEntity);
+    await envelopeEntity.save();
 
     retrievedEnvelopeEntity = await AppContext.global.get<EnvelopeEntity>(envelopeEntity.id!);
 
     expect(envelopeEntity, equals(retrievedEnvelopeEntity));
     expect(envelopeEntity.state, equals(retrievedEnvelopeEntity.state));
 
-    await AppContext.global.delete<EnvelopeEntity>(envelopeEntity.id!);
+    await envelopeEntity.delete();
 
     retrievedEnvelopeEntity = await AppContext.global.getOrNull<EnvelopeEntity>(envelopeEntity.id!);
     expect(retrievedEnvelopeEntity, isNull);
@@ -54,7 +54,7 @@ void main() {
           ..nameProperty.value = 'Tithe'
           ..amountProperty.value = 24 * 100);
 
-    await AppContext.global.create(envelopeEntity);
+    await envelopeEntity.create();
 
     final envelopeId = envelopeEntity.id!;
 
@@ -65,7 +65,7 @@ void main() {
     expect(retrievedEnvelope.state, envelopeEntity.state);
 
     envelopeEntity.changeName('Giving');
-    await AppContext.global.save<EnvelopeEntity>(envelopeEntity);
+    await envelopeEntity.save();
 
     retrievedEnvelope = (await envelopeX.getCurrentValue()).get();
 
