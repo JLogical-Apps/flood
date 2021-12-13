@@ -1,5 +1,4 @@
 import 'package:jlogical_utils/src/pond/property/field_property.dart';
-import 'package:jlogical_utils/src/pond/property/validation/property_validator.dart';
 import 'package:jlogical_utils/src/pond/property/with_stateful_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
@@ -9,8 +8,7 @@ class ValueObjectFieldProperty<V extends ValueObject> extends FieldProperty<V> {
   ValueObjectFieldProperty({
     required String name,
     V? initialValue,
-    List<PropertyValidator<V>>? validators,
-  }) : super(name: name, initialValue: initialValue, validators: validators);
+  }) : super(name: name, initialValue: initialValue);
 
   @override
   TypeStateSerializer<V> get typeStateSerializer => ValueObjectTypeStateSerializer<V>();

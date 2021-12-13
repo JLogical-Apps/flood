@@ -3,14 +3,9 @@ import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serial
 import 'package:jlogical_utils/src/utils/util.dart';
 
 import 'field_property.dart';
-import 'validation/property_validator.dart';
 
 class MapFieldProperty<K, V> extends FieldProperty<Map<K, V>> {
-  MapFieldProperty({
-    required String name,
-    Map<K, V>? initialValue,
-    List<PropertyValidator<Map<K, V>>>? validators,
-  }) : super(name: name, initialValue: initialValue, validators: validators);
+  MapFieldProperty({required String name, Map<K, V>? initialValue}) : super(name: name, initialValue: initialValue);
 
   @override
   TypeStateSerializer<Map<K, V>> get typeStateSerializer => MapTypeStateSerializer();

@@ -1,7 +1,6 @@
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/property/field_property.dart';
-import 'package:jlogical_utils/src/pond/property/validation/property_validator.dart';
 import 'package:jlogical_utils/src/pond/property/with_global_type_serializer.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
@@ -13,8 +12,7 @@ class ReferenceFieldProperty<E extends Entity> extends FieldProperty<String>
     required String name,
     E? initialReference,
     String? initialValue,
-    List<PropertyValidator<String>>? validators,
-  }) : super(name: name, initialValue: initialReference?.id ?? initialValue, validators: validators);
+  }) : super(name: name, initialValue: initialReference?.id ?? initialValue);
 
   E? _reference;
 
