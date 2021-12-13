@@ -5,7 +5,7 @@ import 'user_entity.dart';
 
 class Budget extends ValueObject {
   late final nameProperty = FieldProperty<String>(name: 'name');
-  late final ReferenceProperty<UserEntity> ownerProperty = ReferenceProperty(name: 'owner');
+  late final ReferenceFieldProperty<UserEntity> ownerProperty = ReferenceFieldProperty(name: 'owner');
 
   @override
   List<Property> get properties => [nameProperty, ownerProperty];

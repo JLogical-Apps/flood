@@ -5,8 +5,8 @@ import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 
-class ValueObjectProperty<V extends ValueObject> extends FieldProperty<V> {
-  ValueObjectProperty({
+class ValueObjectFieldProperty<V extends ValueObject> extends FieldProperty<V> {
+  ValueObjectFieldProperty({
     required String name,
     V? initialValue,
     List<PropertyValidator<V>>? validators,

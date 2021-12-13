@@ -5,8 +5,8 @@ import 'package:jlogical_utils/src/utils/util.dart';
 
 import 'field_property.dart';
 
-class ListProperty<T> extends FieldProperty<List<T>> {
-  ListProperty({
+class ListFieldProperty<T> extends FieldProperty<List<T>> {
+  ListFieldProperty({
     required String name,
     List<T>? initialValue,
     List<PropertyValidator<List<T>>>? validators,

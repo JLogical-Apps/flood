@@ -5,8 +5,8 @@ import 'package:jlogical_utils/src/utils/util.dart';
 import 'field_property.dart';
 import 'validation/property_validator.dart';
 
-class MapProperty<K, V> extends FieldProperty<Map<K, V>> {
-  MapProperty({
+class MapFieldProperty<K, V> extends FieldProperty<Map<K, V>> {
+  MapFieldProperty({
     required String name,
     Map<K, V>? initialValue,
     List<PropertyValidator<Map<K, V>>>? validators,

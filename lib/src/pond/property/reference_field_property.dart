@@ -6,10 +6,10 @@ import 'package:jlogical_utils/src/pond/property/with_global_type_serializer.dar
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
 
-class ReferenceProperty<E extends Entity> extends FieldProperty<String>
+class ReferenceFieldProperty<E extends Entity> extends FieldProperty<String>
     with WithGlobalTypeSerializer
     implements Resolvable {
-  ReferenceProperty({
+  ReferenceFieldProperty({
     required String name,
     E? initialReference,
     String? initialValue,
