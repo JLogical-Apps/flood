@@ -5,7 +5,6 @@ mixin WithValidators on Record {
   List<Validator> get validators => [];
 
   void onValidate() {
-    final _state = state;
-    validators.forEach((validator) => validator.validate(_state));
+    validators.forEach((validator) => validator.validate());
   }
 }

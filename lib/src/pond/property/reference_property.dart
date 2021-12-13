@@ -1,9 +1,14 @@
-import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
-import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/pond/property/property.dart';
+import 'package:jlogical_utils/src/pond/context/app_context.dart';
+import 'package:jlogical_utils/src/pond/database/database.dart';
+import 'package:jlogical_utils/src/pond/property/field_property.dart';
 import 'package:jlogical_utils/src/pond/property/validation/property_validator.dart';
+import 'package:jlogical_utils/src/pond/property/with_global_type_serializer.dart';
+import 'package:jlogical_utils/src/pond/record/entity.dart';
+import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
 
-class ReferenceProperty<E extends Entity> extends Property<String> with WithGlobalTypeSerializer implements Resolvable {
+class ReferenceProperty<E extends Entity> extends FieldProperty<String>
+    with WithGlobalTypeSerializer
+    implements Resolvable {
   ReferenceProperty({
     required String name,
     E? initialReference,

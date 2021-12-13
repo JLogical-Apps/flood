@@ -1,10 +1,11 @@
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
-import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/property/validation/property_validator.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 import 'package:jlogical_utils/src/utils/util.dart';
 
-class ListProperty<T> extends Property<List<T>> {
+import 'field_property.dart';
+
+class ListProperty<T> extends FieldProperty<List<T>> {
   ListProperty({
     required String name,
     List<T>? initialValue,
@@ -16,7 +17,8 @@ class ListProperty<T> extends Property<List<T>> {
 }
 
 class ListTypeStateSerializer<T> extends TypeStateSerializer<List<T>> {
-  TypeStateSerializer itemTypeStateSerializer = AppContext.global.appRegistration.getTypeStateSerializerByTypeRuntime(T);
+  TypeStateSerializer itemTypeStateSerializer =
+      AppContext.global.appRegistration.getTypeStateSerializerByTypeRuntime(T);
 
   @override
   dynamic onSerialize(List<T> value) {

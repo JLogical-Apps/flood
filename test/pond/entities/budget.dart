@@ -1,10 +1,10 @@
 import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/pond/property/field_property.dart';
 
-import 'user.dart';
 import 'user_entity.dart';
 
 class Budget extends ValueObject {
-  late final StringProperty nameProperty = StringProperty(name: 'name');
+  late final nameProperty = FieldProperty<String>(name: 'name');
   late final ReferenceProperty<UserEntity> ownerProperty = ReferenceProperty(name: 'owner');
 
   @override

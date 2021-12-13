@@ -1,11 +1,11 @@
-import 'package:jlogical_utils/src/pond/property/property.dart';
+import 'package:jlogical_utils/src/pond/property/field_property.dart';
 import 'package:jlogical_utils/src/pond/property/validation/property_validator.dart';
 import 'package:jlogical_utils/src/pond/property/with_stateful_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 
-class ValueObjectProperty<V extends ValueObject> extends Property<V> {
+class ValueObjectProperty<V extends ValueObject> extends FieldProperty<V> {
   ValueObjectProperty({
     required String name,
     V? initialValue,
