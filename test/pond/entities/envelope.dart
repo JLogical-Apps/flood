@@ -1,5 +1,4 @@
 import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/pond/property/field_property.dart';
 
 class Envelope extends ValueObject {
   static const namePropertyName = 'name';
