@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 
+import 'entities/budget.dart';
 import 'entities/color.dart';
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
@@ -8,7 +9,9 @@ import 'entities/lucky_numbers.dart';
 import 'entities/palette.dart';
 import 'entities/palette_stats.dart';
 import 'entities/transaction.dart';
+import 'entities/user.dart';
 import 'entities/user_avatar.dart';
+import 'entities/user_entity.dart';
 
 void main() {
   test('state inflation on simple ValueObject.', () {
@@ -208,4 +211,41 @@ void main() {
   test('required validation working', () {
     expect(() => Color()..validate(), throwsA(isA<ValidationException>()));
   });
+
+  test('fallback working', () async {
+    AppContext.global = AppContext(
+      registration: ExplicitAppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<User, User?>(() => User()),
+        ],
+        entityRegistrations: [
+          EntityRegistration<UserEntity, User>((initialUser) => UserEntity(initialUser: initialUser)),
+        ],
+        database: EntityDatabase(repositories: [
+          LocalUserRepository(),
+        ]),
+      ),
+    );
+
+    final userEntity = UserEntity(initialUser: User()..nameProperty.value = 'Jake');
+    await userEntity.create();
+
+    final budget = Budget()..ownerProperty.reference = userEntity;
+
+    expect(budget.nameProperty.value, userEntity.value.nameProperty.value);
+  });
+}
+
+class LocalUserRepository extends EntityRepository<UserEntity>
+    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<User, UserEntity>
+    implements RegistrationsProvider {
+  @override
+  UserEntity createEntity(User initialValue) {
+    throw UserEntity(initialUser: initialValue);
+  }
+
+  @override
+  User createValueObject() {
+    return User();
+  }
 }

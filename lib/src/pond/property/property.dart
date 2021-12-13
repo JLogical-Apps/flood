@@ -6,6 +6,8 @@ import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serial
 import 'package:jlogical_utils/src/pond/validation/validator.dart';
 import 'package:jlogical_utils/src/utils/util.dart';
 
+import 'fallback_property.dart';
+
 abstract class Property<T> with EquatableMixin implements Validator {
   final String name;
 
@@ -61,5 +63,9 @@ abstract class Property<T> with EquatableMixin implements Validator {
 
   RequiredProperty<T> required() {
     return RequiredProperty(parent: this);
+  }
+
+  FallbackProperty<T> withFallback(T fallback()) {
+    return FallbackProperty(parent: this, fallback: fallback);
   }
 }
