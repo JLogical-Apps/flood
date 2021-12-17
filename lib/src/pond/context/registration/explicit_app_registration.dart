@@ -88,10 +88,8 @@ class ExplicitAppRegistration implements AppRegistration {
     final entityType = entity.runtimeType;
     return aggregateRegistrations
         .firstWhereOrNull((registration) => registration.entityType == entityType)
-        ?.onCreate(entity);
+        ?.create(entity);
   }
-
-  Entity? constructEntityFromStateOrNull(State state) {}
 
   Type getEntityTypeFromAggregate(Type aggregateType) {
     return aggregateRegistrations
@@ -153,6 +151,8 @@ class AggregateRegistration<A extends Aggregate<E>, E extends Entity> {
   final A Function(E entity) onCreate;
 
   const AggregateRegistration(this.onCreate);
+
+  A create(E entity) => onCreate(entity);
 
   Type get aggregateType => A;
 

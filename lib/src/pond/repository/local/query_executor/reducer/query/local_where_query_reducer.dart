@@ -16,11 +16,11 @@ class LocalWhereQueryReducer extends AbstractWhereQueryReducer<Iterable<Record>>
   ];
 
   @override
-  Iterable<Record> reduce({required Iterable<Record>? aggregate, required Query query}) {
+  Iterable<Record> reduce({required Iterable<Record>? accumulation, required Query query}) {
     final whereQuery = query as WhereQuery;
     final queryPredicate = whereQuery.queryPredicate;
 
     final queryPredicateReducer = resolve(queryPredicate);
-    return queryPredicateReducer.reduce(aggregate: aggregate!, queryPredicate: queryPredicate);
+    return queryPredicateReducer.reduce(aggregate: accumulation!, queryPredicate: queryPredicate);
   }
 }

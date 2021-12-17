@@ -1,10 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/utils/marker.dart';
 
 @marker
-abstract class AbstractQueryRequest<R extends Record, T> {
+abstract class AbstractQueryRequest<R extends Record, T> extends Equatable {
   final Transaction? transaction;
 
   /// The query that this request makes a request on.
@@ -13,4 +14,7 @@ abstract class AbstractQueryRequest<R extends Record, T> {
   const AbstractQueryRequest({this.transaction});
 
   Type get outputType => T;
+
+  @override
+  List<Object?> get props => [transaction, query];
 }

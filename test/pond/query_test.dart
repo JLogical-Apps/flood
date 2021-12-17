@@ -1,8 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/model/future_value.dart';
-import 'package:jlogical_utils/src/pond/context/registration/database_app_registration.dart';
-import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
-import 'package:jlogical_utils/src/pond/context/registration/with_domain_registrations_provider.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/utils/stream_extensions.dart';
 
@@ -35,7 +32,13 @@ List<Budget> budgets = [
 void main() {
   setUp(() {
     AppContext.global = AppContext(
-        registration: DatabaseAppRegistration(repositories: [LocalEnvelopeRepository(), LocalBudgetRepository()]));
+      registration: DatabaseAppRegistration(
+        repositories: [
+          LocalEnvelopeRepository(),
+          LocalBudgetRepository(),
+        ],
+      ),
+    );
 
     _populateRepositories();
   });
@@ -86,6 +89,15 @@ void main() {
           .map((value) => value!.length),
       emitsThrough(1), // Use emitsThrough instead of emits because of async issue.
     );
+  });
+
+  test('from id', () async {
+    final firstEnvelope = await AppContext.global.executeQuery(Query.from<EnvelopeEntity>().firstOrNull());
+
+    final queryById = Query.from<EnvelopeEntity>().where(Query.id, isEqualTo: firstEnvelope!.id).firstOrNull();
+    final firstEnvelopeById = await AppContext.global.executeQuery(queryById);
+
+    expect(firstEnvelopeById, firstEnvelope);
   });
 }
 

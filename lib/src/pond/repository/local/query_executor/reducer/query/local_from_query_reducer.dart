@@ -9,7 +9,7 @@ class LocalFromQueryReducer extends AbstractFromQueryReducer<Iterable<Record>> {
   const LocalFromQueryReducer({required this.stateById});
 
   @override
-  Iterable<Record> reduce({required Iterable<Record>? aggregate, required Query query}) {
+  Iterable<Record> reduce({required Iterable<Record>? accumulation, required Query query}) {
     return stateById.values
         .where((state) => state.type == query.recordType.toString())
         .map((state) => Entity.fromState(state));

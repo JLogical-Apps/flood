@@ -60,12 +60,14 @@ abstract class Property<T> with EquatableMixin implements Validator {
 
   @override
   List<Object?> get props => [name, value];
+}
 
+extension PropertyExtensions<T> on Property<T?> {
   RequiredProperty<T> required() {
     return RequiredProperty(parent: this);
   }
 
-  FallbackProperty<T> withFallback(T fallback()) {
+  FallbackProperty<T?> withFallback(T? fallback()) {
     return FallbackProperty(parent: this, fallback: fallback);
   }
 }

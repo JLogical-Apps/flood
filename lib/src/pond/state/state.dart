@@ -8,6 +8,13 @@ class State extends Equatable {
 
   const State({this.id, this.type, required this.values});
 
+  Map<String, dynamic> get fullValues =>
+      {
+        ...values,
+        Query.id: id,
+        Query.type: type,
+      };
+
   static State? extractFrom(dynamic value) {
     if (value is State) {
       return value;

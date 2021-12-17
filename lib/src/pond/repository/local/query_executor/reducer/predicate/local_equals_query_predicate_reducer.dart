@@ -12,7 +12,7 @@ class LocalEqualsQueryPredicateReducer extends AbstractEqualsQueryPredicateReduc
 
   bool _predicatePasses(EqualsQueryPredicate queryPredicate, Record record) {
     final stateField = queryPredicate.stateField;
-    final stateValues = record.state.values;
+    final stateValues = record.state.fullValues;
 
     if (!stateValues.containsKey(stateField)) {
       return false;

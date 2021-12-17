@@ -93,7 +93,7 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
   @override
   Future<void> commit() async {
     final pendingTransactionChange =
-        _pendingTransactionChange ?? (throw Exception('Can only commit if a transaction has started!'));
+        _pendingTransactionChange ?? (throw Exception('Can only commit if a budget_transaction has started!'));
 
     var newStateById = _stateById.copy();
 
@@ -118,7 +118,7 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
 
   Map<String, State> _getCommittedStateById() {
     final pendingTransactionChange =
-        _pendingTransactionChange ?? (throw Exception('Can only commit if a transaction has started!'));
+        _pendingTransactionChange ?? (throw Exception('Can only commit if a budget_transaction has started!'));
 
     final committedStateById = {..._stateById};
     committedStateById.addAll(pendingTransactionChange.stateChangesById);

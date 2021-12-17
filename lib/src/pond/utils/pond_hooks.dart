@@ -1,30 +1,25 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
+import 'package:jlogical_utils/src/pond/utils/entity_controller.dart';
 import 'package:jlogical_utils/src/pond/utils/query_controller.dart';
 
-FutureValue<A>? useAggregate<A extends Aggregate>(String? id) {
-  final valueX = useMemoized(() {
-    if (id == null) {
-      return null;
-    }
+import 'aggregate_controller.dart';
 
-    final appContext = AppContext.global;
+AggregateController<A, E> useAggregate<A extends Aggregate<E>, E extends Entity>(String id) {
+  final aggregateController = useMemoized(() => AggregateController<A, E>(aggregateId: id), [id]);
+  useModel(aggregateController.model);
+  return aggregateController;
+}
 
-    final entityType = appContext.getEntityTypeFromAggregate(A);
-    final repository = appContext.getRepositoryRuntime(entityType);
-
-    final entityX = repository.getX(id);
-
-    return entityX.mapWithValue(
-        (maybeEntity) => maybeEntity.mapIfPresent((entity) => appContext.constructAggregateFromEntity<A>(entity)));
-  }, [id]);
-
-  return useValueStreamOrNull(valueX);
+EntityController<E> useEntity<E extends Entity>(String id) {
+  final entityController = useMemoized(() => EntityController<E>(entityId: id), [id]);
+  useModel(entityController.model);
+  return entityController;
 }
 
 QueryController<R, T> useQuery<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) {
-  final queryController = useMemoized(() => QueryController(queryRequest: queryRequest));
+  final queryController = useMemoized(() => QueryController(queryRequest: queryRequest), [queryRequest]);
   useModel(queryController.model);
   return queryController;
 }

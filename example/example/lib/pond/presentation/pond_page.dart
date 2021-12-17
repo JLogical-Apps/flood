@@ -1,6 +1,9 @@
-import 'package:example/pond/domain/budget.dart';
-import 'package:example/pond/domain/budget_aggregate.dart';
-import 'package:example/pond/domain/budget_entity.dart';
+import 'package:example/pond/domain/budget/budget.dart';
+import 'package:example/pond/domain/budget/budget_entity.dart';
+import 'package:example/pond/domain/budget/budget_repository.dart';
+import 'package:example/pond/domain/budget_transaction/budget_transaction_repository.dart';
+import 'package:example/pond/domain/envelope/envelope_repository.dart';
+import 'package:example/pond/domain/user/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -25,34 +28,11 @@ class PondPage extends HookWidget {
               body: StyledCategory.medium(
                 headerText: 'Budgets',
                 children: [
-                  ...budgets.map((budget) => StyledContent(
-                        headerText: budget.value.nameProperty.value ?? 'N/A',
-                        actions: [
-                          ActionItem(
-                            name: 'Edit',
-                            onPerform: () async {
-                              final edit = await StyledDialog.smartForm(context: context, titleText: 'Edit', children: [
-                                StyledSmartTextField(
-                                  name: 'name',
-                                  label: 'Name',
-                                  suggestedValue: budget.value.nameProperty.value,
-                                ),
-                              ]).show(context);
-                              if (edit == null) {
-                                return;
-                              }
-
-                              budget.value.nameProperty.value = edit['name'];
-                              budget.save();
-                            },
-                          ),
-                          ActionItem(name: 'Delete', onPerform: () => budget.delete()),
-                        ],
-                      )),
+                  ...budgets.map((budgetEntity) => BudgetCard(budgetId: budgetEntity.id!)),
                   StyledButton.high(
                     text: 'Create',
                     onTapped: () {
-                      final budgetEntity = BudgetEntity(initialBudget: Budget()..nameProperty.value = 'A');
+                      final budgetEntity = BudgetEntity(initialValue: Budget()..nameProperty.value = 'A');
                       budgetEntity.create();
                     },
                   ),
@@ -68,26 +48,53 @@ class PondPage extends HookWidget {
       registration: DatabaseAppRegistration(
         repositories: [
           LocalBudgetRepository(),
+          LocalBudgetTransactionRepository(),
+          LocalEnvelopeRepository(),
+          LocalUserRepository(),
         ],
       ),
     );
   }
 }
 
-class LocalBudgetRepository extends EntityRepository<BudgetEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<Budget, BudgetEntity>
-    implements RegistrationsProvider {
-  @override
-  BudgetEntity createEntity(Budget initialValue) {
-    return BudgetEntity(initialBudget: initialValue);
-  }
+class BudgetCard extends HookWidget {
+  final String budgetId;
+
+  const BudgetCard({Key? key, required this.budgetId}) : super(key: key);
 
   @override
-  Budget createValueObject() {
-    return Budget();
-  }
+  Widget build(BuildContext context) {
+    final budgetEntityController = useEntity<BudgetEntity>(budgetId);
+    return ModelBuilder.styled(
+      model: budgetEntityController.model,
+      builder: (BudgetEntity budgetEntity) {
+        final budget = budgetEntity.value;
+        return StyledContent(
+          headerText: budget.nameProperty.value,
+          bodyText: budget.ownerProperty.reference?.value.nameProperty.value,
+          actions: [
+            ActionItem(
+              name: 'Edit',
+              onPerform: () async {
+                final edit = await StyledDialog.smartForm(context: context, titleText: 'Edit', children: [
+                  StyledSmartTextField(
+                    name: 'name',
+                    label: 'Name',
+                    suggestedValue: budget.nameProperty.value,
+                  ),
+                ]).show(context);
+                if (edit == null) {
+                  return;
+                }
 
-  @override
-  AggregateRegistration<BudgetAggregate, BudgetEntity> get aggregateRegistration =>
-      AggregateRegistration((entity) => BudgetAggregate(initialBudgetEntity: entity));
+                budget.nameProperty.value = edit['name'];
+                budgetEntity.save();
+              },
+            ),
+            ActionItem(name: 'Delete', onPerform: () => budgetEntity.delete()),
+          ],
+        );
+      },
+    );
+  }
 }

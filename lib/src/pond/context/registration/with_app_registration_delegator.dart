@@ -25,6 +25,10 @@ mixin WithAppRegistrationDelegator implements AppRegistration {
     return appRegistration.constructAggregateFromEntityRuntimeOrNull(entity);
   }
 
+  A constructAggregateFromEntity<A extends Aggregate>(Entity entity) {
+    return constructAggregateFromEntityRuntime(entity) as A;
+  }
+
   Type getEntityTypeFromAggregate(Type aggregateType) {
     return appRegistration.getEntityTypeFromAggregate(aggregateType);
   }

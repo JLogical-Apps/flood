@@ -10,6 +10,7 @@ import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_all_query_request_reducer.dart';
 
 import 'reducer/query/local_from_query_reducer.dart';
+import 'reducer/request/local_first_query_request_reducer.dart';
 
 class LocalQueryExecutor {
   final Map<String, State> stateById;
@@ -21,9 +22,12 @@ class LocalQueryExecutor {
         LocalWhereQueryReducer(),
       ]);
 
-  Resolver<AbstractQueryRequest, AbstractLocalQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>
-      getQueryRequestReducerResolver<R extends Record, T>() => WrapperResolver([
+  Resolver<AbstractQueryRequest<R, dynamic>,
+          AbstractLocalQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>
+      getQueryRequestReducerResolver<R extends Record>() => WrapperResolver<AbstractQueryRequest<R, dynamic>,
+              AbstractLocalQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>([
             LocalAllQueryRequestReducer<R>(),
+            LocalFirstOrNullQueryRequestReducer<R>(),
           ]);
 
   Future<T> executeQuery<R extends Record, T>(
@@ -36,7 +40,7 @@ class LocalQueryExecutor {
     Iterable<Record>? accumulation;
     queryChain.forEach((query) {
       final queryReducer = getQueryReducerResolver().resolve(query);
-      accumulation = queryReducer.reduce(aggregate: accumulation, query: query);
+      accumulation = queryReducer.reduce(accumulation: accumulation, query: query);
     });
 
     final _accumulation = accumulation ??
@@ -45,7 +49,7 @@ class LocalQueryExecutor {
 
     final accumulationList = _accumulation.cast<R>().toList();
 
-    final queryRequestReducer = getQueryRequestReducerResolver<R, T>().resolve(queryRequest);
+    final queryRequestReducer = getQueryRequestReducerResolver<R>().resolve(queryRequest);
     final output = queryRequestReducer.reduce(accumulation: accumulationList, queryRequest: queryRequest);
 
     return output;

@@ -130,7 +130,7 @@ void main() {
     expect(envelopeEntity.value.nameProperty.value, 'Tithe');
   });
 
-  test('transaction commit saves when done.', () async {
+  test('budget_transaction commit saves when done.', () async {
     final transactionCreate = Transaction((t) async {
       final envelopeEntity = EnvelopeEntity(
           initialEnvelope: Envelope()
@@ -149,7 +149,7 @@ void main() {
     expect(envelopeEntity, isNotNull);
   });
 
-  test('simultaneous read/write while transaction running.', () async {
+  test('simultaneous read/write while budget_transaction running.', () async {
     final otherStuffCompleter = Completer();
 
     final titheEnvelopeEntity = EnvelopeEntity(
@@ -187,7 +187,7 @@ void main() {
     expect(titheEnvelope, isNull);
   });
 
-  test('query in transaction.', () async {
+  test('query in budget_transaction.', () async {
     final titheEnvelopeEntity = EnvelopeEntity(
         initialEnvelope: Envelope()
           ..nameProperty.value = 'Tithe'
