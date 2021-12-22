@@ -21,7 +21,7 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
 
   set state(State state) => value = ValueObject.fromState(state);
 
-  void onValidate() => value.onValidate();
+  void validateRecord() => value.validateRecord();
 
   ValidationState get validationState => value.validationState;
 

@@ -1,21 +1,19 @@
 import 'package:equatable/equatable.dart';
 import 'package:jlogical_utils/src/pond/property/context/property_context_provider.dart';
-import 'package:jlogical_utils/src/pond/property/required_property.dart';
+import 'package:jlogical_utils/src/pond/property/modifier/context/property_modifier_context_provider.dart';
 import 'package:jlogical_utils/src/pond/record/immutability_violation_error.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/validation/validator.dart';
 import 'package:jlogical_utils/src/utils/util.dart';
 
-import 'fallback_property.dart';
+import 'modifier/context/property_modifier_context.dart';
 
-abstract class Property<T> with EquatableMixin implements Validator {
+abstract class Property<T> with EquatableMixin implements PropertyModifierContextProvider, Validator {
   final String name;
 
   T? getUnvalidated();
 
   void setUnvalidated(T value);
-
-  void validate() {}
 
   Property({required this.name, T? initialValue}) {
     if (initialValue != null) {
@@ -55,19 +53,13 @@ abstract class Property<T> with EquatableMixin implements Validator {
 
   void fromStateValue(dynamic stateValue) => setUnvalidated(typeStateSerializer.onDeserialize(stateValue));
 
+  PropertyModifierContext createPropertyModifierContext() {
+    return PropertyModifierContext(property: this);
+  }
+
   @override
   String toString() => '$runtimeType{name = $name, value = $value}';
 
   @override
   List<Object?> get props => [name, value];
-}
-
-extension PropertyExtensions<T> on Property<T?> {
-  RequiredProperty<T> required() {
-    return RequiredProperty(parent: this);
-  }
-
-  FallbackProperty<T?> withFallback(T? fallback()) {
-    return FallbackProperty(parent: this, fallback: fallback);
-  }
 }

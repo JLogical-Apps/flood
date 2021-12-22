@@ -18,7 +18,9 @@ mixin WithPropertiesState on Record {
         .forEach((property) => property.fromStateValue(state.values[property.name]));
   }
 
-  List<Validator> get validators => properties;
+  void validateRecord() {
+    properties.forEach((element) => element.validate());
+  }
 
   Future resolve(AppContext context) async {
     return Future.wait(properties

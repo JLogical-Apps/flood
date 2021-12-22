@@ -1,10 +1,9 @@
-import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/validation/validator.dart';
 
-mixin WithValidators on Record {
+mixin WithValidators implements Validator {
   List<Validator> get validators => [];
 
-  void onValidate() {
+  void validate() {
     validators.forEach((validator) => validator.validate());
   }
 }
