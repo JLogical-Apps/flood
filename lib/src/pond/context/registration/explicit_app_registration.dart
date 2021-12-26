@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
+import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/database/entity_database.dart';
 import 'package:jlogical_utils/src/pond/record/aggregate.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
@@ -234,7 +235,11 @@ class RuntimeValueObjectTypeStateSerializer extends TypeStateSerializer<ValueObj
 
   @override
   onSerialize(ValueObject value) {
-    return value.state.values;
+    final state = value.state;
+    return {
+      ...state.values,
+      Query.type: state.type,
+    };
   }
 
   @override

@@ -98,6 +98,7 @@ void main() {
     final state = State(
       values: {
         'color': {
+          '_type': 'Color',
           'rgb': rgb,
         },
       },
@@ -127,9 +128,11 @@ void main() {
       values: {
         'colors': [
           {
+            '_type': 'Color',
             'rgb': white,
           },
           {
+            '_type': 'Color',
             'rgb': black,
           },
         ],
@@ -161,9 +164,11 @@ void main() {
       values: {
         'colorUses': {
           {
+            '_type': 'Color',
             'rgb': white,
           }: 4,
           {
+            '_type': 'Color',
             'rgb': black,
           }: 2,
         },

@@ -10,6 +10,7 @@ mixin WithPropertiesState on Record {
 
   State get state => State(
         values: properties.map((property) => MapEntry(property.name, property.toStateValue())).toMap(),
+        type: '$runtimeType',
       );
 
   set state(State state) {

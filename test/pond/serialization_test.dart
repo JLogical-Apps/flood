@@ -1,7 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 
+import 'entities/budget_transaction.dart';
+import 'entities/budget_transaction_entity.dart';
 import 'entities/color.dart';
+import 'entities/envelope_transaction.dart';
+import 'entities/envelope_transaction_entity.dart';
+import 'entities/transfer_transaction.dart';
+import 'entities/transfer_transaction_entity.dart';
 
 void main() {
   test('only nullabe serializers deserialize non-null values', () {
@@ -76,7 +82,8 @@ void main() {
     final colorSerializer = RuntimeValueObjectTypeStateSerializer(valueObjectType: Color);
 
     expect(colorSerializer.onSerialize(white), {
-      'rgb': {'r': 255, 'g': 255, 'b': 255}
+      '_type': 'Color',
+      'rgb': {'r': 255, 'g': 255, 'b': 255},
     });
 
     expect(
@@ -157,4 +164,81 @@ void main() {
       [white, black],
     );
   });
+
+  test('serializing & deserializing abstract class', () {
+    AppContext.global = AppContext(
+      registration: ExplicitAppRegistration(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),
+          ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(
+            () => EnvelopeTransaction(),
+            parents: [BudgetTransaction],
+          ),
+          ValueObjectRegistration<TransferTransaction, TransferTransaction?>(
+            () => TransferTransaction(),
+            parents: [BudgetTransaction],
+          ),
+        ],
+        entityRegistrations: [
+          EntityRegistration<BudgetTransactionEntity, BudgetTransaction>.abstract(),
+          EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(
+              (initialValue) => EnvelopeTransactionEntity(initialValue)),
+          EntityRegistration<TransferTransactionEntity, TransferTransaction>(
+            (initialValue) => TransferTransactionEntity(initialValue),
+          ),
+        ],
+      ),
+    );
+
+    final envelopeTransaction = EnvelopeTransaction()
+      ..nameProperty.value = 'test'
+      ..amountProperty.value = 10 * 100;
+    final budgetTransactionWrapper = BudgetTransactionWrapper()..budgetTransactionProperty.value = envelopeTransaction;
+
+    final valueObjectSerializer = RuntimeValueObjectTypeStateSerializer(valueObjectType: BudgetTransactionWrapper);
+
+    var serialized = valueObjectSerializer.onSerialize(budgetTransactionWrapper);
+
+    expect(
+      serialized,
+      {
+        'transaction': {
+          '_type': 'EnvelopeTransaction',
+          'name': 'test',
+          'amount': 10 * 100,
+        }
+      },
+    );
+
+    var deserializedWrapper = valueObjectSerializer.onDeserialize(serialized) as BudgetTransactionWrapper;
+    expect(deserializedWrapper.budgetTransactionProperty, isA<EnvelopeTransaction>());
+
+    budgetTransactionWrapper.budgetTransactionProperty.value = TransferTransaction()..amountProperty.value = 5 * 100;
+
+    serialized = valueObjectSerializer.onSerialize(budgetTransactionWrapper);
+
+    expect(
+      serialized,
+      {
+        'transaction': {
+          '_type': 'TransferTransaction',
+          'amount': 5 * 100,
+        }
+      },
+    );
+
+    deserializedWrapper = valueObjectSerializer.onDeserialize(serialized) as BudgetTransactionWrapper;
+    expect(deserializedWrapper.budgetTransactionProperty, isA<TransferTransaction>());
+  });
+}
+
+class BudgetTransactionWrapper extends ValueObject {
+  late final budgetTransactionProperty = FieldProperty<BudgetTransaction>(name: 'transaction');
+
+  @override
+  List<Property> get properties => [budgetTransactionProperty];
+}
+
+class BudgetTransactionWrapperEntity extends Entity {
+  BudgetTransactionWrapperEntity(BudgetTransactionWrapper initialValue) : super(initialValue: initialValue);
 }
