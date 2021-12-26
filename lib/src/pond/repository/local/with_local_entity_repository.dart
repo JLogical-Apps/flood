@@ -1,10 +1,9 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
-import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/local_query_executor.dart';
 import 'package:rxdart/rxdart.dart';
 
-mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
+mixin WithLocalEntityRepository on EntityRepository {
   BehaviorSubject<Map<String, State>> _stateByIdX = BehaviorSubject.seeded({});
 
   _TransactionPendingChanges? _pendingTransactionChange;
@@ -14,7 +13,7 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
   set _stateById(Map<String, State> value) => _stateByIdX.value = value;
 
   @override
-  Future<E?> save(E entity, {Transaction? transaction}) async {
+  Future<Entity?> save(Entity entity, {Transaction? transaction}) async {
     _startTransactionIfNew(transaction);
 
     final id = entity.id ?? (throw Exception('Cannot save entity that has a null id!'));
@@ -27,7 +26,7 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
   }
 
   @override
-  Future<E?> getOrNull(String id, {Transaction? transaction}) async {
+  Future<Entity?> getOrNull(String id, {Transaction? transaction}) async {
     _startTransactionIfNew(transaction);
 
     State? state;
@@ -42,17 +41,17 @@ mixin WithLocalEntityRepository<E extends Entity> on EntityRepository<E> {
 
     state ??= _stateById[id];
 
-    return state.mapIfNonNull((state) => Entity.fromStateOrNull<E>(state));
+    return state.mapIfNonNull((state) => Entity.fromStateOrNull(state));
   }
 
-  ValueStream<FutureValue<E>>? getXOrNull(String id) {
+  ValueStream<FutureValue<Entity>>? getXOrNull(String id) {
     final state = _stateById[id];
     if (state == null) {
       return null;
     }
 
     return _stateByIdX.mapWithValue((stateById) {
-      return stateById[id].mapIfNonNull((state) => FutureValue.loaded(value: Entity.fromState<E>(state))) ??
+      return stateById[id].mapIfNonNull((state) => FutureValue.loaded(value: Entity.fromState(state))) ??
           FutureValue.error(error: 'No state found with id [$id]');
     });
   }

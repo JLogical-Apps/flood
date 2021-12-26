@@ -6,34 +6,33 @@ import 'package:jlogical_utils/src/pond/transaction/transaction_executor.dart';
 import 'package:jlogical_utils/src/pond/utils/with_key_synchronizable.dart';
 import 'package:rxdart/rxdart.dart';
 
-abstract class EntityRepository<E extends Entity>
-    with WithKeySynchronizable<Transaction>
-    implements QueryExecutor, TransactionExecutor {
-  Future<String> generateId(E entity, {Transaction? transaction});
+abstract class EntityRepository with WithKeySynchronizable<Transaction> implements QueryExecutor, TransactionExecutor {
 
-  Future<void> save(E entity, {Transaction? transaction});
+  List<Type> get handledEntityTypes;
 
-  Future<E?> getOrNull(String id, {Transaction? transaction});
+  Future<String> generateId(Entity entity, {Transaction? transaction});
 
-  ValueStream<FutureValue<E>>? getXOrNull(String id);
+  Future<void> save(Entity entity, {Transaction? transaction});
+
+  Future<Entity?> getOrNull(String id, {Transaction? transaction});
+
+  ValueStream<FutureValue<Entity>>? getXOrNull(String id);
 
   Future<void> delete(String id, {Transaction? transaction});
 
-  Future<E> get(String id, {Transaction? transaction}) async {
-    return (await getOrNull(id, transaction: transaction)) ?? (throw Exception('Cannot find $E with id: $id'));
+  Future<Entity> get(String id, {Transaction? transaction}) async {
+    return (await getOrNull(id, transaction: transaction)) ?? (throw Exception('Cannot find entity with id [$id] from repository [$this]'));
   }
 
-  ValueStream<FutureValue<E>> getX(String id) {
-    return getXOrNull(id) ?? (throw Exception('Cannot find $E with id: $id'));
+  ValueStream<FutureValue<Entity>> getX(String id) {
+    return getXOrNull(id) ?? (throw Exception('Cannot find entity with id [$id] from repository [$this]'));
   }
 
-  Future<void> create(E entity, {Transaction? transaction}) async {
+  Future<void> create(Entity entity, {Transaction? transaction}) async {
     final id = await generateId(entity, transaction: transaction);
     entity.id = id;
     await save(entity, transaction: transaction);
   }
-
-  Type get entityType => E;
 
   EntityRepository get repository => this;
 }

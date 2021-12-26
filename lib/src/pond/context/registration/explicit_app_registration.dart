@@ -58,7 +58,7 @@ class ExplicitAppRegistration implements AppRegistration {
   ValueObject? constructValueObjectRuntimeOrNull(Type valueObjectType) {
     return valueObjectRegistrations
         .firstWhereOrNull((registration) => registration.valueObjectType == valueObjectType)
-        ?.onCreate();
+        ?.onCreate!();
   }
 
   ValueObject? constructValueObjectFromStateOrNull(State state) {
@@ -78,7 +78,7 @@ class ExplicitAppRegistration implements AppRegistration {
 
     final valueObjectRegistration =
         valueObjectRegistrations.firstWhereOrNull((registration) => registration.valueObjectType == valueObjectType);
-    final valueObject = valueObjectRegistration?.onCreate();
+    final valueObject = valueObjectRegistration?.onCreate!();
     valueObject?.state = state;
 
     return valueObject;
@@ -123,14 +123,71 @@ class ExplicitAppRegistration implements AppRegistration {
 
     throw Exception('Unable to find a type state serializer for type [$type]');
   }
+
+  bool isSubtype(Type a, Type b) {
+    if (a == b) {
+      return true;
+    }
+
+    final isValueObject = valueObjectRegistrations.any((registration) => registration.valueObjectType == a);
+    if (isValueObject) {
+      return _isValueObjectSubtype(a, b);
+    }
+
+    final isEntity = entityRegistrations.any((registration) => registration.entityType == a);
+    if (isEntity) {
+      return _isEntitySubtype(a, b);
+    }
+
+    return false;
+  }
+
+  bool _isValueObjectSubtype(Type a, Type b) {
+    if (a == b) {
+      return true;
+    }
+
+    final valueObjectRegistrationA =
+        valueObjectRegistrations.firstWhereOrNull((registration) => registration.valueObjectType == a);
+    if (valueObjectRegistrationA == null) {
+      return false;
+    }
+
+    return valueObjectRegistrationA.parents.any((parentType) => _isValueObjectSubtype(parentType, b));
+  }
+
+  bool _isEntitySubtype(Type a, Type b) {
+    if (a == b) {
+      return true;
+    }
+
+    final entityRegistrationA = entityRegistrations.firstWhereOrNull((registration) => registration.entityType == a);
+    if (entityRegistrationA == null) {
+      return false;
+    }
+
+    final valueObjectTypeA = entityRegistrationA.valueObjectType;
+
+    final valueObjectRegistrationA =
+        valueObjectRegistrations.firstWhere((registration) => registration.valueObjectType == valueObjectTypeA);
+
+    final parentEntityRegistrations = valueObjectRegistrationA.parents.map(
+        (parentType) => entityRegistrations.firstWhere((registration) => registration.valueObjectType == parentType));
+
+    return parentEntityRegistrations.any((registration) => _isEntitySubtype(registration.entityType, b));
+  }
 }
 
 class EntityRegistration<E extends Entity<V>, V extends ValueObject> {
-  final E Function(V initialState) onCreate;
+  final E Function(V initialState)? onCreate;
 
   const EntityRegistration(this.onCreate);
 
-  E create(V initialState) => onCreate(initialState);
+  const EntityRegistration.abstract() : onCreate = null;
+
+  E create(V initialState) => onCreate!(initialState);
+
+  bool get isAbstract => onCreate == null;
 
   Type get entityType => E;
 
@@ -138,9 +195,20 @@ class EntityRegistration<E extends Entity<V>, V extends ValueObject> {
 }
 
 class ValueObjectRegistration<V extends ValueObject, NullableV extends ValueObject?> {
-  final V Function() onCreate;
+  final V Function()? onCreate;
 
-  const ValueObjectRegistration(this.onCreate);
+  final List<Type> parents;
+
+  bool get isAbstract => onCreate == null;
+
+  const ValueObjectRegistration(
+    this.onCreate, {
+    this.parents: const [],
+  });
+
+  const ValueObjectRegistration.abstract({
+    this.parents: const [],
+  }) : onCreate = null;
 
   Type get valueObjectType => V;
 

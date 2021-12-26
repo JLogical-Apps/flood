@@ -1,9 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/registration/database_app_registration.dart';
 import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
 import 'package:jlogical_utils/src/pond/context/registration/with_domain_registrations_provider.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
+import 'package:jlogical_utils/src/pond/repository/with_mono_entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/local/with_local_entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/with_id_generator.dart';
 
@@ -40,8 +41,12 @@ void main() {
   });
 }
 
-class LocalUserRepository extends EntityRepository<UserEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<User, UserEntity>
+class LocalUserRepository extends EntityRepository
+    with
+        WithMonoEntityRepository<UserEntity>,
+        WithLocalEntityRepository,
+        WithIdGenerator,
+        WithDomainRegistrationsProvider<User, UserEntity>
     implements RegistrationsProvider {
   @override
   UserEntity createEntity(User initialValue) => UserEntity(initialUser: initialValue);
@@ -50,8 +55,12 @@ class LocalUserRepository extends EntityRepository<UserEntity>
   User createValueObject() => User();
 }
 
-class LocalBudgetRepository extends EntityRepository<BudgetEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<Budget, BudgetEntity>
+class LocalBudgetRepository extends EntityRepository
+    with
+        WithMonoEntityRepository<BudgetEntity>,
+        WithLocalEntityRepository,
+        WithIdGenerator,
+        WithDomainRegistrationsProvider<Budget, BudgetEntity>
     implements RegistrationsProvider {
   @override
   BudgetEntity createEntity(Budget initialValue) => BudgetEntity(initialBudget: initialValue);

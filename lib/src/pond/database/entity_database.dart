@@ -1,4 +1,6 @@
+import 'package:collection/src/iterable_extensions.dart';
 import 'package:jlogical_utils/src/model/future_value.dart';
+import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
@@ -9,14 +11,15 @@ import 'package:jlogical_utils/src/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EntityDatabase implements Database {
-  final Map<Type, EntityRepository> _repositoryByType;
+  final List<EntityRepository> _repositories;
 
-  EntityDatabase({List<EntityRepository> repositories: const []})
-      : _repositoryByType = repositories.map((repository) => MapEntry(repository.entityType, repository)).toMap();
+  EntityDatabase({List<EntityRepository>? repositories}) : _repositories = repositories ?? [];
 
   @override
   EntityRepository getRepositoryRuntimeOrNull(Type entityType) {
-    return _repositoryByType[entityType] ?? (throw Exception('Could not find repository for entity $entityType'));
+    return _repositories.firstWhereOrNull((repository) =>
+            repository.handledEntityTypes.any((handledType) => AppContext.global.isSubtype(entityType, handledType))) ??
+        (throw Exception('Could not find repository for entity $entityType'));
   }
 
   @override

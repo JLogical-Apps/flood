@@ -1,5 +1,6 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
+import 'package:jlogical_utils/src/pond/state/state.dart';
+import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_from_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 

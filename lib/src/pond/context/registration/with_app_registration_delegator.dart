@@ -37,5 +37,9 @@ mixin WithAppRegistrationDelegator implements AppRegistration {
     return appRegistration.getTypeStateSerializerByTypeRuntime(type);
   }
 
+  bool isSubtype(Type a, Type b) {
+    return appRegistration.isSubtype(a, b);
+  }
+
   Database get database => appRegistration.database;
 }

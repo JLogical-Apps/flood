@@ -5,8 +5,14 @@ import 'package:jlogical_utils/src/utils/stream_extensions.dart';
 
 import 'entities/budget.dart';
 import 'entities/budget_entity.dart';
+import 'entities/budget_transaction.dart';
+import 'entities/budget_transaction_entity.dart';
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
+import 'entities/envelope_transaction.dart';
+import 'entities/envelope_transaction_entity.dart';
+import 'entities/transfer_transaction.dart';
+import 'entities/transfer_transaction_entity.dart';
 
 late List<Envelope> envelopes = [
   Envelope()
@@ -99,6 +105,49 @@ void main() {
 
     expect(firstEnvelopeById, firstEnvelope);
   });
+
+  test('query from abstract class', () async {
+    AppContext.global = AppContext(
+      registration: ExplicitAppRegistration(
+          valueObjectRegistrations: [
+            ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),
+            ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(
+              () => EnvelopeTransaction(),
+              parents: [BudgetTransaction],
+            ),
+            ValueObjectRegistration<TransferTransaction, TransferTransaction?>(
+              () => TransferTransaction(),
+              parents: [BudgetTransaction],
+            ),
+          ],
+          entityRegistrations: [
+            EntityRegistration<BudgetTransactionEntity, BudgetTransaction>.abstract(),
+            EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(
+                (initialValue) => EnvelopeTransactionEntity(initialValue)),
+            EntityRegistration<TransferTransactionEntity, TransferTransaction>(
+              (initialValue) => TransferTransactionEntity(initialValue),
+            ),
+          ],
+          database: EntityDatabase(
+            repositories: [
+              LocalBudgetTransactionRepository(),
+            ],
+          )),
+    );
+
+    final envelopeTransaction = EnvelopeTransactionEntity(EnvelopeTransaction());
+    await envelopeTransaction.create();
+
+    final transferTransaction = TransferTransactionEntity(TransferTransaction());
+    await transferTransaction.create();
+
+    expect(await AppContext.global.executeQuery(Query.from<EnvelopeTransaction>().all()), [envelopeTransaction]);
+    expect(await AppContext.global.executeQuery(Query.from<TransferTransaction>().all()), [transferTransaction]);
+    expect(
+      await AppContext.global.executeQuery(Query.from<BudgetTransactionEntity>().all()),
+      containsAll([envelopeTransaction, transferTransaction]),
+    );
+  });
 }
 
 void _populateRepositories() {
@@ -106,8 +155,12 @@ void _populateRepositories() {
   budgets.map((budget) => BudgetEntity(initialBudget: budget)).forEach((entity) => entity.create());
 }
 
-class LocalEnvelopeRepository extends EntityRepository<EnvelopeEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>
+class LocalEnvelopeRepository extends EntityRepository
+    with
+        WithMonoEntityRepository<EnvelopeEntity>,
+        WithLocalEntityRepository,
+        WithIdGenerator,
+        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>
     implements RegistrationsProvider {
   @override
   EnvelopeEntity createEntity(Envelope initialValue) => EnvelopeEntity(initialEnvelope: initialValue);
@@ -116,8 +169,12 @@ class LocalEnvelopeRepository extends EntityRepository<EnvelopeEntity>
   Envelope createValueObject() => Envelope();
 }
 
-class LocalBudgetRepository extends EntityRepository<BudgetEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<Budget, BudgetEntity>
+class LocalBudgetRepository extends EntityRepository
+    with
+        WithMonoEntityRepository<BudgetEntity>,
+        WithLocalEntityRepository,
+        WithIdGenerator,
+        WithDomainRegistrationsProvider<Budget, BudgetEntity>
     implements RegistrationsProvider {
   @override
   BudgetEntity createEntity(Budget initialValue) => BudgetEntity(initialBudget: initialValue);
@@ -125,3 +182,6 @@ class LocalBudgetRepository extends EntityRepository<BudgetEntity>
   @override
   Budget createValueObject() => Budget();
 }
+
+class LocalBudgetTransactionRepository = EntityRepository
+    with WithMonoEntityRepository<BudgetTransactionEntity>, WithLocalEntityRepository, WithIdGenerator;

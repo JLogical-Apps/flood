@@ -18,6 +18,8 @@ abstract class AppRegistration {
 
   TypeStateSerializer getTypeStateSerializerByTypeRuntime(Type type);
 
+  bool isSubtype(Type a, Type b);
+
   Database get database;
 }
 

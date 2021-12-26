@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
-import 'package:jlogical_utils/src/pond/context/registration/with_domain_registrations_provider.dart';
 
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
@@ -95,7 +93,7 @@ void main() {
 
     await transactionsCompleter.future;
 
-    envelopeEntity = await envelopeRepository.get(envelopeId);
+    envelopeEntity = await envelopeRepository.get(envelopeId) as EnvelopeEntity;
 
     expect(envelopeEntity.value.nameProperty.value, 'Car');
   });
@@ -125,7 +123,7 @@ void main() {
       await envelopeRepository.executeTransaction(transactionGiving);
     } on Exception {}
 
-    envelopeEntity = await envelopeRepository.get(envelopeId);
+    envelopeEntity = await envelopeRepository.get(envelopeId) as EnvelopeEntity;
 
     expect(envelopeEntity.value.nameProperty.value, 'Tithe');
   });
@@ -169,12 +167,12 @@ void main() {
       final transactionEnvelope = await t.getOrNull<EnvelopeEntity>(titheEnvelopeId);
       expect(transactionEnvelope, isNull);
 
-      final repositoryEnvelope = await envelopeRepository.get(titheEnvelopeId);
+      final repositoryEnvelope = await envelopeRepository.get(titheEnvelopeId) as EnvelopeEntity;
       expect(repositoryEnvelope.value.nameProperty.value, 'Giving');
     });
 
     Future modifyTitheEnvelope() async {
-      final envelopeEntity = await envelopeRepository.get(titheEnvelopeId);
+      final envelopeEntity = await envelopeRepository.get(titheEnvelopeId) as EnvelopeEntity;
       envelopeEntity.changeName('Giving');
       await envelopeRepository.save(envelopeEntity);
 
@@ -215,8 +213,12 @@ void main() {
   });
 }
 
-class LocalEnvelopeRepository extends EntityRepository<EnvelopeEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>
+class LocalEnvelopeRepository extends EntityRepository
+    with
+        WithMonoEntityRepository<EnvelopeEntity>,
+        WithLocalEntityRepository,
+        WithIdGenerator,
+        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>
     implements RegistrationsProvider {
   @override
   EnvelopeEntity createEntity(Envelope initialValue) => EnvelopeEntity(initialEnvelope: initialValue);

@@ -34,6 +34,6 @@ class ReferenceFieldProperty<E extends Entity> extends FieldProperty<String>
     }
 
     final entityRepository = context.database.getRepository<E>();
-    _reference = await entityRepository.getOrNull(referenceId);
+    _reference = await entityRepository.getOrNull(referenceId) as E;
   }
 }

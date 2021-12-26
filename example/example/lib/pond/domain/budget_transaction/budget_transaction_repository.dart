@@ -3,8 +3,9 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 import 'budget_transaction.dart';
 import 'budget_transaction_entity.dart';
 
-class LocalBudgetTransactionRepository extends EntityRepository<BudgetTransactionEntity>
+class LocalBudgetTransactionRepository extends EntityRepository
     with
+        WithMonoEntityRepository<BudgetTransactionEntity>,
         WithLocalEntityRepository,
         WithIdGenerator,
         WithDomainRegistrationsProvider<BudgetTransaction, BudgetTransactionEntity>

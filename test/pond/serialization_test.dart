@@ -1,8 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/pond/type_state_serializers/bool_type_state_serializer.dart';
-import 'package:jlogical_utils/src/pond/type_state_serializers/double_type_state_serializer.dart';
-import 'package:jlogical_utils/src/pond/type_state_serializers/nullable_type_state_serializer.dart';
 
 import 'entities/color.dart';
 

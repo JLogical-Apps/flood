@@ -236,8 +236,12 @@ void main() {
   });
 }
 
-class LocalUserRepository extends EntityRepository<UserEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<User, UserEntity>
+class LocalUserRepository extends EntityRepository
+    with
+        WithMonoEntityRepository<UserEntity>,
+        WithLocalEntityRepository,
+        WithIdGenerator,
+        WithDomainRegistrationsProvider<User, UserEntity>
     implements RegistrationsProvider {
   @override
   UserEntity createEntity(User initialValue) {

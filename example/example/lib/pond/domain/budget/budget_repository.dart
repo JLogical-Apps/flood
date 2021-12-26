@@ -4,8 +4,12 @@ import 'budget.dart';
 import 'budget_aggregate.dart';
 import 'budget_entity.dart';
 
-class LocalBudgetRepository extends EntityRepository<BudgetEntity>
-    with WithLocalEntityRepository, WithIdGenerator, WithDomainRegistrationsProvider<Budget, BudgetEntity>
+class LocalBudgetRepository extends EntityRepository
+    with
+        WithMonoEntityRepository<BudgetEntity>,
+        WithLocalEntityRepository,
+        WithIdGenerator,
+        WithDomainRegistrationsProvider<Budget, BudgetEntity>
     implements RegistrationsProvider {
   @override
   BudgetEntity createEntity(Budget initialValue) {
