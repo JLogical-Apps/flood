@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/equals_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/where_query.dart';
 import 'package:jlogical_utils/src/utils/marker.dart';
 
@@ -44,6 +45,10 @@ abstract class Query<R extends Record> extends Equatable {
 
   FirstOrNullQueryRequest<R> firstOrNull() {
     return FirstOrNullQueryRequest<R>(query: this);
+  }
+
+  PaginateQueryRequest<R> paginate({int limit: 20}) {
+    return PaginateQueryRequest<R>(query: this, limit: limit);
   }
 
   /// Returns the list of queries in the query chain starting with the root and ending at this query.

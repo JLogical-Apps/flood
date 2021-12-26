@@ -8,6 +8,7 @@ import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/query/local_where_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/abstract_local_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_all_query_request_reducer.dart';
+import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_paginate_query_request_reducer.dart';
 
 import 'reducer/query/local_from_query_reducer.dart';
 import 'reducer/request/local_first_query_request_reducer.dart';
@@ -28,6 +29,7 @@ class LocalQueryExecutor {
               AbstractLocalQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>([
             LocalAllQueryRequestReducer<R>(),
             LocalFirstOrNullQueryRequestReducer<R>(),
+            LocalPaginateQueryRequestReducer<R>(),
           ]);
 
   Future<T> executeQuery<R extends Record, T>(
