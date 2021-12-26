@@ -73,7 +73,7 @@ void main() {
     );
 
     final white = Color()..rgbProperty.value = {'r': 255, 'g': 255, 'b': 255};
-    final colorSerializer = ValueObjectTypeStateSerializer<Color>();
+    final colorSerializer = RuntimeValueObjectTypeStateSerializer(valueObjectType: Color);
 
     expect(colorSerializer.onSerialize(white), {
       'rgb': {'r': 255, 'g': 255, 'b': 255}

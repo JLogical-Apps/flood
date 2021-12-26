@@ -11,7 +11,6 @@ export 'property/list_field_property.dart';
 export 'property/map_field_property.dart';
 export 'property/property.dart';
 export 'property/reference_field_property.dart';
-export 'property/value_object_field_property.dart';
 export 'property/with_global_type_serializer.dart';
 export 'property/with_id_properties_state.dart';
 export 'property/with_properties_state.dart';

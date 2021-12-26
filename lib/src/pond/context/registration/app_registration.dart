@@ -73,7 +73,7 @@ extension DefaultAppRegistration on AppRegistration {
     return constructAggregateFromEntityRuntime(entity) as A;
   }
 
-  TypeStateSerializer<T> getTypeStateSerializerByType<T>() {
-    return getTypeStateSerializerByTypeRuntime(T) as TypeStateSerializer<T>;
+  TypeStateSerializer getTypeStateSerializerByType<T>() {
+    return getTypeStateSerializerByTypeRuntime(T);
   }
 }
