@@ -1,16 +1,13 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/patterns/cache/cache.dart';
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/local_query_executor.dart';
 import 'package:rxdart/rxdart.dart';
 
 mixin WithLocalEntityRepository on EntityRepository {
-  BehaviorSubject<Map<String, State>> _stateByIdX = BehaviorSubject.seeded({});
+  final Cache<String, State> _stateByIdCache = Cache();
 
   _TransactionPendingChanges? _pendingTransactionChange;
-
-  Map<String, State> get _stateById => _stateByIdX.value;
-
-  set _stateById(Map<String, State> value) => _stateByIdX.value = value;
 
   @override
   Future<Entity?> save(Entity entity, {Transaction? transaction}) async {
@@ -21,7 +18,7 @@ mixin WithLocalEntityRepository on EntityRepository {
     if (transaction != null) {
       _pendingTransactionChange!.stateChangesById[id] = entity.state;
     } else {
-      _stateById = _stateById.copy()..set(id, entity.state);
+      _stateByIdCache.save(id, entity.state);
     }
   }
 
@@ -39,21 +36,15 @@ mixin WithLocalEntityRepository on EntityRepository {
       state = _pendingTransactionChange!.stateChangesById[id];
     }
 
-    state ??= _stateById[id];
+    state ??= _stateByIdCache.get(id);
 
     return state.mapIfNonNull((state) => Entity.fromStateOrNull(state));
   }
 
-  ValueStream<FutureValue<Entity>>? getXOrNull(String id) {
-    final state = _stateById[id];
-    if (state == null) {
-      return null;
-    }
-
-    return _stateByIdX.mapWithValue((stateById) {
-      return stateById[id].mapIfNonNull((state) => FutureValue.loaded(value: Entity.fromState(state))) ??
-          FutureValue.error(error: 'No state found with id [$id]');
-    });
+  ValueStream<FutureValue<Entity>> getX(String id) {
+    return _stateByIdCache.getX(id).mapWithValue((state) => state != null
+        ? FutureValue.loaded(value: Entity.fromState(state))
+        : FutureValue.error(error: 'No state found with id [$id]'));
   }
 
   @override
@@ -63,13 +54,13 @@ mixin WithLocalEntityRepository on EntityRepository {
     if (transaction != null) {
       _pendingTransactionChange!.stateIdDeletes.add(id);
     } else {
-      _stateById = _stateById.copy()..remove(id);
+      _stateByIdCache.remove(id);
     }
   }
 
   @override
   ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) {
-    return _stateByIdX.switchMapWithValue((stateById) => executeQuery(queryRequest).asValueStream());
+    return _stateByIdCache.valueByKeyX.switchMapWithValue((stateById) => executeQuery(queryRequest).asValueStream());
   }
 
   @override
@@ -81,7 +72,7 @@ mixin WithLocalEntityRepository on EntityRepository {
 
     late Map<String, State> stateById;
     if (transaction == null) {
-      stateById = _stateById;
+      stateById = _stateByIdCache.valueByKey;
     } else if (transaction == _currentTransaction) {
       stateById = _getCommittedStateById();
     }
@@ -94,12 +85,12 @@ mixin WithLocalEntityRepository on EntityRepository {
     final pendingTransactionChange =
         _pendingTransactionChange ?? (throw Exception('Can only commit if a budget_transaction has started!'));
 
-    var newStateById = _stateById.copy();
+    var newStateById = _stateByIdCache.valueByKey.copy();
 
     newStateById.addAll(pendingTransactionChange.stateChangesById);
     newStateById.removeWhere((id, state) => pendingTransactionChange.stateIdDeletes.contains(id));
 
-    _stateById = newStateById;
+    _stateByIdCache.valueByKey = newStateById;
   }
 
   @override
@@ -119,7 +110,7 @@ mixin WithLocalEntityRepository on EntityRepository {
     final pendingTransactionChange =
         _pendingTransactionChange ?? (throw Exception('Can only commit if a budget_transaction has started!'));
 
-    final committedStateById = {..._stateById};
+    final committedStateById = _stateByIdCache.valueByKey.copy();
     committedStateById.addAll(pendingTransactionChange.stateChangesById);
     committedStateById.removeWhere((id, state) => pendingTransactionChange.stateIdDeletes.contains(id));
     return committedStateById;

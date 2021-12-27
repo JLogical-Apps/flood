@@ -16,16 +16,12 @@ abstract class EntityRepository with WithKeySynchronizable<Transaction> implemen
 
   Future<Entity?> getOrNull(String id, {Transaction? transaction});
 
-  ValueStream<FutureValue<Entity>>? getXOrNull(String id);
+  ValueStream<FutureValue<Entity>> getX(String id);
 
   Future<void> delete(String id, {Transaction? transaction});
 
   Future<Entity> get(String id, {Transaction? transaction}) async {
     return (await getOrNull(id, transaction: transaction)) ?? (throw Exception('Cannot find entity with id [$id] from repository [$this]'));
-  }
-
-  ValueStream<FutureValue<Entity>> getX(String id) {
-    return getXOrNull(id) ?? (throw Exception('Cannot find entity with id [$id] from repository [$this]'));
   }
 
   Future<void> create(Entity entity, {Transaction? transaction}) async {

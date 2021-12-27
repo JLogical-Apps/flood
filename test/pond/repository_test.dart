@@ -47,8 +47,6 @@ void main() {
   });
 
   test('get streams.', () async {
-    expect(AppContext.global.getXOrNull<EnvelopeEntity>('abc'), isNull);
-
     final envelopeEntity = EnvelopeEntity(
         initialEnvelope: Envelope()
           ..nameProperty.value = 'Tithe'
@@ -58,7 +56,7 @@ void main() {
 
     final envelopeId = envelopeEntity.id!;
 
-    final envelopeX = AppContext.global.getXOrNull<EnvelopeEntity>(envelopeId)!;
+    final envelopeX = AppContext.global.getX<EnvelopeEntity>(envelopeId)!;
     var retrievedEnvelope = (await envelopeX.getCurrentValue()).get();
 
     expect(retrievedEnvelope, envelopeEntity);
