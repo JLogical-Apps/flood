@@ -25,30 +25,29 @@ class PondPage extends HookWidget {
             builder: (QueryPaginationResultController<BudgetEntity> budgetResultController) {
               final results = useValueStream(budgetResultController.resultsX);
               return StyledPage(
-              onRefresh: budgetsQuery.reload,
-              titleText: 'Home',
-              body: StyledCategory.medium(
-                headerText: 'Budgets',
-                children: [
-                  StyledButton.high(
-                    text: 'Create',
-                    onTapped: () {
-                      final budgetEntity = BudgetEntity(initialValue: Budget()..nameProperty.value = 'New Budget');
-                      budgetEntity.create();
-                    },
-                  ),
-                  ...results.map((budgetEntity) => BudgetCard(budgetId: budgetEntity.id!)),
-                  if (budgetResultController.canLoadMore)
-                    StyledButton.low(
-                      text: 'Load More',
-                      onTapped: () async {
-                        await Future.delayed(Duration(seconds: 1));
-                        await budgetResultController.loadMore();
+                onRefresh: budgetsQuery.reload,
+                titleText: 'Home',
+                body: StyledCategory.medium(
+                  headerText: 'Budgets',
+                  children: [
+                    StyledButton.high(
+                      text: 'Create',
+                      onTapped: () {
+                        final budgetEntity = BudgetEntity(initialValue: Budget()..nameProperty.value = 'New Budget');
+                        budgetEntity.create();
                       },
                     ),
-                ],
-              ),
-            );
+                    ...results.map((budgetEntity) => BudgetCard(budgetId: budgetEntity.id!)),
+                    if (budgetResultController.canLoadMore)
+                      StyledButton.low(
+                        text: 'Load More',
+                        onTapped: () async {
+                          await budgetResultController.loadMore();
+                        },
+                      ),
+                  ],
+                ),
+              );
             },
           ),
         ));

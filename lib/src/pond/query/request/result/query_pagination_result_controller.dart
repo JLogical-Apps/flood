@@ -10,7 +10,7 @@ class QueryPaginationResultController<R extends Record> {
     _resultsX.value = result;
   }
 
-  ValueStream<List<R>> get resultsX => _resultsX.mapWithValue((paginationResult) => paginationResult.results);
+  late final ValueStream<List<R>> resultsX = _resultsX.mapWithValue((paginationResult) => paginationResult.results);
 
   List<R> get results => _resultsX.value.results;
 
