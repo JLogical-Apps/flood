@@ -107,12 +107,12 @@ void main() {
   });
 
   test('pagination', () async {
-    var envelopePages = await AppContext.global.executeQuery(Query.from<EnvelopeEntity>().paginate(limit: 2));
-    expect(envelopePages.results.length, 2);
-    expect(envelopePages.results.map((entity) => entity.value), envelopes.take(2).toList());
+    final envelopePages = await AppContext.global.executeQuery(Query.from<EnvelopeEntity>().paginate(limit: 3));
+    expect(envelopePages.results.length, 3);
+    expect(envelopePages.results.map((entity) => entity.value), envelopes.take(3).toList());
 
     expect(envelopePages.canLoadMore, true);
-    envelopePages = await envelopePages.loadMore();
+    await envelopePages.loadMore();
     expect(envelopePages.results.length, 4);
     expect(envelopePages.results.map((entity) => entity.value), envelopes);
 

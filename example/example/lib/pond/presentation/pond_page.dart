@@ -16,29 +16,40 @@ class PondPage extends HookWidget {
     useOneTimeEffect(() {
       _initPond();
     });
-    final budgetsQuery = useQuery(Query.from<BudgetEntity>().all());
+    final budgetsQuery = useQuery(Query.from<BudgetEntity>().paginate(limit: 3));
     return StyleProvider(
         style: DeltaStyle(backgroundColor: Color(0xff030818)),
         child: Builder(
           builder: (context) => ModelBuilder.styledPage(
             model: budgetsQuery.model,
-            builder: (List<BudgetEntity> budgets) => StyledPage(
+            builder: (QueryPaginationResultController<BudgetEntity> budgetResultController) {
+              final results = useValueStream(budgetResultController.resultsX);
+              return StyledPage(
               onRefresh: budgetsQuery.reload,
               titleText: 'Home',
               body: StyledCategory.medium(
                 headerText: 'Budgets',
                 children: [
-                  ...budgets.map((budgetEntity) => BudgetCard(budgetId: budgetEntity.id!)),
                   StyledButton.high(
                     text: 'Create',
                     onTapped: () {
-                      final budgetEntity = BudgetEntity(initialValue: Budget()..nameProperty.value = 'A');
+                      final budgetEntity = BudgetEntity(initialValue: Budget()..nameProperty.value = 'New Budget');
                       budgetEntity.create();
                     },
                   ),
+                  ...results.map((budgetEntity) => BudgetCard(budgetId: budgetEntity.id!)),
+                  if (budgetResultController.canLoadMore)
+                    StyledButton.low(
+                      text: 'Load More',
+                      onTapped: () async {
+                        await Future.delayed(Duration(seconds: 1));
+                        await budgetResultController.loadMore();
+                      },
+                    ),
                 ],
               ),
-            ),
+            );
+            },
           ),
         ));
   }
