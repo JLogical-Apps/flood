@@ -8,7 +8,8 @@ class LocalEnvelopeRepository extends EntityRepository
         WithMonoEntityRepository<EnvelopeEntity>,
         WithLocalEntityRepository,
         WithIdGenerator,
-        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>
+        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>,
+        WithTransactionsAndCacheEntityRepository
     implements RegistrationsProvider {
   @override
   EnvelopeEntity createEntity(Envelope initialValue) {

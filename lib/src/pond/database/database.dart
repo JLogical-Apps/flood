@@ -1,12 +1,12 @@
 import 'package:jlogical_utils/src/model/future_value.dart';
-import 'package:jlogical_utils/src/pond/query/query_executor.dart';
+import 'package:jlogical_utils/src/pond/query/query_executor_x.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/utils/stream_extensions.dart';
 import 'package:rxdart/rxdart.dart';
 
-abstract class Database implements QueryExecutor {
+abstract class Database implements QueryExecutorX {
   EntityRepository? getRepositoryRuntimeOrNull(Type entityType);
 }
 
@@ -27,7 +27,7 @@ extension DefaultDatabase on Database {
     return (await getRepository<E>().getOrNull(id, transaction: transaction)) as E?;
   }
 
-  ValueStream<FutureValue<E>>? getX<E extends Entity>(String id) {
+  ValueStream<FutureValue<E>> getX<E extends Entity>(String id) {
     return getRepository<E>().getX(id).mapWithValue((value) => value.mapIfPresent((value) => value as E));
   }
 

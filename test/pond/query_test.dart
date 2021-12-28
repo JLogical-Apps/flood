@@ -36,7 +36,7 @@ List<Budget> budgets = [
 ];
 
 void main() {
-  setUp(() {
+  setUp(() async {
     AppContext.global = AppContext(
       registration: DatabaseAppRegistration(
         repositories: [
@@ -46,7 +46,7 @@ void main() {
       ),
     );
 
-    _populateRepositories();
+    await _populateRepositories();
   });
 
   test('all from a type.', () async {
@@ -163,9 +163,9 @@ void main() {
   });
 }
 
-void _populateRepositories() {
-  envelopes.map((envelope) => EnvelopeEntity(initialEnvelope: envelope)).forEach((entity) => entity.create());
-  budgets.map((budget) => BudgetEntity(initialBudget: budget)).forEach((entity) => entity.create());
+Future<void> _populateRepositories() async {
+  await Future.wait(envelopes.map((envelope) => EnvelopeEntity(initialEnvelope: envelope).create()));
+  await Future.wait(budgets.map((budget) => BudgetEntity(initialBudget: budget).create()));
 }
 
 class LocalEnvelopeRepository extends EntityRepository
@@ -173,7 +173,8 @@ class LocalEnvelopeRepository extends EntityRepository
         WithMonoEntityRepository<EnvelopeEntity>,
         WithLocalEntityRepository,
         WithIdGenerator,
-        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>
+        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>,
+        WithTransactionsAndCacheEntityRepository
     implements RegistrationsProvider {
   @override
   EnvelopeEntity createEntity(Envelope initialValue) => EnvelopeEntity(initialEnvelope: initialValue);
@@ -187,7 +188,8 @@ class LocalBudgetRepository extends EntityRepository
         WithMonoEntityRepository<BudgetEntity>,
         WithLocalEntityRepository,
         WithIdGenerator,
-        WithDomainRegistrationsProvider<Budget, BudgetEntity>
+        WithDomainRegistrationsProvider<Budget, BudgetEntity>,
+        WithTransactionsAndCacheEntityRepository
     implements RegistrationsProvider {
   @override
   BudgetEntity createEntity(Budget initialValue) => BudgetEntity(initialBudget: initialValue);
@@ -197,4 +199,8 @@ class LocalBudgetRepository extends EntityRepository
 }
 
 class LocalBudgetTransactionRepository = EntityRepository
-    with WithMonoEntityRepository<BudgetTransactionEntity>, WithLocalEntityRepository, WithIdGenerator;
+    with
+        WithMonoEntityRepository<BudgetTransactionEntity>,
+        WithLocalEntityRepository,
+        WithIdGenerator,
+        WithTransactionsAndCacheEntityRepository;

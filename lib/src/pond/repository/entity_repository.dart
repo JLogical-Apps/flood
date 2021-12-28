@@ -1,12 +1,12 @@
 import 'package:jlogical_utils/src/model/future_value.dart';
-import 'package:jlogical_utils/src/pond/query/query_executor.dart';
+import 'package:jlogical_utils/src/pond/query/query_executor_x.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction_executor.dart';
 import 'package:jlogical_utils/src/pond/utils/with_key_synchronizable.dart';
 import 'package:rxdart/rxdart.dart';
 
-abstract class EntityRepository with WithKeySynchronizable<Transaction> implements QueryExecutor, TransactionExecutor {
+abstract class EntityRepository with WithKeySynchronizable<Transaction> implements QueryExecutorX, TransactionExecutor {
 
   List<Type> get handledEntityTypes;
 

@@ -7,6 +7,7 @@ import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/with_mono_entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/local/with_local_entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/with_id_generator.dart';
+import 'package:jlogical_utils/src/pond/repository/with_transactions_and_cache_entity_repository.dart';
 
 import 'entities/budget.dart';
 import 'entities/budget_aggregate.dart';
@@ -46,7 +47,8 @@ class LocalUserRepository extends EntityRepository
         WithMonoEntityRepository<UserEntity>,
         WithLocalEntityRepository,
         WithIdGenerator,
-        WithDomainRegistrationsProvider<User, UserEntity>
+        WithDomainRegistrationsProvider<User, UserEntity>,
+        WithTransactionsAndCacheEntityRepository
     implements RegistrationsProvider {
   @override
   UserEntity createEntity(User initialValue) => UserEntity(initialUser: initialValue);
@@ -60,7 +62,8 @@ class LocalBudgetRepository extends EntityRepository
         WithMonoEntityRepository<BudgetEntity>,
         WithLocalEntityRepository,
         WithIdGenerator,
-        WithDomainRegistrationsProvider<Budget, BudgetEntity>
+        WithDomainRegistrationsProvider<Budget, BudgetEntity>,
+        WithTransactionsAndCacheEntityRepository
     implements RegistrationsProvider {
   @override
   BudgetEntity createEntity(Budget initialValue) => BudgetEntity(initialBudget: initialValue);

@@ -8,7 +8,8 @@ class LocalBudgetTransactionRepository extends EntityRepository
         WithMonoEntityRepository<BudgetTransactionEntity>,
         WithLocalEntityRepository,
         WithIdGenerator,
-        WithDomainRegistrationsProvider<BudgetTransaction, BudgetTransactionEntity>
+        WithDomainRegistrationsProvider<BudgetTransaction, BudgetTransactionEntity>,
+        WithTransactionsAndCacheEntityRepository
     implements RegistrationsProvider {
   @override
   BudgetTransactionEntity createEntity(BudgetTransaction initialValue) {

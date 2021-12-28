@@ -1,11 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/context/registration/database_app_registration.dart';
-import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
-import 'package:jlogical_utils/src/pond/context/registration/with_domain_registrations_provider.dart';
-import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
-import 'package:jlogical_utils/src/pond/repository/local/with_local_entity_repository.dart';
-import 'package:jlogical_utils/src/pond/repository/with_id_generator.dart';
 
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
@@ -56,7 +50,7 @@ void main() {
 
     final envelopeId = envelopeEntity.id!;
 
-    final envelopeX = AppContext.global.getX<EnvelopeEntity>(envelopeId)!;
+    final envelopeX = AppContext.global.getX<EnvelopeEntity>(envelopeId);
     var retrievedEnvelope = (await envelopeX.getCurrentValue()).get();
 
     expect(retrievedEnvelope, envelopeEntity);
@@ -64,6 +58,8 @@ void main() {
 
     envelopeEntity.changeName('Giving');
     await envelopeEntity.save();
+
+    // await Future.sync(() {});
 
     retrievedEnvelope = (await envelopeX.getCurrentValue()).get();
 
@@ -77,7 +73,8 @@ class LocalEnvelopeRepository extends EntityRepository
         WithMonoEntityRepository<EnvelopeEntity>,
         WithLocalEntityRepository,
         WithIdGenerator,
-        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>
+        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>,
+        WithTransactionsAndCacheEntityRepository
     implements RegistrationsProvider {
   @override
   EnvelopeEntity createEntity(Envelope initialValue) => EnvelopeEntity(initialEnvelope: initialValue);

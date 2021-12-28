@@ -1,7 +1,7 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/patterns/resolver/resolver.dart';
 import 'package:jlogical_utils/src/patterns/resolver/wrapper_resolver.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
+import 'package:jlogical_utils/src/pond/query/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
@@ -9,11 +9,13 @@ import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/abstract_local_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_all_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_paginate_query_request_reducer.dart';
+import 'package:jlogical_utils/src/pond/state/state.dart';
+import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 
 import 'reducer/query/local_from_query_reducer.dart';
 import 'reducer/request/local_first_query_request_reducer.dart';
 
-class LocalQueryExecutor {
+class LocalQueryExecutor implements QueryExecutor {
   final Map<String, State> stateById;
 
   const LocalQueryExecutor({required this.stateById});

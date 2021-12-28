@@ -14,7 +14,7 @@ extension ValueStreamExtensions<T> on ValueStream<T> {
         late StreamSubscription subscription;
         subscription = listen((event) {
           value = event;
-          completer.complete(Future.delayed(Duration(seconds: 1), () => event));
+          completer.complete(event);
           subscription.cancel();
         });
       })

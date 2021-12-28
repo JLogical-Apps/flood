@@ -88,8 +88,10 @@ void main() {
       transactionsCompleter.complete();
     });
 
-    envelopeRepository.executeTransaction(transactionGiving);
-    envelopeRepository.executeTransaction(transactionCar);
+    await Future.wait([
+      envelopeRepository.executeTransaction(transactionGiving),
+      envelopeRepository.executeTransaction(transactionCar),
+    ]);
 
     await transactionsCompleter.future;
 
@@ -218,7 +220,8 @@ class LocalEnvelopeRepository extends EntityRepository
         WithMonoEntityRepository<EnvelopeEntity>,
         WithLocalEntityRepository,
         WithIdGenerator,
-        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>
+        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>,
+        WithTransactionsAndCacheEntityRepository
     implements RegistrationsProvider {
   @override
   EnvelopeEntity createEntity(Envelope initialValue) => EnvelopeEntity(initialEnvelope: initialValue);

@@ -7,7 +7,8 @@ class LocalUserRepository extends EntityRepository
         WithMonoEntityRepository<UserEntity>,
         WithLocalEntityRepository,
         WithIdGenerator,
-        WithDomainRegistrationsProvider<User, UserEntity>
+        WithDomainRegistrationsProvider<User, UserEntity>,
+        WithTransactionsAndCacheEntityRepository
     implements RegistrationsProvider {
   @override
   UserEntity createEntity(User initialValue) {
