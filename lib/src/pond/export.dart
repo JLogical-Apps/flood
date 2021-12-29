@@ -22,6 +22,7 @@ export 'record/record.dart';
 export 'record/value_object.dart';
 export 'repository/entity_repository.dart';
 export 'repository/local/with_local_entity_repository.dart';
+export 'repository/file/with_file_entity_repository.dart';
 export 'repository/with_id_generator.dart';
 export 'repository/with_mono_entity_repository.dart';
 export 'repository/with_transactions_and_cache_entity_repository.dart';

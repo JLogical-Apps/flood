@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:example/pond/domain/budget/budget.dart';
 import 'package:example/pond/domain/budget/budget_entity.dart';
 import 'package:example/pond/domain/budget/budget_repository.dart';
@@ -9,7 +11,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class PondPage extends HookWidget {
-  const PondPage({Key? key}) : super(key: key);
+  final Directory baseBudgetDirectory;
+
+  const PondPage({Key? key, required this.baseBudgetDirectory}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +61,7 @@ class PondPage extends HookWidget {
     AppContext.global = AppContext(
       registration: DatabaseAppRegistration(
         repositories: [
-          LocalBudgetRepository(),
+          FileBudgetRepository(baseDirectory: baseBudgetDirectory),
           LocalBudgetTransactionRepository(),
           LocalEnvelopeRepository(),
           LocalUserRepository(),

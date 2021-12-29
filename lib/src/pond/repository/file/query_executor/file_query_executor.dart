@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:jlogical_utils/src/patterns/resolver/resolver.dart';
 import 'package:jlogical_utils/src/patterns/resolver/wrapper_resolver.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
@@ -5,33 +7,34 @@ import 'package:jlogical_utils/src/pond/query/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
-import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/query/local_where_query_reducer.dart';
-import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/abstract_local_query_request_reducer.dart';
-import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_all_query_request_reducer.dart';
-import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_paginate_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
+import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/query/file_where_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 
-import 'reducer/query/local_from_query_reducer.dart';
-import 'reducer/request/local_first_query_request_reducer.dart';
+import 'reducer/query/file_from_query_reducer.dart';
+import 'reducer/request/abstract_file_query_request_reducer.dart';
+import 'reducer/request/file_all_query_request_reducer.dart';
+import 'reducer/request/file_first_query_request_reducer.dart';
+import 'reducer/request/file_paginate_query_request_reducer.dart';
 
-class LocalQueryExecutor implements QueryExecutor {
-  final Map<String, State> stateById;
+class FileQueryExecutor implements QueryExecutor {
+  final Directory baseDirectory;
+  final Future<State> Function(String id) stateGetter;
 
-  const LocalQueryExecutor({required this.stateById});
+  FileQueryExecutor({required this.baseDirectory, required this.stateGetter});
 
   Resolver<Query, AbstractQueryReducer<Query, Iterable<Record>>> getQueryReducerResolver() => WrapperResolver([
-        LocalFromQueryReducer(stateById: stateById),
-        LocalWhereQueryReducer(),
+        FileFromQueryReducer(baseDirectory: baseDirectory, stateGetter: stateGetter),
+        FileWhereQueryReducer(),
       ]);
 
   Resolver<AbstractQueryRequest<R, dynamic>,
-          AbstractLocalQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>
+          AbstractFileQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>
       getQueryRequestReducerResolver<R extends Record>() => WrapperResolver<AbstractQueryRequest<R, dynamic>,
-              AbstractLocalQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>([
-            LocalAllQueryRequestReducer<R>(),
-            LocalFirstOrNullQueryRequestReducer<R>(),
-            LocalPaginateQueryRequestReducer<R>(),
+              AbstractFileQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>([
+            FileAllQueryRequestReducer<R>(),
+            FileFirstOrNullQueryRequestReducer<R>(),
+            FilePaginateQueryRequestReducer<R>(),
           ]);
 
   Future<T> executeQuery<R extends Record, T>(

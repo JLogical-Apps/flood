@@ -8,7 +8,7 @@ import 'package:jlogical_utils/src/pond/query/where_query.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/predicate/local_equals_query_predicate_reducer.dart';
 
-class LocalWhereQueryReducer extends AbstractWhereQueryReducer<Iterable<Record>>
+class FileWhereQueryReducer extends AbstractWhereQueryReducer<Iterable<Record>>
     with WithWrapperResolver<AbstractQueryPredicate, AbstractQueryPredicateReducer>
     implements Resolver<AbstractQueryPredicate, AbstractQueryPredicateReducer> {
   late List<AbstractQueryPredicateReducer> wrappers = [

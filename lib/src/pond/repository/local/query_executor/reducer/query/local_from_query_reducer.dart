@@ -11,7 +11,7 @@ class LocalFromQueryReducer extends AbstractFromQueryReducer<Iterable<Record>> {
   const LocalFromQueryReducer({required this.stateById});
 
   @override
-  Iterable<Record> reduce({required Iterable<Record>? accumulation, required Query query}) {
+  Future<Iterable<Record>> reduce({required Iterable<Record>? accumulation, required Query query}) async {
     final descendants = AppContext.global.getDescendants(query.recordType);
     final types = {...descendants, query.recordType};
     final typeNames = types.map((type) => type.toString()).toList();

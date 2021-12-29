@@ -1,17 +1,23 @@
+import 'dart:io';
+
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 import 'budget.dart';
 import 'budget_aggregate.dart';
 import 'budget_entity.dart';
 
-class LocalBudgetRepository extends EntityRepository
+class FileBudgetRepository extends EntityRepository
     with
         WithMonoEntityRepository<BudgetEntity>,
-        WithLocalEntityRepository,
+        WithFileEntityRepository,
         WithIdGenerator,
         WithDomainRegistrationsProvider<Budget, BudgetEntity>,
         WithTransactionsAndCacheEntityRepository
     implements RegistrationsProvider {
+  final Directory baseDirectory;
+
+  FileBudgetRepository({required this.baseDirectory});
+
   @override
   BudgetEntity createEntity(Budget initialValue) {
     return BudgetEntity(initialValue: initialValue);
