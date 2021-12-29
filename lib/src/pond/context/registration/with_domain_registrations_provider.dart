@@ -4,7 +4,7 @@ import 'package:jlogical_utils/src/pond/context/registration/registrations_provi
 mixin WithDomainRegistrationsProvider<V extends ValueObject, E extends Entity<V>> implements RegistrationsProvider {
   V createValueObject();
 
-  E createEntity(V initialValue);
+  E createEntity();
 
   AggregateRegistration? get aggregateRegistration => null;
 

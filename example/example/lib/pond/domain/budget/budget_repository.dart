@@ -6,21 +6,14 @@ import 'budget.dart';
 import 'budget_aggregate.dart';
 import 'budget_entity.dart';
 
-class FileBudgetRepository extends EntityRepository
-    with
-        WithMonoEntityRepository<BudgetEntity>,
-        WithFileEntityRepository,
-        WithIdGenerator,
-        WithDomainRegistrationsProvider<Budget, BudgetEntity>,
-        WithTransactionsAndCacheEntityRepository
-    implements RegistrationsProvider {
+class FileBudgetRepository extends DefaultFileRepository<BudgetEntity, Budget> {
   final Directory baseDirectory;
 
   FileBudgetRepository({required this.baseDirectory});
 
   @override
-  BudgetEntity createEntity(Budget initialValue) {
-    return BudgetEntity(initialValue: initialValue);
+  BudgetEntity createEntity() {
+    return BudgetEntity();
   }
 
   @override
@@ -30,5 +23,5 @@ class FileBudgetRepository extends EntityRepository
 
   @override
   AggregateRegistration<BudgetAggregate, BudgetEntity> get aggregateRegistration =>
-      AggregateRegistration((entity) => BudgetAggregate(initialBudgetEntity: entity));
+      AggregateRegistration((entity) => BudgetAggregate());
 }

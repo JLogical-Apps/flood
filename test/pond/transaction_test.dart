@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/repository/local/default_local_repository.dart';
 
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
@@ -13,7 +14,7 @@ void main() {
     AppContext.global = AppContext(
       registration: ExplicitAppRegistration(
         entityRegistrations: [
-          EntityRegistration<EnvelopeEntity, Envelope>((envelope) => EnvelopeEntity(initialEnvelope: envelope)),
+          EntityRegistration<EnvelopeEntity, Envelope>(() => EnvelopeEntity()),
         ],
         valueObjectRegistrations: [
           ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
@@ -23,10 +24,10 @@ void main() {
   });
   test('basic repository actions.', () {
     final transaction = Transaction((t) async {
-      final envelopeEntity = EnvelopeEntity(
-          initialEnvelope: Envelope()
-            ..nameProperty.value = 'Tithe'
-            ..amountProperty.value = 24 * 100);
+      final envelopeEntity = EnvelopeEntity()
+        ..value = (Envelope()
+          ..nameProperty.value = 'Tithe'
+          ..amountProperty.value = 24 * 100);
 
       await t.create(envelopeEntity);
 
@@ -53,10 +54,10 @@ void main() {
   });
 
   test('locking', () async {
-    var envelopeEntity = EnvelopeEntity(
-        initialEnvelope: Envelope()
-          ..nameProperty.value = 'Tithe'
-          ..amountProperty.value = 24 * 100);
+    var envelopeEntity = EnvelopeEntity()
+      ..value = (Envelope()
+        ..nameProperty.value = 'Tithe'
+        ..amountProperty.value = 24 * 100);
 
     await envelopeRepository.create(envelopeEntity);
 
@@ -101,10 +102,10 @@ void main() {
   });
 
   test('reverting on exception.', () async {
-    var envelopeEntity = EnvelopeEntity(
-        initialEnvelope: Envelope()
-          ..nameProperty.value = 'Tithe'
-          ..amountProperty.value = 24 * 100);
+    var envelopeEntity = EnvelopeEntity()
+      ..value = (Envelope()
+        ..nameProperty.value = 'Tithe'
+        ..amountProperty.value = 24 * 100);
 
     await envelopeRepository.create(envelopeEntity);
 
@@ -132,10 +133,10 @@ void main() {
 
   test('budget_transaction commit saves when done.', () async {
     final transactionCreate = Transaction((t) async {
-      final envelopeEntity = EnvelopeEntity(
-          initialEnvelope: Envelope()
-            ..nameProperty.value = 'Tithe'
-            ..amountProperty.value = 24 * 100);
+      final envelopeEntity = EnvelopeEntity()
+        ..value = (Envelope()
+          ..nameProperty.value = 'Tithe'
+          ..amountProperty.value = 24 * 100);
 
       await t.create(envelopeEntity);
 
@@ -152,10 +153,10 @@ void main() {
   test('simultaneous read/write while budget_transaction running.', () async {
     final otherStuffCompleter = Completer();
 
-    final titheEnvelopeEntity = EnvelopeEntity(
-        initialEnvelope: Envelope()
-          ..nameProperty.value = 'Tithe'
-          ..amountProperty.value = 24 * 100);
+    final titheEnvelopeEntity = EnvelopeEntity()
+      ..value = (Envelope()
+        ..nameProperty.value = 'Tithe'
+        ..amountProperty.value = 24 * 100);
 
     await envelopeRepository.create(titheEnvelopeEntity);
 
@@ -188,10 +189,10 @@ void main() {
   });
 
   test('query in budget_transaction.', () async {
-    final titheEnvelopeEntity = EnvelopeEntity(
-        initialEnvelope: Envelope()
-          ..nameProperty.value = 'Tithe'
-          ..amountProperty.value = 24 * 100);
+    final titheEnvelopeEntity = EnvelopeEntity()
+      ..value = (Envelope()
+        ..nameProperty.value = 'Tithe'
+        ..amountProperty.value = 24 * 100);
 
     await envelopeRepository.create(titheEnvelopeEntity);
 
@@ -215,16 +216,9 @@ void main() {
   });
 }
 
-class LocalEnvelopeRepository extends EntityRepository
-    with
-        WithMonoEntityRepository<EnvelopeEntity>,
-        WithLocalEntityRepository,
-        WithIdGenerator,
-        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>,
-        WithTransactionsAndCacheEntityRepository
-    implements RegistrationsProvider {
+class LocalEnvelopeRepository extends DefaultLocalRepository<EnvelopeEntity, Envelope> {
   @override
-  EnvelopeEntity createEntity(Envelope initialValue) => EnvelopeEntity(initialEnvelope: initialValue);
+  EnvelopeEntity createEntity() => EnvelopeEntity();
 
   @override
   Envelope createValueObject() => Envelope();

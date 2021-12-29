@@ -1,5 +1,11 @@
 import 'package:equatable/equatable.dart';
-import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/pond/context/app_context.dart';
+import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
+import 'package:jlogical_utils/src/pond/database/database.dart';
+import 'package:jlogical_utils/src/pond/record/value_object.dart';
+import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/state/state.dart';
+import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
 import 'package:jlogical_utils/src/pond/validation/validation_state.dart';
 import 'package:rxdart/rxdart.dart';
@@ -9,13 +15,11 @@ import 'has_id.dart';
 abstract class Entity<V extends ValueObject> extends Record with EquatableMixin implements HasId, Resolvable {
   String? id;
 
-  BehaviorSubject<V> _valueX;
+  final BehaviorSubject<V> _valueX = BehaviorSubject();
 
   V get value => _valueX.value;
 
   set value(V value) => _valueX.value = value;
-
-  Entity({required V initialValue}) : _valueX = BehaviorSubject.seeded(initialValue);
 
   State get state => value.state.copyWith(id: id, type: runtimeType.toString());
 

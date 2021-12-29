@@ -2,9 +2,9 @@ import 'package:jlogical_utils/src/pond/context/registration/explicit_app_regist
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 
 abstract class RegistrationsProvider {
-  List<EntityRegistration> get entityRegistrations;
-
   List<ValueObjectRegistration> get valueObjectRegistrations;
+
+  List<EntityRegistration> get entityRegistrations;
 
   List<AggregateRegistration> get aggregateRegistrations;
 

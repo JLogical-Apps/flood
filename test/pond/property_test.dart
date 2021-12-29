@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/pond/repository/local/default_local_repository.dart';
 
 import 'entities/budget.dart';
 import 'entities/color.dart';
@@ -209,7 +210,9 @@ void main() {
     final transaction = ValueObject.fromState<EnvelopeTransaction>(state);
     expect(transaction.state, state);
 
-    final envelope = EnvelopeEntity(initialEnvelope: Envelope())..id = 'envelope2';
+    final envelope = EnvelopeEntity()
+      ..value = Envelope()
+      ..id = 'envelope2';
 
     transaction.envelopeProperty.reference = envelope;
     final newState = State(
@@ -232,7 +235,7 @@ void main() {
           ValueObjectRegistration<User, User?>(() => User()),
         ],
         entityRegistrations: [
-          EntityRegistration<UserEntity, User>((initialUser) => UserEntity(initialUser: initialUser)),
+          EntityRegistration<UserEntity, User>(() => UserEntity()),
         ],
         database: EntityDatabase(repositories: [
           LocalUserRepository(),
@@ -240,7 +243,7 @@ void main() {
       ),
     );
 
-    final userEntity = UserEntity(initialUser: User()..nameProperty.value = 'Jake');
+    final userEntity = UserEntity()..value = (User()..nameProperty.value = 'Jake');
     await userEntity.create();
 
     final budget = Budget()..ownerProperty.reference = userEntity;
@@ -249,17 +252,10 @@ void main() {
   });
 }
 
-class LocalUserRepository extends EntityRepository
-    with
-        WithMonoEntityRepository<UserEntity>,
-        WithLocalEntityRepository,
-        WithIdGenerator,
-        WithDomainRegistrationsProvider<User, UserEntity>,
-        WithTransactionsAndCacheEntityRepository
-    implements RegistrationsProvider {
+class LocalUserRepository extends DefaultLocalRepository<UserEntity, User> {
   @override
-  UserEntity createEntity(User initialValue) {
-    throw UserEntity(initialUser: initialValue);
+  UserEntity createEntity() {
+    throw UserEntity();
   }
 
   @override

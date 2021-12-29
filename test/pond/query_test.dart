@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/pond/repository/local/default_local_repository.dart';
 import 'package:jlogical_utils/src/utils/stream_extensions.dart';
 
 import 'entities/budget.dart';
@@ -135,10 +136,9 @@ void main() {
           ],
           entityRegistrations: [
             EntityRegistration<BudgetTransactionEntity, BudgetTransaction>.abstract(),
-            EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(
-                (initialValue) => EnvelopeTransactionEntity(initialValue)),
+            EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(() => EnvelopeTransactionEntity()),
             EntityRegistration<TransferTransactionEntity, TransferTransaction>(
-              (initialValue) => TransferTransactionEntity(initialValue),
+              () => TransferTransactionEntity(),
             ),
           ],
           database: EntityDatabase(
@@ -148,12 +148,14 @@ void main() {
           )),
     );
 
-    final envelopeTransaction = EnvelopeTransactionEntity(EnvelopeTransaction()
-      ..nameProperty.value = 'Tithe'
-      ..amountProperty.value = 12 * 100);
+    final envelopeTransaction = EnvelopeTransactionEntity()
+      ..value = (EnvelopeTransaction()
+        ..nameProperty.value = 'Tithe'
+        ..amountProperty.value = 12 * 100);
     await envelopeTransaction.create();
 
-    final transferTransaction = TransferTransactionEntity(TransferTransaction()..amountProperty.value = 8 * 100);
+    final transferTransaction = TransferTransactionEntity()
+      ..value = (TransferTransaction()..amountProperty.value = 8 * 100);
     await transferTransaction.create();
 
     expect(await AppContext.global.executeQuery(Query.from<EnvelopeTransactionEntity>().all()), [envelopeTransaction]);
@@ -166,35 +168,21 @@ void main() {
 }
 
 Future<void> _populateRepositories() async {
-  await Future.wait(envelopes.map((envelope) => EnvelopeEntity(initialEnvelope: envelope).create()));
-  await Future.wait(budgets.map((budget) => BudgetEntity(initialBudget: budget).create()));
+  await Future.wait(envelopes.map((envelope) => (EnvelopeEntity()..value = envelope).create()));
+  await Future.wait(budgets.map((budget) => (BudgetEntity()..value = budget).create()));
 }
 
-class LocalEnvelopeRepository extends EntityRepository
-    with
-        WithMonoEntityRepository<EnvelopeEntity>,
-        WithLocalEntityRepository,
-        WithIdGenerator,
-        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>,
-        WithTransactionsAndCacheEntityRepository
-    implements RegistrationsProvider {
+class LocalEnvelopeRepository extends DefaultLocalRepository<EnvelopeEntity, Envelope> {
   @override
-  EnvelopeEntity createEntity(Envelope initialValue) => EnvelopeEntity(initialEnvelope: initialValue);
+  EnvelopeEntity createEntity() => EnvelopeEntity();
 
   @override
   Envelope createValueObject() => Envelope();
 }
 
-class LocalBudgetRepository extends EntityRepository
-    with
-        WithMonoEntityRepository<BudgetEntity>,
-        WithLocalEntityRepository,
-        WithIdGenerator,
-        WithDomainRegistrationsProvider<Budget, BudgetEntity>,
-        WithTransactionsAndCacheEntityRepository
-    implements RegistrationsProvider {
+class LocalBudgetRepository extends DefaultLocalRepository<BudgetEntity, Budget> {
   @override
-  BudgetEntity createEntity(Budget initialValue) => BudgetEntity(initialBudget: initialValue);
+  BudgetEntity createEntity() => BudgetEntity();
 
   @override
   Budget createValueObject() => Budget();

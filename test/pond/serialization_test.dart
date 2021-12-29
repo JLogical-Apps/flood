@@ -188,10 +188,9 @@ void main() {
         ],
         entityRegistrations: [
           EntityRegistration<BudgetTransactionEntity, BudgetTransaction>.abstract(),
-          EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(
-              (initialValue) => EnvelopeTransactionEntity(initialValue)),
+          EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(() => EnvelopeTransactionEntity()),
           EntityRegistration<TransferTransactionEntity, TransferTransaction>(
-            (initialValue) => TransferTransactionEntity(initialValue),
+            () => TransferTransactionEntity(),
           ),
         ],
       ),
@@ -248,6 +247,4 @@ class BudgetTransactionWrapper extends ValueObject {
   List<Property> get properties => [budgetTransactionProperty];
 }
 
-class BudgetTransactionWrapperEntity extends Entity {
-  BudgetTransactionWrapperEntity(BudgetTransactionWrapper initialValue) : super(initialValue: initialValue);
-}
+class BudgetTransactionWrapperEntity extends Entity {}

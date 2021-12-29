@@ -1,6 +1,9 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
+import 'package:jlogical_utils/src/pond/context/registration/explicit_app_registration.dart';
 import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
 import 'package:jlogical_utils/src/pond/context/registration/with_app_registration_delegator.dart';
+import 'package:jlogical_utils/src/pond/database/entity_database.dart';
+import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 
 class DatabaseAppRegistration with WithAppRegistrationDelegator implements AppRegistration {
   final List<EntityRepository> repositories;

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/repository/local/default_local_repository.dart';
 
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
@@ -14,10 +15,10 @@ void main() {
   });
 
   test('basic repository functions.', () async {
-    final envelopeEntity = EnvelopeEntity(
-        initialEnvelope: Envelope()
-          ..nameProperty.value = 'Tithe'
-          ..amountProperty.value = 24 * 100);
+    final envelopeEntity = EnvelopeEntity()
+      ..value = (Envelope()
+        ..nameProperty.value = 'Tithe'
+        ..amountProperty.value = 24 * 100);
 
     await envelopeEntity.create();
 
@@ -41,10 +42,10 @@ void main() {
   });
 
   test('get streams.', () async {
-    final envelopeEntity = EnvelopeEntity(
-        initialEnvelope: Envelope()
-          ..nameProperty.value = 'Tithe'
-          ..amountProperty.value = 24 * 100);
+    final envelopeEntity = EnvelopeEntity()
+      ..value = (Envelope()
+        ..nameProperty.value = 'Tithe'
+        ..amountProperty.value = 24 * 100);
 
     await envelopeEntity.create();
 
@@ -68,16 +69,9 @@ void main() {
   });
 }
 
-class LocalEnvelopeRepository extends EntityRepository
-    with
-        WithMonoEntityRepository<EnvelopeEntity>,
-        WithLocalEntityRepository,
-        WithIdGenerator,
-        WithDomainRegistrationsProvider<Envelope, EnvelopeEntity>,
-        WithTransactionsAndCacheEntityRepository
-    implements RegistrationsProvider {
+class LocalEnvelopeRepository extends DefaultLocalRepository<EnvelopeEntity, Envelope> {
   @override
-  EnvelopeEntity createEntity(Envelope initialValue) => EnvelopeEntity(initialEnvelope: initialValue);
+  EnvelopeEntity createEntity() => EnvelopeEntity();
 
   @override
   Envelope createValueObject() => Envelope();

@@ -20,7 +20,7 @@ void main() {
         ],
         entityRegistrations: [
           EntityRegistration<BudgetTransactionWrapperEntity, BudgetTransactionWrapper>(
-              (initialValue) => BudgetTransactionWrapperEntity(initialValue)),
+              () => BudgetTransactionWrapperEntity()),
         ],
       ),
     );
@@ -31,7 +31,7 @@ void main() {
       ..nameProperty.value = 'Payment'
       ..amountProperty.value = 12 * 100;
     final budgetTransactionWrapper = BudgetTransactionWrapper()..budgetTransactionProperty.value = envelopeTransaction;
-    final budgetTransactionWrapperEntity = BudgetTransactionWrapperEntity(budgetTransactionWrapper);
+    final budgetTransactionWrapperEntity = BudgetTransactionWrapperEntity()..value = budgetTransactionWrapper;
     budgetTransactionWrapperEntity.id = 'id0';
 
     final json = '''\
@@ -60,6 +60,4 @@ class BudgetTransactionWrapper extends ValueObject {
   List<Property> get properties => [budgetTransactionProperty];
 }
 
-class BudgetTransactionWrapperEntity extends Entity<BudgetTransactionWrapper> {
-  BudgetTransactionWrapperEntity(BudgetTransactionWrapper initialValue) : super(initialValue: initialValue);
-}
+class BudgetTransactionWrapperEntity extends Entity<BudgetTransactionWrapper> {}

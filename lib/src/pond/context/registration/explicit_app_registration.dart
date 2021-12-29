@@ -52,7 +52,8 @@ class ExplicitAppRegistration implements AppRegistration {
   Entity? constructEntityRuntimeOrNull(ValueObject initialState) {
     return entityRegistrations
         .firstWhereOrNull((registration) => registration.valueObjectType == initialState.runtimeType)
-        ?.create(initialState);
+        ?.create()
+      ?..value = initialState;
   }
 
   ValueObject? constructValueObjectRuntimeOrNull(Type valueObjectType) {
@@ -229,13 +230,13 @@ class ExplicitAppRegistration implements AppRegistration {
 }
 
 class EntityRegistration<E extends Entity<V>, V extends ValueObject> {
-  final E Function(V initialState)? onCreate;
+  final E Function()? onCreate;
 
   const EntityRegistration(this.onCreate);
 
   const EntityRegistration.abstract() : onCreate = null;
 
-  E create(V initialState) => onCreate!(initialState);
+  E create() => onCreate!();
 
   bool get isAbstract => onCreate == null;
 

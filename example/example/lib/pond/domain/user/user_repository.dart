@@ -2,17 +2,10 @@ import 'package:example/pond/domain/user/user.dart';
 import 'package:example/pond/domain/user/user_entity.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class LocalUserRepository extends EntityRepository
-    with
-        WithMonoEntityRepository<UserEntity>,
-        WithLocalEntityRepository,
-        WithIdGenerator,
-        WithDomainRegistrationsProvider<User, UserEntity>,
-        WithTransactionsAndCacheEntityRepository
-    implements RegistrationsProvider {
+class LocalUserRepository extends DefaultLocalRepository<UserEntity, User> {
   @override
-  UserEntity createEntity(User initialValue) {
-    return UserEntity(initialValue: initialValue);
+  UserEntity createEntity() {
+    return UserEntity();
   }
 
   @override

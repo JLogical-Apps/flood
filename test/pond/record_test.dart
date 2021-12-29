@@ -36,22 +36,22 @@ void main() {
   });
 
   test('equality of Entities is their id.', () {
-    final originalEnvelope = EnvelopeEntity(
-        initialEnvelope: Envelope()
-          ..nameProperty.value = 'A'
-          ..amountProperty.value = 204 * 100)
+    final originalEnvelope = EnvelopeEntity()
+      ..value = (Envelope()
+        ..nameProperty.value = 'A'
+        ..amountProperty.value = 204 * 100)
       ..id = 'envelope';
 
-    final envelopeWithSameIdDifferentContent = EnvelopeEntity(
-        initialEnvelope: Envelope()
-          ..nameProperty.value = 'B'
-          ..amountProperty.value = 24 * 100)
+    final envelopeWithSameIdDifferentContent = EnvelopeEntity()
+      ..value = (Envelope()
+        ..nameProperty.value = 'B'
+        ..amountProperty.value = 24 * 100)
       ..id = 'envelope';
 
-    final envelopeWithDifferentIdSameContent = EnvelopeEntity(
-        initialEnvelope: Envelope()
-          ..nameProperty.value = 'A'
-          ..amountProperty.value = 204 * 100)
+    final envelopeWithDifferentIdSameContent = EnvelopeEntity()
+      ..value = (Envelope()
+        ..nameProperty.value = 'A'
+        ..amountProperty.value = 204 * 100)
       ..id = 'something_different';
 
     expect(originalEnvelope, equals(envelopeWithSameIdDifferentContent));
@@ -59,10 +59,10 @@ void main() {
   });
 
   test('can change properties of Entity after validation.', () {
-    final envelope = EnvelopeEntity(
-        initialEnvelope: Envelope()
-          ..nameProperty.value = 'Tithe'
-          ..amountProperty.value = 25 * 100);
+    final envelope = EnvelopeEntity()
+      ..value = (Envelope()
+        ..nameProperty.value = 'Tithe'
+        ..amountProperty.value = 25 * 100);
 
     expect(() => envelope.changeName('Giving'), returnsNormally);
   });

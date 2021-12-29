@@ -1,13 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/registration/database_app_registration.dart';
-import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
-import 'package:jlogical_utils/src/pond/context/registration/with_domain_registrations_provider.dart';
-import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
-import 'package:jlogical_utils/src/pond/repository/with_mono_entity_repository.dart';
-import 'package:jlogical_utils/src/pond/repository/local/with_local_entity_repository.dart';
-import 'package:jlogical_utils/src/pond/repository/with_id_generator.dart';
-import 'package:jlogical_utils/src/pond/repository/with_transactions_and_cache_entity_repository.dart';
+import 'package:jlogical_utils/src/pond/repository/local/default_local_repository.dart';
 
 import 'entities/budget.dart';
 import 'entities/budget_aggregate.dart';
@@ -24,15 +18,15 @@ void main() {
       ]),
     );
 
-    final ownerEntity = UserEntity(initialUser: User()..nameProperty.value = 'Jake');
+    final ownerEntity = UserEntity()..value = (User()..nameProperty.value = 'Jake');
     await ownerEntity.create();
     final ownerId = ownerEntity.id;
 
-    final budgetAggregate = BudgetAggregate(
-        budgetEntity: BudgetEntity(
-            initialBudget: Budget()
-              ..nameProperty.value = 'Budget'
-              ..ownerProperty.value = ownerId));
+    final budgetAggregate = BudgetAggregate()
+      ..entity = (BudgetEntity()
+        ..value = (Budget()
+          ..nameProperty.value = 'Budget'
+          ..ownerProperty.value = ownerId));
     await budgetAggregate.resolve();
 
     final ownerReference = budgetAggregate.entity.value.ownerProperty.reference;
@@ -42,31 +36,17 @@ void main() {
   });
 }
 
-class LocalUserRepository extends EntityRepository
-    with
-        WithMonoEntityRepository<UserEntity>,
-        WithLocalEntityRepository,
-        WithIdGenerator,
-        WithDomainRegistrationsProvider<User, UserEntity>,
-        WithTransactionsAndCacheEntityRepository
-    implements RegistrationsProvider {
+class LocalUserRepository extends DefaultLocalRepository<UserEntity, User> {
   @override
-  UserEntity createEntity(User initialValue) => UserEntity(initialUser: initialValue);
+  UserEntity createEntity() => UserEntity();
 
   @override
   User createValueObject() => User();
 }
 
-class LocalBudgetRepository extends EntityRepository
-    with
-        WithMonoEntityRepository<BudgetEntity>,
-        WithLocalEntityRepository,
-        WithIdGenerator,
-        WithDomainRegistrationsProvider<Budget, BudgetEntity>,
-        WithTransactionsAndCacheEntityRepository
-    implements RegistrationsProvider {
+class LocalBudgetRepository extends DefaultLocalRepository<BudgetEntity, Budget> {
   @override
-  BudgetEntity createEntity(Budget initialValue) => BudgetEntity(initialBudget: initialValue);
+  BudgetEntity createEntity() => BudgetEntity();
 
   @override
   Budget createValueObject() => Budget();

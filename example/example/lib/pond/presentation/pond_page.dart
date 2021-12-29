@@ -37,7 +37,7 @@ class PondPage extends HookWidget {
                     StyledButton.high(
                       text: 'Create',
                       onTapped: () {
-                        final budgetEntity = BudgetEntity(initialValue: Budget()..nameProperty.value = 'New Budget');
+                        final budgetEntity = BudgetEntity()..value = (Budget()..nameProperty.value = 'New Budget');
                         budgetEntity.create();
                       },
                     ),
