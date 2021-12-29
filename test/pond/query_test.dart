@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/pond/repository/local/default_local_repository.dart';
 import 'package:jlogical_utils/src/utils/stream_extensions.dart';
 
 import 'entities/budget.dart';

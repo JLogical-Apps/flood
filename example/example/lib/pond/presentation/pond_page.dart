@@ -20,7 +20,7 @@ class PondPage extends HookWidget {
     useOneTimeEffect(() {
       _initPond();
     });
-    final budgetsQuery = useQuery(Query.from<BudgetEntity>().paginate(limit: 3));
+    final budgetsQuery = useQuery(Query.from<BudgetEntity>().paginate());
     return StyleProvider(
         style: DeltaStyle(backgroundColor: Color(0xff030818)),
         child: Builder(
@@ -84,7 +84,7 @@ class BudgetCard extends HookWidget {
       builder: (BudgetEntity budgetEntity) {
         final budget = budgetEntity.value;
         return StyledContent(
-          headerText: budget.nameProperty.value,
+          headerText: '${budget.nameProperty.value} - ${budget.timeCreatedProperty.value?.minute}',
           bodyText: budget.ownerProperty.reference?.value.nameProperty.value,
           actions: [
             ActionItem(

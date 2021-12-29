@@ -9,5 +9,5 @@ class BudgetTransaction extends ValueObject {
   late final ownerProperty = ReferenceFieldProperty<UserEntity>(name: 'owner').required();
 
   @override
-  List<Property> get properties => [nameProperty, amountProperty, envelopeProperty, ownerProperty];
+  List<Property> get properties => super.properties + [nameProperty, amountProperty, envelopeProperty, ownerProperty];
 }

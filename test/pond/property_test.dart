@@ -230,16 +230,8 @@ void main() {
 
   test('fallback working', () async {
     AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
-        valueObjectRegistrations: [
-          ValueObjectRegistration<User, User?>(() => User()),
-        ],
-        entityRegistrations: [
-          EntityRegistration<UserEntity, User>(() => UserEntity()),
-        ],
-        database: EntityDatabase(repositories: [
-          LocalUserRepository(),
-        ]),
+      registration: DatabaseAppRegistration(
+        repositories: [LocalUserRepository()],
       ),
     );
 
@@ -249,6 +241,24 @@ void main() {
     final budget = Budget()..ownerProperty.reference = userEntity;
 
     expect(budget.nameProperty.value, userEntity.value.nameProperty.value);
+  });
+
+  test('fallback replacement', () async {
+    AppContext.global = AppContext(
+      registration: DatabaseAppRegistration(
+        repositories: [LocalUserRepository()],
+      ),
+    );
+
+    final userEntity = UserEntity()..value = (User()..nameProperty.value = 'Jake');
+
+    final timeCreated = userEntity.value.timeCreatedProperty.value;
+    expect(timeCreated, isNotNull);
+
+    await Future.delayed(Duration(milliseconds: 100));
+
+    // Ensure the time is still the same even after a delay.
+    expect(userEntity.value.timeCreatedProperty.value, timeCreated);
   });
 }
 

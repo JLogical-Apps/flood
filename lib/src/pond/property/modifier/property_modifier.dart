@@ -4,9 +4,11 @@ import 'package:jlogical_utils/src/pond/property/modifier/context/property_modif
 import 'context/property_modifier_context_provider.dart';
 
 abstract class PropertyModifier<T> {
-  late PropertyModifierContextProvider propertyModifierContextProvider;
+  late PropertyModifierContextProvider<T> propertyModifierContextProvider;
 
-  late PropertyModifierContext context = propertyModifierContextProvider.createPropertyModifierContext();
+  late PropertyModifierContext<T> context = propertyModifierContextProvider.createPropertyModifierContext();
+
+  Property<T> get property => context.property;
 
   Validator? get validator => null;
 

@@ -8,7 +8,7 @@ import 'package:jlogical_utils/src/utils/util.dart';
 
 import 'modifier/context/property_modifier_context.dart';
 
-abstract class Property<T> with EquatableMixin implements PropertyModifierContextProvider, Validator {
+abstract class Property<T> with EquatableMixin implements PropertyModifierContextProvider<T>, Validator {
   final String name;
 
   T? getUnvalidated();
@@ -53,12 +53,12 @@ abstract class Property<T> with EquatableMixin implements PropertyModifierContex
 
   void fromStateValue(dynamic stateValue) => setUnvalidated(typeStateSerializer.deserialize(stateValue));
 
-  PropertyModifierContext createPropertyModifierContext() {
+  PropertyModifierContext<T> createPropertyModifierContext() {
     return PropertyModifierContext(property: this);
   }
 
   @override
-  String toString() => '$runtimeType{name = $name, value = $getUnvalidated()}';
+  String toString() => '$runtimeType{name = $name, value = ${getUnvalidated()}';
 
   @override
   List<Object?> get props => [name, value];

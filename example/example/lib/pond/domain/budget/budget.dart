@@ -8,7 +8,7 @@ class Budget extends ValueObject {
   late final ownerProperty = ReferenceFieldProperty<UserEntity>(name: 'owner');
 
   @override
-  List<Property> get properties => [nameProperty, ownerProperty];
+  List<Property> get properties => super.properties + [nameProperty, ownerProperty];
 
   Budget copyWith({String? name, String? ownerId}) {
     return Budget()

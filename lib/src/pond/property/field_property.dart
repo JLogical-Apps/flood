@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/pond/property/modifier/fallback_replacement_modifier.dart';
 import 'package:jlogical_utils/src/pond/property/modifier/required_property_modifier.dart';
 import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/property/with_global_type_serializer.dart';
@@ -57,6 +58,11 @@ class FieldProperty<T> extends Property<T?> with WithGlobalTypeSerializer {
 
   FieldProperty<T> withFallback(T? fallback()) {
     modifiers.add(FallbackPropertyModifier(fallback));
+    return this;
+  }
+
+  FieldProperty<T> withFallbackReplacement(T? fallback()) {
+    modifiers.add(FallbackReplacementPropertyModifier(fallback));
     return this;
   }
 }

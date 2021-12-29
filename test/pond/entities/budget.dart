@@ -8,5 +8,5 @@ class Budget extends ValueObject {
       FieldProperty<String>(name: 'name').withFallback(() => ownerProperty.reference?.value.nameProperty.value);
 
   @override
-  List<Property> get properties => [nameProperty, ownerProperty];
+  List<Property> get properties => super.properties + [nameProperty, ownerProperty];
 }
