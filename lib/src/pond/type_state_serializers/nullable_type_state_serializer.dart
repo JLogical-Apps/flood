@@ -6,12 +6,12 @@ class NullableTypeStateSerializer<T> extends TypeStateSerializer<T?> {
   NullableTypeStateSerializer(this.typeStateSerializer);
 
   @override
-  onSerialize(T? value) {
-    return value == null ? null : typeStateSerializer.onSerialize(value);
+  serialize(T? value) {
+    return value == null ? null : typeStateSerializer.serialize(value);
   }
 
   @override
-  T? onDeserialize(value) {
-    return value == null ? null : typeStateSerializer.onDeserialize(value);
+  T? deserialize(value) {
+    return value == null ? null : typeStateSerializer.deserialize(value);
   }
 }

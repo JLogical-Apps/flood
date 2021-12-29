@@ -126,11 +126,11 @@ void main() {
             ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),
             ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(
               () => EnvelopeTransaction(),
-              parents: [BudgetTransaction],
+              parents: {BudgetTransaction},
             ),
             ValueObjectRegistration<TransferTransaction, TransferTransaction?>(
               () => TransferTransaction(),
-              parents: [BudgetTransaction],
+              parents: {BudgetTransaction},
             ),
           ],
           entityRegistrations: [
@@ -148,14 +148,16 @@ void main() {
           )),
     );
 
-    final envelopeTransaction = EnvelopeTransactionEntity(EnvelopeTransaction());
+    final envelopeTransaction = EnvelopeTransactionEntity(EnvelopeTransaction()
+      ..nameProperty.value = 'Tithe'
+      ..amountProperty.value = 12 * 100);
     await envelopeTransaction.create();
 
-    final transferTransaction = TransferTransactionEntity(TransferTransaction());
+    final transferTransaction = TransferTransactionEntity(TransferTransaction()..amountProperty.value = 8 * 100);
     await transferTransaction.create();
 
-    expect(await AppContext.global.executeQuery(Query.from<EnvelopeTransaction>().all()), [envelopeTransaction]);
-    expect(await AppContext.global.executeQuery(Query.from<TransferTransaction>().all()), [transferTransaction]);
+    expect(await AppContext.global.executeQuery(Query.from<EnvelopeTransactionEntity>().all()), [envelopeTransaction]);
+    expect(await AppContext.global.executeQuery(Query.from<TransferTransactionEntity>().all()), [transferTransaction]);
     expect(
       await AppContext.global.executeQuery(Query.from<BudgetTransactionEntity>().all()),
       containsAll([envelopeTransaction, transferTransaction]),

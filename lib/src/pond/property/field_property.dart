@@ -3,6 +3,7 @@ import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/property/with_global_type_serializer.dart';
 import 'package:jlogical_utils/src/pond/validation/validator.dart';
 
+import 'modifier/fallback_property_modifier.dart';
 import 'modifier/property_modifier.dart';
 
 class FieldProperty<T> extends Property<T?> with WithGlobalTypeSerializer {
@@ -55,7 +56,7 @@ class FieldProperty<T> extends Property<T?> with WithGlobalTypeSerializer {
   }
 
   FieldProperty<T> withFallback(T? fallback()) {
-    modifiers.add(RequiredPropertyModifier());
+    modifiers.add(FallbackPropertyModifier(fallback));
     return this;
   }
 }

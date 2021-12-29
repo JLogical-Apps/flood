@@ -4,7 +4,7 @@ class DoubleTypeStateSerializer extends TypeStateSerializer<double> {
   DoubleTypeStateSerializer();
 
   @override
-  double onDeserialize(value) {
+  double deserialize(value) {
     if (value == null) {
       throw ArgumentError.notNull('value');
     }
@@ -16,7 +16,7 @@ class DoubleTypeStateSerializer extends TypeStateSerializer<double> {
   }
 
   @override
-  onSerialize(double value) {
+  serialize(double value) {
     return value;
   }
 }

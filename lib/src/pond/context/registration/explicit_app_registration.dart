@@ -1,11 +1,10 @@
 import 'package:collection/collection.dart';
-import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
-import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/database/entity_database.dart';
 import 'package:jlogical_utils/src/pond/record/aggregate.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
+import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/bool_type_state_serializer.dart';
@@ -14,7 +13,7 @@ import 'package:jlogical_utils/src/pond/type_state_serializers/int_type_state_se
 import 'package:jlogical_utils/src/pond/type_state_serializers/nullable_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/string_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
-import 'package:jlogical_utils/src/utils/util.dart';
+import 'package:jlogical_utils/src/pond/type_state_serializers/value_object_type_state_serializer.dart';
 
 class ExplicitAppRegistration implements AppRegistration {
   final List<EntityRegistration> entityRegistrations;
@@ -68,21 +67,30 @@ class ExplicitAppRegistration implements AppRegistration {
       return null;
     }
 
-    final entityRegistration =
-        entityRegistrations.firstWhereOrNull((registration) => registration.entityType.toString() == state.type);
+    final valueObjectRegistration = valueObjectRegistrations.firstWhereOrNull((registration) =>
+        registration.valueObjectType.toString() == state.type ||
+        registration.nullableValueObjectType.toString() == state.type);
+    if (valueObjectRegistration != null) {
+      final valueObject = valueObjectRegistration.onCreate!();
+      valueObject.state = state;
 
-    if (entityRegistration == null) {
-      return null;
+      return valueObject;
     }
 
-    final valueObjectType = entityRegistration.valueObjectType;
+    final entityRegistration =
+        entityRegistrations.firstWhereOrNull((registration) => registration.entityType.toString() == state.type);
+    if (entityRegistration != null) {
+      final valueObjectType = entityRegistration.valueObjectType;
 
-    final valueObjectRegistration =
-        valueObjectRegistrations.firstWhereOrNull((registration) => registration.valueObjectType == valueObjectType);
-    final valueObject = valueObjectRegistration?.onCreate!();
-    valueObject?.state = state;
+      final valueObjectRegistration =
+          valueObjectRegistrations.firstWhereOrNull((registration) => registration.valueObjectType == valueObjectType);
+      final valueObject = valueObjectRegistration?.onCreate!();
+      valueObject?.state = state;
 
-    return valueObject;
+      return valueObject;
+    }
+
+    return null;
   }
 
   Aggregate? constructAggregateFromEntityRuntimeOrNull(Entity entity) {
@@ -105,21 +113,17 @@ class ExplicitAppRegistration implements AppRegistration {
       return typeStateSerializer;
     }
 
-    final valueObjectRegistration = valueObjectRegistrations
-        .firstWhereOrNull((registration) => registration.valueObjectType == type)
-        .mapIfNonNull((registration) => RuntimeValueObjectTypeStateSerializer(valueObjectType: type));
+    final hasValueObjectRegistration =
+        valueObjectRegistrations.any((registration) => registration.valueObjectType == type);
 
-    if (valueObjectRegistration != null) {
-      return valueObjectRegistration;
+    if (hasValueObjectRegistration) {
+      return ValueObjectTypeStateSerializer();
     }
 
-    final nullableValueObjectRegistration = valueObjectRegistrations
-        .firstWhereOrNull((registration) => registration.nullableValueObjectType == type)
-        .mapIfNonNull((registration) => NullableTypeStateSerializer(
-            RuntimeValueObjectTypeStateSerializer(valueObjectType: registration.valueObjectType)));
-
-    if (nullableValueObjectRegistration != null) {
-      return nullableValueObjectRegistration;
+    final hasNullableValueObjectRegistration =
+        valueObjectRegistrations.any((registration) => registration.nullableValueObjectType == type);
+    if (hasNullableValueObjectRegistration) {
+      return NullableTypeStateSerializer(ValueObjectTypeStateSerializer());
     }
 
     throw Exception('Unable to find a type state serializer for type [$type]');
@@ -172,10 +176,55 @@ class ExplicitAppRegistration implements AppRegistration {
     final valueObjectRegistrationA =
         valueObjectRegistrations.firstWhere((registration) => registration.valueObjectType == valueObjectTypeA);
 
-    final parentEntityRegistrations = valueObjectRegistrationA.parents.map(
-        (parentType) => entityRegistrations.firstWhere((registration) => registration.valueObjectType == parentType));
+    final parentEntityRegistrations = valueObjectRegistrationA.parents
+        .map((parentType) =>
+            entityRegistrations.firstWhereOrNull((registration) => registration.valueObjectType == parentType))
+        .where((registration) => registration != null)
+        .map((registration) => registration!)
+        .toList();
 
     return parentEntityRegistrations.any((registration) => _isEntitySubtype(registration.entityType, b));
+  }
+
+  Set<Type> getDescendants(Type type) {
+    final isEntity = entityRegistrations.any((registration) => registration.entityType == type);
+    if (isEntity) {
+      final entityValueType = _getEntityValueTypeOrNull(type)!;
+      final valueObjectDescendants = {entityValueType};
+      var changed = true;
+      while (changed) {
+        changed = entityRegistrations
+            .map((registration) => registration.valueObjectType)
+            .map((type) => valueObjectRegistrations.firstWhere((registration) => registration.valueObjectType == type))
+            .where((registration) => registration.parents.any((parent) => valueObjectDescendants.contains(parent)))
+            .map((registration) => valueObjectDescendants.add(registration.valueObjectType))
+            .any((added) => added);
+      }
+
+      valueObjectDescendants.remove(entityValueType); // The type itself is not a descendant.
+
+      final entityDescendants = valueObjectDescendants
+          .map((type) => _getValueObjectWrapperEntityTypeOrNull(type))
+          .where((type) => type != null)
+          .map((type) => type!)
+          .toSet();
+
+      return entityDescendants;
+    }
+
+    throw Exception('Unable to get descendants of type [$type]');
+  }
+
+  Type? _getEntityValueTypeOrNull(Type entityType) {
+    return entityRegistrations
+        .firstWhereOrNull((registration) => registration.entityType == entityType)
+        ?.valueObjectType;
+  }
+
+  Type? _getValueObjectWrapperEntityTypeOrNull(Type valueObjectType) {
+    return entityRegistrations
+        .firstWhereOrNull((registration) => registration.valueObjectType == valueObjectType)
+        ?.entityType;
   }
 }
 
@@ -198,22 +247,28 @@ class EntityRegistration<E extends Entity<V>, V extends ValueObject> {
 class ValueObjectRegistration<V extends ValueObject, NullableV extends ValueObject?> {
   final V Function()? onCreate;
 
-  final List<Type> parents;
+  final Set<Type> parents;
 
   bool get isAbstract => onCreate == null;
 
-  const ValueObjectRegistration(
-    this.onCreate, {
-    this.parents: const [],
-  });
+  ValueObjectRegistration(this.onCreate, {Set<Type>? parents})
+      : this.parents = {
+          ...?parents,
+          ..._baseParentTypes,
+        };
 
-  const ValueObjectRegistration.abstract({
-    this.parents: const [],
-  }) : onCreate = null;
+  ValueObjectRegistration.abstract({Set<Type>? parents})
+      : this.parents = {
+          ...?parents,
+          ..._baseParentTypes,
+        },
+        onCreate = null;
 
   Type get valueObjectType => V;
 
   Type get nullableValueObjectType => NullableV;
+
+  static Set<Type> get _baseParentTypes => {ValueObject, Record};
 }
 
 class AggregateRegistration<A extends Aggregate<E>, E extends Entity> {
@@ -226,25 +281,4 @@ class AggregateRegistration<A extends Aggregate<E>, E extends Entity> {
   Type get aggregateType => A;
 
   Type get entityType => E;
-}
-
-class RuntimeValueObjectTypeStateSerializer extends TypeStateSerializer<ValueObject> {
-  final Type valueObjectType;
-
-  RuntimeValueObjectTypeStateSerializer({required this.valueObjectType});
-
-  @override
-  onSerialize(ValueObject value) {
-    final state = value.state;
-    return {
-      ...state.values,
-      Query.type: state.type,
-    };
-  }
-
-  @override
-  ValueObject onDeserialize(dynamic value) {
-    return AppContext.global.appRegistration.constructValueObjectRuntime(valueObjectType)
-      ..state = State.extractFrom(value)!;
-  }
 }

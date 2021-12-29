@@ -1,7 +1,7 @@
 abstract class TypeStateSerializer<T> {
-  dynamic onSerialize(T value);
+  dynamic serialize(T value);
 
-  T onDeserialize(dynamic value);
+  T deserialize(dynamic value);
 
   Type get type => T;
 }

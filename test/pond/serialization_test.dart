@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/pond/type_state_serializers/value_object_type_state_serializer.dart';
 
 import 'entities/budget_transaction.dart';
 import 'entities/budget_transaction_entity.dart';
@@ -12,61 +13,61 @@ import 'entities/transfer_transaction_entity.dart';
 void main() {
   test('only nullabe serializers deserialize non-null values', () {
     final stringSerializer = StringTypeStateSerializer();
-    expect(() => stringSerializer.onDeserialize(null), throwsA(isA<Error>()));
+    expect(() => stringSerializer.deserialize(null), throwsA(isA<Error>()));
 
     final nullableSerializer = NullableTypeStateSerializer(stringSerializer);
-    expect(nullableSerializer.onDeserialize(null), null);
+    expect(nullableSerializer.deserialize(null), null);
   });
 
   test('serializing strings', () {
     final stringSerializer = StringTypeStateSerializer();
-    expect(stringSerializer.onDeserialize('hello world'), 'hello world');
-    expect(stringSerializer.onDeserialize(5), '5');
-    expect(stringSerializer.onDeserialize(3.0), '3');
-    expect(stringSerializer.onDeserialize(3.16), '3.16');
-    expect(stringSerializer.onDeserialize(true), 'true');
+    expect(stringSerializer.deserialize('hello world'), 'hello world');
+    expect(stringSerializer.deserialize(5), '5');
+    expect(stringSerializer.deserialize(3.0), '3');
+    expect(stringSerializer.deserialize(3.16), '3.16');
+    expect(stringSerializer.deserialize(true), 'true');
   });
 
   test('serializing ints', () {
     final roundingIntSerializer = IntTypeStateSerializer(intConverterPolicy: IntConverterPolicy.round());
-    expect(roundingIntSerializer.onDeserialize(5), 5);
-    expect(roundingIntSerializer.onDeserialize(3.5), 4);
-    expect(roundingIntSerializer.onDeserialize(1.2), 1);
-    expect(roundingIntSerializer.onDeserialize(4.9), 5);
-    expect(roundingIntSerializer.onDeserialize('-2.5'), -3);
-    expect(roundingIntSerializer.onDeserialize('-10'), -10);
-    expect(() => roundingIntSerializer.onDeserialize('hello world'), throwsA(isA<FormatException>()));
+    expect(roundingIntSerializer.deserialize(5), 5);
+    expect(roundingIntSerializer.deserialize(3.5), 4);
+    expect(roundingIntSerializer.deserialize(1.2), 1);
+    expect(roundingIntSerializer.deserialize(4.9), 5);
+    expect(roundingIntSerializer.deserialize('-2.5'), -3);
+    expect(roundingIntSerializer.deserialize('-10'), -10);
+    expect(() => roundingIntSerializer.deserialize('hello world'), throwsA(isA<FormatException>()));
 
     final flooringIntSerializer = IntTypeStateSerializer(intConverterPolicy: IntConverterPolicy.floor());
-    expect(flooringIntSerializer.onDeserialize(5), 5);
-    expect(flooringIntSerializer.onDeserialize(3.5), 3);
-    expect(flooringIntSerializer.onDeserialize(1.2), 1);
-    expect(flooringIntSerializer.onDeserialize(4.9), 4);
-    expect(flooringIntSerializer.onDeserialize('-2.5'), -3);
-    expect(flooringIntSerializer.onDeserialize('-10'), -10);
+    expect(flooringIntSerializer.deserialize(5), 5);
+    expect(flooringIntSerializer.deserialize(3.5), 3);
+    expect(flooringIntSerializer.deserialize(1.2), 1);
+    expect(flooringIntSerializer.deserialize(4.9), 4);
+    expect(flooringIntSerializer.deserialize('-2.5'), -3);
+    expect(flooringIntSerializer.deserialize('-10'), -10);
 
     final truncatingIntSerializer = IntTypeStateSerializer(intConverterPolicy: IntConverterPolicy.truncate());
-    expect(truncatingIntSerializer.onDeserialize(5), 5);
-    expect(truncatingIntSerializer.onDeserialize(3.5), 3);
-    expect(truncatingIntSerializer.onDeserialize(1.2), 1);
-    expect(truncatingIntSerializer.onDeserialize(4.9), 4);
-    expect(truncatingIntSerializer.onDeserialize('-2.5'), -2);
-    expect(truncatingIntSerializer.onDeserialize('-10'), -10);
+    expect(truncatingIntSerializer.deserialize(5), 5);
+    expect(truncatingIntSerializer.deserialize(3.5), 3);
+    expect(truncatingIntSerializer.deserialize(1.2), 1);
+    expect(truncatingIntSerializer.deserialize(4.9), 4);
+    expect(truncatingIntSerializer.deserialize('-2.5'), -2);
+    expect(truncatingIntSerializer.deserialize('-10'), -10);
   });
 
   test('serializing doubles', () {
     final doubleSerializer = DoubleTypeStateSerializer();
-    expect(doubleSerializer.onDeserialize(5), 5.0);
-    expect(doubleSerializer.onDeserialize(3.5), 3.5);
-    expect(doubleSerializer.onDeserialize('-2.5'), -2.5);
-    expect(doubleSerializer.onDeserialize('-10'), -10.0);
-    expect(() => doubleSerializer.onDeserialize('hello world'), throwsA(isA<FormatException>()));
+    expect(doubleSerializer.deserialize(5), 5.0);
+    expect(doubleSerializer.deserialize(3.5), 3.5);
+    expect(doubleSerializer.deserialize('-2.5'), -2.5);
+    expect(doubleSerializer.deserialize('-10'), -10.0);
+    expect(() => doubleSerializer.deserialize('hello world'), throwsA(isA<FormatException>()));
   });
 
   test('serializing bools', () {
     final boolSerializer = BoolTypeStateSerializer();
-    expect(boolSerializer.onDeserialize(false), false);
-    expect(boolSerializer.onDeserialize('true'), true);
+    expect(boolSerializer.deserialize(false), false);
+    expect(boolSerializer.deserialize('true'), true);
   });
 
   test('serializing value objects', () {
@@ -79,24 +80,25 @@ void main() {
     );
 
     final white = Color()..rgbProperty.value = {'r': 255, 'g': 255, 'b': 255};
-    final colorSerializer = RuntimeValueObjectTypeStateSerializer(valueObjectType: Color);
+    final colorSerializer = ValueObjectTypeStateSerializer();
 
-    expect(colorSerializer.onSerialize(white), {
-      '_type': 'Color',
+    expect(colorSerializer.serialize(white), {
+      '_type': '$Color',
       'rgb': {'r': 255, 'g': 255, 'b': 255},
     });
 
     expect(
-      colorSerializer.onDeserialize({
+      colorSerializer.deserialize({
+        '_type': '$Color',
         'rgb': {'r': 255, 'g': 255, 'b': 255}
       }),
       white,
     );
 
-    expect(() => colorSerializer.onDeserialize(null), throwsA(isA<Error>()));
+    expect(() => colorSerializer.deserialize(null), throwsA(isA<Exception>()));
 
     final nullableColorSerializer = NullableTypeStateSerializer(colorSerializer);
-    expect(nullableColorSerializer.onDeserialize(null), null);
+    expect(nullableColorSerializer.deserialize(null), null);
   });
 
   test('serializing lists', () {
@@ -109,55 +111,59 @@ void main() {
     );
 
     final nonNullListSerializer = ListTypeStateSerializer<int>();
-    expect(nonNullListSerializer.onDeserialize(['2', 4]), [2, 4]);
-    expect(nonNullListSerializer.onDeserialize([]), []);
-    expect(() => nonNullListSerializer.onDeserialize(['hello world']), throwsA(isA<FormatException>()));
-    expect(() => nonNullListSerializer.onDeserialize([null, 4]), throwsA(isA<Error>()));
+    expect(nonNullListSerializer.deserialize(['2', 4]), [2, 4]);
+    expect(nonNullListSerializer.deserialize([]), []);
+    expect(() => nonNullListSerializer.deserialize(['hello world']), throwsA(isA<FormatException>()));
+    expect(() => nonNullListSerializer.deserialize([null, 4]), throwsA(isA<Error>()));
 
     final nullableListSerializer = ListTypeStateSerializer<int?>();
-    expect(nullableListSerializer.onDeserialize([null, 4]), [null, 4]);
+    expect(nullableListSerializer.deserialize([null, 4]), [null, 4]);
 
     final white = Color()..rgbProperty.value = {'r': 255, 'g': 255, 'b': 255};
     final black = Color()..rgbProperty.value = {'r': 0, 'g': 0, 'b': 0};
     final colorSerializer = ListTypeStateSerializer<Color>();
     expect(
-      colorSerializer.onDeserialize([
+      colorSerializer.deserialize([
         {
+          '_type': '$Color',
           'rgb': {'r': 255, 'g': 255, 'b': 255}
         },
         {
+          '_type': '$Color',
           'rgb': {'r': 0, 'g': 0, 'b': 0}
         },
       ]),
       [white, black],
     );
 
-    expect(() => colorSerializer.onDeserialize([null]), throwsA(isA<Error>()));
+    expect(() => colorSerializer.deserialize([null]), throwsA(isA<Exception>()));
 
     final nullableColorSerializer = ListTypeStateSerializer<Color?>();
-    expect(nullableColorSerializer.onDeserialize([null]), [null]);
+    expect(nullableColorSerializer.deserialize([null]), [null]);
   });
 
   test('serializing maps', () {
     final nonNullListSerializer = MapTypeStateSerializer<int, String>();
-    expect(nonNullListSerializer.onDeserialize({1: 'one', '2': 'two'}), {1: 'one', 2: 'two'});
-    expect(nonNullListSerializer.onDeserialize({}), {});
-    expect(() => nonNullListSerializer.onDeserialize(['hello world']), throwsA(isA<Exception>()));
-    expect(() => nonNullListSerializer.onDeserialize({'hello world': 1}), throwsA(isA<FormatException>()));
-    expect(() => nonNullListSerializer.onDeserialize({0: null}), throwsA(isA<Error>()));
+    expect(nonNullListSerializer.deserialize({1: 'one', '2': 'two'}), {1: 'one', 2: 'two'});
+    expect(nonNullListSerializer.deserialize({}), {});
+    expect(() => nonNullListSerializer.deserialize(['hello world']), throwsA(isA<Exception>()));
+    expect(() => nonNullListSerializer.deserialize({'hello world': 1}), throwsA(isA<FormatException>()));
+    expect(() => nonNullListSerializer.deserialize({0: null}), throwsA(isA<Error>()));
 
     final nullableListSerializer = MapTypeStateSerializer<int, String?>();
-    expect(nullableListSerializer.onDeserialize({0: null}), {0: null});
+    expect(nullableListSerializer.deserialize({0: null}), {0: null});
 
     final white = Color()..rgbProperty.value = {'r': 255, 'g': 255, 'b': 255};
     final black = Color()..rgbProperty.value = {'r': 0, 'g': 0, 'b': 0};
     final colorSerializer = ListTypeStateSerializer<Color>();
     expect(
-      colorSerializer.onDeserialize([
+      colorSerializer.deserialize([
         {
+          '_type': '$Color',
           'rgb': {'r': 255, 'g': 255, 'b': 255}
         },
         {
+          '_type': '$Color',
           'rgb': {'r': 0, 'g': 0, 'b': 0}
         },
       ]),
@@ -172,12 +178,13 @@ void main() {
           ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),
           ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(
             () => EnvelopeTransaction(),
-            parents: [BudgetTransaction],
+            parents: {BudgetTransaction},
           ),
           ValueObjectRegistration<TransferTransaction, TransferTransaction?>(
             () => TransferTransaction(),
-            parents: [BudgetTransaction],
+            parents: {BudgetTransaction},
           ),
+          ValueObjectRegistration<BudgetTransactionWrapper, BudgetTransactionWrapper?>(BudgetTransactionWrapper.new),
         ],
         entityRegistrations: [
           EntityRegistration<BudgetTransactionEntity, BudgetTransaction>.abstract(),
@@ -195,40 +202,42 @@ void main() {
       ..amountProperty.value = 10 * 100;
     final budgetTransactionWrapper = BudgetTransactionWrapper()..budgetTransactionProperty.value = envelopeTransaction;
 
-    final valueObjectSerializer = RuntimeValueObjectTypeStateSerializer(valueObjectType: BudgetTransactionWrapper);
+    final valueObjectSerializer = ValueObjectTypeStateSerializer();
 
-    var serialized = valueObjectSerializer.onSerialize(budgetTransactionWrapper);
+    var serialized = valueObjectSerializer.serialize(budgetTransactionWrapper);
 
     expect(
       serialized,
       {
+        '_type': '$BudgetTransactionWrapper',
         'transaction': {
-          '_type': 'EnvelopeTransaction',
+          '_type': '$EnvelopeTransaction',
           'name': 'test',
           'amount': 10 * 100,
-        }
+        },
       },
     );
 
-    var deserializedWrapper = valueObjectSerializer.onDeserialize(serialized) as BudgetTransactionWrapper;
-    expect(deserializedWrapper.budgetTransactionProperty, isA<EnvelopeTransaction>());
+    var deserializedWrapper = valueObjectSerializer.deserialize(serialized) as BudgetTransactionWrapper;
+    expect(deserializedWrapper.budgetTransactionProperty.value, isA<EnvelopeTransaction>());
 
     budgetTransactionWrapper.budgetTransactionProperty.value = TransferTransaction()..amountProperty.value = 5 * 100;
 
-    serialized = valueObjectSerializer.onSerialize(budgetTransactionWrapper);
+    serialized = valueObjectSerializer.serialize(budgetTransactionWrapper);
 
     expect(
       serialized,
       {
+        '_type': '$BudgetTransactionWrapper',
         'transaction': {
-          '_type': 'TransferTransaction',
+          '_type': '$TransferTransaction',
           'amount': 5 * 100,
         }
       },
     );
 
-    deserializedWrapper = valueObjectSerializer.onDeserialize(serialized) as BudgetTransactionWrapper;
-    expect(deserializedWrapper.budgetTransactionProperty, isA<TransferTransaction>());
+    deserializedWrapper = valueObjectSerializer.deserialize(serialized) as BudgetTransactionWrapper;
+    expect(deserializedWrapper.budgetTransactionProperty.value, isA<TransferTransaction>());
   });
 }
 

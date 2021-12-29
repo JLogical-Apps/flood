@@ -3,7 +3,7 @@ import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serial
 
 mixin WithStatefulTypeStateSerializer<T extends Stateful> on TypeStateSerializer<T> {
   @override
-  dynamic onSerialize(T value) {
+  dynamic serialize(T value) {
     return value.state.values;
   }
 }

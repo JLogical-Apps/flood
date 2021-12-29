@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
@@ -11,8 +12,9 @@ class LocalFromQueryReducer extends AbstractFromQueryReducer<Iterable<Record>> {
 
   @override
   Iterable<Record> reduce({required Iterable<Record>? accumulation, required Query query}) {
-    return stateById.values
-        .where((state) => state.type == query.recordType.toString())
-        .map((state) => Entity.fromState(state));
+    final descendants = AppContext.global.getDescendants(query.recordType);
+    final types = {...descendants, query.recordType};
+    final typeNames = types.map((type) => type.toString()).toList();
+    return stateById.values.where((state) => typeNames.contains(state.type)).map((state) => Entity.fromState(state));
   }
 }

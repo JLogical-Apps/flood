@@ -16,20 +16,20 @@ class MapTypeStateSerializer<K, V> extends TypeStateSerializer<Map<K, V>> {
   final TypeStateSerializer valueTypeStateSerializer = AppContext.global.getTypeStateSerializerByTypeRuntime(V);
 
   @override
-  dynamic onSerialize(Map<K, V> value) {
+  dynamic serialize(Map<K, V> value) {
     return value.map((key, value) {
-      final serializedKey = keyTypeStateSerializer.onSerialize(key);
-      final serializedValue = valueTypeStateSerializer.onSerialize(value);
+      final serializedKey = keyTypeStateSerializer.serialize(key);
+      final serializedValue = valueTypeStateSerializer.serialize(value);
       return MapEntry(serializedKey, serializedValue);
     });
   }
 
   @override
-  Map<K, V> onDeserialize(dynamic value) {
+  Map<K, V> deserialize(dynamic value) {
     Object? object = value;
 
     return object.mapIfNonNull((object) => object.as<Map>()).mapIfNonNull((list) => list.map((key, value) =>
-            MapEntry(keyTypeStateSerializer.onDeserialize(key), valueTypeStateSerializer.onDeserialize(value)))) ??
+            MapEntry(keyTypeStateSerializer.deserialize(key), valueTypeStateSerializer.deserialize(value)))) ??
         (throw Exception('Cannot deserialize map from $value'));
   }
 }

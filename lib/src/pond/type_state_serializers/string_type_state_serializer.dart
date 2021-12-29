@@ -3,7 +3,7 @@ import 'package:jlogical_utils/src/utils/format.dart';
 
 class StringTypeStateSerializer extends TypeStateSerializer<String> {
   @override
-  String onDeserialize(value) {
+  String deserialize(value) {
     if (value == null) {
       throw ArgumentError.notNull('value');
     }
@@ -16,7 +16,7 @@ class StringTypeStateSerializer extends TypeStateSerializer<String> {
   }
 
   @override
-  onSerialize(String value) {
+  serialize(String value) {
     return value;
   }
 }

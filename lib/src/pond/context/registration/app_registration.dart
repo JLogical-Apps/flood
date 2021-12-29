@@ -21,6 +21,8 @@ abstract class AppRegistration {
   bool isSubtype(Type a, Type b);
 
   Database get database;
+
+  Set<Type> getDescendants(Type type);
 }
 
 extension DefaultAppRegistration on AppRegistration {

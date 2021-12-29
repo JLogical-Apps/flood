@@ -49,16 +49,16 @@ abstract class Property<T> with EquatableMixin implements PropertyModifierContex
 
   TypeStateSerializer get typeStateSerializer;
 
-  dynamic toStateValue() => value.mapIfNonNull((value) => typeStateSerializer.onSerialize(value));
+  dynamic toStateValue() => value.mapIfNonNull((value) => typeStateSerializer.serialize(value));
 
-  void fromStateValue(dynamic stateValue) => setUnvalidated(typeStateSerializer.onDeserialize(stateValue));
+  void fromStateValue(dynamic stateValue) => setUnvalidated(typeStateSerializer.deserialize(stateValue));
 
   PropertyModifierContext createPropertyModifierContext() {
     return PropertyModifierContext(property: this);
   }
 
   @override
-  String toString() => '$runtimeType{name = $name, value = $value}';
+  String toString() => '$runtimeType{name = $name, value = $getUnvalidated()}';
 
   @override
   List<Object?> get props => [name, value];

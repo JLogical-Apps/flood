@@ -6,7 +6,7 @@ class IntTypeStateSerializer extends TypeStateSerializer<int> {
   IntTypeStateSerializer({this.intConverterPolicy: const _RoundingConverterPolicy()});
 
   @override
-  int onDeserialize(value) {
+  int deserialize(value) {
     if (value == null) {
       throw ArgumentError.notNull('value');
     }
@@ -25,7 +25,7 @@ class IntTypeStateSerializer extends TypeStateSerializer<int> {
   }
 
   @override
-  onSerialize(int value) {
+  serialize(int value) {
     return value;
   }
 }

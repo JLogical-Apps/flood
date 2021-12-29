@@ -16,16 +16,16 @@ class ListTypeStateSerializer<T> extends TypeStateSerializer<List<T>> {
       AppContext.global.appRegistration.getTypeStateSerializerByTypeRuntime(T);
 
   @override
-  dynamic onSerialize(List<T> value) {
-    return value.map((element) => itemTypeStateSerializer.onSerialize(element)).toList();
+  dynamic serialize(List<T> value) {
+    return value.map((element) => itemTypeStateSerializer.serialize(element)).toList();
   }
 
   @override
-  List<T> onDeserialize(dynamic value) {
+  List<T> deserialize(dynamic value) {
     Object? object = value;
 
     return object.mapIfNonNull((object) => object.as<List>()).mapIfNonNull(
-            (list) => list.map((element) => itemTypeStateSerializer.onDeserialize(element) as T).toList()) ??
+            (list) => list.map((element) => itemTypeStateSerializer.deserialize(element) as T).toList()) ??
         (throw Exception('Cannot deserialize list from $value'));
   }
 }

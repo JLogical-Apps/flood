@@ -2,7 +2,7 @@ import 'package:jlogical_utils/src/pond/export.dart';
 
 class BoolTypeStateSerializer extends TypeStateSerializer<bool> {
   @override
-  bool onDeserialize(value) {
+  bool deserialize(value) {
     if (value is bool) {
       return value;
     } else if (value is String) {
@@ -13,7 +13,7 @@ class BoolTypeStateSerializer extends TypeStateSerializer<bool> {
   }
 
   @override
-  dynamic onSerialize(bool value) {
+  dynamic serialize(bool value) {
     return value;
   }
 }

@@ -24,6 +24,7 @@ void main() {
     );
 
     final state = State(
+      type: '$Envelope',
       values: {
         'name': 'Tithe',
         'amount': 24 * 100,
@@ -49,6 +50,7 @@ void main() {
     const luckyNumbers = [4, 8, 15, 16, 23, 42];
 
     final state = State(
+      type: '$LuckyNumbers',
       values: {
         'luckyNumbers': luckyNumbers,
       },
@@ -72,6 +74,7 @@ void main() {
     const rgb = {'r': 0, 'g': 152, 'b': 19};
 
     final state = State(
+      type: '$Color',
       values: {
         'rgb': rgb,
       },
@@ -96,6 +99,7 @@ void main() {
     const rgb = {'r': 0, 'g': 152, 'b': 19};
 
     final state = State(
+      type: '$UserAvatar',
       values: {
         'color': {
           '_type': 'Color',
@@ -125,6 +129,7 @@ void main() {
     const black = {'r': 0, 'g': 0, 'b': 0};
 
     final state = State(
+      type: '$Palette',
       values: {
         'colors': [
           {
@@ -161,6 +166,7 @@ void main() {
     const black = {'r': 0, 'g': 0, 'b': 0};
 
     final state = State(
+      type: '$PaletteStats',
       values: {
         'colorUses': {
           {
@@ -194,6 +200,7 @@ void main() {
     );
 
     final state = State(
+      type: '$EnvelopeTransaction',
       values: {
         'envelope': 'envelope1',
       },
@@ -206,6 +213,7 @@ void main() {
 
     transaction.envelopeProperty.reference = envelope;
     final newState = State(
+      type: '$EnvelopeTransaction',
       values: {
         'envelope': 'envelope2',
       },

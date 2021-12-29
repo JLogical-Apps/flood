@@ -42,4 +42,6 @@ mixin WithAppRegistrationDelegator implements AppRegistration {
   }
 
   Database get database => appRegistration.database;
+
+  Set<Type> getDescendants(Type type) => appRegistration.getDescendants(type);
 }
