@@ -84,7 +84,7 @@ class BudgetCard extends HookWidget {
       builder: (BudgetEntity budgetEntity) {
         final budget = budgetEntity.value;
         return StyledContent(
-          headerText: '${budget.nameProperty.value} - ${budget.timeCreatedProperty.value?.minute}',
+          headerText: '${budget.nameProperty.value}',
           bodyText: budget.ownerProperty.reference?.value.nameProperty.value,
           actions: [
             ActionItem(

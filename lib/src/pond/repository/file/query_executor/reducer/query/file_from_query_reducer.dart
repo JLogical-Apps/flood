@@ -32,8 +32,8 @@ class FileFromQueryReducer extends AbstractFromQueryReducer<Iterable<Record>> {
 
     final entities =
         states.where((state) => typeNames.contains(state.type)).map((state) => Entity.fromState(state)).toList();
-    entities.sort((a, b) => (a.value.timeCreatedOrNull?.millisecondsSinceEpoch ?? 0)
-        .compareTo(b.value.timeCreatedOrNull?.millisecondsSinceEpoch ?? 0));
+    entities.sort((a, b) => (b.value.timeCreatedOrNull?.millisecondsSinceEpoch ?? 0)
+        .compareTo(a.value.timeCreatedOrNull?.millisecondsSinceEpoch ?? 0));
     return entities;
   }
 }

@@ -22,7 +22,8 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
     } else {
       await super.save(entity, transaction: null);
       _stateByIdCache.save(id, entity.state);
-      await Future.sync((){}); // ???? Somehow I NEED to place this here since Dart doesn't save into the cache due to no await after it :facepalm:
+      await Future.sync(
+          () {}); // ???? Somehow I NEED to place this here since Dart doesn't save into the cache due to no await after it :facepalm:
     }
   }
 
@@ -42,7 +43,13 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
 
     state ??= _stateByIdCache.get(id);
 
-    state ??= (await super.getOrNull(id, transaction: transaction))?.state;
+    if (state == null) {
+      final uncachedState = (await super.getOrNull(id, transaction: transaction))?.state;
+      if (uncachedState != null) {
+        _stateByIdCache.save(id, uncachedState);
+        state = uncachedState;
+      }
+    }
 
     return state.mapIfNonNull((state) => Entity.fromStateOrNull(state));
   }
@@ -67,7 +74,7 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
 
   @override
   ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) {
-    return _stateByIdCache.valueByKeyX.switchMapWithValue((stateById) => executeQuery(queryRequest).asValueStream());
+    return _stateByIdCache.valueByKeyX.asyncMapWithValue((stateById) => executeQuery(queryRequest));
   }
 
   @override
