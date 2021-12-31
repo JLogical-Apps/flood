@@ -11,5 +11,7 @@ class ValueStreamModel<T> extends AsyncLoadable<T> {
   @override
   final FutureOr<T> Function() loader;
 
-  ValueStreamModel({required this.valueX, required this.loader});
+  ValueStreamModel({required this.valueX, required this.loader, bool hasStartedLoading: false}) {
+    this.hasStartedLoading = hasStartedLoading;
+  }
 }

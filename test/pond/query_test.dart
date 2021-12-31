@@ -146,6 +146,23 @@ void main() {
       containsAll([envelopeTransaction, transferTransaction]),
     );
   });
+
+  test('without cache does not break query.', () async {
+    final allEnvelopesQuery = Query.from<EnvelopeEntity>().all();
+    final resultEnvelopeEntities = await AppContext.global.executeQuery(allEnvelopesQuery);
+
+    final allEnvelopesQueryWithoutCache1 = Query.from<EnvelopeEntity>().withoutCache().all();
+    final resultEnvelopeEntitiesWithoutCache1 = await AppContext.global.executeQuery(allEnvelopesQueryWithoutCache1);
+    expect(resultEnvelopeEntitiesWithoutCache1, resultEnvelopeEntities);
+
+    final allEnvelopesQueryWithoutCache2 = Query.from<EnvelopeEntity>().all().withoutCache();
+    final resultEnvelopeEntitiesWithoutCache2 = await AppContext.global.executeQuery(allEnvelopesQueryWithoutCache2);
+    expect(resultEnvelopeEntitiesWithoutCache2, resultEnvelopeEntities);
+
+    final allEnvelopesQueryWithoutCache3 = Query.from<EnvelopeEntity>().withoutCache().all().withoutCache();
+    final resultEnvelopeEntitiesWithoutCache3 = await AppContext.global.executeQuery(allEnvelopesQueryWithoutCache3);
+    expect(resultEnvelopeEntitiesWithoutCache3, resultEnvelopeEntities);
+  });
 }
 
 Future<void> _populateRepositories() async {

@@ -28,7 +28,7 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
   }
 
   @override
-  Future<Entity?> getOrNull(String id, {Transaction? transaction}) async {
+  Future<Entity?> getOrNull(String id, {Transaction? transaction, bool withoutCache: false}) async {
     _startTransactionIfNew(transaction);
 
     State? state;
@@ -41,7 +41,9 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
       state = _pendingTransactionChange!.stateChangesById[id];
     }
 
-    state ??= _stateByIdCache.get(id);
+    if (!withoutCache) {
+      state ??= _stateByIdCache.get(id);
+    }
 
     if (state == null) {
       final uncachedState = (await super.getOrNull(id, transaction: transaction))?.state;

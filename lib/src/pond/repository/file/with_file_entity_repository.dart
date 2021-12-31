@@ -24,7 +24,7 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
   }
 
   @override
-  Future<Entity?> getOrNull(String id, {Transaction? transaction}) async {
+  Future<Entity?> getOrNull(String id, {Transaction? transaction, bool withoutCache: false}) async {
     final file = _getFile(id);
     if (!await file.exists()) {
       return null;
@@ -48,7 +48,8 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
   QueryExecutor getQueryExecutor({Transaction? transaction}) {
     return FileQueryExecutor(
       baseDirectory: baseDirectory,
-      stateGetter: (id) async => (await get(id, transaction: transaction)).state,
+      stateGetter: (id, withoutCache) async =>
+          (await get(id, transaction: transaction, withoutCache: withoutCache)).state,
     );
   }
 

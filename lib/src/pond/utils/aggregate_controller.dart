@@ -18,7 +18,8 @@ class AggregateController<A extends Aggregate<E>, E extends Entity> {
               : FutureValue.loaded(value: entity),
           error: (error) => FutureValue.error(error: error),
         )),
-    loader: () async => (await AppContext.global.executeQuery<E, E?>(_aggregateQuery))!,
+    loader: () async => (await AppContext.global.executeQuery<E, E?>(_aggregateQuery.withoutCache()))!,
+    hasStartedLoading: true,
   ).map((entity) => AppContext.global.constructAggregateFromEntity<A>(entity));
 
   late final AbstractQueryRequest<E, E?> _aggregateQuery =

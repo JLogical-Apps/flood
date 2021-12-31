@@ -13,7 +13,7 @@ mixin WithLocalEntityRepository on EntityRepository implements WithTransactionsA
   }
 
   @override
-  Future<Entity?> getOrNull(String id, {Transaction? transaction}) async {
+  Future<Entity?> getOrNull(String id, {Transaction? transaction, bool withoutCache: false}) async {
     // Do nothing since cache takes care of it.
     return null;
   }

@@ -4,6 +4,7 @@ import 'package:jlogical_utils/src/pond/query/predicate/equals_query_predicate.d
 import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/where_query.dart';
+import 'package:jlogical_utils/src/pond/query/without_cache_query.dart';
 import 'package:jlogical_utils/src/utils/marker.dart';
 
 import 'from_query.dart';
@@ -37,6 +38,10 @@ abstract class Query<R extends Record> extends Equatable {
     }
 
     throw Exception('One of the predicates must not be null!');
+  }
+
+  Query<R> withoutCache() {
+    return WithoutCacheQuery(parent: this);
   }
 
   AllQueryRequest<R> all() {

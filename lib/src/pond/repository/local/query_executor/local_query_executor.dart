@@ -6,6 +6,7 @@ import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reduc
 import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/query/local_where_query_reducer.dart';
+import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/query/local_without_cache_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/abstract_local_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_all_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_paginate_query_request_reducer.dart';
@@ -14,6 +15,7 @@ import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 
 import 'reducer/query/local_from_query_reducer.dart';
 import 'reducer/request/local_first_query_request_reducer.dart';
+import 'reducer/request/local_without_cache_query_request_reducer.dart';
 
 class LocalQueryExecutor implements QueryExecutor {
   final Map<String, State> stateById;
@@ -23,6 +25,7 @@ class LocalQueryExecutor implements QueryExecutor {
   Resolver<Query, AbstractQueryReducer<Query, Iterable<Record>>> getQueryReducerResolver() => WrapperResolver([
         LocalFromQueryReducer(stateById: stateById),
         LocalWhereQueryReducer(),
+        LocalWithoutCacheQueryReducer(),
       ]);
 
   Resolver<AbstractQueryRequest<R, dynamic>,
@@ -32,6 +35,8 @@ class LocalQueryExecutor implements QueryExecutor {
             LocalAllQueryRequestReducer<R>(),
             LocalFirstOrNullQueryRequestReducer<R>(),
             LocalPaginateQueryRequestReducer<R>(),
+            LocalWithoutCacheQueryRequestReducer<R>(
+                queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver()),
           ]);
 
   Future<T> executeQuery<R extends Record, T>(

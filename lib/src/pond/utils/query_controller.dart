@@ -10,7 +10,8 @@ class QueryController<R extends Record, T> {
 
   late AsyncLoadable<T> model = ValueStreamModel(
     valueX: AppContext.global.executeQueryX(queryRequest),
-    loader: () => AppContext.global.executeQuery(queryRequest),
+    loader: () => AppContext.global.executeQuery(queryRequest.withoutCache()),
+    hasStartedLoading: true,
   );
 
   FutureValue<T> get value => model.value;

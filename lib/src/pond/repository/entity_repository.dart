@@ -7,21 +7,21 @@ import 'package:jlogical_utils/src/pond/utils/with_key_synchronizable.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class EntityRepository with WithKeySynchronizable<Transaction> implements QueryExecutorX, TransactionExecutor {
-
   List<Type> get handledEntityTypes;
 
   Future<String> generateId(Entity entity, {Transaction? transaction});
 
   Future<void> save(Entity entity, {Transaction? transaction});
 
-  Future<Entity?> getOrNull(String id, {Transaction? transaction});
+  Future<Entity?> getOrNull(String id, {Transaction? transaction, bool withoutCache: false});
 
   ValueStream<FutureValue<Entity>> getX(String id);
 
   Future<void> delete(String id, {Transaction? transaction});
 
-  Future<Entity> get(String id, {Transaction? transaction}) async {
-    return (await getOrNull(id, transaction: transaction)) ?? (throw Exception('Cannot find entity with id [$id] from repository [$this]'));
+  Future<Entity> get(String id, {Transaction? transaction, bool withoutCache: false}) async {
+    return (await getOrNull(id, transaction: transaction, withoutCache: withoutCache)) ??
+        (throw Exception('Cannot find entity with id [$id] from repository [$this]'));
   }
 
   Future<void> create(Entity entity, {Transaction? transaction}) async {

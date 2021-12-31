@@ -18,7 +18,8 @@ class EntityController<E extends Entity> {
               : FutureValue.loaded(value: entity),
           error: (error) => FutureValue.error(error: error),
         )),
-    loader: () async => (await AppContext.global.executeQuery<E, E?>(_entityQuery))!,
+    loader: () async => (await AppContext.global.executeQuery<E, E?>(_entityQuery.withoutCache()))!,
+    hasStartedLoading: true,
   );
 
   late final AbstractQueryRequest<E, E?> _entityQuery = Query.getById(entityId);
