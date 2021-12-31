@@ -36,20 +36,24 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
   }
 
   @override
-  Future<void> delete(String id, {Transaction? transaction}) async {
+  Future<void> delete(Entity entity, {Transaction? transaction}) async {
+    final id = entity.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
     await _getFile(id).delete();
   }
 
   Future<void> commitTransactionChanges(TransactionPendingChanges changes) async {
     await Future.wait(changes.stateChangesById.entries.mapEntries((id, state) => _saveState(id: id, state: state)));
-    await Future.wait(changes.stateIdDeletes.map((id) => delete(id)));
+    await Future.wait(changes.stateIdDeletes.map((id) async {
+      final entity = await getOrNull(id) ?? (throw Exception('Cannot delete entity with id [$id] since it does not exist!'));
+      await delete(entity);
+    }));
   }
 
   QueryExecutor getQueryExecutor({Transaction? transaction}) {
     return FileQueryExecutor(
       baseDirectory: baseDirectory,
       stateGetter: (id, withoutCache) async =>
-          (await get(id, transaction: transaction, withoutCache: withoutCache)).state,
+      (await get(id, transaction: transaction, withoutCache: withoutCache)).state,
     );
   }
 

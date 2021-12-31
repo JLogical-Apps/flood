@@ -20,10 +20,10 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
     if (transaction != null) {
       _pendingTransactionChange!.stateChangesById[id] = entity.state;
     } else {
+      await entity.beforeSave();
       await super.save(entity, transaction: null);
       _stateByIdCache.save(id, entity.state);
-      await Future.sync(
-          () {}); // ???? Somehow I NEED to place this here since Dart doesn't save into the cache due to no await after it :facepalm:
+      await entity.afterSave();
     }
   }
 
@@ -63,14 +63,19 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
   }
 
   @override
-  Future<void> delete(String id, {Transaction? transaction}) async {
+  Future<void> delete(Entity entity, {Transaction? transaction}) async {
     _startTransactionIfNew(transaction);
+
+    final id = entity.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
+
+    await entity.beforeDelete();
 
     if (transaction != null) {
       _pendingTransactionChange!.stateIdDeletes.add(id);
     } else {
-      await super.delete(id, transaction: transaction);
+      await super.delete(entity, transaction: transaction);
       _stateByIdCache.remove(id);
+      await Future.sync(() {});
     }
   }
 

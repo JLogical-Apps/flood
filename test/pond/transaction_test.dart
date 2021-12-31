@@ -44,7 +44,7 @@ void main() {
       expect(envelopeEntity, equals(retrievedEnvelopeEntity));
       expect(envelopeEntity.state, equals(retrievedEnvelopeEntity!.state));
 
-      await t.delete(envelopeEntity.id!);
+      await t.delete(envelopeEntity);
 
       retrievedEnvelopeEntity = await t.getOrNull<EnvelopeEntity>(envelopeEntity.id!);
       expect(retrievedEnvelopeEntity, isNull);
@@ -163,7 +163,7 @@ void main() {
     final titheEnvelopeId = titheEnvelopeEntity.id!;
 
     final deleteTitheTransaction = Transaction((t) async {
-      await t.delete(titheEnvelopeId);
+      await t.delete(titheEnvelopeEntity);
 
       await otherStuffCompleter.future;
 

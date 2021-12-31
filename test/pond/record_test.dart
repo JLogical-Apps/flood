@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/record/immutability_violation_error.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'entities/color.dart';
 import 'entities/envelope.dart';
@@ -81,4 +82,101 @@ void main() {
       throwsA(isA<ImmutabilityViolationError>()),
     );
   });
+
+  test('lifecycle events', () async {
+    AppContext.global = AppContext(
+      registration: DatabaseAppRegistration(
+        repositories: [
+          LifecycleRepository(),
+        ],
+      ),
+    );
+    final lifecycleEntity = LifecycleEntity()..value = Lifecycle();
+
+    var afterCreate = false;
+    var beforeSave = false;
+    var afterSave = false;
+    var beforeDelete = false;
+
+    lifecycleEntity.afterCreateX.listen((_) => afterCreate = true);
+    lifecycleEntity.beforeSaveX.listen((_) => beforeSave = true);
+    lifecycleEntity.afterSaveX.listen((_) => afterSave = true);
+    lifecycleEntity.beforeDeleteX.listen((_) => beforeDelete = true);
+
+    await lifecycleEntity.create();
+
+    expect(afterCreate, true);
+    expect(beforeSave, true);
+    expect(afterSave, true);
+    expect(beforeDelete, false);
+
+    afterCreate = false;
+    beforeSave = false;
+    afterSave = false;
+    beforeDelete = false;
+
+    await lifecycleEntity.save();
+
+    expect(afterCreate, false);
+    expect(beforeSave, true);
+    expect(afterSave, true);
+    expect(beforeDelete, false);
+
+    afterCreate = false;
+    beforeSave = false;
+    afterSave = false;
+    beforeDelete = false;
+
+    await lifecycleEntity.delete();
+
+    expect(afterCreate, false);
+    expect(beforeSave, false);
+    expect(afterSave, false);
+    expect(beforeDelete, true);
+  });
+}
+
+class Lifecycle extends ValueObject {}
+
+class LifecycleEntity extends Entity<Lifecycle> {
+  final BehaviorSubject afterCreateX = BehaviorSubject();
+  final BehaviorSubject beforeSaveX = BehaviorSubject();
+  final BehaviorSubject afterSaveX = BehaviorSubject();
+  final BehaviorSubject beforeDeleteX = BehaviorSubject();
+
+  @override
+  Future<void> afterCreate() {
+    afterCreateX.value = 0;
+    return super.afterCreate();
+  }
+
+  @override
+  Future<void> beforeSave() {
+    beforeSaveX.value = 0;
+    return super.beforeSave();
+  }
+
+  @override
+  Future<void> afterSave() {
+    afterSaveX.value = 0;
+    return super.afterSave();
+  }
+
+  @override
+  Future<void> beforeDelete() {
+    beforeDeleteX.value = 0;
+    return super.beforeDelete();
+  }
+}
+
+class LifecycleRepository extends DefaultLocalRepository<LifecycleEntity, Lifecycle> {
+  @override
+  LifecycleEntity createEntity() {
+    return LifecycleEntity();
+  }
+
+  @override
+  Lifecycle createValueObject() {
+    return Lifecycle();
+  }
 }

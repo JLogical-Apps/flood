@@ -17,7 +17,7 @@ abstract class EntityRepository with WithKeySynchronizable<Transaction> implemen
 
   ValueStream<FutureValue<Entity>> getX(String id);
 
-  Future<void> delete(String id, {Transaction? transaction});
+  Future<void> delete(Entity entity, {Transaction? transaction});
 
   Future<Entity> get(String id, {Transaction? transaction, bool withoutCache: false}) async {
     return (await getOrNull(id, transaction: transaction, withoutCache: withoutCache)) ??
@@ -28,6 +28,7 @@ abstract class EntityRepository with WithKeySynchronizable<Transaction> implemen
     final id = await generateId(entity, transaction: transaction);
     entity.id = id;
     await save(entity, transaction: transaction);
+    await entity.afterCreate();
   }
 
   EntityRepository get repository => this;

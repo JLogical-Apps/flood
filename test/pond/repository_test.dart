@@ -60,8 +60,6 @@ void main() {
     envelopeEntity.changeName('Giving');
     await envelopeEntity.save();
 
-    // await Future.sync(() {});
-
     retrievedEnvelope = (await envelopeX.getCurrentValue()).get();
 
     expect(retrievedEnvelope, envelopeEntity);

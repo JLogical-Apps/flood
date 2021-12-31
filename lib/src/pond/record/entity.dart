@@ -17,6 +17,11 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
 
   final BehaviorSubject<V> _valueX = BehaviorSubject();
 
+  Future<void> beforeSave() async {}
+  Future<void> afterSave() async {}
+  Future<void> beforeDelete() async {}
+  Future<void> afterCreate() async {}
+
   V get value => _valueX.value;
 
   set value(V value) => _valueX.value = value;
@@ -24,6 +29,8 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
   State get state => value.state.copyWith(id: id, type: runtimeType.toString());
 
   set state(State state) => value = ValueObject.fromState(state);
+
+  bool get isNew => id == null;
 
   void validateRecord() => value.validateRecord();
 

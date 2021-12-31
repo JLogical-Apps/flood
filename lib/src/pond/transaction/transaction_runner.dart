@@ -22,8 +22,8 @@ class TransactionRunner {
     return await (repository.getOrNull(id, transaction: transaction)) as E?;
   }
 
-  Future<void> delete(String id) {
-    return repository.delete(id, transaction: transaction);
+  Future<void> delete(Entity entity) {
+    return repository.delete(entity, transaction: transaction);
   }
 
   Future<E> get<E extends Entity>(String id) async {

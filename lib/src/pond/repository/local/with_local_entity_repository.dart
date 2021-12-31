@@ -14,12 +14,15 @@ mixin WithLocalEntityRepository on EntityRepository implements WithTransactionsA
 
   @override
   Future<Entity?> getOrNull(String id, {Transaction? transaction, bool withoutCache: false}) async {
-    // Do nothing since cache takes care of it.
+    // Even when [withoutCache] is true, still use the cache.
+    if (withoutCache) {
+      return await getOrNull(id, transaction: transaction, withoutCache: false);
+    }
     return null;
   }
 
   @override
-  Future<void> delete(String id, {Transaction? transaction}) async {
+  Future<void> delete(Entity entity, {Transaction? transaction}) async {
     // Do nothing since cache takes care of it.
   }
 

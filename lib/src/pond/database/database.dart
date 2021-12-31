@@ -36,8 +36,10 @@ extension DefaultDatabase on Database {
   }
 
   Future<void> delete(Entity entity, {Transaction? transaction}) {
-    final id = entity.id ?? (throw Exception('Cannot delete an entity that has not been saved!'));
-    return getRepositoryRuntime(entity.runtimeType).delete(id, transaction: transaction);
+    if (entity.isNew) {
+      throw Exception('Cannot delete an entity that has not been saved!');
+    }
+    return getRepositoryRuntime(entity.runtimeType).delete(entity, transaction: transaction);
   }
 
   Future<void> create(Entity entity, {Transaction? transaction}) {
