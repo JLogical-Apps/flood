@@ -23,10 +23,10 @@ mixin WithPropertiesState on Record {
     properties.forEach((element) => element.validate());
   }
 
-  Future resolve(AppContext context) async {
+  Future resolve() async {
     return Future.wait(properties
         .where((property) => property is Resolvable)
         .map((property) => property as Resolvable)
-        .map((resolvableProperty) => resolvableProperty.resolve(context)));
+        .map((resolvableProperty) => resolvableProperty.resolve()));
   }
 }

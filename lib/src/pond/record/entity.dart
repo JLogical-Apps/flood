@@ -37,8 +37,8 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
   ValidationState get validationState => value.validationState;
 
   @override
-  Future resolve(AppContext context) {
-    return value.resolve(context);
+  Future resolve() {
+    return value.resolve();
   }
 
   static E? fromStateOrNull<E extends Entity>(State state) {

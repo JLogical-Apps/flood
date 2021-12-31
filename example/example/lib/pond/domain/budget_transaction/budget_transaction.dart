@@ -7,7 +7,7 @@ class BudgetTransaction extends ValueObject {
   late final budgetProperty = ReferenceFieldProperty<BudgetEntity>(name: budgetField).required();
 
   static const envelopeField = 'envelope';
-  late final envelopeProperty = ReferenceFieldProperty<EnvelopeEntity>(name: envelopeField).required();
+  late final envelopeProperty = ReferenceFieldProperty<EnvelopeEntity>(name: envelopeField)..required();
 
   @override
   List<Property> get properties => super.properties + [budgetProperty, envelopeProperty];

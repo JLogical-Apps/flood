@@ -27,13 +27,16 @@ class ReferenceFieldProperty<E extends Entity> extends FieldProperty<String>
     value = reference?.id;
   }
 
-  Future resolve(AppContext context) async {
+  Future<void> resolve() {
+    return loadOrNull();
+  }
+
+  Future<E?> loadOrNull() async {
     final referenceId = value;
     if (referenceId == null) {
-      return;
+      return null;
     }
-
-    final entityRepository = context.database.getRepository<E>();
-    _reference = await entityRepository.getOrNull(referenceId) as E;
+    _reference = await AppContext.global.getOrNull<E>(referenceId);
+    return _reference;
   }
 }
