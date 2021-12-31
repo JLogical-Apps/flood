@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/pond/repository/local/default_abstract_local_repository.dart';
 import 'package:jlogical_utils/src/utils/stream_extensions.dart';
 
 import 'entities/budget.dart';
@@ -121,30 +122,11 @@ void main() {
 
   test('query from abstract class', () async {
     AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
-          valueObjectRegistrations: [
-            ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),
-            ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(
-              () => EnvelopeTransaction(),
-              parents: {BudgetTransaction},
-            ),
-            ValueObjectRegistration<TransferTransaction, TransferTransaction?>(
-              () => TransferTransaction(),
-              parents: {BudgetTransaction},
-            ),
-          ],
-          entityRegistrations: [
-            EntityRegistration<BudgetTransactionEntity, BudgetTransaction>.abstract(),
-            EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(() => EnvelopeTransactionEntity()),
-            EntityRegistration<TransferTransactionEntity, TransferTransaction>(
-              () => TransferTransactionEntity(),
-            ),
-          ],
-          database: EntityDatabase(
-            repositories: [
-              LocalBudgetTransactionRepository(),
-            ],
-          )),
+      registration: DatabaseAppRegistration(
+        repositories: [
+          LocalBudgetTransactionRepository(),
+        ],
+      ),
     );
 
     final envelopeTransaction = EnvelopeTransactionEntity()
@@ -187,9 +169,25 @@ class LocalBudgetRepository extends DefaultLocalRepository<BudgetEntity, Budget>
   Budget createValueObject() => Budget();
 }
 
-class LocalBudgetTransactionRepository = EntityRepository
-    with
-        WithMonoEntityRepository<BudgetTransactionEntity>,
-        WithLocalEntityRepository,
-        WithIdGenerator,
-        WithTransactionsAndCacheEntityRepository;
+class LocalBudgetTransactionRepository
+    extends DefaultAbstractLocalRepository<BudgetTransactionEntity, BudgetTransaction> {
+  @override
+  List<ValueObjectRegistration> get valueObjectRegistrations => [
+        ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),
+        ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(
+          () => EnvelopeTransaction(),
+          parents: {BudgetTransaction},
+        ),
+        ValueObjectRegistration<TransferTransaction, TransferTransaction?>(
+          () => TransferTransaction(),
+          parents: {BudgetTransaction},
+        ),
+      ];
+
+  @override
+  List<EntityRegistration> get entityRegistrations => [
+        EntityRegistration<BudgetTransactionEntity, BudgetTransaction>.abstract(),
+        EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(() => EnvelopeTransactionEntity()),
+        EntityRegistration<TransferTransactionEntity, TransferTransaction>(() => TransferTransactionEntity()),
+      ];
+}

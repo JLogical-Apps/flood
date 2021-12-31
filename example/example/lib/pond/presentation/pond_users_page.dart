@@ -44,21 +44,24 @@ class PondUsersPage extends HookWidget {
                       color: Colors.green,
                       onPerform: () async {
                         final data = await StyledDialog.smartForm(
-                                context: context,
-                                children: [
-                                  StyledSmartTextField(
-                                    name: 'name',
-                                    label: 'Name',
-                                    validators: [Validation.required()],
-                                  ),
-                                  StyledSmartTextField(
-                                    name: 'email',
-                                    label: 'Email',
-                                    validators: [Validation.isEmail()],
-                                  ),
-                                ],
-                                titleText: 'Create User')
-                            .show(context);
+                          context: context,
+                          titleText: 'Create User',
+                          children: [
+                            StyledSmartTextField(
+                              name: 'name',
+                              label: 'Name',
+                              validators: [Validation.required()],
+                            ),
+                            StyledSmartTextField(
+                              name: 'email',
+                              label: 'Email',
+                              validators: [
+                                Validation.required(),
+                                Validation.isEmail(),
+                              ],
+                            ),
+                          ],
+                        ).show(context);
                         if (data == null) {
                           return;
                         }

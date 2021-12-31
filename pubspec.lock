@@ -341,7 +341,7 @@ packages:
       name: flutter_hooks
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.18.1"
+    version: "0.18.2"
   flutter_mobx:
     dependency: "direct main"
     description:
@@ -400,7 +400,7 @@ packages:
       name: google_fonts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.2.0"
   graphs:
     dependency: transitive
     description:
