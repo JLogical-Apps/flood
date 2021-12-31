@@ -1,11 +1,9 @@
-import 'dart:io';
 
 import 'package:example/model/model_page.dart';
-import 'package:example/pond/presentation/pond_page.dart';
+import 'package:example/pond/presentation/pond_users_page.dart';
 import 'package:example/style/styles_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'form/form_page.dart';
@@ -40,11 +38,7 @@ class HomePage extends StatelessWidget {
             title: Text('Pond'),
             onTap: () async {
               final baseDirectory = await getApplicationSupportDirectory();
-              final baseBudgetDirectory = Directory(join(baseDirectory.path, 'budgets'));
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => PondPage(
-                        baseBudgetDirectory: baseBudgetDirectory,
-                      )));
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) => PondUsersPage(baseDirectory: baseDirectory)));
             },
           ),
           NavigationCard(

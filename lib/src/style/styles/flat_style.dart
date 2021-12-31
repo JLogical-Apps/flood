@@ -959,6 +959,7 @@ class FlatStyle extends Style {
                           )
                         : null,
                   ),
+                if (category.children.isEmpty && category.noChildrenWidget != null) category.noChildrenWidget!,
                 ...category.children
               ],
             ),
@@ -1000,6 +1001,7 @@ class FlatStyle extends Style {
                           : null,
                     ),
                   ),
+                if (category.children.isEmpty && category.noChildrenWidget != null) category.noChildrenWidget!,
                 ...category.children
               ],
             ),
@@ -1032,6 +1034,7 @@ class FlatStyle extends Style {
                         )
                       : null,
                 ),
+              if (category.children.isEmpty && category.noChildrenWidget != null) category.noChildrenWidget!,
               ...category.children
             ],
           ),

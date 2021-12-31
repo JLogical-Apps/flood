@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:path/path.dart';
+
 extension FileExtensions on File {
   /// Reads the json from a file. Throws an exception if the file doesn't exist or cannot be parsed to json.
   Map<String, dynamic> readJsonSync() {
@@ -38,5 +40,15 @@ extension DirectoryExtensions on Directory {
   Future<Directory> ensureCreated() async {
     await create(recursive: true);
     return this;
+  }
+
+  /// Returns the directory with [path] appended.
+  Directory operator /(String path) {
+    return Directory(join(this.path, path));
+  }
+
+  /// Returns the file with [path] appended.
+  File operator -(String path) {
+    return File(join(this.path, path));
   }
 }
