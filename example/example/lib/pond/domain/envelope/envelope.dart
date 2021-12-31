@@ -8,8 +8,8 @@ class Envelope extends ValueObject {
   static const String budgetField = 'budget';
   late final budgetProperty = ReferenceFieldProperty<BudgetEntity>(name: budgetField).required();
 
-  late final amountProperty = FieldProperty<int>(name: 'amount').required();
+  late final amountProperty = FieldProperty<int>(name: 'amount').withFallbackReplacement(() => 0);
 
   @override
-  List<Property> get properties => super.properties + [nameProperty, budgetProperty];
+  List<Property> get properties => super.properties + [nameProperty, budgetProperty, amountProperty];
 }

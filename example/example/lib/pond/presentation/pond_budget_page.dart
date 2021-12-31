@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+import 'pond_envelope_page.dart';
+import 'transaction_card.dart';
+
 class PondBudgetPage extends HookWidget {
   final String budgetId;
 
@@ -17,11 +20,17 @@ class PondBudgetPage extends HookWidget {
   Widget build(BuildContext context) {
     final budgetEntityController = useEntity<BudgetEntity>(budgetId);
     final envelopesQueryController = useQuery(
-      Query.from<EnvelopeEntity>().where(Envelope.budgetField, isEqualTo: budgetId).paginate(),
+      Query.from<EnvelopeEntity>().where(Envelope.budgetField, isEqualTo: budgetId).all(),
     );
     final transactionsQueryController = useQuery(
       Query.from<BudgetTransactionEntity>().where(BudgetTransaction.budgetField, isEqualTo: budgetId).paginate(),
     );
+
+    final budgetAmountX = useComputed(() => envelopesQueryController.model.valueX.mapWithValue(
+        (maybeEnvelopeEntities) => maybeEnvelopeEntities.mapIfPresent<int>((envelopeEntities) =>
+            envelopeEntities.sumBy((envelopeEntity) => envelopeEntity.value.amountProperty.value!).round())));
+    final maybeBudgetAmount = useValueStream(budgetAmountX);
+
     return StyleProvider(
       style: PondUsersPage.style,
       child: Builder(
@@ -29,30 +38,135 @@ class PondBudgetPage extends HookWidget {
           return ModelBuilder.styledPage(
             model: budgetEntityController.model,
             builder: (BudgetEntity budgetEntity) {
-              return ScrollColumn.withScrollbar(children: [
-                ModelBuilder.styled(
-                  model: envelopesQueryController.model,
-                  builder: (QueryPaginationResultController<EnvelopeEntity> envelopesController) {
-                    return StyledCategory.medium(
-                      headerText: 'Envelopes',
-                      actions: [],
-                    );
-                  },
-                ),
-                ModelBuilder.styled(
-                  model: transactionsQueryController.model,
-                  builder: (QueryPaginationResultController<BudgetTransactionEntity> budgetTransactionsController) {
-                    return StyledCategory.medium(
-                      headerText: 'Transactions',
-                      actions: [],
-                    );
-                  },
-                )
-              ]);
+              final budget = budgetEntity.value;
+              return StyledPage(
+                onRefresh: () => Future.wait([
+                  budgetEntityController.reload(),
+                  envelopesQueryController.reload(),
+                  transactionsQueryController.reload(),
+                ]),
+                titleText:
+                    'Budget: ${budget.nameProperty.value}\n${maybeBudgetAmount.mapIfPresent((amount) => amount.formatCentsAsCurrency()).get(orElse: () => 'N/A')}',
+                body: ScrollColumn.withScrollbar(children: [
+                  ModelBuilder.styled(
+                    model: envelopesQueryController.model,
+                    builder: (List<EnvelopeEntity> envelopeEntities) {
+                      return StyledCategory.medium(
+                        headerText: 'Envelopes',
+                        actions: [
+                          ActionItem(
+                            name: 'Create',
+                            description: 'Create new Envelope',
+                            color: Colors.green,
+                            leading: Icon(Icons.mail),
+                            onPerform: () async {
+                              final data = await StyledDialog.smartForm(context: context, children: [
+                                StyledSmartTextField(
+                                  name: 'name',
+                                  label: 'Name',
+                                  validators: [Validation.required()],
+                                ),
+                              ]).show(context);
+
+                              if (data == null) {
+                                return;
+                              }
+
+                              final envelope = Envelope()
+                                ..nameProperty.value = data['name']
+                                ..amountProperty.value = 0
+                                ..budgetProperty.value = budgetId;
+                              final envelopeEntity = EnvelopeEntity()..value = envelope;
+
+                              await envelopeEntity.create();
+                            },
+                          ),
+                        ],
+                        noChildrenWidget: StyledContentSubtitleText('No envelopes'),
+                        children: [
+                          ...envelopeEntities.map((envelopeEntity) => EnvelopeCard(
+                                envelopeId: envelopeEntity.id!,
+                                key: ValueKey(envelopeEntity.id),
+                              )),
+                        ],
+                      );
+                    },
+                  ),
+                  ModelBuilder.styled(
+                    model: transactionsQueryController.model,
+                    builder: (QueryPaginationResultController<BudgetTransactionEntity> budgetTransactionsController) {
+                      return StyledCategory.medium(
+                        headerText: 'Transactions',
+                        noChildrenWidget: StyledContentSubtitleText('No transactions'),
+                        children: [
+                          ...budgetTransactionsController.results.map((transactionEntity) => TransactionCard(
+                                transactionId: transactionEntity.id!,
+                                key: ValueKey(transactionEntity.id),
+                              )),
+                          if (budgetTransactionsController.canLoadMore)
+                            StyledButton.low(
+                              text: 'Load More',
+                              onTapped: () async {
+                                await budgetTransactionsController.loadMore();
+                              },
+                            ),
+                        ],
+                      );
+                    },
+                  )
+                ]),
+              );
             },
           );
         },
       ),
+    );
+  }
+}
+
+class EnvelopeCard extends HookWidget {
+  final String envelopeId;
+
+  const EnvelopeCard({Key? key, required this.envelopeId}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final envelopeEntityController = useEntity<EnvelopeEntity>(envelopeId);
+
+    return ModelBuilder.styled(
+      model: envelopeEntityController.model,
+      builder: (EnvelopeEntity envelopeEntity) {
+        final envelope = envelopeEntity.value;
+        return StyledContent(
+          headerText: envelope.nameProperty.value,
+          bodyText: envelope.amountProperty.value!.formatCentsAsCurrency(),
+          onTapped: () {
+            context
+                .style()
+                .navigateTo(context: context, page: (context) => PondEnvelopePage(envelopeId: envelopeEntity.id!));
+          },
+          actions: [
+            ActionItem(
+              name: 'Delete',
+              description: 'Delete this envelope.',
+              color: Colors.red,
+              leading: Icon(Icons.delete),
+              onPerform: () async {
+                final dialog = StyledDialog.yesNo(
+                  context: context,
+                  titleText: 'Confirm Delete',
+                  children: [
+                    StyledBodyText('Are you sure you want to delete this envelope?'),
+                  ],
+                );
+                if (await dialog.show(context)) {
+                  await envelopeEntity.delete();
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

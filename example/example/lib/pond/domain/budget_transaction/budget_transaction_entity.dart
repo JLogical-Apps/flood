@@ -1,5 +1,4 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'budget_transaction.dart';
 
-class BudgetTransactionEntity extends Entity<BudgetTransaction> {
-}
+abstract class BudgetTransactionEntity<B extends BudgetTransaction> extends Entity<B> {}
