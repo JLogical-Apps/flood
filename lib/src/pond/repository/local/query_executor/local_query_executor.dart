@@ -3,7 +3,7 @@ import 'package:jlogical_utils/src/patterns/resolver/wrapper_resolver.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/query/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reducer.dart';
-import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/query/local_where_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/query/local_without_cache_query_reducer.dart';
@@ -28,10 +28,10 @@ class LocalQueryExecutor implements QueryExecutor {
         LocalWithoutCacheQueryReducer(),
       ]);
 
-  Resolver<AbstractQueryRequest<R, dynamic>,
-          AbstractLocalQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>
-      getQueryRequestReducerResolver<R extends Record>() => WrapperResolver<AbstractQueryRequest<R, dynamic>,
-              AbstractLocalQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>([
+  Resolver<QueryRequest<R, dynamic>,
+          AbstractLocalQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
+      getQueryRequestReducerResolver<R extends Record>() => WrapperResolver<QueryRequest<R, dynamic>,
+              AbstractLocalQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>([
             LocalAllQueryRequestReducer<R>(),
             LocalFirstOrNullQueryRequestReducer<R>(),
             LocalPaginateQueryRequestReducer<R>(),
@@ -40,7 +40,7 @@ class LocalQueryExecutor implements QueryExecutor {
           ]);
 
   Future<T> executeQuery<R extends Record, T>(
-    AbstractQueryRequest<R, T> queryRequest, {
+    QueryRequest<R, T> queryRequest, {
     Transaction? transaction,
   }) async {
     final queryChain = queryRequest.query.getQueryChain();

@@ -1,6 +1,6 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/utils/entity_controller.dart';
 import 'package:jlogical_utils/src/pond/utils/query_controller.dart';
 
@@ -18,7 +18,7 @@ EntityController<E> useEntity<E extends Entity>(String id) {
   return entityController;
 }
 
-QueryController<R, T> useQuery<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) {
+QueryController<R, T> useQuery<R extends Record, T>(QueryRequest<R, T> queryRequest) {
   final queryController = useMemoized(() => QueryController(queryRequest: queryRequest), [queryRequest]);
   useModel(queryController.model);
   return queryController;

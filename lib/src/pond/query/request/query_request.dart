@@ -7,20 +7,20 @@ import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/utils/marker.dart';
 
 @marker
-abstract class AbstractQueryRequest<R extends Record, T> extends Equatable {
+abstract class QueryRequest<R extends Record, T> extends Equatable {
   final Transaction? transaction;
 
   /// The query that this request makes a request on.
   Query<R> get query;
 
-  const AbstractQueryRequest({this.transaction});
+  const QueryRequest({this.transaction});
 
   Type get outputType => T;
 
   @override
   List<Object?> get props => [transaction, query];
 
-  AbstractQueryRequest<R, T> withoutCache() {
+  QueryRequest<R, T> withoutCache() {
     return WithoutCacheQueryRequest<R, T>(queryRequest: this);
   }
 

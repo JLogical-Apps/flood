@@ -1,7 +1,7 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/patterns/cache/cache.dart';
 import 'package:jlogical_utils/src/pond/query/query_executor.dart';
-import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:rxdart/rxdart.dart';
 
 mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
@@ -80,13 +80,13 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
   }
 
   @override
-  ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(AbstractQueryRequest<R, T> queryRequest) {
+  ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) {
     return _stateByIdCache.valueByKeyX.asyncMapWithValue((stateById) => executeQuery(queryRequest));
   }
 
   @override
   Future<T> executeQuery<R extends Record, T>(
-    AbstractQueryRequest<R, T> queryRequest, {
+    QueryRequest<R, T> queryRequest, {
     Transaction? transaction,
   }) async {
     _startTransactionIfNew(transaction);

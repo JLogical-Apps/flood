@@ -5,7 +5,7 @@ import 'package:jlogical_utils/src/patterns/resolver/wrapper_resolver.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/query/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reducer.dart';
-import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/query/file_where_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/query/file_without_cache_query_reducer.dart';
@@ -26,7 +26,7 @@ class FileQueryExecutor implements QueryExecutor {
   FileQueryExecutor({required this.baseDirectory, required this.stateGetter});
 
   Resolver<Query, AbstractQueryReducer<Query, Iterable<Record>>> getQueryReducerResolver(
-          AbstractQueryRequest queryRequest) =>
+          QueryRequest queryRequest) =>
       WrapperResolver([
         FileFromQueryReducer(
             baseDirectory: baseDirectory, stateGetter: (id) => stateGetter(id, queryRequest.isWithoutCache())),
@@ -34,10 +34,10 @@ class FileQueryExecutor implements QueryExecutor {
         FileWithoutCacheQueryReducer(),
       ]);
 
-  Resolver<AbstractQueryRequest<R, dynamic>,
-          AbstractFileQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>
-      getQueryRequestReducerResolver<R extends Record>() => WrapperResolver<AbstractQueryRequest<R, dynamic>,
-              AbstractFileQueryRequestReducer<AbstractQueryRequest<R, dynamic>, R, dynamic>>([
+  Resolver<QueryRequest<R, dynamic>,
+          AbstractFileQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
+      getQueryRequestReducerResolver<R extends Record>() => WrapperResolver<QueryRequest<R, dynamic>,
+              AbstractFileQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>([
             FileAllQueryRequestReducer<R>(),
             FileFirstOrNullQueryRequestReducer<R>(),
             FilePaginateQueryRequestReducer<R>(),
@@ -46,7 +46,7 @@ class FileQueryExecutor implements QueryExecutor {
           ]);
 
   Future<T> executeQuery<R extends Record, T>(
-    AbstractQueryRequest<R, T> queryRequest, {
+    QueryRequest<R, T> queryRequest, {
     Transaction? transaction,
   }) async {
     final queryChain = queryRequest.query.getQueryChain();

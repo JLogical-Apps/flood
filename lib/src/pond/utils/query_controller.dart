@@ -2,11 +2,11 @@ import 'package:jlogical_utils/src/model/async_loadable.dart';
 import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/model/value_stream_model.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
-import 'package:jlogical_utils/src/pond/query/request/abstract_query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 
 class QueryController<R extends Record, T> {
-  final AbstractQueryRequest<R, T> queryRequest;
+  final QueryRequest<R, T> queryRequest;
 
   late AsyncLoadable<T> model = ValueStreamModel(
     valueX: AppContext.global.executeQueryX(queryRequest),
