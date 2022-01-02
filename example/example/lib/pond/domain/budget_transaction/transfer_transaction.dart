@@ -8,5 +8,14 @@ class TransferTransaction extends BudgetTransaction {
   late final amountCentsProperty = FieldProperty<int>(name: 'amount').required();
 
   @override
-  List<Property> get properties => super.properties + [fromProperty, toProperty];
+  Property<List<String>> get abstractAffectedEnvelopesProperty => ListComputedProperty(
+        name: BudgetTransaction.affectedEnvelopesField,
+        computation: () => [
+          fromProperty.value!,
+          toProperty.value!,
+        ],
+      );
+
+  @override
+  List<Property> get properties => super.properties + [fromProperty, toProperty, amountCentsProperty];
 }

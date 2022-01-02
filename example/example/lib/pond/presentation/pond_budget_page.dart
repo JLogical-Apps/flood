@@ -110,6 +110,7 @@ class PondBudgetPage extends HookWidget {
                                 final data = await StyledDialog.smartForm(context: context, children: [
                                   StyledSmartOptionsField<EnvelopeEntity>(
                                     name: 'from',
+                                    label: 'From',
                                     options: [...envelopesQueryController.value.get()],
                                     builder: (envelopeEntity) => StyledBodyText(
                                       envelopeEntity?.value.nameProperty.value ?? 'None',
@@ -118,6 +119,7 @@ class PondBudgetPage extends HookWidget {
                                   ),
                                   StyledSmartOptionsField<EnvelopeEntity>(
                                     name: 'to',
+                                    label: 'To',
                                     options: [...envelopesQueryController.value.get()],
                                     builder: (envelopeEntity) => StyledBodyText(
                                       envelopeEntity?.value.nameProperty.value ?? 'None',
@@ -145,9 +147,9 @@ class PondBudgetPage extends HookWidget {
                                   ..fromProperty.reference = data['from']
                                   ..toProperty.reference = data['to']
                                   ..budgetProperty.value = budgetId;
-                                final envelopeTransactionEntity = TransferTransactionEntity()
+                                final transferTransactionEntity = TransferTransactionEntity()
                                   ..value = transferTransaction;
-                                await envelopeTransactionEntity.create();
+                                await transferTransactionEntity.create();
 
                                 // TODO Change the affected envelope amounts.
                               },

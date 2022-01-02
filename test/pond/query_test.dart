@@ -12,6 +12,8 @@ import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
 import 'entities/envelope_transaction.dart';
 import 'entities/envelope_transaction_entity.dart';
+import 'entities/lucky_numbers.dart';
+import 'entities/lucky_numbers_entity.dart';
 import 'entities/transfer_transaction.dart';
 import 'entities/transfer_transaction_entity.dart';
 
@@ -163,6 +165,55 @@ void main() {
     final resultEnvelopeEntitiesWithoutCache3 = await AppContext.global.executeQuery(allEnvelopesQueryWithoutCache3);
     expect(resultEnvelopeEntitiesWithoutCache3, resultEnvelopeEntities);
   });
+
+  test('where contains', () async {
+    AppContext.global = AppContext(
+        registration: DatabaseAppRegistration(repositories: [
+      LocalLuckyNumbersRepository(),
+    ]));
+
+    final firstFive = [1, 2, 3, 4, 5];
+    final firstEvens = [2, 4, 6, 8, 10];
+    final firstSquares = [1, 4, 9, 16, 25];
+
+    final luckyNumbers = {
+      firstFive,
+      firstEvens,
+      firstSquares,
+    };
+
+    await Future.wait(luckyNumbers
+        .map((luckyNumbers) => LuckyNumbers()..luckyNumbersProperty.value = luckyNumbers)
+        .map((luckyNumbers) => LuckyNumbersEntity()..value = luckyNumbers)
+        .map((entity) => entity.create()));
+
+    final containsOne = await AppContext.global.executeQuery(
+      Query.from<LuckyNumbersEntity>().where('luckyNumbers', contains: 1).all(),
+    );
+
+    expect(
+      containsOne.map((entity) => entity.value.luckyNumbersProperty.value).toList(),
+      containsAll([firstFive, firstSquares]),
+    );
+
+    final containsTwo = await AppContext.global.executeQuery(
+      Query.from<LuckyNumbersEntity>().where('luckyNumbers', contains: 2).all(),
+    );
+
+    expect(
+      containsTwo.map((entity) => entity.value.luckyNumbersProperty.value).toList(),
+      containsAll([firstFive, firstEvens]),
+    );
+
+    final containsZero = await AppContext.global.executeQuery(
+      Query.from<LuckyNumbersEntity>().where('luckyNumbers', contains: 0).all(),
+    );
+
+    expect(
+      containsZero.map((entity) => entity.value.luckyNumbersProperty.value).toList(),
+      isEmpty,
+    );
+  });
 }
 
 Future<void> _populateRepositories() async {
@@ -207,4 +258,16 @@ class LocalBudgetTransactionRepository
         EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(() => EnvelopeTransactionEntity()),
         EntityRegistration<TransferTransactionEntity, TransferTransaction>(() => TransferTransactionEntity()),
       ];
+}
+
+class LocalLuckyNumbersRepository extends DefaultLocalRepository<LuckyNumbersEntity, LuckyNumbers> {
+  @override
+  LuckyNumbersEntity createEntity() {
+    return LuckyNumbersEntity();
+  }
+
+  @override
+  LuckyNumbers createValueObject() {
+    return LuckyNumbers();
+  }
 }

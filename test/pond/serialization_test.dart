@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/pond/type_state_serializers/list_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/value_object_type_state_serializer.dart';
 
 import 'entities/budget_transaction.dart';

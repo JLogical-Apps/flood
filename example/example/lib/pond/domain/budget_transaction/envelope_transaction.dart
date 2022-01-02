@@ -10,5 +10,11 @@ class EnvelopeTransaction extends BudgetTransaction {
   late final amountCentsProperty = FieldProperty<int>(name: 'amount').required();
 
   @override
+  Property<List<String>> get abstractAffectedEnvelopesProperty => ListComputedProperty(
+        name: BudgetTransaction.affectedEnvelopesField,
+        computation: () => [envelopeProperty.value!],
+      );
+
+  @override
   List<Property> get properties => super.properties + [nameProperty, envelopeProperty, amountCentsProperty];
 }

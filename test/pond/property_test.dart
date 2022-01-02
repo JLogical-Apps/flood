@@ -260,6 +260,16 @@ void main() {
     // Ensure the time is still the same even after a delay.
     expect(userEntity.value.timeCreatedProperty.value, timeCreated);
   });
+
+  test('computed properties', () async {
+    final cents = 24 * 100;
+    final dollars = (cents / 100).round();
+
+    final money = Money()..centsProperty.value = cents;
+
+    expect(money.dollarsProperty.value, dollars);
+    expect(money.state.fullValues['dollars'], dollars);
+  });
 }
 
 class LocalUserRepository extends DefaultLocalRepository<UserEntity, User> {
@@ -272,4 +282,14 @@ class LocalUserRepository extends DefaultLocalRepository<UserEntity, User> {
   User createValueObject() {
     return User();
   }
+}
+
+class Money extends ValueObject {
+  late final centsProperty = FieldProperty<int>(name: 'cents');
+
+  late final dollarsProperty =
+      ComputedProperty(name: 'dollars', computation: () => (centsProperty.value! / 100).round());
+
+  @override
+  List<Property> get properties => super.properties + [centsProperty, dollarsProperty];
 }

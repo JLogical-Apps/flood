@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:example/pond/domain/budget_transaction/transfer_transaction.dart';
+import 'package:example/pond/domain/budget_transaction/transfer_transaction_entity.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 import 'budget_transaction.dart';
@@ -21,11 +23,16 @@ class FileBudgetTransactionRepository
           () => EnvelopeTransaction(),
           parents: {BudgetTransaction},
         ),
+        ValueObjectRegistration<TransferTransaction, TransferTransaction?>(
+          () => TransferTransaction(),
+          parents: {BudgetTransaction},
+        ),
       ];
 
   @override
   List<EntityRegistration> get entityRegistrations => [
         EntityRegistration<BudgetTransactionEntity, BudgetTransaction>.abstract(),
         EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(() => EnvelopeTransactionEntity()),
+        EntityRegistration<TransferTransactionEntity, TransferTransaction>(() => TransferTransactionEntity()),
       ];
 }

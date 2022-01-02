@@ -19,7 +19,9 @@ class PondEnvelopePage extends HookWidget {
   Widget build(BuildContext context) {
     final envelopeEntityController = useEntity<EnvelopeEntity>(envelopeId);
     final transactionsQueryController = useQuery(
-      Query.from<BudgetTransactionEntity>().where(BudgetTransaction.affectedEnvelopesField, isEqualTo: envelopeId).paginate(),
+      Query.from<BudgetTransactionEntity>()
+          .where(BudgetTransaction.affectedEnvelopesField, contains: envelopeId)
+          .paginate(),
     );
 
     return StyleProvider(

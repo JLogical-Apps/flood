@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/query/predicate/contains_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/equals_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
@@ -29,10 +30,17 @@ abstract class Query<R extends Record> extends Equatable {
     return Query.from<R>().where(Query.id, isEqualTo: id).firstOrNull();
   }
 
-  Query<R> where(String stateField, {dynamic isEqualTo}) {
+  Query<R> where(String stateField, {dynamic isEqualTo, dynamic contains}) {
     if (isEqualTo != null) {
       return WhereQuery(
         queryPredicate: EqualsQueryPredicate(stateField: stateField, isEqualTo: isEqualTo),
+        parent: this,
+      );
+    }
+
+    if (contains != null) {
+      return WhereQuery(
+        queryPredicate: ContainsQueryPredicate(stateField: stateField, contains: contains),
         parent: this,
       );
     }

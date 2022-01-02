@@ -6,6 +6,7 @@ import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_query_p
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_where_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/where_query.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/predicate/local_contains_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/predicate/local_equals_query_predicate_reducer.dart';
 
 class LocalWhereQueryReducer extends AbstractWhereQueryReducer<Iterable<Record>>
@@ -13,6 +14,7 @@ class LocalWhereQueryReducer extends AbstractWhereQueryReducer<Iterable<Record>>
     implements Resolver<AbstractQueryPredicate, AbstractQueryPredicateReducer> {
   late List<AbstractQueryPredicateReducer> wrappers = [
     LocalEqualsQueryPredicateReducer(),
+    LocalContainsQueryPredicateReducer(),
   ];
 
   @override
