@@ -22,7 +22,7 @@ class TransactionCard extends HookWidget {
         if (transaction is EnvelopeTransaction) {
           return StyledContent(
             headerText: transaction.nameProperty.value,
-            bodyText: transaction.amountCentsProperty.value!.formatCentsAsCurrency(),
+            bodyText: transaction.amountProperty.value!.formatCentsAsCurrency(),
             onTapped: () {
               // context.style().navigateTo(context: context, page: (context) => PondBudgetPage(budgetId: envelopeEntity.id!));
             },
@@ -59,7 +59,7 @@ class TransactionCard extends HookWidget {
               .mapIfPresent((entity) => entity.value)
               .getOrNull();
           return StyledContent(
-            headerText: 'Transfer of ${transaction.amountCentsProperty.value!.formatCentsAsCurrency()}',
+            headerText: 'Transfer of ${transaction.amountProperty.value!.formatCentsAsCurrency()}',
             bodyText: 'From ${fromEnvelope?.nameProperty.value ?? 'N/A'} to ${toEnvelope?.nameProperty.value ?? 'N/A'}',
             onTapped: () {
               // context.style().navigateTo(context: context, page: (context) => PondBudgetPage(budgetId: envelopeEntity.id!));

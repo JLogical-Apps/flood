@@ -78,16 +78,12 @@ class PondEnvelopePage extends HookWidget {
                                     (data['amount'].toString().tryParseDoubleAfterClean()! * 100).round();
                                 final envelopeTransaction = EnvelopeTransaction()
                                   ..nameProperty.value = data['name']
-                                  ..amountCentsProperty.value = amountCents
+                                  ..amountProperty.value = amountCents
                                   ..budgetProperty.value = envelope.budgetProperty.value
                                   ..envelopeProperty.value = envelopeId;
                                 final envelopeTransactionEntity = EnvelopeTransactionEntity()
                                   ..value = envelopeTransaction;
                                 await envelopeTransactionEntity.create();
-
-                                envelopeEntity.value.amountProperty.value =
-                                    envelopeEntity.value.amountProperty.value! + amountCents;
-                                await envelopeEntity.save();
                               },
                             ),
                           ],

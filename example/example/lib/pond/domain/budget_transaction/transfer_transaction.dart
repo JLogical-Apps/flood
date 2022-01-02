@@ -5,7 +5,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 class TransferTransaction extends BudgetTransaction {
   late final fromProperty = ReferenceFieldProperty<EnvelopeEntity>(name: 'from')..required();
   late final toProperty = ReferenceFieldProperty<EnvelopeEntity>(name: 'to')..required();
-  late final amountCentsProperty = FieldProperty<int>(name: 'amount').required();
+  late final amountProperty = FieldProperty<int>(name: 'amount').required();
 
   @override
   Property<List<String>> get abstractAffectedEnvelopesProperty => ListComputedProperty(
@@ -17,5 +17,5 @@ class TransferTransaction extends BudgetTransaction {
       );
 
   @override
-  List<Property> get properties => super.properties + [fromProperty, toProperty, amountCentsProperty];
+  List<Property> get properties => super.properties + [fromProperty, toProperty, amountProperty];
 }

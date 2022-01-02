@@ -143,15 +143,13 @@ class PondBudgetPage extends HookWidget {
                                 final amountCents =
                                     (data['amount'].toString().tryParseDoubleAfterClean()! * 100).round();
                                 final transferTransaction = TransferTransaction()
-                                  ..amountCentsProperty.value = amountCents
+                                  ..amountProperty.value = amountCents
                                   ..fromProperty.reference = data['from']
                                   ..toProperty.reference = data['to']
                                   ..budgetProperty.value = budgetId;
                                 final transferTransactionEntity = TransferTransactionEntity()
                                   ..value = transferTransaction;
                                 await transferTransactionEntity.create();
-
-                                // TODO Change the affected envelope amounts.
                               },
                             ),
                         ],
