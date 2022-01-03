@@ -1,5 +1,6 @@
 export 'src/form/export.dart';
 export 'src/model/models.dart';
+export 'src/patterns/export.dart';
 export 'src/persistence/export.dart';
 export 'src/pond/export.dart';
 export 'src/popup/popup.dart';
