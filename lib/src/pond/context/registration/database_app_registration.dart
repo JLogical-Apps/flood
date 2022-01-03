@@ -8,7 +8,12 @@ import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 class DatabaseAppRegistration with WithAppRegistrationDelegator implements AppRegistration {
   final List<EntityRepository> repositories;
 
-  DatabaseAppRegistration({required this.repositories});
+  final List<ValueObjectRegistration> additionalValueObjectRegistrations;
+
+  DatabaseAppRegistration({
+    required this.repositories,
+    this.additionalValueObjectRegistrations: const [],
+  });
 
   late final List<RegistrationsProvider> registrationProviders = repositories
       .where((repository) => repository is RegistrationsProvider)
@@ -19,7 +24,8 @@ class DatabaseAppRegistration with WithAppRegistrationDelegator implements AppRe
   AppRegistration get appRegistration {
     return ExplicitAppRegistration(
       valueObjectRegistrations:
-          registrationProviders.expand((registration) => registration.valueObjectRegistrations).toList(),
+          registrationProviders.expand((registration) => registration.valueObjectRegistrations).toList() +
+              additionalValueObjectRegistrations,
       entityRegistrations: registrationProviders.expand((registration) => registration.entityRegistrations).toList(),
       aggregateRegistrations:
           registrationProviders.expand((registration) => registration.aggregateRegistrations).toList(),
