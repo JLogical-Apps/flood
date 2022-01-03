@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/model/pagination_result.dart';
+import 'package:jlogical_utils/src/persistence/repository/repository.dart';
+import 'package:jlogical_utils/src/utils/collection_extensions.dart';
+import 'package:jlogical_utils/src/utils/util.dart';
 
 abstract class FirestoreRepository<T> extends Repository<T, String> {
   /// The path of the collection.

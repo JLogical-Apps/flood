@@ -13,6 +13,9 @@ abstract class AsyncLoadable<T> {
   /// The current value.
   FutureValue<T> get value => valueX.value;
 
+  /// Whether the loadable has already started loading.
+  bool hasStartedLoading = false;
+
   /// Whether this is in its initial state.
   bool get isInitial => value is FutureValueInitial;
 
@@ -34,6 +37,8 @@ abstract class AsyncLoadable<T> {
     // If the model is currently loading something, just wait for the previous load to finish.
     var completer = _completer;
 
+    hasStartedLoading = true;
+
     if (completer != null && !completer.isCompleted) {
       await completer.future;
       return value;
@@ -53,7 +58,7 @@ abstract class AsyncLoadable<T> {
 
   /// If the model is in its initial state, load it.
   Future<void> ensureLoadingStarted() async {
-    if (value is FutureValueInitial) {
+    if (!hasStartedLoading) {
       await load();
     }
   }

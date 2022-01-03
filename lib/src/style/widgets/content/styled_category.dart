@@ -21,6 +21,9 @@ class StyledCategory extends StyledWidget {
   final Widget? trailing;
   final List<Widget> children;
 
+  /// Widget to display if there are no children.
+  final Widget? noChildrenWidget;
+
   /// Actions that can be performed associated with the category.
   final List<ActionItem> actions;
 
@@ -44,6 +47,7 @@ class StyledCategory extends StyledWidget {
     this.leading,
     this.trailing,
     this.children: const [],
+    this.noChildrenWidget,
     this.actions: const [],
     this.emphasisColorOverride,
     this.borderRadius,
@@ -60,6 +64,7 @@ class StyledCategory extends StyledWidget {
     this.leading,
     this.trailing,
     this.children: const [],
+    this.noChildrenWidget,
     this.actions: const [],
     this.emphasisColorOverride,
     this.borderRadius,
@@ -76,6 +81,7 @@ class StyledCategory extends StyledWidget {
     this.leading,
     this.trailing,
     this.children: const [],
+    this.noChildrenWidget,
     this.actions: const [],
     this.emphasisColorOverride,
     this.borderRadius,
@@ -92,6 +98,7 @@ class StyledCategory extends StyledWidget {
     this.leading,
     this.trailing,
     this.children: const [],
+    this.noChildrenWidget,
     this.actions: const [],
     this.emphasisColorOverride,
     this.borderRadius,

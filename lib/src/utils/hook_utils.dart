@@ -9,6 +9,12 @@ T useValueStream<T>(ValueStream<T> stream) {
   return stream.value;
 }
 
+/// Helper for using a value stream. Returns a null value if the stream is null.
+T? useValueStreamOrNull<T>(ValueStream<T>? stream) {
+  useStream(stream);
+  return stream?.value;
+}
+
 /// Performs an action only once in a HookWidget. Similar to [initState] of a StatefulWidget.
 void useOneTimeEffect(void Function()? Function() effect) {
   useEffect(effect, [0]);
