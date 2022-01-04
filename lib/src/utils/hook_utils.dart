@@ -37,10 +37,14 @@ ValueStream<C> useComputed<V, C>(ValueStream<C> create()) {
 }
 
 /// Listens to an async loadable.
-M useModel<M extends AsyncLoadable<V>, V>(M model) {
-  model.ensureLoadingStarted();
-  useValueStream(model.valueX);
+M? useModelOrNull<M extends AsyncLoadable<V>, V>(M? model) {
+  model?.ensureLoadingStarted();
+  useValueStreamOrNull(model?.valueX);
   return model;
+}
+
+M useModel<M extends AsyncLoadable<V>, V>(M model) {
+  return useModelOrNull(model)!;
 }
 
 /// Listens to a stream and disposes of the listener when the widget is disposed.
