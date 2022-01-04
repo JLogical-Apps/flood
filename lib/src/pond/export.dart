@@ -18,6 +18,7 @@ export 'property/with_global_type_serializer.dart';
 export 'property/with_id_properties_state.dart';
 export 'property/with_properties_state.dart';
 export 'query/query.dart';
+export 'query/request/query_request.dart';
 export 'query/request/result/query_pagination_result_controller.dart';
 export 'record/aggregate.dart';
 export 'record/entity.dart';
