@@ -7,13 +7,13 @@ class State extends Equatable {
   final String? type;
   final Map<String, dynamic> values;
 
-  const State({this.id, this.type, required this.values});
+  State({this.id, this.type, required this.values});
 
-  Map<String, dynamic> get fullValues => {
-        ...values,
-        Query.id: id,
-        Query.type: type,
-      };
+  late final Map<String, dynamic> fullValues = {
+    ...values,
+    Query.id: id,
+    Query.type: type,
+  };
 
   static State? extractFromOrNull(dynamic value) {
     if (value is State) {
@@ -28,6 +28,10 @@ class State extends Equatable {
     }
 
     return null;
+  }
+
+  operator [](String fieldName) {
+    return fullValues[fieldName];
   }
 
   State copyWith({String? id, Map<String, dynamic>? values, String? type}) {

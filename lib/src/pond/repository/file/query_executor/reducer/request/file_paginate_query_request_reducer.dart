@@ -9,7 +9,7 @@ class FilePaginateQueryRequestReducer<R extends Record>
     extends AbstractFileQueryRequestReducer<PaginateQueryRequest<R>, R, QueryPaginationResultController<R>> {
   @override
   QueryPaginationResultController<R> reduce({
-    required List<Record> accumulation,
+    required Iterable<Record> accumulation,
     required PaginateQueryRequest<R> queryRequest,
   }) {
     return QueryPaginationResultController(

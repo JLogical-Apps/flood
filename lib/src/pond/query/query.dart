@@ -3,13 +3,14 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/contains_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/equals_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/first_or_null_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/where_query.dart';
 import 'package:jlogical_utils/src/pond/query/without_cache_query.dart';
 import 'package:jlogical_utils/src/utils/marker.dart';
 
 import 'from_query.dart';
-import 'request/first_query_request.dart';
+import 'order_by_query.dart';
 
 @marker
 abstract class Query<R extends Record> extends Equatable {
@@ -50,6 +51,14 @@ abstract class Query<R extends Record> extends Equatable {
 
   Query<R> withoutCache() {
     return WithoutCacheQuery(parent: this);
+  }
+
+  Query<R> orderByAscending(String fieldName) {
+    return OrderByQuery(parent: this, fieldName: fieldName, orderByType: OrderByType.ascending);
+  }
+
+  Query<R> orderByDescending(String fieldName) {
+    return OrderByQuery(parent: this, fieldName: fieldName, orderByType: OrderByType.descending);
   }
 
   AllQueryRequest<R> all() {

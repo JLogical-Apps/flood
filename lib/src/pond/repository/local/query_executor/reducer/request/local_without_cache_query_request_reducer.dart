@@ -6,16 +6,15 @@ import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'abstract_local_query_request_reducer.dart';
 
 class LocalWithoutCacheQueryRequestReducer<R extends Record>
-    extends AbstractLocalQueryRequestReducer<WithoutCacheQueryRequest<R, List<Record>>, R, List<Record>> {
-  final Resolver<QueryRequest<R, dynamic>,
-          AbstractLocalQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
+    extends AbstractLocalQueryRequestReducer<WithoutCacheQueryRequest<R, List<Record>>, R, dynamic> {
+  final Resolver<QueryRequest<R, dynamic>, AbstractLocalQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
       Function() queryRequestReducerResolverGetter;
 
   LocalWithoutCacheQueryRequestReducer({required this.queryRequestReducerResolverGetter});
 
   @override
-  List<R> reduce({
-    required List<Record> accumulation,
+  dynamic reduce({
+    required Iterable<Record> accumulation,
     required WithoutCacheQueryRequest<R, List<Record>> queryRequest,
   }) {
     return queryRequestReducerResolverGetter().resolve(queryRequest.queryRequest).reduce(

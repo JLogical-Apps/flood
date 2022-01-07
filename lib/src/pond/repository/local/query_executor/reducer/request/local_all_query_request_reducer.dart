@@ -7,7 +7,7 @@ class LocalAllQueryRequestReducer<R extends Record>
     extends AbstractLocalQueryRequestReducer<AllQueryRequest<R>, R, List<Record>> {
   @override
   List<R> reduce({
-    required List<Record> accumulation,
+    required Iterable<Record> accumulation,
     required AllQueryRequest<R> queryRequest,
   }) {
     return accumulation.cast<R>().toList();

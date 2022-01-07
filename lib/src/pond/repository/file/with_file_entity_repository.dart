@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/query/query_executor.dart';
+import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/file_query_executor.dart';
 import 'package:jlogical_utils/src/pond/state/persistence/json_state_persister.dart';
 import 'package:jlogical_utils/src/pond/state/persistence/state_persister.dart';
@@ -44,7 +44,8 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
   Future<void> commitTransactionChanges(TransactionPendingChanges changes) async {
     await Future.wait(changes.stateChangesById.entries.mapEntries((id, state) => _saveState(id: id, state: state)));
     await Future.wait(changes.stateIdDeletes.map((id) async {
-      final entity = await getOrNull(id) ?? (throw Exception('Cannot delete entity with id [$id] since it does not exist!'));
+      final entity =
+          await getOrNull(id) ?? (throw Exception('Cannot delete entity with id [$id] since it does not exist!'));
       await delete(entity);
     }));
   }
@@ -53,7 +54,7 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
     return FileQueryExecutor(
       baseDirectory: baseDirectory,
       stateGetter: (id, withoutCache) async =>
-      (await get(id, transaction: transaction, withoutCache: withoutCache)).state,
+          (await get(id, transaction: transaction, withoutCache: withoutCache)).state,
     );
   }
 

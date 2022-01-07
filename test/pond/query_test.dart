@@ -214,6 +214,28 @@ void main() {
       isEmpty,
     );
   });
+
+  test('order by', () async {
+    final emptyEnvelopesQueryAscending =
+        Query.from<EnvelopeEntity>().orderByAscending(Envelope.amountPropertyName).all();
+    final resultEnvelopeEntitiesAscending = await AppContext.global.executeQuery(emptyEnvelopesQueryAscending);
+    final resultEnvelopeValueObjectsAscending =
+        resultEnvelopeEntitiesAscending.map((envelopeEntity) => envelopeEntity.value).toList();
+    expect(
+      resultEnvelopeValueObjectsAscending.map((envelope) => envelope.nameProperty.value).toList(),
+      ['Car', 'House', 'Tithe', 'Investing'],
+    );
+
+    final emptyEnvelopesQueryDescending =
+        Query.from<EnvelopeEntity>().orderByDescending(Envelope.amountPropertyName).all();
+    final resultEnvelopeEntitiesDescending = await AppContext.global.executeQuery(emptyEnvelopesQueryDescending);
+    final resultEnvelopeValueObjectsDescending =
+        resultEnvelopeEntitiesDescending.map((envelopeEntity) => envelopeEntity.value).toList();
+    expect(
+      resultEnvelopeValueObjectsDescending.map((envelope) => envelope.nameProperty.value).toList(),
+      ['Investing', 'Tithe', 'Car', 'House'],
+    );
+  });
 }
 
 Future<void> _populateRepositories() async {

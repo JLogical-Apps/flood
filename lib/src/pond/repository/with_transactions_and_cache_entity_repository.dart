@@ -1,6 +1,6 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/patterns/cache/cache.dart';
-import 'package:jlogical_utils/src/pond/query/query_executor.dart';
+import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:rxdart/rxdart.dart';
 

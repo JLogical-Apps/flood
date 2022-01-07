@@ -1,5 +1,5 @@
 import 'package:jlogical_utils/src/model/future_value.dart';
-import 'package:jlogical_utils/src/pond/query/query_executor_x.dart';
+import 'package:jlogical_utils/src/pond/query/executor/query_executor_x.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
