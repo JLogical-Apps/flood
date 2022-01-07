@@ -10,10 +10,9 @@ class FileOrderByQueryReducer extends AbstractOrderByQueryReducer<Iterable<Recor
     final orderByType = orderByQuery.orderByType;
     final sortField = orderByQuery.fieldName;
 
+    final multiplier = orderByType == OrderByType.ascending ? 1 : -1;
     final list = accumulation!.toList();
-    list.sort(orderByType == OrderByType.ascending
-        ? ((a, b) => _compare(b, a, sortField))
-        : ((a, b) => _compare(a, b, sortField)));
+    list.sort((a, b) => _compare(a, b, sortField) * multiplier);
     return list;
   }
 
@@ -27,7 +26,7 @@ class FileOrderByQueryReducer extends AbstractOrderByQueryReducer<Iterable<Recor
       }
 
       if (valueA == null) {
-        return valueB!.compareTo(valueA);
+        return -valueB!.compareTo(valueA);
       }
 
       return valueA.compareTo(valueB);

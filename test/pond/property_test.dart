@@ -16,6 +16,8 @@ import 'entities/user_entity.dart';
 
 void main() {
   test('state inflation on simple ValueObject.', () {
+    final now = DateTime.now();
+
     AppContext.global = AppContext(
       registration: ExplicitAppRegistration(
         valueObjectRegistrations: [
@@ -29,6 +31,7 @@ void main() {
       values: {
         'name': 'Tithe',
         'amount': 24 * 100,
+        'timeCreated': now.millisecondsSinceEpoch,
       },
     );
 
@@ -37,6 +40,7 @@ void main() {
     expect(envelope.state, state);
     expect(envelope.nameProperty.value, 'Tithe');
     expect(envelope.amountProperty.value, 24 * 100);
+    expect(envelope.timeCreatedProperty.value!.millisecondsSinceEpoch, now.millisecondsSinceEpoch);
   });
 
   test('state inflation of record that has a list', () {

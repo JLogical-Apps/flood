@@ -9,9 +9,11 @@ import 'entities/envelope_entity.dart';
 
 void main() {
   test('simple value object has proper state.', () {
+    final now = DateTime.now().toUtc();
     final envelope = Envelope()
       ..nameProperty.value = 'Tithe'
-      ..amountProperty.value = 24 * 100;
+      ..amountProperty.value = 24 * 100
+      ..timeCreatedProperty.value = now;
 
     expect(
       envelope.state,
@@ -20,6 +22,7 @@ void main() {
         values: {
           'name': 'Tithe',
           'amount': 24 * 100,
+          'timeCreated': now.millisecondsSinceEpoch,
         },
       ),
     );

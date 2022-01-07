@@ -20,16 +20,20 @@ import 'entities/transfer_transaction_entity.dart';
 late List<Envelope> envelopes = [
   Envelope()
     ..nameProperty.value = 'Tithe'
-    ..amountProperty.value = 24 * 100,
+    ..amountProperty.value = 24 * 100
+    ..timeCreatedProperty.value = DateTime.now(),
   Envelope()
     ..nameProperty.value = 'Investing'
-    ..amountProperty.value = 81 * 100,
+    ..amountProperty.value = 81 * 100
+    ..timeCreatedProperty.value = DateTime.now().subtract(Duration(minutes: 1)),
   Envelope()
     ..nameProperty.value = 'Car'
-    ..amountProperty.value = 0,
+    ..amountProperty.value = 0
+    ..timeCreatedProperty.value = DateTime.now().subtract(Duration(minutes: 2)),
   Envelope()
     ..nameProperty.value = 'House'
-    ..amountProperty.value = 0,
+    ..amountProperty.value = 0
+    ..timeCreatedProperty.value = DateTime.now().subtract(Duration(minutes: 3)),
 ];
 
 List<Budget> budgets = [
@@ -65,14 +69,14 @@ void main() {
   });
 
   test('with condition', () async {
-    final emptyEnvelopesQuery = Query.from<EnvelopeEntity>().where(Envelope.amountPropertyName, isEqualTo: 0).all();
+    final emptyEnvelopesQuery = Query.from<EnvelopeEntity>().where(Envelope.amountField, isEqualTo: 0).all();
     final resultEnvelopeEntities = await AppContext.global.executeQuery(emptyEnvelopesQuery);
     final resultEnvelopeValueObjects = resultEnvelopeEntities.map((envelopeEntity) => envelopeEntity.value).toList();
     expect(resultEnvelopeValueObjects, envelopes.where((envelope) => envelope.amountProperty.value == 0).toList());
   });
 
   test('as stream', () async {
-    final emptyEnvelopesQuery = Query.from<EnvelopeEntity>().where(Envelope.amountPropertyName, isEqualTo: 0).all();
+    final emptyEnvelopesQuery = Query.from<EnvelopeEntity>().where(Envelope.amountField, isEqualTo: 0).all();
     final resultEnvelopeEntitiesX = AppContext.global.executeQueryX(emptyEnvelopesQuery);
     expect(resultEnvelopeEntitiesX.value, FutureValue<List<EnvelopeEntity>>.initial());
 
@@ -216,26 +220,35 @@ void main() {
   });
 
   test('order by', () async {
-    final emptyEnvelopesQueryAscending =
-        Query.from<EnvelopeEntity>().orderByAscending(Envelope.amountPropertyName).all();
-    final resultEnvelopeEntitiesAscending = await AppContext.global.executeQuery(emptyEnvelopesQueryAscending);
-    final resultEnvelopeValueObjectsAscending =
-        resultEnvelopeEntitiesAscending.map((envelopeEntity) => envelopeEntity.value).toList();
+    final amountUpQuery = Query.from<EnvelopeEntity>().orderByAscending(Envelope.amountField);
     expect(
-      resultEnvelopeValueObjectsAscending.map((envelope) => envelope.nameProperty.value).toList(),
+      (await _getEnvelopesFromQuery(amountUpQuery)).map((envelope) => envelope.nameProperty.value).toList(),
       ['Car', 'House', 'Tithe', 'Investing'],
     );
 
-    final emptyEnvelopesQueryDescending =
-        Query.from<EnvelopeEntity>().orderByDescending(Envelope.amountPropertyName).all();
-    final resultEnvelopeEntitiesDescending = await AppContext.global.executeQuery(emptyEnvelopesQueryDescending);
-    final resultEnvelopeValueObjectsDescending =
-        resultEnvelopeEntitiesDescending.map((envelopeEntity) => envelopeEntity.value).toList();
+    final amountDownQuery = Query.from<EnvelopeEntity>().orderByDescending(Envelope.amountField);
     expect(
-      resultEnvelopeValueObjectsDescending.map((envelope) => envelope.nameProperty.value).toList(),
+      (await _getEnvelopesFromQuery(amountDownQuery)).map((envelope) => envelope.nameProperty.value).toList(),
       ['Investing', 'Tithe', 'Car', 'House'],
     );
+
+    final timeUpQuery = Query.from<EnvelopeEntity>().orderByAscending(ValueObject.timeCreatedField);
+    expect(
+      (await _getEnvelopesFromQuery(timeUpQuery)).map((envelope) => envelope.nameProperty.value).toList(),
+      ['House', 'Car', 'Investing', 'Tithe'],
+    );
+
+    final timeDownQuery = Query.from<EnvelopeEntity>().orderByDescending(ValueObject.timeCreatedField);
+    expect(
+      (await _getEnvelopesFromQuery(timeDownQuery)).map((envelope) => envelope.nameProperty.value).toList(),
+      ['Tithe', 'Investing', 'Car', 'House'],
+    );
   });
+}
+
+Future<List<Envelope>> _getEnvelopesFromQuery(Query<EnvelopeEntity> query) async {
+  final entities = await query.all().get();
+  return entities.map((e) => e.value).toList();
 }
 
 Future<void> _populateRepositories() async {

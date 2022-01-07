@@ -7,6 +7,10 @@ class DateTimeTypeStateSerializer extends TypeStateSerializer<DateTime> {
       throw ArgumentError.notNull('value');
     }
 
+    if(value is DateTime) {
+      return value;
+    }
+
     if (value is int) {
       return DateTime.fromMillisecondsSinceEpoch(value, isUtc: true);
     }

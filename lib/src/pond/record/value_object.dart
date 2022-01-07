@@ -15,7 +15,9 @@ import 'package:meta/meta.dart';
 abstract class ValueObject extends Record
     with EquatableMixin, WithPropertiesState
     implements PropertyContextProvider, Resolvable {
-  late final timeCreatedProperty = FieldProperty<DateTime>(name: 'timeCreated').withFallbackReplacement(() => DateTime.now());
+  static const timeCreatedField = 'timeCreated';
+  late final timeCreatedProperty =
+      FieldProperty<DateTime>(name: timeCreatedField).withFallbackReplacement(() => DateTime.now());
 
   ValueObject() {
     properties.forEach((property) => property.registerPropertyContextProvider(this));
