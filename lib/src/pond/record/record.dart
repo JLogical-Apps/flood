@@ -15,4 +15,8 @@ abstract class Record implements Stateful, Validator {
       throw e;
     }
   }
+
+  void copyFrom(Stateful stateful) {
+    state = stateful.state;
+  }
 }

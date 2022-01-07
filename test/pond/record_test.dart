@@ -134,6 +134,20 @@ void main() {
     expect(afterSave, false);
     expect(beforeDelete, true);
   });
+
+  test('copying ValueObjects', () {
+    final envelope = Envelope()
+      ..nameProperty.value = 'Tithe'
+      ..amountProperty.value = 12 * 100;
+
+    final envelopeCopy = envelope.copy();
+    expect(envelopeCopy, envelope);
+
+    final envelopeModification = envelope.copy()..nameProperty.value = 'Giving';
+
+    expect(envelopeModification.nameProperty.value, 'Giving');
+    expect(envelopeModification.amountProperty.value, 12 * 100);
+  });
 }
 
 class Lifecycle extends ValueObject {}
