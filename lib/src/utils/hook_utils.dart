@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -18,6 +19,14 @@ T? useValueStreamOrNull<T>(ValueStream<T>? stream) {
 /// Performs an action only once in a HookWidget. Similar to [initState] of a StatefulWidget.
 void useOneTimeEffect(void Function()? Function() effect) {
   useEffect(effect, [0]);
+}
+
+/// Listens to a future but memoizes the future to prevent rebuilds every frame.
+AsyncSnapshot<T> useMemoizedFuture<T>(
+  Future<T> futureGetter(), [
+  List<Object?> keys = const <Object>[],
+]) {
+  return useFuture(useMemoized(futureGetter, keys));
 }
 
 /// Creates a BehaviorSubject with the value from [create] and is automatically disposed when the widget is disposed.
