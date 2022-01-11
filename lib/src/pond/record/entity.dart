@@ -28,7 +28,10 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
 
   State get state => value.state.copyWith(id: id, type: runtimeType.toString());
 
-  set state(State state) => value = ValueObject.fromState(state);
+  set state(State state) {
+    id = state.id;
+    value = ValueObject.fromState(state);
+  }
 
   bool get isNew => id == null;
 
