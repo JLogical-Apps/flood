@@ -5,26 +5,25 @@ import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
-import 'package:jlogical_utils/src/utils/stream_extensions.dart';
 
 class EntityController<E extends Entity> {
   final String entityId;
 
-  late AsyncLoadable<E> model = ValueStreamModel<E>(
-    valueX: AppContext.global.executeQueryX(_entityQuery).mapWithValue((maybeEntity) => maybeEntity.when(
-          initial: () => FutureValue.initial(),
-          loaded: (entity) => entity == null
-              ? FutureValue.error(error: 'Could not load entity of type $E with id $entityId')
-              : FutureValue.loaded(value: entity),
-          error: (error) => FutureValue.error(error: error),
-        )),
+  late AsyncLoadable<E?> nullableModel = ValueStreamModel<E?>(
+    valueX: AppContext.global.executeQueryX(_entityQuery),
     loader: () async => (await AppContext.global.executeQuery<E, E?>(_entityQuery.withoutCache()))!,
     hasStartedLoading: true,
   );
 
+  late AsyncLoadable<E> model =
+      nullableModel.map((maybeEntity) => maybeEntity ?? (throw Exception('Cannot load $E with id $entityId')));
+
   late final QueryRequest<E, E?> _entityQuery = Query.getById(entityId);
 
-  FutureValue<E> get value => model.value;
+  FutureValue<E?> get valueOrNull => model.value;
+
+  FutureValue<E> get value =>
+      valueOrNull.mapIfPresent((value) => value ?? (throw Exception('Cannot get value of $E with id $entityId')));
 
   EntityController({required this.entityId});
 
