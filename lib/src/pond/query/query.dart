@@ -11,6 +11,10 @@ import 'package:jlogical_utils/src/utils/marker.dart';
 
 import 'from_query.dart';
 import 'order_by_query.dart';
+import 'predicate/greater_than_or_equal_to_query_predicate.dart';
+import 'predicate/greater_than_query_predicate.dart';
+import 'predicate/less_than_or_equal_to_query_predicate.dart';
+import 'predicate/less_than_query_predicate.dart';
 
 @marker
 abstract class Query<R extends Record> extends Equatable {
@@ -31,7 +35,15 @@ abstract class Query<R extends Record> extends Equatable {
     return Query.from<R>().where(Query.id, isEqualTo: id).firstOrNull();
   }
 
-  Query<R> where(String stateField, {dynamic isEqualTo, dynamic contains}) {
+  Query<R> where(
+    String stateField, {
+    dynamic isEqualTo,
+    dynamic contains,
+    dynamic isGreaterThan,
+    dynamic isGreaterThanOrEqualTo,
+    dynamic isLessThan,
+    dynamic isLessThanOrEqualTo,
+  }) {
     if (isEqualTo != null) {
       return WhereQuery(
         queryPredicate: EqualsQueryPredicate(stateField: stateField, isEqualTo: isEqualTo),
@@ -42,6 +54,40 @@ abstract class Query<R extends Record> extends Equatable {
     if (contains != null) {
       return WhereQuery(
         queryPredicate: ContainsQueryPredicate(stateField: stateField, contains: contains),
+        parent: this,
+      );
+    }
+
+    if (isGreaterThan != null) {
+      return WhereQuery(
+        queryPredicate: GreaterThanQueryPredicate(stateField: stateField, isGreaterThan: isGreaterThan),
+        parent: this,
+      );
+    }
+
+    if (isGreaterThanOrEqualTo != null) {
+      return WhereQuery(
+        queryPredicate: GreaterThanOrEqualToQueryPredicate(
+          stateField: stateField,
+          isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        ),
+        parent: this,
+      );
+    }
+
+    if (isLessThan != null) {
+      return WhereQuery(
+        queryPredicate: LessThanQueryPredicate(stateField: stateField, isLessThan: isLessThan),
+        parent: this,
+      );
+    }
+
+    if (isLessThanOrEqualTo != null) {
+      return WhereQuery(
+        queryPredicate: LessThanOrEqualToQueryPredicate(
+          stateField: stateField,
+          isLessThanOrEqualTo: isLessThanOrEqualTo,
+        ),
         parent: this,
       );
     }

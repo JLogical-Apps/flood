@@ -17,23 +17,25 @@ import 'entities/lucky_numbers_entity.dart';
 import 'entities/transfer_transaction.dart';
 import 'entities/transfer_transaction_entity.dart';
 
+late DateTime now = DateTime.now();
+
 late List<Envelope> envelopes = [
   Envelope()
     ..nameProperty.value = 'Tithe'
     ..amountProperty.value = 24 * 100
-    ..timeCreatedProperty.value = DateTime.now(),
+    ..timeCreatedProperty.value = now,
   Envelope()
     ..nameProperty.value = 'Investing'
     ..amountProperty.value = 81 * 100
-    ..timeCreatedProperty.value = DateTime.now().subtract(Duration(minutes: 1)),
+    ..timeCreatedProperty.value = now.subtract(Duration(minutes: 1)),
   Envelope()
     ..nameProperty.value = 'Car'
     ..amountProperty.value = 0
-    ..timeCreatedProperty.value = DateTime.now().subtract(Duration(minutes: 2)),
+    ..timeCreatedProperty.value = now.subtract(Duration(minutes: 2)),
   Envelope()
     ..nameProperty.value = 'House'
     ..amountProperty.value = 0
-    ..timeCreatedProperty.value = DateTime.now().subtract(Duration(minutes: 3)),
+    ..timeCreatedProperty.value = now.subtract(Duration(minutes: 3)),
 ];
 
 List<Budget> budgets = [
@@ -243,6 +245,56 @@ void main() {
       (await _getEnvelopesFromQuery(timeDownQuery)).map((envelope) => envelope.nameProperty.value).toList(),
       ['Tithe', 'Investing', 'Car', 'House'],
     );
+  });
+
+  test('greater than/less than', () async {
+    final greaterThanEnvelopes =
+        await _getEnvelopesFromQuery(Query.from<EnvelopeEntity>().where(Envelope.amountField, isGreaterThan: 0));
+    expect(greaterThanEnvelopes, envelopes.where((envelope) => envelope.amountProperty.value! > 0).toList());
+
+    final greaterThanOrEqualToEnvelopes = await _getEnvelopesFromQuery(
+        Query.from<EnvelopeEntity>().where(Envelope.amountField, isGreaterThanOrEqualTo: 0));
+    expect(greaterThanOrEqualToEnvelopes, envelopes.where((envelope) => envelope.amountProperty.value! >= 0).toList());
+
+    final lessThanEnvelopes =
+        await _getEnvelopesFromQuery(Query.from<EnvelopeEntity>().where(Envelope.amountField, isLessThan: 24 * 100));
+    expect(lessThanEnvelopes, envelopes.where((envelope) => envelope.amountProperty.value! < 24 * 100).toList());
+
+    final lessThanOrEqualToEnvelopes = await _getEnvelopesFromQuery(
+        Query.from<EnvelopeEntity>().where(Envelope.amountField, isLessThanOrEqualTo: 24 * 100));
+    expect(
+        lessThanOrEqualToEnvelopes, envelopes.where((envelope) => envelope.amountProperty.value! <= 24 * 100).toList());
+
+    final oneMinuteAgo = now.subtract(Duration(seconds: 1));
+    final greaterThanDateEnvelopes = await _getEnvelopesFromQuery(
+        Query.from<EnvelopeEntity>().where(ValueObject.timeCreatedField, isGreaterThan: oneMinuteAgo));
+    expect(greaterThanDateEnvelopes,
+        envelopes.where((envelope) => envelope.timeCreatedProperty.value!.isAfter(oneMinuteAgo)).toList());
+
+    final greaterThanOrEqualToDateEnvelopes = await _getEnvelopesFromQuery(
+        Query.from<EnvelopeEntity>().where(ValueObject.timeCreatedField, isGreaterThanOrEqualTo: oneMinuteAgo));
+    expect(
+        greaterThanOrEqualToDateEnvelopes,
+        envelopes
+            .where((envelope) =>
+                envelope.timeCreatedProperty.value!.isAfter(oneMinuteAgo) ||
+                envelope.timeCreatedProperty.value!.isAtSameMomentAs(oneMinuteAgo))
+            .toList());
+
+    final lessThanDateEnvelopes = await _getEnvelopesFromQuery(
+        Query.from<EnvelopeEntity>().where(ValueObject.timeCreatedField, isLessThan: oneMinuteAgo));
+    expect(lessThanDateEnvelopes,
+        envelopes.where((envelope) => envelope.timeCreatedProperty.value!.isBefore(oneMinuteAgo)).toList());
+
+    final lessThanOrEqualToDateEnvelopes = await _getEnvelopesFromQuery(
+        Query.from<EnvelopeEntity>().where(ValueObject.timeCreatedField, isLessThanOrEqualTo: oneMinuteAgo));
+    expect(
+        lessThanOrEqualToDateEnvelopes,
+        envelopes
+            .where((envelope) =>
+                envelope.timeCreatedProperty.value!.isBefore(oneMinuteAgo) ||
+                envelope.timeCreatedProperty.value!.isAtSameMomentAs(oneMinuteAgo))
+            .toList());
   });
 }
 

@@ -8,6 +8,10 @@ import 'package:jlogical_utils/src/pond/query/where_query.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/predicate/file_contains_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/predicate/file_equals_query_predicate_reducer.dart';
+import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/predicate/file_greater_than_or_equal_to_query_predicate_reducer.dart';
+import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/predicate/file_greater_than_query_predicate_reducer.dart';
+import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/predicate/file_less_than_or_equal_to_query_predicate_reducer.dart';
+import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/predicate/file_less_than_query_predicate_reducer.dart';
 
 class FileWhereQueryReducer extends AbstractWhereQueryReducer<Iterable<Record>>
     with WithWrapperResolver<AbstractQueryPredicate, AbstractQueryPredicateReducer>
@@ -15,6 +19,10 @@ class FileWhereQueryReducer extends AbstractWhereQueryReducer<Iterable<Record>>
   late List<AbstractQueryPredicateReducer> wrappers = [
     FileEqualsQueryPredicateReducer(),
     FileContainsQueryPredicateReducer(),
+    FileGreaterThanQueryPredicateReducer(),
+    FileGreaterThanOrEqualToQueryPredicateReducer(),
+    FileLessThanQueryPredicateReducer(),
+    FileLessThanOrEqualToQueryPredicateReducer(),
   ];
 
   @override
