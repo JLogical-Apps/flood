@@ -1,6 +1,7 @@
-export 'auth/default_auth_module.dart';
 export 'auth/auth_service.dart';
+export 'auth/default_auth_module.dart';
 export 'auth/login_failure.dart';
+export 'auth/signup_failure.dart';
 export 'context/app_context.dart';
 export 'context/environment/environment.dart';
 export 'context/registration/app_registration.dart';
