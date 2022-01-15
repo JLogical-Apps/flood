@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/record/aggregate.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
@@ -6,6 +7,8 @@ import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 
 abstract class AppRegistration {
+  Database get database;
+
   ValueObject? constructValueObjectRuntimeOrNull(Type valueObjectType);
 
   ValueObject? constructValueObjectFromStateOrNull(State state);
@@ -20,9 +23,11 @@ abstract class AppRegistration {
 
   bool isSubtype(Type a, Type b);
 
-  Database get database;
-
   Set<Type> getDescendants(Type type);
+
+  void register<T extends Object>(T lazyGetter());
+
+  T locate<T>();
 }
 
 extension DefaultAppRegistration on AppRegistration {
@@ -77,5 +82,9 @@ extension DefaultAppRegistration on AppRegistration {
 
   TypeStateSerializer getTypeStateSerializerByType<T>() {
     return getTypeStateSerializerByTypeRuntime(T);
+  }
+
+  void registerModule(AppModule module) {
+    module.onRegister(this);
   }
 }

@@ -44,4 +44,12 @@ mixin WithAppRegistrationDelegator implements AppRegistration {
   Database get database => appRegistration.database;
 
   Set<Type> getDescendants(Type type) => appRegistration.getDescendants(type);
+
+  void register<T extends Object>(T lazyGetter()) {
+    appRegistration.register<T>(lazyGetter);
+  }
+
+  T locate<T>() {
+    return appRegistration.locate<T>();
+  }
 }
