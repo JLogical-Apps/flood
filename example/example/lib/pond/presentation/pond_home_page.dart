@@ -2,10 +2,11 @@ import 'package:example/pond/domain/budget/budget.dart';
 import 'package:example/pond/domain/budget/budget_entity.dart';
 import 'package:example/pond/domain/user/user_entity.dart';
 import 'package:example/pond/presentation/pond_budget_page.dart';
-import 'package:example/pond/presentation/pond_users_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+
+import 'pond_login_page.dart';
 
 class PondHomePage extends HookWidget {
   final String userId;
@@ -19,7 +20,7 @@ class PondHomePage extends HookWidget {
       Query.from<BudgetEntity>().where(Budget.ownerField, isEqualTo: userId).paginate(),
     );
     return StyleProvider(
-      style: PondUsersPage.style,
+      style: PondLoginPage.style,
       child: Builder(builder: (context) {
         return ModelBuilder.styledPage(
           model: userEntityController.model,

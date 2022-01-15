@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -85,6 +87,7 @@ class StyledDialog<T> {
     Widget? title,
     required List<Widget> children,
     Widget Function(SmartFormController controller)? confirmButtonBuilder,
+    FutureOr<Map<String, String>?> postValidator(Map<String, dynamic> data)?,
   }) {
     final style = context.style();
     final smartFormController = SmartFormController();
@@ -113,6 +116,7 @@ class StyledDialog<T> {
             confirmButton,
           ],
         ),
+        postValidator: postValidator,
       ),
     );
   }

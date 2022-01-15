@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
 import 'package:jlogical_utils/src/pond/context/registration/explicit_app_registration.dart';
 import 'package:jlogical_utils/src/pond/context/registration/registrations_provider.dart';
@@ -10,9 +11,12 @@ class DatabaseAppRegistration with WithAppRegistrationDelegator implements AppRe
 
   final List<ValueObjectRegistration> additionalValueObjectRegistrations;
 
+  final Environment environment;
+
   DatabaseAppRegistration({
     required this.repositories,
     this.additionalValueObjectRegistrations: const [],
+    this.environment: Environment.testing,
   });
 
   late final List<RegistrationsProvider> registrationProviders = repositories
@@ -21,17 +25,16 @@ class DatabaseAppRegistration with WithAppRegistrationDelegator implements AppRe
       .toList();
 
   @override
-  AppRegistration get appRegistration {
-    return ExplicitAppRegistration(
-      valueObjectRegistrations:
-          registrationProviders.expand((registration) => registration.valueObjectRegistrations).toList() +
-              additionalValueObjectRegistrations,
-      entityRegistrations: registrationProviders.expand((registration) => registration.entityRegistrations).toList(),
-      aggregateRegistrations:
-          registrationProviders.expand((registration) => registration.aggregateRegistrations).toList(),
-      additionalTypeStateSerializers:
-          registrationProviders.expand((registration) => registration.additionalTypeStateSerializers).toList(),
-      database: EntityDatabase(repositories: repositories),
-    );
-  }
+  late AppRegistration appRegistration = ExplicitAppRegistration(
+    valueObjectRegistrations:
+        registrationProviders.expand((registration) => registration.valueObjectRegistrations).toList() +
+            additionalValueObjectRegistrations,
+    entityRegistrations: registrationProviders.expand((registration) => registration.entityRegistrations).toList(),
+    aggregateRegistrations:
+        registrationProviders.expand((registration) => registration.aggregateRegistrations).toList(),
+    additionalTypeStateSerializers:
+        registrationProviders.expand((registration) => registration.additionalTypeStateSerializers).toList(),
+    database: EntityDatabase(repositories: repositories),
+    environment: environment,
+  );
 }

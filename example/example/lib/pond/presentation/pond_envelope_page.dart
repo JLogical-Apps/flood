@@ -3,7 +3,7 @@ import 'package:example/pond/domain/budget_transaction/budget_transaction_entity
 import 'package:example/pond/domain/budget_transaction/envelope_transaction.dart';
 import 'package:example/pond/domain/budget_transaction/envelope_transaction_entity.dart';
 import 'package:example/pond/domain/envelope/envelope_entity.dart';
-import 'package:example/pond/presentation/pond_users_page.dart';
+import 'package:example/pond/presentation/pond_login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -25,7 +25,7 @@ class PondEnvelopePage extends HookWidget {
     );
 
     return StyleProvider(
-      style: PondUsersPage.style,
+      style: PondLoginPage.style,
       child: Builder(
         builder: (context) {
           return ModelBuilder.styledPage(

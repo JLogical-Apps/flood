@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
 import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/record/aggregate.dart';
@@ -7,6 +8,8 @@ import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 
 abstract class AppRegistration {
+  Environment get environment;
+
   Database get database;
 
   ValueObject? constructValueObjectRuntimeOrNull(Type valueObjectType);
@@ -27,7 +30,7 @@ abstract class AppRegistration {
 
   void register<T extends Object>(T lazyGetter());
 
-  T locate<T>();
+  T locate<T extends Object>();
 }
 
 extension DefaultAppRegistration on AppRegistration {

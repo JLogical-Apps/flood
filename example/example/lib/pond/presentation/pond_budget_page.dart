@@ -5,7 +5,7 @@ import 'package:example/pond/domain/budget_transaction/transfer_transaction.dart
 import 'package:example/pond/domain/budget_transaction/transfer_transaction_entity.dart';
 import 'package:example/pond/domain/envelope/envelope.dart';
 import 'package:example/pond/domain/envelope/envelope_entity.dart';
-import 'package:example/pond/presentation/pond_users_page.dart';
+import 'package:example/pond/presentation/pond_login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -34,7 +34,7 @@ class PondBudgetPage extends HookWidget {
     final maybeBudgetAmount = useValueStream(budgetAmountX);
 
     return StyleProvider(
-      style: PondUsersPage.style,
+      style: PondLoginPage.style,
       child: Builder(
         builder: (context) {
           return ModelBuilder.styledPage(

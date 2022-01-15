@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
+import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/database/entity_database.dart';
@@ -24,12 +25,15 @@ class ExplicitAppRegistration implements AppRegistration {
   final List<ValueObjectRegistration> valueObjectRegistrations;
   final List<AggregateRegistration> aggregateRegistrations;
   final List<TypeStateSerializer> typeStateSerializers;
+
+  final Environment environment;
   final Database database;
 
   ExplicitAppRegistration({
     this.entityRegistrations: const [],
     this.valueObjectRegistrations: const [],
     this.aggregateRegistrations: const [],
+    this.environment : Environment.testing,
     Database? database,
     List<TypeStateSerializer>? additionalTypeStateSerializers,
   })  : typeStateSerializers = [
@@ -238,7 +242,7 @@ class ExplicitAppRegistration implements AppRegistration {
     _getIt.registerLazySingleton<T>(lazyGetter);
   }
 
-  T locate<T>() {
+  T locate<T extends Object>() {
     return _getIt<T>();
   }
 }

@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/record/aggregate.dart';
@@ -8,6 +9,8 @@ import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serial
 
 mixin WithAppRegistrationDelegator implements AppRegistration {
   AppRegistration get appRegistration;
+
+  Environment get environment => appRegistration.environment;
 
   Entity? constructEntityRuntimeOrNull(ValueObject initialState) {
     return appRegistration.constructEntityRuntimeOrNull(initialState);
@@ -49,7 +52,7 @@ mixin WithAppRegistrationDelegator implements AppRegistration {
     appRegistration.register<T>(lazyGetter);
   }
 
-  T locate<T>() {
+  T locate<T extends Object>() {
     return appRegistration.locate<T>();
   }
 }
