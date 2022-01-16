@@ -161,8 +161,9 @@ class PondLoginPage extends HookWidget {
                                       return;
                                     }
 
-                                    context.style().navigateTo(
-                                        context: context, page: (_) => PondHomePage(userId: userId));
+                                    context
+                                        .style()
+                                        .navigateTo(context: context, page: (_) => PondHomePage(userId: userId));
                                   },
                                 )
                               ],
@@ -184,6 +185,7 @@ class PondLoginPage extends HookWidget {
           FileEnvelopeRepository(baseDirectory: baseDirectory / 'envelopes'),
           FileUserRepository(baseDirectory: baseDirectory / 'users'),
         ],
+        environment: Environment.local,
       ),
     );
     appContext.registerModule(DefaultAuthModule(parentDirectory: baseDirectory / 'auth'));
