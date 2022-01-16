@@ -5,8 +5,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 import 'envelope.dart';
 import 'envelope_entity.dart';
 
-class FileEnvelopeRepository extends DefaultFileRepository<EnvelopeEntity, Envelope> {
-
+class FileEnvelopeRepository extends DefaultAdaptingRepository<EnvelopeEntity, Envelope> {
   @override
   final Directory baseDirectory;
 

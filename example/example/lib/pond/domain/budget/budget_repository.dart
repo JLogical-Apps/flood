@@ -6,10 +6,10 @@ import 'budget.dart';
 import 'budget_aggregate.dart';
 import 'budget_entity.dart';
 
-class FileBudgetRepository extends DefaultFileRepository<BudgetEntity, Budget> {
+class BudgetRepository extends DefaultAdaptingRepository<BudgetEntity, Budget> {
   final Directory baseDirectory;
 
-  FileBudgetRepository({required this.baseDirectory});
+  BudgetRepository({required this.baseDirectory});
 
   @override
   BudgetEntity createEntity() {

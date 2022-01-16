@@ -9,12 +9,12 @@ import 'budget_transaction_entity.dart';
 import 'envelope_transaction.dart';
 import 'envelope_transaction_entity.dart';
 
-class FileBudgetTransactionRepository
-    extends DefaultAbstractFileRepository<BudgetTransactionEntity, BudgetTransaction> {
+class BudgetTransactionRepository
+    extends DefaultAbstractAdaptingRepository<BudgetTransactionEntity, BudgetTransaction> {
   @override
   final Directory baseDirectory;
 
-  FileBudgetTransactionRepository({required this.baseDirectory});
+  BudgetTransactionRepository({required this.baseDirectory});
 
   @override
   List<ValueObjectRegistration> get valueObjectRegistrations => [

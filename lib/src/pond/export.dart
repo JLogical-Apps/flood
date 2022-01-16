@@ -29,6 +29,8 @@ export 'record/aggregate.dart';
 export 'record/entity.dart';
 export 'record/record.dart';
 export 'record/value_object.dart';
+export 'repository/adapting/default_abstract_adapting_repository.dart';
+export 'repository/adapting/default_adapting_repository.dart';
 export 'repository/entity_repository.dart';
 export 'repository/file/default_abstract_file_repository.dart';
 export 'repository/file/default_file_repository.dart';
