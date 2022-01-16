@@ -12,8 +12,9 @@ class EntityController<E extends Entity> {
     valueX: AppContext.global
         .getRepositoryRuntimeOrNull(E)!
         .getXOrNull(entityId)
-        .mapWithValue((maybeEntity) => maybeEntity.mapIfPresent((entity) => entity as E)),
-    loader: () async => (await AppContext.global.getRepositoryRuntimeOrNull(E)!.get(entityId, withoutCache: true)) as E,
+        .mapWithValue((maybeEntity) => maybeEntity.mapIfPresent((entity) => entity as E?)),
+    loader: () async =>
+        (await AppContext.global.getRepositoryRuntimeOrNull(E)!.getOrNull(entityId, withoutCache: true)) as E?,
     hasStartedLoading: true,
   );
 
