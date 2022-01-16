@@ -15,7 +15,7 @@ abstract class EntityRepository with WithKeySynchronizable<Transaction> implemen
 
   Future<Entity?> getOrNull(String id, {Transaction? transaction, bool withoutCache: false});
 
-  ValueStream<FutureValue<Entity>> getX(String id);
+  ValueStream<FutureValue<Entity?>> getXOrNull(String id);
 
   Future<void> delete(Entity entity, {Transaction? transaction});
 

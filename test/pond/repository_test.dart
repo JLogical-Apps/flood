@@ -51,7 +51,7 @@ void main() {
 
     final envelopeId = envelopeEntity.id!;
 
-    final envelopeX = AppContext.global.getX<EnvelopeEntity>(envelopeId);
+    final envelopeX = AppContext.global.getXOrNull<EnvelopeEntity>(envelopeId);
     var retrievedEnvelope = (await envelopeX.getCurrentValue()).get();
 
     expect(retrievedEnvelope, envelopeEntity);

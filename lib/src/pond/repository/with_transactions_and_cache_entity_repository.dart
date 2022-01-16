@@ -56,10 +56,10 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
     return state.mapIfNonNull((state) => Entity.fromStateOrNull(state));
   }
 
-  ValueStream<FutureValue<Entity>> getX(String id) {
-    return _stateByIdCache.getX(id).mapWithValue((state) => state != null
-        ? FutureValue.loaded(value: Entity.fromState(state))
-        : FutureValue.error(error: 'No state found with id [$id]'));
+  ValueStream<FutureValue<Entity?>> getXOrNull(String id) {
+    return _stateByIdCache
+        .getX(id)
+        .mapWithValue((state) => FutureValue.loaded(value: state.mapIfNonNull((state) => Entity.fromState(state))));
   }
 
   @override

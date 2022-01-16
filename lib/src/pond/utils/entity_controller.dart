@@ -11,7 +11,7 @@ class EntityController<E extends Entity> {
   late AsyncLoadable<E?> nullableModel = ValueStreamModel<E?>(
     valueX: AppContext.global
         .getRepositoryRuntimeOrNull(E)!
-        .getX(entityId)
+        .getXOrNull(entityId)
         .mapWithValue((maybeEntity) => maybeEntity.mapIfPresent((entity) => entity as E)),
     loader: () async => (await AppContext.global.getRepositoryRuntimeOrNull(E)!.get(entityId, withoutCache: true)) as E,
     hasStartedLoading: true,

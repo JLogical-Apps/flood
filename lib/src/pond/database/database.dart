@@ -27,8 +27,8 @@ extension DefaultDatabase on Database {
     return (await getRepository<E>().getOrNull(id, transaction: transaction)) as E?;
   }
 
-  ValueStream<FutureValue<E>> getX<E extends Entity>(String id) {
-    return getRepository<E>().getX(id).mapWithValue((value) => value.mapIfPresent((value) => value as E));
+  ValueStream<FutureValue<E>> getXOrNull<E extends Entity>(String id) {
+    return getRepository<E>().getXOrNull(id).mapWithValue((value) => value.mapIfPresent((value) => value as E));
   }
 
   Future<E> get<E extends Entity>(String id, {Transaction? transaction}) async {
