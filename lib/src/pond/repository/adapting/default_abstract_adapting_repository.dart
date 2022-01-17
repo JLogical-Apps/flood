@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
-import 'package:jlogical_utils/src/pond/context/registration/explicit_app_registration.dart';
+import 'package:jlogical_utils/src/pond/context/registration/entity_registration.dart';
+import 'package:jlogical_utils/src/pond/context/registration/value_object_registration.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/repository/default_abstract_repository.dart';

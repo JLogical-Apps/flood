@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/repository/local/default_local_repository.dart';
 
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
@@ -11,16 +10,7 @@ void main() {
   late LocalEnvelopeRepository envelopeRepository;
   setUp(() {
     envelopeRepository = LocalEnvelopeRepository();
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
-        entityRegistrations: [
-          EntityRegistration<EnvelopeEntity, Envelope>(() => EnvelopeEntity()),
-        ],
-        valueObjectRegistrations: [
-          ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
-        ],
-      ),
-    );
+    AppContext.global = AppContext()..register(envelopeRepository);
   });
   test('basic repository actions.', () {
     final transaction = Transaction((t) async {

@@ -1,63 +1,38 @@
 import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
-import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
+import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
+import 'package:jlogical_utils/src/pond/context/module/core_app_module.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
+import 'package:jlogical_utils/src/pond/context/registration/value_object_registration.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/database/entity_database.dart';
-import 'package:jlogical_utils/src/pond/record/aggregate.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
-import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
+import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
-import 'package:jlogical_utils/src/pond/type_state_serializers/bool_type_state_serializer.dart';
-import 'package:jlogical_utils/src/pond/type_state_serializers/date_time_type_state_serializer.dart';
-import 'package:jlogical_utils/src/pond/type_state_serializers/double_type_state_serializer.dart';
-import 'package:jlogical_utils/src/pond/type_state_serializers/int_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/nullable_type_state_serializer.dart';
-import 'package:jlogical_utils/src/pond/type_state_serializers/string_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/value_object_type_state_serializer.dart';
 
-class ExplicitAppRegistration implements AppRegistration {
+import 'entity_registration.dart';
+
+mixin WithExplicitAppRegistration implements AppRegistration {
   final GetIt _getIt = GetIt.asNewInstance();
 
-  final List<EntityRegistration> entityRegistrations;
-  final List<ValueObjectRegistration> valueObjectRegistrations;
-  final List<AggregateRegistration> aggregateRegistrations;
-  final List<TypeStateSerializer> typeStateSerializers;
+  Database get database => _entityDatabase;
 
-  final Environment environment;
-  final Database database;
+  final EntityDatabase _entityDatabase = EntityDatabase();
 
-  ExplicitAppRegistration({
-    this.entityRegistrations: const [],
-    this.valueObjectRegistrations: const [],
-    this.aggregateRegistrations: const [],
-    this.environment : Environment.testing,
-    Database? database,
-    List<TypeStateSerializer>? additionalTypeStateSerializers,
-  })  : typeStateSerializers = [
-          ..._coreTypeStateSerializers,
-          ..._nullableCoreTypeStateSerializers,
-          ...?additionalTypeStateSerializers,
-        ],
-        this.database = database ?? EntityDatabase(repositories: []);
+  final List<AppModule> _appModules = [CoreAppModule()];
 
-  static List<TypeStateSerializer> get _coreTypeStateSerializers => [
-        IntTypeStateSerializer(),
-        DoubleTypeStateSerializer(),
-        StringTypeStateSerializer(),
-        BoolTypeStateSerializer(),
-        DateTimeTypeStateSerializer(),
-      ];
+  List<ValueObjectRegistration> get valueObjectRegistrations =>
+      _appModules.expand((module) => module.valueObjectRegistrations).toList();
 
-  static List<TypeStateSerializer> get _nullableCoreTypeStateSerializers => [
-        NullableTypeStateSerializer<int?>(IntTypeStateSerializer()),
-        NullableTypeStateSerializer<double?>(DoubleTypeStateSerializer()),
-        NullableTypeStateSerializer<String?>(StringTypeStateSerializer()),
-        NullableTypeStateSerializer<bool?>(BoolTypeStateSerializer()),
-        NullableTypeStateSerializer<DateTime?>(DateTimeTypeStateSerializer()),
-      ];
+  List<EntityRegistration> get entityRegistrations =>
+      _appModules.expand((module) => module.entityRegistrations).toList();
+
+  List<TypeStateSerializer> get typeStateSerializers =>
+      _appModules.expand((module) => module.typeStateSerializers).toList();
 
   Entity? constructEntityRuntimeOrNull(ValueObject initialState) {
     return entityRegistrations
@@ -102,20 +77,6 @@ class ExplicitAppRegistration implements AppRegistration {
     }
 
     return null;
-  }
-
-  Aggregate? constructAggregateFromEntityRuntimeOrNull(Entity entity) {
-    final entityType = entity.runtimeType;
-    return aggregateRegistrations
-        .firstWhereOrNull((registration) => registration.entityType == entityType)
-        ?.create(entity);
-  }
-
-  Type getEntityTypeFromAggregate(Type aggregateType) {
-    return aggregateRegistrations
-            .firstWhereOrNull((registration) => registration.aggregateType == aggregateType)
-            ?.entityType ??
-        (throw Exception('Could not find aggregate with type [$aggregateType]'));
   }
 
   TypeStateSerializer getTypeStateSerializerByTypeRuntime(Type type) {
@@ -238,66 +199,20 @@ class ExplicitAppRegistration implements AppRegistration {
         ?.entityType;
   }
 
-  void register<T extends Object>(T lazyGetter()) {
-    _getIt.registerLazySingleton<T>(lazyGetter);
+  void register<T extends Object>(T obj) {
+    _getIt.registerSingleton<T>(obj);
+
+    if (obj is AppModule) {
+      _appModules.add(obj);
+      obj.onRegister(this);
+    }
+
+    if (obj is EntityRepository) {
+      _entityDatabase.registerRepository(obj);
+    }
   }
 
   T locate<T extends Object>() {
     return _getIt<T>();
   }
-}
-
-class EntityRegistration<E extends Entity<V>, V extends ValueObject> {
-  final E Function()? onCreate;
-
-  const EntityRegistration(this.onCreate);
-
-  const EntityRegistration.abstract() : onCreate = null;
-
-  E create() => onCreate!();
-
-  bool get isAbstract => onCreate == null;
-
-  Type get entityType => E;
-
-  Type get valueObjectType => V;
-}
-
-class ValueObjectRegistration<V extends ValueObject, NullableV extends ValueObject?> {
-  final V Function()? onCreate;
-
-  final Set<Type> parents;
-
-  bool get isAbstract => onCreate == null;
-
-  ValueObjectRegistration(this.onCreate, {Set<Type>? parents})
-      : this.parents = {
-          ...?parents,
-          ..._baseParentTypes,
-        };
-
-  ValueObjectRegistration.abstract({Set<Type>? parents})
-      : this.parents = {
-          ...?parents,
-          ..._baseParentTypes,
-        },
-        onCreate = null;
-
-  Type get valueObjectType => V;
-
-  Type get nullableValueObjectType => NullableV;
-
-  static Set<Type> get _baseParentTypes => {ValueObject, Record};
-}
-
-class AggregateRegistration<A extends Aggregate<E>, E extends Entity> {
-  final A Function(E entity) onCreate;
-
-  const AggregateRegistration(this.onCreate);
-
-  A create(E entity) => onCreate(entity);
-
-  Type get aggregateType => A;
-
-  Type get entityType => E;
 }

@@ -3,8 +3,7 @@ import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serial
 import 'package:jlogical_utils/src/utils/util.dart';
 
 class ListTypeStateSerializer<T> extends TypeStateSerializer<List<T>> {
-  TypeStateSerializer itemTypeStateSerializer =
-      AppContext.global.appRegistration.getTypeStateSerializerByTypeRuntime(T);
+  TypeStateSerializer itemTypeStateSerializer = AppContext.global.getTypeStateSerializerByTypeRuntime(T);
 
   @override
   dynamic serialize(List<T> value) {

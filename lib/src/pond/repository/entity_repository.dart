@@ -1,4 +1,5 @@
 import 'package:jlogical_utils/src/model/future_value.dart';
+import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor_x.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
@@ -6,7 +7,9 @@ import 'package:jlogical_utils/src/pond/transaction/transaction_executor.dart';
 import 'package:jlogical_utils/src/pond/utils/with_key_synchronizable.dart';
 import 'package:rxdart/rxdart.dart';
 
-abstract class EntityRepository with WithKeySynchronizable<Transaction> implements QueryExecutorX, TransactionExecutor {
+abstract class EntityRepository extends AppModule
+    with WithKeySynchronizable<Transaction>
+    implements QueryExecutorX, TransactionExecutor {
   List<Type> get handledEntityTypes;
 
   Future<String> generateId(Entity entity, {Transaction? transaction});

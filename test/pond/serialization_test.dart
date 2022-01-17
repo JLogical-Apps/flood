@@ -1,4 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jlogical_utils/src/pond/context/module/simple_app_module.dart';
+import 'package:jlogical_utils/src/pond/context/registration/entity_registration.dart';
+import 'package:jlogical_utils/src/pond/context/registration/value_object_registration.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/list_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/value_object_type_state_serializer.dart';
@@ -12,7 +15,7 @@ import 'entities/transfer_transaction.dart';
 import 'entities/transfer_transaction_entity.dart';
 
 void main() {
-  test('only nullabe serializers deserialize non-null values', () {
+  test('only nullable serializers deserialize non-null values', () {
     final stringSerializer = StringTypeStateSerializer();
     expect(() => stringSerializer.deserialize(null), throwsA(isA<Error>()));
 
@@ -72,13 +75,12 @@ void main() {
   });
 
   test('serializing value objects', () {
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
+    AppContext.global = AppContext()
+      ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
         ],
-      ),
-    );
+      ));
 
     final white = Color()..rgbProperty.value = {'r': 255, 'g': 255, 'b': 255};
     final colorSerializer = ValueObjectTypeStateSerializer();
@@ -103,13 +105,12 @@ void main() {
   });
 
   test('serializing lists', () {
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
+    AppContext.global = AppContext()
+      ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
         ],
-      ),
-    );
+      ));
 
     final nonNullListSerializer = ListTypeStateSerializer<int>();
     expect(nonNullListSerializer.deserialize(['2', 4]), [2, 4]);
@@ -173,8 +174,8 @@ void main() {
   });
 
   test('serializing & deserializing abstract class', () {
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
+    AppContext.global = AppContext()
+      ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),
           ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(
@@ -194,8 +195,7 @@ void main() {
             () => TransferTransactionEntity(),
           ),
         ],
-      ),
-    );
+      ));
 
     final envelopeTransaction = EnvelopeTransaction()
       ..nameProperty.value = 'test'

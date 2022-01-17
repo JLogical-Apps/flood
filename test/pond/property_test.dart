@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jlogical_utils/src/pond/context/module/simple_app_module.dart';
+import 'package:jlogical_utils/src/pond/context/registration/value_object_registration.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/pond/repository/local/default_local_repository.dart';
 
 import 'entities/budget.dart';
 import 'entities/color.dart';
@@ -18,13 +19,12 @@ void main() {
   test('state inflation on simple ValueObject.', () {
     final now = DateTime.now();
 
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
+    AppContext.global = AppContext()
+      ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
         ],
-      ),
-    );
+      ));
 
     final state = State(
       type: '$Envelope',
@@ -44,13 +44,12 @@ void main() {
   });
 
   test('state inflation of record that has a list', () {
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
+    AppContext.global = AppContext()
+      ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<LuckyNumbers, LuckyNumbers?>(() => LuckyNumbers()),
         ],
-      ),
-    );
+      ));
 
     const luckyNumbers = [4, 8, 15, 16, 23, 42];
 
@@ -68,13 +67,12 @@ void main() {
   });
 
   test('state inflation of record that has a map.', () {
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
+    AppContext.global = AppContext()
+      ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
         ],
-      ),
-    );
+      ));
 
     const rgb = {'r': 0, 'g': 152, 'b': 19};
 
@@ -92,14 +90,13 @@ void main() {
   });
 
   test('state inflation of record that has a value object.', () {
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
+    AppContext.global = AppContext()
+      ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
           ValueObjectRegistration<UserAvatar, UserAvatar?>(() => UserAvatar()),
         ],
-      ),
-    );
+      ));
 
     const rgb = {'r': 0, 'g': 152, 'b': 19};
 
@@ -121,14 +118,13 @@ void main() {
   });
 
   test('state inflation of record that has a list of value objects.', () {
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
+    AppContext.global = AppContext()
+      ..register(SimpleAppModule(
         valueObjectRegistrations: [
-          ValueObjectRegistration<Palette, Palette?>(() => Palette()),
           ValueObjectRegistration<Color, Color?>(() => Color()),
+          ValueObjectRegistration<Palette, Palette?>(() => Palette()),
         ],
-      ),
-    );
+      ));
 
     const white = {'r': 255, 'g': 255, 'b': 255};
     const black = {'r': 0, 'g': 0, 'b': 0};
@@ -158,14 +154,13 @@ void main() {
   });
 
   test('state inflation of record that has a map with value objects.', () {
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
+    AppContext.global = AppContext()
+      ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
           ValueObjectRegistration<PaletteStats, PaletteStats?>(() => PaletteStats()),
         ],
-      ),
-    );
+      ));
 
     const white = {'r': 255, 'g': 255, 'b': 255};
     const black = {'r': 0, 'g': 0, 'b': 0};
@@ -195,14 +190,13 @@ void main() {
   });
 
   test('state inflation of record that has a reference to an entity.', () {
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
+    AppContext.global = AppContext()
+      ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
           ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(() => EnvelopeTransaction()),
         ],
-      ),
-    );
+      ));
 
     final state = State(
       type: '$EnvelopeTransaction',
@@ -233,11 +227,7 @@ void main() {
   });
 
   test('fallback working', () async {
-    AppContext.global = AppContext(
-      registration: DatabaseAppRegistration(
-        repositories: [LocalUserRepository()],
-      ),
-    );
+    AppContext.global = AppContext()..register(LocalUserRepository());
 
     final userEntity = UserEntity()..value = (User()..nameProperty.value = 'Jake');
     await userEntity.create();
@@ -248,11 +238,7 @@ void main() {
   });
 
   test('fallback replacement', () async {
-    AppContext.global = AppContext(
-      registration: DatabaseAppRegistration(
-        repositories: [LocalUserRepository()],
-      ),
-    );
+    AppContext.global = AppContext()..register(LocalUserRepository());
 
     final userEntity = UserEntity()..value = (User()..nameProperty.value = 'Jake');
 

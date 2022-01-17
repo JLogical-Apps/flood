@@ -22,6 +22,10 @@ class EntityDatabase implements Database {
         (throw Exception('Could not find repository for entity $entityType'));
   }
 
+  void registerRepository(EntityRepository repository) {
+    _repositories.add(repository);
+  }
+
   @override
   ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) {
     if (isSubtype<R, Entity>()) {

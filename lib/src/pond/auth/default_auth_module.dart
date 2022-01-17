@@ -16,8 +16,7 @@ class DefaultAuthModule extends AppModule {
 
   @override
   void onRegister(AppRegistration registration) {
-    registration
-        .register<AuthService>(() => _getAuthService(DefaultEnvironmentData.getDataSource(registration.environment)));
+    registration.register<AuthService>(_getAuthService(DefaultEnvironmentData.getDataSource(registration.environment)));
   }
 
   AuthService _getAuthService(EnvironmentDataSource dataSource) {

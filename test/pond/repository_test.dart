@@ -1,17 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/repository/local/default_local_repository.dart';
 
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
 
 void main() {
   setUp(() {
-    AppContext.global = AppContext(
-      registration: DatabaseAppRegistration(repositories: [
-        LocalEnvelopeRepository(),
-      ]),
-    );
+    AppContext.global = AppContext()..register(LocalEnvelopeRepository());
   });
 
   test('basic repository functions.', () async {

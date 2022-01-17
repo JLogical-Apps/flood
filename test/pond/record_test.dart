@@ -87,13 +87,7 @@ void main() {
   });
 
   test('lifecycle events', () async {
-    AppContext.global = AppContext(
-      registration: DatabaseAppRegistration(
-        repositories: [
-          LifecycleRepository(),
-        ],
-      ),
-    );
+    AppContext.global = AppContext()..register(LifecycleRepository());
     final lifecycleEntity = LifecycleEntity()..value = Lifecycle();
 
     var afterCreate = false;

@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/src/model/future_value.dart';
+import 'package:jlogical_utils/src/pond/context/registration/entity_registration.dart';
+import 'package:jlogical_utils/src/pond/context/registration/value_object_registration.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/pond/repository/local/default_abstract_local_repository.dart';
 import 'package:jlogical_utils/src/utils/stream_extensions.dart';
 
 import 'entities/budget.dart';
@@ -46,14 +47,9 @@ List<Budget> budgets = [
 
 void main() {
   setUp(() async {
-    AppContext.global = AppContext(
-      registration: DatabaseAppRegistration(
-        repositories: [
-          LocalEnvelopeRepository(),
-          LocalBudgetRepository(),
-        ],
-      ),
-    );
+    AppContext.global = AppContext()
+      ..register(LocalEnvelopeRepository())
+      ..register(LocalBudgetRepository());
 
     await _populateRepositories();
   });
@@ -129,13 +125,7 @@ void main() {
   });
 
   test('query from abstract class', () async {
-    AppContext.global = AppContext(
-      registration: DatabaseAppRegistration(
-        repositories: [
-          LocalBudgetTransactionRepository(),
-        ],
-      ),
-    );
+    AppContext.global = AppContext()..register(LocalBudgetTransactionRepository());
 
     final envelopeTransaction = EnvelopeTransactionEntity()
       ..value = (EnvelopeTransaction()
@@ -173,10 +163,7 @@ void main() {
   });
 
   test('where contains', () async {
-    AppContext.global = AppContext(
-        registration: DatabaseAppRegistration(repositories: [
-      LocalLuckyNumbersRepository(),
-    ]));
+    AppContext.global = AppContext()..register(LocalLuckyNumbersRepository());
 
     final firstFive = [1, 2, 3, 4, 5];
     final firstEvens = [2, 4, 6, 8, 10];

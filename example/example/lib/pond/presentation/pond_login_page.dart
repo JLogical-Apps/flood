@@ -177,18 +177,11 @@ class PondLoginPage extends HookWidget {
   }
 
   void _initPond() {
-    final appContext = AppContext(
-      registration: DatabaseAppRegistration(
-        repositories: [
-          BudgetRepository(baseDirectory: baseDirectory / 'budgets'),
-          BudgetTransactionRepository(baseDirectory: baseDirectory / 'transactions'),
-          FileEnvelopeRepository(baseDirectory: baseDirectory / 'envelopes'),
-          FileUserRepository(baseDirectory: baseDirectory / 'users'),
-        ],
-        environment: Environment.testing,
-      ),
-    );
-    appContext.registerModule(DefaultAuthModule(parentDirectory: baseDirectory / 'auth'));
-    AppContext.global = appContext;
+    AppContext.global = AppContext(environment: Environment.testing)
+      ..register(BudgetRepository(baseDirectory: baseDirectory / 'budgets'))
+      ..register(BudgetTransactionRepository(baseDirectory: baseDirectory / 'transactions'))
+      ..register(FileEnvelopeRepository(baseDirectory: baseDirectory / 'envelopes'))
+      ..register(FileUserRepository(baseDirectory: baseDirectory / 'users'))
+      ..register(DefaultAuthModule(parentDirectory: baseDirectory / 'auth'));
   }
 }

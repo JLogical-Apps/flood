@@ -1,4 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jlogical_utils/src/pond/context/module/simple_app_module.dart';
+import 'package:jlogical_utils/src/pond/context/registration/entity_registration.dart';
+import 'package:jlogical_utils/src/pond/context/registration/value_object_registration.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/state/persistence/json_state_persister.dart';
 
@@ -7,8 +10,8 @@ import 'entities/envelope_transaction.dart';
 
 void main() {
   test('json', () {
-    AppContext.global = AppContext(
-      registration: ExplicitAppRegistration(
+    AppContext.global = AppContext()
+      ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),
           ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(
@@ -22,8 +25,7 @@ void main() {
           EntityRegistration<BudgetTransactionWrapperEntity, BudgetTransactionWrapper>(
               () => BudgetTransactionWrapperEntity()),
         ],
-      ),
-    );
+      ));
 
     final jsonPersister = JsonStatePersister();
 

@@ -1,15 +1,14 @@
+import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
-import 'package:jlogical_utils/src/pond/context/registration/explicit_app_registration.dart';
-import 'package:jlogical_utils/src/pond/context/registration/with_app_registration_delegator.dart';
+import 'package:jlogical_utils/src/pond/context/registration/with_explicit_app_registration.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/database/with_database_delegator.dart';
 
-class AppContext with WithAppRegistrationDelegator, WithDatabaseDelegator implements AppRegistration, Database {
+class AppContext with WithExplicitAppRegistration, WithDatabaseDelegator implements AppRegistration, Database {
   static late AppContext global = AppContext();
 
-  final AppRegistration appRegistration;
+  @override
+  final Environment environment;
 
-  AppContext({
-    AppRegistration? registration,
-  }) : this.appRegistration = registration ?? ExplicitAppRegistration();
+  AppContext({this.environment: Environment.testing});
 }

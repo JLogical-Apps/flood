@@ -1,7 +1,5 @@
 import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
-import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
-import 'package:jlogical_utils/src/pond/record/aggregate.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
@@ -18,17 +16,13 @@ abstract class AppRegistration {
 
   Entity? constructEntityRuntimeOrNull(ValueObject initialState);
 
-  Aggregate? constructAggregateFromEntityRuntimeOrNull(Entity entity);
-
-  Type getEntityTypeFromAggregate(Type aggregateType);
-
   TypeStateSerializer getTypeStateSerializerByTypeRuntime(Type type);
 
   bool isSubtype(Type a, Type b);
 
   Set<Type> getDescendants(Type type);
 
-  void register<T extends Object>(T lazyGetter());
+  void register<T extends Object>(T obj);
 
   T locate<T extends Object>();
 }
@@ -74,20 +68,7 @@ extension DefaultAppRegistration on AppRegistration {
         (throw Exception('Could not construct an Entity from the state [$state]'));
   }
 
-  Aggregate constructAggregateFromEntityRuntime(Entity entity) {
-    return constructAggregateFromEntityRuntimeOrNull(entity) ??
-        (throw Exception('Could not construct an Aggregate from the entity [$entity]'));
-  }
-
-  A constructAggregateFromEntity<A extends Aggregate>(Entity entity) {
-    return constructAggregateFromEntityRuntime(entity) as A;
-  }
-
   TypeStateSerializer getTypeStateSerializerByType<T>() {
     return getTypeStateSerializerByTypeRuntime(T);
-  }
-
-  void registerModule(AppModule module) {
-    module.onRegister(this);
   }
 }
