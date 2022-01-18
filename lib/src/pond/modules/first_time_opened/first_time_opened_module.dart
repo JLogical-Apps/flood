@@ -15,7 +15,7 @@ class FirstTimeOpenedModule extends AppModule {
 
   @override
   void onRegister(AppRegistration registration) {
-    registration.register(AppOpenedMarkerRepository(baseDirectory: baseDirectory / 'meta'));
+    registration.register(AppOpenedMarkerRepository(baseDirectory: baseDirectory));
   }
 
   Future<void> onLoad() async {
