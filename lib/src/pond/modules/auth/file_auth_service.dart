@@ -95,6 +95,7 @@ class FileAuthService extends AuthService {
   Future<void> onReset() async {
     await super.onReset();
     await loggedInUserIdDataSource.delete();
+    await registeredUsersDataSource.delete();
   }
 }
 
