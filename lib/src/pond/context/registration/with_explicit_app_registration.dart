@@ -215,4 +215,9 @@ mixin WithExplicitAppRegistration implements AppRegistration {
   T locate<T extends Object>() {
     return _getIt<T>();
   }
+
+  /// Resets the entire device as if it has never opened the app before.
+  Future<void> reset() {
+    return Future.wait(_appModules.map((module) => module.onReset()));
+  }
 }

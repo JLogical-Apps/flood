@@ -9,4 +9,10 @@ abstract class AppModule {
   List<TypeStateSerializer> get typeStateSerializers => [];
 
   void onRegister(AppRegistration registration) {}
+
+  /// Called when the app is "force-reset".
+  Future<void> onReset() async {}
+
+  /// Loads during the splash screen.
+  Future<void> onLoad() async {}
 }
