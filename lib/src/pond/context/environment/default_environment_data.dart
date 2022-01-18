@@ -6,7 +6,7 @@ class DefaultEnvironmentData {
   static EnvironmentDataSource getDataSource(Environment environment) {
     if (environment == Environment.testing) {
       return EnvironmentDataSource.memory;
-    } else if (environment == Environment.local) {
+    } else if (environment == Environment.device) {
       return EnvironmentDataSource.file;
     } else {
       return EnvironmentDataSource.online;

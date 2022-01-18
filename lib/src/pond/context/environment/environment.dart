@@ -1,6 +1,6 @@
 enum Environment {
   testing,
-  local,
+  device,
   qa,
   uat,
   alpha,

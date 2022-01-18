@@ -26,7 +26,7 @@ abstract class DefaultAbstractAdaptingRepository<E extends Entity<V>, V extends 
           valueObjectRegistrations: valueObjectRegistrations,
           entityRegistrations: entityRegistrations,
         );
-      case Environment.local:
+      case Environment.device:
         return _DefaultAbstractFileRepository<E, V>(
           baseDirectory: baseDirectory,
           valueObjectRegistrations: valueObjectRegistrations,

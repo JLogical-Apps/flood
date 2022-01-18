@@ -24,7 +24,7 @@ abstract class DefaultAdaptingRepository<E extends Entity<V>, V extends ValueObj
           onCreateEntity: createEntity,
           onCreateValueObject: createValueObject,
         );
-      case Environment.local:
+      case Environment.device:
         return _DefaultFileRepository(
           baseDirectory: baseDirectory,
           onCreateEntity: createEntity,
