@@ -12,3 +12,7 @@ class AppContext with WithExplicitAppRegistration, WithDatabaseDelegator impleme
 
   AppContext({this.environment: Environment.testing});
 }
+
+T locate<T extends Object>() {
+  return AppContext.global.locate<T>();
+}

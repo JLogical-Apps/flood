@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
-import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 import 'package:jlogical_utils/src/pond/context/module/core_app_module.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
@@ -226,8 +225,4 @@ mixin WithExplicitAppRegistration implements AppRegistration {
   Future<void> reset() {
     return Future.wait(_appModules.map((module) => module.onReset()));
   }
-}
-
-T locate<T extends Object>() {
-  return AppContext.global.locate<T>();
 }
