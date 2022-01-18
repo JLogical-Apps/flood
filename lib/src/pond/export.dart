@@ -1,7 +1,3 @@
-export 'auth/auth_service.dart';
-export 'auth/default_auth_module.dart';
-export 'auth/login_failure.dart';
-export 'auth/signup_failure.dart';
 export 'context/app_context.dart';
 export 'context/environment/environment.dart';
 export 'context/registration/app_registration.dart';
@@ -9,6 +5,10 @@ export 'context/registration/entity_registration.dart';
 export 'context/registration/value_object_registration.dart';
 export 'database/database.dart';
 export 'database/entity_database.dart';
+export 'modules/auth/auth_service.dart';
+export 'modules/auth/default_auth_module.dart';
+export 'modules/auth/login_failure.dart';
+export 'modules/auth/signup_failure.dart';
 export 'property/computed_property.dart';
 export 'property/field_property.dart';
 export 'property/list_computed_property.dart';

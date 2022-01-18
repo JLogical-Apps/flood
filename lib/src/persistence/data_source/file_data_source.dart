@@ -34,4 +34,10 @@ class FileDataSource<T> extends DataSource<T> {
     await file.ensureCreated();
     await file.writeAsString(content);
   }
+
+  Future<void> delete() async {
+    if (!await file.exists()) return;
+
+    await file.delete();
+  }
 }

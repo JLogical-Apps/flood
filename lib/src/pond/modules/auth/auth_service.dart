@@ -1,4 +1,6 @@
-abstract class AuthService {
+import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
+
+abstract class AuthService extends AppModule {
   /// Returns the user that is currently logged in or null if no one is.
   Future<String?> getCurrentlyLoggedInUserId();
 
@@ -14,4 +16,8 @@ abstract class AuthService {
 
   /// Logs out of the currently logged-in user.
   Future<void> logout();
+
+  Future<void> onReset() async {
+    await logout();
+  }
 }

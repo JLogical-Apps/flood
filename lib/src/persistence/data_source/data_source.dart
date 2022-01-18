@@ -6,4 +6,7 @@ abstract class DataSource<T> {
 
   /// Saves [data] into the data source.
   Future<void> saveData(T data);
+
+  /// Deletes the data source.
+  Future<void> delete();
 }

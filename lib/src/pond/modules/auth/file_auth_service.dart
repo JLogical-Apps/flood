@@ -11,7 +11,7 @@ import 'auth_service.dart';
 import 'login_failure.dart';
 import 'signup_failure.dart';
 
-class FileAuthService implements AuthService {
+class FileAuthService extends AuthService {
   final FileDataSource<String?> loggedInUserIdDataSource;
   final FileDataSource<Map<_LoginToken, String>> registeredUsersDataSource;
 
@@ -89,6 +89,12 @@ class FileAuthService implements AuthService {
   @override
   Future<void> logout() {
     return loggedInUserIdDataSource.saveData(null);
+  }
+
+  @override
+  Future<void> onReset() async {
+    await super.onReset();
+    await loggedInUserIdDataSource.delete();
   }
 }
 

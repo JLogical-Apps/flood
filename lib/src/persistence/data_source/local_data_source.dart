@@ -16,4 +16,9 @@ class LocalDataSource<T> implements DataSource<T> {
   Future<void> saveData(T data) async {
     this.data = data;
   }
+
+  @override
+  Future<void> delete() async {
+    data = null;
+  }
 }

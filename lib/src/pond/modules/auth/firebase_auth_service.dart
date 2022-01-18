@@ -4,7 +4,7 @@ import 'auth_service.dart';
 import 'login_failure.dart';
 import 'signup_failure.dart';
 
-class FirebaseAuthService implements AuthService {
+class FirebaseAuthService extends AuthService {
   static final firebase.FirebaseAuth auth = firebase.FirebaseAuth.instance;
 
   @override

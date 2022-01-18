@@ -5,7 +5,7 @@ import 'auth_service.dart';
 import 'login_failure.dart';
 import 'signup_failure.dart';
 
-class LocalAuthService implements AuthService {
+class LocalAuthService extends AuthService {
   String? loggedInUserId;
   Map<_LoginToken, String> userIdByLogin = {};
 
