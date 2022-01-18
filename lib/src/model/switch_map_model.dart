@@ -31,7 +31,9 @@ class SwitchMapModel<T, R> extends AsyncLoadable<R> {
   final AsyncLoadable<T> parent;
   final AsyncLoadable<R> Function(T value) mapper;
 
-  SwitchMapModel({required this.parent, required this.mapper});
+  SwitchMapModel({required this.parent, required this.mapper}) {
+    hasStartedLoading = parent.hasStartedLoading;
+  }
 
   FutureValue<AsyncLoadable<R>> _getValueFromParent(FutureValue<T> parentValue) {
     return parentValue.mapIfPresent((value) => mapper(value));

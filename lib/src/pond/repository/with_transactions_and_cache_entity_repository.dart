@@ -1,11 +1,24 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'dart:async';
+
+import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/patterns/cache/cache.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
+import 'package:jlogical_utils/src/pond/record/entity.dart';
+import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/state/state.dart';
+import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
+import 'package:jlogical_utils/src/utils/collection_extensions.dart';
+import 'package:jlogical_utils/src/utils/stream_extensions.dart';
+import 'package:jlogical_utils/src/utils/util.dart';
 import 'package:rxdart/rxdart.dart';
+
+import 'entity_repository.dart';
 
 mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
   final Cache<String, State> _stateByIdCache = Cache();
+
+  final Map<String, Completer<State?>> _completerById = {};
 
   TransactionPendingChanges? _pendingTransactionChange;
 
@@ -45,15 +58,30 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
       state ??= _stateByIdCache.get(id);
     }
 
-    if (state == null) {
-      final uncachedState = (await super.getOrNull(id, transaction: transaction))?.state;
-      if (uncachedState != null) {
-        _stateByIdCache.save(id, uncachedState);
-        state = uncachedState;
-      }
-    }
+    state ??= await _getOrNullFromSourceRepository(id, transaction: transaction);
 
     return state.mapIfNonNull((state) => Entity.fromStateOrNull(state));
+  }
+
+  Future<State?> _getOrNullFromSourceRepository(String id, {Transaction? transaction}) async {
+    var completer = _completerById[id];
+    if (completer != null) {
+      return await completer.future;
+    }
+
+    completer = Completer<State?>();
+    _completerById[id] = completer;
+
+    final sourceState = (await super.getOrNull(id, transaction: transaction))?.state;
+
+    completer.complete(sourceState);
+    _completerById.remove(id);
+
+    if (sourceState != null) {
+      _stateByIdCache.save(id, sourceState);
+    }
+
+    return sourceState;
   }
 
   ValueStream<FutureValue<Entity?>> getXOrNull(String id) {

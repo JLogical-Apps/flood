@@ -23,5 +23,7 @@ class MappedModel<T, R> extends AsyncLoadable<R> {
   final AsyncLoadable<T> parent;
   final R Function(T value) mapper;
 
-  MappedModel({required this.parent, required this.mapper});
+  MappedModel({required this.parent, required this.mapper}) {
+    hasStartedLoading = parent.hasStartedLoading;
+  }
 }

@@ -177,7 +177,7 @@ class PondLoginPage extends HookWidget {
   }
 
   void _initPond() {
-    AppContext.global = AppContext(environment: Environment.testing)
+    AppContext.global = AppContext(environment: Environment.device)
       ..register(BudgetRepository(baseDirectory: baseDirectory / 'budgets'))
       ..register(BudgetTransactionRepository(baseDirectory: baseDirectory / 'transactions'))
       ..register(FileEnvelopeRepository(baseDirectory: baseDirectory / 'envelopes'))
