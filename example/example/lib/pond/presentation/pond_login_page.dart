@@ -1,11 +1,7 @@
 import 'dart:io';
 
-import 'package:example/pond/domain/budget/budget_repository.dart';
-import 'package:example/pond/domain/budget_transaction/budget_transaction_repository.dart';
-import 'package:example/pond/domain/envelope/envelope_repository.dart';
 import 'package:example/pond/domain/user/user.dart';
 import 'package:example/pond/domain/user/user_entity.dart';
-import 'package:example/pond/domain/user/user_repository.dart';
 import 'package:example/pond/presentation/pond_home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -20,9 +16,6 @@ class PondLoginPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useOneTimeEffect(() {
-      _initPond();
-    });
     final smartFormController = useMemoized(() => SmartFormController());
     return StyleProvider(
         style: style,
@@ -77,9 +70,12 @@ class PondLoginPage extends HookWidget {
                                       return;
                                     }
 
-                                    context
-                                        .style()
-                                        .navigateTo(context: context, page: (_) => PondHomePage(userId: userId));
+                                    context.style().navigateTo(
+                                        context: context,
+                                        page: (_) => PondHomePage(
+                                              userId: userId,
+                                              loginBaseDirectory: baseDirectory,
+                                            ));
                                   },
                                 ),
                                 Padding(
@@ -161,9 +157,12 @@ class PondLoginPage extends HookWidget {
                                       return;
                                     }
 
-                                    context
-                                        .style()
-                                        .navigateTo(context: context, page: (_) => PondHomePage(userId: userId));
+                                    context.style().navigateTo(
+                                        context: context,
+                                        page: (_) => PondHomePage(
+                                              userId: userId,
+                                              loginBaseDirectory: baseDirectory,
+                                            ));
                                   },
                                 )
                               ],
@@ -174,14 +173,5 @@ class PondLoginPage extends HookWidget {
                     ],
                   ),
                 )));
-  }
-
-  void _initPond() {
-    AppContext.global = AppContext(environment: Environment.device)
-      ..register(BudgetRepository(baseDirectory: baseDirectory / 'budgets'))
-      ..register(BudgetTransactionRepository(baseDirectory: baseDirectory / 'transactions'))
-      ..register(FileEnvelopeRepository(baseDirectory: baseDirectory / 'envelopes'))
-      ..register(FileUserRepository(baseDirectory: baseDirectory / 'users'))
-      ..register(DefaultAuthModule(parentDirectory: baseDirectory / 'auth'));
   }
 }

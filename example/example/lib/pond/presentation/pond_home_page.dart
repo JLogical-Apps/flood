@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:example/pond/domain/budget/budget.dart';
 import 'package:example/pond/domain/budget/budget_entity.dart';
 import 'package:example/pond/domain/user/user_entity.dart';
@@ -9,9 +11,11 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 import 'pond_login_page.dart';
 
 class PondHomePage extends HookWidget {
+  final Directory loginBaseDirectory;
+
   final String userId;
 
-  const PondHomePage({Key? key, required this.userId}) : super(key: key);
+  const PondHomePage({Key? key, required this.userId, required this.loginBaseDirectory}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +32,16 @@ class PondHomePage extends HookWidget {
             return StyledPage(
               onRefresh: userEntityController.reload,
               titleText: 'Home: ${userEntity.value.nameProperty.value}',
+              actions: [
+                ActionItem(
+                  name: 'Log Out',
+                  onPerform: () async {
+                    await locate<AuthService>().logout();
+                    context.style().navigateReplacement(
+                        context: context, newPage: (_) => PondLoginPage(baseDirectory: loginBaseDirectory));
+                  },
+                ),
+              ],
               body: ModelBuilder.styled(
                 model: userBudgetsController.model,
                 builder: (QueryPaginationResultController<BudgetEntity> budgetsController) {
