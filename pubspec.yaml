@@ -27,6 +27,11 @@ dependencies:
   transparent_image: ^2.0.0
   wave: ^0.2.0
 
+  # Logging
+  lumberdash: ^3.0.0
+  emoji_lumberdash: ^2.0.0
+  file_lumberdash: ^1.0.0
+
   # Application
   equatable: ^2.0.3
   flutter_bloc: ^7.0.1
