@@ -27,8 +27,9 @@ class SplashPage extends HookWidget {
           await beforeLoad?.call(context);
           await AppContext.global.load();
           await onDone?.call(context);
-        } catch (e) {
+        } catch (e, stack) {
           print(e);
+          print(stack);
           error.value = e.toString();
         }
       }();

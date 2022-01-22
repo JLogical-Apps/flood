@@ -34,5 +34,13 @@ abstract class EntityRepository extends AppModule
     await entity.afterCreate();
   }
 
+  Future<void> createOrSave(Entity entity, {Transaction? transaction}) {
+    if (entity.isNew) {
+      return create(entity, transaction: transaction);
+    } else {
+      return save(entity, transaction: transaction);
+    }
+  }
+
   EntityRepository get repository => this;
 }

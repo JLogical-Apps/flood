@@ -1,48 +1,50 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
-import 'package:jlogical_utils/src/persistence/data_source/json_file_data_source.dart';
-import 'package:jlogical_utils/src/persistence/data_source/string_file_data_source.dart';
 import 'package:jlogical_utils/src/persistence/ids/uuid_id_generator.dart';
-import 'package:path/path.dart';
+import 'package:jlogical_utils/src/utils/file_extensions.dart';
 
 import 'auth_service.dart';
 import 'login_failure.dart';
 import 'signup_failure.dart';
 
 class FileAuthService extends AuthService {
-  final FileDataSource<String?> loggedInUserIdDataSource;
-  final FileDataSource<Map<_LoginToken, String>> registeredUsersDataSource;
+  final DataSource<String> loggedInUserIdDataSource;
+  final DataSource<Map<_LoginToken, String>> registeredUsersDataSource;
 
   final UuidIdGenerator _uuidGenerator = UuidIdGenerator();
 
   FileAuthService({
     required Directory parentDirectory,
-  })  : loggedInUserIdDataSource = StringFileDataSource(
-          file: File(join(parentDirectory.path, 'logged_in_user_token.txt')),
-          fromString: (string) => string == '' ? null : string,
-          toString: (string) => string ?? '',
+  })  : loggedInUserIdDataSource = FileDataSource(file: parentDirectory - 'logged_in_user_token.txt').map<String>(
+          onSave: (string) => string,
+          onLoad: (string) => string == '' ? null : string,
         ),
-        registeredUsersDataSource = JsonFileDataSource(
-          file: File(join(parentDirectory.path, 'registered_users.json')),
-          fromJson: (json) {
-            Map<String, dynamic> registeredUsers = json['registeredUsers'];
-            return registeredUsers.map((email, data) => MapEntry(
-                  _LoginToken(
-                    email: email,
-                    password: data['password'],
-                  ),
-                  data['userId'] as String,
-                ));
-          },
-          toJson: (registeredUsers) => {
-            'registeredUsers': registeredUsers.map((loginToken, userId) => MapEntry(loginToken.email, {
-                  'userId': userId,
-                  'password': loginToken.password,
-                }))
-          },
-        );
+        registeredUsersDataSource =
+            FileDataSource(file: parentDirectory - 'registered_users.json').mapJson().map<Map<_LoginToken, String>>(
+                  onSave: (registeredUsers) => {
+                    'registeredUsers': registeredUsers.map((loginToken, userId) => MapEntry(loginToken.email, {
+                          'userId': userId,
+                          'password': loginToken.password,
+                        }))
+                  },
+                  onLoad: (json) {
+                    if (json == null) {
+                      return {};
+                    }
+
+                    Map<String, dynamic> registeredUsers = json['registeredUsers'];
+                    return registeredUsers.map((email, data) => MapEntry(
+                          _LoginToken(
+                            email: email,
+                            password: data['password'],
+                          ),
+                          data['userId'] as String,
+                        ));
+                  },
+                );
 
   @override
   Future<String?> getCurrentlyLoggedInUserId() async {
@@ -88,7 +90,7 @@ class FileAuthService extends AuthService {
 
   @override
   Future<void> logout() {
-    return loggedInUserIdDataSource.saveData(null);
+    return loggedInUserIdDataSource.delete();
   }
 
   @override

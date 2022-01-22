@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
-import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
@@ -61,6 +61,10 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
 
   Future<void> save({Transaction? transaction}) {
     return AppContext.global.save(this, transaction: transaction);
+  }
+
+  Future<void> createOrSave({Transaction? transaction}) {
+    return AppContext.global.createOrSave(this, transaction: transaction);
   }
 
   Future<void> delete({Transaction? transaction}) {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:example/model/model_page.dart';
 import 'package:example/pond/domain/budget/budget_repository.dart';
 import 'package:example/pond/domain/budget_transaction/budget_transaction_repository.dart';
@@ -15,7 +17,9 @@ import 'pond/domain/user/user_entity.dart';
 import 'pond/presentation/pond_login_page.dart';
 import 'repository/repository_page.dart';
 
-void main() {
+late Directory baseDirectory;
+
+Future<void> main() async {
   runApp(MyApp());
 }
 
@@ -43,33 +47,23 @@ class HomePage extends StatelessWidget {
           NavigationCard(
             title: Text('Pond'),
             onTap: () async {
-              final baseDirectory = await getApplicationSupportDirectory();
+              baseDirectory = await getApplicationSupportDirectory();
 
-              AppContext.global = AppContext(environment: Environment.testing)
-                ..register(BudgetRepository(baseDirectory: baseDirectory / 'budgets'))
-                ..register(BudgetTransactionRepository(baseDirectory: baseDirectory / 'transactions'))
-                ..register(FileEnvelopeRepository(baseDirectory: baseDirectory / 'envelopes'))
-                ..register(FileUserRepository(baseDirectory: baseDirectory / 'users'))
-                ..register(DefaultAuthModule(
-                  baseDirectory: baseDirectory / 'auth',
-                  onAutoSignUp: (userId, email) async {
-                    final user = User()
-                      ..emailProperty.value = email
-                      ..nameProperty.value = 'Test';
-                    final userEntity = UserEntity()
-                      ..id = userId
-                      ..value = user;
-                    await userEntity.save();
-                  },
-                ));
+              _initPond();
 
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => StyleProvider(
                         style: PondLoginPage.style,
                         child: SplashPage(
                           child: StyledContentHeaderText('JLogical Utils'),
-                          beforeLoad: (context) => AppContext.global.reset(),
+                          //beforeLoad: (context) => AppContext.global.reset(),
                           onDone: (context) async {
+                            print('last used version: ${locate<AppVersionModule>().lastUsedVersion}');
+                            print('is first time open? ${locate<AppVersionModule>().isFirstTimeOpened}');
+                            print('version: ${locate<AppVersionModule>().currentVersion}');
+                            print('min version: ${locate<AppVersionModule>().minimumVersion}');
+                            print('needs update: ${locate<AppVersionModule>().needsUpdate}');
+
                             final loggedInId = await locate<AuthService>().getCurrentlyLoggedInUserId();
                             context.style().navigateReplacement(
                                   context: context,
@@ -104,5 +98,36 @@ class HomePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _initPond() {
+    AppContext.global = AppContext(environment: Environment.device)
+      ..register(BudgetRepository(baseDirectory: baseDirectory / 'budgets'))
+      ..register(BudgetTransactionRepository(baseDirectory: baseDirectory / 'transactions'))
+      ..register(FileEnvelopeRepository(baseDirectory: baseDirectory / 'envelopes'))
+      ..register(FileUserRepository(baseDirectory: baseDirectory / 'users'))
+      ..register(DefaultAuthModule(
+        baseDirectory: baseDirectory / 'auth',
+        onAutoSignUp: (userId, email) async {
+          final user = User()
+            ..emailProperty.value = email
+            ..nameProperty.value = 'Test';
+          final userEntity = UserEntity()
+            ..id = userId
+            ..value = user;
+          await userEntity.save();
+        },
+      ))
+      ..register(AppVersionModule(
+        baseDirectory: baseDirectory,
+        currentVersionProvider: AssetDataSource(assetPath: 'assets/pond/config.yaml').mapYaml().map(
+              onSave: (obj) => throw UnimplementedError(),
+              onLoad: (yaml) => yaml?['version'],
+            ),
+        minimumVersionProvider: AssetDataSource(assetPath: 'assets/pond/config.yaml').mapYaml().map(
+              onSave: (obj) => throw UnimplementedError(),
+              onLoad: (yaml) => yaml?['min_version'],
+            ),
+      ));
   }
 }

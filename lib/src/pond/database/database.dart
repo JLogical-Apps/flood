@@ -45,4 +45,8 @@ extension DefaultDatabase on Database {
   Future<void> create(Entity entity, {Transaction? transaction}) {
     return getRepositoryRuntime(entity.runtimeType).create(entity, transaction: transaction);
   }
+
+  Future<void> createOrSave(Entity entity, {Transaction? transaction}) {
+    return getRepositoryRuntime(entity.runtimeType).createOrSave(entity, transaction: transaction);
+  }
 }

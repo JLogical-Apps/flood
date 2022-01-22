@@ -5,7 +5,6 @@ import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/file_query_executor.dart';
 import 'package:jlogical_utils/src/pond/state/persistence/json_state_persister.dart';
 import 'package:jlogical_utils/src/pond/state/persistence/state_persister.dart';
-import 'package:path/path.dart';
 
 mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAndCacheEntityRepository {
   Directory get baseDirectory;
@@ -31,7 +30,7 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
     }
 
     final contents = await file.readAsString();
-    return guard(() => statePersister.inflate(contents))
+    return guard(() => statePersister.inflate(contents), onError: (e) => print(e))
         .mapIfNonNull((inflatedState) => Entity.fromStateOrNull(inflatedState));
   }
 
@@ -66,6 +65,6 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
   }
 
   File _getFile(String id) {
-    return File(join(baseDirectory.path, id));
+    return baseDirectory - '$id.entity';
   }
 }
