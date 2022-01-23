@@ -222,7 +222,9 @@ mixin WithExplicitAppRegistration implements AppRegistration {
   }
 
   /// Resets the entire device as if it has never opened the app before.
-  Future<void> reset() {
-    return Future.wait(_appModules.map((module) => module.onReset()));
+  Future<void> reset() async {
+    for (final module in _appModules) {
+      await module.onReset();
+    }
   }
 }

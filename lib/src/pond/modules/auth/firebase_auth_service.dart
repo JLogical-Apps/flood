@@ -5,7 +5,7 @@ import 'login_failure.dart';
 import 'signup_failure.dart';
 
 class FirebaseAuthService extends AuthService {
-  static final firebase.FirebaseAuth auth = firebase.FirebaseAuth.instance;
+  static late final firebase.FirebaseAuth auth = firebase.FirebaseAuth.instance;
 
   @override
   Future<String?> getCurrentlyLoggedInUserId() async {

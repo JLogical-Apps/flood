@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:jlogical_utils/src/patterns/resolver/resolver.dart';
-import 'package:jlogical_utils/src/patterns/resolver/wrapper_resolver.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/executor/with_resolver_query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
@@ -26,22 +24,20 @@ class FileQueryExecutor with WithResolverQueryExecutor<Iterable<Record>> impleme
 
   FileQueryExecutor({required this.baseDirectory, required this.stateGetter});
 
-  Resolver<Query, AbstractQueryReducer<Query, Iterable<Record>>> getQueryReducerResolver(QueryRequest queryRequest) =>
-      WrapperResolver([
+  List<AbstractQueryReducer<Query, Iterable<Record>>> getQueryReducers(QueryRequest queryRequest) => [
         FileFromQueryReducer(
             baseDirectory: baseDirectory, stateGetter: (id) => stateGetter(id, queryRequest.isWithoutCache())),
         FileWhereQueryReducer(),
         FileOrderByQueryReducer(),
         FileWithoutCacheQueryReducer(),
-      ]);
+      ];
 
-  Resolver<QueryRequest<R, dynamic>, AbstractFileQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
-      getQueryRequestReducerResolver<R extends Record>() => WrapperResolver<QueryRequest<R, dynamic>,
-              AbstractFileQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>([
+  List<AbstractFileQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
+      getQueryRequestReducers<R extends Record>() => [
             FileAllQueryRequestReducer<R>(),
             FileFirstOrNullQueryRequestReducer<R>(),
             FilePaginateQueryRequestReducer<R>(),
             FileWithoutCacheQueryRequestReducer<R>(
                 queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver()),
-          ]);
+          ];
 }

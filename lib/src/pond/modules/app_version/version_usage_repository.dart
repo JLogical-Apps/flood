@@ -9,6 +9,8 @@ class VersionUsageRepository extends DefaultAdaptingRepository<VersionUsageEntit
   @override
   final Directory baseDirectory;
 
+  String get collectionPath => throw UnimplementedError('Version Usage cannot be saved online!');
+
   VersionUsageRepository({required this.baseDirectory});
 
   @override

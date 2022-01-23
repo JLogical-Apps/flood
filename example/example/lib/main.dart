@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:example/firebase_options.dart';
 import 'package:example/model/model_page.dart';
 import 'package:example/pond/domain/budget/budget_repository.dart';
 import 'package:example/pond/domain/budget_transaction/budget_transaction_repository.dart';
@@ -56,14 +57,8 @@ class HomePage extends StatelessWidget {
                         style: PondLoginPage.style,
                         child: SplashPage(
                           child: StyledContentHeaderText('JLogical Utils'),
-                          //beforeLoad: (context) => AppContext.global.reset(),
+                          beforeLoad: (context) => AppContext.global.reset(),
                           onDone: (context) async {
-                            print('last used version: ${locate<AppVersionModule>().lastUsedVersion}');
-                            print('is first time open? ${locate<AppVersionModule>().isFirstTimeOpened}');
-                            print('version: ${locate<AppVersionModule>().currentVersion}');
-                            print('min version: ${locate<AppVersionModule>().minimumVersion}');
-                            print('needs update: ${locate<AppVersionModule>().needsUpdate}');
-
                             final loggedInId = await locate<AuthService>().getCurrentlyLoggedInUserId();
                             context.style().navigateReplacement(
                                   context: context,
@@ -101,11 +96,12 @@ class HomePage extends StatelessWidget {
   }
 
   void _initPond() {
-    AppContext.global = AppContext(environment: Environment.device)
+    AppContext.global = AppContext(environment: Environment.qa)
+      ..register(FirebaseModule(app: DefaultFirebaseOptions.currentPlatform))
       ..register(BudgetRepository(baseDirectory: baseDirectory / 'budgets'))
       ..register(BudgetTransactionRepository(baseDirectory: baseDirectory / 'transactions'))
-      ..register(FileEnvelopeRepository(baseDirectory: baseDirectory / 'envelopes'))
-      ..register(FileUserRepository(baseDirectory: baseDirectory / 'users'))
+      ..register(EnvelopeRepository(baseDirectory: baseDirectory / 'envelopes'))
+      ..register(UserRepository(baseDirectory: baseDirectory / 'users'))
       ..register(DefaultAuthModule(
         baseDirectory: baseDirectory / 'auth',
         onAutoSignUp: (userId, email) async {

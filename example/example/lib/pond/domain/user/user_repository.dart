@@ -4,11 +4,13 @@ import 'package:example/pond/domain/user/user.dart';
 import 'package:example/pond/domain/user/user_entity.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class FileUserRepository extends DefaultAdaptingRepository<UserEntity, User> {
+class UserRepository extends DefaultAdaptingRepository<UserEntity, User> {
   @override
   final Directory baseDirectory;
 
-  FileUserRepository({required this.baseDirectory});
+  String get collectionPath => 'users';
+
+  UserRepository({required this.baseDirectory});
 
   @override
   UserEntity createEntity() {

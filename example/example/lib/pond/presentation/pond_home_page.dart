@@ -21,7 +21,10 @@ class PondHomePage extends HookWidget {
   Widget build(BuildContext context) {
     final userEntityController = useEntity<UserEntity>(userId);
     final userBudgetsController = useQuery(
-      Query.from<BudgetEntity>().where(Budget.ownerField, isEqualTo: userId).paginate(),
+      Query.from<BudgetEntity>()
+          .where(Budget.ownerField, isEqualTo: userId)
+          .orderByDescending(ValueObject.timeCreatedField)
+          .paginate(),
     );
     return StyleProvider(
       style: PondLoginPage.style,

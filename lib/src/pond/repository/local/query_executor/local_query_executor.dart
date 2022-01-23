@@ -1,5 +1,3 @@
-import 'package:jlogical_utils/src/patterns/resolver/resolver.dart';
-import 'package:jlogical_utils/src/patterns/resolver/wrapper_resolver.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/executor/with_resolver_query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
@@ -23,21 +21,19 @@ class LocalQueryExecutor with WithResolverQueryExecutor<Iterable<Record>> implem
 
   const LocalQueryExecutor({required this.stateById});
 
-  Resolver<Query, AbstractQueryReducer<Query, Iterable<Record>>> getQueryReducerResolver(QueryRequest queryRequest) =>
-      WrapperResolver([
+  List<AbstractQueryReducer<Query, Iterable<Record>>> getQueryReducers(QueryRequest queryRequest) => [
         LocalFromQueryReducer(stateById: stateById),
         LocalWhereQueryReducer(),
         LocalOrderByQueryReducer(),
         LocalWithoutCacheQueryReducer(),
-      ]);
+      ];
 
-  Resolver<QueryRequest<R, dynamic>, AbstractLocalQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
-      getQueryRequestReducerResolver<R extends Record>() => WrapperResolver<QueryRequest<R, dynamic>,
-              AbstractLocalQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>([
+  List<AbstractLocalQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
+      getQueryRequestReducers<R extends Record>() => [
             LocalAllQueryRequestReducer<R>(),
             LocalFirstOrNullQueryRequestReducer<R>(),
             LocalPaginateQueryRequestReducer<R>(),
             LocalWithoutCacheQueryRequestReducer<R>(
-                queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver()),
-          ]);
+                queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver<R>()),
+          ];
 }

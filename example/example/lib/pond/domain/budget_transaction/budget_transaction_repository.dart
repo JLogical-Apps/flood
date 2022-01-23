@@ -14,6 +14,9 @@ class BudgetTransactionRepository
   @override
   final Directory baseDirectory;
 
+  @override
+  String get collectionPath => 'transactions';
+
   BudgetTransactionRepository({required this.baseDirectory});
 
   @override

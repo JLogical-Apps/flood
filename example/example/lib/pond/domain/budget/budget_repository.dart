@@ -8,6 +8,8 @@ import 'budget_entity.dart';
 class BudgetRepository extends DefaultAdaptingRepository<BudgetEntity, Budget> {
   final Directory baseDirectory;
 
+  String get collectionPath => 'budgets';
+
   BudgetRepository({required this.baseDirectory});
 
   @override

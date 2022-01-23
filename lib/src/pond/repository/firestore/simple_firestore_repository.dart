@@ -1,15 +1,14 @@
-import 'dart:io';
-
 import 'package:jlogical_utils/src/pond/context/registration/entity_registration.dart';
 import 'package:jlogical_utils/src/pond/context/registration/value_object_registration.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
 
-import 'default_abstract_file_repository.dart';
+import 'default_abstract_firestore_repository.dart';
 
-class SimpleFileRepository<E extends Entity<V>, V extends ValueObject> extends DefaultAbstractFileRepository<E, V> {
+class SimpleFirestoreRepository<E extends Entity<V>, V extends ValueObject>
+    extends DefaultAbstractFirestoreRepository<E, V> {
   @override
-  final Directory baseDirectory;
+  final String collectionPath;
 
   final E Function()? onCreateEntity;
   final V Function()? onCreateValueObject;
@@ -17,8 +16,8 @@ class SimpleFileRepository<E extends Entity<V>, V extends ValueObject> extends D
   final List<ValueObjectRegistration>? additionalValueObjectRegistrations;
   final List<EntityRegistration>? additionalEntityRegistrations;
 
-  SimpleFileRepository({
-    required this.baseDirectory,
+  SimpleFirestoreRepository({
+    required this.collectionPath,
     this.onCreateEntity,
     this.onCreateValueObject,
     this.additionalValueObjectRegistrations,
