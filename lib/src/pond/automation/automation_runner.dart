@@ -9,6 +9,7 @@ Future<void> runAutomation(List<String> args, {required AutomationContext automa
     runner.addCommand(SimpleCommand(
       name: automation.name,
       description: automation.description ?? 'N/A',
+      category: automation.category,
       args: automation.args,
       onRun: (args) {
         automationContext.args = args;
@@ -16,7 +17,11 @@ Future<void> runAutomation(List<String> args, {required AutomationContext automa
       },
     ));
   });
-  runner.run(args);
+  try {
+    await runner.run(args);
+  } on UsageException catch (e) {
+    automationContext.print(e);
+  }
 }
 
 class SimpleCommand extends Command {
@@ -26,14 +31,18 @@ class SimpleCommand extends Command {
   @override
   final String description;
 
+  @override
+  final String category;
+
   final Future<void> Function(ArgResults args) onRun;
 
   SimpleCommand({
     required this.name,
     required this.description,
     required this.onRun,
+    String? category,
     Function(ArgParser args)? args,
-  }) {
+  }) : this.category = category ?? '' {
     args?.call(argParser);
   }
 

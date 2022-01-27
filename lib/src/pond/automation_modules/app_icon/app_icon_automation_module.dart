@@ -10,22 +10,21 @@ class AppIconAutomationModule extends AutomationModule {
   final File appIconForegroundFile;
   final int backgroundColor;
 
-  AppIconAutomationModule({required this.appIconForegroundFile, this.backgroundColor: 0xffffff});
+  String get name => 'App Icon';
+
+  AppIconAutomationModule({required this.appIconForegroundFile, this.backgroundColor: 0xffffff}) {
+    registerAutomation(
+      name: 'app_icon',
+      description: 'Set the app icon of the app.',
+      action: _setAppIcon,
+    );
+  }
 
   @override
   Future<void> onBuild(AutomationContext context) async {
     if (context.isClean) {
       await _setAppIcon(context);
     }
-  }
-
-  @override
-  void onRegister(AutomationRegistration registration) {
-    registration.register(
-      name: 'app_icon',
-      description: 'Set the app icon of the app',
-      action: _setAppIcon,
-    );
   }
 
   Future<void> _setAppIcon(AutomationContext context) async {
