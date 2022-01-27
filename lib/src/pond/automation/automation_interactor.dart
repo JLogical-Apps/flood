@@ -1,3 +1,5 @@
+import 'dart:io';
+
 abstract class AutomationInteractor {
   void print(dynamic obj);
 
@@ -7,5 +9,5 @@ abstract class AutomationInteractor {
 
   bool confirm(String prompt);
 
-  Future<void> run(String command);
+  Future<void> run(String command, {Directory? workingDirectory});
 }

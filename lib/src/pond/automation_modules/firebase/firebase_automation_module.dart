@@ -10,8 +10,12 @@ class FirebaseAutomationModule extends AutomationModule {
   final Directory firebaseDirectory;
 
   FirebaseAutomationModule({Directory? firebaseDirectory})
-      : this.firebaseDirectory =
-            firebaseDirectory ?? Directory.current / 'firebase' {
+      : this.firebaseDirectory = firebaseDirectory ?? Directory.current / 'firebase' {
+    registerAutomation(
+      name: 'init',
+      description: 'Initializes Firebase for this project.',
+      action: _initFirebase,
+    );
     registerAutomation(
       name: 'emulators',
       description: 'Starts up the emulators.',
@@ -24,26 +28,42 @@ class FirebaseAutomationModule extends AutomationModule {
     );
   }
 
+  Future<void> _initFirebase(AutomationContext context) async {
+    if (!await _setupFirebase(context)) {
+      return;
+    }
+
+    await firebaseDirectory.ensureCreated();
+    final firebaseJsonFile = firebaseDirectory - 'firebase.json';
+    if (!await firebaseJsonFile.exists()) {
+      context.print(
+          'You need to initialize firebase! Run this command to initialize from the terminal:\ncd firebase\nfirebase init');
+    }
+  }
+
   Future<void> _setupEmulators(AutomationContext context) async {
-    await _setupFirebase(context);
+    if (!await _setupFirebase(context)) {
+      return;
+    }
+
     await context.run('firebase emulators:start');
   }
 
   Future<void> _deploy(AutomationContext context) async {
-    await _setupFirebase(context);
+    if (!await _setupFirebase(context)) {
+      return;
+    }
   }
 
-  Future<void> _setupFirebase(AutomationContext context) async {
-    await context.run('cd ${firebaseDirectory.relativePath}');
-
+  Future<bool> _setupFirebase(AutomationContext context) async {
     try {
       await context.run('firebase --version');
     } catch (e) {
-      final shouldInstallFirebase = context.confirm(
-          'Firebase is not installed on this machine. Would you like to install it?');
+      final shouldInstallFirebase =
+          context.confirm('Firebase is not installed on this machine. Would you like to install it?');
       if (!shouldInstallFirebase) {
         context.error('Firebase needs to be installed.');
-        return;
+        return false;
       }
 
       try {
@@ -51,10 +71,16 @@ class FirebaseAutomationModule extends AutomationModule {
       } catch (e) {
         context.error(
             'Unable to install Firebase. Follow `https://firebase.google.com/docs/cli` to install Firebase manually.');
-        return;
+        return false;
       }
     }
 
-    await context.run('firebase login --interactive');
+    try {
+      await context.run('firebase login --interactive');
+    } catch (e) {
+      return false;
+    }
+
+    return true;
   }
 }
