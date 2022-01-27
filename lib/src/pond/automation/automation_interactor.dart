@@ -7,5 +7,5 @@ abstract class AutomationInteractor {
 
   bool confirm(String prompt);
 
-  void run(String command);
+  Future<void> run(String command);
 }
