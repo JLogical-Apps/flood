@@ -8,7 +8,12 @@ Future<void> main(List<String> args) async {
     args: args,
     automationContext: AutomationContext()
       ..registerModule(AppIconAutomationModule(
-        appIconForegroundFile: Directory.current / 'assets' - 'logo_foreground.png',
+        appIconForegroundFile:
+            Directory.current / 'assets' - 'logo_foreground.png',
+        backgroundColor: 0x172434,
+      ))
+      ..registerModule(NativeSplashAutomationModule(
+        imageFile: Directory.current / 'assets' - 'logo_foreground.png',
         backgroundColor: 0x172434,
       )),
   );

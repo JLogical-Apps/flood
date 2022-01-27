@@ -25,8 +25,8 @@
               android:resource="@style/NormalTheme"
               />
             <!-- Displays an Android View that continues showing the launch screen
-                 Drawable until Flutter paints its first frame, then this splash
-                 screen fades out. A splash screen is useful to avoid any visual
+                 Drawable until Flutter paints its first frame, then this native_splash
+                 screen fades out. A native_splash screen is useful to avoid any visual
                  gap between the end of Android's launch screen and the painting of
                  Flutter's first frame. -->
             <meta-data

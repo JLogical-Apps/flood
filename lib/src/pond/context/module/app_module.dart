@@ -13,6 +13,6 @@ abstract class AppModule {
   /// Called when the app is "force-reset".
   Future<void> onReset() async {}
 
-  /// Loads during the splash screen.
+  /// Loads during the native_splash screen.
   Future<void> onLoad() async {}
 }
