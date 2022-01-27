@@ -33,6 +33,8 @@ extension FileExtensions on File {
     await create(recursive: true);
     return this;
   }
+
+  String get relativePath => relative(path).replaceAll('\\', '/');
 }
 
 extension DirectoryExtensions on Directory {
@@ -51,4 +53,6 @@ extension DirectoryExtensions on Directory {
   File operator -(String path) {
     return File(join(this.path, path));
   }
+
+  String get relativePath => relative(path).replaceAll('\\', '/');
 }

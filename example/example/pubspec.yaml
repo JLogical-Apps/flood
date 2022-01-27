@@ -26,3 +26,5 @@ flutter:
   assets:
     - assets/
     - assets/pond/
+dev_dependencies: 
+  flutter_launcher_icons: ^0.9.2
