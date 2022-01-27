@@ -38,6 +38,7 @@ class FirebaseAutomationModule extends AutomationModule {
     if (!await firebaseJsonFile.exists()) {
       context.print(
           'You need to initialize firebase! Run this command to initialize from the terminal:\ncd firebase\nfirebase init');
+      return;
     }
   }
 
@@ -46,7 +47,7 @@ class FirebaseAutomationModule extends AutomationModule {
       return;
     }
 
-    await context.run('firebase emulators:start');
+    await context.run('firebase emulators:start', workingDirectory: firebaseDirectory);
   }
 
   Future<void> _deploy(AutomationContext context) async {
