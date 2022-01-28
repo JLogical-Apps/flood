@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:jlogical_utils/automation.dart';
-import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
-import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
 import 'package:jlogical_utils/utils.dart';
 
@@ -129,11 +127,11 @@ class FirebaseAutomationModule extends AutomationModule {
       return;
     }
 
-    final config = (await _getConfigData()) ?? {};
+    final config = (await context.getConfig()) ?? {};
     config.ensureNested(['firebase', 'environments']);
     environments.forEach((environment) => config['firebase']['environments'][environment.name] = projectId);
 
-    await _saveConfigData(config);
+    await context.saveConfig(config);
 
     context.print(
         'Run this command to actually register the project to Firebase:\ncd ${firebaseDirectory.relativePath}\nfirebase use --add');
@@ -145,7 +143,7 @@ class FirebaseAutomationModule extends AutomationModule {
     }
 
     String envName = context.args['environment'];
-    final projectId = await _getProjectIdFromEnvironmentName(envName);
+    final projectId = await _getProjectIdFromEnvironmentName(context, envName: envName);
     if (projectId == null) {
       context.error('No project found associated with $envName environment!');
       return;
@@ -177,7 +175,7 @@ class FirebaseAutomationModule extends AutomationModule {
     if (projectIds.isEmpty) {
       List<String> environmentsNames = context.args['environments'];
       if (environmentsNames.isNotEmpty) {
-        final config = (await _getConfigData()) ?? {};
+        final config = (await context.getConfig()) ?? {};
         config.ensureNested(['firebase', 'environments']);
 
         projectIds = environmentsNames
@@ -189,7 +187,7 @@ class FirebaseAutomationModule extends AutomationModule {
     }
 
     if (projectIds.isEmpty && context.args['all']) {
-      final config = (await _getConfigData()) ?? {};
+      final config = (await context.getConfig()) ?? {};
       config.ensureNested(['firebase', 'environments']);
 
       projectIds = config['firebase']['environments'].values.cast<String>().toSet().toList();
@@ -235,22 +233,10 @@ class FirebaseAutomationModule extends AutomationModule {
     return true;
   }
 
-  Future<String?> _getProjectIdFromEnvironmentName(String envName) async {
-    final config = (await _getConfigData()) ?? {};
+  Future<String?> _getProjectIdFromEnvironmentName(AutomationContext context, {required String envName}) async {
+    final config = (await context.getConfig()) ?? {};
     config.ensureNested(['firebase', 'environments']);
 
     return config['firebase']['environments'][envName];
-  }
-
-  DataSource<Map<String, dynamic>> _configDataSource() {
-    return FileDataSource(file: Directory.current / 'assets' - 'config.yaml').mapYaml();
-  }
-
-  Future<Map<String, dynamic>?> _getConfigData() async {
-    return await _configDataSource().getData();
-  }
-
-  Future<void> _saveConfigData(Map<String, dynamic> data) async {
-    await _configDataSource().saveData(data);
   }
 }
