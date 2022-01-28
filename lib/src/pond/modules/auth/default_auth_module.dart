@@ -22,7 +22,7 @@ class DefaultAuthModule extends AppModule {
   }
 
   @override
-  Future<void> onLoad() async {
+  Future<void> onLoad(AppContext context) async {
     if (shouldAutoSignUpForTesting && AppContext.global.environment == Environment.testing) {
       final email = 'test@test.com';
       final userId = await locate<AuthService>().signup(email: email, password: 'password');

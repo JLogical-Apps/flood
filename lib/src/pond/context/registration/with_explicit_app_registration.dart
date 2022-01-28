@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
+import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 import 'package:jlogical_utils/src/pond/context/module/core_app_module.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
@@ -218,13 +219,13 @@ mixin WithExplicitAppRegistration implements AppRegistration {
 
   /// Loads all the modules.
   Future<void> load() {
-    return Future.wait(_appModules.map((module) => module.onLoad()));
+    return Future.wait(_appModules.map((module) => module.onLoad(AppContext.global)));
   }
 
   /// Resets the entire device as if it has never opened the app before.
   Future<void> reset() async {
     for (final module in _appModules) {
-      await module.onReset();
+      await module.onReset(AppContext.global);
     }
   }
 }

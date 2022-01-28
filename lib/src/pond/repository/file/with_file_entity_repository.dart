@@ -58,8 +58,8 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
   }
 
   /// Called when the app is "force-reset".
-  Future<void> onReset() async {
-    await super.onReset();
+  Future<void> onReset(AppContext context) async {
+    await super.onReset(context);
 
     await baseDirectory.delete(recursive: true);
   }

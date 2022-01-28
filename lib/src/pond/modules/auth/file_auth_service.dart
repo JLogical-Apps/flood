@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 import 'package:jlogical_utils/src/persistence/ids/uuid_id_generator.dart';
+import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/utils/file_extensions.dart';
 
 import 'auth_service.dart';
@@ -94,8 +95,8 @@ class FileAuthService extends AuthService {
   }
 
   @override
-  Future<void> onReset() async {
-    await super.onReset();
+  Future<void> onReset(AppContext context) async {
+    await super.onReset(context);
     await loggedInUserIdDataSource.delete();
     await registeredUsersDataSource.delete();
   }

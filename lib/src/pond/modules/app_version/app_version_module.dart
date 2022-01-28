@@ -27,7 +27,7 @@ class AppVersionModule extends AppModule {
     registration.register(VersionUsageRepository(baseDirectory: baseDirectory));
   }
 
-  Future<void> onLoad() async {
+  Future<void> onLoad(AppContext context) async {
     VersionUsageEntity? versionUsageEntity = await Query.from<VersionUsageEntity>().firstOrNull().get();
 
     lastUsedVersion = versionUsageEntity?.value.versionProperty.value;
@@ -42,7 +42,7 @@ class AppVersionModule extends AppModule {
   }
 
   @override
-  Future<void> onReset() async {
+  Future<void> onReset(AppContext context) async {
     final versionUsages = await Query.from<VersionUsageEntity>().all().get();
     for (final versionUsage in versionUsages) {
       await versionUsage.delete();

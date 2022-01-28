@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 
 abstract class AuthService extends AppModule {
@@ -17,7 +18,7 @@ abstract class AuthService extends AppModule {
   /// Logs out of the currently logged-in user.
   Future<void> logout();
 
-  Future<void> onReset() async {
+  Future<void> onReset(AppContext context) async {
     await logout();
   }
 }
