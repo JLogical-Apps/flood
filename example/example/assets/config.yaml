@@ -4,4 +4,7 @@ version: 2
 min_version: 3
 firebase:
   environments:
-    uat: "valet-budget-uat"
+    uat: "jlogical-utils"
+    alpha: "jlogical-utils"
+    beta: "jlogical-utils"
+    production: "jlogical-utils"

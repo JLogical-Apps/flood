@@ -41,6 +41,19 @@ class FirebaseAutomationModule extends AutomationModule {
       action: _setupEmulators,
     );
     registerAutomation(
+        name: 'refresh',
+        description: "Refreshes the project's indices and security rules from the live version.",
+        action: _refresh,
+        args: (args) {
+          args.addOption(
+            'environment',
+            aliases: ['env'],
+            help: 'The environment whose project to refresh the indices from. ',
+            allowed: Environment.values.map((env) => env.name).toList(),
+            defaultsTo: Environment.production.name,
+          );
+        });
+    registerAutomation(
       name: 'deploy',
       description: 'Deploys the local changes to Firebase.',
       args: (args) {
@@ -74,7 +87,7 @@ class FirebaseAutomationModule extends AutomationModule {
     final firebaseJsonFile = firebaseDirectory - 'firebase.json';
     if (!await firebaseJsonFile.exists()) {
       context.print(
-          'You need to initialize firebase! Run this command to initialize from the terminal:\ncd firebase\nfirebase init');
+          'You need to initialize firebase! Run this command to initialize from the terminal:\ncd ${firebaseDirectory.relativePath}\nfirebase init');
       return false;
     }
 
@@ -121,6 +134,27 @@ class FirebaseAutomationModule extends AutomationModule {
     environments.forEach((environment) => config['firebase']['environments'][environment.name] = projectId);
 
     await _saveConfigData(config);
+
+    context.print(
+        'Run this command to actually register the project to Firebase:\ncd ${firebaseDirectory.relativePath}\nfirebase use --add');
+  }
+
+  Future<void> _refresh(AutomationContext context) async {
+    if (!await _setupFirebase(context)) {
+      return;
+    }
+
+    String envName = context.args['environment'];
+    final projectId = await _getProjectIdFromEnvironmentName(envName);
+    if (projectId == null) {
+      context.error('No project found associated with $envName environment!');
+      return;
+    }
+
+    context.print(
+        'Run this command to save the indexes and rules:\ncd ${firebaseDirectory.relativePath}\nfirebase firestore:indexes --project $projectId > firestore.indexes.json');
+    context.print(
+        'You will need to manually copy/paste the firestore/storage rules since there is no way to do that from the CLI :-(');
   }
 
   Future<void> _setupEmulators(AutomationContext context) async {
@@ -199,6 +233,13 @@ class FirebaseAutomationModule extends AutomationModule {
     }
 
     return true;
+  }
+
+  Future<String?> _getProjectIdFromEnvironmentName(String envName) async {
+    final config = (await _getConfigData()) ?? {};
+    config.ensureNested(['firebase', 'environments']);
+
+    return config['firebase']['environments'][envName];
   }
 
   DataSource<Map<String, dynamic>> _configDataSource() {
