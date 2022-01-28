@@ -18,7 +18,8 @@ extension IterableExtensions<T> on Iterable<T> {
 
   /// Safely maps the elements of this iterable into a new one.
   /// If a mapper throws an exception, it is not included in the map and calls [onError].
-  Iterable<R> tryMap<R>(R mapper(T value), {void onError(T value, dynamic error)?}) {
+  Iterable<R> tryMap<R>(R mapper(T value),
+      {void onError(T value, dynamic error)?}) {
     return map((value) {
       try {
         return mapper(value);
@@ -36,7 +37,8 @@ extension MapExtensions<K, V> on Map<K, V> {
   Map<K, V> copy({K keyCopier(K value)?, V valueCopier(V value)?}) {
     if (keyCopier == null && valueCopier == null) return Map.of(this);
 
-    return map((key, value) => MapEntry(keyCopier?.call(key) ?? key, valueCopier?.call(value) ?? value));
+    return map((key, value) => MapEntry(
+        keyCopier?.call(key) ?? key, valueCopier?.call(value) ?? value));
   }
 
   /// Simply sets the value of [key] to [value], just like `map[key] = value`
@@ -47,6 +49,19 @@ extension MapExtensions<K, V> on Map<K, V> {
   /// Maps the key-value pairs of this map into an iterable.
   Iterable<R> mapToIterable<R>(R mapper(K key, V value)) {
     return entries.map((entry) => mapper(entry.key, entry.value));
+  }
+}
+
+extension JsonExtensions on Map<String, dynamic> {
+  /// Ensures that a path can be walked from the root of this json by key.
+  /// For example, if [keys] = ['top', 'mid', 'leaf'] and this is {'top': {'random': 3}},
+  /// this will set the json to {'top': {'random': 3, 'mid': {'leaf': {}}}}
+  Map<String, dynamic> ensureNested(List<String> keys) {
+    var map = this;
+    for (final key in keys) {
+      map = map.putIfAbsent(key, () => <String, dynamic>{});
+    }
+    return this;
   }
 }
 

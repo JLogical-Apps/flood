@@ -26,6 +26,21 @@ mixin WithConsoleAutomationOutput implements AutomationInteractor {
     return Confirm(prompt: prompt, waitForNewLine: true).interact();
   }
 
+  String input(String prompt) {
+    return Input(prompt: prompt).interact();
+  }
+
+  List<T> multiSelect<T>({
+    required String prompt,
+    required List<T> options,
+    required String stringMapper(T value),
+  }) {
+    final selectedIndices =
+        MultiSelect(prompt: prompt, options: options.map(stringMapper).toList())
+            .interact();
+    return selectedIndices.map((index) => options[index]).toList();
+  }
+
   void _initializeLumberdashIfNeeded() {
     if (!_isLumberdashInitialized) {
       _isLumberdashInitialized = true;

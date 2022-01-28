@@ -1,5 +1,6 @@
 export 'context/app_context.dart';
 export 'context/environment/environment.dart';
+export 'context/environment/environment_config.dart';
 export 'context/module/app_module.dart';
 export 'context/module/simple_app_module.dart';
 export 'context/registration/app_registration.dart';

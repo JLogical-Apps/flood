@@ -9,5 +9,13 @@ abstract class AutomationInteractor {
 
   bool confirm(String prompt);
 
+  String input(String prompt);
+
+  List<T> multiSelect<T>({
+    required String prompt,
+    required List<T> options,
+    required String stringMapper(T value),
+  });
+
   Future<void> run(String command, {Directory? workingDirectory});
 }

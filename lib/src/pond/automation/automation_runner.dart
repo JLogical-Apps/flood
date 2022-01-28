@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 
@@ -22,6 +24,7 @@ Future<void> runAutomation(List<String> args, {required AutomationContext automa
   } on UsageException catch (e) {
     automationContext.print(e);
   }
+  exit(0);
 }
 
 class SimpleCommand extends Command {

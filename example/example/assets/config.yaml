@@ -1,0 +1,7 @@
+env: qa
+reset: false
+version: 2
+min_version: 3
+firebase:
+  environments:
+    uat: "valet-budget-uat"

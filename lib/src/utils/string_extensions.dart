@@ -28,4 +28,8 @@ extension StringExtensions on String {
 
     return substring(0, index);
   }
+
+  String? get nullIfBlank {
+    return isBlank ? null : this;
+  }
 }

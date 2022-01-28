@@ -95,8 +95,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  void _initPond() {
-    AppContext.global = AppContext(environment: Environment.qa)
+  Future<void> _initPond() async {
+    AppContext.global = AppContext(environment: await EnvironmentConfig.readFromAssetConfig())
       ..register(FirebaseModule(app: DefaultFirebaseOptions.currentPlatform))
       ..register(BudgetRepository(baseDirectory: baseDirectory / 'budgets'))
       ..register(BudgetTransactionRepository(baseDirectory: baseDirectory / 'transactions'))
@@ -116,11 +116,11 @@ class HomePage extends StatelessWidget {
       ))
       ..register(AppVersionModule(
         baseDirectory: baseDirectory,
-        currentVersionProvider: AssetDataSource(assetPath: 'assets/pond/config.yaml').mapYaml().map(
+        currentVersionProvider: AssetDataSource(assetPath: 'assets/config.yaml').mapYaml().map(
               onSave: (obj) => throw UnimplementedError(),
               onLoad: (yaml) => yaml?['version'],
             ),
-        minimumVersionProvider: AssetDataSource(assetPath: 'assets/pond/config.yaml').mapYaml().map(
+        minimumVersionProvider: AssetDataSource(assetPath: 'assets/config.yaml').mapYaml().map(
               onSave: (obj) => throw UnimplementedError(),
               onLoad: (yaml) => yaml?['min_version'],
             ),
