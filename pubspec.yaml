@@ -44,6 +44,9 @@ dependencies:
   provider: ^5.0.0
   shared_preferences: ^2.0.6
   url_launcher: ^6.0.2
+  cli_script: ^0.2.3+2
+  async: ^2.8.2
+  dart_console: ^1.0.0
 
   # Backend
   freezed_annotation: ^0.14.2

@@ -11,6 +11,13 @@ abstract class AutomationInteractor {
 
   String input(String prompt);
 
+  T select<T>({
+    required String prompt,
+    required List<T> options,
+    required String stringMapper(T value),
+    T? initialValue,
+  });
+
   List<T> multiSelect<T>({
     required String prompt,
     required List<T> options,

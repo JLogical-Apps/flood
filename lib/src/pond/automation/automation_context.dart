@@ -28,24 +28,78 @@ class AutomationContext
     modules.add(module);
   }
 
-  Future<Environment> getEnvironment({String argName: 'environment'}) async {
+  Future<Environment?> getEnvironmentOrNull({
+    String? argName: 'environment',
+    bool shouldAskIfNoArg: true,
+    String selectPrompt: 'Select environment:',
+  }) async {
     Environment? environment;
-    if (args.options.contains(argName)) {
+    if (argName != null && args.options.contains(argName)) {
       final environmentArgName = args[argName];
-      environment = Environment.values.firstWhereOrNull((env) => env.name == environmentArgName) ??
+      environment = _environmentFromNameOrNull(environmentArgName) ??
           (throw Exception('Environment [$environmentArgName] not recognized!'));
     }
 
     if (environment == null) {
+      Environment? configEnvironment;
       final config = (await getConfig() ?? {});
       final environmentConfigName = config['environment'];
       if (environmentConfigName != null) {
-        environment = Environment.values.firstWhereOrNull((env) => env.name == environmentConfigName) ??
+        configEnvironment = Environment.values.firstWhereOrNull((env) => env.name == environmentConfigName) ??
             (throw Exception('Environment [$environmentConfigName] not recognized!'));
+      }
+
+      if (shouldAskIfNoArg) {
+        environment = select<Environment>(
+          prompt: selectPrompt,
+          options: Environment.values,
+          stringMapper: (env) => env.name,
+        );
+      } else {
+        environment = configEnvironment;
       }
     }
 
-    return environment ?? (throw Exception('Cannot find environment!'));
+    return environment;
+  }
+
+  Future<List<Environment>> getEnvironments({
+    String? argName: 'environments',
+    bool shouldAskIfNoArgs: true,
+    String selectPrompt: 'Select environments:',
+  }) async {
+    List<Environment> environments = [];
+    if (argName != null && args.options.contains(argName)) {
+      List<String> environmentArgNames = args[argName];
+      environments = environmentArgNames
+          .map((envName) =>
+              _environmentFromNameOrNull(envName) ?? (throw Exception('Environment [$envName] not recognized!')))
+          .toList();
+    }
+
+    if (environments.isEmpty) {
+      Environment? configEnvironment;
+      final config = (await getConfig() ?? {});
+      final environmentConfigName = config['environment'];
+      if (environmentConfigName != null) {
+        configEnvironment = Environment.values.firstWhereOrNull((env) => env.name == environmentConfigName) ??
+            (throw Exception('Environment [$environmentConfigName] not recognized!'));
+      }
+
+      if (shouldAskIfNoArgs) {
+        environments = multiSelect<Environment>(
+          prompt: selectPrompt,
+          options: Environment.values,
+          stringMapper: (env) => env.name,
+        );
+      } else {
+        if (configEnvironment != null) {
+          environments = [configEnvironment];
+        }
+      }
+    }
+
+    return environments;
   }
 
   bool get isClean => args['clean'];
@@ -77,5 +131,9 @@ class AutomationContext
 
   DataSource<Map<String, dynamic>> _configDataSource() {
     return FileDataSource(file: Directory.current / 'assets' - 'config.yaml').mapYaml();
+  }
+
+  Environment? _environmentFromNameOrNull(String envName) {
+    return Environment.values.firstWhereOrNull((env) => env.name == envName);
   }
 }

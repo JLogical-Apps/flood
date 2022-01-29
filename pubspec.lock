@@ -44,7 +44,7 @@ packages:
     source: hosted
     version: "2.3.0"
   async:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: async
       url: "https://pub.dartlang.org"
@@ -162,6 +162,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  cli_script:
+    dependency: "direct main"
+    description:
+      name: cli_script
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.3+2"
   cli_util:
     dependency: transitive
     description:
@@ -233,7 +240,7 @@ packages:
     source: hosted
     version: "3.0.1"
   dart_console:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: dart_console
       url: "https://pub.dartlang.org"
@@ -779,6 +786,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1+1"
   rxdart:
     dependency: "direct main"
     description:
@@ -970,6 +984,13 @@ packages:
     dependency: "direct main"
     description:
       name: transparent_image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"

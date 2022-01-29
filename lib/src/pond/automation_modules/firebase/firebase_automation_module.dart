@@ -46,7 +46,7 @@ class FirebaseAutomationModule extends AutomationModule {
           args.addOption(
             'environment',
             aliases: ['env'],
-            help: 'The environment whose project to refresh the indices from. ',
+            help: 'The environment whose project to refresh the indices from.',
             allowed: Environment.values.map((env) => env.name).toList(),
             defaultsTo: Environment.production.name,
           );
@@ -102,7 +102,7 @@ class FirebaseAutomationModule extends AutomationModule {
       await context.run('firebase projects:list');
       projectId = context
           .input(
-              'Above are the projects associated with your account. Type in the id of the project you want to register.')
+              'Above are the projects associated with your account. Type in the id of the project you want to register:\n')
           .nullIfBlank;
     }
     if (projectId == null) {
@@ -110,18 +110,11 @@ class FirebaseAutomationModule extends AutomationModule {
       return;
     }
 
-    List<String> environmentNames = context.args['environments'];
-    var environments =
-        environmentNames.map((name) => Environment.values.firstWhere((env) => env.name == name)).toList();
+    final environments = await context.getEnvironments(
+      selectPrompt:
+          'Which environments would you like to associate the Firebase project with? Any environments that already exist will be overwritten by selecting them here.',
+    );
 
-    if (environments.isEmpty) {
-      environments = context.multiSelect(
-        prompt:
-            'Which environments would you like to associate the Firebase project with? Any environments that already exist will be overwritten by selecting them here.',
-        options: Environment.values,
-        stringMapper: (env) => env.name,
-      );
-    }
     if (environments.isEmpty) {
       context.error('At least one environment is needed to map to in order to register a Firebase project!');
       return;
@@ -142,10 +135,10 @@ class FirebaseAutomationModule extends AutomationModule {
       return;
     }
 
-    String envName = context.args['environment'];
-    final projectId = await _getProjectIdFromEnvironmentName(context, envName: envName);
+    final env = await context.getEnvironmentOrNull() ?? (throw Exception('Environment needed to refresh from!'));
+    final projectId = await _getProjectIdFromEnvironmentName(context, envName: env.name);
     if (projectId == null) {
-      context.error('No project found associated with $envName environment!');
+      context.error('No project found associated with $env environment!');
       return;
     }
 
@@ -172,25 +165,27 @@ class FirebaseAutomationModule extends AutomationModule {
     List<String> projectIdsArg = context.args['project-ids'];
     projectIds = projectIdsArg;
 
-    if (projectIds.isEmpty) {
-      List<String> environmentsNames = context.args['environments'];
-      if (environmentsNames.isNotEmpty) {
-        final config = (await context.getConfig()) ?? {};
-        config.ensureNested(['firebase', 'environments']);
-
-        projectIds = environmentsNames
-            .where((env) => config['firebase']['environments'][env] != null)
-            .map((env) => config['firebase']['environments'][env] as String)
-            .toSet()
-            .toList();
-      }
-    }
-
     if (projectIds.isEmpty && context.args['all']) {
       final config = (await context.getConfig()) ?? {};
       config.ensureNested(['firebase', 'environments']);
 
       projectIds = config['firebase']['environments'].values.cast<String>().toSet().toList();
+    }
+
+    if (projectIds.isEmpty) {
+      List<Environment> environments = await context.getEnvironments(
+        selectPrompt: 'Select which associated environments you would like to deploy!',
+      );
+      if (environments.isNotEmpty) {
+        final config = (await context.getConfig()) ?? {};
+        config.ensureNested(['firebase', 'environments']);
+
+        projectIds = environments
+            .where((env) => config['firebase']['environments'][env] != null)
+            .map((env) => config['firebase']['environments'][env] as String)
+            .toSet()
+            .toList();
+      }
     }
 
     if (projectIds.isEmpty) {
