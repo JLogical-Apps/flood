@@ -12,13 +12,14 @@ class FirebaseAutomationModule extends AutomationModule {
 
   FirebaseAutomationModule({Directory? firebaseDirectory})
       : this.firebaseDirectory = firebaseDirectory ?? Directory.current / 'firebase' {
-    registerAutomation(
+    final firebaseCommand = registerAutomation(name: 'firebase', description: 'Commands relating to Firebase.');
+    firebaseCommand.registerAutomation(
       name: 'init',
       description: 'Initializes Firebase for this project.',
       action: _initFirebase,
     );
-    registerAutomation(
-        name: 'register_project',
+    firebaseCommand.registerAutomation(
+        name: 'register',
         description: 'Registers a Firebase Project to this project.',
         action: _registerProject,
         args: (args) {
@@ -33,12 +34,12 @@ class FirebaseAutomationModule extends AutomationModule {
             allowed: Environment.values.map((env) => env.name).toList(),
           );
         });
-    registerAutomation(
+    firebaseCommand.registerAutomation(
       name: 'emulators',
       description: 'Starts up the emulators.',
       action: _setupEmulators,
     );
-    registerAutomation(
+    firebaseCommand.registerAutomation(
         name: 'refresh',
         description: "Refreshes the project's indices and security rules from the live version.",
         action: _refresh,
@@ -51,7 +52,7 @@ class FirebaseAutomationModule extends AutomationModule {
             defaultsTo: Environment.production.name,
           );
         });
-    registerAutomation(
+    firebaseCommand.registerAutomation(
       name: 'deploy',
       description: 'Deploys the local changes to Firebase.',
       args: (args) {
