@@ -11,6 +11,7 @@ import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_date_field.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_dropdown.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_menu_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_radio.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_divider.dart';
@@ -579,6 +580,19 @@ class FlatStyle extends Style {
           },
         );
       },
+    );
+  }
+
+  Widget menuButton(BuildContext context, StyleContext styleContext, StyledMenuButton menuButton) {
+    return actionButton(
+      context,
+      styleContext: styleContext,
+      actions: menuButton.actions,
+      color: menuButton.emphasis.map(
+        high: () => styleContext.emphasisColor,
+        medium: () => styleContext.foregroundColor,
+        low: () => styleContext.backgroundColorSoft,
+      ),
     );
   }
 
