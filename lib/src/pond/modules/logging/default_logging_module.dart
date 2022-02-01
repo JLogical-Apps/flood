@@ -12,13 +12,7 @@ class DefaultLoggingModule extends AppModule {
   }
 
   LoggingService _getLoggingService(Environment environment) {
-    switch (environment) {
-      case Environment.testing:
-      case Environment.device:
-        return ConsoleLoggingService();
-      default:
-        throw UnimplementedError();
-    }
+    return ConsoleLoggingService();
   }
 }
 
