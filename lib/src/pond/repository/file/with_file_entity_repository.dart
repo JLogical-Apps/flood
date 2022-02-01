@@ -7,9 +7,11 @@ import 'package:jlogical_utils/src/pond/state/persistence/json_state_persister.d
 import 'package:jlogical_utils/src/pond/state/persistence/state_persister.dart';
 
 mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAndCacheEntityRepository {
-  Directory get baseDirectory;
-
   StatePersister<String> get statePersister => JsonStatePersister();
+
+  String get dataPath;
+
+  Directory get _baseDirectory => AppContext.global.supportDirectory / dataPath;
 
   @override
   Future<void> save(Entity entity, {Transaction? transaction}) {
@@ -51,7 +53,7 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
 
   QueryExecutor getQueryExecutor({Transaction? transaction}) {
     return FileQueryExecutor(
-      baseDirectory: baseDirectory,
+      baseDirectory: _baseDirectory,
       stateGetter: (id, withoutCache) async =>
           (await get(id, transaction: transaction, withoutCache: withoutCache)).state,
     );
@@ -61,10 +63,10 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
   Future<void> onReset(AppContext context) async {
     await super.onReset(context);
 
-    await baseDirectory.delete(recursive: true);
+    await _baseDirectory.delete(recursive: true);
   }
 
   File _getFile(String id) {
-    return baseDirectory - '$id.entity';
+    return _baseDirectory - '$id.entity';
   }
 }

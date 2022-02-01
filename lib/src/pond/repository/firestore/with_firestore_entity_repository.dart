@@ -5,9 +5,9 @@ import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'query_executor/firestore_query_executor.dart';
 
 mixin WithFirestoreEntityRepository on EntityRepository implements WithTransactionsAndCacheEntityRepository {
-  String get collectionPath;
+  String get dataPath;
 
-  firestore.CollectionReference get _collection => firestore.FirebaseFirestore.instance.collection(collectionPath);
+  firestore.CollectionReference get _collection => firestore.FirebaseFirestore.instance.collection(dataPath);
 
   @override
   Future<void> save(Entity entity, {Transaction? transaction}) {
@@ -55,7 +55,7 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithTransacti
 
   QueryExecutor getQueryExecutor({Transaction? transaction}) {
     return FirestoreQueryExecutor(
-      collectionPath: collectionPath,
+      collectionPath: dataPath,
       stateGetter: (id, withoutCache) async =>
           (await get(id, transaction: transaction, withoutCache: withoutCache)).state,
     );

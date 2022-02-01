@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/context/environment/default_environment_data.dart';
@@ -10,11 +9,10 @@ import 'firebase_auth_service.dart';
 import 'local_auth_service.dart';
 
 class DefaultAuthModule extends AppModule {
-  final Directory baseDirectory;
   final bool shouldAutoSignUpForTesting;
   final FutureOr Function(String userId, String email)? onAutoSignUp;
 
-  DefaultAuthModule({required this.baseDirectory, this.shouldAutoSignUpForTesting: true, this.onAutoSignUp});
+  DefaultAuthModule({this.shouldAutoSignUpForTesting: true, this.onAutoSignUp});
 
   @override
   void onRegister(AppRegistration registration) {
@@ -35,7 +33,7 @@ class DefaultAuthModule extends AppModule {
       case EnvironmentDataSource.memory:
         return LocalAuthService();
       case EnvironmentDataSource.file:
-        return FileAuthService(parentDirectory: baseDirectory);
+        return FileAuthService(authDirectory: 'auth');
       case EnvironmentDataSource.online:
         return FirebaseAuthService();
     }

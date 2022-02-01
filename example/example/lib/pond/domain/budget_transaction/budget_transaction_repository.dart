@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:example/pond/domain/budget_transaction/transfer_transaction.dart';
 import 'package:example/pond/domain/budget_transaction/transfer_transaction_entity.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -12,12 +10,7 @@ import 'envelope_transaction_entity.dart';
 class BudgetTransactionRepository
     extends DefaultAbstractAdaptingRepository<BudgetTransactionEntity, BudgetTransaction> {
   @override
-  final Directory baseDirectory;
-
-  @override
-  String get collectionPath => 'transactions';
-
-  BudgetTransactionRepository({required this.baseDirectory});
+  String get dataPath => 'transactions';
 
   @override
   List<ValueObjectRegistration> get valueObjectRegistrations => [

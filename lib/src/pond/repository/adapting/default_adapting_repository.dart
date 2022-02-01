@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
@@ -14,9 +12,7 @@ import '../entity_repository.dart';
 
 abstract class DefaultAdaptingRepository<E extends Entity<V>, V extends ValueObject> extends DefaultRepository<E, V>
     with WithEntityRepositoryDelegator {
-  Directory get baseDirectory;
-
-  String get collectionPath;
+  String get dataPath;
 
   late EntityRepository entityRepository = getRepository(AppContext.global.environment);
 
@@ -29,7 +25,7 @@ abstract class DefaultAdaptingRepository<E extends Entity<V>, V extends ValueObj
         );
       case Environment.device:
         return SimpleFileRepository(
-          baseDirectory: baseDirectory,
+          dataPath: dataPath,
           onCreateEntity: createEntity,
           onCreateValueObject: createValueObject,
         );
@@ -39,7 +35,7 @@ abstract class DefaultAdaptingRepository<E extends Entity<V>, V extends ValueObj
       case Environment.beta:
       case Environment.production:
         return SimpleFirestoreRepository(
-          collectionPath: collectionPath,
+          dataPath: dataPath,
           onCreateEntity: createEntity,
           onCreateValueObject: createValueObject,
         );

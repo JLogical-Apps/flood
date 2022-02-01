@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:example/firebase_options.dart';
 import 'package:example/model/model_page.dart';
 import 'package:example/pond/domain/budget/budget_repository.dart';
@@ -10,15 +8,12 @@ import 'package:example/pond/presentation/pond_home_page.dart';
 import 'package:example/style/styles_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'form/form_page.dart';
 import 'pond/domain/user/user.dart';
 import 'pond/domain/user/user_entity.dart';
 import 'pond/presentation/pond_login_page.dart';
 import 'repository/repository_page.dart';
-
-late Directory baseDirectory;
 
 Future<void> main() async {
   runApp(MyApp());
@@ -48,9 +43,7 @@ class HomePage extends StatelessWidget {
           NavigationCard(
             title: Text('Pond'),
             onTap: () async {
-              baseDirectory = await getApplicationSupportDirectory();
-
-              _initPond();
+              await _initPond();
 
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => StyleProvider(
@@ -62,12 +55,8 @@ class HomePage extends StatelessWidget {
                             final loggedInId = await locate<AuthService>().getCurrentlyLoggedInUserId();
                             context.style().navigateReplacement(
                                   context: context,
-                                  newPage: (_) => loggedInId == null
-                                      ? PondLoginPage(baseDirectory: baseDirectory)
-                                      : PondHomePage(
-                                          userId: loggedInId,
-                                          loginBaseDirectory: baseDirectory,
-                                        ),
+                                  newPage: (_) =>
+                                      loggedInId == null ? PondLoginPage() : PondHomePage(userId: loggedInId),
                                 );
                           },
                         ),
@@ -96,14 +85,16 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> _initPond() async {
-    AppContext.global = AppContext(environment: await EnvironmentConfig.readFromAssetConfig())
+    AppContext.global = AppContext(
+      environment: await EnvironmentConfig.readFromAssetConfig(),
+      directoryBundle: await DirectoryBundle.generate(),
+    )
       ..register(FirebaseModule(app: DefaultFirebaseOptions.currentPlatform))
-      ..register(BudgetRepository(baseDirectory: baseDirectory / 'budgets'))
-      ..register(BudgetTransactionRepository(baseDirectory: baseDirectory / 'transactions'))
-      ..register(EnvelopeRepository(baseDirectory: baseDirectory / 'envelopes'))
-      ..register(UserRepository(baseDirectory: baseDirectory / 'users'))
+      ..register(BudgetRepository())
+      ..register(BudgetTransactionRepository())
+      ..register(EnvelopeRepository())
+      ..register(UserRepository())
       ..register(DefaultAuthModule(
-        baseDirectory: baseDirectory / 'auth',
         onAutoSignUp: (userId, email) async {
           final user = User()
             ..emailProperty.value = email
@@ -115,7 +106,6 @@ class HomePage extends StatelessWidget {
         },
       ))
       ..register(AppVersionModule(
-        baseDirectory: baseDirectory,
         currentVersionProvider: AssetDataSource(assetPath: 'assets/config.yaml').mapYaml().map(
               onSave: (obj) => throw UnimplementedError(),
               onLoad: (yaml) => yaml?['version'],

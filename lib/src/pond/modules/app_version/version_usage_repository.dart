@@ -1,17 +1,10 @@
-import 'dart:io';
-
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 import 'version_usage.dart';
 import 'version_usage_entity.dart';
 
 class VersionUsageRepository extends DefaultAdaptingRepository<VersionUsageEntity, VersionUsage> {
-  @override
-  final Directory baseDirectory;
-
-  String get collectionPath => throw UnimplementedError('Version Usage cannot be saved online!');
-
-  VersionUsageRepository({required this.baseDirectory});
+  String get dataPath => 'meta';
 
   @override
   VersionUsageEntity createEntity() {
@@ -33,7 +26,7 @@ class VersionUsageRepository extends DefaultAdaptingRepository<VersionUsageEntit
         );
       default:
         return SimpleFileRepository<VersionUsageEntity, VersionUsage>(
-          baseDirectory: baseDirectory,
+          dataPath: dataPath,
           onCreateEntity: createEntity,
           onCreateValueObject: createValueObject,
         );
