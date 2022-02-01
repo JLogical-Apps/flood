@@ -14,6 +14,7 @@ export 'modules/auth/default_auth_module.dart';
 export 'modules/auth/login_failure.dart';
 export 'modules/auth/signup_failure.dart';
 export 'modules/firebase/firebase_module.dart';
+export 'modules/logging/default_logging_module.dart';
 export 'property/computed_property.dart';
 export 'property/field_property.dart';
 export 'property/list_computed_property.dart';
