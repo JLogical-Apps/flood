@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget {
                         style: PondLoginPage.style,
                         child: SplashPage(
                           child: StyledContentHeaderText('JLogical Utils'),
-                          beforeLoad: (context) => AppContext.global.reset(),
+                          //beforeLoad: (context) => AppContext.global.reset(),
                           onDone: (context) async {
                             final loggedInId = await locate<AuthService>().getCurrentlyLoggedInUserId();
                             context.style().navigateReplacement(
@@ -88,7 +88,9 @@ class HomePage extends StatelessWidget {
     AppContext.global = AppContext(
       environment: await EnvironmentConfig.readFromAssetConfig(),
       directoryBundle: await DirectoryBundle.generate(),
-    )
+    );
+    AppContext.global
+      ..register(DefaultLoggingModule())
       ..register(FirebaseModule(app: DefaultFirebaseOptions.currentPlatform))
       ..register(BudgetRepository())
       ..register(BudgetTransactionRepository())

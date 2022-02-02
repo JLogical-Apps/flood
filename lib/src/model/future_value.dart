@@ -64,4 +64,9 @@ class FutureValue<T> with _$FutureValue<T> {
   void otherwise(void action()) {
     maybeWhen(loaded: (_) {}, orElse: action);
   }
+
+  /// Casts this to another type by casting the loaded value to [R].
+  FutureValue<R> cast<R>() {
+    return mapIfPresent((value) => value as R);
+  }
 }

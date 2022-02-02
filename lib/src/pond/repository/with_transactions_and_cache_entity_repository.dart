@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/patterns/cache/cache.dart';
+import 'package:jlogical_utils/src/pond/modules/logging/default_logging_module.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/repository/local/query_executor/local_query_executor.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/utils/collection_extensions.dart';
@@ -76,6 +78,7 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
     completer = Completer<State?>();
     _completerById[id] = completer;
 
+    log('Getting source data for $id from ${runtimeType.toString()}');
     final sourceState = (await super.getOrNull(id, transaction: transaction))?.state;
 
     completer.complete(sourceState);
@@ -125,7 +128,11 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
     Transaction? transaction,
   }) async {
     _startTransactionIfNew(transaction);
-    return getQueryExecutor(transaction: transaction).executeQuery(queryRequest);
+    if (queryRequest.isWithoutCache()) {
+      return getQueryExecutor(transaction: transaction).executeQuery(queryRequest);
+    } else {
+      return LocalQueryExecutor(stateById: _stateByIdCache.valueByKey).executeQuery(queryRequest);
+    }
   }
 
   Map<String, State> getTransactionStateById({Transaction? transaction}) {
