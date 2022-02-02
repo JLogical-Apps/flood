@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 import 'version_usage.dart';
@@ -7,8 +5,6 @@ import 'version_usage_entity.dart';
 import 'version_usage_repository.dart';
 
 class AppVersionModule extends AppModule {
-  final Directory baseDirectory;
-
   final DataSource<int>? currentVersionProvider;
   final DataSource<int>? minimumVersionProvider;
 
@@ -20,11 +16,11 @@ class AppVersionModule extends AppModule {
 
   bool? get needsUpdate => currentVersion == null || minimumVersion == null ? null : currentVersion! < minimumVersion!;
 
-  AppVersionModule({required this.baseDirectory, this.currentVersionProvider, this.minimumVersionProvider});
+  AppVersionModule({this.currentVersionProvider, this.minimumVersionProvider});
 
   @override
   void onRegister(AppRegistration registration) {
-    registration.register(VersionUsageRepository(baseDirectory: baseDirectory));
+    registration.register(VersionUsageRepository());
   }
 
   Future<void> onLoad(AppContext context) async {

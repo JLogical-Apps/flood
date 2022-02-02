@@ -5,6 +5,7 @@ import 'package:jlogical_utils/src/style/widgets/content/styled_category.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_date_field.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_dropdown.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_menu_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_radio.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_chip.dart';
@@ -68,6 +69,10 @@ abstract class Style {
   // === INPUT ===
   /// A button. This should respond to the button having different emphases.
   Widget button(BuildContext context, StyleContext styleContext, StyledButton primaryButton) =>
+      throw UnimplementedError();
+
+  /// A menu button. This should show a list of actions the user can take.
+  Widget menuButton(BuildContext context, StyleContext styleContext, StyledMenuButton styledMenuButton) =>
       throw UnimplementedError();
 
   /// A text field that handles taking in user input.

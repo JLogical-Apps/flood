@@ -8,7 +8,7 @@ import 'default_abstract_firestore_repository.dart';
 class SimpleFirestoreRepository<E extends Entity<V>, V extends ValueObject>
     extends DefaultAbstractFirestoreRepository<E, V> {
   @override
-  final String collectionPath;
+  final String dataPath;
 
   Type get inferredType => E;
 
@@ -19,7 +19,7 @@ class SimpleFirestoreRepository<E extends Entity<V>, V extends ValueObject>
   final List<EntityRegistration>? additionalEntityRegistrations;
 
   SimpleFirestoreRepository({
-    required this.collectionPath,
+    required this.dataPath,
     this.onCreateEntity,
     this.onCreateValueObject,
     this.additionalValueObjectRegistrations,

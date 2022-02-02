@@ -94,18 +94,21 @@ class DeltaStyle extends FlatStyle {
                                     SizedBox(
                                       height: 40,
                                     ),
-                                    Expanded(
-                                      child: Center(
-                                          child: section.bodyText.mapIfNonNull((text) => StyledBodyText(
-                                                    text,
-                                                    textOverrides: StyledTextOverrides(
-                                                      fontSize: 16,
-                                                      padding: EdgeInsets.all(12),
-                                                      textAlign: TextAlign.center,
-                                                    ),
-                                                  )) ??
-                                              section.body),
-                                      flex: 2,
+                                    StyleContextProvider(
+                                      styleContext: styleContextFromBackground(primaryColor),
+                                      child: Expanded(
+                                        child: Center(
+                                            child: section.bodyText.mapIfNonNull((text) => StyledBodyText(
+                                                      text,
+                                                      textOverrides: StyledTextOverrides(
+                                                        fontSize: 16,
+                                                        padding: EdgeInsets.all(12),
+                                                        textAlign: TextAlign.center,
+                                                      ),
+                                                    )) ??
+                                                section.body),
+                                        flex: 2,
+                                      ),
                                     ),
                                     SizedBox(
                                       height: 60,

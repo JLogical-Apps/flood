@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:example/pond/domain/user/user.dart';
 import 'package:example/pond/domain/user/user_entity.dart';
 import 'package:example/pond/presentation/pond_home_page.dart';
@@ -9,10 +7,6 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class PondLoginPage extends HookWidget {
   static Style style = DeltaStyle(backgroundColor: Color(0xff030818));
-
-  final Directory baseDirectory;
-
-  const PondLoginPage({Key? key, required this.baseDirectory}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +68,6 @@ class PondLoginPage extends HookWidget {
                                         context: context,
                                         page: (_) => PondHomePage(
                                               userId: userId,
-                                              loginBaseDirectory: baseDirectory,
                                             ));
                                   },
                                 ),
@@ -157,12 +150,9 @@ class PondLoginPage extends HookWidget {
                                       return;
                                     }
 
-                                    context.style().navigateTo(
-                                        context: context,
-                                        page: (_) => PondHomePage(
-                                              userId: userId,
-                                              loginBaseDirectory: baseDirectory,
-                                            ));
+                                    context
+                                        .style()
+                                        .navigateTo(context: context, page: (_) => PondHomePage(userId: userId));
                                   },
                                 )
                               ],

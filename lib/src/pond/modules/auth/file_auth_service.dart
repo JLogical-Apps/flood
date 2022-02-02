@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
@@ -18,13 +16,17 @@ class FileAuthService extends AuthService {
   final UuidIdGenerator _uuidGenerator = UuidIdGenerator();
 
   FileAuthService({
-    required Directory parentDirectory,
-  })  : loggedInUserIdDataSource = FileDataSource(file: parentDirectory - 'logged_in_user_token.txt').map<String>(
+    required String authDirectory,
+  })  : loggedInUserIdDataSource =
+            FileDataSource(file: AppContext.global.supportDirectory / authDirectory - 'logged_in_user_token.txt')
+                .map<String>(
           onSave: (string) => string,
           onLoad: (string) => string == '' ? null : string,
         ),
         registeredUsersDataSource =
-            FileDataSource(file: parentDirectory - 'registered_users.json').mapJson().map<Map<_LoginToken, String>>(
+            FileDataSource(file: AppContext.global.supportDirectory / authDirectory - 'registered_users.json')
+                .mapJson()
+                .map<Map<_LoginToken, String>>(
                   onSave: (registeredUsers) => {
                     'registeredUsers': registeredUsers.map((loginToken, userId) => MapEntry(loginToken.email, {
                           'userId': userId,
