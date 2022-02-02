@@ -19,12 +19,12 @@ abstract class DefaultAdaptingRepository<E extends Entity<V>, V extends ValueObj
   EntityRepository getRepository(Environment environment) {
     switch (environment) {
       case Environment.testing:
-        return SimpleLocalRepository(
+        return SimpleLocalRepository<E, V>(
           onCreateEntity: createEntity,
           onCreateValueObject: createValueObject,
         );
       case Environment.device:
-        return SimpleFileRepository(
+        return SimpleFileRepository<E, V>(
           dataPath: dataPath,
           onCreateEntity: createEntity,
           onCreateValueObject: createValueObject,
@@ -34,7 +34,7 @@ abstract class DefaultAdaptingRepository<E extends Entity<V>, V extends ValueObj
       case Environment.alpha:
       case Environment.beta:
       case Environment.production:
-        return SimpleFirestoreRepository(
+        return SimpleFirestoreRepository<E, V>(
           dataPath: dataPath,
           onCreateEntity: createEntity,
           onCreateValueObject: createValueObject,

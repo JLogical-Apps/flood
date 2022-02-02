@@ -5,5 +5,7 @@ import 'package:jlogical_utils/src/pond/repository/firestore/with_firestore_enti
 
 import '../with_transactions_and_cache_entity_repository.dart';
 
-abstract class DefaultFirestoreRepository<E extends Entity<V>, V extends ValueObject> = DefaultRepository<E, V>
-    with WithFirestoreEntityRepository, WithTransactionsAndCacheEntityRepository;
+abstract class DefaultFirestoreRepository<E extends Entity<V>, V extends ValueObject> extends DefaultRepository<E, V>
+    with WithFirestoreEntityRepository, WithTransactionsAndCacheEntityRepository {
+  Type get inferredType => E;
+}

@@ -26,21 +26,17 @@ class TransferTransactionEntity extends BudgetTransactionEntity<TransferTransact
 
   Future<void> _adjustEnvelopeAmount(int centsToAdd) async {
     final fromEnvelopeEntity = await value.fromProperty.loadOrNull();
-    if (fromEnvelopeEntity == null) {
-      return;
+    if (fromEnvelopeEntity != null) {
+      final fromEnvelope = fromEnvelopeEntity.value;
+      fromEnvelope.amountProperty.value = fromEnvelope.amountProperty.value! - centsToAdd;
+      await fromEnvelopeEntity.save();
     }
 
     final toEnvelopeEntity = await value.toProperty.loadOrNull();
-    if (toEnvelopeEntity == null) {
-      return;
+    if (toEnvelopeEntity != null) {
+      final toEnvelope = toEnvelopeEntity.value;
+      toEnvelope.amountProperty.value = toEnvelope.amountProperty.value! + centsToAdd;
+      await toEnvelopeEntity.save();
     }
-
-    final fromEnvelope = fromEnvelopeEntity.value;
-    fromEnvelope.amountProperty.value = fromEnvelope.amountProperty.value! - centsToAdd;
-    await fromEnvelopeEntity.save();
-
-    final toEnvelope = toEnvelopeEntity.value;
-    toEnvelope.amountProperty.value = toEnvelope.amountProperty.value! + centsToAdd;
-    await toEnvelopeEntity.save();
   }
 }

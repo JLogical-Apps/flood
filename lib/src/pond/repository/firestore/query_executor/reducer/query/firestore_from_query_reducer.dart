@@ -2,16 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_from_query_reducer.dart';
-import 'package:jlogical_utils/src/pond/state/state.dart';
 
 class FirestoreFromQueryReducer extends AbstractFromQueryReducer<firestore.Query> {
   final String collectionPath;
-  final Future<State> Function(String id) stateGetter;
   final Type? inferredType;
 
   const FirestoreFromQueryReducer({
     required this.collectionPath,
-    required this.stateGetter,
     this.inferredType,
   });
 

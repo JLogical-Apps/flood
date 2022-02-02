@@ -24,6 +24,10 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
 
   QueryExecutor getQueryExecutor({Transaction? transaction});
 
+  void saveToCache(Entity entity) {
+    _stateByIdCache.save(entity.id!, entity.state);
+  }
+
   @override
   Future<void> save(Entity entity, {Transaction? transaction}) async {
     _startTransactionIfNew(transaction);
@@ -85,9 +89,12 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
   }
 
   ValueStream<FutureValue<Entity?>> getXOrNull(String id) {
-    return _stateByIdCache
-        .getX(id)
-        .mapWithValue((state) => FutureValue.loaded(value: state.mapIfNonNull((state) => Entity.fromState(state))));
+    if (!_stateByIdCache.exists(id)) {
+      get(id, withoutCache: true);
+    }
+    return _stateByIdCache.getX(id).mapWithValue(
+          (state) => state == null ? FutureValue.initial() : FutureValue.loaded(value: Entity.fromState(state)),
+        );
   }
 
   @override

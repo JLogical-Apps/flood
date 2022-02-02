@@ -20,10 +20,9 @@ class EntityController<E extends Entity> {
 
   late final QueryRequest<E, E?> _entityQuery = Query.getById(entityId);
 
-  FutureValue<E?> get valueOrNull => model.value;
+  FutureValue<E?> get valueOrNull => nullableModel.value;
 
-  FutureValue<E> get value =>
-      valueOrNull.mapIfPresent((value) => value ?? (throw Exception('Cannot get value of $E with id $entityId')));
+  FutureValue<E> get value => model.value;
 
   EntityController({required this.entityId});
 

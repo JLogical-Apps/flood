@@ -38,7 +38,11 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithTransacti
       return null;
     }
 
-    final state = State.extractFromOrNull(snap.data(), idOverride: snap.id, typeFallback: inferredType?.toString());
+    final state = State.extractFromOrNull(
+      snap.data(),
+      idOverride: snap.id,
+      typeFallback: inferredType?.toString(),
+    );
     if (state == null) {
       return null;
     }
@@ -65,8 +69,7 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithTransacti
   QueryExecutor getQueryExecutor({Transaction? transaction}) {
     return FirestoreQueryExecutor(
       collectionPath: dataPath,
-      stateGetter: (id, withoutCache) async =>
-          (await get(id, transaction: transaction, withoutCache: withoutCache)).state,
+      onEntityInflated: (entity) => saveToCache(entity),
       inferredType: inferredType,
     );
   }

@@ -51,12 +51,12 @@ class TransactionCard extends HookWidget {
 
         if (transaction is TransferTransaction) {
           final fromEnvelope = useEntity<EnvelopeEntity>(transaction.fromProperty.value!)
-              .value
-              .mapIfPresent((entity) => entity.value)
+              .valueOrNull
+              .mapIfPresent((entity) => entity?.value)
               .getOrNull();
           final toEnvelope = useEntity<EnvelopeEntity>(transaction.toProperty.value!)
-              .value
-              .mapIfPresent((entity) => entity.value)
+              .valueOrNull
+              .mapIfPresent((entity) => entity?.value)
               .getOrNull();
           return StyledContent(
             headerText: 'Transfer of ${transaction.amountProperty.value!.formatCentsAsCurrency()}',

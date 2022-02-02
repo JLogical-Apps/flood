@@ -10,8 +10,9 @@ import 'abstract_firestore_query_request_reducer.dart';
 class FirestoreFirstOrNullQueryRequestReducer<R extends Record>
     extends AbstractFirestoreQueryRequestReducer<FirstOrNullQueryRequest<R>, R, R?> {
   final Type? inferredType;
+  final void Function(Entity entity) onEntityInflated;
 
-  FirestoreFirstOrNullQueryRequestReducer({required this.inferredType});
+  FirestoreFirstOrNullQueryRequestReducer({required this.inferredType, required this.onEntityInflated});
 
   @override
   Future<R?> reduce({
@@ -19,7 +20,7 @@ class FirestoreFirstOrNullQueryRequestReducer<R extends Record>
     required FirstOrNullQueryRequest<R> queryRequest,
   }) async {
     final snap = await accumulation.get();
-    return snap.docs
+    final record = snap.docs
         .map((doc) =>
             State.extractFromOrNull(
               doc.data(),
@@ -30,5 +31,11 @@ class FirestoreFirstOrNullQueryRequestReducer<R extends Record>
         .map((state) => Entity.fromState(state))
         .map((entity) => entity as R)
         .firstOrNull;
+
+    if (record != null) {
+      onEntityInflated(record as Entity);
+    }
+
+    return record;
   }
 }

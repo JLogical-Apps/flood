@@ -20,6 +20,10 @@ class Cache<K, V> {
   }
 
   void save(K key, V value) {
+    if (valueByKey[key] == value) {
+      return;
+    }
+
     valueByKey = valueByKey.copy()..set(key, value);
   }
 
@@ -43,6 +47,10 @@ class Cache<K, V> {
   }
 
   void remove(K key) {
+    if (!valueByKey.containsKey(key)) {
+      return;
+    }
+
     valueByKey = valueByKey.copy()..remove(key);
   }
 }
