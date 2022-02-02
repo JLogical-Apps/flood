@@ -10,6 +10,8 @@ class SimpleFirestoreRepository<E extends Entity<V>, V extends ValueObject>
   @override
   final String collectionPath;
 
+  Type get inferredType => E;
+
   final E Function()? onCreateEntity;
   final V Function()? onCreateValueObject;
 

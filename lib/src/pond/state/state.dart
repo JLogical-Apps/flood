@@ -15,14 +15,18 @@ class State extends Equatable {
     Query.type: type,
   };
 
-  static State? extractFromOrNull(dynamic value) {
+  static State? extractFromOrNull(dynamic value, {String? typeFallback, String? idOverride}) {
     if (value is State) {
       return value;
     } else if (value is Map) {
       value = value.copy();
       final type = value.remove(Query.type)?.toString();
       final id = value.remove(Query.id)?.toString();
-      return State(id: id, type: type, values: value.map((key, value) => MapEntry(key.toString(), value)));
+      return State(
+        id: idOverride ?? id,
+        type: type ?? typeFallback,
+        values: value.map((key, value) => MapEntry(key.toString(), value)),
+      );
     } else if (value is Stateful) {
       return value.state;
     }

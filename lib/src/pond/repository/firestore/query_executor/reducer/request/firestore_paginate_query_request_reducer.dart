@@ -12,6 +12,10 @@ import 'abstract_firestore_query_request_reducer.dart';
 
 class FirestorePaginateQueryRequestReducer<R extends Record>
     extends AbstractFirestoreQueryRequestReducer<PaginateQueryRequest<R>, R, QueryPaginationResultController<R>> {
+  final Type? inferredType;
+
+  FirestorePaginateQueryRequestReducer({required this.inferredType});
+
   @override
   Future<QueryPaginationResultController<R>> reduce({
     required firestore.Query accumulation,
@@ -39,9 +43,13 @@ class FirestorePaginateQueryRequestReducer<R extends Record>
     final snap = await paginateQuery.get(firestore.GetOptions(source: Source.server));
     return QueryPaginationResult<R>(
       results: snap.docs
-          .map((e) =>
-              State.extractFromOrNull(e.data()) ??
-              (throw Exception('Cannot get state from Firestore data! [${e.data()}]')))
+          .map((doc) =>
+              State.extractFromOrNull(
+                doc.data(),
+                idOverride: doc.id,
+                typeFallback: inferredType?.toString(),
+              ) ??
+              (throw Exception('Cannot get state from Firestore data! [${doc.data()}]')))
           .map((state) => Entity.fromState(state))
           .map((entity) => entity as R)
           .toList(),

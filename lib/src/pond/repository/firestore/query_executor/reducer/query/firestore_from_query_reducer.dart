@@ -6,18 +6,26 @@ import 'package:jlogical_utils/src/pond/state/state.dart';
 
 class FirestoreFromQueryReducer extends AbstractFromQueryReducer<firestore.Query> {
   final String collectionPath;
-
   final Future<State> Function(String id) stateGetter;
+  final Type? inferredType;
 
-  const FirestoreFromQueryReducer({required this.collectionPath, required this.stateGetter});
+  const FirestoreFromQueryReducer({
+    required this.collectionPath,
+    required this.stateGetter,
+    this.inferredType,
+  });
 
   @override
   Future<firestore.Query> reduce({required firestore.Query? accumulation, required Query query}) async {
+    final collection = firestore.FirebaseFirestore.instance.collection(collectionPath);
+
+    if (query.recordType == inferredType) {
+      return collection;
+    }
+
     final descendants = AppContext.global.getDescendants(query.recordType);
     final types = {...descendants, query.recordType};
     final typeNames = types.map((type) => type.toString()).toList();
-
-    final collection = firestore.FirebaseFirestore.instance.collection(collectionPath);
 
     return collection.where(Query.type, whereIn: typeNames);
   }

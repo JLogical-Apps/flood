@@ -20,12 +20,16 @@ import 'reducer/request/firestore_without_cache_query_request_reducer.dart';
 class FirestoreQueryExecutor with WithResolverQueryExecutor<firestore.Query> implements QueryExecutor {
   final String collectionPath;
   final Future<State> Function(String id, bool withoutCache) stateGetter;
+  final Type? inferredType;
 
-  FirestoreQueryExecutor({required this.collectionPath, required this.stateGetter});
+  FirestoreQueryExecutor({required this.collectionPath, required this.stateGetter, this.inferredType});
 
   List<AbstractQueryReducer<Query, firestore.Query>> getQueryReducers(QueryRequest queryRequest) => [
         FirestoreFromQueryReducer(
-            collectionPath: collectionPath, stateGetter: (id) => stateGetter(id, queryRequest.isWithoutCache())),
+          collectionPath: collectionPath,
+          stateGetter: (id) => stateGetter(id, queryRequest.isWithoutCache()),
+          inferredType: inferredType,
+        ),
         FirestoreWhereQueryReducer(),
         FirestoreOrderByQueryReducer(),
         FirestoreWithoutCacheQueryReducer(),
@@ -33,9 +37,9 @@ class FirestoreQueryExecutor with WithResolverQueryExecutor<firestore.Query> imp
 
   List<AbstractFirestoreQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
       getQueryRequestReducers<R extends Record>() => [
-            FirestoreAllQueryRequestReducer<R>(),
-            FirestoreFirstOrNullQueryRequestReducer<R>(),
-            FirestorePaginateQueryRequestReducer<R>(),
+            FirestoreAllQueryRequestReducer<R>(inferredType: inferredType),
+            FirestoreFirstOrNullQueryRequestReducer<R>(inferredType: inferredType),
+            FirestorePaginateQueryRequestReducer<R>(inferredType: inferredType),
             FirestoreWithoutCacheQueryRequestReducer<R>(
                 queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver()),
           ];

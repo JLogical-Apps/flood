@@ -7,6 +7,10 @@ import 'query_executor/firestore_query_executor.dart';
 mixin WithFirestoreEntityRepository on EntityRepository implements WithTransactionsAndCacheEntityRepository {
   String get collectionPath;
 
+  /// The type to infer documents without a `_type` value are.
+  /// If saving an entity with a type of [inferredType], omit the `_type` field to save space.
+  Type? get inferredType;
+
   firestore.CollectionReference get _collection => firestore.FirebaseFirestore.instance.collection(collectionPath);
 
   @override
@@ -17,6 +21,11 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithTransacti
   Future<void> _saveState({required String id, required State state}) async {
     final doc = _collection.doc(id);
     final json = state.fullValues;
+    json.remove(Query.id);
+    if (state.type == inferredType?.toString()) {
+      json.remove(Query.type);
+    }
+
     await doc.set(json);
   }
 
@@ -29,7 +38,7 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithTransacti
       return null;
     }
 
-    final state = State.extractFromOrNull(snap.data());
+    final state = State.extractFromOrNull(snap.data(), idOverride: snap.id, typeFallback: inferredType?.toString());
     if (state == null) {
       return null;
     }
@@ -58,6 +67,7 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithTransacti
       collectionPath: collectionPath,
       stateGetter: (id, withoutCache) async =>
           (await get(id, transaction: transaction, withoutCache: withoutCache)).state,
+      inferredType: inferredType,
     );
   }
 }
