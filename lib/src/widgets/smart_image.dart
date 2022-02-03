@@ -9,14 +9,16 @@ class SmartImage extends StatelessWidget {
 
   final double? width;
   final double? height;
+  final BoxFit? fit;
 
-  const SmartImage({required this.url, this.width, this.height});
+  const SmartImage({required this.url, this.width, this.height, this.fit});
 
   @override
   Widget build(BuildContext context) {
     return FadeInImage(
       placeholder: MemoryImage(kTransparentImage),
       image: CachedNetworkImageProvider(url),
+      fit: fit,
       width: width,
       height: height,
     );
