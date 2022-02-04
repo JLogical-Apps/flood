@@ -8,11 +8,10 @@ class AppVersionModule extends AppModule {
   final DataSource<int>? currentVersionProvider;
   final DataSource<int>? minimumVersionProvider;
 
+  late bool isFirstTimeOpened;
   late int? lastUsedVersion;
   late int? currentVersion;
   late int? minimumVersion;
-
-  bool get isFirstTimeOpened => lastUsedVersion == null;
 
   bool? get needsUpdate => currentVersion == null || minimumVersion == null ? null : currentVersion! < minimumVersion!;
 
@@ -26,6 +25,7 @@ class AppVersionModule extends AppModule {
   Future<void> onLoad(AppContext context) async {
     VersionUsageEntity? versionUsageEntity = await Query.from<VersionUsageEntity>().firstOrNull().get();
 
+    isFirstTimeOpened = versionUsageEntity == null;
     lastUsedVersion = versionUsageEntity?.value.versionProperty.value;
     currentVersion = await currentVersionProvider?.getData();
     minimumVersion = await minimumVersionProvider?.getData();
