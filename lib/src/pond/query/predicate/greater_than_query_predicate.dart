@@ -6,4 +6,6 @@ class GreaterThanQueryPredicate extends AbstractQueryPredicate {
   final dynamic isGreaterThan;
 
   const GreaterThanQueryPredicate({required this.stateField, required this.isGreaterThan});
+
+  List<Object?> get props => [stateField, isGreaterThan];
 }

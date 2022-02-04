@@ -14,6 +14,12 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
   Directory get _baseDirectory => AppContext.global.supportDirectory / dataPath;
 
   @override
+  Future<void> onLoad(AppContext appContext) async {
+    await _baseDirectory.ensureCreated();
+    return super.onLoad(appContext);
+  }
+
+  @override
   Future<void> save(Entity entity, {Transaction? transaction}) {
     return _saveState(id: entity.id!, state: entity.state);
   }

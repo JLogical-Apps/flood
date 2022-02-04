@@ -7,6 +7,8 @@ class OrderByQuery<R extends Record> extends Query<R> {
 
   OrderByQuery({required Query parent, required this.fieldName, this.orderByType: OrderByType.ascending})
       : super(parent: parent);
+
+  List<Object?> get props => super.props + [fieldName, orderByType];
 }
 
 enum OrderByType {

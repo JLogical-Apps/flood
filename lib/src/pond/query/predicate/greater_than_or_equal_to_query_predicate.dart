@@ -6,4 +6,6 @@ class GreaterThanOrEqualToQueryPredicate extends AbstractQueryPredicate {
   final dynamic isGreaterThanOrEqualTo;
 
   const GreaterThanOrEqualToQueryPredicate({required this.stateField, required this.isGreaterThanOrEqualTo});
+
+  List<Object?> get props => [stateField, isGreaterThanOrEqualTo];
 }

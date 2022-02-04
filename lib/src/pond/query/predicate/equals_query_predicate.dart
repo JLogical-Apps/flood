@@ -6,4 +6,6 @@ class EqualsQueryPredicate extends AbstractQueryPredicate {
   final dynamic isEqualTo;
 
   const EqualsQueryPredicate({required this.stateField, required this.isEqualTo});
+
+  List<Object?> get props => [stateField, isEqualTo];
 }

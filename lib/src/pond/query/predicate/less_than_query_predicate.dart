@@ -6,4 +6,6 @@ class LessThanQueryPredicate extends AbstractQueryPredicate {
   final dynamic isLessThan;
 
   const LessThanQueryPredicate({required this.stateField, required this.isLessThan});
+
+  List<Object?> get props => [stateField, isLessThan];
 }

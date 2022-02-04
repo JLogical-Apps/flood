@@ -8,9 +8,12 @@ import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/utils/utils.dart';
+import 'package:lumberdash/lumberdash.dart';
 import 'package:rxdart/rxdart.dart';
 
-class EntityDatabase implements Database {
+import 'query/with_query_cache_manager.dart';
+
+class EntityDatabase with WithQueryCacheManager implements Database {
   final List<EntityRepository> _repositories;
 
   EntityDatabase({List<EntityRepository>? repositories}) : _repositories = repositories ?? [];
@@ -30,6 +33,12 @@ class EntityDatabase implements Database {
   ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) {
     if (isSubtype<R, Entity>()) {
       final entityRepository = getRepositoryRuntime(R);
+      queryRequest = modifiedWithoutCacheIfNeeded(queryRequest);
+
+      if (queryRequest.isWithoutCache()) {
+        logMessage('Using without-cache query [$queryRequest]');
+      }
+
       return entityRepository.executeQueryX(queryRequest);
     }
 
@@ -40,6 +49,12 @@ class EntityDatabase implements Database {
   Future<T> executeQuery<R extends Record, T>(QueryRequest<R, T> queryRequest, {Transaction? transaction}) {
     if (isSubtype<R, Entity>()) {
       final entityRepository = getRepositoryRuntime(R);
+      queryRequest = modifiedWithoutCacheIfNeeded(queryRequest);
+
+      if (queryRequest.isWithoutCache()) {
+        logMessage('Using without-cache query [$queryRequest]');
+      }
+
       return entityRepository.executeQuery(queryRequest, transaction: transaction);
     }
 

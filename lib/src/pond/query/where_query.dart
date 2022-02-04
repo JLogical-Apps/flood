@@ -6,4 +6,6 @@ class WhereQuery<R extends Record> extends Query<R> {
   final AbstractQueryPredicate queryPredicate;
 
   WhereQuery({required Query parent, required this.queryPredicate}) : super(parent: parent);
+
+  List<Object?> get props => super.props + [queryPredicate];
 }

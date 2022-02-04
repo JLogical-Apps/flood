@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/patterns/cache/cache.dart';
-import 'package:jlogical_utils/src/pond/modules/logging/default_logging_module.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
@@ -78,7 +77,6 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
     completer = Completer<State?>();
     _completerById[id] = completer;
 
-    log('Getting source data for $id from ${runtimeType.toString()}');
     final sourceState = (await super.getOrNull(id, transaction: transaction))?.state;
 
     completer.complete(sourceState);
