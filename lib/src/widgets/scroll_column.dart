@@ -13,7 +13,15 @@ class ScrollColumn extends HookWidget {
 
   final Future Function()? onRefresh;
 
-  const ScrollColumn({Key? key, this.withScrollbar: false, required this.children, this.onRefresh}) : super(key: key);
+  final CrossAxisAlignment crossAxisAlignment;
+
+  const ScrollColumn({
+    Key? key,
+    this.withScrollbar: false,
+    required this.children,
+    this.onRefresh,
+    this.crossAxisAlignment: CrossAxisAlignment.center,
+  }) : super(key: key);
 
   const ScrollColumn.withScrollbar({Key? key, required List<Widget> children, Future Function()? onRefresh})
       : this(key: key, withScrollbar: true, children: children, onRefresh: onRefresh);
@@ -21,7 +29,10 @@ class ScrollColumn extends HookWidget {
   @override
   Widget build(BuildContext context) {
     Widget scrollView = SingleChildScrollView(
-      child: Column(children: children),
+      child: Column(
+        crossAxisAlignment: crossAxisAlignment,
+        children: children,
+      ),
       physics: BouncingScrollPhysics(),
     );
     if (onRefresh != null) {
