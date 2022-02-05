@@ -1197,7 +1197,7 @@ class FlatStyle extends Style {
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top,
       )),
       enableDrag: false,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       builder: (_) {
         return StyleProvider(
           style: this,
