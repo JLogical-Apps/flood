@@ -33,10 +33,14 @@ class EntityDatabase with WithQueryCacheManager implements Database {
   ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) {
     if (isSubtype<R, Entity>()) {
       final entityRepository = getRepositoryRuntime(R);
-      queryRequest = modifiedWithoutCacheIfNeeded(queryRequest);
-
       if (queryRequest.isWithoutCache()) {
-        logMessage('Using without-cache query [$queryRequest]');
+        throw Exception('Cannot run `useQuery()` with a `withoutCache()` query!');
+      }
+
+      final modifiedQueryRequest = modifiedWithoutCacheIfNeeded(queryRequest);
+      if (modifiedQueryRequest.isWithoutCache()) {
+        logMessage('Calling without-cache due to useQueryX [$queryRequest]');
+        entityRepository.executeQuery(modifiedQueryRequest); // Run the cacheless query in order to fetch latest data.
       }
 
       return entityRepository.executeQueryX(queryRequest);

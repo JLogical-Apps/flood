@@ -15,7 +15,6 @@ import 'predicate/greater_than_or_equal_to_query_predicate.dart';
 import 'predicate/greater_than_query_predicate.dart';
 import 'predicate/less_than_or_equal_to_query_predicate.dart';
 import 'predicate/less_than_query_predicate.dart';
-import 'package:meta/meta.dart';
 
 @marker
 abstract class Query<R extends Record> extends Equatable {
@@ -132,6 +131,5 @@ abstract class Query<R extends Record> extends Equatable {
   }
 
   @override
-  @mustCallSuper
   List<Object?> get props => [parent];
 }
