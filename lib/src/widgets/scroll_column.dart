@@ -23,8 +23,12 @@ class ScrollColumn extends HookWidget {
     this.crossAxisAlignment: CrossAxisAlignment.center,
   }) : super(key: key);
 
-  const ScrollColumn.withScrollbar({Key? key, required List<Widget> children, Future Function()? onRefresh})
-      : this(key: key, withScrollbar: true, children: children, onRefresh: onRefresh);
+  const ScrollColumn.withScrollbar({
+    Key? key,
+    required List<Widget> children,
+    Future Function()? onRefresh,
+    CrossAxisAlignment crossAxisAlignment: CrossAxisAlignment.center,
+  }) : this(key: key, withScrollbar: true, children: children, onRefresh: onRefresh);
 
   @override
   Widget build(BuildContext context) {
