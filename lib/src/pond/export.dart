@@ -1,6 +1,5 @@
 export 'context/app_context.dart';
 export 'context/environment/environment.dart';
-export 'context/environment/environment_config.dart';
 export 'context/module/app_module.dart';
 export 'context/directory/directory_bundle.dart';
 export 'context/module/simple_app_module.dart';
@@ -14,6 +13,8 @@ export 'modules/auth/auth_service.dart';
 export 'modules/auth/default_auth_module.dart';
 export 'modules/auth/login_failure.dart';
 export 'modules/auth/signup_failure.dart';
+export 'modules/config/config_module.dart';
+export 'modules/config/config_data_source.dart';
 export 'modules/firebase/firebase_module.dart';
 export 'modules/logging/default_logging_module.dart';
 export 'property/computed_property.dart';

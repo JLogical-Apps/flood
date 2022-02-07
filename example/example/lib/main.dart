@@ -85,11 +85,14 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> _initPond() async {
+    final configModule = ConfigModule();
+
     AppContext.global = AppContext(
-      environment: await EnvironmentConfig.readFromAssetConfig(),
+      environment: await configModule.getEnvironmentFromConfig(),
       directoryBundle: await DirectoryBundle.generate(),
     );
     AppContext.global
+      ..register(configModule)
       ..register(DefaultLoggingModule())
       ..register(FirebaseModule(app: DefaultFirebaseOptions.currentPlatform))
       ..register(BudgetRepository())
@@ -108,14 +111,14 @@ class HomePage extends StatelessWidget {
         },
       ))
       ..register(AppVersionModule(
-        currentVersionProvider: AssetDataSource(assetPath: 'assets/config.yaml').mapYaml().map(
-              onSave: (obj) => throw UnimplementedError(),
-              onLoad: (yaml) => yaml?['version'],
-            ),
-        minimumVersionProvider: AssetDataSource(assetPath: 'assets/config.yaml').mapYaml().map(
-              onSave: (obj) => throw UnimplementedError(),
-              onLoad: (yaml) => yaml?['min_version'],
-            ),
+        currentVersionProvider: ConfigDataSource().map(
+          onSave: (obj) => throw UnimplementedError(),
+          onLoad: (yaml) => yaml?['version'],
+        ),
+        minimumVersionProvider: ConfigDataSource().map(
+          onSave: (obj) => throw UnimplementedError(),
+          onLoad: (yaml) => yaml?['min_version'],
+        ),
       ));
   }
 }
