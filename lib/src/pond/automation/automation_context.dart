@@ -10,9 +10,9 @@ import 'package:jlogical_utils/src/pond/automation/package_registration.dart';
 import 'package:jlogical_utils/src/pond/automation/with_console_automation_output.dart';
 import 'package:jlogical_utils/src/pond/automation/with_pubspec_package_registration.dart';
 import 'package:jlogical_utils/src/pond/automation/with_shell_automation_interactor.dart';
-import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
 import 'package:jlogical_utils/src/utils/file_extensions.dart';
 
+import '../modules/environment/environment.dart';
 import 'automation.dart';
 
 class AutomationContext

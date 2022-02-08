@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
-import 'package:jlogical_utils/src/pond/context/environment/environment.dart';
 import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
+import 'package:jlogical_utils/src/pond/modules/environment/environment_module.dart';
+
+import '../environment/environment.dart';
 
 class FirebaseModule extends AppModule {
   final FirebaseOptions app;

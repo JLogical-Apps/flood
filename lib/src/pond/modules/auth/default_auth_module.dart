@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/context/environment/default_environment_data.dart';
-import 'package:jlogical_utils/src/pond/context/environment/environment_data_source.dart';
+import 'package:jlogical_utils/src/pond/modules/environment/default_environment_data.dart';
+import 'package:jlogical_utils/src/pond/modules/environment/environment_data_source.dart';
 
+import '../environment/environment.dart';
 import 'file_auth_service.dart';
 import 'firebase_auth_service.dart';
 import 'local_auth_service.dart';
@@ -16,7 +17,7 @@ class DefaultAuthModule extends AppModule {
 
   @override
   void onRegister(AppRegistration registration) {
-    registration.register<AuthService>(_getAuthService(DefaultEnvironmentData.getDataSource(registration.environment)));
+    registration.register<AuthService>(_getAuthService(DefaultEnvironmentData.getDataSource(AppContext.global.environment)));
   }
 
   @override

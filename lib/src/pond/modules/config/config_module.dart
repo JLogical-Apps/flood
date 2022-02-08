@@ -1,5 +1,7 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+import '../environment/environment.dart';
+
 class ConfigModule extends AppModule {
   final String configPath;
 

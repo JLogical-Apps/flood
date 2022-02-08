@@ -1,5 +1,6 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+import '../environment/environment.dart';
 import 'version_usage.dart';
 import 'version_usage_entity.dart';
 

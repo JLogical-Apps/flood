@@ -15,7 +15,7 @@ class EntityController<E extends Entity> {
     hasStartedLoading: true,
   );
 
-  late AsyncLoadable<E> model =
+  late final AsyncLoadable<E> model =
       nullableModel.map((maybeEntity) => maybeEntity ?? (throw Exception('Cannot load $E with id $entityId')));
 
   late final QueryRequest<E, E?> _entityQuery = Query.getById(entityId);

@@ -1,5 +1,4 @@
 export 'context/app_context.dart';
-export 'context/environment/environment.dart';
 export 'context/module/app_module.dart';
 export 'context/directory/directory_bundle.dart';
 export 'context/module/simple_app_module.dart';
@@ -9,6 +8,8 @@ export 'context/registration/value_object_registration.dart';
 export 'database/database.dart';
 export 'database/entity_database.dart';
 export 'modules/app_version/app_version_module.dart';
+export 'modules/environment/environment_module.dart';
+export 'modules/core_module.dart';
 export 'modules/auth/auth_service.dart';
 export 'modules/auth/default_auth_module.dart';
 export 'modules/auth/login_failure.dart';

@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
-import 'package:jlogical_utils/src/pond/context/module/core_app_module.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
 import 'package:jlogical_utils/src/pond/context/registration/value_object_registration.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
@@ -24,7 +23,7 @@ mixin WithExplicitAppRegistration implements AppRegistration {
 
   final EntityDatabase _entityDatabase = EntityDatabase();
 
-  final List<AppModule> _appModules = [CoreAppModule()];
+  final List<AppModule> _appModules = [];
 
   List<ValueObjectRegistration> get valueObjectRegistrations =>
       _appModules.expand((module) => module.valueObjectRegistrations).toList();

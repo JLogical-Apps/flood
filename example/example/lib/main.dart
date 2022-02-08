@@ -85,15 +85,8 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> _initPond() async {
-    final configModule = ConfigModule();
-
-    AppContext.global = AppContext(
-      environment: await configModule.getEnvironmentFromConfig(),
-      directoryBundle: await DirectoryBundle.generate(),
-    );
-    AppContext.global
-      ..register(configModule)
-      ..register(DefaultLoggingModule())
+    final appContext = await AppContext.createGlobal();
+    appContext
       ..register(FirebaseModule(app: DefaultFirebaseOptions.currentPlatform))
       ..register(BudgetRepository())
       ..register(BudgetTransactionRepository())
