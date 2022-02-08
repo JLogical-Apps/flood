@@ -22,82 +22,92 @@ class PondHomePage extends HookWidget {
           .orderByDescending(ValueObject.timeCreatedField)
           .paginate(),
     );
-    return StyleProvider(
-      style: PondLoginPage.style,
-      child: Builder(builder: (context) {
-        return ModelBuilder.styledPage(
-          model: userEntityController.model,
-          builder: (UserEntity userEntity) {
-            return StyledPage(
-              onRefresh: () => Future.wait([userEntityController.reload(), userBudgetsController.reload()]),
-              titleText: 'Home: ${userEntity.value.nameProperty.value}',
-              actions: [
-                ActionItem(
-                  name: 'Log Out',
-                  onPerform: () async {
-                    await locate<AuthService>().logout();
-                    context.style().navigateReplacement(context: context, newPage: (_) => PondLoginPage());
-                  },
-                ),
-              ],
-              body: ModelBuilder.styled(
-                model: userBudgetsController.model,
-                builder: (QueryPaginationResultController<BudgetEntity> budgetsController) {
-                  return StyledCategory.medium(
-                    headerText: 'Budgets',
-                    actions: [
-                      ActionItem(
-                        name: 'Create',
-                        description: 'Create a budget for this user.',
-                        color: Colors.green,
-                        leading: Icon(Icons.monetization_on),
-                        onPerform: () async {
-                          final data = await StyledDialog.smartForm(
-                            context: context,
-                            children: [
-                              StyledSmartTextField(
-                                name: 'name',
-                                label: 'Name',
-                                validators: [Validation.required()],
-                              ),
-                            ],
-                          ).show(context);
+    return Banner(
+      message: AppContext.global.environment.name.toUpperCase(),
+      location: BannerLocation.topEnd,
+      textDirection: TextDirection.ltr,
+      layoutDirection: TextDirection.ltr,
+      color: Colors.red,
+      child: StyleProvider(
+        style: PondLoginPage.style,
+        child: Builder(builder: (context) {
+          return ModelBuilder.styledPage(
+            model: userEntityController.nullableModel,
+            builder: (UserEntity? userEntity) {
+              if(userEntity == null) {
+                return StyledLoadingPage();
+              }
+              return StyledPage(
+                onRefresh: () => Future.wait([userEntityController.reload(), userBudgetsController.reload()]),
+                titleText: 'Home: ${userEntity.value.nameProperty.value}',
+                actions: [
+                  ActionItem(
+                    name: 'Log Out',
+                    onPerform: () async {
+                      await locate<AuthService>().logout();
+                      context.style().navigateReplacement(context: context, newPage: (_) => PondLoginPage());
+                    },
+                  ),
+                ],
+                body: ModelBuilder.styled(
+                  model: userBudgetsController.model,
+                  builder: (QueryPaginationResultController<BudgetEntity> budgetsController) {
+                    return StyledCategory.medium(
+                      headerText: 'Budgets',
+                      actions: [
+                        ActionItem(
+                          name: 'Create',
+                          description: 'Create a budget for this user.',
+                          color: Colors.green,
+                          leading: Icon(Icons.monetization_on),
+                          onPerform: () async {
+                            final data = await StyledDialog.smartForm(
+                              context: context,
+                              children: [
+                                StyledSmartTextField(
+                                  name: 'name',
+                                  label: 'Name',
+                                  validators: [Validation.required()],
+                                ),
+                              ],
+                            ).show(context);
 
-                          if (data == null) {
-                            return;
-                          }
+                            if (data == null) {
+                              return;
+                            }
 
-                          final budget = Budget()
-                            ..nameProperty.value = data['name']
-                            ..ownerProperty.value = userId;
+                            final budget = Budget()
+                              ..nameProperty.value = data['name']
+                              ..ownerProperty.value = userId;
 
-                          final budgetEntity = BudgetEntity()..value = budget;
+                            final budgetEntity = BudgetEntity()..value = budget;
 
-                          await budgetEntity.create();
-                        },
-                      ),
-                    ],
-                    noChildrenWidget: StyledContentSubtitleText('No budgets'),
-                    children: [
-                      ...budgetsController.results.map((budget) => BudgetCard(
-                            budgetId: budget.id!,
-                            key: ValueKey(budget.id),
-                          )),
-                      if (budgetsController.canLoadMore)
-                        StyledButton.low(
-                          text: 'Load More',
-                          onTapped: () async {
-                            await budgetsController.loadMore();
+                            await budgetEntity.create();
                           },
                         ),
-                    ],
-                  );
-                },
-              ),
-            );
-          },
-        );
-      }),
+                      ],
+                      noChildrenWidget: StyledContentSubtitleText('No budgets'),
+                      children: [
+                        ...budgetsController.results.map((budget) => BudgetCard(
+                              budgetId: budget.id!,
+                              key: ValueKey(budget.id),
+                            )),
+                        if (budgetsController.canLoadMore)
+                          StyledButton.low(
+                            text: 'Load More',
+                            onTapped: () async {
+                              await budgetsController.loadMore();
+                            },
+                          ),
+                      ],
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        }),
+      ),
     );
   }
 }

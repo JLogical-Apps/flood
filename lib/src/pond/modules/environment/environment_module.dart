@@ -1,7 +1,5 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-import 'environment.dart';
-
 class EnvironmentModule extends AppModule {
   late final Environment environment;
 
