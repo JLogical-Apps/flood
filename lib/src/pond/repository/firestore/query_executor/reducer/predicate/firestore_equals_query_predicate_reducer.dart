@@ -12,6 +12,10 @@ class FirestoreEqualsQueryPredicateReducer extends AbstractEqualsQueryPredicateR
       return aggregate.where(firestore.FieldPath.documentId, isEqualTo: equalsQueryPredicate.isEqualTo);
     }
 
+    if (equalsQueryPredicate.isEqualTo == null) {
+      return aggregate.where(equalsQueryPredicate.stateField, isNull: true);
+    }
+
     return aggregate.where(equalsQueryPredicate.stateField, isEqualTo: equalsQueryPredicate.isEqualTo);
   }
 }

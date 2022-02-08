@@ -43,6 +43,7 @@ abstract class Query<R extends Record> extends Equatable {
     dynamic isGreaterThanOrEqualTo,
     dynamic isLessThan,
     dynamic isLessThanOrEqualTo,
+    bool isNull: false,
   }) {
     if (isEqualTo != null) {
       return WhereQuery(
@@ -88,6 +89,13 @@ abstract class Query<R extends Record> extends Equatable {
           stateField: stateField,
           isLessThanOrEqualTo: isLessThanOrEqualTo,
         ),
+        parent: this,
+      );
+    }
+
+    if (isNull) {
+      return WhereQuery(
+        queryPredicate: EqualsQueryPredicate(stateField: stateField, isEqualTo: null),
         parent: this,
       );
     }
