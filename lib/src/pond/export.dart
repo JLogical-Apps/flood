@@ -9,6 +9,7 @@ export 'database/database.dart';
 export 'database/entity_database.dart';
 export 'modules/app_version/app_version_module.dart';
 export 'modules/environment/environment_module.dart';
+export 'modules/environment/environment.dart';
 export 'modules/core_module.dart';
 export 'modules/auth/auth_service.dart';
 export 'modules/auth/default_auth_module.dart';
