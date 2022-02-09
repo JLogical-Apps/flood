@@ -136,11 +136,16 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
     Transaction? transaction,
   }) async {
     _startTransactionIfNew(transaction);
+    T result;
     if (queryRequest.isWithoutCache()) {
-      return getQueryExecutor(transaction: transaction).executeQuery(queryRequest);
+      result = await getQueryExecutor(transaction: transaction).executeQuery(queryRequest);
     } else {
-      return LocalQueryExecutor(stateById: _stateByIdCache.valueByKey).executeQuery(queryRequest);
+      result = await LocalQueryExecutor(stateById: _stateByIdCache.valueByKey).executeQuery(queryRequest);
     }
+
+    markHasBeenRun(queryRequest);
+
+    return result;
   }
 
   T executeQuerySync<R extends Record, T>(
