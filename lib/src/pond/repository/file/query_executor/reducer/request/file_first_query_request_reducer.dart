@@ -7,7 +7,7 @@ import 'abstract_file_query_request_reducer.dart';
 class FileFirstOrNullQueryRequestReducer<R extends Record>
     extends AbstractFileQueryRequestReducer<FirstOrNullQueryRequest<R>, R, R?> {
   @override
-  R? reduce({
+  R? reduceSync({
     required Iterable<Record> accumulation,
     required FirstOrNullQueryRequest<R> queryRequest,
   }) {

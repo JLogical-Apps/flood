@@ -8,5 +8,5 @@ import 'package:jlogical_utils/src/pond/record/record.dart';
 abstract class AbstractQueryRequestReducer<QR extends QueryRequest<R, T>, R extends Record, T, C>
     with WithSubtypeWrapper<QR, QueryRequest<R, dynamic>>
     implements Wrapper<QueryRequest<R, dynamic>> {
-  FutureOr<T> reduce({required C accumulation, required QR queryRequest});
+  Future<T> reduce({required C accumulation, required QR queryRequest});
 }

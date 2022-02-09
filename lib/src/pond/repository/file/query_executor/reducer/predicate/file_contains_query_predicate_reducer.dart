@@ -1,9 +1,10 @@
 import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/contains_query_predicate.dart';
-import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_contains_query_predicate_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 
-class FileContainsQueryPredicateReducer extends AbstractContainsQueryPredicateReducer<Iterable<Record>> {
+class FileContainsQueryPredicateReducer
+    extends AbstractQueryPredicateReducer<ContainsQueryPredicate, Iterable<Record>> {
   @override
   Iterable<Record> reduce({required Iterable<Record> aggregate, required AbstractQueryPredicate queryPredicate}) {
     final containsQueryPredicate = queryPredicate as ContainsQueryPredicate;

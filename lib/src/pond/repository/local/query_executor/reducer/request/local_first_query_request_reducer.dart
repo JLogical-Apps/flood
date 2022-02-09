@@ -7,7 +7,7 @@ import 'abstract_local_query_request_reducer.dart';
 class LocalFirstOrNullQueryRequestReducer<R extends Record>
     extends AbstractLocalQueryRequestReducer<FirstOrNullQueryRequest<R>, R, R?> {
   @override
-  R? reduce({
+  R? reduceSync({
     required Iterable<Record> accumulation,
     required FirstOrNullQueryRequest<R> queryRequest,
   }) {

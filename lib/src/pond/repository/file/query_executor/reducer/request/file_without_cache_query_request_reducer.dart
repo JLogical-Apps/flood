@@ -1,5 +1,5 @@
 import 'package:jlogical_utils/src/patterns/resolver/resolver.dart';
-import 'package:jlogical_utils/src/pond/query/reducer/abstract_query_request_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/request/abstract_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/without_cache_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
@@ -15,7 +15,7 @@ class FileWithoutCacheQueryRequestReducer<R extends Record>
   FileWithoutCacheQueryRequestReducer({required this.queryRequestReducerResolverGetter});
 
   @override
-  dynamic reduce({
+  dynamic reduceSync({
     required Iterable<Record> accumulation,
     required WithoutCacheQueryRequest<R, dynamic> queryRequest,
   }) {

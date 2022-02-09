@@ -3,7 +3,7 @@ import 'package:jlogical_utils/src/patterns/resolver/with_wrapper_resolver.dart'
 import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_query_predicate_reducer.dart';
-import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_where_query_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_sync_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/where_query.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/predicate/local_contains_query_predicate_reducer.dart';
@@ -13,7 +13,7 @@ import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/predicate/local_less_than_or_equal_to_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/predicate/local_less_than_query_predicate_reducer.dart';
 
-class LocalWhereQueryReducer extends AbstractWhereQueryReducer<Iterable<Record>>
+class LocalWhereQueryReducer extends AbstractSyncQueryReducer<WhereQuery, Iterable<Record>>
     with WithWrapperResolver<AbstractQueryPredicate, AbstractQueryPredicateReducer>
     implements Resolver<AbstractQueryPredicate, AbstractQueryPredicateReducer> {
   late List<AbstractQueryPredicateReducer> wrappers = [
@@ -26,7 +26,7 @@ class LocalWhereQueryReducer extends AbstractWhereQueryReducer<Iterable<Record>>
   ];
 
   @override
-  Future<Iterable<Record>> reduce({required Iterable<Record>? accumulation, required Query query}) async {
+  Iterable<Record> reduceSync({required Iterable<Record>? accumulation, required Query query}) {
     final whereQuery = query as WhereQuery;
     final queryPredicate = whereQuery.queryPredicate;
 

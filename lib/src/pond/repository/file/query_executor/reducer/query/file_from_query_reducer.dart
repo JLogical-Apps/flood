@@ -1,15 +1,16 @@
 import 'dart:io';
 
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
+import 'package:jlogical_utils/src/pond/query/from_query.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
-import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_from_query_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/utils/file_extensions.dart';
 import 'package:path/path.dart';
 
-class FileFromQueryReducer extends AbstractFromQueryReducer<Iterable<Record>> {
+class FileFromQueryReducer extends AbstractQueryReducer<FromQuery, Iterable<Record>> {
   final Directory baseDirectory;
 
   final Future<State> Function(String id) stateGetter;

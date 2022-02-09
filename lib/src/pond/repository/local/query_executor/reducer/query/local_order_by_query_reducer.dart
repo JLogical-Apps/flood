@@ -1,11 +1,11 @@
 import 'package:jlogical_utils/src/pond/query/order_by_query.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
-import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_order_by_query_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_sync_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 
-class LocalOrderByQueryReducer extends AbstractOrderByQueryReducer<Iterable<Record>> {
+class LocalOrderByQueryReducer extends AbstractSyncQueryReducer<OrderByQuery, Iterable<Record>> {
   @override
-  Future<Iterable<Record>> reduce({required Iterable<Record>? accumulation, required Query query}) async {
+  Iterable<Record> reduceSync({required Iterable<Record>? accumulation, required Query query}) {
     final orderByQuery = query as OrderByQuery;
     final orderByType = orderByQuery.orderByType;
     final sortField = orderByQuery.fieldName;

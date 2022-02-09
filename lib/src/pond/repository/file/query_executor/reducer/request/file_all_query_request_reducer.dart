@@ -6,7 +6,7 @@ import 'abstract_file_query_request_reducer.dart';
 class FileAllQueryRequestReducer<R extends Record>
     extends AbstractFileQueryRequestReducer<AllQueryRequest<R>, R, List<Record>> {
   @override
-  List<R> reduce({
+  List<R> reduceSync({
     required Iterable<Record> accumulation,
     required AllQueryRequest<R> queryRequest,
   }) {

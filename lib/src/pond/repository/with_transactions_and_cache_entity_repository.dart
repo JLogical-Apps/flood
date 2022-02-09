@@ -117,7 +117,17 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
 
   @override
   ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) {
-    return _stateByIdCache.valueByKeyX.asyncMapWithValue((stateById) => executeQuery(queryRequest));
+    FutureValue<T> initialValue;
+    if (hasBeenRunBefore(queryRequest)) {
+      initialValue = FutureValue.loaded(value: executeQuerySync(queryRequest));
+    } else {
+      initialValue = FutureValue.initial();
+    }
+
+    return _stateByIdCache.valueByKeyX.asyncMapWithValue(
+      (stateById) => executeQuery(queryRequest),
+      initialValue: initialValue,
+    );
   }
 
   @override
@@ -131,6 +141,13 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
     } else {
       return LocalQueryExecutor(stateById: _stateByIdCache.valueByKey).executeQuery(queryRequest);
     }
+  }
+
+  T executeQuerySync<R extends Record, T>(
+    QueryRequest<R, T> queryRequest, {
+    Transaction? transaction,
+  }) {
+    return LocalQueryExecutor(stateById: _stateByIdCache.valueByKey).executeQuerySync(queryRequest);
   }
 
   Map<String, State> getTransactionStateById({Transaction? transaction}) {

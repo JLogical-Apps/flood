@@ -34,7 +34,7 @@ class EntityDatabase with WithQueryCacheManager implements Database {
     if (isSubtype<R, Entity>()) {
       final entityRepository = getRepositoryRuntime(R);
       if (queryRequest.isWithoutCache()) {
-        throw Exception('Cannot run `useQuery()` with a `withoutCache()` query!');
+        throw Exception('Cannot run `useQueryX()` with a `withoutCache()` query!');
       }
 
       final modifiedQueryRequest = modifiedWithoutCacheIfNeeded(queryRequest);

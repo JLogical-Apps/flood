@@ -1,9 +1,10 @@
 import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/greater_than_query_predicate.dart';
-import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_greater_than_equals_query_predicate_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 
-class FileGreaterThanQueryPredicateReducer extends AbstractGreaterThanQueryPredicateReducer<Iterable<Record>> {
+class FileGreaterThanQueryPredicateReducer
+    extends AbstractQueryPredicateReducer<GreaterThanQueryPredicate, Iterable<Record>> {
   @override
   Iterable<Record> reduce({required Iterable<Record> aggregate, required AbstractQueryPredicate queryPredicate}) {
     final greaterThanPredicate = queryPredicate as GreaterThanQueryPredicate;
@@ -21,7 +22,7 @@ class FileGreaterThanQueryPredicateReducer extends AbstractGreaterThanQueryPredi
     final stateValue = stateValues[stateField];
 
     var compareTo = queryPredicate.isGreaterThan;
-    if(queryPredicate.isGreaterThan is DateTime) {
+    if (queryPredicate.isGreaterThan is DateTime) {
       compareTo = (queryPredicate.isGreaterThan as DateTime).millisecondsSinceEpoch;
     }
 

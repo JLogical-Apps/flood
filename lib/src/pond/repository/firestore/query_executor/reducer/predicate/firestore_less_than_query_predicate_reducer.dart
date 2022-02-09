@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/less_than_query_predicate.dart';
-import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_less_than_equals_query_predicate_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 
-class FirestoreLessThanQueryPredicateReducer extends AbstractLessThanQueryPredicateReducer<firestore.Query> {
+class FirestoreLessThanQueryPredicateReducer
+    extends AbstractQueryPredicateReducer<LessThanQueryPredicate, firestore.Query> {
   @override
   firestore.Query reduce({required firestore.Query aggregate, required AbstractQueryPredicate queryPredicate}) {
     final lessThanOrEqualToPredicate = queryPredicate as LessThanQueryPredicate;

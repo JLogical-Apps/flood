@@ -8,7 +8,7 @@ import 'abstract_file_query_request_reducer.dart';
 class FilePaginateQueryRequestReducer<R extends Record>
     extends AbstractFileQueryRequestReducer<PaginateQueryRequest<R>, R, QueryPaginationResultController<R>> {
   @override
-  QueryPaginationResultController<R> reduce({
+  QueryPaginationResultController<R> reduceSync({
     required Iterable<Record> accumulation,
     required PaginateQueryRequest<R> queryRequest,
   }) {

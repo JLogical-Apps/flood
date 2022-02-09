@@ -6,7 +6,7 @@ import 'abstract_local_query_request_reducer.dart';
 class LocalAllQueryRequestReducer<R extends Record>
     extends AbstractLocalQueryRequestReducer<AllQueryRequest<R>, R, List<Record>> {
   @override
-  List<R> reduce({
+  List<R> reduceSync({
     required Iterable<Record> accumulation,
     required AllQueryRequest<R> queryRequest,
   }) {

@@ -1,6 +1,6 @@
-import 'package:jlogical_utils/src/pond/query/reducer/abstract_query_request_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/request/abstract_sync_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 
 abstract class AbstractLocalQueryRequestReducer<QR extends QueryRequest<R, T>, R extends Record, T>
-    extends AbstractQueryRequestReducer<QR, R, T, Iterable<Record>> {}
+    extends AbstractSyncQueryRequestReducer<QR, R, T, Iterable<Record>> {}

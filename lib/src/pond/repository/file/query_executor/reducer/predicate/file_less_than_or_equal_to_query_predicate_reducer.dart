@@ -1,10 +1,10 @@
 import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/less_than_or_equal_to_query_predicate.dart';
-import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_less_than_or_equal_to_equals_query_predicate_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 
 class FileLessThanOrEqualToQueryPredicateReducer
-    extends AbstractLessThanOrEqualToQueryPredicateReducer<Iterable<Record>> {
+    extends AbstractQueryPredicateReducer<LessThanOrEqualToQueryPredicate, Iterable<Record>> {
   @override
   Iterable<Record> reduce({required Iterable<Record> aggregate, required AbstractQueryPredicate queryPredicate}) {
     final lessThanOrEqualToPredicate = queryPredicate as LessThanOrEqualToQueryPredicate;

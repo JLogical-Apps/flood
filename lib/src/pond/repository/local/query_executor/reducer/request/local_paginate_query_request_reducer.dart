@@ -8,7 +8,7 @@ import 'abstract_local_query_request_reducer.dart';
 class LocalPaginateQueryRequestReducer<R extends Record>
     extends AbstractLocalQueryRequestReducer<PaginateQueryRequest<R>, R, QueryPaginationResultController<R>> {
   @override
-  QueryPaginationResultController<R> reduce({
+  QueryPaginationResultController<R> reduceSync({
     required Iterable<Record> accumulation,
     required PaginateQueryRequest<R> queryRequest,
   }) {

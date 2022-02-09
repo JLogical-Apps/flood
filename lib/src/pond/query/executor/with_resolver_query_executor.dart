@@ -1,8 +1,8 @@
 import 'package:jlogical_utils/src/patterns/resolver/resolver.dart';
 import 'package:jlogical_utils/src/patterns/resolver/wrapper_resolver.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
-import 'package:jlogical_utils/src/pond/query/reducer/abstract_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reducer.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/request/abstract_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
