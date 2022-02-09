@@ -34,9 +34,9 @@ extension ValueStreamExtensions<T> on ValueStream<T> {
 
   /// Maps this value stream to a stream where each value is mapped to a future.
   /// It only updates when the last element from this stream returns from the future.
-  ValueStream<FutureValue<S>> asyncMapWithValue<S>(FutureOr<S> convert(T value)) {
+  ValueStream<FutureValue<S>> asyncMapWithValue<S>(FutureOr<S> convert(T value), {FutureValue<S>? initialValue}) {
     return asyncMap((value) => FutureValue.guard<S>(() async => await convert(value)))
-        .publishValueSeeded(FutureValue.initial())
+        .publishValueSeeded(initialValue ?? FutureValue.initial())
         .autoConnect();
   }
 }
