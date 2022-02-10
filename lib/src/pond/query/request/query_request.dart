@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:equatable/src/equatable_utils.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/request/without_cache_query_request.dart';
@@ -19,7 +20,9 @@ abstract class QueryRequest<R extends Record, T> extends Equatable {
   const QueryRequest({this.transaction});
 
   @override
-  List<Object?> get props => [transaction, query];
+  List<Object?> get props => [transaction, query, ...queryRequestProps];
+
+  List<Object?> get queryRequestProps => [];
 
   Future<T> get() {
     return AppContext.global.executeQuery(this);
@@ -31,5 +34,21 @@ abstract class QueryRequest<R extends Record, T> extends Equatable {
 
   bool isWithoutCache() {
     return this is WithoutCacheQueryRequest || query.getQueryChain().any((query) => query is WithoutCacheQuery);
+  }
+
+  bool equalsIgnoringCache(QueryRequest queryRequest) {
+    QueryRequest thisQueryRequest = this;
+    if (this is WithoutCacheQueryRequest) {
+      thisQueryRequest = (this as WithoutCacheQueryRequest).queryRequest;
+    }
+
+    if (queryRequest is WithoutCacheQueryRequest) {
+      queryRequest = queryRequest.queryRequest;
+    }
+
+    return identical(thisQueryRequest, queryRequest) ||
+        thisQueryRequest.runtimeType == queryRequest.runtimeType &&
+            equals(queryRequestProps, queryRequest.queryRequestProps) &&
+            thisQueryRequest.query.equalsIgnoringCache(queryRequest.query);
   }
 }

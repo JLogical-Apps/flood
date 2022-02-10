@@ -8,5 +8,5 @@ class FromQuery<R extends Record> extends Query<R> {
       : recordType = R,
         super();
 
-  List<Object?> get props => super.props + [recordType];
+  List<Object?> get queryProps => [recordType];
 }

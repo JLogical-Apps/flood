@@ -6,4 +6,6 @@ class WithoutCacheQuery<R extends Record> extends Query<R> {
 
   @override
   List<Object?> get props => parent!.props;
+
+  List<Object?> get queryProps => parent!.queryProps;
 }

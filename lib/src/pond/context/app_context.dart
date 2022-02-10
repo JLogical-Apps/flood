@@ -17,6 +17,12 @@ class AppContext
 
   AppContext({DirectoryBundle? directoryBundle}) : this.directoryBundle = directoryBundle ?? DirectoryBundle.empty();
 
+  static Future<AppContext> createForTesting() async {
+    AppContext.global = AppContext(directoryBundle: DirectoryBundle.empty())..register(CoreModule());
+
+    return AppContext.global;
+  }
+
   static Future<AppContext> createGlobal() async {
     AppContext.global = AppContext(directoryBundle: await DirectoryBundle.generate());
 

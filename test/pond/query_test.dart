@@ -1,9 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jlogical_utils/src/model/future_value.dart';
-import 'package:jlogical_utils/src/pond/context/registration/entity_registration.dart';
-import 'package:jlogical_utils/src/pond/context/registration/value_object_registration.dart';
-import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/utils/stream_extensions.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 
 import 'entities/budget.dart';
 import 'entities/budget_entity.dart';
@@ -47,11 +43,25 @@ List<Budget> budgets = [
 
 void main() {
   setUp(() async {
-    AppContext.global = AppContext()
+    AppContext.global = await AppContext.createForTesting()
       ..register(LocalEnvelopeRepository())
       ..register(LocalBudgetRepository());
 
     await _populateRepositories();
+  });
+
+  test('equalsIgnoringCache', () {
+    expect(Query.from<BudgetEntity>().all().equalsIgnoringCache(Query.from<BudgetEntity>().all()), isTrue);
+    expect(
+        Query.from<BudgetEntity>().all().equalsIgnoringCache(Query.from<BudgetEntity>().all().withoutCache()), isTrue);
+    expect(
+        Query.from<BudgetEntity>().all().equalsIgnoringCache(Query.from<BudgetEntity>().withoutCache().all()), isTrue);
+    expect(
+        Query.from<BudgetEntity>()
+            .all()
+            .withoutCache()
+            .equalsIgnoringCache(Query.from<BudgetEntity>().withoutCache().all()),
+        isTrue);
   });
 
   test('all from a type.', () async {
@@ -125,7 +135,8 @@ void main() {
   });
 
   test('query from abstract class', () async {
-    AppContext.global = AppContext()..register(LocalBudgetTransactionRepository());
+    AppContext.global = await AppContext.createForTesting()
+      ..register(LocalBudgetTransactionRepository());
 
     final envelopeTransaction = EnvelopeTransactionEntity()
       ..value = (EnvelopeTransaction()
@@ -163,7 +174,8 @@ void main() {
   });
 
   test('where contains', () async {
-    AppContext.global = AppContext()..register(LocalLuckyNumbersRepository());
+    AppContext.global = await AppContext.createForTesting()
+      ..register(LocalLuckyNumbersRepository());
 
     final firstFive = [1, 2, 3, 4, 5];
     final firstEvens = [2, 4, 6, 8, 10];

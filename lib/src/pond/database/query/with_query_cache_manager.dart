@@ -1,41 +1,20 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/query/without_cache_query.dart';
+import 'package:jlogical_utils/src/pond/query/request/without_cache_query_request.dart';
 
 mixin WithQueryCacheManager {
   /// Queries that have been executed already.
-  final Set<Query> _executedQueries = <Query>{};
+  final Set<QueryRequest> _executedQueryRequests = <QueryRequest>{};
 
   /// Returns whether the query has been executed before.
   bool hasBeenRunBefore<R extends Record, T>(QueryRequest<R, T> queryRequest) {
-    final query = _getQueryFromQueryRequest(queryRequest);
-
-    return _executedQueries.contains(query);
+    return _executedQueryRequests.any((qr) => qr.equalsIgnoringCache(queryRequest));
   }
 
   void markHasBeenRun(QueryRequest queryRequest) {
-    final query = _getQueryFromQueryRequest(queryRequest);
-
-    _executedQueries.add(query);
-  }
-
-  /// If a similar query request hasn't been run at all yet, force [queryRequest] to be run without cache.
-  QueryRequest<R, T> modifiedWithoutCacheIfNeeded<R extends Record, T>(QueryRequest<R, T> queryRequest) {
-    final query = _getQueryFromQueryRequest(queryRequest);
-
-    final added = _executedQueries.add(query);
-    if (added && !queryRequest.isWithoutCache()) {
-      queryRequest = queryRequest.withoutCache();
+    if (queryRequest is WithoutCacheQueryRequest) {
+      queryRequest = queryRequest.queryRequest;
     }
 
-    return queryRequest;
-  }
-
-  Query<R> _getQueryFromQueryRequest<R extends Record>(QueryRequest<R, dynamic> queryRequest) {
-    Query query = queryRequest.query;
-    if (query is WithoutCacheQuery<R>) {
-      query = query.parent!;
-    }
-
-    return query as Query<R>;
+    _executedQueryRequests.add(queryRequest);
   }
 }

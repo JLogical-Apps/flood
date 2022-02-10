@@ -8,9 +8,7 @@ abstract class Singleton {
   }) async {
     final entities = await Query.from<E>().all().get();
     if (entities.isNotEmpty) {
-      if (entities.length > 1) {
-        throw Exception('More than one instance of a Singleton of $E');
-      }
+      await Future.wait(entities.skip(1).map((entity) => entity.delete()));
 
       return entities[0];
     }

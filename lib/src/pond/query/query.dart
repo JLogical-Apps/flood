@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:equatable/src/equatable_utils.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/contains_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/equals_query_predicate.dart';
@@ -24,7 +25,12 @@ abstract class Query<R extends Record> extends Equatable {
 
   final Query? parent;
 
-  const Query({this.parent});
+  Query({this.parent}) {
+    if (parent is WithoutCacheQuery) {
+      throw Exception(
+          'Cannot place `.withoutCache()` in the middle of a query! Must be placed as the last part of the query before the request itself (or after request)');
+    }
+  }
 
   Type get recordType => R;
 
@@ -144,5 +150,21 @@ abstract class Query<R extends Record> extends Equatable {
   }
 
   @override
-  List<Object?> get props => [parent];
+  List<Object?> get props => [parent, ...queryProps];
+
+  List<Object?> get queryProps => [];
+
+  bool equalsIgnoringCache(Query query) {
+    Query thisQuery = this;
+    if (this is WithoutCacheQuery) {
+      thisQuery = (this as WithoutCacheQuery).parent!;
+    }
+
+    if (query is WithoutCacheQuery) {
+      query = query.parent!;
+    }
+
+    return identical(thisQuery, query) ||
+        thisQuery.runtimeType == query.runtimeType && equals(queryProps, query.queryProps);
+  }
 }

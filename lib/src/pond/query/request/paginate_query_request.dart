@@ -11,4 +11,7 @@ class PaginateQueryRequest<R extends Record> extends QueryRequest<R, QueryPagina
 
   PaginateQueryRequest({required this.query, this.limit: 20, Transaction? transaction})
       : super(transaction: transaction);
+
+  @override
+  List<Object?> get queryRequestProps => [limit];
 }

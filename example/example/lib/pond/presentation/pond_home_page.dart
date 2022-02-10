@@ -32,11 +32,8 @@ class PondHomePage extends HookWidget {
         style: PondLoginPage.style,
         child: Builder(builder: (context) {
           return ModelBuilder.styledPage(
-            model: userEntityController.nullableModel,
-            builder: (UserEntity? userEntity) {
-              if(userEntity == null) {
-                return StyledLoadingPage();
-              }
+            model: userEntityController.model,
+            builder: (UserEntity userEntity) {
               return StyledPage(
                 onRefresh: () => Future.wait([userEntityController.reload(), userBudgetsController.reload()]),
                 titleText: 'Home: ${userEntity.value.nameProperty.value}',

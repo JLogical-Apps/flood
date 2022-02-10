@@ -12,6 +12,7 @@ import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/utils/collection_extensions.dart';
 import 'package:jlogical_utils/src/utils/stream_extensions.dart';
 import 'package:jlogical_utils/src/utils/util.dart';
+import 'package:lumberdash/lumberdash.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'entity_repository.dart';
@@ -19,7 +20,8 @@ import 'entity_repository.dart';
 mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
   final Cache<String, State> _stateByIdCache = Cache();
 
-  final Map<String, Completer<State?>> _completerById = {};
+  final Map<String, Completer<State?>> _getCompleterById = {};
+  final Map<QueryRequest, Completer<dynamic>> _queryCompleterByQueryRequest = {};
 
   TransactionPendingChanges? _pendingTransactionChange;
 
@@ -69,18 +71,18 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
   }
 
   Future<State?> _getOrNullFromSourceRepository(String id, {Transaction? transaction}) async {
-    var completer = _completerById[id];
+    var completer = _getCompleterById[id];
     if (completer != null) {
       return await completer.future;
     }
 
     completer = Completer<State?>();
-    _completerById[id] = completer;
+    _getCompleterById[id] = completer;
 
     final sourceState = (await super.getOrNull(id, transaction: transaction))?.state;
 
     completer.complete(sourceState);
-    _completerById.remove(id);
+    _getCompleterById.remove(id);
 
     if (sourceState != null) {
       _stateByIdCache.save(id, sourceState);
@@ -117,11 +119,17 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
 
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) {
+    if (queryRequest.isWithoutCache()) {
+      throw Exception('Cannot run `useQueryX()` with a `withoutCache()` query!');
+    }
+
     FutureValue<T> initialValue;
     if (hasBeenRunBefore(queryRequest)) {
       initialValue = FutureValue.loaded(value: executeQuerySync(queryRequest));
     } else {
       initialValue = FutureValue.initial();
+
+      executeQuery(queryRequest.withoutCache()); // Run the cacheless query in order to fetch latest data.
     }
 
     return _stateByIdCache.valueByKeyX.asyncMapWithValue(
@@ -136,14 +144,30 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
     Transaction? transaction,
   }) async {
     _startTransactionIfNew(transaction);
+
+    if (!queryRequest.isWithoutCache() && !hasBeenRunBefore(queryRequest)) {
+      queryRequest = queryRequest.withoutCache();
+    }
+
     T result;
     if (queryRequest.isWithoutCache()) {
+      var completer = _queryCompleterByQueryRequest[queryRequest];
+      if (completer != null) {
+        return await completer.future;
+      }
+
+      completer = Completer();
+      _queryCompleterByQueryRequest[queryRequest] = completer;
+
+      logMessage('Using without-cache query [$queryRequest]');
       result = await getQueryExecutor(transaction: transaction).executeQuery(queryRequest);
+      markHasBeenRun(queryRequest);
+
+      completer.complete(result);
+      _queryCompleterByQueryRequest.remove(queryRequest);
     } else {
       result = await LocalQueryExecutor(stateById: _stateByIdCache.valueByKey).executeQuery(queryRequest);
     }
-
-    markHasBeenRun(queryRequest);
 
     return result;
   }

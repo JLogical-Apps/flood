@@ -7,5 +7,5 @@ class WhereQuery<R extends Record> extends Query<R> {
 
   WhereQuery({required Query parent, required this.queryPredicate}) : super(parent: parent);
 
-  List<Object?> get props => super.props + [queryPredicate];
+  List<Object?> get queryProps => [queryPredicate];
 }
