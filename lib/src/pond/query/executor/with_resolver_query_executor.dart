@@ -21,7 +21,8 @@ mixin WithResolverQueryExecutor<C> implements QueryExecutor {
   Resolver<QueryRequest<R, dynamic>, AbstractQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic, C>>
       getQueryRequestReducerResolver<R extends Record>() => WrapperResolver(getQueryRequestReducers<R>());
 
-  Future<T> executeQuery<R extends Record, T>(
+  @override
+  Future<T> onExecuteQuery<R extends Record, T>(
     QueryRequest<R, T> queryRequest, {
     Transaction? transaction,
   }) async {

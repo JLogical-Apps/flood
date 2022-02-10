@@ -2,6 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
+import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
+import 'package:jlogical_utils/src/pond/query/executor/query_executor_x.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
@@ -30,7 +32,7 @@ class EntityDatabase with WithQueryCacheManager implements Database {
   }
 
   @override
-  ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) {
+  ValueStream<FutureValue<T>> onExecuteQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) {
     if (isSubtype<R, Entity>()) {
       final entityRepository = getRepositoryRuntime(R);
       if (queryRequest.isWithoutCache()) {
@@ -50,7 +52,7 @@ class EntityDatabase with WithQueryCacheManager implements Database {
   }
 
   @override
-  Future<T> executeQuery<R extends Record, T>(QueryRequest<R, T> queryRequest, {Transaction? transaction}) {
+  Future<T> onExecuteQuery<R extends Record, T>(QueryRequest<R, T> queryRequest, {Transaction? transaction}) {
     if (isSubtype<R, Entity>()) {
       final entityRepository = getRepositoryRuntime(R);
       queryRequest = modifiedWithoutCacheIfNeeded(queryRequest);

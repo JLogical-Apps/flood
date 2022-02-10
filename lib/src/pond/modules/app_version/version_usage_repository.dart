@@ -1,5 +1,7 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
-
+import '../../repository/adapting/default_adapting_repository.dart';
+import '../../repository/entity_repository.dart';
+import '../../repository/file/simple_file_repository.dart';
+import '../../repository/local/simple_local_repository.dart';
 import '../environment/environment.dart';
 import 'version_usage.dart';
 import 'version_usage_entity.dart';

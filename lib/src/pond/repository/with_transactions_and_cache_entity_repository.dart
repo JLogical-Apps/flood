@@ -116,7 +116,7 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
   }
 
   @override
-  ValueStream<FutureValue<T>> executeQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) {
+  ValueStream<FutureValue<T>> onExecuteQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) {
     FutureValue<T> initialValue;
     if (hasBeenRunBefore(queryRequest)) {
       initialValue = FutureValue.loaded(value: executeQuerySync(queryRequest));
@@ -131,7 +131,7 @@ mixin WithTransactionsAndCacheEntityRepository on EntityRepository {
   }
 
   @override
-  Future<T> executeQuery<R extends Record, T>(
+  Future<T> onExecuteQuery<R extends Record, T>(
     QueryRequest<R, T> queryRequest, {
     Transaction? transaction,
   }) async {

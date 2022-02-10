@@ -51,8 +51,14 @@ class HomePage extends StatelessWidget {
                         style: PondLoginPage.style,
                         child: SplashPage(
                           child: StyledContentHeaderText('JLogical Utils'),
-                          // beforeLoad: (context) => AppContext.global.reset(),
+                          beforeLoad: (context) async {
+                            if (locate<ConfigModule>().config['reset'] == true) {
+                              await AppContext.global.reset();
+                            }
+                          },
                           onDone: (context) async {
+                            print('first time opened: ${locate<AppVersionModule>().isFirstTimeOpened}');
+
                             final loggedInId = await locate<AuthService>().getCurrentlyLoggedInUserId();
                             context.style().navigateReplacement(
                                   context: context,

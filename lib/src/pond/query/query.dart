@@ -9,6 +9,7 @@ import 'package:jlogical_utils/src/pond/query/where_query.dart';
 import 'package:jlogical_utils/src/pond/query/without_cache_query.dart';
 import 'package:jlogical_utils/src/utils/marker.dart';
 
+import 'derived/exists_query_request.dart';
 import 'from_query.dart';
 import 'order_by_query.dart';
 import 'predicate/greater_than_or_equal_to_query_predicate.dart';
@@ -125,6 +126,10 @@ abstract class Query<R extends Record> extends Equatable {
 
   PaginateQueryRequest<R> paginate({int limit: 20}) {
     return PaginateQueryRequest<R>(query: this, limit: limit);
+  }
+
+  ExistsQueryRequest<R> exists() {
+    return ExistsQueryRequest(query: this);
   }
 
   /// Returns the list of queries in the query chain starting with the root and ending at this query.

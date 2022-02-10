@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
+import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/request/without_cache_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/without_cache_query.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
@@ -16,8 +17,6 @@ abstract class QueryRequest<R extends Record, T> extends Equatable {
   Query<R> get query;
 
   const QueryRequest({this.transaction});
-
-  Type get outputType => T;
 
   @override
   List<Object?> get props => [transaction, query];

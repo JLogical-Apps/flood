@@ -1,4 +1,5 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/record/singleton.dart';
 
 import 'version_usage.dart';
 import 'version_usage_entity.dart';
@@ -23,18 +24,18 @@ class AppVersionModule extends AppModule {
   }
 
   Future<void> onLoad(AppContext context) async {
-    VersionUsageEntity? versionUsageEntity = await Query.from<VersionUsageEntity>().firstOrNull().get();
+    var singletonExisted = true;
+    final versionUsageEntity =
+        await Singleton.getOrCreate<VersionUsageEntity, VersionUsage>(beforeCreate: (e) => singletonExisted = false);
 
-    isFirstTimeOpened = versionUsageEntity == null;
-    lastUsedVersion = versionUsageEntity?.value.versionProperty.value;
+    isFirstTimeOpened = !singletonExisted;
+    lastUsedVersion = versionUsageEntity.value.versionProperty.value;
     currentVersion = await currentVersionProvider?.getData();
     minimumVersion = await minimumVersionProvider?.getData();
 
-    final versionUsage = VersionUsage()..versionProperty.value = currentVersion;
+    versionUsageEntity.value = VersionUsage()..versionProperty.value = currentVersion;
 
-    (versionUsageEntity ??= VersionUsageEntity())..value = versionUsage;
-
-    await versionUsageEntity.createOrSave();
+    await versionUsageEntity.save();
   }
 
   @override
