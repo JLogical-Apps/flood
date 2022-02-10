@@ -49,6 +49,6 @@ mixin WithSyncResolverQueryExecutor<C> implements QueryExecutor {
     QueryRequest<R, T> queryRequest, {
     Transaction? transaction,
   }) async {
-    return await executeQuerySync(queryRequest, transaction: transaction);
+    return executeQuerySync<R, T>(queryRequest, transaction: transaction);
   }
 }
