@@ -23,6 +23,7 @@ export 'widgets/input/styled_dropdown.dart';
 export 'widgets/input/styled_radio.dart';
 export 'widgets/input/styled_text_field.dart';
 export 'widgets/misc/styled_chip.dart';
+export 'widgets/misc/styled_message.dart';
 export 'widgets/misc/styled_divider.dart';
 export 'widgets/misc/styled_icon.dart';
 export 'widgets/misc/styled_loading_indicator.dart';

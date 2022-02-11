@@ -50,6 +50,12 @@ class TestHomePage extends HookWidget {
               title: 'Budget',
               actions: [
                 ActionItem(
+                  name: 'View Message',
+                  onPerformWithContext: (context) {
+                    style.showMessage(context: context, message: StyledMessage(messageText: 'Kachow'));
+                  },
+                ),
+                ActionItem(
                   name: 'Create Envelope',
                   color: Colors.green,
                   description: 'Create a new envelope.',
@@ -154,7 +160,7 @@ class TestHomePage extends HookWidget {
                                   actions: [
                                     ActionItem(
                                       name: 'Test',
-                                      type: ActionItemType.primary,
+                                      type: ActionItemType.secondary,
                                     ),
                                   ],
                                 ))

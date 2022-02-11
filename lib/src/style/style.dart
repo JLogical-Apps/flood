@@ -11,6 +11,7 @@ import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_chip.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_divider.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
+import 'package:jlogical_utils/src/style/widgets/misc/styled_message.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_onboarding_page.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_page.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_tabbed_page.dart';
@@ -118,6 +119,8 @@ abstract class Style {
 
   /// Displays a [dialog].
   Future<T> showDialog<T>({required BuildContext context, required StyledDialog dialog}) => throw UnimplementedError();
+
+  Future<void> showMessage({required BuildContext context, required StyledMessage message}) => throw UnimplementedError();
 
   /// Navigates to the [page] and returns the value given when [navigateBack] is called.
   Future<T?> navigateTo<T>({required BuildContext context, required Widget Function(BuildContext context) page}) =>

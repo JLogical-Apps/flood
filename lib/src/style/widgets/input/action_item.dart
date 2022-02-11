@@ -12,6 +12,7 @@ class ActionItem {
   final ActionItemType type;
 
   final VoidCallback? onPerform;
+  final void Function(BuildContext context)? onPerformWithContext;
 
   const ActionItem({
     required this.name,
@@ -20,11 +21,22 @@ class ActionItem {
     this.color,
     this.type: ActionItemType.primary,
     this.onPerform,
+    this.onPerformWithContext,
   });
 
   /// The icon associated with the action.
   /// This is extracted from [leading].
   IconData? get icon => leading?.as<Icon>()?.icon ?? leading?.as<StyledIcon>()?.iconData;
+
+  void perform(BuildContext context) {
+    if (onPerformWithContext != null) {
+      onPerformWithContext!(context);
+    }
+
+    if (onPerform != null) {
+      onPerform!();
+    }
+  }
 }
 
 enum ActionItemType {

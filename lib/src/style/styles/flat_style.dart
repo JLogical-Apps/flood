@@ -26,6 +26,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 import '../style_context_provider.dart';
+import '../widgets/misc/styled_message.dart';
 
 class FlatStyle extends Style {
   final Color primaryColor;
@@ -112,12 +113,14 @@ class FlatStyle extends Style {
       iconTheme: IconThemeData(color: styleContext.emphasisColor),
       actions: [
         if (actions.isNotEmpty)
-          actionButton(
-            context,
-            styleContext: styleContext,
-            actions: actions,
-            color: styleContext.emphasisColor,
-          ),
+          Builder(builder: (context) {
+            return actionButton(
+              context,
+              styleContext: styleContext,
+              actions: actions,
+              color: styleContext.emphasisColor,
+            );
+          }),
       ],
     );
   }
@@ -931,24 +934,28 @@ class FlatStyle extends Style {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (header != null || content.leading != null || content.trailing != null || primaryActions.isNotEmpty)
-              ListTile(
-                title: header != null ? header : body,
-                subtitle: header != null ? body : null,
-                leading: content.leading,
-                trailing: content.trailing != null || content.actions.isNotEmpty
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (content.trailing != null) content.trailing!,
-                          if (content.actions.isNotEmpty)
-                            actionButton(
-                              context,
-                              styleContext: styleContext,
-                              actions: primaryActions,
-                            ),
-                        ],
-                      )
-                    : null,
+              MediaQuery(
+                data: MediaQuery.of(context).copyWith(padding: EdgeInsets.zero),
+                child: ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 14),
+                  title: header != null ? header : body,
+                  subtitle: header != null ? body : null,
+                  leading: content.leading,
+                  trailing: content.trailing != null || primaryActions.isNotEmpty
+                      ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (content.trailing != null) content.trailing!,
+                            if (primaryActions.isNotEmpty)
+                              actionButton(
+                                context,
+                                styleContext: styleContext,
+                                actions: primaryActions,
+                              ),
+                          ],
+                        )
+                      : null,
+                ),
               ),
             ...content.children,
           ],
@@ -971,21 +978,102 @@ class FlatStyle extends Style {
     final header = category.headerText != null ? StyledContentHeaderText(category.headerText!) : category.header;
     final body = category.bodyText != null ? StyledContentSubtitleText(category.bodyText!) : category.body;
 
-    return category.emphasis.map(
-      high: () {
-        return ClickableCard(
-          elevation: 0,
-          margin: EdgeInsets.all(8),
-          color: emphasisColor,
-          borderRadius: category.borderRadius,
-          onTap: category.onTapped,
-          child: StyleContextProvider(
-            styleContext: styleContextWithEmphasisOverride(styleContextFromBackground(styleContext.emphasisColor)),
+    return MediaQuery(
+      data: MediaQuery.of(context).copyWith(padding: EdgeInsets.zero),
+      child: category.emphasis.map(
+        high: () {
+          return ClickableCard(
+            elevation: 0,
+            margin: EdgeInsets.all(8),
+            color: emphasisColor,
+            borderRadius: category.borderRadius,
+            onTap: category.onTapped,
+            child: StyleContextProvider(
+              styleContext: styleContextWithEmphasisOverride(styleContextFromBackground(styleContext.emphasisColor)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (header != null || body != null || category.leading != null || category.trailing != null)
+                    ListTile(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                      title: header != null ? header : body,
+                      subtitle: header != null ? body : null,
+                      leading: category.leading,
+
+                      trailing: category.trailing != null || category.actions.isNotEmpty
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (category.trailing != null) category.trailing!,
+                                if (category.actions.isNotEmpty)
+                                  actionButton(
+                                    context,
+                                    styleContext: styleContext,
+                                    actions: category.actions,
+                                  ),
+                              ],
+                            )
+                          : null,
+                    ),
+                  if (category.children.isEmpty && category.noChildrenWidget != null) category.noChildrenWidget!,
+                  ...category.children
+                ],
+              ),
+            ),
+          );
+        },
+        medium: () {
+          return ClickableCard(
+            elevation: 0,
+            margin: EdgeInsets.all(8),
+            color: styleContext.backgroundColorSoft,
+            borderRadius: category.borderRadius,
+            onTap: category.onTapped,
+            child: StyleContextProvider(
+              styleContext:
+                  styleContextWithEmphasisOverride(styleContextFromBackground(styleContext.backgroundColorSoft)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (header != null || body != null || category.leading != null || category.trailing != null)
+                    Container(
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 14),
+                        title: header != null ? header : body,
+                        subtitle: header != null ? body : null,
+                        leading: category.leading,
+                        trailing: category.trailing != null || category.actions.isNotEmpty
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (category.trailing != null) category.trailing!,
+                                  if (category.actions.isNotEmpty)
+                                    actionButton(
+                                      context,
+                                      styleContext: styleContext,
+                                      actions: category.actions,
+                                    ),
+                                ],
+                              )
+                            : null,
+                      ),
+                    ),
+                  if (category.children.isEmpty && category.noChildrenWidget != null) category.noChildrenWidget!,
+                  ...category.children
+                ],
+              ),
+            ),
+          );
+        },
+        low: () {
+          return StyleContextProvider(
+            styleContext: styleContextWithEmphasisOverride(styleContext),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (header != null || body != null || category.leading != null || category.trailing != null)
                   ListTile(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 14),
                     title: header != null ? header : body,
                     subtitle: header != null ? body : null,
                     leading: category.leading,
@@ -1008,83 +1096,9 @@ class FlatStyle extends Style {
                 ...category.children
               ],
             ),
-          ),
-        );
-      },
-      medium: () {
-        return ClickableCard(
-          elevation: 0,
-          margin: EdgeInsets.all(8),
-          color: styleContext.backgroundColorSoft,
-          borderRadius: category.borderRadius,
-          onTap: category.onTapped,
-          child: StyleContextProvider(
-            styleContext:
-                styleContextWithEmphasisOverride(styleContextFromBackground(styleContext.backgroundColorSoft)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (header != null || body != null || category.leading != null || category.trailing != null)
-                  Container(
-                    child: ListTile(
-                      title: header != null ? header : body,
-                      subtitle: header != null ? body : null,
-                      leading: category.leading,
-                      trailing: category.trailing != null || category.actions.isNotEmpty
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (category.trailing != null) category.trailing!,
-                                if (category.actions.isNotEmpty)
-                                  actionButton(
-                                    context,
-                                    styleContext: styleContext,
-                                    actions: category.actions,
-                                  ),
-                              ],
-                            )
-                          : null,
-                    ),
-                  ),
-                if (category.children.isEmpty && category.noChildrenWidget != null) category.noChildrenWidget!,
-                ...category.children
-              ],
-            ),
-          ),
-        );
-      },
-      low: () {
-        return StyleContextProvider(
-          styleContext: styleContextWithEmphasisOverride(styleContext),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (header != null || body != null || category.leading != null || category.trailing != null)
-                ListTile(
-                  title: header != null ? header : body,
-                  subtitle: header != null ? body : null,
-                  leading: category.leading,
-                  trailing: category.trailing != null || category.actions.isNotEmpty
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (category.trailing != null) category.trailing!,
-                            if (category.actions.isNotEmpty)
-                              actionButton(
-                                context,
-                                styleContext: styleContext,
-                                actions: category.actions,
-                              ),
-                          ],
-                        )
-                      : null,
-                ),
-              if (category.children.isEmpty && category.noChildrenWidget != null) category.noChildrenWidget!,
-              ...category.children
-            ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -1242,6 +1256,21 @@ class FlatStyle extends Style {
     );
   }
 
+  Future<void> showMessage({required BuildContext context, required StyledMessage message}) async {
+    await ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(
+          content: StyleContextProvider(
+            styleContext: styleContextFromBackground(initialStyleContext.emphasisColorSoft),
+            child: StyledBodyText(
+              message.messageText,
+            ),
+          ),
+          backgroundColor: initialStyleContext.emphasisColorSoft,
+          duration: Duration(seconds: 2),
+        ))
+        .closed;
+  }
+
   @override
   Future<T?> navigateTo<T>({required BuildContext context, required Widget Function(BuildContext context) page}) {
     return Navigator.of(context).push(MaterialPageRoute(builder: page));
@@ -1274,7 +1303,7 @@ class FlatStyle extends Style {
                           splashColor: styleContext.backgroundColorSoft,
                           onTap: () {
                             Navigator.of(context).pop();
-                            action.onPerform?.call();
+                            action.perform(context);
                           },
                           child: ListTile(
                             title: StyledContentSubtitleText(
