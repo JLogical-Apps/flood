@@ -1,4 +1,5 @@
 export 'data_source/asset_data_source.dart';
+export 'data_source/raw_asset_data_source.dart';
 export 'data_source/data_source.dart';
 export 'data_source/file_data_source.dart';
 export 'data_source/firestore_document_data_source.dart';
