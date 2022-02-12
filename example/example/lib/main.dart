@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 import 'form/form_page.dart';
+import 'pond/domain/budget/budget_draft_repository.dart';
 import 'pond/domain/user/user.dart';
 import 'pond/domain/user/user_entity.dart';
 import 'pond/presentation/pond_login_page.dart';
@@ -95,6 +96,7 @@ class HomePage extends StatelessWidget {
     appContext
       ..register(FirebaseModule(app: DefaultFirebaseOptions.currentPlatform))
       ..register(BudgetRepository())
+      ..register(BudgetDraftRepository())
       ..register(BudgetTransactionRepository())
       ..register(EnvelopeRepository())
       ..register(UserRepository())

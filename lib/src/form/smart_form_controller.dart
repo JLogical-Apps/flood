@@ -12,8 +12,11 @@ class SmartFormController {
 
   Map<String, SmartFormData> get dataByName => _dataByNameX.value;
 
+  late ValueStream<Map<String, dynamic>> valueByNameX =
+      dataByNameX.mapWithValue((dataByName) => dataByName.map((name, data) => MapEntry(name, data.value)));
+
   /// Maps each field to its value.
-  Map<String, dynamic> get valuesByName => dataByName.map((name, data) => MapEntry(name, data.value));
+  Map<String, dynamic> get valueByName => dataByName.map((name, data) => MapEntry(name, data.value));
 
   /// Validator to use after all other fields have been checked.
   PostValidator? postValidator;
@@ -74,10 +77,10 @@ class SmartFormController {
     }
 
     // Check the post validator.
-    var errors = await postValidator?.call(valuesByName);
+    var errors = await postValidator?.call(valueByName);
 
     // If the post validator returned null or an empty map, it was a success.
-    if (errors == null || errors.isEmpty) return ValidationResult.success(valuesByName);
+    if (errors == null || errors.isEmpty) return ValidationResult.success(valueByName);
 
     _setFieldErrors(errors);
 
@@ -86,7 +89,11 @@ class SmartFormController {
 
   /// Returns the value of the form field with the [name].
   T getData<T>(String name) {
-    return getFormDataX(name).value.value as T;
+    return valueByName[name] as T;
+  }
+
+  T? getDataOrNull<T>(String name) {
+    return valueByName[name] as T?;
   }
 
   /// Sets the value of the form field with [name] to [value].

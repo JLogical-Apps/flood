@@ -999,7 +999,6 @@ class FlatStyle extends Style {
                       title: header != null ? header : body,
                       subtitle: header != null ? body : null,
                       leading: category.leading,
-
                       trailing: category.trailing != null || category.actions.isNotEmpty
                           ? Row(
                               mainAxisSize: MainAxisSize.min,
@@ -1189,7 +1188,7 @@ class FlatStyle extends Style {
   }
 
   @override
-  Future<T> showDialog<T>({required BuildContext context, required StyledDialog dialog}) async {
+  Future<T?> showDialog<T>({required BuildContext context, required StyledDialog<T> dialog}) async {
     final styleContext = initialStyleContext;
 
     final title = dialog.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
@@ -1200,7 +1199,10 @@ class FlatStyle extends Style {
               ),
             )) ??
         dialog.title;
-    return await showModalBottomSheet(
+
+    dialog.onShown?.call();
+
+    final poppedValue = await showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       shape: RoundedRectangleBorder(
@@ -1254,6 +1256,12 @@ class FlatStyle extends Style {
         );
       },
     );
+
+    T? result = dialog.resultTransformer.mapIfNonNull((transformer) => transformer(poppedValue)) ?? poppedValue;
+
+    dialog.onClosed?.call(result);
+
+    return result;
   }
 
   Future<void> showMessage({required BuildContext context, required StyledMessage message}) async {

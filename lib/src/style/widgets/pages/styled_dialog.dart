@@ -19,21 +19,27 @@ class StyledDialog<T> {
   /// If null, the dialog simply returns the popped value.
   final T Function(dynamic result)? resultTransformer;
 
+  /// Action to perform when the dialog is shown.
+  final void Function()? onShown;
+
+  /// Action to perform when the dialog is closed.
+  final void Function(T? poppedValue)? onClosed;
+
   const StyledDialog({
     this.titleText,
     this.title,
     required this.body,
     this.resultTransformer,
+    this.onShown,
+    this.onClosed,
   });
 
-  Future<T> show(BuildContext context) async {
+  Future<T?> show(BuildContext context) async {
     final style = context.style();
-    final poppedValue = await style.showDialog(
+    return await style.showDialog(
       context: context,
       dialog: this,
     );
-    T result = resultTransformer.mapIfNonNull((transformer) => transformer(poppedValue)) ?? poppedValue;
-    return result;
   }
 
   static StyledDialog<bool> yesNo({
@@ -88,6 +94,7 @@ class StyledDialog<T> {
     required List<Widget> children,
     Widget Function(SmartFormController controller)? confirmButtonBuilder,
     FutureOr<Map<String, String>?> postValidator(Map<String, dynamic> data)?,
+    void onFormChange(SmartFormController controller)?,
   }) {
     final style = context.style();
     final smartFormController = SmartFormController();
@@ -105,9 +112,18 @@ class StyledDialog<T> {
             );
     final confirmButton = _confirmButtonBuilder(smartFormController);
 
+    StreamSubscription? listener;
+
     return StyledDialog(
       titleText: titleText,
       title: title,
+      onShown: onFormChange == null
+          ? null
+          : () {
+              listener =
+                  smartFormController.valueByNameX.listen((valueByName) => onFormChange.call(smartFormController));
+            },
+      onClosed: onFormChange == null ? null : (_) => listener?.cancel(),
       body: SmartForm(
         controller: smartFormController,
         child: Column(

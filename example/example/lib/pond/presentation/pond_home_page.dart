@@ -1,4 +1,5 @@
 import 'package:example/pond/domain/budget/budget.dart';
+import 'package:example/pond/domain/budget/budget_draft_entity.dart';
 import 'package:example/pond/domain/budget/budget_entity.dart';
 import 'package:example/pond/domain/user/user_entity.dart';
 import 'package:example/pond/presentation/pond_budget_page.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+import '../domain/budget/budget_draft.dart';
 import 'pond_login_page.dart';
 
 class PondHomePage extends HookWidget {
@@ -58,12 +60,22 @@ class PondHomePage extends HookWidget {
                           color: Colors.green,
                           leading: Icon(Icons.monetization_on),
                           onPerform: () async {
+                            final draftEntity = await Singleton.getOrCreate<BudgetDraftEntity, BudgetDraft>();
+                            final budgetDraft = draftEntity.value.sourcePrototype;
+
                             final data = await StyledDialog.smartForm(
                               context: context,
+                              onFormChange: (controller) async {
+                                final budget = Budget()..nameProperty.setUnvalidated(controller.getData('name'));
+                                final budgetDraft = BudgetDraft()..sourcePrototype = budget;
+                                draftEntity..value = budgetDraft;
+                                await draftEntity.createOrSave();
+                              },
                               children: [
                                 StyledSmartTextField(
                                   name: 'name',
                                   label: 'Name',
+                                  initialValue: budgetDraft.nameProperty.getUnvalidated(),
                                   validators: [Validation.required()],
                                 ),
                               ],
@@ -72,6 +84,8 @@ class PondHomePage extends HookWidget {
                             if (data == null) {
                               return;
                             }
+
+                            await draftEntity.delete();
 
                             final budget = Budget()
                               ..nameProperty.value = data['name']
@@ -141,7 +155,7 @@ class BudgetCard extends HookWidget {
                     StyledBodyText('Are you sure you want to delete this budget?'),
                   ],
                 );
-                if (await dialog.show(context)) {
+                if (await dialog.show(context) == true) {
                   await budgetEntity.delete();
                 }
               },

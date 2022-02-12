@@ -118,7 +118,7 @@ abstract class Style {
   // === ACTIONS ===
 
   /// Displays a [dialog].
-  Future<T> showDialog<T>({required BuildContext context, required StyledDialog dialog}) => throw UnimplementedError();
+  Future<T?> showDialog<T>({required BuildContext context, required StyledDialog<T> dialog}) => throw UnimplementedError();
 
   Future<void> showMessage({required BuildContext context, required StyledMessage message}) => throw UnimplementedError();
 

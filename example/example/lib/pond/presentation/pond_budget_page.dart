@@ -215,7 +215,7 @@ class EnvelopeCard extends HookWidget {
                     StyledBodyText('Are you sure you want to delete this envelope?'),
                   ],
                 );
-                if (await dialog.show(context)) {
+                if (await dialog.show(context) == true) {
                   await envelopeEntity.delete();
                 }
               },

@@ -40,7 +40,7 @@ class TransactionCard extends HookWidget {
                       StyledBodyText('Are you sure you want to delete this transaction?'),
                     ],
                   );
-                  if (await dialog.show(context)) {
+                  if (await dialog.show(context) == true) {
                     await transactionEntity.delete();
                   }
                 },
@@ -78,7 +78,7 @@ class TransactionCard extends HookWidget {
                       StyledBodyText('Are you sure you want to delete this transaction?'),
                     ],
                   );
-                  if (await dialog.show(context)) {
+                  if (await dialog.show(context) == true) {
                     await transactionEntity.delete();
                   }
                 },
