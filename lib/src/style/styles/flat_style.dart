@@ -916,7 +916,7 @@ class FlatStyle extends Style {
 
     return ClickableCard(
       elevation: 0,
-      margin: EdgeInsets.all(8),
+      margin: content.paddingOverride ?? EdgeInsets.all(8),
       color: backgroundColor,
       borderRadius: content.borderRadius ?? BorderRadius.circular(12),
       splashColor: softenColor(backgroundColor).withOpacity(0.8),
@@ -984,7 +984,7 @@ class FlatStyle extends Style {
         high: () {
           return ClickableCard(
             elevation: 0,
-            margin: EdgeInsets.all(8),
+            margin: category.paddingOverride ?? EdgeInsets.all(8),
             color: emphasisColor,
             borderRadius: category.borderRadius,
             onTap: category.onTapped,
@@ -1024,7 +1024,7 @@ class FlatStyle extends Style {
         medium: () {
           return ClickableCard(
             elevation: 0,
-            margin: EdgeInsets.all(8),
+            margin: category.paddingOverride ?? EdgeInsets.all(8),
             color: styleContext.backgroundColorSoft,
             borderRadius: category.borderRadius,
             onTap: category.onTapped,

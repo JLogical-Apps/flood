@@ -33,6 +33,9 @@ class StyledCategory extends StyledWidget {
   /// If non-null, overrides the border radius of the content.
   final BorderRadius? borderRadius;
 
+  /// If non-null, overrides the padding.
+  final EdgeInsets? paddingOverride;
+
   final Emphasis emphasis;
 
   /// Action to perform when this category is tapped.
@@ -51,6 +54,7 @@ class StyledCategory extends StyledWidget {
     this.actions: const [],
     this.emphasisColorOverride,
     this.borderRadius,
+    this.paddingOverride,
     this.emphasis: Emphasis.low,
     this.onTapped,
   }) : super(key: key);
@@ -68,6 +72,7 @@ class StyledCategory extends StyledWidget {
     this.actions: const [],
     this.emphasisColorOverride,
     this.borderRadius,
+    this.paddingOverride,
     this.onTapped,
   })  : emphasis = Emphasis.low,
         super(key: key);
@@ -85,6 +90,7 @@ class StyledCategory extends StyledWidget {
     this.actions: const [],
     this.emphasisColorOverride,
     this.borderRadius,
+    this.paddingOverride,
     this.onTapped,
   })  : emphasis = Emphasis.medium,
         super(key: key);
@@ -102,6 +108,7 @@ class StyledCategory extends StyledWidget {
     this.actions: const [],
     this.emphasisColorOverride,
     this.borderRadius,
+    this.paddingOverride,
     this.onTapped,
   })  : emphasis = Emphasis.high,
         super(key: key);
