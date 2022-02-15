@@ -27,5 +27,5 @@ QueryController<R, T> useQuery<R extends Record, T>(QueryRequest<R, T> queryRequ
 }
 
 QueryController<E, E?> useSingleton<E extends Entity<V>, V extends ValueObject>() {
-  return useQuery(Query.from<E>().firstOrNull());
+  return useQuery(Query.from<E>().firstOrNull().map((value) => value ?? Singleton.createDefault<E, V>()));
 }
