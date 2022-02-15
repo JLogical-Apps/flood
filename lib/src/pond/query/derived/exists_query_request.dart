@@ -16,14 +16,14 @@ class ExistsQueryRequest<R extends Record> extends DerivedQueryRequest<R, bool> 
 
   @override
   Future<bool> deriveQueryResult(QueryExecutor queryExecutor) async {
-    final anyEntity = await queryExecutor.executeQuery(Query.from<R>().firstOrNull());
+    final anyEntity = await queryExecutor.executeQuery(query.firstOrNull());
     return anyEntity != null;
   }
 
   @override
   ValueStream<FutureValue<bool>> deriveQueryResultX(QueryExecutorX queryExecutorX) {
     return queryExecutorX
-        .executeQueryX(Query.from<R>().firstOrNull())
+        .executeQueryX(query.firstOrNull())
         .mapWithValue((maybeAnyEntity) => maybeAnyEntity.mapIfPresent((someEntity) => someEntity != null));
   }
 }

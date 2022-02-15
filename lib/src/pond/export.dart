@@ -31,6 +31,7 @@ export 'property/reference_field_property.dart';
 export 'property/with_global_type_serializer.dart';
 export 'property/with_id_properties_state.dart';
 export 'property/with_properties_state.dart';
+export 'query/derived/mapped_query_request.dart';
 export 'query/executor/query_executor.dart';
 export 'query/executor/query_executor_x.dart';
 export 'query/query.dart';

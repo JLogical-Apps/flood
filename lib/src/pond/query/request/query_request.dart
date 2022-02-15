@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:equatable/src/equatable_utils.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/request/without_cache_query_request.dart';
@@ -30,6 +31,10 @@ abstract class QueryRequest<R extends Record, T> extends Equatable {
 
   QueryRequest<R, T> withoutCache() {
     return WithoutCacheQueryRequest<R, T>(queryRequest: this);
+  }
+
+  QueryRequest<R, S> map<S>(S mapper(T value)) {
+    return MappedQueryRequest(queryRequest: this, mapper: mapper);
   }
 
   bool isWithoutCache() {
