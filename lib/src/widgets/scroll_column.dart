@@ -5,6 +5,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 /// A utility widget of a Column wrapped in a SingleChildScrollView with an optional Scrollbar.
 class ScrollColumn extends HookWidget {
+  final ScrollController? controller;
+
   /// Whether to show a Scrollbar.
   final bool withScrollbar;
 
@@ -17,6 +19,7 @@ class ScrollColumn extends HookWidget {
 
   const ScrollColumn({
     Key? key,
+    this.controller,
     this.withScrollbar: false,
     required this.children,
     this.onRefresh,
@@ -25,14 +28,16 @@ class ScrollColumn extends HookWidget {
 
   const ScrollColumn.withScrollbar({
     Key? key,
+    ScrollController? controller,
     required List<Widget> children,
     Future Function()? onRefresh,
     CrossAxisAlignment crossAxisAlignment: CrossAxisAlignment.center,
-  }) : this(key: key, withScrollbar: true, children: children, onRefresh: onRefresh);
+  }) : this(key: key, controller: controller, withScrollbar: true, children: children, onRefresh: onRefresh);
 
   @override
   Widget build(BuildContext context) {
     Widget scrollView = SingleChildScrollView(
+      controller: controller,
       child: Column(
         crossAxisAlignment: crossAxisAlignment,
         children: children,
