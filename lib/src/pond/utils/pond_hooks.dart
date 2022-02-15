@@ -25,3 +25,7 @@ QueryController<R, T>? useQueryOrNull<R extends Record, T>(QueryRequest<R, T>? q
 QueryController<R, T> useQuery<R extends Record, T>(QueryRequest<R, T> queryRequest) {
   return useQueryOrNull(queryRequest)!;
 }
+
+QueryController<E, E?> useSingleton<E extends Entity<V>, V extends ValueObject>() {
+  return useQuery(Query.from<E>().firstOrNull());
+}
