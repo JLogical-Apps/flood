@@ -14,3 +14,7 @@ export 'refresh_scaffold.dart';
 export 'scroll_column.dart';
 export 'smart_image.dart';
 export 'value_stream_builder.dart';
+export 'tutorial/tutorial_coach_mark.dart';
+export 'tutorial/target/target_content.dart';
+export 'tutorial/target/target_focus.dart';
+export 'tutorial/target/target_position.dart';
