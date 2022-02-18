@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart' as flutter;
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
@@ -17,7 +17,7 @@ import 'package:jlogical_utils/src/pond/type_state_serializers/value_object_type
 import 'entity_registration.dart';
 
 mixin WithExplicitAppRegistration implements AppRegistration {
-  final GetIt _getIt = GetIt.asNewInstance();
+  Map<Type, dynamic> _registrationByType = {};
 
   Database get database => _entityDatabase;
 
@@ -33,6 +33,9 @@ mixin WithExplicitAppRegistration implements AppRegistration {
 
   List<TypeStateSerializer> get typeStateSerializers =>
       _appModules.expand((module) => module.typeStateSerializers).toList();
+
+  List<flutter.NavigatorObserver> get navigatorObservers =>
+      _appModules.expand((module) => module.navigatorObservers).toList();
 
   Entity? constructEntityRuntimeOrNull(ValueObject initialState) {
     return entityRegistrations
@@ -199,8 +202,8 @@ mixin WithExplicitAppRegistration implements AppRegistration {
         ?.entityType;
   }
 
-  void register<T extends Object>(T obj) {
-    _getIt.registerSingleton<T>(obj);
+  void register<T>(T obj) {
+    _registrationByType[T] = obj;
 
     if (obj is AppModule) {
       _appModules.add(obj);
@@ -212,8 +215,8 @@ mixin WithExplicitAppRegistration implements AppRegistration {
     }
   }
 
-  T locate<T extends Object>() {
-    return _getIt<T>();
+  T? locateOrNull<T>() {
+    return _registrationByType[T] as T?;
   }
 
   /// Loads all the modules.

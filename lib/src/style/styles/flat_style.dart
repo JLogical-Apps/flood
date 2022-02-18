@@ -1280,8 +1280,11 @@ class FlatStyle extends Style {
   }
 
   @override
-  Future<T?> navigateTo<T>({required BuildContext context, required Widget Function(BuildContext context) page}) {
-    return Navigator.of(context).push(MaterialPageRoute(builder: page));
+  Future<T?> navigateTo<T, P extends Widget>({
+    required BuildContext context,
+    required Widget Function(BuildContext context) page,
+  }) {
+    return Navigator.of(context).push(MaterialPageRoute(builder: page, settings: RouteSettings(name: '$P')));
   }
 
   @override

@@ -30,6 +30,9 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blue,
         accentColor: Colors.purple,
       ),
+      navigatorObservers: [
+        PondNavigatorObserver(),
+      ],
       home: HomePage(),
     );
   }
@@ -94,7 +97,8 @@ class HomePage extends StatelessWidget {
   Future<void> _initPond() async {
     final appContext = await AppContext.createGlobal();
     appContext
-      ..register(FirebaseModule(app: DefaultFirebaseOptions.currentPlatform))
+      ..register(await FirebaseModule.create(app: DefaultFirebaseOptions.currentPlatform))
+      ..register(DefaultAnalyticsModule())
       ..register(BudgetRepository())
       ..register(BudgetDraftRepository())
       ..register(BudgetTransactionRepository())

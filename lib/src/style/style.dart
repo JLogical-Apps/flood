@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_category.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_date_field.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_dropdown.dart';
@@ -12,10 +12,12 @@ import 'package:jlogical_utils/src/style/widgets/misc/styled_chip.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_divider.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_message.dart';
+import 'package:jlogical_utils/src/style/widgets/pages/styled_dialog.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_onboarding_page.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_page.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_tabbed_page.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_text_overrides.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_span.dart';
 import 'package:provider/provider.dart';
 
@@ -118,12 +120,15 @@ abstract class Style {
   // === ACTIONS ===
 
   /// Displays a [dialog].
-  Future<T?> showDialog<T>({required BuildContext context, required StyledDialog<T> dialog}) => throw UnimplementedError();
+  Future<T?> showDialog<T>({required BuildContext context, required StyledDialog<T> dialog}) =>
+      throw UnimplementedError();
 
-  Future<void> showMessage({required BuildContext context, required StyledMessage message}) => throw UnimplementedError();
+  Future<void> showMessage({required BuildContext context, required StyledMessage message}) =>
+      throw UnimplementedError();
 
   /// Navigates to the [page] and returns the value given when [navigateBack] is called.
-  Future<T?> navigateTo<T>({required BuildContext context, required Widget Function(BuildContext context) page}) =>
+  Future<T?> navigateTo<T, P extends Widget>(
+          {required BuildContext context, required P Function(BuildContext context) page}) =>
       throw UnimplementedError();
 
   /// Navigates back and returns an optional [result].

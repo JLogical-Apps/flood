@@ -19,9 +19,9 @@ abstract class AppRegistration {
 
   Set<Type> getDescendants(Type type);
 
-  void register<T extends Object>(T obj);
+  void register<T>(T obj);
 
-  T locate<T extends Object>();
+  T? locateOrNull<T>();
 }
 
 extension DefaultAppRegistration on AppRegistration {
@@ -67,5 +67,9 @@ extension DefaultAppRegistration on AppRegistration {
 
   TypeStateSerializer getTypeStateSerializerByType<T>() {
     return getTypeStateSerializerByTypeRuntime(T);
+  }
+
+  T locate<T>() {
+    return locateOrNull() ?? (throw Exception('Could not locate [$T]'));
   }
 }

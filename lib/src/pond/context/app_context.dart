@@ -38,3 +38,7 @@ class AppContext
 T locate<T extends Object>() {
   return AppContext.global.locate<T>();
 }
+
+T? locateOrNull<T extends Object>() {
+  return AppContext.global.locateOrNull<T>();
+}

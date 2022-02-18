@@ -11,14 +11,16 @@ import '../environment/environment.dart';
 class FirebaseModule extends AppModule {
   final FirebaseOptions app;
 
-  FirebaseModule({required this.app});
+  FirebaseModule._({required this.app});
 
-  @override
-  Future<void> onLoad(AppContext context) async {
-    if (context.environment.index >= Environment.qa.index) {
+  static Future<FirebaseModule> create({required FirebaseOptions app}) async {
+    final module = FirebaseModule._(app: app);
+
+    if (AppContext.global.environment.index >= Environment.qa.index) {
       await Firebase.initializeApp(options: app);
     }
-    if (context.environment == Environment.qa) {
+
+    if (AppContext.global.environment == Environment.qa) {
       FirebaseFirestore.instance.settings = const Settings(
         host: 'localhost:8080',
         sslEnabled: false,
@@ -29,6 +31,8 @@ class FirebaseModule extends AppModule {
 
       await FirebaseStorage.instance.useStorageEmulator('localhost', 9199);
     }
+
+    return module;
   }
 
   @override
