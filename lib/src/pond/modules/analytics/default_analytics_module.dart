@@ -10,7 +10,7 @@ class DefaultAnalyticsModule extends AppModule {
   @override
   void onRegister(AppRegistration registration) {
     _getService(DefaultEnvironmentData.getDataSource(AppContext.global.environment))
-        .mapIfNonNull(registration.register);
+        .mapIfNonNull((service) => registration.register<AnalyticsService>(service));
   }
 
   AnalyticsService? _getService(EnvironmentDataSource dataSource) {
