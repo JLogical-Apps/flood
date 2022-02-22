@@ -10,7 +10,7 @@ void main() {
   late LocalEnvelopeRepository envelopeRepository;
   setUp(() {
     envelopeRepository = LocalEnvelopeRepository();
-    AppContext.global = AppContext()..register(envelopeRepository);
+    AppContext.global = AppContext.createForTesting()..register(envelopeRepository);
   });
   test('basic repository actions.', () {
     final transaction = Transaction((t) async {

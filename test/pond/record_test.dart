@@ -8,12 +8,15 @@ import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
 
 void main() {
+  final now = DateTime.now();
+  setUp(() async {
+    AppContext.global = AppContext.createForTesting(now: now);
+  });
+
   test('simple value object has proper state.', () {
-    final now = DateTime.now().toUtc();
     final envelope = Envelope()
       ..nameProperty.value = 'Tithe'
-      ..amountProperty.value = 24 * 100
-      ..timeCreatedProperty.value = now;
+      ..amountProperty.value = 24 * 100;
 
     expect(
       envelope.state,
@@ -87,7 +90,7 @@ void main() {
   });
 
   test('lifecycle events', () async {
-    AppContext.global = AppContext()..register(LifecycleRepository());
+    AppContext.global = AppContext.createForTesting()..register(LifecycleRepository());
     final lifecycleEntity = LifecycleEntity()..value = Lifecycle();
 
     var afterCreate = false;

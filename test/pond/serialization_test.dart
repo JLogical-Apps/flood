@@ -74,8 +74,8 @@ void main() {
     expect(boolSerializer.deserialize('true'), true);
   });
 
-  test('serializing value objects', () {
-    AppContext.global = AppContext()
+  test('serializing value objects', () async {
+    AppContext.global = AppContext.createForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
@@ -105,7 +105,7 @@ void main() {
   });
 
   test('serializing lists', () {
-    AppContext.global = AppContext()
+    AppContext.global = AppContext.createForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
@@ -174,7 +174,7 @@ void main() {
   });
 
   test('serializing & deserializing abstract class', () {
-    AppContext.global = AppContext()
+    AppContext.global = AppContext.createForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),

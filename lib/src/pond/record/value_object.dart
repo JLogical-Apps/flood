@@ -17,13 +17,13 @@ abstract class ValueObject extends Record
     implements PropertyContextProvider, Resolvable {
   static const timeCreatedField = 'timeCreated';
   late final timeCreatedProperty =
-      FieldProperty<DateTime>(name: timeCreatedField).withFallbackReplacement(() => DateTime.now());
+      FieldProperty<DateTime>(name: timeCreatedField).withFallbackReplacement(() => AppContext.global.getNow());
 
   ValueObject() {
     properties.forEach((property) => property.registerPropertyContextProvider(this));
   }
 
-  DateTime? get timeCreatedOrNull => timeCreatedProperty.value;
+  DateTime get timeCreated => timeCreatedProperty.value!;
 
   @mustCallSuper
   List<Property> get properties => [timeCreatedProperty];
