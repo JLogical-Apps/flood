@@ -1,6 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jlogical_utils/src/pond/context/module/simple_app_module.dart';
-import 'package:jlogical_utils/src/pond/context/registration/value_object_registration.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 
 import 'entities/budget.dart';
@@ -19,7 +17,7 @@ void main() {
   test('state inflation on simple ValueObject.', () {
     final now = DateTime.now();
 
-    AppContext.global = AppContext.createForTesting()
+    AppContext.global = AppContext.createForTesting(now: now)
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
@@ -265,7 +263,7 @@ void main() {
 class LocalUserRepository extends DefaultLocalRepository<UserEntity, User> {
   @override
   UserEntity createEntity() {
-    throw UserEntity();
+    return UserEntity();
   }
 
   @override

@@ -15,7 +15,7 @@ import 'directory/directory_provider.dart';
 class AppContext
     with WithExplicitAppRegistration, WithDatabaseDelegator, WithDateTimeDelegator, WithDirectoryProviderDelegator
     implements AppRegistration, Database, DateTimeProvider, DirectoryProvider {
-  static late AppContext global;
+  static late AppContext global = AppContext._();
 
   DateTimeProvider dateTimeProvider = NowDateTimeProvider();
 

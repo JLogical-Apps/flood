@@ -8,7 +8,6 @@ import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
-import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 import 'package:jlogical_utils/src/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -39,10 +38,10 @@ class EntityDatabase implements Database {
   }
 
   @override
-  Future<T> onExecuteQuery<R extends Record, T>(QueryRequest<R, T> queryRequest, {Transaction? transaction}) {
+  Future<T> onExecuteQuery<R extends Record, T>(QueryRequest<R, T> queryRequest) {
     if (isSubtype<R, Entity>()) {
       final entityRepository = getRepositoryRuntime(R);
-      return entityRepository.executeQuery(queryRequest, transaction: transaction);
+      return entityRepository.executeQuery(queryRequest);
     }
 
     throw Exception('Unable to find repository to handle query request with record of type $R');

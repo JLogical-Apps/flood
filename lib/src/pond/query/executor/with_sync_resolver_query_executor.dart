@@ -4,7 +4,6 @@ import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/request/abstract_sync_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
-import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 
 import '../query.dart';
 import '../reducer/query/abstract_sync_query_reducer.dart';
@@ -21,10 +20,7 @@ mixin WithSyncResolverQueryExecutor<C> implements QueryExecutor {
   Resolver<QueryRequest<R, dynamic>, AbstractSyncQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic, C>>
       getQueryRequestReducerResolver<R extends Record>() => WrapperResolver(getSyncQueryRequestReducers<R>());
 
-  T executeQuerySync<R extends Record, T>(
-    QueryRequest<R, T> queryRequest, {
-    Transaction? transaction,
-  }) {
+  T executeQuerySync<R extends Record, T>(QueryRequest<R, T> queryRequest) {
     final queryChain = queryRequest.query.getQueryChain();
 
     // [accumulation] represents all the records that match the query.
@@ -45,10 +41,7 @@ mixin WithSyncResolverQueryExecutor<C> implements QueryExecutor {
   }
 
   @override
-  Future<T> onExecuteQuery<R extends Record, T>(
-    QueryRequest<R, T> queryRequest, {
-    Transaction? transaction,
-  }) async {
-    return executeQuerySync<R, T>(queryRequest, transaction: transaction);
+  Future<T> onExecuteQuery<R extends Record, T>(QueryRequest<R, T> queryRequest) async {
+    return executeQuerySync<R, T>(queryRequest);
   }
 }

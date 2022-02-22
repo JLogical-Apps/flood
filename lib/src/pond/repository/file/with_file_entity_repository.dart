@@ -6,7 +6,7 @@ import 'package:jlogical_utils/src/pond/repository/file/query_executor/file_quer
 import 'package:jlogical_utils/src/pond/state/persistence/json_state_persister.dart';
 import 'package:jlogical_utils/src/pond/state/persistence/state_persister.dart';
 
-mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAndCacheEntityRepository {
+mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRepository {
   StatePersister<String> get statePersister => JsonStatePersister();
 
   String get dataPath;
@@ -20,7 +20,7 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
   }
 
   @override
-  Future<void> save(Entity entity, {Transaction? transaction}) {
+  Future<void> save(Entity entity) {
     return _saveState(id: entity.id!, state: entity.state);
   }
 
@@ -31,7 +31,7 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
   }
 
   @override
-  Future<Entity?> getOrNull(String id, {Transaction? transaction, bool withoutCache: false}) async {
+  Future<Entity?> getOrNull(String id, {bool withoutCache: false}) async {
     final file = _getFile(id);
     if (!await file.exists()) {
       return null;
@@ -43,25 +43,15 @@ mixin WithFileEntityRepository on EntityRepository implements WithTransactionsAn
   }
 
   @override
-  Future<void> delete(Entity entity, {Transaction? transaction}) async {
+  Future<void> delete(Entity entity) async {
     final id = entity.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
     await _getFile(id).delete();
   }
 
-  Future<void> commitTransactionChanges(TransactionPendingChanges changes) async {
-    await Future.wait(changes.stateChangesById.entries.mapEntries((id, state) => _saveState(id: id, state: state)));
-    await Future.wait(changes.stateIdDeletes.map((id) async {
-      final entity =
-          await getOrNull(id) ?? (throw Exception('Cannot delete entity with id [$id] since it does not exist!'));
-      await delete(entity);
-    }));
-  }
-
-  QueryExecutor getQueryExecutor({Transaction? transaction}) {
+  QueryExecutor getQueryExecutor() {
     return FileQueryExecutor(
       baseDirectory: _baseDirectory,
-      stateGetter: (id, withoutCache) async =>
-          (await get(id, transaction: transaction, withoutCache: withoutCache)).state,
+      stateGetter: (id, withoutCache) async => (await get(id, withoutCache: withoutCache)).state,
     );
   }
 

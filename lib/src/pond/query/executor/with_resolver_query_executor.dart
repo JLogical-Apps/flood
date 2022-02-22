@@ -5,7 +5,6 @@ import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reduc
 import 'package:jlogical_utils/src/pond/query/reducer/request/abstract_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
-import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
 
 import '../query.dart';
 
@@ -22,10 +21,7 @@ mixin WithResolverQueryExecutor<C> implements QueryExecutor {
       getQueryRequestReducerResolver<R extends Record>() => WrapperResolver(getQueryRequestReducers<R>());
 
   @override
-  Future<T> onExecuteQuery<R extends Record, T>(
-    QueryRequest<R, T> queryRequest, {
-    Transaction? transaction,
-  }) async {
+  Future<T> onExecuteQuery<R extends Record, T>(QueryRequest<R, T> queryRequest) async {
     final queryChain = queryRequest.query.getQueryChain();
 
     // [accumulation] represents all the records that match the query.

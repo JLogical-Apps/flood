@@ -3,43 +3,38 @@ import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 import 'package:jlogical_utils/src/pond/database/query/with_query_cache_manager.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor_x.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
-import 'package:jlogical_utils/src/pond/transaction/transaction.dart';
-import 'package:jlogical_utils/src/pond/transaction/transaction_executor.dart';
-import 'package:jlogical_utils/src/pond/utils/with_key_synchronizable.dart';
 import 'package:rxdart/rxdart.dart';
 
-abstract class EntityRepository extends AppModule
-    with WithKeySynchronizable<Transaction>, WithQueryCacheManager
-    implements QueryExecutorX, TransactionExecutor {
+abstract class EntityRepository extends AppModule with WithQueryCacheManager implements QueryExecutorX {
   List<Type> get handledEntityTypes;
 
-  Future<String> generateId(Entity entity, {Transaction? transaction});
+  Future<String> generateId(Entity entity);
 
-  Future<void> save(Entity entity, {Transaction? transaction});
+  Future<void> save(Entity entity);
 
-  Future<Entity?> getOrNull(String id, {Transaction? transaction, bool withoutCache: false});
+  Future<Entity?> getOrNull(String id, {bool withoutCache: false});
 
   ValueStream<FutureValue<Entity?>> getXOrNull(String id);
 
-  Future<void> delete(Entity entity, {Transaction? transaction});
+  Future<void> delete(Entity entity);
 
-  Future<Entity> get(String id, {Transaction? transaction, bool withoutCache: false}) async {
-    return (await getOrNull(id, transaction: transaction, withoutCache: withoutCache)) ??
+  Future<Entity> get(String id, {bool withoutCache: false}) async {
+    return (await getOrNull(id, withoutCache: withoutCache)) ??
         (throw Exception('Cannot find entity with id [$id] from repository [$this]'));
   }
 
-  Future<void> create(Entity entity, {Transaction? transaction}) async {
-    final id = await generateId(entity, transaction: transaction);
+  Future<void> create(Entity entity) async {
+    final id = await generateId(entity);
     entity.id = id;
-    await save(entity, transaction: transaction);
+    await save(entity);
     await entity.afterCreate();
   }
 
-  Future<void> createOrSave(Entity entity, {Transaction? transaction}) {
+  Future<void> createOrSave(Entity entity) {
     if (entity.isNew) {
-      return create(entity, transaction: transaction);
+      return create(entity);
     } else {
-      return save(entity, transaction: transaction);
+      return save(entity);
     }
   }
 
