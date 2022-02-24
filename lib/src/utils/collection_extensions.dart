@@ -18,8 +18,7 @@ extension IterableExtensions<T> on Iterable<T> {
 
   /// Safely maps the elements of this iterable into a new one.
   /// If a mapper throws an exception, it is not included in the map and calls [onError].
-  Iterable<R> tryMap<R>(R mapper(T value),
-      {void onError(T value, dynamic error)?}) {
+  Iterable<R> tryMap<R>(R mapper(T value), {void onError(T value, dynamic error)?}) {
     return map((value) {
       try {
         return mapper(value);
@@ -29,6 +28,10 @@ extension IterableExtensions<T> on Iterable<T> {
       }
     }).whereType<R>();
   }
+
+  T? get lastOrNull {
+    return isEmpty ? null : last;
+  }
 }
 
 extension MapExtensions<K, V> on Map<K, V> {
@@ -37,8 +40,7 @@ extension MapExtensions<K, V> on Map<K, V> {
   Map<K, V> copy({K keyCopier(K value)?, V valueCopier(V value)?}) {
     if (keyCopier == null && valueCopier == null) return Map.of(this);
 
-    return map((key, value) => MapEntry(
-        keyCopier?.call(key) ?? key, valueCopier?.call(value) ?? value));
+    return map((key, value) => MapEntry(keyCopier?.call(key) ?? key, valueCopier?.call(value) ?? value));
   }
 
   /// Simply sets the value of [key] to [value], just like `map[key] = value`

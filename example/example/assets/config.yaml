@@ -1,4 +1,4 @@
-env: device
+env: prod
 reset: false
 version: 2
 min_version: 3
