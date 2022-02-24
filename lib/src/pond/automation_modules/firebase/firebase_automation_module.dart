@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:jlogical_utils/automation.dart';
+import 'package:jlogical_utils/src/pond/automation_modules/environment/environment_listening_automation_module.dart';
 import 'package:jlogical_utils/utils.dart';
 
 import '../../modules/environment/environment.dart';
 
-class FirebaseAutomationModule extends AutomationModule {
+class FirebaseAutomationModule extends AutomationModule implements EnvironmentListeningAutomationModule {
   @override
   String get name => 'Firebase';
 
@@ -76,6 +77,17 @@ class FirebaseAutomationModule extends AutomationModule {
       },
       action: _deploy,
     );
+  }
+
+  @override
+  Future<void> onEnvironmentChanged(
+    AutomationContext context,
+    Environment? oldEnvironment,
+    Environment newEnvironment,
+  ) async {
+    if (newEnvironment == Environment.qa) {
+      await _setupEmulators(context);
+    }
   }
 
   Future<bool> _initFirebase(AutomationContext context) async {

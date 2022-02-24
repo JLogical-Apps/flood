@@ -29,6 +29,10 @@ extension IterableExtensions<T> on Iterable<T> {
     }).whereType<R>();
   }
 
+  T? get firstOrNull {
+    return isEmpty ? null : first;
+  }
+
   T? get lastOrNull {
     return isEmpty ? null : last;
   }
