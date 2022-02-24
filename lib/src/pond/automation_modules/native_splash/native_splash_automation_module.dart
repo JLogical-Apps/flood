@@ -6,7 +6,7 @@ import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 import 'package:jlogical_utils/src/utils/file_extensions.dart';
 
-class NativeSplashAutomationModule extends AutomationModule {
+class NativeSplashAutomationModule extends AutomationModule implements BuildingAutomationModule {
   final File imageFile;
   final int backgroundColor;
 

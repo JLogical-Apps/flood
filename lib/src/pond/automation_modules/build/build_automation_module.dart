@@ -1,4 +1,5 @@
 import 'package:jlogical_utils/automation.dart';
+import 'package:jlogical_utils/src/pond/automation_modules/build/building_automation_module.dart';
 
 import '../../modules/environment/environment.dart';
 
@@ -36,5 +37,5 @@ Future<void> _build(AutomationContext context) async {
   } else {
     context.print('Building the app!');
   }
-  await Future.wait(context.modules.map((module) => module.onBuild(context)));
+  await Future.wait(context.modules.whereType<BuildingAutomationModule>().map((module) => module.onBuild(context)));
 }

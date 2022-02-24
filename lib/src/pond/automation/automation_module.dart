@@ -1,5 +1,4 @@
 import 'package:jlogical_utils/src/pond/automation/automation.dart';
-import 'package:jlogical_utils/src/pond/automation/automation_context.dart';
 import 'package:jlogical_utils/src/pond/automation/automations_provider.dart';
 
 abstract class AutomationModule implements AutomationsProvider {
@@ -8,6 +7,4 @@ abstract class AutomationModule implements AutomationsProvider {
   final List<Automation> automations = [];
 
   String get categoryName => name;
-
-  Future<void> onBuild(AutomationContext context) async {}
 }

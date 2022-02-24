@@ -6,7 +6,7 @@ import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 import 'package:jlogical_utils/src/utils/file_extensions.dart';
 
-class AppIconAutomationModule extends AutomationModule {
+class AppIconAutomationModule extends AutomationModule implements BuildingAutomationModule {
   final File appIconForegroundFile;
   final int backgroundColor;
 

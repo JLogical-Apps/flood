@@ -8,15 +8,15 @@ import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart
 import 'package:jlogical_utils/src/pond/automation/automation_interactor.dart';
 import 'package:jlogical_utils/src/pond/automation/package_registration.dart';
 import 'package:jlogical_utils/src/pond/automation/with_console_automation_output.dart';
+import 'package:jlogical_utils/src/pond/automation/with_dcli_automation_interactor.dart';
 import 'package:jlogical_utils/src/pond/automation/with_pubspec_package_registration.dart';
-import 'package:jlogical_utils/src/pond/automation/with_shell_automation_interactor.dart';
 import 'package:jlogical_utils/src/utils/file_extensions.dart';
 
 import '../modules/environment/environment.dart';
 import 'automation.dart';
 
 class AutomationContext
-    with WithConsoleAutomationOutput, WithShellAutomationInteractor, WithPubspecPackageRegistration
+    with WithConsoleAutomationOutput, WithDcliAutomationInteractor, WithPubspecPackageRegistration
     implements AutomationInteractor, PackageRegistration {
   late ArgResults args;
 
@@ -127,6 +127,12 @@ class AutomationContext
 
   Future<void> saveConfig(Map<String, dynamic> data) async {
     await _configDataSource().saveData(data);
+  }
+
+  Future<void> updateConfigField<T>(String path, T data) async {
+    final config = await _configDataSource().getData();
+    config![path] = data;
+    await saveConfig(config);
   }
 
   DataSource<Map<String, dynamic>> _configDataSource() {
