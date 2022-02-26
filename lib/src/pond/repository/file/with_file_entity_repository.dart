@@ -59,7 +59,9 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
   Future<void> onReset(AppContext context) async {
     await super.onReset(context);
 
-    await _baseDirectory.delete(recursive: true);
+    if (await _baseDirectory.exists()) {
+      await _baseDirectory.delete(recursive: true);
+    }
   }
 
   File _getFile(String id) {
