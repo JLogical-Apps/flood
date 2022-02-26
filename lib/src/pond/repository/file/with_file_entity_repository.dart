@@ -27,7 +27,7 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
   Future<void> _saveState({required String id, required State state}) async {
     final file = await _getFile(id).ensureCreated();
     final json = statePersister.persist(state);
-    await file.writeAsString(json);
+    await file.writeAsString(json, flush: true);
   }
 
   @override
