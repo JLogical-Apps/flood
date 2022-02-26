@@ -12,11 +12,13 @@ import 'package:jlogical_utils/src/utils/stream_extensions.dart';
 import 'package:jlogical_utils/src/utils/util.dart';
 import 'package:lumberdash/lumberdash.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:synchronized/synchronized.dart';
 
 import 'entity_repository.dart';
 
 mixin WithCacheEntityRepository on EntityRepository {
   final Cache<String, State> _stateByIdCache = Cache();
+  final Lock _saveLock = Lock(reentrant: true);
 
   final Map<String, Completer<State?>> _getCompleterById = {};
   final Map<QueryRequest, Completer<dynamic>> _queryCompleterByQueryRequest = {};
@@ -32,7 +34,7 @@ mixin WithCacheEntityRepository on EntityRepository {
     final id = entity.id ?? (throw Exception('Cannot save entity that has a null id!'));
 
     await entity.beforeSave();
-    await super.save(entity);
+    await _saveLock.synchronized(() => super.save(entity));
     _stateByIdCache.save(id, entity.state);
     await entity.afterSave();
   }
