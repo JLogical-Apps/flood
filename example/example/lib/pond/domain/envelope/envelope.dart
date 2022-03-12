@@ -10,6 +10,15 @@ class Envelope extends ValueObject {
 
   late final amountProperty = FieldProperty<int>(name: 'amount').withFallbackReplacement(() => 0);
 
+  late final colorProperty = FieldProperty<int>(name: 'color');
+
   @override
-  List<Property> get properties => super.properties + [nameProperty, budgetProperty, amountProperty];
+  List<Property> get properties =>
+      super.properties +
+      [
+        nameProperty,
+        budgetProperty,
+        amountProperty,
+        colorProperty,
+      ];
 }

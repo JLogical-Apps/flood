@@ -19,7 +19,7 @@ import 'reducer/request/firestore_without_cache_query_request_reducer.dart';
 
 class FirestoreQueryExecutor with WithResolverQueryExecutor<firestore.Query> implements QueryExecutor {
   final String collectionPath;
-  final void Function(Entity entity) onEntityInflated;
+  final Future Function(Entity entity) onEntityInflated;
   final Type? inferredType;
 
   FirestoreQueryExecutor({required this.collectionPath, required this.onEntityInflated, this.inferredType});
