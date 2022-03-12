@@ -1200,6 +1200,8 @@ class FlatStyle extends Style {
             )) ??
         dialog.title;
 
+    final body = dialog.bodyText.mapIfNonNull((bodyText) => StyledBodyText(bodyText)) ?? dialog.body;
+
     dialog.onShown?.call();
 
     final poppedValue = await showModalBottomSheet(
@@ -1241,7 +1243,7 @@ class FlatStyle extends Style {
                               context,
                               title: title,
                             ),
-                          dialog.body,
+                          body!,
                           SafeArea(
                             child: Container(),
                           )
