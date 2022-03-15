@@ -93,11 +93,13 @@ void main() {
     AppContext.global = AppContext.createForTesting()..register(LifecycleRepository());
     final lifecycleEntity = LifecycleEntity()..value = Lifecycle();
 
+    var onInitialize = false;
     var afterCreate = false;
     var beforeSave = false;
     var afterSave = false;
     var beforeDelete = false;
 
+    lifecycleEntity.onInitializeX.listen((_) => onInitialize = true);
     lifecycleEntity.afterCreateX.listen((_) => afterCreate = true);
     lifecycleEntity.beforeSaveX.listen((_) => beforeSave = true);
     lifecycleEntity.afterSaveX.listen((_) => afterSave = true);
@@ -105,6 +107,7 @@ void main() {
 
     await lifecycleEntity.create();
 
+    expect(onInitialize, true);
     expect(afterCreate, true);
     expect(beforeSave, true);
     expect(afterSave, true);
@@ -153,10 +156,17 @@ void main() {
 class Lifecycle extends ValueObject {}
 
 class LifecycleEntity extends Entity<Lifecycle> {
+  final BehaviorSubject onInitializeX = BehaviorSubject();
   final BehaviorSubject afterCreateX = BehaviorSubject();
   final BehaviorSubject beforeSaveX = BehaviorSubject();
   final BehaviorSubject afterSaveX = BehaviorSubject();
   final BehaviorSubject beforeDeleteX = BehaviorSubject();
+
+  @override
+  Future<void> onInitialize() {
+    onInitializeX.value = 0;
+    return super.onInitialize();
+  }
 
   @override
   Future<void> afterCreate() {

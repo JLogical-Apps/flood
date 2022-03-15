@@ -42,14 +42,26 @@ mixin WithCacheEntityRepository on EntityRepository {
   @override
   Future<Entity?> getOrNull(String id, {bool withoutCache: false}) async {
     State? state;
+    bool fromSource = false;
 
     if (!withoutCache) {
       state ??= _stateByIdCache.get(id);
     }
 
-    state ??= await _getOrNullFromSourceRepository(id);
+    if (state == null) {
+      state ??= await _getOrNullFromSourceRepository(id);
+      if (state != null) {
+        fromSource = true;
+      }
+    }
 
-    return state.mapIfNonNull((state) => Entity.fromStateOrNull(state));
+    final entity = state.mapIfNonNull((state) => Entity.fromStateOrNull(state));
+
+    if (fromSource) {
+      await entity?.onInitialize();
+    }
+
+    return entity;
   }
 
   Future<State?> _getOrNullFromSourceRepository(String id) async {

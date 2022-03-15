@@ -27,6 +27,7 @@ abstract class EntityRepository extends AppModule with WithQueryCacheManager imp
     final id = await generateId(entity);
     entity.id = id;
     await save(entity);
+    await entity.onInitialize();
     await entity.afterCreate();
   }
 

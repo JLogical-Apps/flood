@@ -59,7 +59,10 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithCacheEnti
   QueryExecutor getQueryExecutor() {
     return FirestoreQueryExecutor(
       collectionPath: dataPath,
-      onEntityInflated: (entity) => saveToCache(entity),
+      onEntityInflated: (entity) async {
+        saveToCache(entity);
+        await entity.onInitialize();
+      },
       inferredType: inferredType,
     );
   }

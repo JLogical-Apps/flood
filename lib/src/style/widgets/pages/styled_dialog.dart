@@ -12,8 +12,11 @@ class StyledDialog<T> {
   /// If [titleText] is null, uses this as the title of the dialog.
   final Widget? title;
 
-  /// The body of the dialog.
-  final Widget body;
+  /// The body text of the dialog.
+  final String? bodyText;
+
+  /// If [bodyText] is null, uses this as the body of the dialog.
+  final Widget? body;
 
   /// Transforms the result of the popped value.
   /// If null, the dialog simply returns the popped value.
@@ -28,7 +31,8 @@ class StyledDialog<T> {
   const StyledDialog({
     this.titleText,
     this.title,
-    required this.body,
+    this.bodyText,
+    this.body,
     this.resultTransformer,
     this.onShown,
     this.onClosed,

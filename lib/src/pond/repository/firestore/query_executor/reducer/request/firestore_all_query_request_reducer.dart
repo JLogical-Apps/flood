@@ -9,7 +9,7 @@ import 'abstract_firestore_query_request_reducer.dart';
 class FirestoreAllQueryRequestReducer<R extends Record>
     extends AbstractFirestoreQueryRequestReducer<AllQueryRequest<R>, R, List<Record>> {
   final Type? inferredType;
-  final void Function(Entity entity) onEntityInflated;
+  final Future Function(Entity entity) onEntityInflated;
 
   FirestoreAllQueryRequestReducer({required this.inferredType, required this.onEntityInflated});
 
@@ -30,7 +30,7 @@ class FirestoreAllQueryRequestReducer<R extends Record>
         .map((state) => Entity.fromState(state))
         .map((entity) => entity as R)
         .toList();
-    records.forEach((r) => onEntityInflated(r as Entity));
+    await Future.wait(records.map((r) => onEntityInflated(r as Entity)));
     return records;
   }
 }

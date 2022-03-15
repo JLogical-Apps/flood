@@ -16,9 +16,14 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
 
   final BehaviorSubject<V> _valueX = BehaviorSubject();
 
+  Future<void> onInitialize() async {}
+
   Future<void> beforeSave() async {}
+
   Future<void> afterSave() async {}
+
   Future<void> beforeDelete() async {}
+
   Future<void> afterCreate() async {}
 
   V get value => _valueX.value;

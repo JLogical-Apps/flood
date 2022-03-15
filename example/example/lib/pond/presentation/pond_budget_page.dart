@@ -194,7 +194,11 @@ class EnvelopeCard extends HookWidget {
       builder: (EnvelopeEntity envelopeEntity) {
         final envelope = envelopeEntity.value;
         return StyledContent(
-          headerText: envelope.nameProperty.value,
+          header: StyledContentHeaderText(
+            envelope.nameProperty.value!,
+            textOverrides:
+                StyledTextOverrides(fontColor: envelope.colorProperty.value.mapIfNonNull((value) => Color(value))),
+          ),
           bodyText: envelope.amountProperty.value!.formatCentsAsCurrency(),
           onTapped: () {
             context

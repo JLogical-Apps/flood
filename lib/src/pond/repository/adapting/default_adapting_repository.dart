@@ -44,4 +44,14 @@ abstract class DefaultAdaptingRepository<E extends Entity<V>, V extends ValueObj
         throw UnimplementedError();
     }
   }
+
+  @override
+  Future<void> onLoad(AppContext appContext) {
+    return entityRepository.onLoad(appContext);
+  }
+
+  @override
+  Future<void> onReset(AppContext appContext) {
+    return entityRepository.onReset(appContext);
+  }
 }
