@@ -8,6 +8,7 @@ import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/database/with_database_delegator.dart';
 
 import '../modules/core_module.dart';
+import '../modules/environment/environment_module.dart';
 import 'date/now_date_time_provider.dart';
 import 'date/preset_date_time_provider.dart';
 import 'directory/directory_provider.dart';
@@ -26,6 +27,7 @@ class AppContext
   static AppContext createForTesting({DateTime? now}) {
     AppContext.global = AppContext._(directoryBundle: DirectoryBundle.empty())
       ..register(CoreModule())
+      ..register(EnvironmentModule.createForTesting())
       ..dateTimeProvider = PresetDateTimeProvider(now ?? DateTime.now());
 
     return AppContext.global;
