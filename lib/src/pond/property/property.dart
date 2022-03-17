@@ -17,7 +17,7 @@ abstract class Property<T> with EquatableMixin implements PropertyModifierContex
 
   Property({required this.name, T? initialValue}) {
     if (initialValue != null) {
-      setUnvalidated(value);
+      setUnvalidated(initialValue);
     }
   }
 
@@ -49,7 +49,7 @@ abstract class Property<T> with EquatableMixin implements PropertyModifierContex
 
   TypeStateSerializer get typeStateSerializer;
 
-  dynamic toStateValue() => value.mapIfNonNull((value) => typeStateSerializer.serialize(value));
+  dynamic toStateValue() => getUnvalidated().mapIfNonNull((value) => typeStateSerializer.serialize(value));
 
   void fromStateValue(dynamic stateValue) => setUnvalidated(typeStateSerializer.deserialize(stateValue));
 
