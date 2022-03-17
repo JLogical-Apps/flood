@@ -5,6 +5,10 @@ class EnvironmentModule extends AppModule {
 
   EnvironmentModule._();
 
+  EnvironmentModule.createForTesting() {
+    environment = Environment.testing;
+  }
+
   static Future<EnvironmentModule> create() async {
     final module = EnvironmentModule._();
     module.environment = await locate<ConfigModule>().getEnvironmentFromConfig();
