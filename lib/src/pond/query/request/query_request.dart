@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:equatable/src/equatable_utils.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -27,7 +29,7 @@ abstract class QueryRequest<R extends Record, T> extends Equatable {
     return WithoutCacheQueryRequest<R, T>(queryRequest: this);
   }
 
-  QueryRequest<R, S> map<S>(S mapper(T value)) {
+  QueryRequest<R, S> map<S>(FutureOr<S> mapper(T value)) {
     return MappedQueryRequest(queryRequest: this, mapper: mapper);
   }
 

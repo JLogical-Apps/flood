@@ -120,6 +120,31 @@ void main() {
     await Query.getById<UserEntity>('some random id that will never work').get();
     expect(withoutCacheQueriesExecuted, 2);
   });
+
+  test('cache used on derived query requests.', () async {
+    late int withoutCacheQueriesExecuted;
+    Future<void> reset() async {
+      withoutCacheQueriesExecuted = 0;
+      AppContext.global = AppContext.createForTesting()
+        ..register(UserRepository(whenWithoutCacheQueryExecuted: () => withoutCacheQueriesExecuted++));
+
+      final userEntities = [
+        UserEntity()..value = (User()..emailProperty.value = 'a@a.com'),
+        UserEntity()..value = (User()..emailProperty.value = 'b@b.com'),
+      ];
+      await Future.wait(userEntities.map((user) => user.create()));
+    }
+
+    await reset();
+    await Query.from<UserEntity>().all().get();
+    await Query.from<UserEntity>().first().get(); // Since .first is a subset of .all, use cache.
+    expect(withoutCacheQueriesExecuted, 1);
+
+    await reset();
+    await Query.from<UserEntity>().all().get();
+    await Query.from<UserEntity>().exists().get(); // Since .exists is a subset of .all, use cache.
+    expect(withoutCacheQueriesExecuted, 1);
+  });
 }
 
 class User extends ValueObject {

@@ -293,6 +293,46 @@ void main() {
                 envelope.timeCreatedProperty.value!.isAtSameMomentAs(oneMinuteAgo))
             .toList());
   });
+
+  test('mapped query requests', () async {
+    final envelopeNames = await Query.from<EnvelopeEntity>()
+        .all()
+        .map((envelopeEntities) =>
+            envelopeEntities.map((envelopeEntity) => envelopeEntity.value.nameProperty.value).toList())
+        .get();
+    expect(envelopeNames, envelopes.map((envelope) => envelope.nameProperty.value).toList());
+
+    final queryCreatedEnvelope = await Query.from<EnvelopeEntity>().firstOrNull().map((envelopeEntity) async {
+      final newEnvelopeEntity = EnvelopeEntity()..value = (Envelope()..nameProperty.value = 'Newly created envelope');
+      await newEnvelopeEntity.create();
+      return newEnvelopeEntity;
+    }).get();
+
+    expect(queryCreatedEnvelope.value.nameProperty.value, 'Newly created envelope');
+    expect(queryCreatedEnvelope.isNew, isFalse);
+  });
+
+  test('first query request', () async {
+    final envelope = await Query.from<EnvelopeEntity>().first().get();
+    expect(envelope, isNotNull);
+
+    final queryCreatedEnvelope =
+        await Query.from<EnvelopeEntity>().where(Envelope.amountField, isEqualTo: 123456789).first(orElse: () async {
+      final envelopeEntity = EnvelopeEntity()
+        ..value = (Envelope()
+          ..nameProperty.value = 'Newly created envelope'
+          ..amountProperty.value = 123456789);
+      await envelopeEntity.create();
+      return envelopeEntity;
+    }).get();
+    expect(queryCreatedEnvelope.isNew, isFalse);
+    expect(queryCreatedEnvelope.value.amountProperty.value, 123456789);
+
+    expect(
+      () => Query.from<EnvelopeEntity>().where(Envelope.amountField, isEqualTo: 987654321).first().get(),
+      throwsA(isA<Exception>()),
+    );
+  });
 }
 
 Future<List<Envelope>> _getEnvelopesFromQuery(Query<EnvelopeEntity> query) async {

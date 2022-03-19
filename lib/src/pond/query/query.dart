@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:equatable/src/equatable_utils.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/query/derived/first_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/contains_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/equals_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
@@ -133,6 +136,10 @@ abstract class Query<R extends Record> extends Equatable {
 
   FirstOrNullQueryRequest<R> firstOrNull({bool orderMatters: true}) {
     return FirstOrNullQueryRequest<R>(query: this, orderMatters: orderMatters);
+  }
+
+  FirstQueryRequest<R> first({FutureOr<R> orElse()?}) {
+    return FirstQueryRequest(query: this, orElse: orElse);
   }
 
   PaginateQueryRequest<R> paginate({int limit: 20}) {
