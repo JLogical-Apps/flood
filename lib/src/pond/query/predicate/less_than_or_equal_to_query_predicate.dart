@@ -8,4 +8,9 @@ class LessThanOrEqualToQueryPredicate extends AbstractQueryPredicate {
   const LessThanOrEqualToQueryPredicate({required this.stateField, required this.isLessThanOrEqualTo});
 
   List<Object?> get props => [stateField, isLessThanOrEqualTo];
+
+  @override
+  String toString() {
+    return '$stateField <= $isLessThanOrEqualTo';
+  }
 }

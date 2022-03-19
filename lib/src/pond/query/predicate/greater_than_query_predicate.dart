@@ -8,4 +8,9 @@ class GreaterThanQueryPredicate extends AbstractQueryPredicate {
   const GreaterThanQueryPredicate({required this.stateField, required this.isGreaterThan});
 
   List<Object?> get props => [stateField, isGreaterThan];
+
+  @override
+  String toString() {
+    return '$stateField > $isGreaterThan';
+  }
 }

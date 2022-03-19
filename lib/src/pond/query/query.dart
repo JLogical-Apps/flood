@@ -32,6 +32,11 @@ abstract class Query<R extends Record> extends Equatable {
     }
   }
 
+  /// Whether this query is necessary in [queryRequest] in order for [queryRequest] to be considered a super-query.
+  bool mustBePresentInSuperQuery(QueryRequest queryRequest) {
+    return false;
+  }
+
   Type get recordType => R;
 
   static Query<R> from<R extends Record>() {
@@ -39,7 +44,7 @@ abstract class Query<R extends Record> extends Equatable {
   }
 
   static FirstOrNullQueryRequest<R> getById<R extends Record>(String id) {
-    return Query.from<R>().where(Query.id, isEqualTo: id).firstOrNull();
+    return Query.from<R>().where(Query.id, isEqualTo: id).firstOrNull(orderMatters: false);
   }
 
   Query<R> where(
@@ -126,8 +131,8 @@ abstract class Query<R extends Record> extends Equatable {
     return AllQueryRequest<R>(query: this);
   }
 
-  FirstOrNullQueryRequest<R> firstOrNull() {
-    return FirstOrNullQueryRequest<R>(query: this);
+  FirstOrNullQueryRequest<R> firstOrNull({bool orderMatters: true}) {
+    return FirstOrNullQueryRequest<R>(query: this, orderMatters: orderMatters);
   }
 
   PaginateQueryRequest<R> paginate({int limit: 20}) {

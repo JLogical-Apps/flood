@@ -8,4 +8,9 @@ class WhereQuery<R extends Record> extends Query<R> {
   WhereQuery({required Query parent, required this.queryPredicate}) : super(parent: parent);
 
   List<Object?> get queryProps => [queryPredicate];
+
+  @override
+  String toString() {
+    return '$parent | where ($queryPredicate)';
+  }
 }

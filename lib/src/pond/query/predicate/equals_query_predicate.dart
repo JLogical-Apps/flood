@@ -8,4 +8,9 @@ class EqualsQueryPredicate extends AbstractQueryPredicate {
   const EqualsQueryPredicate({required this.stateField, required this.isEqualTo});
 
   List<Object?> get props => [stateField, isEqualTo];
+
+  @override
+  String toString() {
+    return '$stateField = $isEqualTo';
+  }
 }

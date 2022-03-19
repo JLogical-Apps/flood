@@ -9,4 +9,9 @@ class FromQuery<R extends Record> extends Query<R> {
         super();
 
   List<Object?> get queryProps => [recordType];
+
+  @override
+  String toString() {
+    return 'from $recordType';
+  }
 }

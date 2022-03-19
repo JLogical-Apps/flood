@@ -14,6 +14,7 @@ import 'package:lumberdash/lumberdash.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:synchronized/synchronized.dart';
 
+import '../query/request/first_or_null_query_request.dart';
 import 'entity_repository.dart';
 
 mixin WithCacheEntityRepository on EntityRepository {
@@ -25,6 +26,8 @@ mixin WithCacheEntityRepository on EntityRepository {
 
   QueryExecutor getQueryExecutor();
 
+  Future<void> onWithoutCacheQueryExecuted(QueryRequest queryRequest) async {}
+
   void saveToCache(Entity entity) {
     _stateByIdCache.save(entity.id!, entity.state);
   }
@@ -34,8 +37,8 @@ mixin WithCacheEntityRepository on EntityRepository {
     final id = entity.id ?? (throw Exception('Cannot save entity that has a null id!'));
 
     await entity.beforeSave();
-    await _saveLock.synchronized(() => super.save(entity));
     _stateByIdCache.save(id, entity.state);
+    await _saveLock.synchronized(() => super.save(entity));
     await entity.afterSave();
   }
 
@@ -112,7 +115,7 @@ mixin WithCacheEntityRepository on EntityRepository {
     }
 
     FutureValue<T> initialValue;
-    if (hasBeenRunBefore(queryRequest)) {
+    if (hasBeenRunBefore(queryRequest) || _isCachedFirstOrNull(queryRequest)) {
       initialValue = FutureValue.loaded(value: executeQuerySync(queryRequest));
     } else {
       initialValue = FutureValue.initial();
@@ -128,7 +131,7 @@ mixin WithCacheEntityRepository on EntityRepository {
 
   @override
   Future<T> onExecuteQuery<R extends Record, T>(QueryRequest<R, T> queryRequest) async {
-    if (!queryRequest.isWithoutCache() && !hasBeenRunBefore(queryRequest)) {
+    if (!queryRequest.isWithoutCache() && !hasBeenRunBefore(queryRequest) && !_isCachedFirstOrNull(queryRequest)) {
       queryRequest = queryRequest.withoutCache();
     }
 
@@ -142,6 +145,7 @@ mixin WithCacheEntityRepository on EntityRepository {
       completer = Completer();
       _queryCompleterByQueryRequest[queryRequest] = completer;
 
+      await onWithoutCacheQueryExecuted(queryRequest);
       logMessage('Using without-cache query [$queryRequest]');
       result = await getQueryExecutor().executeQuery(queryRequest);
       markHasBeenRun(queryRequest);
@@ -161,5 +165,14 @@ mixin WithCacheEntityRepository on EntityRepository {
 
   Map<String, State> getStateById() {
     return _stateByIdCache.valueByKey;
+  }
+
+  bool _isCachedFirstOrNull(QueryRequest queryRequest) {
+    if (queryRequest is FirstOrNullQueryRequest && !queryRequest.orderMatters) {
+      final result = executeQuerySync(queryRequest);
+      return result != null;
+    }
+
+    return false;
   }
 }

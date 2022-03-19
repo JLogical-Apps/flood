@@ -22,4 +22,9 @@ class MappedQueryRequest<R extends Record, T, S> extends DerivedQueryRequest<R, 
   ValueStream<FutureValue<S>> deriveQueryResultX(QueryExecutorX queryExecutorX) {
     return queryExecutorX.executeQueryX(queryRequest).mapWithValue((result) => result.mapIfPresent(mapper));
   }
+
+  @override
+  String toString() {
+    return '$queryRequest | mapped by ($mapper)';
+  }
 }

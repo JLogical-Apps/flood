@@ -1,5 +1,7 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/request/without_cache_query_request.dart';
+
+import '../../query/request/query_request.dart';
+import '../../record/record.dart';
 
 mixin WithQueryCacheManager {
   /// Queries that have been executed already.
@@ -7,7 +9,7 @@ mixin WithQueryCacheManager {
 
   /// Returns whether the query has been executed before.
   bool hasBeenRunBefore<R extends Record, T>(QueryRequest<R, T> queryRequest) {
-    return _executedQueryRequests.any((qr) => qr.equalsIgnoringCache(queryRequest));
+    return _executedQueryRequests.any((qr) => qr.containsOrEquals(queryRequest));
   }
 
   void markHasBeenRun(QueryRequest queryRequest) {

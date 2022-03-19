@@ -8,4 +8,9 @@ class ContainsQueryPredicate extends AbstractQueryPredicate {
   const ContainsQueryPredicate({required this.stateField, required this.contains});
 
   List<Object?> get props => [stateField, contains];
+
+  @override
+  String toString() {
+    return '$stateField contains $contains';
+  }
 }

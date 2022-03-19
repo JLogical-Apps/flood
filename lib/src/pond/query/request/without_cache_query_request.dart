@@ -9,4 +9,9 @@ class WithoutCacheQueryRequest<R extends Record, T> extends QueryRequest<R, T> {
 
   @override
   Query<R> get query => queryRequest.query;
+
+  @override
+  String toString() {
+    return queryRequest.toString();
+  }
 }

@@ -15,6 +15,10 @@ abstract class QueryRequest<R extends Record, T> extends Equatable {
 
   List<Object?> get queryRequestProps => [];
 
+  bool isSupertypeOf(QueryRequest queryRequest) {
+    return false;
+  }
+
   Future<T> get() {
     return AppContext.global.executeQuery(this);
   }
@@ -45,5 +49,44 @@ abstract class QueryRequest<R extends Record, T> extends Equatable {
         thisQueryRequest.runtimeType == queryRequest.runtimeType &&
             equals(queryRequestProps, queryRequest.queryRequestProps) &&
             thisQueryRequest.query.equalsIgnoringCache(queryRequest.query);
+  }
+
+  bool containsOrEquals(QueryRequest queryRequest) {
+    if (equalsIgnoringCache(queryRequest)) {
+      return true;
+    }
+
+    QueryRequest thisQueryRequest = this;
+    if (this is WithoutCacheQueryRequest) {
+      thisQueryRequest = (this as WithoutCacheQueryRequest).queryRequest;
+    }
+
+    if (queryRequest is WithoutCacheQueryRequest) {
+      queryRequest = queryRequest.queryRequest;
+    }
+
+    final compatibleQueryRequestType =
+        thisQueryRequest.runtimeType == queryRequest.runtimeType || thisQueryRequest.isSupertypeOf(queryRequest);
+    if (!compatibleQueryRequestType) {
+      return false;
+    }
+
+    final thisQueryChain = thisQueryRequest.query.getQueryChain();
+    final otherQueryChain = queryRequest.query.getQueryChain();
+
+    final compatibleQueries = thisQueryChain
+        .every((thisQuery) => otherQueryChain.any((query) => equals(thisQuery.queryProps, query.queryProps)));
+    if (!compatibleQueries) {
+      return false;
+    }
+
+    final anyMissingQueries = otherQueryChain.any((query) =>
+        query.mustBePresentInSuperQuery(thisQueryRequest) &&
+        !thisQueryChain.any((thisQuery) => equals(thisQuery.queryProps, query.queryProps)));
+    if (anyMissingQueries) {
+      return false;
+    }
+
+    return true;
   }
 }

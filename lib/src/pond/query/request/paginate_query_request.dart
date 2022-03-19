@@ -12,4 +12,9 @@ class PaginateQueryRequest<R extends Record> extends QueryRequest<R, QueryPagina
 
   @override
   List<Object?> get queryRequestProps => [limit];
+
+  @override
+  String toString() {
+    return '$query | paginate by $limit';
+  }
 }

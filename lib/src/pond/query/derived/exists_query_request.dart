@@ -26,4 +26,9 @@ class ExistsQueryRequest<R extends Record> extends DerivedQueryRequest<R, bool> 
         .executeQueryX(query.firstOrNull())
         .mapWithValue((maybeAnyEntity) => maybeAnyEntity.mapIfPresent((someEntity) => someEntity != null));
   }
+
+  @override
+  String toString() {
+    return '$query | exists';
+  }
 }

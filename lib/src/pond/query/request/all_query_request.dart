@@ -6,4 +6,13 @@ class AllQueryRequest<R extends Record> extends QueryRequest<R, List<R>> {
   final Query<R> query;
 
   AllQueryRequest({required this.query});
+
+  bool isSupertypeOf(QueryRequest queryRequest) {
+    return true;
+  }
+
+  @override
+  String toString() {
+    return '$query | all';
+  }
 }
