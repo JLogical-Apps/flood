@@ -17,6 +17,10 @@ class FirestoreEqualsQueryPredicateReducer
       return aggregate.where(equalsQueryPredicate.stateField, isNull: true);
     }
 
-    return aggregate.where(equalsQueryPredicate.stateField, isEqualTo: equalsQueryPredicate.isEqualTo);
+    var compareTo = equalsQueryPredicate.isEqualTo;
+    if (compareTo is DateTime) {
+      compareTo = compareTo.millisecondsSinceEpoch;
+    }
+    return aggregate.where(equalsQueryPredicate.stateField, isEqualTo: compareTo);
   }
 }

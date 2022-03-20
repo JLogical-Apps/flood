@@ -8,9 +8,11 @@ class FirestoreGreaterThanOrEqualToQueryPredicateReducer
   @override
   firestore.Query reduce({required firestore.Query aggregate, required AbstractQueryPredicate queryPredicate}) {
     final greaterThanOrEqualToPredicate = queryPredicate as GreaterThanOrEqualToQueryPredicate;
-    return aggregate.where(
-      greaterThanOrEqualToPredicate.stateField,
-      isGreaterThanOrEqualTo: greaterThanOrEqualToPredicate.isGreaterThanOrEqualTo,
-    );
+
+    var compareTo = greaterThanOrEqualToPredicate.isGreaterThanOrEqualTo;
+    if (compareTo is DateTime) {
+      compareTo = compareTo.millisecondsSinceEpoch;
+    }
+    return aggregate.where(greaterThanOrEqualToPredicate.stateField, isGreaterThanOrEqualTo: compareTo);
   }
 }
