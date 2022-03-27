@@ -9,11 +9,21 @@ import 'package:jlogical_utils/src/pond/repository/local/simple_local_repository
 import 'package:jlogical_utils/src/pond/repository/with_entity_repository_delegator.dart';
 
 import '../../modules/environment/environment.dart';
+import '../../query/query.dart';
 import '../entity_repository.dart';
 
 abstract class DefaultAbstractAdaptingRepository<E extends Entity<V>, V extends ValueObject>
     extends DefaultAbstractRepository<E, V> with WithEntityRepositoryDelegator {
   String get dataPath;
+
+  /// The name of the field that stores the union type of
+  String get unionTypeFieldName => Query.type;
+
+  /// Converts [type] (the name of a type that extends `E`) to a string to be queried/saved.
+  /// The state of extracted documents will find the first [type] in the list of handled types that has the same value.
+  String unionTypeConverter(String typeName) {
+    return typeName;
+  }
 
   late EntityRepository entityRepository = _getEntityRepository();
 
@@ -21,14 +31,14 @@ abstract class DefaultAbstractAdaptingRepository<E extends Entity<V>, V extends 
     switch (AppContext.global.environment) {
       case Environment.testing:
         return SimpleLocalRepository<E, V>(
-          additionalValueObjectRegistrations: valueObjectRegistrations,
-          additionalEntityRegistrations: entityRegistrations,
+          valueObjectRegistrations: valueObjectRegistrations,
+          entityRegistrations: entityRegistrations,
         );
       case Environment.device:
         return SimpleFileRepository<E, V>(
           dataPath: dataPath,
-          additionalValueObjectRegistrations: valueObjectRegistrations,
-          additionalEntityRegistrations: entityRegistrations,
+          valueObjectRegistrations: valueObjectRegistrations,
+          entityRegistrations: entityRegistrations,
         );
       case Environment.qa:
       case Environment.uat:
@@ -37,8 +47,10 @@ abstract class DefaultAbstractAdaptingRepository<E extends Entity<V>, V extends 
       case Environment.production:
         return SimpleFirestoreRepository<E, V>(
           dataPath: dataPath,
-          additionalValueObjectRegistrations: valueObjectRegistrations,
-          additionalEntityRegistrations: entityRegistrations,
+          unionTypeFieldName: unionTypeFieldName,
+          unionTypeConverterGetter: unionTypeConverter,
+          valueObjectRegistrations: valueObjectRegistrations,
+          entityRegistrations: entityRegistrations,
         );
       default:
         throw UnimplementedError();

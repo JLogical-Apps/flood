@@ -6,7 +6,7 @@ import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class EntityRepository extends AppModule with WithQueryCacheManager implements QueryExecutorX {
-  List<Type> get handledEntityTypes;
+  List<Type> get handledEntityTypes => entityRegistrations.map((registration) => registration.entityType).toList();
 
   Future<String> generateId(Entity entity);
 

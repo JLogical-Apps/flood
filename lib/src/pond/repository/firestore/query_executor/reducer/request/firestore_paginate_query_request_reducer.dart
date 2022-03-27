@@ -12,10 +12,17 @@ import 'abstract_firestore_query_request_reducer.dart';
 
 class FirestorePaginateQueryRequestReducer<R extends Record>
     extends AbstractFirestoreQueryRequestReducer<PaginateQueryRequest<R>, R, QueryPaginationResultController<R>> {
+  final String unionTypeFieldName;
   final Type? inferredType;
-  final void Function(Entity entity) onEntityInflated;
+  final String Function(String unionTypeValue) typeNameFromUnionTypeValueGetter;
+  final Future Function(Entity entity) onEntityInflated;
 
-  FirestorePaginateQueryRequestReducer({required this.inferredType, required this.onEntityInflated});
+  FirestorePaginateQueryRequestReducer({
+    required this.unionTypeFieldName,
+    required this.inferredType,
+    required this.typeNameFromUnionTypeValueGetter,
+    required this.onEntityInflated,
+  });
 
   @override
   Future<QueryPaginationResultController<R>> reduce({
@@ -47,14 +54,14 @@ class FirestorePaginateQueryRequestReducer<R extends Record>
             State.extractFromOrNull(
               doc.data(),
               idOverride: doc.id,
-              typeFallback: inferredType?.toString(),
+              typeFallback: inferredType?.toString() ?? typeNameFromUnionTypeValueGetter(doc[unionTypeFieldName]),
             ) ??
             (throw Exception('Cannot get state from Firestore data! [${doc.data()}]')))
         .map((state) => Entity.fromState(state))
         .map((entity) => entity as R)
         .toList();
 
-    records.forEach((r) => onEntityInflated(r as Entity));
+    await Future.wait(records.map((r) => onEntityInflated(r as Entity)));
 
     return QueryPaginationResult<R>(
       results: records,

@@ -6,10 +6,14 @@ import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reduc
 
 class FirestoreFromQueryReducer extends AbstractQueryReducer<FromQuery, firestore.Query> {
   final String collectionPath;
+  final String unionTypeFieldName;
+  final String Function(String typeName) unionTypeConverter;
   final Type? inferredType;
 
   const FirestoreFromQueryReducer({
     required this.collectionPath,
+    required this.unionTypeFieldName,
+    required this.unionTypeConverter,
     this.inferredType,
   });
 
@@ -23,8 +27,8 @@ class FirestoreFromQueryReducer extends AbstractQueryReducer<FromQuery, firestor
 
     final descendants = AppContext.global.getDescendants(query.recordType);
     final types = {...descendants, query.recordType};
-    final typeNames = types.map((type) => type.toString()).toList();
+    final typeNames = types.map((type) => unionTypeConverter(type.toString())).toList();
 
-    return collection.where(Query.type, whereIn: typeNames);
+    return collection.where(unionTypeFieldName, whereIn: typeNames);
   }
 }

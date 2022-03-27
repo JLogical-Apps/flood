@@ -1,7 +1,5 @@
 import '../../repository/adapting/default_adapting_repository.dart';
 import '../../repository/entity_repository.dart';
-import '../../repository/file/simple_file_repository.dart';
-import '../../repository/local/simple_local_repository.dart';
 import '../environment/environment.dart';
 import 'version_usage.dart';
 import 'version_usage_entity.dart';
@@ -23,16 +21,9 @@ class VersionUsageRepository extends DefaultAdaptingRepository<VersionUsageEntit
   EntityRepository getRepository(Environment environment) {
     switch (environment) {
       case Environment.testing:
-        return SimpleLocalRepository<VersionUsageEntity, VersionUsage>(
-          onCreateEntity: createEntity,
-          onCreateValueObject: createValueObject,
-        );
+        return getLocalRepository();
       default:
-        return SimpleFileRepository<VersionUsageEntity, VersionUsage>(
-          dataPath: dataPath,
-          onCreateEntity: createEntity,
-          onCreateValueObject: createValueObject,
-        );
+        return getFileRepository();
     }
   }
 }

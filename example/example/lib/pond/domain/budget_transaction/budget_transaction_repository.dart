@@ -13,6 +13,20 @@ class BudgetTransactionRepository
   String get dataPath => 'transactions';
 
   @override
+  String get unionTypeFieldName => 'runtimeType';
+
+  @override
+  String unionTypeConverter(String typeName) {
+    if (typeName == '$EnvelopeTransactionEntity') {
+      return 'envelope';
+    } else if (typeName == '$TransferTransactionEntity') {
+      return 'transfer';
+    }
+
+    return 'budgetTransaction';
+  }
+
+  @override
   List<ValueObjectRegistration> get valueObjectRegistrations => [
         ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),
         ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(

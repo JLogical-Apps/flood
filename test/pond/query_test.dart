@@ -382,6 +382,9 @@ class LocalBudgetTransactionRepository
         EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(() => EnvelopeTransactionEntity()),
         EntityRegistration<TransferTransactionEntity, TransferTransaction>(() => TransferTransactionEntity()),
       ];
+
+  @override
+  List<Type> get handledEntityTypes => throw UnimplementedError();
 }
 
 class LocalLuckyNumbersRepository extends DefaultLocalRepository<LuckyNumbersEntity, LuckyNumbers> {

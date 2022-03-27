@@ -20,13 +20,25 @@ import 'reducer/request/firestore_without_cache_query_request_reducer.dart';
 class FirestoreQueryExecutor with WithResolverQueryExecutor<firestore.Query> implements QueryExecutor {
   final String collectionPath;
   final Future Function(Entity entity) onEntityInflated;
+  final String unionTypeFieldName;
+  final String Function(String typeName) unionTypeConverter;
+  final List<Type> validTypes;
   final Type? inferredType;
 
-  FirestoreQueryExecutor({required this.collectionPath, required this.onEntityInflated, this.inferredType});
+  FirestoreQueryExecutor({
+    required this.collectionPath,
+    required this.onEntityInflated,
+    required this.unionTypeFieldName,
+    required this.unionTypeConverter,
+    required this.validTypes,
+    this.inferredType,
+  });
 
   List<AbstractQueryReducer<Query, firestore.Query>> getQueryReducers(QueryRequest queryRequest) => [
         FirestoreFromQueryReducer(
           collectionPath: collectionPath,
+          unionTypeFieldName: unionTypeFieldName,
+          unionTypeConverter: unionTypeConverter,
           inferredType: inferredType,
         ),
         FirestoreWhereQueryReducer(),
@@ -36,10 +48,29 @@ class FirestoreQueryExecutor with WithResolverQueryExecutor<firestore.Query> imp
 
   List<AbstractFirestoreQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
       getQueryRequestReducers<R extends Record>() => [
-            FirestoreAllQueryRequestReducer<R>(inferredType: inferredType, onEntityInflated: onEntityInflated),
-            FirestoreFirstOrNullQueryRequestReducer<R>(inferredType: inferredType, onEntityInflated: onEntityInflated),
-            FirestorePaginateQueryRequestReducer<R>(inferredType: inferredType, onEntityInflated: onEntityInflated),
+            FirestoreAllQueryRequestReducer<R>(
+              unionTypeFieldName: unionTypeFieldName,
+              typeNameFromUnionTypeValueGetter: getTypeNameFromUnionTypeValue,
+              inferredType: inferredType,
+              onEntityInflated: onEntityInflated,
+            ),
+            FirestoreFirstOrNullQueryRequestReducer<R>(
+              unionTypeFieldName: unionTypeFieldName,
+              typeNameFromUnionTypeValueGetter: getTypeNameFromUnionTypeValue,
+              inferredType: inferredType,
+              onEntityInflated: onEntityInflated,
+            ),
+            FirestorePaginateQueryRequestReducer<R>(
+              unionTypeFieldName: unionTypeFieldName,
+              typeNameFromUnionTypeValueGetter: getTypeNameFromUnionTypeValue,
+              inferredType: inferredType,
+              onEntityInflated: onEntityInflated,
+            ),
             FirestoreWithoutCacheQueryRequestReducer<R>(
                 queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver()),
           ];
+
+  String getTypeNameFromUnionTypeValue(String unionTypeValue) {
+    return validTypes.firstWhere((type) => unionTypeConverter(type.toString()) == unionTypeValue).toString();
+  }
 }

@@ -3,6 +3,7 @@ import 'package:jlogical_utils/src/pond/context/registration/value_object_regist
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
 
+import '../../query/query.dart';
 import 'default_abstract_firestore_repository.dart';
 
 class SimpleFirestoreRepository<E extends Entity<V>, V extends ValueObject>
@@ -10,31 +11,31 @@ class SimpleFirestoreRepository<E extends Entity<V>, V extends ValueObject>
   @override
   final String dataPath;
 
-  Type get inferredType => E;
+  /// The name of the field that stores the union type of
+  final String unionTypeFieldName;
 
-  final E Function()? onCreateEntity;
-  final V Function()? onCreateValueObject;
+  /// Converts [type] (the name of a type that extends `E`) to a string to be queried/saved.
+  /// The state of extracted documents will find the first [type] in the list of handled types that has the same value.
+  final String Function(String typeName) unionTypeConverterGetter;
 
-  final List<ValueObjectRegistration>? additionalValueObjectRegistrations;
-  final List<EntityRegistration>? additionalEntityRegistrations;
+  final Type? inferredType;
+
+  final List<ValueObjectRegistration> valueObjectRegistrations;
+  final List<EntityRegistration> entityRegistrations;
 
   SimpleFirestoreRepository({
     required this.dataPath,
-    this.onCreateEntity,
-    this.onCreateValueObject,
-    this.additionalValueObjectRegistrations,
-    this.additionalEntityRegistrations,
+    this.unionTypeFieldName: Query.type,
+    this.unionTypeConverterGetter: _defaultUnionTypeConverterGetter,
+    this.inferredType,
+    required this.valueObjectRegistrations,
+    required this.entityRegistrations,
   });
 
   @override
-  List<ValueObjectRegistration> get valueObjectRegistrations => [
-        if (onCreateValueObject != null) ValueObjectRegistration<V, V?>(onCreateValueObject),
-        ...?additionalValueObjectRegistrations,
-      ];
+  String unionTypeConverter(String typeName) => unionTypeConverterGetter(typeName);
+}
 
-  @override
-  List<EntityRegistration> get entityRegistrations => [
-        if (onCreateEntity != null) EntityRegistration<E, V>(onCreateEntity),
-        ...?additionalEntityRegistrations,
-      ];
+String _defaultUnionTypeConverterGetter(String typeName) {
+  return typeName;
 }

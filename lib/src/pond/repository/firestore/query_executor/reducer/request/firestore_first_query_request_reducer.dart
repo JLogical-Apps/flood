@@ -9,10 +9,17 @@ import 'abstract_firestore_query_request_reducer.dart';
 
 class FirestoreFirstOrNullQueryRequestReducer<R extends Record>
     extends AbstractFirestoreQueryRequestReducer<FirstOrNullQueryRequest<R>, R, R?> {
+  final String unionTypeFieldName;
   final Type? inferredType;
-  final void Function(Entity entity) onEntityInflated;
+  final String Function(String unionTypeValue) typeNameFromUnionTypeValueGetter;
+  final Future Function(Entity entity) onEntityInflated;
 
-  FirestoreFirstOrNullQueryRequestReducer({required this.inferredType, required this.onEntityInflated});
+  FirestoreFirstOrNullQueryRequestReducer({
+    required this.unionTypeFieldName,
+    required this.inferredType,
+    required this.typeNameFromUnionTypeValueGetter,
+    required this.onEntityInflated,
+  });
 
   @override
   Future<R?> reduce({
@@ -25,7 +32,7 @@ class FirestoreFirstOrNullQueryRequestReducer<R extends Record>
             State.extractFromOrNull(
               doc.data(),
               idOverride: doc.id,
-              typeFallback: inferredType?.toString(),
+              typeFallback: inferredType?.toString() ?? typeNameFromUnionTypeValueGetter(doc[unionTypeFieldName]),
             ) ??
             (throw Exception('Cannot get state from Firestore data! [${doc.data()}]')))
         .map((state) => Entity.fromState(state))
@@ -33,7 +40,7 @@ class FirestoreFirstOrNullQueryRequestReducer<R extends Record>
         .firstOrNull;
 
     if (record != null) {
-      onEntityInflated(record as Entity);
+      await onEntityInflated(record as Entity);
     }
 
     return record;
