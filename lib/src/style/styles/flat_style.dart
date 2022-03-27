@@ -1267,16 +1267,17 @@ class FlatStyle extends Style {
   }
 
   Future<void> showMessage({required BuildContext context, required StyledMessage message}) async {
+    final backgroundColor = message.backgroundColorOverride ?? initialStyleContext.emphasisColorSoft;
     await ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(
           content: StyleContextProvider(
-            styleContext: styleContextFromBackground(initialStyleContext.emphasisColorSoft),
+            styleContext: styleContextFromBackground(backgroundColor),
             child: StyledBodyText(
               message.messageText,
             ),
           ),
-          backgroundColor: initialStyleContext.emphasisColorSoft,
-          duration: Duration(seconds: 2),
+          backgroundColor: backgroundColor,
+          duration: message.showDuration,
         ))
         .closed;
   }
