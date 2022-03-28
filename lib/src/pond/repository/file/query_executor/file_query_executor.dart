@@ -14,6 +14,7 @@ import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'reducer/query/file_from_query_reducer.dart';
 import 'reducer/request/abstract_file_query_request_reducer.dart';
 import 'reducer/request/file_all_query_request_reducer.dart';
+import 'reducer/request/file_all_raw_query_request_reducer.dart';
 import 'reducer/request/file_first_query_request_reducer.dart';
 import 'reducer/request/file_paginate_query_request_reducer.dart';
 import 'reducer/request/file_without_cache_query_request_reducer.dart';
@@ -35,6 +36,7 @@ class FileQueryExecutor with WithResolverQueryExecutor<Iterable<Record>> impleme
   List<AbstractFileQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
       getQueryRequestReducers<R extends Record>() => [
             FileAllQueryRequestReducer<R>(),
+            FileAllRawQueryRequestReducer<R>(),
             FileFirstOrNullQueryRequestReducer<R>(),
             FilePaginateQueryRequestReducer<R>(),
             FileWithoutCacheQueryRequestReducer<R>(

@@ -5,15 +5,15 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 class EnvelopeEntity extends Entity<Envelope> {
   @override
   Future<void> onInitialize() async {
-    _ensureColorIsSet();
+    await _ensureColorIsSet();
   }
 
   Future<void> _ensureColorIsSet() async {
     if (value.colorProperty.value == null) {
       final budgetId = value.budgetProperty.value;
       final budgetEnvelopes =
-          await Query.from<EnvelopeEntity>().where(Envelope.budgetField, isEqualTo: budgetId).all().get();
-      var index = budgetEnvelopes.indexOf(this);
+          await Query.from<EnvelopeEntity>().where(Envelope.budgetField, isEqualTo: budgetId).all().raw().get();
+      var index = budgetEnvelopes.indexOf(state);
 
       if (index == -1) {
         index = budgetEnvelopes.length;
@@ -34,6 +34,8 @@ class EnvelopeEntity extends Entity<Envelope> {
       value = Envelope()
         ..copyFrom(value)
         ..colorProperty.value = orderedColors[index % orderedColors.length].value;
+
+      await save();
     }
   }
 }

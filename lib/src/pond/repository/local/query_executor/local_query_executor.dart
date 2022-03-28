@@ -9,6 +9,7 @@ import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/query/local_without_cache_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/abstract_local_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_all_query_request_reducer.dart';
+import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_all_raw_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_paginate_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
@@ -31,6 +32,7 @@ class LocalQueryExecutor with WithSyncResolverQueryExecutor<Iterable<Record>> im
   List<AbstractLocalQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
       getSyncQueryRequestReducers<R extends Record>() => [
             LocalAllQueryRequestReducer<R>(),
+            LocalAllRawQueryRequestReducer<R>(),
             LocalFirstOrNullQueryRequestReducer<R>(),
             LocalPaginateQueryRequestReducer<R>(),
             LocalWithoutCacheQueryRequestReducer<R>(
