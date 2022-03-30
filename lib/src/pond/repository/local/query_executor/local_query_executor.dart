@@ -13,16 +13,19 @@ import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_paginate_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
+import '../../../record/entity.dart';
 import 'reducer/query/local_from_query_reducer.dart';
 import 'reducer/request/local_first_query_request_reducer.dart';
 import 'reducer/request/local_without_cache_query_request_reducer.dart';
 
-class LocalQueryExecutor with WithSyncResolverQueryExecutor<Iterable<Record>> implements QueryExecutor {
+class LocalQueryExecutor with WithSyncResolverQueryExecutor<Iterable<State>> implements QueryExecutor {
   final Map<String, State> stateById;
 
-  const LocalQueryExecutor({required this.stateById});
+  final Future<void> Function(Entity entity) onEntityInflated;
 
-  List<AbstractSyncQueryReducer<Query, Iterable<Record>>> getSyncQueryReducers(QueryRequest queryRequest) => [
+  const LocalQueryExecutor({required this.stateById, this.onEntityInflated: _defaultOnEntityInflated});
+
+  List<AbstractSyncQueryReducer<Query, Iterable<State>>> getSyncQueryReducers(QueryRequest queryRequest) => [
         LocalFromQueryReducer(stateById: stateById),
         LocalWhereQueryReducer(),
         LocalOrderByQueryReducer(),
@@ -31,11 +34,13 @@ class LocalQueryExecutor with WithSyncResolverQueryExecutor<Iterable<Record>> im
 
   List<AbstractLocalQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
       getSyncQueryRequestReducers<R extends Record>() => [
-            LocalAllQueryRequestReducer<R>(),
+            LocalAllQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
             LocalAllRawQueryRequestReducer<R>(),
-            LocalFirstOrNullQueryRequestReducer<R>(),
-            LocalPaginateQueryRequestReducer<R>(),
+            LocalFirstOrNullQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
+            LocalPaginateQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
             LocalWithoutCacheQueryRequestReducer<R>(
                 queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver<R>()),
           ];
+
+  static Future<void> _defaultOnEntityInflated(Entity entity) async {}
 }

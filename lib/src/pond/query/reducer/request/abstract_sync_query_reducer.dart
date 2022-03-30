@@ -7,8 +7,12 @@ import 'package:jlogical_utils/src/pond/record/record.dart';
 abstract class AbstractSyncQueryRequestReducer<QR extends QueryRequest<R, T>, R extends Record, T, C>
     extends AbstractQueryRequestReducer<QR, R, T, C> {
   Future<T> reduce({required C accumulation, required QR queryRequest}) async {
-    return reduceSync(accumulation: accumulation, queryRequest: queryRequest);
+    final value = reduceSync(accumulation: accumulation, queryRequest: queryRequest);
+    await inflate(value);
+    return value;
   }
+
+  Future<void> inflate(T output);
 
   T reduceSync({required C accumulation, required QR queryRequest});
 }

@@ -1,19 +1,19 @@
 import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/contains_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_query_predicate_reducer.dart';
-import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/state/state.dart';
 
 class FileContainsQueryPredicateReducer
-    extends AbstractQueryPredicateReducer<ContainsQueryPredicate, Iterable<Record>> {
+    extends AbstractQueryPredicateReducer<ContainsQueryPredicate, Iterable<State>> {
   @override
-  Iterable<Record> reduce({required Iterable<Record> aggregate, required AbstractQueryPredicate queryPredicate}) {
+  Iterable<State> reduce({required Iterable<State> aggregate, required AbstractQueryPredicate queryPredicate}) {
     final containsQueryPredicate = queryPredicate as ContainsQueryPredicate;
     return aggregate.where((record) => _predicatePasses(containsQueryPredicate, record));
   }
 
-  bool _predicatePasses(ContainsQueryPredicate queryPredicate, Record record) {
+  bool _predicatePasses(ContainsQueryPredicate queryPredicate, State state) {
     final stateField = queryPredicate.stateField;
-    final stateValues = record.state.fullValues;
+    final stateValues = state.fullValues;
 
     if (!stateValues.containsKey(stateField)) {
       return false;

@@ -8,9 +8,12 @@ class FileAllRawQueryRequestReducer<R extends Record>
     extends AbstractFileQueryRequestReducer<AllRawQueryRequest<R>, R, List<State>> {
   @override
   List<State> reduceSync({
-    required Iterable<Record> accumulation,
+    required Iterable<State> accumulation,
     required AllRawQueryRequest<R> queryRequest,
   }) {
-    return accumulation.map((record) => record.state).toList();
+    return accumulation.toList();
   }
+
+  @override
+  Future<void> inflate(List<State> output) async {}
 }

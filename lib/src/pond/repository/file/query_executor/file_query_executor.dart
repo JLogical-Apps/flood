@@ -11,6 +11,7 @@ import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/q
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/query/file_without_cache_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
+import '../../../record/entity.dart';
 import 'reducer/query/file_from_query_reducer.dart';
 import 'reducer/request/abstract_file_query_request_reducer.dart';
 import 'reducer/request/file_all_query_request_reducer.dart';
@@ -19,15 +20,15 @@ import 'reducer/request/file_first_query_request_reducer.dart';
 import 'reducer/request/file_paginate_query_request_reducer.dart';
 import 'reducer/request/file_without_cache_query_request_reducer.dart';
 
-class FileQueryExecutor with WithResolverQueryExecutor<Iterable<Record>> implements QueryExecutor {
+class FileQueryExecutor with WithResolverQueryExecutor<Iterable<State>> implements QueryExecutor {
   final Directory baseDirectory;
-  final Future<State> Function(String id, bool withoutCache) stateGetter;
+  final Future<State> Function(String id) stateGetter;
+  final Future<void> Function(Entity entity) onEntityInflated;
 
-  FileQueryExecutor({required this.baseDirectory, required this.stateGetter});
+  FileQueryExecutor({required this.baseDirectory, required this.stateGetter, required this.onEntityInflated});
 
-  List<AbstractQueryReducer<Query, Iterable<Record>>> getQueryReducers(QueryRequest queryRequest) => [
-        FileFromQueryReducer(
-            baseDirectory: baseDirectory, stateGetter: (id) => stateGetter(id, queryRequest.isWithoutCache())),
+  List<AbstractQueryReducer<Query, Iterable<State>>> getQueryReducers(QueryRequest queryRequest) => [
+        FileFromQueryReducer(baseDirectory: baseDirectory, stateGetter: (id) => stateGetter(id)),
         FileWhereQueryReducer(),
         FileOrderByQueryReducer(),
         FileWithoutCacheQueryReducer(),
@@ -35,11 +36,12 @@ class FileQueryExecutor with WithResolverQueryExecutor<Iterable<Record>> impleme
 
   List<AbstractFileQueryRequestReducer<QueryRequest<R, dynamic>, R, dynamic>>
       getQueryRequestReducers<R extends Record>() => [
-            FileAllQueryRequestReducer<R>(),
+            FileAllQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
             FileAllRawQueryRequestReducer<R>(),
-            FileFirstOrNullQueryRequestReducer<R>(),
-            FilePaginateQueryRequestReducer<R>(),
+            FileFirstOrNullQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
+            FilePaginateQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
             FileWithoutCacheQueryRequestReducer<R>(
-                queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver()),
+              queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver(),
+            ),
           ];
 }

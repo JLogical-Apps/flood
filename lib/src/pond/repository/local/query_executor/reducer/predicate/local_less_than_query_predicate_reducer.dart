@@ -1,19 +1,19 @@
 import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/less_than_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_query_predicate_reducer.dart';
-import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/state/state.dart';
 
 class LocalLessThanQueryPredicateReducer
-    extends AbstractQueryPredicateReducer<LessThanQueryPredicate, Iterable<Record>> {
+    extends AbstractQueryPredicateReducer<LessThanQueryPredicate, Iterable<State>> {
   @override
-  Iterable<Record> reduce({required Iterable<Record> aggregate, required AbstractQueryPredicate queryPredicate}) {
+  Iterable<State> reduce({required Iterable<State> aggregate, required AbstractQueryPredicate queryPredicate}) {
     final lessThanOrEqualToPredicate = queryPredicate as LessThanQueryPredicate;
     return aggregate.where((record) => _predicatePasses(lessThanOrEqualToPredicate, record));
   }
 
-  bool _predicatePasses(LessThanQueryPredicate queryPredicate, Record record) {
+  bool _predicatePasses(LessThanQueryPredicate queryPredicate, State state) {
     final stateField = queryPredicate.stateField;
-    final stateValues = record.state.fullValues;
+    final stateValues = state.fullValues;
 
     if (!stateValues.containsKey(stateField)) {
       return false;

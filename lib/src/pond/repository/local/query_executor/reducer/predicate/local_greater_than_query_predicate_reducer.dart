@@ -1,19 +1,19 @@
 import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/greater_than_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_query_predicate_reducer.dart';
-import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/state/state.dart';
 
 class LocalGreaterThanQueryPredicateReducer
-    extends AbstractQueryPredicateReducer<GreaterThanQueryPredicate, Iterable<Record>> {
+    extends AbstractQueryPredicateReducer<GreaterThanQueryPredicate, Iterable<State>> {
   @override
-  Iterable<Record> reduce({required Iterable<Record> aggregate, required AbstractQueryPredicate queryPredicate}) {
+  Iterable<State> reduce({required Iterable<State> aggregate, required AbstractQueryPredicate queryPredicate}) {
     final greaterThanPredicate = queryPredicate as GreaterThanQueryPredicate;
     return aggregate.where((record) => _predicatePasses(greaterThanPredicate, record));
   }
 
-  bool _predicatePasses(GreaterThanQueryPredicate queryPredicate, Record record) {
+  bool _predicatePasses(GreaterThanQueryPredicate queryPredicate, State state) {
     final stateField = queryPredicate.stateField;
-    final stateValues = record.state.fullValues;
+    final stateValues = state.fullValues;
 
     if (!stateValues.containsKey(stateField)) {
       return false;

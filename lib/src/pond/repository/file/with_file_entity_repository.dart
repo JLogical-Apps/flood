@@ -32,14 +32,18 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
 
   @override
   Future<Entity?> getOrNull(String id, {bool withoutCache: false}) async {
+    final state = await getStateOrNull(id);
+    return state.mapIfNonNull((inflatedState) => Entity.fromStateOrNull(inflatedState));
+  }
+
+  Future<State?> getStateOrNull(String id) async {
     final file = _getFile(id);
     if (!await file.exists()) {
       return null;
     }
 
     final contents = await file.readAsString();
-    return guard(() => statePersister.inflate(contents), onError: (e) => print(e))
-        .mapIfNonNull((inflatedState) => Entity.fromStateOrNull(inflatedState));
+    return guard(() => statePersister.inflate(contents), onError: (e) => print(e));
   }
 
   @override
@@ -48,14 +52,19 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
     await _getFile(id).delete();
   }
 
+  @override
   QueryExecutor getQueryExecutor() {
     return FileQueryExecutor(
       baseDirectory: _baseDirectory,
-      stateGetter: (id, withoutCache) async => (await get(id, withoutCache: withoutCache)).state,
+      stateGetter: (id) async => (await getStateOrNull(id)) ?? (throw Exception('Cannot find $id')),
+      onEntityInflated: (entity) async {
+        saveToCache(entity);
+        await entity.onInitialize();
+      },
     );
   }
 
-  /// Called when the app is "force-reset".
+  @override
   Future<void> onReset(AppContext context) async {
     await super.onReset(context);
 
