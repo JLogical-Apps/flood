@@ -153,7 +153,7 @@ mixin WithCacheEntityRepository on EntityRepository {
       completer.complete(result);
       _queryCompleterByQueryRequest.remove(queryRequest);
     } else {
-      result = await LocalQueryExecutor(stateById: _stateByIdCache.valueByKey).executeQuery(queryRequest);
+      result = executeQuerySync(queryRequest);
     }
 
     return result;

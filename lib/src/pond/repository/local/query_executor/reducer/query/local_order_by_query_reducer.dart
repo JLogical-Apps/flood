@@ -1,11 +1,11 @@
 import 'package:jlogical_utils/src/pond/query/order_by_query.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_sync_query_reducer.dart';
-import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/state/state.dart';
 
-class LocalOrderByQueryReducer extends AbstractSyncQueryReducer<OrderByQuery, Iterable<Record>> {
+class LocalOrderByQueryReducer extends AbstractSyncQueryReducer<OrderByQuery, Iterable<State>> {
   @override
-  Iterable<Record> reduceSync({required Iterable<Record>? accumulation, required Query query}) {
+  Iterable<State> reduceSync({required Iterable<State>? accumulation, required Query query}) {
     final orderByQuery = query as OrderByQuery;
     final orderByType = orderByQuery.orderByType;
     final sortField = orderByQuery.fieldName;
@@ -16,9 +16,9 @@ class LocalOrderByQueryReducer extends AbstractSyncQueryReducer<OrderByQuery, It
     return list;
   }
 
-  int _compare(Record a, Record b, String sortField) {
-    final valueA = a.state[sortField];
-    final valueB = b.state[sortField];
+  int _compare(State a, State b, String sortField) {
+    final valueA = a.fullValues[sortField];
+    final valueB = b.fullValues[sortField];
 
     if ((valueA is Comparable?) && (valueB is Comparable?)) {
       if (valueA == null && valueB == null) {

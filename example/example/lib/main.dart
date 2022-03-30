@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:example/firebase_options.dart';
 import 'package:example/model/model_page.dart';
 import 'package:example/pond/domain/budget/budget_repository.dart';
@@ -17,7 +19,12 @@ import 'pond/presentation/pond_login_page.dart';
 import 'repository/repository_page.dart';
 
 Future<void> main() async {
-  runApp(MyApp());
+  runZonedGuarded(() {
+    runApp(MyApp());
+  }, (err, stack) {
+    print(err);
+    print(stack);
+  });
 }
 
 class MyApp extends StatelessWidget {

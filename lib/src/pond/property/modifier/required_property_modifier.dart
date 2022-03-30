@@ -9,7 +9,7 @@ class RequiredPropertyModifier<T> extends PropertyModifier<T> {
         if (propertyValue == null) {
           throw ValidationException(
             failedValidator: context.property,
-            errorMessage: 'Null value in required property!',
+            errorMessage: 'Null value in required property! [$property]',
           );
         }
       });

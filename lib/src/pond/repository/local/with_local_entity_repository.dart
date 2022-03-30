@@ -26,6 +26,11 @@ mixin WithLocalEntityRepository on EntityRepository implements WithCacheEntityRe
   }
 
   QueryExecutor getQueryExecutor() {
-    return LocalQueryExecutor(stateById: getStateById());
+    return LocalQueryExecutor(
+      stateById: getStateById(),
+      onEntityInflated: (entity) async {
+       // await entity.onInitialize();
+      },
+    );
   }
 }
