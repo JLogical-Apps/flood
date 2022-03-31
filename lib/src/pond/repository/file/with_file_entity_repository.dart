@@ -30,12 +30,6 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
     await file.writeAsString(json, flush: true);
   }
 
-  @override
-  Future<Entity?> getOrNull(String id, {bool withoutCache: false}) async {
-    final state = await getStateOrNull(id);
-    return state.mapIfNonNull((inflatedState) => Entity.fromStateOrNull(inflatedState));
-  }
-
   Future<State?> getStateOrNull(String id) async {
     final file = _getFile(id);
     if (!await file.exists()) {

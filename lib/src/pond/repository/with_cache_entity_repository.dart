@@ -9,7 +9,6 @@ import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/local_query_executor.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/utils/stream_extensions.dart';
-import 'package:jlogical_utils/src/utils/util.dart';
 import 'package:lumberdash/lumberdash.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:synchronized/synchronized.dart';
@@ -21,7 +20,6 @@ mixin WithCacheEntityRepository on EntityRepository {
   final Cache<String, State> _stateByIdCache = Cache();
   final Lock _saveLock = Lock(reentrant: true);
 
-  final Map<String, Completer<State?>> _getCompleterById = {};
   final Map<QueryRequest, Completer<dynamic>> _queryCompleterByQueryRequest = {};
 
   QueryExecutor getQueryExecutor();
@@ -40,61 +38,6 @@ mixin WithCacheEntityRepository on EntityRepository {
     _stateByIdCache.save(id, entity.state);
     await _saveLock.synchronized(() => super.save(entity));
     await entity.afterSave();
-  }
-
-  @override
-  Future<Entity?> getOrNull(String id, {bool withoutCache: false}) async {
-    State? state;
-    bool fromSource = false;
-
-    if (!withoutCache) {
-      state ??= _stateByIdCache.get(id);
-    }
-
-    if (state == null) {
-      state ??= await _getOrNullFromSourceRepository(id);
-      if (state != null) {
-        fromSource = true;
-      }
-    }
-
-    final entity = state.mapIfNonNull((state) => Entity.fromStateOrNull(state));
-
-    if (fromSource) {
-      await entity?.onInitialize();
-    }
-
-    return entity;
-  }
-
-  Future<State?> _getOrNullFromSourceRepository(String id) async {
-    var completer = _getCompleterById[id];
-    if (completer != null) {
-      return await completer.future;
-    }
-
-    completer = Completer<State?>();
-    _getCompleterById[id] = completer;
-
-    final sourceState = (await super.getOrNull(id))?.state;
-
-    completer.complete(sourceState);
-    _getCompleterById.remove(id);
-
-    if (sourceState != null) {
-      _stateByIdCache.save(id, sourceState);
-    }
-
-    return sourceState;
-  }
-
-  ValueStream<FutureValue<Entity?>> getXOrNull(String id) {
-    if (!_stateByIdCache.exists(id)) {
-      get(id, withoutCache: true);
-    }
-    return _stateByIdCache.getX(id).mapWithValue(
-          (state) => state == null ? FutureValue.initial() : FutureValue.loaded(value: Entity.fromState(state)),
-        );
   }
 
   @override

@@ -12,15 +12,6 @@ mixin WithLocalEntityRepository on EntityRepository implements WithCacheEntityRe
   }
 
   @override
-  Future<Entity?> getOrNull(String id, {bool withoutCache: false}) async {
-    // Even when [withoutCache] is true, still use the cache.
-    if (withoutCache) {
-      return await getOrNull(id, withoutCache: false);
-    }
-    return null;
-  }
-
-  @override
   Future<void> delete(Entity entity) async {
     // Do nothing since cache takes care of it.
   }
@@ -29,7 +20,7 @@ mixin WithLocalEntityRepository on EntityRepository implements WithCacheEntityRe
     return LocalQueryExecutor(
       stateById: getStateById(),
       onEntityInflated: (entity) async {
-       // await entity.onInitialize();
+        await entity.onInitialize();
       },
     );
   }

@@ -1,9 +1,9 @@
-import 'package:jlogical_utils/src/pond/context/app_context.dart';
-import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/property/field_property.dart';
 import 'package:jlogical_utils/src/pond/property/with_global_type_serializer.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
+
+import '../query/query.dart';
 
 class ReferenceFieldProperty<E extends Entity> extends FieldProperty<String>
     with WithGlobalTypeSerializer
@@ -36,7 +36,7 @@ class ReferenceFieldProperty<E extends Entity> extends FieldProperty<String>
     if (referenceId == null) {
       return null;
     }
-    _reference = await AppContext.global.getOrNull<E>(referenceId);
+    _reference = await Query.getById<E>(referenceId).get();
     return _reference;
   }
 }

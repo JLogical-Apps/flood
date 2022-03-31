@@ -17,22 +17,22 @@ void main() {
 
     await envelopeEntity.create();
 
-    EnvelopeEntity? retrievedEnvelopeEntity = await AppContext.global.get<EnvelopeEntity>(envelopeEntity.id!);
+    var retrievedEnvelopeEntity = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get();
 
     expect(envelopeEntity, equals(retrievedEnvelopeEntity));
-    expect(envelopeEntity.state, equals(retrievedEnvelopeEntity.state));
+    expect(envelopeEntity.state, equals(retrievedEnvelopeEntity!.state));
 
     envelopeEntity.changeName('Giving');
     await envelopeEntity.save();
 
-    retrievedEnvelopeEntity = await AppContext.global.get<EnvelopeEntity>(envelopeEntity.id!);
+    retrievedEnvelopeEntity = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get();
 
     expect(envelopeEntity, equals(retrievedEnvelopeEntity));
-    expect(envelopeEntity.state, equals(retrievedEnvelopeEntity.state));
+    expect(envelopeEntity.state, equals(retrievedEnvelopeEntity!.state));
 
     await envelopeEntity.delete();
 
-    retrievedEnvelopeEntity = await AppContext.global.getOrNull<EnvelopeEntity>(envelopeEntity.id!);
+    retrievedEnvelopeEntity = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get();
     expect(retrievedEnvelopeEntity, isNull);
   });
 
@@ -46,8 +46,8 @@ void main() {
 
     final envelopeId = envelopeEntity.id!;
 
-    final envelopeX = AppContext.global.getXOrNull<EnvelopeEntity>(envelopeId);
-    var retrievedEnvelope = (await envelopeX.getCurrentValue()).get();
+    final envelopeX = AppContext.global.executeQueryX(Query.getById<EnvelopeEntity>(envelopeId));
+    var retrievedEnvelope = (await envelopeX.getCurrentValue()).get()!;
 
     expect(retrievedEnvelope, envelopeEntity);
     expect(retrievedEnvelope.state, envelopeEntity.state);
@@ -55,7 +55,7 @@ void main() {
     envelopeEntity.changeName('Giving');
     await envelopeEntity.save();
 
-    retrievedEnvelope = (await envelopeX.getCurrentValue()).get();
+    retrievedEnvelope = (await envelopeX.getCurrentValue()).get()!;
 
     expect(retrievedEnvelope, envelopeEntity);
     expect(retrievedEnvelope.state, envelopeEntity.state);

@@ -25,7 +25,7 @@ class PondBudgetPage extends HookWidget {
       Query.from<EnvelopeEntity>().where(Envelope.budgetField, isEqualTo: budgetId).all(),
     );
     final transactionsQueryController = useQuery(
-      Query.from<BudgetTransactionEntity>().where(BudgetTransaction.budgetField, isEqualTo: budgetId).paginate(),
+      Query.from<BudgetTransactionEntity>().where(BudgetTransaction.budgetField, isEqualTo: budgetId).paginate(limit: 2),
     );
 
     final budgetAmountX = useComputed(() => envelopesQueryController.model.valueX.mapWithValue(
@@ -97,76 +97,81 @@ class PondBudgetPage extends HookWidget {
                   ModelBuilder.styled(
                     model: transactionsQueryController.model,
                     builder: (QueryPaginationResultController<BudgetTransactionEntity> budgetTransactionsController) {
-                      return StyledCategory.medium(
-                        headerText: 'Transactions',
-                        actions: [
-                          if (envelopesQueryController.value is FutureValueLoaded)
-                            ActionItem(
-                              name: 'Create Transfer',
-                              description: 'Create new transfer',
-                              color: Colors.green,
-                              leading: Icon(Icons.swap_calls),
-                              onPerform: () async {
-                                final data = await StyledDialog.smartForm(context: context, children: [
-                                  StyledSmartOptionsField<EnvelopeEntity>(
-                                    name: 'from',
-                                    label: 'From',
-                                    options: [...envelopesQueryController.value.get()],
-                                    builder: (envelopeEntity) => StyledBodyText(
-                                      envelopeEntity?.value.nameProperty.value ?? 'None',
-                                      textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
-                                    ),
-                                  ),
-                                  StyledSmartOptionsField<EnvelopeEntity>(
-                                    name: 'to',
-                                    label: 'To',
-                                    options: [...envelopesQueryController.value.get()],
-                                    builder: (envelopeEntity) => StyledBodyText(
-                                      envelopeEntity?.value.nameProperty.value ?? 'None',
-                                      textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
-                                    ),
-                                  ),
-                                  StyledSmartTextField(
-                                    name: 'amount',
-                                    label: 'Amount',
-                                    validators: [
-                                      Validation.required(),
-                                      Validation.isCurrency(),
-                                    ],
-                                  ),
-                                ]).show(context);
+                      return HookBuilder(
+                        builder: (context) {
+                          final budgetTransactions = useValueStream(budgetTransactionsController.resultsX);
+                          return StyledCategory.medium(
+                            headerText: 'Transactions',
+                            actions: [
+                              if (envelopesQueryController.value is FutureValueLoaded)
+                                ActionItem(
+                                  name: 'Create Transfer',
+                                  description: 'Create new transfer',
+                                  color: Colors.green,
+                                  leading: Icon(Icons.swap_calls),
+                                  onPerform: () async {
+                                    final data = await StyledDialog.smartForm(context: context, children: [
+                                      StyledSmartOptionsField<EnvelopeEntity>(
+                                        name: 'from',
+                                        label: 'From',
+                                        options: [...envelopesQueryController.value.get()],
+                                        builder: (envelopeEntity) => StyledBodyText(
+                                          envelopeEntity?.value.nameProperty.value ?? 'None',
+                                          textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
+                                        ),
+                                      ),
+                                      StyledSmartOptionsField<EnvelopeEntity>(
+                                        name: 'to',
+                                        label: 'To',
+                                        options: [...envelopesQueryController.value.get()],
+                                        builder: (envelopeEntity) => StyledBodyText(
+                                          envelopeEntity?.value.nameProperty.value ?? 'None',
+                                          textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
+                                        ),
+                                      ),
+                                      StyledSmartTextField(
+                                        name: 'amount',
+                                        label: 'Amount',
+                                        validators: [
+                                          Validation.required(),
+                                          Validation.isCurrency(),
+                                        ],
+                                      ),
+                                    ]).show(context);
 
-                                if (data == null) {
-                                  return;
-                                }
+                                    if (data == null) {
+                                      return;
+                                    }
 
-                                final amountCents =
-                                    (data['amount'].toString().tryParseDoubleAfterClean()! * 100).round();
-                                final transferTransaction = TransferTransaction()
-                                  ..amountProperty.value = amountCents
-                                  ..fromProperty.reference = data['from']
-                                  ..toProperty.reference = data['to']
-                                  ..budgetProperty.value = budgetId;
-                                final transferTransactionEntity = TransferTransactionEntity()
-                                  ..value = transferTransaction;
-                                await transferTransactionEntity.create();
-                              },
-                            ),
-                        ],
-                        noChildrenWidget: StyledContentSubtitleText('No transactions'),
-                        children: [
-                          ...budgetTransactionsController.results.map((transactionEntity) => TransactionCard(
-                                transactionId: transactionEntity.id!,
-                                key: ValueKey(transactionEntity.id),
-                              )),
-                          if (budgetTransactionsController.canLoadMore)
-                            StyledButton.low(
-                              text: 'Load More',
-                              onTapped: () async {
-                                await budgetTransactionsController.loadMore();
-                              },
-                            ),
-                        ],
+                                    final amountCents =
+                                        (data['amount'].toString().tryParseDoubleAfterClean()! * 100).round();
+                                    final transferTransaction = TransferTransaction()
+                                      ..amountProperty.value = amountCents
+                                      ..fromProperty.reference = data['from']
+                                      ..toProperty.reference = data['to']
+                                      ..budgetProperty.value = budgetId;
+                                    final transferTransactionEntity = TransferTransactionEntity()
+                                      ..value = transferTransaction;
+                                    await transferTransactionEntity.create();
+                                  },
+                                ),
+                            ],
+                            noChildrenWidget: StyledContentSubtitleText('No transactions'),
+                            children: [
+                              ...budgetTransactions.map((transactionEntity) => TransactionCard(
+                                    transactionId: transactionEntity.id!,
+                                    key: ValueKey(transactionEntity.id),
+                                  )),
+                              if (budgetTransactionsController.canLoadMore)
+                                StyledButton.low(
+                                  text: 'Load More',
+                                  onTapped: () async {
+                                    await budgetTransactionsController.loadMore();
+                                  },
+                                ),
+                            ],
+                          );
+                        }
                       );
                     },
                   )

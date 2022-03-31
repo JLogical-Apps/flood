@@ -14,13 +14,6 @@ mixin WithEntityRepositoryDelegator implements EntityRepository {
   Future<void> save(Entity entity) => entityRepository.save(entity);
 
   @override
-  Future<Entity?> getOrNull(String id, {bool withoutCache: false}) =>
-      entityRepository.getOrNull(id, withoutCache: withoutCache);
-
-  @override
-  ValueStream<FutureValue<Entity?>> getXOrNull(String id) => entityRepository.getXOrNull(id);
-
-  @override
   Future<void> delete(Entity entity) => entityRepository.delete(entity);
 
   @override

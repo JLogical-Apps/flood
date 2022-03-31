@@ -42,27 +42,6 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithCacheEnti
   }
 
   @override
-  Future<Entity?> getOrNull(String id, {bool withoutCache: false}) async {
-    final doc = _collection.doc(id);
-    final snap = await doc.get(firestore.GetOptions(source: firestore.Source.server));
-
-    if (!snap.exists) {
-      return null;
-    }
-
-    final state = State.extractFromOrNull(
-      snap.data(),
-      idOverride: snap.id,
-      typeFallback: inferredType?.toString(),
-    );
-    if (state == null) {
-      return null;
-    }
-
-    return Entity.fromStateOrNull(state);
-  }
-
-  @override
   Future<void> delete(Entity entity) async {
     final id = entity.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
     final doc = _collection.doc(id);
