@@ -78,6 +78,11 @@ void main() {
     expect(withoutCacheQueriesExecuted, 2);
 
     await reset();
+    await Query.from<UserEntity>().where('email', isEqualTo: 'a@a.com').all().get();
+    await Query.from<UserEntity>().where('email', isEqualTo: 'b@b.com').all().get(); // Different queries.
+    expect(withoutCacheQueriesExecuted, 2);
+
+    await reset();
     await Query.from<UserEntity>().firstOrNull().get();
     await Query.from<UserEntity>().all().get(); // Do not use cache since all is greater in scope than .firstOrNull
     expect(withoutCacheQueriesExecuted, 2);
