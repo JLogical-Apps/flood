@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:equatable/src/equatable_utils.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/request/without_cache_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/without_cache_query.dart';
@@ -49,7 +49,7 @@ abstract class QueryRequest<R extends Record, T> extends Equatable {
 
     return identical(thisQueryRequest, queryRequest) ||
         thisQueryRequest.runtimeType == queryRequest.runtimeType &&
-            equals(queryRequestProps, queryRequest.queryRequestProps) &&
+            DeepCollectionEquality().equals(queryRequestProps, queryRequest.queryRequestProps) &&
             thisQueryRequest.query.equalsIgnoringCache(queryRequest.query);
   }
 
@@ -76,15 +76,15 @@ abstract class QueryRequest<R extends Record, T> extends Equatable {
     final thisQueryChain = thisQueryRequest.query.getQueryChain();
     final otherQueryChain = queryRequest.query.getQueryChain();
 
-    final compatibleQueries = thisQueryChain
-        .every((thisQuery) => otherQueryChain.any((query) => equals(thisQuery.queryProps, query.queryProps)));
+    final compatibleQueries = thisQueryChain.every((thisQuery) =>
+        otherQueryChain.any((query) => DeepCollectionEquality().equals(thisQuery.queryProps, query.queryProps)));
     if (!compatibleQueries) {
       return false;
     }
 
     final anyMissingQueries = otherQueryChain.any((query) =>
         query.mustBePresentInSuperQuery(thisQueryRequest) &&
-        !thisQueryChain.any((thisQuery) => equals(thisQuery.queryProps, query.queryProps)));
+        !thisQueryChain.any((thisQuery) => DeepCollectionEquality().equals(thisQuery.queryProps, query.queryProps)));
     if (anyMissingQueries) {
       return false;
     }
