@@ -69,7 +69,9 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithCacheEnti
     await doc.delete();
   }
 
-  QueryExecutor getQueryExecutor() {
+  QueryExecutor getQueryExecutor({
+    required void onPaginationControllerCreated(Query query, QueryPaginationResultController controller),
+  }) {
     return FirestoreQueryExecutor(
       collectionPath: dataPath,
       onEntityInflated: (entity) async {
@@ -80,6 +82,7 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithCacheEnti
       unionTypeConverter: unionTypeConverter,
       validTypes: handledEntityTypes,
       inferredType: inferredType,
+      onPaginationControllerCreated: onPaginationControllerCreated,
     );
   }
 }

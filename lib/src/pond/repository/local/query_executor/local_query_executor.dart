@@ -13,6 +13,7 @@ import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_paginate_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
+import '../../../query/request/result/query_pagination_result_controller.dart';
 import '../../../record/entity.dart';
 import 'reducer/query/local_from_query_reducer.dart';
 import 'reducer/request/local_first_query_request_reducer.dart';
@@ -23,7 +24,13 @@ class LocalQueryExecutor with WithSyncResolverQueryExecutor<Iterable<State>> imp
 
   final Future<void> Function(Entity entity) onEntityInflated;
 
-  const LocalQueryExecutor({required this.stateById, this.onEntityInflated: _defaultOnEntityInflated});
+  final QueryPaginationResultController? Function(Query query)? sourcePaginationResultControllerByQueryGetter;
+
+  const LocalQueryExecutor({
+    required this.stateById,
+    this.onEntityInflated: _defaultOnEntityInflated,
+    this.sourcePaginationResultControllerByQueryGetter,
+  });
 
   List<AbstractSyncQueryReducer<Query, Iterable<State>>> getSyncQueryReducers(QueryRequest queryRequest) => [
         LocalFromQueryReducer(stateById: stateById),
@@ -37,7 +44,10 @@ class LocalQueryExecutor with WithSyncResolverQueryExecutor<Iterable<State>> imp
             LocalAllQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
             LocalAllRawQueryRequestReducer<R>(),
             LocalFirstOrNullQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
-            LocalPaginateQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
+            LocalPaginateQueryRequestReducer<R>(
+              onEntityInflated: onEntityInflated,
+              sourcePaginationResultControllerByQueryGetter: sourcePaginationResultControllerByQueryGetter,
+            ),
             LocalWithoutCacheQueryRequestReducer<R>(
                 queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver<R>()),
           ];

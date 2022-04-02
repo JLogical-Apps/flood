@@ -16,17 +16,13 @@ class FileWithoutCacheQueryRequestReducer<R extends Record>
   FileWithoutCacheQueryRequestReducer({required this.queryRequestReducerResolverGetter});
 
   @override
-  dynamic reduceSync({
+  Future<dynamic> reduce({
     required Iterable<State> accumulation,
     required WithoutCacheQueryRequest<R, dynamic> queryRequest,
-  }) {
+  }) async {
     return queryRequestReducerResolverGetter().resolve(queryRequest.queryRequest).reduce(
           accumulation: accumulation,
           queryRequest: queryRequest.queryRequest,
         );
-  }
-
-  @override
-  Future<void> inflate(output) async {
   }
 }

@@ -16,10 +16,17 @@ class QueryPaginationResultController<R extends Record> {
 
   bool get canLoadMore => _resultsX.value.canLoadMore;
 
-  Future<void> loadMore() async {
+  Future<QueryPaginationResult<R>?> loadMore() async {
     if (!canLoadMore) {
       throw Exception('Cannot load more results in this query!');
     }
-    _resultsX.value = await _resultsX.value.loadMore();
+    final result = _resultsX.value;
+    final nextResult = await result.loadMore();
+    if (nextResult != null) {
+      _resultsX.value = result.appendedWith(nextResult);
+    } else {
+      _resultsX.value = result.end();
+    }
+    return nextResult;
   }
 }

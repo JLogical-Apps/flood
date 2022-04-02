@@ -4,28 +4,33 @@ import 'package:jlogical_utils/src/pond/query/request/result/query_pagination_re
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
+import '../../../../../query/query.dart';
 import '../../../../../record/entity.dart';
 import 'abstract_file_query_request_reducer.dart';
 
 class FilePaginateQueryRequestReducer<R extends Record>
     extends AbstractFileQueryRequestReducer<PaginateQueryRequest<R>, R, QueryPaginationResultController<R>> {
   final Future Function(Entity entity) onEntityInflated;
+  final void Function(Query query, QueryPaginationResultController controller) onPaginationControllerCreated;
 
   late List<R> results;
 
-  FilePaginateQueryRequestReducer({required this.onEntityInflated});
+  FilePaginateQueryRequestReducer({required this.onEntityInflated, required this.onPaginationControllerCreated});
 
   @override
-  QueryPaginationResultController<R> reduceSync({
+  Future<QueryPaginationResultController<R>> reduce({
     required Iterable<State> accumulation,
     required PaginateQueryRequest<R> queryRequest,
-  }) {
+  }) async {
     results = accumulation.map((state) => Entity.fromState(state)).cast<R>().toList();
-    return QueryPaginationResultController(result: QueryPaginationResult.paginate(results, limit: queryRequest.limit));
-  }
-
-  @override
-  Future<void> inflate(QueryPaginationResultController<R> output) async {
-    await Future.wait(results.map((result) => onEntityInflated(result as Entity)));
+    final controller = QueryPaginationResultController(
+      result: await QueryPaginationResult.paginateWithProcessing(
+        results,
+        onProcess: (record) => onEntityInflated(record as Entity),
+        limit: queryRequest.limit,
+      ),
+    );
+    onPaginationControllerCreated(queryRequest.query, controller);
+    return controller;
   }
 }

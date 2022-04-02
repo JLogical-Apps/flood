@@ -53,7 +53,9 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
   }
 
   @override
-  QueryExecutor getQueryExecutor() {
+  QueryExecutor getQueryExecutor({
+    required void onPaginationControllerCreated(Query query, QueryPaginationResultController controller),
+  }) {
     return FileQueryExecutor(
       baseDirectory: _baseDirectory,
       stateGetter: (id) async => (await getStateOrNull(id)) ?? (throw Exception('Cannot find $id')),
@@ -61,6 +63,7 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
         saveToCache(entity);
         await entity.onInitialize();
       },
+      onPaginationControllerCreated: onPaginationControllerCreated,
     );
   }
 

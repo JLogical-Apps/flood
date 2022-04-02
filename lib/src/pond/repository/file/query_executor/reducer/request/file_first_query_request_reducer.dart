@@ -14,15 +14,12 @@ class FileFirstOrNullQueryRequestReducer<R extends Record>
   FileFirstOrNullQueryRequestReducer({required this.onEntityInflated});
 
   @override
-  R? reduceSync({
+  Future<R?> reduce({
     required Iterable<State> accumulation,
     required FirstOrNullQueryRequest<R> queryRequest,
-  }) {
-    return accumulation.firstOrNull.mapIfNonNull(Entity.fromState) as R?;
-  }
-
-  @override
-  Future<void> inflate(R? output) async {
-    await output.mapIfNonNull((value) => onEntityInflated(value as Entity));
+  }) async {
+    final record = accumulation.firstOrNull.mapIfNonNull(Entity.fromState) as R?;
+    await record.mapIfNonNull((result) => onEntityInflated(result as Entity));
+    return record;
   }
 }
