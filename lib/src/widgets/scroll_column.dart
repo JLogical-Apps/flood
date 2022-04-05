@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:jlogical_utils/src/style/style.dart';
+import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../style/styled_widget.dart';
 
 /// A utility widget of a Column wrapped in a SingleChildScrollView with an optional Scrollbar.
 class ScrollColumn extends HookWidget {
@@ -15,6 +19,9 @@ class ScrollColumn extends HookWidget {
 
   final Future Function()? onRefresh;
 
+  /// Override the refresh-"header" when [onRefresh] is set.
+  final Widget? headerOverride;
+
   final CrossAxisAlignment crossAxisAlignment;
 
   const ScrollColumn({
@@ -23,16 +30,19 @@ class ScrollColumn extends HookWidget {
     this.withScrollbar: false,
     required this.children,
     this.onRefresh,
+    this.headerOverride,
     this.crossAxisAlignment: CrossAxisAlignment.center,
   }) : super(key: key);
 
   const ScrollColumn.withScrollbar({
     Key? key,
-    ScrollController? controller,
-    required List<Widget> children,
-    Future Function()? onRefresh,
-    CrossAxisAlignment crossAxisAlignment: CrossAxisAlignment.center,
-  }) : this(key: key, controller: controller, withScrollbar: true, children: children, onRefresh: onRefresh);
+    this.controller,
+    this.withScrollbar: true,
+    required this.children,
+    this.onRefresh,
+    this.headerOverride,
+    this.crossAxisAlignment: CrossAxisAlignment.center,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +57,7 @@ class ScrollColumn extends HookWidget {
     if (onRefresh != null) {
       final refreshController = useMemoized(() => RefreshController());
       scrollView = SmartRefresher(
+        header: headerOverride ?? _StyledHeader(),
         controller: refreshController,
         onRefresh: () async {
           await onRefresh!();
@@ -56,5 +67,17 @@ class ScrollColumn extends HookWidget {
       );
     }
     return withScrollbar ? Scrollbar(child: scrollView) : scrollView;
+  }
+}
+
+class _StyledHeader extends StyledWidget {
+  const _StyledHeader({Key? key}) : super(key: key);
+
+  @override
+  Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
+    return WaterDropMaterialHeader(
+      color: styleContext.emphasisColor,
+      backgroundColor: styleContext.backgroundColorSoft,
+    );
   }
 }
