@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/result/query_pagination_result.dart';
@@ -8,6 +7,7 @@ import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
+import '../../../../../query/query.dart';
 import 'abstract_firestore_query_request_reducer.dart';
 
 class FirestorePaginateQueryRequestReducer<R extends Record>
@@ -16,12 +16,14 @@ class FirestorePaginateQueryRequestReducer<R extends Record>
   final Type? inferredType;
   final String Function(String unionTypeValue) typeNameFromUnionTypeValueGetter;
   final Future Function(Entity entity) onEntityInflated;
+  final void Function(Query query, QueryPaginationResultController controller) onPaginationControllerCreated;
 
   FirestorePaginateQueryRequestReducer({
     required this.unionTypeFieldName,
     required this.inferredType,
     required this.typeNameFromUnionTypeValueGetter,
     required this.onEntityInflated,
+    required this.onPaginationControllerCreated,
   });
 
   @override
@@ -35,7 +37,9 @@ class FirestorePaginateQueryRequestReducer<R extends Record>
       limit: queryRequest.limit,
     );
 
-    return QueryPaginationResultController(result: paginationResult);
+    final controller = QueryPaginationResultController(result: paginationResult);
+    onPaginationControllerCreated(queryRequest.query, controller);
+    return controller;
   }
 
   Future<QueryPaginationResult<R>> _paginate<R extends Record>({
@@ -48,7 +52,7 @@ class FirestorePaginateQueryRequestReducer<R extends Record>
       paginateQuery = paginateQuery.startAfterDocument(lastSnap);
     }
 
-    final snap = await paginateQuery.get(firestore.GetOptions(source: Source.server));
+    final snap = await paginateQuery.get(firestore.GetOptions(source: firestore.Source.server));
     final records = snap.docs
         .map((doc) =>
             State.extractFromOrNull(

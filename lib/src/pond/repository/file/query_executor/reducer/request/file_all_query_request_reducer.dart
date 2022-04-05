@@ -7,21 +7,17 @@ import 'abstract_file_query_request_reducer.dart';
 
 class FileAllQueryRequestReducer<R extends Record>
     extends AbstractFileQueryRequestReducer<AllQueryRequest<R>, R, List<R>> {
-
   final Future Function(Entity entity) onEntityInflated;
 
   FileAllQueryRequestReducer({required this.onEntityInflated});
 
   @override
-  List<R> reduceSync({
+  Future<List<R>> reduce({
     required Iterable<State> accumulation,
     required AllQueryRequest<R> queryRequest,
-  }) {
-    return accumulation.map((state) => Entity.fromState(state)).cast<R>().toList();
-  }
-
-  @override
-  Future<void> inflate(List<R> output) {
-    return Future.wait(output.map((value) => onEntityInflated(value as Entity)));
+  }) async {
+    final records = accumulation.map((state) => Entity.fromState(state)).cast<R>().toList();
+    await Future.wait(records.map((value) => onEntityInflated(value as Entity)));
+    return records;
   }
 }

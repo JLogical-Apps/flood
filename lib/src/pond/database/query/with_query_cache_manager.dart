@@ -5,11 +5,11 @@ import '../../record/record.dart';
 
 mixin WithQueryCacheManager {
   /// Queries that have been executed already.
-  final Set<QueryRequest> _executedQueryRequests = <QueryRequest>{};
+  final Set<QueryRequest> executedQueryRequests = <QueryRequest>{};
 
   /// Returns whether the query has been executed before.
   bool hasBeenRunBefore<R extends Record, T>(QueryRequest<R, T> queryRequest) {
-    return _executedQueryRequests.any((qr) => qr.containsOrEquals(queryRequest));
+    return executedQueryRequests.any((qr) => qr.containsOrEquals(queryRequest));
   }
 
   void markHasBeenRun(QueryRequest queryRequest) {
@@ -17,6 +17,6 @@ mixin WithQueryCacheManager {
       queryRequest = queryRequest.queryRequest;
     }
 
-    _executedQueryRequests.add(queryRequest);
+    executedQueryRequests.add(queryRequest);
   }
 }

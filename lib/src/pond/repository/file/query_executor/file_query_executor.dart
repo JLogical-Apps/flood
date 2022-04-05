@@ -11,6 +11,7 @@ import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/q
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/query/file_without_cache_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
+import '../../../query/request/result/query_pagination_result_controller.dart';
 import '../../../record/entity.dart';
 import 'reducer/query/file_from_query_reducer.dart';
 import 'reducer/request/abstract_file_query_request_reducer.dart';
@@ -24,8 +25,14 @@ class FileQueryExecutor with WithResolverQueryExecutor<Iterable<State>> implemen
   final Directory baseDirectory;
   final Future<State> Function(String id) stateGetter;
   final Future<void> Function(Entity entity) onEntityInflated;
+  final void Function(Query query, QueryPaginationResultController controller) onPaginationControllerCreated;
 
-  FileQueryExecutor({required this.baseDirectory, required this.stateGetter, required this.onEntityInflated});
+  FileQueryExecutor({
+    required this.baseDirectory,
+    required this.stateGetter,
+    required this.onEntityInflated,
+    required this.onPaginationControllerCreated,
+  });
 
   List<AbstractQueryReducer<Query, Iterable<State>>> getQueryReducers(QueryRequest queryRequest) => [
         FileFromQueryReducer(baseDirectory: baseDirectory, stateGetter: (id) => stateGetter(id)),
@@ -39,7 +46,10 @@ class FileQueryExecutor with WithResolverQueryExecutor<Iterable<State>> implemen
             FileAllQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
             FileAllRawQueryRequestReducer<R>(),
             FileFirstOrNullQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
-            FilePaginateQueryRequestReducer<R>(onEntityInflated: onEntityInflated),
+            FilePaginateQueryRequestReducer<R>(
+              onEntityInflated: onEntityInflated,
+              onPaginationControllerCreated: onPaginationControllerCreated,
+            ),
             FileWithoutCacheQueryRequestReducer<R>(
               queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver(),
             ),

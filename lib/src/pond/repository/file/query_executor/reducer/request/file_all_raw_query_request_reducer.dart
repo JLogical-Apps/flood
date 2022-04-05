@@ -7,13 +7,10 @@ import 'abstract_file_query_request_reducer.dart';
 class FileAllRawQueryRequestReducer<R extends Record>
     extends AbstractFileQueryRequestReducer<AllRawQueryRequest<R>, R, List<State>> {
   @override
-  List<State> reduceSync({
+  Future<List<State>> reduce({
     required Iterable<State> accumulation,
     required AllRawQueryRequest<R> queryRequest,
-  }) {
+  }) async {
     return accumulation.toList();
   }
-
-  @override
-  Future<void> inflate(List<State> output) async {}
 }

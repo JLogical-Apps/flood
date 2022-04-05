@@ -7,6 +7,7 @@ import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 
+import '../../../query/request/result/query_pagination_result_controller.dart';
 import 'reducer/query/firestore_from_query_reducer.dart';
 import 'reducer/query/firestore_order_by_query_reducer.dart';
 import 'reducer/query/firestore_where_query_reducer.dart';
@@ -26,6 +27,8 @@ class FirestoreQueryExecutor with WithResolverQueryExecutor<firestore.Query> imp
   final List<Type> validTypes;
   final Type? inferredType;
 
+  final void Function(Query query, QueryPaginationResultController controller) onPaginationControllerCreated;
+
   FirestoreQueryExecutor({
     required this.collectionPath,
     required this.onEntityInflated,
@@ -33,6 +36,7 @@ class FirestoreQueryExecutor with WithResolverQueryExecutor<firestore.Query> imp
     required this.unionTypeConverter,
     required this.validTypes,
     this.inferredType,
+    required this.onPaginationControllerCreated,
   });
 
   List<AbstractQueryReducer<Query, firestore.Query>> getQueryReducers(QueryRequest queryRequest) => [
@@ -71,6 +75,7 @@ class FirestoreQueryExecutor with WithResolverQueryExecutor<firestore.Query> imp
               typeNameFromUnionTypeValueGetter: getTypeNameFromUnionTypeValue,
               inferredType: inferredType,
               onEntityInflated: onEntityInflated,
+              onPaginationControllerCreated: onPaginationControllerCreated,
             ),
             FirestoreWithoutCacheQueryRequestReducer<R>(
                 queryRequestReducerResolverGetter: () => getQueryRequestReducerResolver()),

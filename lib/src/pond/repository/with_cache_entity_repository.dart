@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/patterns/cache/cache.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
+import 'package:jlogical_utils/src/pond/query/query.dart';
+import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/without_cache_query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/local_query_executor.dart';
@@ -14,6 +17,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:synchronized/synchronized.dart';
 
 import '../query/request/first_or_null_query_request.dart';
+import '../query/request/result/query_pagination_result_controller.dart';
 import 'entity_repository.dart';
 
 mixin WithCacheEntityRepository on EntityRepository {
@@ -21,8 +25,11 @@ mixin WithCacheEntityRepository on EntityRepository {
   final Lock _saveLock = Lock(reentrant: true);
 
   final Map<QueryRequest, Completer<dynamic>> _queryCompleterByQueryRequest = {};
+  final Map<Query, QueryPaginationResultController> _sourcePaginationResultControllerByQuery = {};
 
-  QueryExecutor getQueryExecutor();
+  QueryExecutor getQueryExecutor({
+    required void onPaginationControllerCreated(Query query, QueryPaginationResultController controller),
+  });
 
   Future<void> onWithoutCacheQueryExecuted(QueryRequest queryRequest) async {}
 
@@ -90,11 +97,23 @@ mixin WithCacheEntityRepository on EntityRepository {
 
       await onWithoutCacheQueryExecuted(queryRequest);
       logMessage('Using without-cache query [$queryRequest]');
-      result = await getQueryExecutor().executeQuery(queryRequest);
+      result = await getQueryExecutor(
+        onPaginationControllerCreated: (query, paginationController) =>
+            _sourcePaginationResultControllerByQuery[query] = paginationController,
+      ).executeQuery(queryRequest);
       markHasBeenRun(queryRequest);
 
       completer.complete(result);
       _queryCompleterByQueryRequest.remove(queryRequest);
+
+      var sourceQueryRequest = queryRequest;
+      if (sourceQueryRequest is WithoutCacheQueryRequest<R, T>) {
+        sourceQueryRequest = sourceQueryRequest.queryRequest;
+      }
+
+      if (sourceQueryRequest is PaginateQueryRequest) {
+        result = executeQuerySync(sourceQueryRequest);
+      }
     } else {
       result = executeQuerySync(queryRequest);
     }
@@ -103,7 +122,10 @@ mixin WithCacheEntityRepository on EntityRepository {
   }
 
   T executeQuerySync<R extends Record, T>(QueryRequest<R, T> queryRequest) {
-    return LocalQueryExecutor(stateById: _stateByIdCache.valueByKey).executeQuerySync(queryRequest);
+    return LocalQueryExecutor(
+      stateById: _stateByIdCache.valueByKey,
+      sourcePaginationResultControllerByQueryGetter: (query) => _sourcePaginationResultControllerByQuery[query],
+    ).executeQuerySync(queryRequest);
   }
 
   Map<String, State> getStateById() {

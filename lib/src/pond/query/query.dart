@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
-import 'package:equatable/src/equatable_utils.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/derived/first_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/contains_query_predicate.dart';
@@ -176,7 +175,6 @@ abstract class Query<R extends Record> extends Equatable {
       query = query.parent!;
     }
 
-    return identical(thisQuery, query) ||
-        thisQuery.runtimeType == query.runtimeType && equals(queryProps, query.queryProps);
+    return thisQuery == query;
   }
 }
