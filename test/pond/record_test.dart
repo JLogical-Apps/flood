@@ -6,11 +6,12 @@ import 'package:rxdart/rxdart.dart';
 import 'entities/color.dart';
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
+import 'query_test.dart';
 
 void main() {
   final now = DateTime.now();
   setUp(() async {
-    AppContext.global = AppContext.createForTesting(now: now);
+    AppContext.global = AppContext.createForTesting(now: now)..register(LocalEnvelopeRepository());
   });
 
   test('simple value object has proper state.', () {
@@ -87,6 +88,23 @@ void main() {
       () => color.rgbProperty.value = {'r': 0, 'g': 0, 'b': 0},
       throwsA(isA<ImmutabilityViolationError>()),
     );
+  });
+
+  test('extra values are stored in ValueObject.', () {
+    final color = ValueObject.fromState<Envelope>(State(
+      type: '$Envelope',
+      values: {
+        'name': 'Tithe',
+        'amount': 243 * 100,
+        'hello': 'world!',
+      },
+    ));
+
+    expect(color.extraValues['hello'], 'world!');
+
+    color.extraValues.remove('hello');
+
+    expect(color.state.values.containsKey('hello'), false);
   });
 
   test('lifecycle events', () async {
