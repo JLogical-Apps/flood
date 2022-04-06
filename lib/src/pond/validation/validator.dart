@@ -6,6 +6,17 @@ abstract class Validator {
   }
 }
 
+extension ValidatorExtension on Validator {
+  bool isValid() {
+    try {
+      validate();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+}
+
 class _DefaultValidator implements Validator {
   final void Function() onValidate;
 

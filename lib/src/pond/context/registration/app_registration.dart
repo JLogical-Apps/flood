@@ -43,6 +43,10 @@ extension DefaultAppRegistration on AppRegistration {
     return constructValueObjectRuntime(V) as V;
   }
 
+  V? constructValueObjectOrNull<V extends ValueObject>() {
+    return constructValueObjectRuntimeOrNull(V) as V?;
+  }
+
   ValueObject constructValueObjectFromState(State state) {
     return constructValueObjectFromStateOrNull(state) ??
         (throw Exception('Could not construct a ValueObject from the state [$state]'));

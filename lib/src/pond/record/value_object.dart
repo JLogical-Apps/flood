@@ -32,6 +32,10 @@ abstract class ValueObject extends Record
     return AppContext.global.constructValueObject<V>()..state = state;
   }
 
+  static V? fromStateOrNull<V extends ValueObject>(State state) {
+    return AppContext.global.constructValueObjectOrNull<V>()?..state = state;
+  }
+
   PropertyContext createPropertyContext(Property property) {
     return PropertyContext(
       canChange: validationState == ValidationState.unvalidated,

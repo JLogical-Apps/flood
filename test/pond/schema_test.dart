@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+import 'entities/color.dart';
+import 'entities/user_avatar.dart';
+
 void main() {
   test('schema matcher matches a state to the right schema.', () {
     final schema1 = Schema(
@@ -135,5 +138,71 @@ void main() {
 
     expect(migrated, isTrue);
     expect(state['color'], isNotNull);
+  });
+
+  test('list schema.', () {
+    final listSchema = Schema(
+      data: {
+        'name': SchemaField.string.required,
+        'envelopes': SchemaField.list(SchemaField.string).present,
+      },
+    );
+
+    final passingState = State(values: {
+      'name': 'Budget',
+      'envelopes': ['e1', 'e2'],
+    });
+    expect(listSchema.matches(passingState), isTrue);
+
+    final passingStateEmptyList = State(values: {
+      'name': 'Budget',
+      'envelopes': [],
+    });
+    expect(listSchema.matches(passingStateEmptyList), isTrue);
+
+    final failingStateWrongType = State(values: {
+      'name': 'Budget',
+      'envelopes': [1, 2, 3],
+    });
+    expect(listSchema.matches(failingStateWrongType), isFalse);
+
+    final failingStateNotPresent = State(values: {'name': 'Budget'});
+    expect(listSchema.matches(failingStateNotPresent), isFalse);
+  });
+
+  test('embedded value objects.', () {
+    AppContext.global = AppContext.createForTesting()
+      ..register(SimpleAppModule(valueObjectRegistrations: [
+        ValueObjectRegistration<UserAvatar, UserAvatar?>(() => UserAvatar()),
+        ValueObjectRegistration<Color, Color?>(() => Color()),
+      ]));
+
+    final userAvatarSchema = Schema(
+      data: {
+        'color': SchemaField.embedded<Color>().required,
+      },
+    );
+
+    final passingState = State(values: {
+      'color': {
+        '_type': '$Color',
+        'rgb': {
+          'r': 1,
+          'g': 3,
+          'b': 3,
+        }
+      }
+    });
+    expect(userAvatarSchema.matches(passingState), isTrue);
+
+    final failingStateIncompatibleType = State(values: {
+      'color': {
+        'asdf': 3,
+      }
+    });
+    expect(userAvatarSchema.matches(failingStateIncompatibleType), isFalse);
+
+    final failingStateMissing = State(values: {'name': 'Jeff!'});
+    expect(userAvatarSchema.matches(failingStateMissing), isFalse);
   });
 }
