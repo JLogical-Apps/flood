@@ -38,24 +38,25 @@ mixin WithCacheEntityRepository on EntityRepository {
   }
 
   @override
-  Future<void> save(Entity entity) async {
-    final id = entity.id ?? (throw Exception('Cannot save entity that has a null id!'));
+  Future<void> saveState(State state) async {
+    final id = state.id ?? (throw Exception('Cannot save entity that has a null id!'));
+    final entity = Entity.fromState(state);
 
     await entity.beforeSave();
     _stateByIdCache.save(id, entity.state);
-    await _saveLock.synchronized(() => super.save(entity));
+    await _saveLock.synchronized(() => super.saveState(entity.state));
     await entity.afterSave();
   }
 
   @override
-  Future<void> delete(Entity entity) async {
-    final id = entity.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
+  Future<void> deleteState(State state) async {
+    final id = state.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
+    final entity = Entity.fromState(state);
 
     await entity.beforeDelete();
 
-    await super.delete(entity);
+    await super.deleteState(state);
     _stateByIdCache.remove(id);
-    await Future.sync(() {});
   }
 
   @override
