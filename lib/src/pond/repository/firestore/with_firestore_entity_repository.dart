@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+import '../../query/reducer/entity_inflater.dart';
 import 'query_executor/firestore_query_executor.dart';
 
 mixin WithFirestoreEntityRepository on EntityRepository implements WithCacheEntityRepository {
@@ -22,12 +23,8 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithCacheEnti
   firestore.CollectionReference get _collection => firestore.FirebaseFirestore.instance.collection(dataPath);
 
   @override
-  Future<void> save(Entity entity) {
-    return _saveState(id: entity.id!, state: entity.state);
-  }
-
-  Future<void> _saveState({required String id, required State state}) async {
-    final doc = _collection.doc(id);
+  Future<void> saveState(State state) async {
+    final doc = _collection.doc(state.id!);
     final json = state.fullValues;
     json.remove(Query.id);
 
@@ -42,8 +39,8 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithCacheEnti
   }
 
   @override
-  Future<void> delete(Entity entity) async {
-    final id = entity.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
+  Future<void> deleteState(State state) async {
+    final id = state.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
     final doc = _collection.doc(id);
     await doc.delete();
   }
@@ -53,10 +50,15 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithCacheEnti
   }) {
     return FirestoreQueryExecutor(
       collectionPath: dataPath,
-      onEntityInflated: (entity) async {
-        saveToCache(entity);
-        await entity.onInitialize();
-      },
+      entityInflater: EntityInflater(
+        stateInitializer: (state) async {
+          await initializeState(state);
+        },
+        entityInflater: (entity) async {
+          saveToCache(entity);
+          await entity.onInitialize();
+        },
+      ),
       unionTypeFieldName: unionTypeFieldName,
       unionTypeConverter: unionTypeConverter,
       validTypes: handledEntityTypes,

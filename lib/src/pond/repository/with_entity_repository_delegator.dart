@@ -11,10 +11,10 @@ mixin WithEntityRepositoryDelegator implements EntityRepository {
   Future<String> generateId(Entity entity) => entityRepository.generateId(entity);
 
   @override
-  Future<void> save(Entity entity) => entityRepository.save(entity);
+  Future<void> saveState(State state) => entityRepository.saveState(state);
 
   @override
-  Future<void> delete(Entity entity) => entityRepository.delete(entity);
+  Future<void> deleteState(State state) => entityRepository.deleteState(state);
 
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) =>

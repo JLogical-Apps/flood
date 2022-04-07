@@ -1,20 +1,20 @@
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
-import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/local_query_executor.dart';
 
 import '../../query/query.dart';
 import '../../query/request/result/query_pagination_result_controller.dart';
+import '../../state/state.dart';
 import '../entity_repository.dart';
 import '../with_cache_entity_repository.dart';
 
 mixin WithLocalEntityRepository on EntityRepository implements WithCacheEntityRepository {
   @override
-  Future<void> save(Entity entity) async {
+  Future<void> saveState(State state) async {
     // Do nothing since cache takes care of it.
   }
 
   @override
-  Future<void> delete(Entity entity) async {
+  Future<void> deleteState(State state) async {
     // Do nothing since cache takes care of it.
   }
 

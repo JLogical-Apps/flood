@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/entity_inflater.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/file_query_executor.dart';
 import 'package:jlogical_utils/src/pond/state/persistence/json_state_persister.dart';
 import 'package:jlogical_utils/src/pond/state/persistence/state_persister.dart';
@@ -20,12 +20,8 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
   }
 
   @override
-  Future<void> save(Entity entity) {
-    return _saveState(id: entity.id!, state: entity.state);
-  }
-
-  Future<void> _saveState({required String id, required State state}) async {
-    final file = await _getFile(id).ensureCreated();
+  Future<void> saveState(State state) async {
+    final file = await _getFile(state.id!).ensureCreated();
     final json = statePersister.persist(state);
     await file.writeAsString(json, flush: true);
   }
@@ -41,8 +37,8 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
   }
 
   @override
-  Future<void> delete(Entity entity) async {
-    final id = entity.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
+  Future<void> deleteState(State state) async {
+    final id = state.id ?? (throw Exception('Cannot delete state that has not been saved yet!'));
     await _getFile(id).delete();
   }
 
@@ -53,10 +49,15 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
     return FileQueryExecutor(
       baseDirectory: _baseDirectory,
       stateGetter: (id) async => (await getStateOrNull(id)) ?? (throw Exception('Cannot find $id')),
-      onEntityInflated: (entity) async {
-        saveToCache(entity);
-        await entity.onInitialize();
-      },
+      entityInflater: EntityInflater(
+        stateInitializer: (state) async {
+          await initializeState(state);
+        },
+        entityInflater: (entity) async {
+          saveToCache(entity);
+          await entity.onInitialize();
+        },
+      ),
       onPaginationControllerCreated: onPaginationControllerCreated,
     );
   }

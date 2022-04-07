@@ -40,6 +40,7 @@ abstract class DefaultAdaptingRepository<E extends Entity<V>, V extends ValueObj
     return SimpleLocalRepository<E, V>(
       valueObjectRegistrations: [ValueObjectRegistration<V, V?>(createValueObject)],
       entityRegistrations: [EntityRegistration<E, V>(createEntity)],
+      stateInitializer: initializeState,
     );
   }
 
@@ -48,6 +49,7 @@ abstract class DefaultAdaptingRepository<E extends Entity<V>, V extends ValueObj
       dataPath: dataPath,
       valueObjectRegistrations: [ValueObjectRegistration<V, V?>(createValueObject)],
       entityRegistrations: [EntityRegistration<E, V>(createEntity)],
+      stateInitializer: initializeState,
     );
   }
 
@@ -57,6 +59,7 @@ abstract class DefaultAdaptingRepository<E extends Entity<V>, V extends ValueObj
       inferredType: E,
       valueObjectRegistrations: [ValueObjectRegistration<V, V?>(createValueObject)],
       entityRegistrations: [EntityRegistration<E, V>(createEntity)],
+      stateInitializer: initializeState,
     );
   }
 

@@ -33,12 +33,14 @@ abstract class DefaultAbstractAdaptingRepository<E extends Entity<V>, V extends 
         return SimpleLocalRepository<E, V>(
           valueObjectRegistrations: valueObjectRegistrations,
           entityRegistrations: entityRegistrations,
+          stateInitializer: initializeState,
         );
       case Environment.device:
         return SimpleFileRepository<E, V>(
           dataPath: dataPath,
           valueObjectRegistrations: valueObjectRegistrations,
           entityRegistrations: entityRegistrations,
+          stateInitializer: initializeState,
         );
       case Environment.qa:
       case Environment.uat:
@@ -51,6 +53,7 @@ abstract class DefaultAbstractAdaptingRepository<E extends Entity<V>, V extends 
           unionTypeConverterGetter: unionTypeConverter,
           valueObjectRegistrations: valueObjectRegistrations,
           entityRegistrations: entityRegistrations,
+          stateInitializer: initializeState,
         );
       default:
         throw UnimplementedError();

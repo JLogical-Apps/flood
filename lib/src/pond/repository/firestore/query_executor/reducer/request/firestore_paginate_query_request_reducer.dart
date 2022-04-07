@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:collection/collection.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/entity_inflater.dart';
 import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/result/query_pagination_result.dart';
 import 'package:jlogical_utils/src/pond/query/request/result/query_pagination_result_controller.dart';
@@ -15,14 +16,14 @@ class FirestorePaginateQueryRequestReducer<R extends Record>
   final String unionTypeFieldName;
   final Type? inferredType;
   final String Function(String unionTypeValue) typeNameFromUnionTypeValueGetter;
-  final Future Function(Entity entity) onEntityInflated;
+  final EntityInflater entityInflater;
   final void Function(Query query, QueryPaginationResultController controller) onPaginationControllerCreated;
 
   FirestorePaginateQueryRequestReducer({
     required this.unionTypeFieldName,
     required this.inferredType,
     required this.typeNameFromUnionTypeValueGetter,
-    required this.onEntityInflated,
+    required this.entityInflater,
     required this.onPaginationControllerCreated,
   });
 
@@ -53,7 +54,7 @@ class FirestorePaginateQueryRequestReducer<R extends Record>
     }
 
     final snap = await paginateQuery.get(firestore.GetOptions(source: firestore.Source.server));
-    final records = snap.docs
+    final states = snap.docs
         .map((doc) =>
             State.extractFromOrNull(
               doc.data(),
@@ -61,11 +62,13 @@ class FirestorePaginateQueryRequestReducer<R extends Record>
               typeFallback: inferredType?.toString() ?? typeNameFromUnionTypeValueGetter(doc[unionTypeFieldName]),
             ) ??
             (throw Exception('Cannot get state from Firestore data! [${doc.data()}]')))
-        .map((state) => Entity.fromState(state))
-        .map((entity) => entity as R)
         .toList();
 
-    await Future.wait(records.map((r) => onEntityInflated(r as Entity)));
+    await Future.wait(states.map((state) => entityInflater.initializeState(state)));
+
+    final records = states.map((state) => Entity.fromState(state)).map((entity) => entity as R).toList();
+
+    await Future.wait(records.map((r) => entityInflater.inflateEntity(r as Entity)));
 
     return QueryPaginationResult<R>(
       results: records,

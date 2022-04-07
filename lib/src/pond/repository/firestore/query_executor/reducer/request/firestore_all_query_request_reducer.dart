@@ -1,32 +1,33 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
+import 'package:jlogical_utils/src/pond/query/reducer/request/with_all_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
-import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
+import '../../../../../query/reducer/entity_inflater.dart';
 import 'abstract_firestore_query_request_reducer.dart';
 
 class FirestoreAllQueryRequestReducer<R extends Record>
-    extends AbstractFirestoreQueryRequestReducer<AllQueryRequest<R>, R, List<Record>> {
+    extends AbstractFirestoreQueryRequestReducer<AllQueryRequest<R>, R, List<R>>
+    with WithAllQueryRequestReducer<R, firestore.Query> {
   final String unionTypeFieldName;
   final Type? inferredType;
   final String Function(String unionTypeValue) typeNameFromUnionTypeValueGetter;
-  final Future Function(Entity entity) onEntityInflated;
+
+  final EntityInflater entityInflater;
 
   FirestoreAllQueryRequestReducer({
     required this.unionTypeFieldName,
     required this.inferredType,
     required this.typeNameFromUnionTypeValueGetter,
-    required this.onEntityInflated,
+    required this.entityInflater,
   });
 
-  @override
-  Future<List<R>> reduce({
-    required firestore.Query accumulation,
-    required AllQueryRequest<R> queryRequest,
-  }) async {
+  FutureOr<List<State>> getStates(firestore.Query accumulation) async {
     final snap = await accumulation.get();
-    final records = snap.docs
+    return snap.docs
         .map((doc) =>
             State.extractFromOrNull(
               doc.data(),
@@ -34,10 +35,6 @@ class FirestoreAllQueryRequestReducer<R extends Record>
               typeFallback: inferredType?.toString() ?? typeNameFromUnionTypeValueGetter(doc[unionTypeFieldName]),
             ) ??
             (throw Exception('Cannot get state from Firestore data! [${doc.data()}]')))
-        .map((state) => Entity.fromState(state))
-        .map((entity) => entity as R)
         .toList();
-    await Future.wait(records.map((r) => onEntityInflated(r as Entity)));
-    return records;
   }
 }
