@@ -33,8 +33,9 @@ class AppContext
     return AppContext.global;
   }
 
-  static Future<AppContext> createGlobal() async {
-    AppContext.global = AppContext._(directoryBundle: await DirectoryBundle.generate());
+  static Future<AppContext> createGlobal({bool generateDirectory: true}) async {
+    final directoryBundle = generateDirectory ? await DirectoryBundle.generate() : DirectoryBundle.empty();
+    AppContext.global = AppContext._(directoryBundle: directoryBundle);
 
     final coreModule = CoreModule();
     await coreModule.initialize(AppContext.global);
