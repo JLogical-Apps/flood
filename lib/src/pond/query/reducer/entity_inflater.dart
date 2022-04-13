@@ -5,7 +5,7 @@ class EntityInflater {
   final Future<void> Function(State state)? stateInitializer;
   final Future<void> Function(Entity entity)? entityInflater;
 
-  EntityInflater({this.stateInitializer, this.entityInflater});
+  const EntityInflater({this.stateInitializer, this.entityInflater});
 
   Future<void> initializeState(State state) async {
     await stateInitializer?.call(state);

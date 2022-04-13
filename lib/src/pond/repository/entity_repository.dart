@@ -15,12 +15,15 @@ abstract class EntityRepository extends AppModule with WithQueryCacheManager imp
 
   Future<void> initializeState(State state) async {}
 
-  Future<void> save(Entity entity) {
-    return saveState(entity.state);
+  Future<void> save(Entity entity) async {
+    await entity.beforeSave();
+    await saveState(entity.state);
+    await entity.afterSave();
   }
 
-  Future<void> delete(Entity entity) {
-    return deleteState(entity.state);
+  Future<void> delete(Entity entity) async {
+    await entity.beforeDelete();
+    await deleteState(entity.state);
   }
 
   Future<void> create(Entity entity) async {

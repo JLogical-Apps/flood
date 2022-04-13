@@ -13,7 +13,4 @@ class LocalAllRawQueryRequestReducer<R extends Record>
   }) {
     return accumulation.toList();
   }
-
-  @override
-  Future<void> inflate(List<State> output) async {}
 }

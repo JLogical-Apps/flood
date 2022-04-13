@@ -25,7 +25,4 @@ class LocalWithoutCacheQueryRequestReducer<R extends Record>
           queryRequest: queryRequest.queryRequest,
         );
   }
-
-  @override
-  Future<void> inflate(output) async {}
 }

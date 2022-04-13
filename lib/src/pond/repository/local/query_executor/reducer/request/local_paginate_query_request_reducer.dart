@@ -1,3 +1,4 @@
+import 'package:jlogical_utils/src/pond/query/reducer/entity_inflater.dart';
 import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/result/query_pagination_result.dart';
 import 'package:jlogical_utils/src/pond/query/request/result/query_pagination_result_controller.dart';
@@ -11,13 +12,13 @@ import 'abstract_local_query_request_reducer.dart';
 
 class LocalPaginateQueryRequestReducer<R extends Record>
     extends AbstractLocalQueryRequestReducer<PaginateQueryRequest<R>, R, QueryPaginationResultController<R>> {
-  final Future Function(Entity entity) onEntityInflated;
+  final EntityInflater entityInflater;
   final QueryPaginationResultController? Function(Query query)? sourcePaginationResultControllerByQueryGetter;
 
   late List<R> results;
 
   LocalPaginateQueryRequestReducer({
-    required this.onEntityInflated,
+    required this.entityInflater,
     required this.sourcePaginationResultControllerByQueryGetter,
   });
 
@@ -59,7 +60,18 @@ class LocalPaginateQueryRequestReducer<R extends Record>
   }
 
   @override
-  Future<void> inflate(QueryPaginationResultController<R> output) async {
-    await Future.wait(results.map((result) => onEntityInflated(result as Entity)));
+  Future<QueryPaginationResultController<R>> inflate(QueryPaginationResultController<R> output) async {
+    final newStates = await Future.wait(results.map((entity) async {
+      final state = entity.state;
+      await entityInflater.initializeState(state);
+      return state;
+    }));
+
+    final newResults = newStates.map((state) => Entity.fromState(state)).cast<R>().toList();
+    await Future.wait(newResults.map((value) => entityInflater.inflateEntity(value as Entity)));
+
+    results = newResults;
+
+    return output;
   }
 }

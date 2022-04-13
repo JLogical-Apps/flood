@@ -1,4 +1,5 @@
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
+import 'package:jlogical_utils/src/pond/query/reducer/entity_inflater.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/local_query_executor.dart';
 
 import '../../query/query.dart';
@@ -23,9 +24,14 @@ mixin WithLocalEntityRepository on EntityRepository implements WithCacheEntityRe
   }) {
     return LocalQueryExecutor(
       stateById: getStateById(),
-      onEntityInflated: (entity) async {
-        await entity.onInitialize();
-      },
+      entityInflater: EntityInflater(
+        entityInflater: (entity) async {
+          await entity.onInitialize();
+        },
+        stateInitializer: (state) async {
+          await initializeState(state);
+        },
+      ),
     );
   }
 }
