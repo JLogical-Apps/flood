@@ -30,10 +30,14 @@ class EnvironmentAutomationModule extends AutomationModule {
     final oldEnvironmentName = config?['env'];
     final oldEnvironment = Environment.values.where((env) => env.name == oldEnvironmentName).firstOrNull;
 
+    if (environment == oldEnvironment) {
+      return;
+    }
+
     await context.updateConfigField('env', environmentName);
 
-    await Future.wait(context.modules
-        .whereType<EnvironmentListeningAutomationModule>()
-        .map((e) => e.onEnvironmentChanged(context, oldEnvironment, environment)));
+    for (final module in context.modules.whereType<EnvironmentListeningAutomationModule>()) {
+      await module.onEnvironmentChanged(context, oldEnvironment, environment);
+    }
   }
 }

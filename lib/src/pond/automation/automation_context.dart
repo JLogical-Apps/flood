@@ -43,7 +43,7 @@ class AutomationContext
     if (environment == null) {
       Environment? configEnvironment;
       final config = (await getConfig() ?? {});
-      final environmentConfigName = config['environment'];
+      final environmentConfigName = config['env'];
       if (environmentConfigName != null) {
         configEnvironment = Environment.values.firstWhereOrNull((env) => env.name == environmentConfigName) ??
             (throw Exception('Environment [$environmentConfigName] not recognized!'));
