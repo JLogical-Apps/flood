@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class EnvironmentModule extends AppModule {
@@ -11,7 +12,8 @@ class EnvironmentModule extends AppModule {
 
   static Future<EnvironmentModule> create() async {
     final module = EnvironmentModule._();
-    module.environment = await locate<ConfigModule>().getEnvironmentFromConfig();
+    module.environment =
+        kReleaseMode ? Environment.production : await locate<ConfigModule>().getEnvironmentFromConfig();
     return module;
   }
 }

@@ -2,8 +2,6 @@ import 'package:jlogical_utils/automation.dart';
 import 'package:jlogical_utils/src/pond/automation_modules/environment/environment_listening_automation_module.dart';
 import 'package:jlogical_utils/src/utils/collection_extensions.dart';
 
-import '../../modules/environment/environment.dart';
-
 class EnvironmentAutomationModule extends AutomationModule {
   @override
   String get name => 'Environment';
