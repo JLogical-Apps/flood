@@ -54,11 +54,11 @@ class AppIconAutomationModule extends AutomationModule
       return;
     }
 
-    final configurationFile = automateOutputDirectory / 'app_icon' - 'flutter_launcher_icons.yaml';
+    final configurationFile = cacheDirectory - 'flutter_launcher_icons.yaml';
     context.print('Saving configuration into `${configurationFile.relativePath}`');
     await FileDataSource(file: configurationFile).mapYaml().saveData(await _constructConfig(context));
 
-    context.run('flutter pub run flutter_launcher_icons:main -f ${configurationFile.relativePath}');
+    context.run('flutter pub run flutter_launcher_icons:main -f "${configurationFile.relativePath}"');
   }
 
   Future<Map<String, dynamic>> _constructConfig(AutomationContext context) async {
@@ -90,7 +90,7 @@ class AppIconAutomationModule extends AutomationModule
     fill(image, _getColor(backgroundColor));
     drawImage(image, foregroundImage);
 
-    final outputFile = automateOutputDirectory / 'app_icon' - 'app_icon.png';
+    final outputFile = cacheDirectory - 'app_icon.png';
     await outputFile.ensureCreated();
 
     await outputFile.writeAsBytes(encodePng(image));
@@ -115,7 +115,7 @@ class AppIconAutomationModule extends AutomationModule
     final delta = (bannerWidth * (sqrt(2) / 2)).round();
     drawImage(foregroundImage, bannerImage, dstX: foregroundImage.width - bannerImage.width + delta, dstY: -delta);
 
-    final outputFile = automateOutputDirectory / 'app_icon' - 'foreground_app_icon.png';
+    final outputFile = cacheDirectory - 'foreground_app_icon.png';
     await outputFile.ensureCreated();
 
     await outputFile.writeAsBytes(encodePng(foregroundImage));
