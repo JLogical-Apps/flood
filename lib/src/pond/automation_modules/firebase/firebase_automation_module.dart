@@ -96,9 +96,11 @@ class FirebaseAutomationModule extends AutomationModule implements EnvironmentLi
     await firebaseDirectory.ensureCreated();
     final firebaseJsonFile = firebaseDirectory - 'firebase.json';
     if (!await firebaseJsonFile.exists()) {
-      context.print(
-          'You need to initialize firebase! Run this command to initialize from the terminal:\ncd ${firebaseDirectory.relativePath}\nfirebase init');
-      return false;
+      await context.run('firebase init', workingDirectory: firebaseDirectory);
+
+      if (!await firebaseJsonFile.exists()) {
+        throw Exception('Cannot find firebase json file!');
+      }
     }
 
     return true;
@@ -138,8 +140,7 @@ class FirebaseAutomationModule extends AutomationModule implements EnvironmentLi
 
     await context.saveConfig(config);
 
-    context.print(
-        'Run this command to actually register the project to Firebase:\ncd ${firebaseDirectory.relativePath}\nfirebase use --add');
+    context.run('firebase use --add', workingDirectory: firebaseDirectory);
   }
 
   Future<void> _refresh(AutomationContext context) async {
@@ -154,8 +155,10 @@ class FirebaseAutomationModule extends AutomationModule implements EnvironmentLi
       return;
     }
 
-    context.print(
-        'Run this command to save the indexes and rules:\ncd ${firebaseDirectory.relativePath}\nfirebase firestore:indexes --project $projectId > firestore.indexes.json');
+    await context.run(
+      'firebase firestore:indexes --project $projectId > firestore.indexes.json',
+      workingDirectory: firebaseDirectory,
+    );
     context.print(
         'You will need to manually copy/paste the firestore/storage rules since there is no way to do that from the CLI :-(');
   }
