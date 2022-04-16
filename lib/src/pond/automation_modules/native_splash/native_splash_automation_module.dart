@@ -40,11 +40,11 @@ class NativeSplashAutomationModule extends AutomationModule implements BuildingA
       return;
     }
 
-    final configurationFile = automateOutputDirectory - 'flutter_native_splash.yaml';
+    final configurationFile = cacheDirectory - 'flutter_native_splash.yaml';
     context.print('Saving configuration into `${configurationFile.relativePath}`');
     await FileDataSource(file: configurationFile).mapYaml().saveData(await _constructConfig());
 
-    context.run('flutter pub run flutter_native_splash:create --path=${configurationFile.relativePath}');
+    context.run('flutter pub run flutter_native_splash:create --path="${configurationFile.relativePath}"');
   }
 
   Future<Map<String, dynamic>> _constructConfig() async => {
@@ -64,7 +64,7 @@ class NativeSplashAutomationModule extends AutomationModule implements BuildingA
 
     drawImage(image, foregroundImage, dstW: imageWidth, dstH: imageHeight);
 
-    final outputFile = automateOutputDirectory - 'splash_app_icon.png';
+    final outputFile = cacheDirectory - 'splash_app_icon.png';
     await outputFile.ensureCreated();
 
     await outputFile.writeAsBytes(encodePng(image));
