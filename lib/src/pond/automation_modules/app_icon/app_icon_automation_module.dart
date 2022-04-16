@@ -54,6 +54,10 @@ class AppIconAutomationModule extends AutomationModule
       return;
     }
 
+    // Sometimes the AppIcon.appiconset folder isn't created causing flutter_launcher_icons to crash.
+    final iosAssetsFolder = Directory.current / 'ios' / 'Runner' / 'Assets.xcassets' / 'AppIcon.appiconset';
+    iosAssetsFolder.ensureCreated();
+
     final configurationFile = cacheDirectory - 'flutter_launcher_icons.yaml';
     context.print('Saving configuration into `${configurationFile.relativePath}`');
     await FileDataSource(file: configurationFile).mapYaml().saveData(await _constructConfig(context));
