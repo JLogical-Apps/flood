@@ -20,7 +20,7 @@ class CoreModule extends AppModule {
       ];
 
   Future<void> initialize(AppRegistration registration) async {
-    registration.register(ConfigModule());
+    registration.register(await ConfigModule.create());
     registration.register(await EnvironmentModule.create());
     registration.register(DefaultLoggingModule());
     registration.register(this);

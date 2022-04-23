@@ -9,7 +9,13 @@ class ConfigModule extends AppModule {
     loader: () async => await _loadConfig(),
   );
 
-  ConfigModule({this.configPath: 'assets/config.yaml'});
+  ConfigModule._({this.configPath: 'assets/config.yaml'});
+
+  static Future<ConfigModule> create({String configPath: 'assets/config.yaml'}) async {
+    final configModule = ConfigModule._(configPath: configPath);
+    await configModule.ensureConfigLoaded();
+    return configModule;
+  }
 
   Future<void> onLoad(AppContext appContext) async {
     await _configModel.ensureLoaded();
