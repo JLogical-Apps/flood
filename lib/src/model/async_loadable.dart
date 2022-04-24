@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:jlogical_utils/src/model/mapped_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../jlogical_utils.dart';

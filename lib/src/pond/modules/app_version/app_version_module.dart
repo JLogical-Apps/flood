@@ -1,11 +1,13 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/record/singleton.dart';
+import 'package:jlogical_utils/src/patterns/command/command.dart';
+import 'package:jlogical_utils/src/patterns/command/simple_command.dart';
+import 'package:jlogical_utils/src/pond/modules/debug/debuggable_module.dart';
 
 import 'version_usage.dart';
 import 'version_usage_entity.dart';
 import 'version_usage_repository.dart';
 
-class AppVersionModule extends AppModule {
+class AppVersionModule extends AppModule implements DebuggableModule {
   final DataSource<int>? currentVersionProvider;
   final DataSource<int>? minimumVersionProvider;
 
@@ -45,4 +47,20 @@ class AppVersionModule extends AppModule {
       await versionUsage.delete();
     }
   }
+
+  @override
+  List<Command> get debugCommands => [
+        SimpleCommand(
+          name: 'get_app_version',
+          runner: (args) {
+            return currentVersion;
+          },
+        ),
+        SimpleCommand(
+          name: 'get_min_version',
+          runner: (args) {
+            return minimumVersion;
+          },
+        )
+      ];
 }

@@ -10,10 +10,10 @@ class State extends Equatable {
   State({this.id, this.type, required this.values});
 
   Map<String, dynamic> get fullValues => {
-    ...values,
-    Query.id: id,
-    Query.type: type,
-  };
+        ...values,
+        Query.id: id,
+        Query.type: type,
+      };
 
   static State? extractFromOrNull(dynamic value, {String? typeFallback, String? idOverride}) {
     if (value is State) {
@@ -32,6 +32,11 @@ class State extends Equatable {
     }
 
     return null;
+  }
+
+  static State extractFrom(dynamic value, {String? typeFallback, String? idOverride}) {
+    return extractFromOrNull(value, typeFallback: typeFallback, idOverride: idOverride) ??
+        (throw Exception('Cannot extract state from $value'));
   }
 
   operator [](String fieldName) {

@@ -11,6 +11,7 @@ import 'package:example/style/styles_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+import 'debug_view/debug_page.dart';
 import 'form/form_page.dart';
 import 'pond/domain/budget/budget_draft_repository.dart';
 import 'pond/domain/user/user.dart';
@@ -52,6 +53,29 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(title: Text('JLogical Utils')),
       body: ListView(
         children: [
+          NavigationCard(
+            title: Text('Debugger'),
+            onTap: () async {
+              await _initDebugPond();
+
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => StyleProvider(
+                        style: DebugPage.style,
+                        child: SplashPage(
+                          child: StyledContentHeaderText('Debugger'),
+                          beforeLoad: (context) async {
+                            if (locate<ConfigModule>().config['reset'] == true) {
+                              log('RESETTING POND');
+                              await AppContext.global.reset();
+                            }
+                          },
+                          onDone: (context) async {
+                            context.style().navigateReplacement(context: context, newPage: (_) => DebugPage());
+                          },
+                        ),
+                      )));
+            },
+          ),
           NavigationCard(
             title: Text('Pond'),
             onTap: () async {
@@ -105,6 +129,7 @@ class HomePage extends StatelessWidget {
     final appContext = await AppContext.createGlobal();
     appContext
       ..register(await FirebaseModule.create(app: DefaultFirebaseOptions.currentPlatform))
+      ..register(DebugModule())
       ..register(DefaultAnalyticsModule())
       ..register(BudgetRepository())
       ..register(BudgetDraftRepository())
@@ -132,5 +157,10 @@ class HomePage extends StatelessWidget {
           onLoad: (yaml) => yaml?['min_version'],
         ),
       ));
+  }
+
+  Future<void> _initDebugPond() async {
+    final appContext = await AppContext.createGlobal();
+    appContext..register(CommandModule());
   }
 }

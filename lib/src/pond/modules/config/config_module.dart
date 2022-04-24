@@ -1,6 +1,10 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/patterns/command/command.dart';
+import 'package:jlogical_utils/src/pond/modules/debug/debuggable_module.dart';
 
-class ConfigModule extends AppModule {
+import '../../../patterns/command/simple_command.dart';
+
+class ConfigModule extends AppModule implements DebuggableModule {
   final String configPath;
 
   Map<String, dynamic> get config => _configModel.value.get();
@@ -32,4 +36,14 @@ class ConfigModule extends AppModule {
     var config = (await AssetDataSource(assetPath: configPath).mapYaml().getData())!;
     return config;
   }
+
+  @override
+  List<Command> get debugCommands => [
+        SimpleCommand(
+          name: 'get_config',
+          runner: (args) {
+            return config;
+          },
+        ),
+      ];
 }

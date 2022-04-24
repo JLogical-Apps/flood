@@ -1,6 +1,6 @@
 import 'dart:io';
 
-abstract class AutomationInteractor {
+abstract class ConsoleInteractor {
   void print(dynamic obj);
 
   void warning(dynamic obj);
