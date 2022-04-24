@@ -8,6 +8,8 @@ import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/utils/file_extensions.dart';
 import 'package:path/path.dart';
 
+import '../../../../../record/entity.dart';
+
 class FileFromQueryReducer extends AbstractQueryReducer<FromQuery, Iterable<State>> {
   final Directory baseDirectory;
 
@@ -17,12 +19,8 @@ class FileFromQueryReducer extends AbstractQueryReducer<FromQuery, Iterable<Stat
 
   @override
   Future<Iterable<State>> reduce({required Iterable<State>? accumulation, required Query query}) async {
-    final descendants = AppContext.global.getDescendants(query.recordType);
-    final types = {...descendants, query.recordType};
-    final typeNames = types.map((type) => type.toString()).toList();
-
     final _baseDirectory = await baseDirectory.ensureCreated();
-    final states = await Future.wait(_baseDirectory
+    Iterable<State> states = await Future.wait(_baseDirectory
         .listSync()
         .where((file) => file is File)
         .map((file) => file as File)
@@ -30,7 +28,15 @@ class FileFromQueryReducer extends AbstractQueryReducer<FromQuery, Iterable<Stat
         .map((file) => basenameWithoutExtension(file.path))
         .map((id) => stateGetter(id)));
 
-    final entities = states.where((state) => typeNames.contains(state.type));
-    return entities;
+    final shouldNarrowByType = query.recordType != Entity;
+    if (shouldNarrowByType) {
+      final descendants = AppContext.global.getDescendants(query.recordType);
+      final types = {...descendants, query.recordType};
+      final typeNames = types.map((type) => type.toString()).toList();
+
+      states = states.where((state) => typeNames.contains(state.type));
+    }
+
+    return states;
   }
 }

@@ -20,6 +20,7 @@ class DebugCommandPage extends HookWidget {
     final smartFormController = useMemoized(() => SmartFormController());
 
     final commandResult = useState<dynamic>(null);
+    final outputLoaded = useState<bool>(false);
 
     return StyleProvider(
       style: DebugPage.style,
@@ -51,16 +52,17 @@ class DebugCommandPage extends HookWidget {
                         .toMap();
 
                     commandResult.value = await onExecute(args);
+                    outputLoaded.value = true;
                   },
                 ),
                 SmartFormUpdateBuilder(builder: (context, controller) {
                   return _executeCommandText(controller);
                 }),
                 StyledDivider(),
-                if (commandResult.value != null)
+                if (outputLoaded.value)
                   outputFormBuilderFactory
-                      .getOutputFormBuilderByValueOrNull(commandResult.value!)!
-                      .build(commandResult.value!),
+                      .getOutputFormBuilderByValueOrNull(commandResult.value)!
+                      .build(commandResult.value),
               ],
             ),
           ),
