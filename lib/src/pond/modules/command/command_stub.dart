@@ -3,15 +3,26 @@ import 'package:jlogical_utils/src/patterns/command/command.dart';
 
 class CommandStub extends ValueObject {
   late final nameProperty = FieldProperty<String>(name: 'name').required();
-  late final parametersProperty = MapFieldProperty<String, CommandParameterStub>(name: 'parameters');
+  late final displayNameProperty = FieldProperty<String>(name: 'displayName').withFallback(() => nameProperty.value);
+  late final descriptionProperty = FieldProperty<String>(name: 'description');
+  late final parametersProperty = ListFieldProperty<CommandParameterStub>(name: 'parameters');
 
   @override
-  List<Property> get properties => super.properties + [nameProperty, parametersProperty];
+  List<Property> get properties =>
+      super.properties +
+      [
+        nameProperty,
+        displayNameProperty,
+        descriptionProperty,
+        parametersProperty,
+      ];
 
   static CommandStub fromCommand(Command command) {
     return CommandStub()
       ..nameProperty.value = command.name
+      ..displayNameProperty.value = command.displayName
+      ..descriptionProperty.value = command.description
       ..parametersProperty.value =
-          command.parameters.map((name, param) => MapEntry(name, CommandParameterStub.fromParameter(param)));
+          command.parameters.mapToIterable((name, param) => CommandParameterStub.fromParameter(name, param)).toList();
   }
 }

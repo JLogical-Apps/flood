@@ -48,6 +48,8 @@ class DefaultAuthModule extends AppModule implements DebuggableModule {
   List<Command> get debugCommands => [
         SimpleCommand(
           name: 'get_logged_in_user',
+          displayName: 'Logged-In User',
+          description: 'Gets the currently logged-in user.',
           runner: (args) async {
             final loggedInUserId = await _authService.getCurrentlyLoggedInUserId();
             return loggedInUserId;

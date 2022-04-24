@@ -7,20 +7,25 @@ import 'package:jlogical_utils/src/patterns/command/parameter/string_parameter.d
 import 'int_parameter.dart';
 
 abstract class CommandParameter {
+  final core.String? displayName;
+  final core.String? description;
+
+  CommandParameter({this.displayName, this.description});
+
   core.String get type;
 
   core.bool matches(core.dynamic arg);
 
-  static CommandParameter get int {
-    return IntCommandParameter();
+  static CommandParameter int({core.String? displayName, core.String? description}) {
+    return IntCommandParameter(displayName: displayName, description: description);
   }
 
-  static CommandParameter get string {
-    return StringCommandParameter();
+  static CommandParameter string({core.String? displayName, core.String? description}) {
+    return StringCommandParameter(displayName: displayName, description: description);
   }
 
-  static CommandParameter get bool {
-    return BoolCommandParameter();
+  static CommandParameter bool({core.String? displayName, core.String? description}) {
+    return BoolCommandParameter(displayName: displayName, description: description);
   }
 
   CommandParameter required() {

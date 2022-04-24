@@ -24,13 +24,13 @@ class StyledDescriptionText extends StyledWidget {
         text = text.allAfter('>');
 
         //Adds a new StyledBodyText that comes before the opening tags.
-        result.add(StyledBodyText(description.allBefore('>' + text + '<')));
+        result.add(StyledBodyText(description.allBefore('>' + text + '<'), textOverrides: overrides));
 
         //Removes the portion of the input that has been used
         description = description.replaceAll(description.allBefore('>' + text + '<') + '>' + text + '<', '');
 
         //Adds a new StyledInputText for the text found between the tags
-        result.add(StyledInputText(text));
+        result.add(StyledInputText(text, textOverrides: overrides));
       }
     }
 

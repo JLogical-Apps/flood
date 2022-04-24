@@ -10,6 +10,10 @@ abstract class Command {
   /// The name of the command, which is used to identify the command when trying to be run.
   String get name;
 
+  String get displayName => name;
+
+  String? get description => null;
+
   Map<String, CommandParameter> get parameters;
 
   FutureOr onExecute(Map<String, dynamic> args);

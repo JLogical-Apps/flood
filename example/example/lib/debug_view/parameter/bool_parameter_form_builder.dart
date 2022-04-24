@@ -6,10 +6,19 @@ class BoolParameterFormBuilder extends ParameterFormBuilder {
   @override
   String get handledType => 'bool';
 
-  Widget buildForm(String name, CommandParameterStub parameterStub) {
-    return StyledSmartBoolField(
-      name: name,
-      labelText: name,
+  Widget buildForm(CommandParameterStub parameterStub) {
+    return Column(
+      children: [
+        StyledSmartBoolField(
+          name: parameterStub.nameProperty.value!,
+          labelText: parameterStub.displayNameProperty.value,
+        ),
+        if (parameterStub.descriptionProperty.value != null)
+          StyledBodyText(
+            parameterStub.descriptionProperty.value!,
+            textOverrides: StyledTextOverrides(fontStyle: FontStyle.italic),
+          ),
+      ],
     );
   }
 }

@@ -9,11 +9,12 @@ class DebugCommandPage extends HookWidget {
   final CommandStub commandStub;
   final Future<dynamic> Function(Map<String, dynamic> args) onExecute;
 
-  const DebugCommandPage({Key? key, required this.commandStub, required this.onExecute}) : super(key: key);
+  DebugCommandPage({Key? key, required this.commandStub, required this.onExecute}) : super(key: key);
+
+  final parameterFormBuilderFactory = ParameterFormBuilderFactory();
 
   @override
   Widget build(BuildContext context) {
-    final parameterFormBuilderFactory = ParameterFormBuilderFactory();
     final smartFormController = useMemoized(() => SmartFormController());
 
     final commandResult = useState<String?>(null);
@@ -22,32 +23,59 @@ class DebugCommandPage extends HookWidget {
       style: DebugPage.style,
       child: Builder(builder: (context) {
         return StyledPage(
-          titleText: commandStub.nameProperty.value,
+          titleText: commandStub.displayNameProperty.value,
           body: SmartForm(
             controller: smartFormController,
-            child: ScrollColumn.withScrollbar(children: [
-              ...commandStub.parametersProperty.value!.mapToIterable((name, stub) =>
-                  parameterFormBuilderFactory.getParameterFormBuilderByParameterOrNull(stub)!.buildForm(name, stub)),
-              StyledButton.high(
-                text: 'Execute',
-                onTapped: () async {
-                  final result = await smartFormController.validate();
-                  if (!result.isValid) {
-                    return;
-                  }
+            child: ScrollColumn.withScrollbar(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (commandStub.descriptionProperty.value != null)
+                  StyledContentSubtitleText(commandStub.descriptionProperty.value!),
+                ...commandStub.parametersProperty.value!.map((stub) =>
+                    parameterFormBuilderFactory.getParameterFormBuilderByParameterOrNull(stub)!.buildForm(stub)),
+                StyledButton.high(
+                  text: 'Execute',
+                  onTapped: () async {
+                    final result = await smartFormController.validate();
+                    if (!result.isValid) {
+                      return;
+                    }
 
-                  final data = result.valueByName!;
-                  commandResult.value = (await onExecute(data))?.toString() ?? 'N/A';
-                },
-              ),
-              if (commandResult.value != null) ...[
+                    final data = result.valueByName!;
+
+                    final args = commandStub.parametersProperty.value!
+                        .map((stub) =>
+                            MapEntry(stub.nameProperty.value!, _getArgValue(stub, data[stub.nameProperty.value!])))
+                        .toMap();
+
+                    commandResult.value = (await onExecute(args))?.toString() ?? 'N/A';
+                  },
+                ),
+                SmartFormUpdateBuilder(builder: (context, controller) {
+                  return _executeCommandText(controller);
+                }),
                 StyledDivider(),
-                StyledBodyText(commandResult.value!),
+                if (commandResult.value != null) StyledBodyText(commandResult.value!),
               ],
-            ]),
+            ),
           ),
         );
       }),
     );
+  }
+
+  StyledDescriptionText _executeCommandText(SmartFormController controller) {
+    final parameters = commandStub.parametersProperty.value!.map((param) {
+      final name = param.nameProperty.value!;
+      return '  >$name<: ${_getArgValue(param, controller.getDataOrNull(name))}';
+    }).join('\n');
+    return StyledDescriptionText(
+      inputString: '>${commandStub.nameProperty.value}<\n$parameters',
+      overrides: StyledTextOverrides(fontStyle: FontStyle.italic),
+    );
+  }
+
+  dynamic _getArgValue(CommandParameterStub stub, dynamic formValue) {
+    return parameterFormBuilderFactory.getParameterFormBuilderByParameterOrNull(stub)!.transformValue(formValue);
   }
 }

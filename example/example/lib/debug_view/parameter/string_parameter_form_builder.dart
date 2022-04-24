@@ -6,12 +6,21 @@ class StringParameterFormBuilder extends ParameterFormBuilder {
   @override
   String get handledType => 'string';
 
-  Widget buildForm(String name, CommandParameterStub parameterStub) {
-    return StyledSmartTextField(
-      name: name,
-      label: name,
-      validators: [
-        if (parameterStub.requiredProperty.value!) Validation.required(),
+  Widget buildForm(CommandParameterStub parameterStub) {
+    return Column(
+      children: [
+        StyledSmartTextField(
+          name: parameterStub.nameProperty.value!,
+          label: parameterStub.displayNameProperty.value!,
+          validators: [
+            if (parameterStub.requiredProperty.value!) Validation.required(),
+          ],
+        ),
+        if (parameterStub.descriptionProperty.value != null)
+          StyledBodyText(
+            parameterStub.descriptionProperty.value!,
+            textOverrides: StyledTextOverrides(fontStyle: FontStyle.italic),
+          ),
       ],
     );
   }

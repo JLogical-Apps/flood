@@ -51,16 +51,15 @@ class AppVersionModule extends AppModule implements DebuggableModule {
   @override
   List<Command> get debugCommands => [
         SimpleCommand(
-          name: 'get_app_version',
+          name: 'get_version_info',
+          displayName: 'Version Info',
+          description: 'Gets the current version info.',
           runner: (args) {
-            return currentVersion;
+            return {
+              'currentVersion': currentVersion,
+              'minimumVersion': minimumVersion,
+            };
           },
         ),
-        SimpleCommand(
-          name: 'get_min_version',
-          runner: (args) {
-            return minimumVersion;
-          },
-        )
       ];
 }

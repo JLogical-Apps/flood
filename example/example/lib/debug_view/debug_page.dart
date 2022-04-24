@@ -44,7 +44,7 @@ class DebugPage extends HookWidget {
                         headerText: 'Commands',
                         children: stubs
                             .map((stub) => StyledContent.medium(
-                                  headerText: stub.nameProperty.value,
+                                  headerText: stub.displayNameProperty.value,
                                   onTapped: () async {
                                     context.style().navigateTo(
                                         context: context,

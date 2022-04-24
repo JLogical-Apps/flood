@@ -41,6 +41,8 @@ class ConfigModule extends AppModule implements DebuggableModule {
   List<Command> get debugCommands => [
         SimpleCommand(
           name: 'get_config',
+          displayName: 'Config',
+          description: 'Gets the current config values.',
           runner: (args) {
             return config;
           },
