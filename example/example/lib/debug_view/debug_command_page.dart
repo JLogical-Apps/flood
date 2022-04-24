@@ -1,3 +1,4 @@
+import 'package:example/debug_view/output/output_form_builder_factory.dart';
 import 'package:example/debug_view/parameter/parameter_form_builder_factory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -12,12 +13,13 @@ class DebugCommandPage extends HookWidget {
   DebugCommandPage({Key? key, required this.commandStub, required this.onExecute}) : super(key: key);
 
   final parameterFormBuilderFactory = ParameterFormBuilderFactory();
+  final outputFormBuilderFactory = OutputFormBuilderFactory();
 
   @override
   Widget build(BuildContext context) {
     final smartFormController = useMemoized(() => SmartFormController());
 
-    final commandResult = useState<String?>(null);
+    final commandResult = useState<dynamic>(null);
 
     return StyleProvider(
       style: DebugPage.style,
@@ -48,14 +50,17 @@ class DebugCommandPage extends HookWidget {
                             MapEntry(stub.nameProperty.value!, _getArgValue(stub, data[stub.nameProperty.value!])))
                         .toMap();
 
-                    commandResult.value = (await onExecute(args))?.toString() ?? 'N/A';
+                    commandResult.value = await onExecute(args);
                   },
                 ),
                 SmartFormUpdateBuilder(builder: (context, controller) {
                   return _executeCommandText(controller);
                 }),
                 StyledDivider(),
-                if (commandResult.value != null) StyledBodyText(commandResult.value!),
+                if (commandResult.value != null)
+                  outputFormBuilderFactory
+                      .getOutputFormBuilderByValueOrNull(commandResult.value!)!
+                      .build(commandResult.value!),
               ],
             ),
           ),
