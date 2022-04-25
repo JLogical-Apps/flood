@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:example/debug_view/debug_command_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -33,39 +34,62 @@ class DebugPage extends HookWidget {
           return ModelBuilder.styledPage(
               model: commandsModel,
               builder: (List<CommandStub> stubs) {
+                var commandsByCategory = stubs.groupListsBy((x) => x.categoryProperty.value);
+                final uncategorizedCategory = commandsByCategory.remove(null) ?? [];
+
+                const minCardWidth = 300;
+                final cardsPerRow = MediaQuery.of(context).size.width ~/ minCardWidth;
+                final cardWidth = MediaQuery.of(context).size.width / cardsPerRow;
+
                 return StyledPage(
                   titleText: 'Debugger',
                   onRefresh: () async {
-                    await remoteClientModel.load();
+                    await commandsModel.load();
                   },
                   body: ScrollColumn.withScrollbar(
                     children: [
-                      StyledCategory.medium(
-                        headerText: 'Commands',
-                        children: stubs
-                            .map((stub) => StyledContent.medium(
-                                  headerText: stub.displayNameProperty.value,
-                                  onTapped: () async {
-                                    context.style().navigateTo(
-                                        context: context,
-                                        page: (_) => DebugCommandPage(
-                                              commandStub: stub,
-                                              onExecute: (args) async {
-                                                final client = remoteClientModel.get();
-                                                return await client.run(
-                                                  commandName: stub.nameProperty.value!,
-                                                  args: args,
-                                                );
-                                              },
-                                            ));
-                                  },
-                                ))
-                            .toList(),
+                      Wrap(
+                        children: [
+                          ...commandsByCategory.mapToIterable((category, commands) => SizedBox(
+                                width: cardWidth,
+                                child: StyledCategory.medium(
+                                  headerText: category,
+                                  children: _commandsList(context, commands: commands),
+                                ),
+                              )),
+                          ..._commandsList(context, commands: uncategorizedCategory, cardWidth: cardWidth),
+                        ],
                       ),
                     ],
                   ),
                 );
               });
         }));
+  }
+
+  List<Widget> _commandsList(BuildContext context, {required List<CommandStub> commands, double? cardWidth}) {
+    return commands
+        .map((stub) => SizedBox(
+              width: cardWidth,
+              child: StyledContent.medium(
+                headerText: stub.displayNameProperty.value,
+                trailing: StyledIcon.high(Icons.chevron_right),
+                onTapped: () async {
+                  context.style().navigateTo(
+                      context: context,
+                      page: (_) => DebugCommandPage(
+                            commandStub: stub,
+                            onExecute: (args) async {
+                              final client = remoteClientModel.get();
+                              return await client.run(
+                                commandName: stub.nameProperty.value!,
+                                args: args,
+                              );
+                            },
+                          ));
+                },
+              ),
+            ))
+        .toList();
   }
 }

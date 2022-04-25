@@ -14,6 +14,8 @@ abstract class Command {
 
   String? get description => null;
 
+  String? get category;
+
   Map<String, CommandParameter> get parameters;
 
   FutureOr onExecute(Map<String, dynamic> args);
@@ -42,9 +44,4 @@ abstract class Command {
 
     return true;
   }
-
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'parameters': parameters.map((name, parameter) => MapEntry(name, parameter.toString())),
-      };
 }

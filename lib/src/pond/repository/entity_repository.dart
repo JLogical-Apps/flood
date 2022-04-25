@@ -56,8 +56,9 @@ abstract class EntityRepository extends AppModule
   List<Command> get debugCommands => [
         SimpleCommand(
           name: '${runtimeType.toString()}_get',
-          displayName: '$runtimeType - Get by ID',
+          displayName: 'Get by ID',
           description: 'Get a state by an ID.',
+          category: runtimeType.toString(),
           parameters: {
             'id': CommandParameter.string(displayName: 'ID', description: 'The ID of the state to get').required(),
           },
@@ -69,8 +70,9 @@ abstract class EntityRepository extends AppModule
         ),
         SimpleCommand(
           name: '${runtimeType.toString()}_get_all',
-          displayName: '$runtimeType - Get All',
+          displayName: 'Get All',
           description: 'Gets the first 20 elements (only the first 20 to prevent over-excessive billing).',
+          category: runtimeType.toString(),
           runner: (args) async {
             final pagination = await onExecuteQuery(Query.from<Entity>().paginate());
             final firstPage = pagination.results;

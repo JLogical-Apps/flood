@@ -14,6 +14,9 @@ class SimpleCommand extends Command {
   final String? description;
 
   @override
+  final String? category;
+
+  @override
   final Map<String, CommandParameter> parameters;
 
   final FutureOr Function(Map<String, dynamic> args) runner;
@@ -22,6 +25,7 @@ class SimpleCommand extends Command {
     required this.name,
     String? displayName,
     this.description,
+    this.category,
     this.parameters: const {},
     required this.runner,
   }) : this.displayName = displayName ?? name;
@@ -32,6 +36,7 @@ class SimpleCommand extends Command {
     this.parameters: const {},
     required this.runner,
   })  : name = Command.wildcardName,
+        category = null,
         this.displayName = displayName ?? 'Wildcard';
 
   @override
