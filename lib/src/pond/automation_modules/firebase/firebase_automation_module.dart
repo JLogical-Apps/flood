@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:jlogical_utils/automation.dart';
+import 'package:jlogical_utils/src/patterns/command/command.dart';
+import 'package:jlogical_utils/src/patterns/command/parameter/command_parameter.dart';
+import 'package:jlogical_utils/src/patterns/command/simple_command.dart';
 import 'package:jlogical_utils/src/pond/automation_modules/environment/environment_listening_automation_module.dart';
 import 'package:jlogical_utils/utils.dart';
 
@@ -8,88 +11,64 @@ class FirebaseAutomationModule extends AutomationModule implements EnvironmentLi
   @override
   String get name => 'Firebase';
 
+  @override
+  List<Command> get commands => [
+        SimpleCommand(
+          name: 'init',
+          displayName: 'Initialize',
+          description: 'Initializes Firebase for this project.',
+          category: 'Firebase',
+          runner: (args) async {
+            await _initFirebase();
+          },
+        ),
+        SimpleCommand(
+          name: 'register',
+          displayName: 'Register Project',
+          description: 'Registers a Firebase Project to this project.',
+          category: 'Firebase',
+          parameters: {
+            'project-id': CommandParameter.string(
+              displayName: 'Project ID',
+              description: 'The project id to register.',
+            ),
+            'env': CommandParameter.string(
+              displayName: 'Environment',
+              description: 'The environments to associate the project with.', // TODO multiple.
+            ),
+          },
+          runner: (args) async {
+            await _registerProject();
+          },
+        ),
+        SimpleCommand(
+          name: 'emulators',
+          displayName: 'Start Emulators',
+          description: 'Opens up the emulators.',
+          category: 'Firebase',
+          runner: (args) async {
+            await _setupEmulators();
+          },
+        ),
+      ];
+
   final Directory firebaseDirectory;
 
   FirebaseAutomationModule({Directory? firebaseDirectory})
-      : this.firebaseDirectory = firebaseDirectory ?? Directory.current / 'firebase' {
-    final firebaseCommand = registerAutomation(name: 'firebase', description: 'Commands relating to Firebase.');
-    firebaseCommand.registerAutomation(
-      name: 'init',
-      description: 'Initializes Firebase for this project.',
-      action: _initFirebase,
-    );
-    firebaseCommand.registerAutomation(
-        name: 'register',
-        description: 'Registers a Firebase Project to this project.',
-        action: _registerProject,
-        args: (args) {
-          args.addOption(
-            'project-id',
-            help: 'The project id to register.',
-          );
-          args.addMultiOption(
-            'environments',
-            aliases: ['envs'],
-            help: 'The environments to associate the project with.',
-            allowed: Environment.values.map((env) => env.name).toList(),
-          );
-        });
-    firebaseCommand.registerAutomation(
-      name: 'emulators',
-      description: 'Starts up the emulators.',
-      action: _setupEmulators,
-    );
-    firebaseCommand.registerAutomation(
-        name: 'refresh',
-        description: "Refreshes the project's indices and security rules from the live version.",
-        action: _refresh,
-        args: (args) {
-          args.addOption(
-            'environment',
-            aliases: ['env'],
-            help: 'The environment whose project to refresh the indices from.',
-            allowed: Environment.values.map((env) => env.name).toList(),
-            defaultsTo: Environment.production.name,
-          );
-        });
-    firebaseCommand.registerAutomation(
-      name: 'deploy',
-      description: 'Deploys the local changes to Firebase.',
-      args: (args) {
-        args.addMultiOption(
-          'environments',
-          aliases: ['envs'],
-          help: 'The environments whose Firebase projects to deploy.',
-          allowed: Environment.values.map((env) => env.name).toList(),
-        );
-        args.addMultiOption(
-          'project-ids',
-          help: 'The ids of the Firebase projects to deploy.',
-        );
-        args.addFlag(
-          'all',
-          abbr: 'a',
-          negatable: false,
-          help: 'Whether to deploy all registered Firebase projects.',
-        );
-      },
-      action: _deploy,
-    );
-  }
+      : this.firebaseDirectory = firebaseDirectory ?? Directory.current / 'firebase';
 
   @override
   Future<void> onEnvironmentChanged(
-    AutomationContext context,
     Environment? oldEnvironment,
     Environment newEnvironment,
   ) async {
     if (newEnvironment == Environment.qa) {
-      await _setupEmulators(context);
+      await _setupEmulators();
     }
   }
 
-  Future<bool> _initFirebase(AutomationContext context) async {
-    if (!await _setupFirebase(context)) {
+  Future<bool> _initFirebase() async {
+    if (!await _setupFirebase()) {
       return false;
     }
 
@@ -106,8 +85,8 @@ class FirebaseAutomationModule extends AutomationModule implements EnvironmentLi
     return true;
   }
 
-  Future<void> _registerProject(AutomationContext context) async {
-    if (!await _initFirebase(context)) {
+  Future<void> _registerProject() async {
+    if (!await _initFirebase()) {
       return;
     }
 
@@ -143,78 +122,15 @@ class FirebaseAutomationModule extends AutomationModule implements EnvironmentLi
     context.run('firebase use --add', workingDirectory: firebaseDirectory);
   }
 
-  Future<void> _refresh(AutomationContext context) async {
-    if (!await _setupFirebase(context)) {
-      return;
-    }
-
-    final env = await context.getEnvironmentOrNull() ?? (throw Exception('Environment needed to refresh from!'));
-    final projectId = await _getProjectIdFromEnvironmentName(context, envName: env.name);
-    if (projectId == null) {
-      context.error('No project found associated with $env environment!');
-      return;
-    }
-
-    await context.run(
-      'firebase firestore:indexes --project $projectId > firestore.indexes.json',
-      workingDirectory: firebaseDirectory,
-    );
-    context.print(
-        'You will need to manually copy/paste the firestore/storage rules since there is no way to do that from the CLI :-(');
-  }
-
-  Future<void> _setupEmulators(AutomationContext context) async {
-    if (!await _setupFirebase(context)) {
+  Future<void> _setupEmulators() async {
+    if (!await _setupFirebase()) {
       return;
     }
 
     await context.run('firebase emulators:start', workingDirectory: firebaseDirectory);
   }
 
-  Future<void> _deploy(AutomationContext context) async {
-    if (!await _initFirebase(context)) {
-      return;
-    }
-
-    List<String> projectIds = [];
-    List<String> projectIdsArg = context.args['project-ids'];
-    projectIds = projectIdsArg;
-
-    if (projectIds.isEmpty && context.args['all']) {
-      final config = (await context.getConfig()) ?? {};
-      config.ensureNested(['firebase', 'environments']);
-
-      projectIds = config['firebase']['environments'].values.cast<String>().toSet().toList();
-    }
-
-    if (projectIds.isEmpty) {
-      List<Environment> environments = await context.getEnvironments(
-        selectPrompt: 'Select which associated environments you would like to deploy!',
-      );
-      if (environments.isNotEmpty) {
-        final config = (await context.getConfig()) ?? {};
-        config.ensureNested(['firebase', 'environments']);
-
-        projectIds = environments
-            .where((env) => config['firebase']['environments'][env] != null)
-            .map((env) => config['firebase']['environments'][env] as String)
-            .toSet()
-            .toList();
-      }
-    }
-
-    if (projectIds.isEmpty) {
-      context.error('No projects to deploy! Specify some using the arguments!');
-      return;
-    }
-
-    await Future.wait(projectIds.map((id) => context.run(
-          'firebase deploy --project=$id',
-          workingDirectory: firebaseDirectory,
-        )));
-  }
-
-  Future<bool> _setupFirebase(AutomationContext context) async {
+  Future<bool> _setupFirebase() async {
     try {
       await context.run('firebase --version');
     } catch (e) {
@@ -241,12 +157,5 @@ class FirebaseAutomationModule extends AutomationModule implements EnvironmentLi
     }
 
     return true;
-  }
-
-  Future<String?> _getProjectIdFromEnvironmentName(AutomationContext context, {required String envName}) async {
-    final config = (await context.getConfig()) ?? {};
-    config.ensureNested(['firebase', 'environments']);
-
-    return config['firebase']['environments'][envName];
   }
 }

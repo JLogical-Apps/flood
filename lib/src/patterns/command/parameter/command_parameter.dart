@@ -1,7 +1,6 @@
 import 'dart:core' as core;
 
 import 'package:jlogical_utils/src/patterns/command/parameter/bool_parameter.dart';
-import 'package:jlogical_utils/src/patterns/command/parameter/required_parameter.dart';
 import 'package:jlogical_utils/src/patterns/command/parameter/string_parameter.dart';
 
 import 'int_parameter.dart';
@@ -9,6 +8,8 @@ import 'int_parameter.dart';
 abstract class CommandParameter {
   final core.String? displayName;
   final core.String? description;
+
+  core.bool isRequired = false;
 
   CommandParameter({this.displayName, this.description});
 
@@ -29,6 +30,7 @@ abstract class CommandParameter {
   }
 
   CommandParameter required() {
-    return RequiredParameter(parent: this);
+    isRequired = true;
+    return this;
   }
 }

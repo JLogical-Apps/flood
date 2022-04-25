@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:image/image.dart';
 import 'package:jlogical_utils/automation.dart';
+import 'package:jlogical_utils/src/patterns/command/command.dart';
+import 'package:jlogical_utils/src/patterns/command/simple_command.dart';
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 import 'package:jlogical_utils/src/utils/file_extensions.dart';
@@ -18,22 +20,27 @@ class NativeSplashAutomationModule extends AutomationModule implements BuildingA
     required this.imageFile,
     this.backgroundColor: 0xffffff,
     this.imageSize: 1,
-  }) {
-    registerAutomation(
-      name: 'native_splash',
-      description: 'Sets the native splash screen of the app.',
-      action: _setNativeSplash,
-    );
-  }
+  });
 
   @override
-  Future<void> onBuild(AutomationContext context) async {
-    if (context.isClean) {
-      await _setNativeSplash(context);
+  List<Command> get commands => [
+        SimpleCommand(
+          name: 'native_splash',
+          displayName: 'Setup',
+          description: 'Sets the native splash screen of the app.',
+          category: 'Native Splash',
+          runner: (args) {},
+        ),
+      ];
+
+  @override
+  Future<void> onBuild(bool isClean) async {
+    if (isClean) {
+      await _setNativeSplash();
     }
   }
 
-  Future<void> _setNativeSplash(AutomationContext context) async {
+  Future<void> _setNativeSplash() async {
     if (!await context.ensurePackageRegistered('flutter_native_splash', isDevDependency: true)) {
       context.error(
           "You don't have `flutter_native_splash` installed as a dev_dependency. It is needed in order to generate the app icon.");

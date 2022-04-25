@@ -1,4 +1,7 @@
 import 'package:jlogical_utils/automation.dart';
+import 'package:jlogical_utils/src/patterns/command/command.dart';
+import 'package:jlogical_utils/src/patterns/command/parameter/command_parameter.dart';
+import 'package:jlogical_utils/src/patterns/command/simple_command.dart';
 import 'package:jlogical_utils/src/pond/automation_modules/environment/environment_listening_automation_module.dart';
 import 'package:jlogical_utils/src/utils/collection_extensions.dart';
 
@@ -6,36 +9,38 @@ class EnvironmentAutomationModule extends AutomationModule {
   @override
   String get name => 'Environment';
 
-  EnvironmentAutomationModule() {
-    final environmentAutomations = registerAutomation(
-      name: 'environment',
-      description: 'Commands relating to the environment.',
-    );
-    environmentAutomations.registerAutomation(
-      name: 'set',
-      description: 'Set the environment. The name of the environment should be listed as the last parameter.',
-      action: _setEnvironment,
-      category: 'environment',
-    );
-  }
+  @override
+  List<Command> get commands => [
+        SimpleCommand(
+          name: 'environment_set',
+          displayName: 'Set Environment',
+          description: 'Set the environment.',
+          category: 'Environment',
+          parameters: {
+            'env': CommandParameter.string(
+              displayName: 'Environment',
+              description: 'The environment to set to.',
+            ),
+          },
+          runner: (args) async {
+            final environmentName = args['env'];
+            final environment = Environment.values.where((env) => env.name == environmentName).firstOrNull ??
+                (throw Exception('Could not find environment with name $environmentName'));
 
-  Future<void> _setEnvironment(AutomationContext context) async {
-    final environmentName = context.args.rest.lastOrNull ?? (throw Exception('Environment name should be set last'));
-    final environment = Environment.values.where((env) => env.name == environmentName).firstOrNull ??
-        (throw Exception('Could not find environment with name $environmentName'));
+            final config = await context.getConfig();
+            final oldEnvironmentName = config?['env'];
+            final oldEnvironment = Environment.values.where((env) => env.name == oldEnvironmentName).firstOrNull;
 
-    final config = await context.getConfig();
-    final oldEnvironmentName = config?['env'];
-    final oldEnvironment = Environment.values.where((env) => env.name == oldEnvironmentName).firstOrNull;
+            if (environment == oldEnvironment) {
+              return;
+            }
 
-    if (environment == oldEnvironment) {
-      return;
-    }
+            await context.updateConfigField('env', environmentName);
 
-    await context.updateConfigField('env', environmentName);
-
-    for (final module in context.modules.whereType<EnvironmentListeningAutomationModule>()) {
-      await module.onEnvironmentChanged(context, oldEnvironment, environment);
-    }
-  }
+            for (final module in AutomationContext.global.modules.whereType<EnvironmentListeningAutomationModule>()) {
+              await module.onEnvironmentChanged(oldEnvironment, environment);
+            }
+          },
+        ),
+      ];
 }

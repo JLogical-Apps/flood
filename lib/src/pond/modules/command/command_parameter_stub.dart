@@ -1,6 +1,5 @@
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/patterns/command/parameter/command_parameter.dart';
-import 'package:jlogical_utils/src/patterns/command/parameter/required_parameter.dart';
 
 class CommandParameterStub extends ValueObject {
   late final nameProperty = FieldProperty<String>(name: 'name').required();
@@ -26,6 +25,6 @@ class CommandParameterStub extends ValueObject {
       ..displayNameProperty.value = param.displayName
       ..descriptionProperty.value = param.description
       ..typeProperty.value = param.type
-      ..requiredProperty.value = param is RequiredParameter;
+      ..requiredProperty.value = param.isRequired;
   }
 }

@@ -1,7 +1,6 @@
 export 'src/pond/automation/automate.dart';
 export 'src/pond/automation/automation_context.dart';
 export 'src/pond/automation/automation_module.dart';
-export 'src/pond/automation/automations_provider.dart';
 export 'src/pond/automation_modules/app_icon/app_icon_automation_module.dart';
 export 'src/pond/automation_modules/app_icon/app_icon_banner.dart';
 export 'src/pond/automation_modules/build/building_automation_module.dart';

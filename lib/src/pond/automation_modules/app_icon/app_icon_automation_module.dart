@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:image/image.dart';
 import 'package:jlogical_utils/automation.dart';
+import 'package:jlogical_utils/src/patterns/command/command.dart';
+import 'package:jlogical_utils/src/patterns/command/simple_command.dart';
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 import 'package:jlogical_utils/src/pond/automation_modules/environment/environment_listening_automation_module.dart';
@@ -17,37 +19,44 @@ class AppIconAutomationModule extends AutomationModule
   final int backgroundColor;
   final List<AppIconBanner> banners;
 
+  @override
   String get name => 'App Icon';
 
   AppIconAutomationModule({
     required this.appIconForegroundFile,
     this.backgroundColor: 0xffffff,
     this.banners: const [],
-  }) {
-    registerAutomation(
-      name: 'app_icon',
-      description: 'Set the app icon of the app.',
-      action: _setAppIcon,
-    );
-  }
+  });
 
   @override
-  Future<void> onBuild(AutomationContext context) async {
-    if (context.isClean) {
-      await _setAppIcon(context);
+  List<Command> get commands => [
+        SimpleCommand(
+          name: 'app_icon',
+          displayName: 'Set App Icon',
+          description: 'Set the app icon of the app.',
+          category: 'App Icon',
+          runner: (args) async {
+            await _setAppIcon();
+          },
+        ),
+      ];
+
+  @override
+  Future<void> onBuild(bool isClean) async {
+    if (isClean) {
+      await _setAppIcon();
     }
   }
 
   @override
   Future<void> onEnvironmentChanged(
-    AutomationContext context,
     Environment? oldEnvironment,
     Environment newEnvironment,
   ) async {
-    _setAppIcon(context);
+    await _setAppIcon();
   }
 
-  Future<void> _setAppIcon(AutomationContext context) async {
+  Future<void> _setAppIcon() async {
     if (!await context.ensurePackageRegistered('flutter_launcher_icons', isDevDependency: true)) {
       context.error(
           "You don't have `flutter_launcher_icons` installed as a dev_dependency. It is needed in order to generate the app icon.");
@@ -60,12 +69,12 @@ class AppIconAutomationModule extends AutomationModule
 
     final configurationFile = cacheDirectory - 'flutter_launcher_icons.yaml';
     context.print('Saving configuration into `${configurationFile.relativePath}`');
-    await FileDataSource(file: configurationFile).mapYaml().saveData(await _constructConfig(context));
+    await FileDataSource(file: configurationFile).mapYaml().saveData(await _constructConfig());
 
     context.run('flutter pub run flutter_launcher_icons:main -f "${configurationFile.relativePath}"');
   }
 
-  Future<Map<String, dynamic>> _constructConfig(AutomationContext context) async {
+  Future<Map<String, dynamic>> _constructConfig() async {
     var foregroundFile = appIconForegroundFile;
 
     final environment = await context.getEnvironmentOrNull(shouldAskIfNoArg: false);

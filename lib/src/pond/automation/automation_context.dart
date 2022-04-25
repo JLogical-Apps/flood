@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:args/args.dart';
 import 'package:collection/collection.dart';
 import 'package:jlogical_utils/automation.dart';
+import 'package:jlogical_utils/src/patterns/command/command.dart';
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 import 'package:jlogical_utils/src/pond/automation/automation_interactor.dart';
@@ -10,30 +10,31 @@ import 'package:jlogical_utils/src/pond/automation/package_registration.dart';
 import 'package:jlogical_utils/src/pond/automation/with_pubspec_package_registration.dart';
 import 'package:jlogical_utils/src/utils/file_extensions.dart';
 
-import 'automation.dart';
 import 'with_dcli_console_interactor.dart';
 import 'with_default_console_interactor.dart';
 
 class AutomationContext
     with WithDefaultConsoleInteractor, WithDcliConsoleInteractor, WithPubspecPackageRegistration
     implements ConsoleInteractor, PackageRegistration {
-  late ArgResults args;
+  static late AutomationContext global;
+
+  late Map<String, dynamic> args;
 
   List<AutomationModule> modules = [];
 
-  List<Automation> get automations => modules.expand((element) => element.automations).toList();
+  List<Command> get commands => modules.expand((element) => element.commands).toList();
 
   void registerModule(AutomationModule module) {
     modules.add(module);
   }
 
   Future<Environment?> getEnvironmentOrNull({
-    String? argName: 'environment',
+    String? argName: 'env',
     bool shouldAskIfNoArg: true,
     String selectPrompt: 'Select environment:',
   }) async {
     Environment? environment;
-    if (argName != null && args.options.contains(argName)) {
+    if (argName != null && args.containsKey(argName)) {
       final environmentArgName = args[argName];
       environment = _environmentFromNameOrNull(environmentArgName) ??
           (throw Exception('Environment [$environmentArgName] not recognized!'));
@@ -68,7 +69,7 @@ class AutomationContext
     String selectPrompt: 'Select environments:',
   }) async {
     List<Environment> environments = [];
-    if (argName != null && args.options.contains(argName)) {
+    if (argName != null && args.containsKey(argName)) {
       List<String> environmentArgNames = args[argName];
       environments = environmentArgNames
           .map((envName) =>
@@ -100,8 +101,6 @@ class AutomationContext
 
     return environments;
   }
-
-  bool get isClean => args['clean'];
 
   Future<bool> ensurePackageRegistered(String packageName, {required bool isDevDependency}) async {
     if (await isPackageRegistered(packageName, isDevDependency: isDevDependency)) {

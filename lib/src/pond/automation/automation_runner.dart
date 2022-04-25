@@ -1,44 +1,42 @@
 import 'package:args/args.dart';
-import 'package:args/command_runner.dart';
-import 'package:jlogical_utils/src/utils/util.dart';
+import 'package:args/command_runner.dart' as args_command;
+import 'package:jlogical_utils/src/patterns/command/command.dart';
+import 'package:jlogical_utils/src/pond/automation/parameters/parameter_arg_builder_factory.dart';
 
-import 'automation.dart';
 import 'automation_context.dart';
 
-Future<void> runAutomation(List<String> args, {required AutomationContext automationContext}) async {
-  final runner = CommandRunner('automate', 'Run an automation.');
-  automationContext.automations.forEach((automation) => runner.addCommand(_commandFromAutomation(
-        automationContext,
-        automation: automation,
-      )));
+ParameterArgBuilderFactory _parameterArgBuilderFactory = ParameterArgBuilderFactory();
+
+Future<void> runAutomation(List<String> args) async {
+  final runner = args_command.CommandRunner('automate', 'Run an automation.');
+  AutomationContext.global.commands.forEach((command) => runner.addCommand(_argCommandFromCommand(command)));
   try {
     await runner.run(args);
-  } on UsageException catch (e) {
-    automationContext.print(e);
+  } on args_command.UsageException catch (e) {
+    AutomationContext.global.print(e);
   }
 }
 
-SimpleCommand _commandFromAutomation(AutomationContext context, {required Automation automation}) {
-  final command = SimpleCommand(
-    name: automation.name,
-    description: automation.description ?? 'N/A',
-    category: automation.category,
-    args: automation.args,
-    onRun: automation.action.mapIfNonNull((action) => (args) {
-          context.args = args;
-          return action(context);
-        }),
+_SimpleCommand _argCommandFromCommand(Command command) {
+  final argCommand = _SimpleCommand(
+    name: command.name,
+    description: command.description ?? 'N/A',
+    category: command.category,
+    args: (args) {
+      command.parameters.forEach((name, param) {
+        _parameterArgBuilderFactory.getParameterArgBuilderByValueOrNull(param)!.register(name, param, args);
+      });
+    },
+    onRun: (results) {
+      final args = command.parameters.map((name, param) => MapEntry(name, results[name]));
+      AutomationContext.global.args = args;
+      return command.run(args);
+    },
   );
-  automation.automations.forEach((automation) {
-    command.addSubcommand(_commandFromAutomation(
-      context,
-      automation: automation,
-    ));
-  });
-  return command;
+  return argCommand;
 }
 
-class SimpleCommand extends Command {
+class _SimpleCommand extends args_command.Command {
   @override
   final String name;
 
@@ -50,7 +48,7 @@ class SimpleCommand extends Command {
 
   final Future<void> Function(ArgResults args)? onRun;
 
-  SimpleCommand({
+  _SimpleCommand({
     required this.name,
     required this.description,
     required this.onRun,
