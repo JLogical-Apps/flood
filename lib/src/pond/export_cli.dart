@@ -1,7 +1,6 @@
 export 'automation/automate.dart';
 export 'automation/automation_context.dart';
 export 'automation/automation_module.dart';
-export 'automation/automations_provider.dart';
 export 'automation_modules/app_icon/app_icon_automation_module.dart';
 export 'automation_modules/app_icon/app_icon_banner.dart';
 export 'automation_modules/build/building_automation_module.dart';

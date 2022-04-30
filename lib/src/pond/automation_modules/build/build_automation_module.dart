@@ -1,9 +1,7 @@
+import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/pond/automation_modules/build/building_automation_module.dart';
 
-import '../../automation/automation_context.dart';
 import '../../automation/automation_module.dart';
-import '../../automation/automations_provider.dart';
-import '../../modules/environment/environment.dart';
 
 class BuildAutomationModule extends AutomationModule {
   @override

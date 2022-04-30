@@ -1,10 +1,12 @@
 import 'package:jlogical_utils/src/pond/record/singleton.dart';
 
+import '../../../patterns/export_core.dart';
 import '../../../persistence/export_core.dart';
 import '../../context/app_context.dart';
 import '../../context/module/app_module.dart';
 import '../../context/registration/app_registration.dart';
 import '../../query/query.dart';
+import '../debug/debuggable_module.dart';
 import 'version_usage.dart';
 import 'version_usage_entity.dart';
 import 'version_usage_repository.dart';

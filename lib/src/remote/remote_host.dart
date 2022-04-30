@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:jlogical_utils/remote.dart';
 import 'package:jlogical_utils/src/remote/remote_message.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -9,6 +8,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../patterns/command/command.dart';
 import 'abstract_remote_communicator.dart';
+import 'remote_client.dart';
 
 class RemoteHost extends AbstractRemoteCommunicator {
   final String address;

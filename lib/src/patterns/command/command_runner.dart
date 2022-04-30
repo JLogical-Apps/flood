@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:jlogical_utils/src/patterns/command/command.dart';
-import 'package:jlogical_utils/src/utils/collection_extensions.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 class CommandRunner {
   final List<Command> commands;

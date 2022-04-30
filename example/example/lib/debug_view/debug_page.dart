@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/jlogical_utils.dart' as pond;
-import 'package:jlogical_utils/remote.dart';
 
 class DebugPage extends HookWidget {
   static Style style = DeltaStyle(

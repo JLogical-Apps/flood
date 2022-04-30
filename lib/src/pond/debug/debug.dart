@@ -1,5 +1,5 @@
-import 'package:jlogical_utils/remote.dart';
-import 'package:jlogical_utils/src/patterns/command/simple_command.dart';
+import 'package:jlogical_utils/src/patterns/export_core.dart';
+import 'package:jlogical_utils/src/remote/export_core.dart';
 
 const int _pondPort = 1236;
 const int _debugViewPort = 1237;

@@ -1,5 +1,11 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/patterns/command/command.dart';
+import 'package:jlogical_utils/src/patterns/export_core.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
+
+import '../../property/field_property.dart';
+import '../../property/list_field_property.dart';
+import '../../property/property.dart';
+import '../../record/value_object.dart';
+import 'command_parameter_stub.dart';
 
 class CommandStub extends ValueObject {
   late final nameProperty = FieldProperty<String>(name: 'name').required();

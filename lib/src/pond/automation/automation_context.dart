@@ -1,19 +1,18 @@
 import 'dart:io';
 
-import 'package:args/args.dart';
 import 'package:collection/collection.dart';
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 import 'package:jlogical_utils/src/pond/automation/automation_interactor.dart';
 import 'package:jlogical_utils/src/pond/automation/package_registration.dart';
-import 'package:jlogical_utils/src/pond/automation/with_console_automation_output.dart';
-import 'package:jlogical_utils/src/pond/automation/with_dcli_automation_interactor.dart';
 import 'package:jlogical_utils/src/pond/automation/with_pubspec_package_registration.dart';
 import 'package:jlogical_utils/src/utils/file_extensions.dart';
 
+import '../../patterns/export_core.dart';
 import '../modules/environment/environment.dart';
-import 'automation.dart';
 import 'automation_module.dart';
+import 'with_dcli_console_interactor.dart';
+import 'with_default_console_interactor.dart';
 
 class AutomationContext
     with WithDefaultConsoleInteractor, WithDcliConsoleInteractor, WithPubspecPackageRegistration

@@ -1,4 +1,6 @@
+import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/persistence/export_core.dart';
+import 'package:jlogical_utils/src/pond/modules/debug/debuggable_module.dart';
 
 import '../../../model/export_core.dart';
 import '../../../persistence/data_source/asset_data_source.dart';
@@ -6,7 +8,7 @@ import '../../context/app_context.dart';
 import '../../context/module/app_module.dart';
 import '../environment/environment.dart';
 
-class ConfigModule extends AppModule {
+class ConfigModule extends AppModule implements DebuggableModule {
   final String configPath;
 
   Map<String, dynamic> get config => _configModel.value.get();

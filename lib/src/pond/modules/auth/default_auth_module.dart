@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/pond/modules/environment/default_environment_data.dart';
 import 'package:jlogical_utils/src/pond/modules/environment/environment_data_source.dart';
 import 'package:jlogical_utils/src/pond/modules/environment/environment_module.dart';
@@ -7,6 +8,7 @@ import 'package:jlogical_utils/src/pond/modules/environment/environment_module.d
 import '../../context/app_context.dart';
 import '../../context/module/app_module.dart';
 import '../../context/registration/app_registration.dart';
+import '../debug/debuggable_module.dart';
 import '../environment/environment.dart';
 import 'auth_service.dart';
 import 'file_auth_service.dart';

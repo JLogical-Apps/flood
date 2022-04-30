@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:jlogical_utils/src/remote/remote_message.dart';
 import 'package:web_socket_channel/io.dart';
 
-import '../patterns/command/command.dart';
+import '../patterns/export_core.dart';
 import 'abstract_remote_communicator.dart';
 
 class RemoteClient extends AbstractRemoteCommunicator {

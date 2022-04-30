@@ -1,9 +1,9 @@
 import 'package:args/args.dart';
-import 'package:args/command_runner.dart';
-import 'package:jlogical_utils/src/utils/export_core.dart';
+import 'package:args/command_runner.dart' as args_command;
 
-import 'automation.dart';
+import '../../patterns/export_core.dart';
 import 'automation_context.dart';
+import 'parameters/parameter_arg_builder_factory.dart';
 
 ParameterArgBuilderFactory _parameterArgBuilderFactory = ParameterArgBuilderFactory();
 

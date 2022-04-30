@@ -3,13 +3,13 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:image/image.dart';
+import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/pond/automation_modules/environment/environment_listening_automation_module.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../../../persistence/export_core.dart';
 import '../../automation/automation_context.dart';
 import '../../automation/automation_module.dart';
-import '../../automation/automations_provider.dart';
 import '../../modules/environment/environment.dart';
 import '../build/building_automation_module.dart';
 import 'app_icon_banner.dart';

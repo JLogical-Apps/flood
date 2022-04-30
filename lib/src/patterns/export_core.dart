@@ -1,4 +1,8 @@
 export 'cache/cache.dart';
+export 'command/command.dart';
+export 'command/command_runner.dart';
+export 'command/parameter/command_parameter.dart';
+export 'command/simple_command.dart';
 export 'resolver/resolver.dart';
 export 'resolver/with_resolver_provider.dart';
 export 'resolver/with_typed_resolver.dart';

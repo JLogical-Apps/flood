@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:jlogical_utils/src/remote/remote_message.dart';
 
-import '../patterns/command/command.dart';
-import '../patterns/command/command_runner.dart';
-import '../persistence/ids/uuid_id_generator.dart';
+import '../patterns/export_core.dart';
+import '../persistence/export_core.dart';
 
 const String _commandNameField = '_name';
 const String _commandResultField = 'result';

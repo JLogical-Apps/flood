@@ -1,7 +1,7 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/pond/modules/command/command_stub.dart';
-
+import '../../context/module/app_module.dart';
+import '../../context/registration/value_object_registration.dart';
 import 'command_parameter_stub.dart';
+import 'command_stub.dart';
 
 class CommandModule extends AppModule {
   @override

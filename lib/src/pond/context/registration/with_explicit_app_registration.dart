@@ -33,7 +33,7 @@ mixin WithExplicitAppRegistration implements AppRegistration {
   List<TypeStateSerializer> get typeStateSerializers =>
       appModules.expand((module) => module.typeStateSerializers).toList();
 
-  List get navigatorObservers => _appModules.expand((module) => module.navigatorObservers).toList();
+  List get navigatorObservers => appModules.expand((module) => module.navigatorObservers).toList();
 
   Entity? constructEntityRuntimeOrNull(ValueObject initialState) {
     return entityRegistrations
