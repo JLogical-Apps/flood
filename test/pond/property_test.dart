@@ -18,6 +18,7 @@ void main() {
     final now = DateTime.now();
 
     AppContext.global = AppContext.createForTesting(now: now)
+      ..registerForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
@@ -43,6 +44,7 @@ void main() {
 
   test('state inflation of record that has a list', () {
     AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<LuckyNumbers, LuckyNumbers?>(() => LuckyNumbers()),
@@ -66,6 +68,7 @@ void main() {
 
   test('state inflation of record that has a map.', () {
     AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
@@ -89,6 +92,7 @@ void main() {
 
   test('state inflation of record that has a value object.', () {
     AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
@@ -117,6 +121,7 @@ void main() {
 
   test('state inflation of record that has a list of value objects.', () {
     AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
@@ -153,6 +158,7 @@ void main() {
 
   test('state inflation of record that has a map with value objects.', () {
     AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
@@ -189,6 +195,7 @@ void main() {
 
   test('state inflation of record that has a reference to an entity.', () {
     AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Envelope, Envelope?>(() => Envelope()),
@@ -225,7 +232,9 @@ void main() {
   });
 
   test('fallback working', () async {
-    AppContext.global = AppContext.createForTesting()..register(LocalUserRepository());
+    AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
+      ..register(LocalUserRepository());
 
     final userEntity = UserEntity()..value = (User()..nameProperty.value = 'Jake');
     await userEntity.create();
@@ -236,7 +245,9 @@ void main() {
   });
 
   test('fallback replacement', () async {
-    AppContext.global = AppContext.createForTesting()..register(LocalUserRepository());
+    AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
+      ..register(LocalUserRepository());
 
     final userEntity = UserEntity()..value = (User()..nameProperty.value = 'Jake');
 

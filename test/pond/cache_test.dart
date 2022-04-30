@@ -5,6 +5,7 @@ void main() {
   test('use cache if same query called twice.', () async {
     int withoutCacheQueriesExecuted = 0;
     AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
       ..register(UserRepository(whenWithoutCacheQueryExecuted: () => withoutCacheQueriesExecuted++));
 
     final userEntities = [
@@ -22,6 +23,7 @@ void main() {
   test('do not use cache if query is slightly different', () async {
     int withoutCacheQueriesExecuted = 0;
     AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
       ..register(UserRepository(whenWithoutCacheQueryExecuted: () => withoutCacheQueriesExecuted++));
 
     final userEntities = [
@@ -42,6 +44,7 @@ void main() {
     Future<void> reset() async {
       withoutCacheQueriesExecuted = 0;
       AppContext.global = AppContext.createForTesting()
+        ..registerForTesting()
         ..register(UserRepository(whenWithoutCacheQueryExecuted: () => withoutCacheQueriesExecuted++));
 
       final userEntities = [
@@ -144,6 +147,7 @@ void main() {
     Future<void> reset() async {
       withoutCacheQueriesExecuted = 0;
       AppContext.global = AppContext.createForTesting()
+        ..registerForTesting()
         ..register(UserRepository(whenWithoutCacheQueryExecuted: () => withoutCacheQueriesExecuted++));
 
       final userEntities = [

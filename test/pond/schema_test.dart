@@ -172,6 +172,7 @@ void main() {
 
   test('embedded value objects.', () {
     AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
       ..register(SimpleAppModule(valueObjectRegistrations: [
         ValueObjectRegistration<UserAvatar, UserAvatar?>(() => UserAvatar()),
         ValueObjectRegistration<Color, Color?>(() => Color()),

@@ -11,7 +11,9 @@ import 'query_test.dart';
 void main() {
   final now = DateTime.now();
   setUp(() async {
-    AppContext.global = AppContext.createForTesting(now: now)..register(LocalEnvelopeRepository());
+    AppContext.global = AppContext.createForTesting(now: now)
+      ..registerForTesting()
+      ..register(LocalEnvelopeRepository());
   });
 
   test('simple value object has proper state.', () {
@@ -108,7 +110,9 @@ void main() {
   });
 
   test('lifecycle events', () async {
-    AppContext.global = AppContext.createForTesting()..register(LifecycleRepository());
+    AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
+      ..register(LifecycleRepository());
     final lifecycleEntity = LifecycleEntity()..value = Lifecycle();
 
     var onInitialize = false;

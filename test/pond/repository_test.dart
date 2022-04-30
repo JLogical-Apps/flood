@@ -6,7 +6,9 @@ import 'entities/envelope_entity.dart';
 
 void main() {
   setUp(() {
-    AppContext.global = AppContext.createForTesting()..register(LocalEnvelopeRepository());
+    AppContext.global = AppContext.createForTesting()
+      ..registerForTesting()
+      ..register(LocalEnvelopeRepository());
   });
 
   test('basic repository functions.', () async {
