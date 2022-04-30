@@ -16,27 +16,25 @@ class AppContext
     implements AppRegistration, Database, DateTimeProvider, DirectoryProvider {
   static late AppContext global = AppContext._();
 
+  @override
   DateTimeProvider dateTimeProvider = NowDateTimeProvider();
 
-  final DirectoryBundle directoryBundle;
+  @override
+  DirectoryProvider directoryProvider = DirectoryBundle.empty();
 
-  AppContext._({DirectoryBundle? directoryBundle}) : this.directoryBundle = directoryBundle ?? DirectoryBundle.empty();
+  AppContext._();
 
   static AppContext createForTesting({DateTime? now}) {
-    AppContext.global = AppContext._(directoryBundle: DirectoryBundle.empty())
-      ..dateTimeProvider = PresetDateTimeProvider(now ?? DateTime.now());
+    AppContext.global = AppContext._()..dateTimeProvider = PresetDateTimeProvider(now ?? DateTime.now());
 
     return AppContext.global;
   }
 
-  static AppContext createGlobal({DirectoryBundle? directoryBundle}) {
-    directoryBundle = directoryBundle ?? DirectoryBundle.empty();
-    AppContext.global = AppContext._(directoryBundle: directoryBundle);
+  static AppContext createGlobal() {
+    AppContext.global = AppContext._();
 
     return AppContext.global;
   }
-
-  DirectoryProvider get directoryProvider => directoryBundle;
 }
 
 T locate<T extends Object>() {

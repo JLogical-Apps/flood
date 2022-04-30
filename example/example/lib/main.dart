@@ -97,7 +97,8 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> _initPond() async {
-    final appContext = AppContext.createGlobal()..registerForApp();
+    final appContext = AppContext.createGlobal();
+    await appContext.registerForApp();
     appContext
       ..register(await FirebaseModule.create(app: DefaultFirebaseOptions.currentPlatform))
       ..register(DefaultAnalyticsModule())

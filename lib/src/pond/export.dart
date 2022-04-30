@@ -1,6 +1,5 @@
 export 'context/app_context.dart';
 export 'context/app_context_app_extensions.dart';
-export 'context/directory/application_directory_bundle.dart';
 export 'context/directory/directory_bundle.dart';
 export 'context/observer/pond_navigator_observer.dart';
 export 'export_core.dart';
