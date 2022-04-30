@@ -157,7 +157,7 @@ class HomePage extends StatelessWidget {
 
   Future<void> _initDebugPond() async {
     final appContext = await AppContext.createGlobal();
-    await appContext.registerForApp();
+    await appContext.registerForWeb();
     appContext..register(CommandModule());
   }
 }

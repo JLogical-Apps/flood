@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:jlogical_utils/src/remote/remote_message.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
-import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../patterns/command/command.dart';
@@ -45,7 +44,7 @@ class RemoteHost extends AbstractRemoteCommunicator {
     int port: 1236,
     List<Command> commands: const [],
   }) async {
-    final socket = IOWebSocketChannel.connect(Uri.parse('ws://$address:$port'));
+    final socket = WebSocketChannel.connect(Uri.parse('ws://$address:$port'));
     return RemoteClient(webSocket: socket, commands: commands);
   }
 

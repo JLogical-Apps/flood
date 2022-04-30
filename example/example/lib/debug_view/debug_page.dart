@@ -13,7 +13,7 @@ class DebugPage extends HookWidget {
   );
 
   late Model<RemoteClient> remoteClientModel = Model(loader: () {
-    return RemoteHost.connect(address: '10.0.2.2', port: 1237);
+    return RemoteHost.connect(address: loopbackAddress, port: 1237);
   });
   late Model<List<CommandStub>> commandsModel = Model(loader: () async {
     final client = await remoteClientModel.ensureLoadedAndGet();

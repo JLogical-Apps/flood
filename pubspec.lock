@@ -267,13 +267,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.1"
-  darq:
-    dependency: transitive
-    description:
-      name: darq
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.1"
   dart_console:
     dependency: "direct main"
     description:
@@ -302,13 +295,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.30.2"
-  directed_graph:
-    dependency: transitive
-    description:
-      name: directed_graph
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.6"
   equatable:
     dependency: "direct main"
     description:
@@ -316,13 +302,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
-  exception_templates:
-    dependency: transitive
-    description:
-      name: exception_templates
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.1"
   expandable:
     dependency: "direct main"
     description:
@@ -674,20 +653,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.1.4"
-  lakos:
-    dependency: "direct dev"
-    description:
-      name: lakos
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
-  lazy_memo:
-    dependency: transitive
-    description:
-      name: lazy_memo
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   lint:
     dependency: transitive
     description:
@@ -947,13 +912,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1+1"
-  quote_buffer:
-    dependency: transitive
-    description:
-      name: quote_buffer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.3"
   random_string:
     dependency: transitive
     description:

@@ -71,17 +71,12 @@ dependencies:
   firebase_core: ^1.12.0
   firebase_storage: ^10.2.6
 
-dependency_overrides:
-  path:
-    1.8.0
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   build_runner: ^2.0.5 # flutter packages pub run build_runner watch
   freezed: ^0.14.2
-  lakos: ^2.0.2
 
 flutter:
   uses-material-design: true

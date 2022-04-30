@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:jlogical_utils/src/remote/remote_message.dart';
-import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../patterns/export_core.dart';
 import 'abstract_remote_communicator.dart';
 
 class RemoteClient extends AbstractRemoteCommunicator {
-  final IOWebSocketChannel webSocket;
+  final WebSocketChannel webSocket;
 
   bool isConnected = true;
 

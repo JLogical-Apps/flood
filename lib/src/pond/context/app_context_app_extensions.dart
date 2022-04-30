@@ -16,4 +16,9 @@ extension AppContextAppExtension on AppContext {
     final coreModule = CoreModule();
     await coreModule.initialize(AppContext.global);
   }
+
+  Future<void> registerForWeb() async {
+    final coreModule = CoreModule();
+    await coreModule.initialize(AppContext.global);
+  }
 }
