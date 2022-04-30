@@ -4,7 +4,7 @@ import 'package:dcli/dcli.dart' as dcli;
 import 'package:dcli/dcli.dart';
 import 'package:jlogical_utils/src/pond/automation/automation_interactor.dart';
 
-mixin WithDcliAutomationInteractor implements AutomationInteractor {
+mixin WithDcliConsoleInteractor implements ConsoleInteractor {
   Future<void> run(String command, {Directory? workingDirectory}) async {
     print('> $command');
     dcli.start(

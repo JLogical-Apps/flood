@@ -4,6 +4,8 @@ import 'package:jlogical_utils/src/pond/query/from_query.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reducer.dart';
 
+import '../../../../../record/entity.dart';
+
 class FirestoreFromQueryReducer extends AbstractQueryReducer<FromQuery, firestore.Query> {
   final String collectionPath;
   final String unionTypeFieldName;
@@ -22,6 +24,11 @@ class FirestoreFromQueryReducer extends AbstractQueryReducer<FromQuery, firestor
     final collection = firestore.FirebaseFirestore.instance.collection(collectionPath);
 
     if (query.recordType == inferredType) {
+      return collection;
+    }
+
+    final shouldNarrowByType = query.recordType != Entity;
+    if (!shouldNarrowByType) {
       return collection;
     }
 

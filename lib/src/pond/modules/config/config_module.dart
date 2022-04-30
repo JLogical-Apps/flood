@@ -38,4 +38,16 @@ class ConfigModule extends AppModule {
     var config = (await AssetDataSource(assetPath: configPath).mapYaml().getData())!;
     return config;
   }
+
+  @override
+  List<Command> get debugCommands => [
+        SimpleCommand(
+          name: 'get_config',
+          displayName: 'Config',
+          description: 'Gets the current config values.',
+          runner: (args) {
+            return config;
+          },
+        ),
+      ];
 }

@@ -9,7 +9,7 @@ import 'version_usage.dart';
 import 'version_usage_entity.dart';
 import 'version_usage_repository.dart';
 
-class AppVersionModule extends AppModule {
+class AppVersionModule extends AppModule implements DebuggableModule {
   final DataSource<int>? currentVersionProvider;
   final DataSource<int>? minimumVersionProvider;
 
@@ -49,4 +49,19 @@ class AppVersionModule extends AppModule {
       await versionUsage.delete();
     }
   }
+
+  @override
+  List<Command> get debugCommands => [
+        SimpleCommand(
+          name: 'get_version_info',
+          displayName: 'Version Info',
+          description: 'Gets the current version info.',
+          runner: (args) {
+            return {
+              'currentVersion': currentVersion,
+              'minimumVersion': minimumVersion,
+            };
+          },
+        ),
+      ];
 }

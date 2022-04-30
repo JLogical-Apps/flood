@@ -6,8 +6,10 @@ import 'package:jlogical_utils/src/pond/automation_modules/build/build_automatio
 import 'package:jlogical_utils/src/utils/export_core.dart';
 
 Future<void> automate({required List<String> args, required AutomationContext automationContext}) async {
+  AutomationContext.global = automationContext;
   automationContext.registerModule(BuildAutomationModule());
-  await runAutomation(args, automationContext: automationContext);
+
+  await runAutomation(args);
 }
 
 Directory automateOutputDirectory = Directory.current / 'tool' / 'output';

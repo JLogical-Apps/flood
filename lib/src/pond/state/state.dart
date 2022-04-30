@@ -36,6 +36,11 @@ class State extends Equatable {
     return null;
   }
 
+  static State extractFrom(dynamic value, {String? typeFallback, String? idOverride}) {
+    return extractFromOrNull(value, typeFallback: typeFallback, idOverride: idOverride) ??
+        (throw Exception('Cannot extract state from $value'));
+  }
+
   operator [](String fieldName) {
     return fullValues[fieldName];
   }

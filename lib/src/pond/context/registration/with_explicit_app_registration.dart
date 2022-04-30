@@ -22,16 +22,16 @@ mixin WithExplicitAppRegistration implements AppRegistration {
 
   final EntityDatabase _entityDatabase = EntityDatabase();
 
-  final List<AppModule> _appModules = [];
+  final List<AppModule> appModules = [];
 
   List<ValueObjectRegistration> get valueObjectRegistrations =>
-      _appModules.expand((module) => module.valueObjectRegistrations).toList();
+      appModules.expand((module) => module.valueObjectRegistrations).toList();
 
   List<EntityRegistration> get entityRegistrations =>
-      _appModules.expand((module) => module.entityRegistrations).toList();
+      appModules.expand((module) => module.entityRegistrations).toList();
 
   List<TypeStateSerializer> get typeStateSerializers =>
-      _appModules.expand((module) => module.typeStateSerializers).toList();
+      appModules.expand((module) => module.typeStateSerializers).toList();
 
   List get navigatorObservers => _appModules.expand((module) => module.navigatorObservers).toList();
 
@@ -204,7 +204,7 @@ mixin WithExplicitAppRegistration implements AppRegistration {
     _registrationByType[T] = obj;
 
     if (obj is AppModule) {
-      _appModules.add(obj);
+      appModules.add(obj);
       obj.onRegister(this);
     }
 
@@ -219,14 +219,14 @@ mixin WithExplicitAppRegistration implements AppRegistration {
 
   /// Loads all the modules.
   Future<void> load() async {
-    for (final module in _appModules) {
+    for (final module in appModules) {
       await module.onLoad(AppContext.global);
     }
   }
 
   /// Resets the entire device as if it has never opened the app before.
   Future<void> reset() async {
-    for (final module in _appModules) {
+    for (final module in appModules) {
       await module.onReset(AppContext.global);
     }
   }

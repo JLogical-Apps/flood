@@ -13,16 +13,17 @@ import 'file_auth_service.dart';
 import 'firebase_auth_service.dart';
 import 'local_auth_service.dart';
 
-class DefaultAuthModule extends AppModule {
+class DefaultAuthModule extends AppModule implements DebuggableModule {
   final bool shouldAutoSignUpForTesting;
   final FutureOr Function(String userId, String email)? onAutoSignUp;
+
+  late AuthService _authService = _getAuthService(DefaultEnvironmentData.getDataSource(AppContext.global.environment));
 
   DefaultAuthModule({this.shouldAutoSignUpForTesting: true, this.onAutoSignUp});
 
   @override
   void onRegister(AppRegistration registration) {
-    registration
-        .register<AuthService>(_getAuthService(DefaultEnvironmentData.getDataSource(AppContext.global.environment)));
+    registration.register<AuthService>(_authService);
   }
 
   @override
@@ -44,4 +45,17 @@ class DefaultAuthModule extends AppModule {
         return FirebaseAuthService();
     }
   }
+
+  @override
+  List<Command> get debugCommands => [
+        SimpleCommand(
+          name: 'get_logged_in_user',
+          displayName: 'Logged-In User',
+          description: 'Gets the currently logged-in user.',
+          runner: (args) async {
+            final loggedInUserId = await _authService.getCurrentlyLoggedInUserId();
+            return loggedInUserId;
+          },
+        ),
+      ];
 }

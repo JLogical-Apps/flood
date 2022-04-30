@@ -5,7 +5,7 @@ import 'package:lumberdash/lumberdash.dart' as lumberdash;
 
 import 'automation_interactor.dart';
 
-mixin WithConsoleAutomationOutput implements AutomationInteractor {
+mixin WithDefaultConsoleInteractor implements ConsoleInteractor {
   bool _isLumberdashInitialized = false;
 
   void print(dynamic obj) {

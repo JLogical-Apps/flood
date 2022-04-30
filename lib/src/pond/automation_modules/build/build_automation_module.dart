@@ -9,35 +9,30 @@ class BuildAutomationModule extends AutomationModule {
   @override
   String get name => 'Build';
 
-  BuildAutomationModule() {
-    registerAutomation(
-      name: 'build',
-      description: 'Builds the app.',
-      action: _build,
-      category: null,
-      args: (args) {
-        args.addOption(
-          'environment',
-          help: 'The environment to build the app for.',
-          allowed: Environment.values.map((env) => env.name).toList(),
-          aliases: ['env'],
-          defaultsTo: Environment.device.name,
-        );
-        args.addFlag(
-          'clean',
-          help: 'Whether to build the app from a clean slate.',
-          negatable: false,
-        );
-      },
-    );
-  }
-}
+  @override
+  List<Command> get commands => [
+        SimpleCommand(
+          name: 'build',
+          description: 'Builds the app.',
+          runner: (args) => _build,
+          category: 'Build',
+          parameters: {
+            'clean': CommandParameter.bool(
+              displayName: 'Clean',
+              description: 'Whether to build the app from a clean slate.',
+            )
+          },
+        ),
+      ];
 
-Future<void> _build(AutomationContext context) async {
-  if (context.isClean) {
-    context.print('Building a clean version of the app!');
-  } else {
-    context.print('Building the app!');
+  Future<void> _build(Map<String, dynamic>? args) async {
+    final isClean = args?['clean'] ?? false;
+    if (isClean) {
+      context.print('Building a clean version of the app!');
+    } else {
+      context.print('Building the app!');
+    }
+
+    await Future.wait(context.modules.whereType<BuildingAutomationModule>().map((module) => module.onBuild(isClean)));
   }
-  await Future.wait(context.modules.whereType<BuildingAutomationModule>().map((module) => module.onBuild(context)));
 }

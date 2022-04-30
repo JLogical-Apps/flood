@@ -4,14 +4,12 @@ import 'package:jlogical_utils/src/pond/automation/automation.dart';
 import 'package:jlogical_utils/src/pond/automation/automations_provider.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 
-import 'automate.dart';
-
-abstract class AutomationModule implements AutomationsProvider {
+abstract class AutomationModule {
   String get name;
 
-  final List<Automation> automations = [];
+  List<Command> get commands;
 
-  String get categoryName => name;
+  AutomationContext get context => AutomationContext.global;
 
   Directory get cacheDirectory => automateOutputDirectory / name;
 }
