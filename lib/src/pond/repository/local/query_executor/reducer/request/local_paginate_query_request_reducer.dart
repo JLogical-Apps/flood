@@ -4,7 +4,7 @@ import 'package:jlogical_utils/src/pond/query/request/result/query_pagination_re
 import 'package:jlogical_utils/src/pond/query/request/result/query_pagination_result_controller.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
-import 'package:jlogical_utils/src/utils/util.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../../../../../query/query.dart';
 import '../../../../../record/entity.dart';

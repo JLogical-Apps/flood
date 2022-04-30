@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../export.dart';
+import 'package:jlogical_utils/src/persistence/persistence/persistence_generator.dart';
 
 /// A persistence generator that generates json.
 abstract class JsonPersistenceGenerator<T> implements PersistenceGenerator<T, String> {

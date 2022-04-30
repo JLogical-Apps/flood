@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/style.dart';
+import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:provider/provider.dart';
 
 /// Builds a widget based on a [Style] and [StyleContext].

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:jlogical_utils/src/style/styled_widget.dart';
 
-import '../../../../jlogical_utils.dart';
+import '../../emphasis.dart';
+import '../../style.dart';
+import '../../style_context.dart';
+import '../input/action_item.dart';
 
 class StyledContent extends StyledWidget {
   /// The header text to display.

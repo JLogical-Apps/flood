@@ -1,4 +1,5 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
+import '../record/entity.dart';
+import 'entity_repository.dart';
 
 mixin WithMonoEntityRepository<E extends Entity> on EntityRepository {
   @override

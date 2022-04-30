@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../jlogical_utils.dart';
+import '../../../form/export.dart';
+import '../input/styled_text_field.dart';
 
 /// Styled SmartTextField that uses a [StyledTextField].
 class StyledSmartTextField extends SmartFormField<String> {

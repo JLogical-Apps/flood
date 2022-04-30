@@ -1,8 +1,12 @@
 import 'dart:io';
 
-import 'package:jlogical_utils/automation.dart';
 import 'package:jlogical_utils/src/pond/automation_modules/environment/environment_listening_automation_module.dart';
-import 'package:jlogical_utils/utils.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
+
+import '../../automation/automation_context.dart';
+import '../../automation/automation_module.dart';
+import '../../automation/automations_provider.dart';
+import '../../modules/environment/environment.dart';
 
 class FirebaseAutomationModule extends AutomationModule implements EnvironmentListeningAutomationModule {
   @override

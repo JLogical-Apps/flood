@@ -1,4 +1,10 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/persistence/export_core.dart';
+
+import '../../../model/export_core.dart';
+import '../../../persistence/data_source/asset_data_source.dart';
+import '../../context/app_context.dart';
+import '../../context/module/app_module.dart';
+import '../environment/environment.dart';
 
 class ConfigModule extends AppModule {
   final String configPath;

@@ -16,7 +16,6 @@ import 'pond/domain/budget/budget_draft_repository.dart';
 import 'pond/domain/user/user.dart';
 import 'pond/domain/user/user_entity.dart';
 import 'pond/presentation/pond_login_page.dart';
-import 'repository/repository_page.dart';
 
 Future<void> main() async {
   runZonedGuarded(() {
@@ -83,10 +82,6 @@ class HomePage extends StatelessWidget {
           NavigationCard(
             title: Text('Forms'),
             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => FormPage())),
-          ),
-          NavigationCard(
-            title: Text('Repository'),
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => RepositoryPage())),
           ),
           NavigationCard(
             title: Text('Models'),

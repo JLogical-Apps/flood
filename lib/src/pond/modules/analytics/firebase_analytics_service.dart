@@ -1,5 +1,4 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/material.dart';
 
 import 'analytics_event.dart';
 import 'analytics_service.dart';
@@ -8,7 +7,7 @@ class FirebaseAnalyticsService extends AnalyticsService {
   late final analytics = FirebaseAnalytics.instance;
 
   @override
-  List<NavigatorObserver> get navigatorObservers => [
+  List get navigatorObservers => [
         FirebaseAnalyticsObserver(analytics: analytics),
       ];
 

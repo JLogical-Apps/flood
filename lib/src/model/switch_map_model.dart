@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 
-import '../../jlogical_utils.dart';
+import 'async_loadable.dart';
+import 'future_value.dart';
 
 /// Maps a parent to another model.
 /// Whenever the parent's value changes, this model stops listening to the old model

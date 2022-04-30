@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:provider/provider.dart';
+
+import 'style_context.dart';
 
 /// Provides a new [StyleContext] its children.
 class StyleContextProvider extends StatelessWidget {

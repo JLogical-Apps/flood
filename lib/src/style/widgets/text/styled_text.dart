@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_overrides.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_style.dart';
+
+import '../../style.dart';
+import '../../styled_widget.dart';
 
 abstract class StyledText extends StyledWidget {
   final String text;

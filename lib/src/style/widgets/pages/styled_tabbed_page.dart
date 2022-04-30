@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_tab.dart';
+
+import '../../style.dart';
+import '../../style_context.dart';
+import '../../styled_widget.dart';
+import '../input/action_item.dart';
 
 class StyledTabbedPage extends StyledWidget {
   /// The pages that will be displayed as tabs in this page.

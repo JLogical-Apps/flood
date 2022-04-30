@@ -1,8 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/style.dart';
+
+import '../../../form/export.dart';
+import '../input/styled_button.dart';
 
 /// Not a widget. Used to provide information for [Style.showDialog].
 class StyledDialog<T> {

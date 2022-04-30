@@ -1,5 +1,6 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'data_source.dart';
 
 class FirestoreDocumentDataSource extends DataSource<Map<String, dynamic>> {
   final String documentPath;

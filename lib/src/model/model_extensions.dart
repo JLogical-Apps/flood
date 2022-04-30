@@ -1,6 +1,6 @@
-import 'package:jlogical_utils/src/model/switch_map_model.dart';
-
-import '../../jlogical_utils.dart';
+import 'async_loadable.dart';
+import 'combined_latest_model.dart';
+import 'switch_map_model.dart';
 
 extension IterableModelExtensions<T> on Iterable<AsyncLoadable<T>> {
   /// Combines the list of models into one mapped model.

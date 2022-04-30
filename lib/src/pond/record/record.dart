@@ -1,5 +1,7 @@
-import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/pond/validation/validation_state.dart';
+
+import '../state/stateful.dart';
+import '../validation/validator.dart';
 
 abstract class Record implements Stateful, Validator {
   ValidationState validationState = ValidationState.unvalidated;

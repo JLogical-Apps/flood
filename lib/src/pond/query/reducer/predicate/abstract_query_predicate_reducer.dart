@@ -1,6 +1,6 @@
-import 'package:jlogical_utils/src/patterns/wrapper/with_subtype_wrapper.dart';
-import 'package:jlogical_utils/src/patterns/wrapper/wrapper.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
+
+import '../../../../patterns/export_core.dart';
 
 abstract class AbstractQueryPredicateReducer<P extends AbstractQueryPredicate, C>
     with WithSubtypeWrapper<P, AbstractQueryPredicate>

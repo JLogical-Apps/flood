@@ -7,8 +7,6 @@ import 'package:jlogical_utils/src/pond/context/registration/with_explicit_app_r
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/database/with_database_delegator.dart';
 
-import '../modules/core_module.dart';
-import '../modules/environment/environment_module.dart';
 import 'date/now_date_time_provider.dart';
 import 'date/preset_date_time_provider.dart';
 import 'directory/directory_provider.dart';
@@ -26,19 +24,14 @@ class AppContext
 
   static AppContext createForTesting({DateTime? now}) {
     AppContext.global = AppContext._(directoryBundle: DirectoryBundle.empty())
-      ..register(CoreModule())
-      ..register(EnvironmentModule.createForTesting())
       ..dateTimeProvider = PresetDateTimeProvider(now ?? DateTime.now());
 
     return AppContext.global;
   }
 
-  static Future<AppContext> createGlobal({bool generateDirectory: true}) async {
-    final directoryBundle = generateDirectory ? await DirectoryBundle.generate() : DirectoryBundle.empty();
+  static AppContext createGlobal({DirectoryBundle? directoryBundle}) {
+    directoryBundle = directoryBundle ?? DirectoryBundle.empty();
     AppContext.global = AppContext._(directoryBundle: directoryBundle);
-
-    final coreModule = CoreModule();
-    await coreModule.initialize(AppContext.global);
 
     return AppContext.global;
   }

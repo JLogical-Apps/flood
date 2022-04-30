@@ -1,12 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/style/style_context_provider.dart';
+import 'package:jlogical_utils/src/utils/export.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
+
+import '../style_context.dart';
+import '../widgets/input/styled_button.dart';
+import '../widgets/misc/styled_icon.dart';
+import '../widgets/pages/styled_onboarding_page.dart';
+import '../widgets/text/styled_body_text.dart';
+import '../widgets/text/styled_text_overrides.dart';
+import '../widgets/text/styled_title_text.dart';
+import 'flat_style.dart';
 
 /// Extends [FlatStyle] with overridden styles.
 class DeltaStyle extends FlatStyle {

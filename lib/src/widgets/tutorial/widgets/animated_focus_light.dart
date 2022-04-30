@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../paint/light_paint.dart';
 import '../paint/light_paint_rect.dart';

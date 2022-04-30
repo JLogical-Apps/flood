@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/persistence/ids/id_generator.dart';
+import 'package:jlogical_utils/src/model/pagination_result.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../utils/stream_extensions.dart';
+import '../persistence/export_core.dart';
+import 'future_value.dart';
 import 'model.dart';
-import 'models.dart';
 
 /// A model list that handles paginating the results.
 /// Use [loadNextPage] to append the next page (if it exists) to the

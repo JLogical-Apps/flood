@@ -1,5 +1,4 @@
-import 'package:jlogical_utils/src/utils/collection_extensions.dart';
-import 'package:jlogical_utils/src/utils/stream_extensions.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
 class Cache<K, V> {

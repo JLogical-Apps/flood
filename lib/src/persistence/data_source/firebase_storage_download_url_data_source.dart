@@ -1,5 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import 'data_source.dart';
 
 class FirebaseStorageDownloadUrlDataSource extends DataSource<String> {
   final String storagePath;

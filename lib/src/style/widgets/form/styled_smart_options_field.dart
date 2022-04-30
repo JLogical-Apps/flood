@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import '../../../form/export.dart';
+import '../input/styled_dropdown.dart';
 
 /// Styled SmartOptionsField that uses a [StyledDropdown].
 class StyledSmartOptionsField<T> extends SmartFormField<T?> {

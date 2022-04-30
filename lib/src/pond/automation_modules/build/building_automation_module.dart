@@ -1,4 +1,4 @@
-import 'package:jlogical_utils/automation.dart';
+import '../../automation/automation_context.dart';
 
 abstract class BuildingAutomationModule {
   Future<void> onBuild(AutomationContext context);

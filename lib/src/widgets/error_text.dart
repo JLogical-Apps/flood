@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/popup/export.dart';
 
 /// Text that displays an error message and can retry a failed operation.
 class ErrorText extends StatelessWidget {

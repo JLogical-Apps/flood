@@ -1,7 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
+import 'data_source.dart';
 
 class FirebaseStorageDataSource extends DataSource<Uint8List> {
   final String storagePath;

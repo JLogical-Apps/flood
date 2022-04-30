@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import '../../../form/export.dart';
+import '../input/styled_checkbox.dart';
 
 /// Styled SmartBoolField that uses a [StyledCheckbox].
 class StyledSmartBoolField extends SmartFormField<bool> {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_loading_indicator.dart';
+
+import 'styled_page.dart';
 
 /// Page that indicates data is loading.
 class StyledLoadingPage extends StatelessWidget {

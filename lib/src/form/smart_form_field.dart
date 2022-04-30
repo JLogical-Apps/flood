@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:jlogical_utils/src/form/validation/validation.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/export.dart';
 import 'smart_form_controller.dart';
+import 'validation/validation.dart';
 
 /// A widget to placed in a SmartForm that handles data changes and form validation.
 abstract class SmartFormField<T> extends HookWidget {

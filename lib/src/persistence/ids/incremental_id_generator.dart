@@ -1,4 +1,4 @@
-import '../export.dart';
+import 'id_generator.dart';
 
 /// ID generator that simply counts up by 1 for each object.
 class IncrementalIdGenerator<T> extends IdGenerator<T, int> {

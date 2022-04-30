@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import '../smart_form_controller.dart';
+import '../smart_form_field.dart';
+import '../validation/validation.dart';
 
 /// A radio button that is connected to a radio group.
 class SmartRadioOptionField<T> extends SmartFormField<bool> {

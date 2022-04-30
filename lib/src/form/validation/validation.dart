@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import '../../utils/utils.dart';
-import '../export.dart';
+import 'package:jlogical_utils/src/utils/export.dart';
+
+import '../smart_form_controller.dart';
 
 /// A validation to place on a SmartFormField.
 class Validation<T> {

@@ -1,5 +1,4 @@
-import 'package:jlogical_utils/automation.dart';
-
+import '../../automation/automation_context.dart';
 import '../../modules/environment/environment.dart';
 
 abstract class EnvironmentListeningAutomationModule {

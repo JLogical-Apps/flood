@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
+
+import '../misc/styled_icon.dart';
 
 /// An action that can be performed.
 class ActionItem {

@@ -1,7 +1,10 @@
 import 'dart:async';
 
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
+
+import 'async_loadable.dart';
+import 'future_value.dart';
 
 /// A model that is a combination of other models mapped into one.
 /// If any of the parent models are in their initial state, this model will be in an initial state.

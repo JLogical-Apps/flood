@@ -1,17 +1,18 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/derived/first_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/contains_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/equals_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/first_or_null_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/query/where_query.dart';
 import 'package:jlogical_utils/src/pond/query/without_cache_query.dart';
-import 'package:jlogical_utils/src/utils/marker.dart';
 
+import '../../utils/export_core.dart';
+import '../record/record.dart';
 import 'derived/exists_query_request.dart';
 import 'from_query.dart';
 import 'order_by_query.dart';

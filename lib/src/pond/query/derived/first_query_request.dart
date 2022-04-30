@@ -1,8 +1,14 @@
 import 'dart:async';
 
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/derived/derived_query_request.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../../../model/future_value.dart';
+import '../../record/record.dart';
+import '../executor/query_executor.dart';
+import '../executor/query_executor_x.dart';
+import '../query.dart';
 
 class FirstQueryRequest<R extends Record> extends DerivedQueryRequest<R, R> {
   @override

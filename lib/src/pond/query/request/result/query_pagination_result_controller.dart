@@ -1,6 +1,6 @@
 import 'package:jlogical_utils/src/pond/query/request/result/query_pagination_result.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
-import 'package:jlogical_utils/src/utils/stream_extensions.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
 class QueryPaginationResultController<R extends Record> {

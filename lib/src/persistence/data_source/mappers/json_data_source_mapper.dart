@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/mappers/with_mapper_data_source.dart';
-import 'package:jlogical_utils/src/utils/util.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 class JsonDataSourceMapper extends DataSource<Map<String, dynamic>>
     with WithMapperDataSource<String, Map<String, dynamic>> {

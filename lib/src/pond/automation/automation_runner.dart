@@ -1,6 +1,6 @@
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
-import 'package:jlogical_utils/src/utils/util.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import 'automation.dart';
 import 'automation_context.dart';

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:jlogical_utils/src/persistence/ids/uuid_id_generator.dart';
 
+import '../../../persistence/export_core.dart';
 import 'auth_service.dart';
 import 'login_failure.dart';
 import 'signup_failure.dart';
@@ -37,7 +37,7 @@ class LocalAuthService extends AuthService {
       throw SignupFailure.emailAlreadyUsed();
     }
 
-    final userId = _uuidGenerator.getId(null);
+    final userId = _uuidGenerator.getId();
 
     userIdByLogin[loginToken] = userId;
 

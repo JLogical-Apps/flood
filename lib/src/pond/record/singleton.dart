@@ -1,6 +1,11 @@
 import 'dart:async';
 
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
+import 'package:jlogical_utils/src/pond/record/value_object.dart';
+
+import '../context/app_context.dart';
+import '../query/query.dart';
+import 'entity.dart';
 
 abstract class Singleton {
   /// Returns the default entity to be used if there is no existing singleton.

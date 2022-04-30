@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:jlogical_utils/src/style/emphasis.dart';
 
-import '../../../../jlogical_utils.dart';
+import '../../style.dart';
+import '../../style_context.dart';
+import '../../styled_widget.dart';
+import '../input/action_item.dart';
 
 /// Contains contents or other children.
 class StyledCategory extends StyledWidget {

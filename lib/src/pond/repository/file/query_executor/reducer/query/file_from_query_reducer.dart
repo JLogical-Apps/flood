@@ -5,7 +5,7 @@ import 'package:jlogical_utils/src/pond/query/from_query.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
-import 'package:jlogical_utils/src/utils/file_extensions.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:path/path.dart';
 
 class FileFromQueryReducer extends AbstractQueryReducer<FromQuery, Iterable<State>> {

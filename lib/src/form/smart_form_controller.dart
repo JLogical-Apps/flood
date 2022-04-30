@@ -1,7 +1,10 @@
-import 'package:jlogical_utils/src/form/validation/validation_result.dart';
+import 'package:jlogical_utils/src/utils/export.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'smart_form.dart';
 import 'smart_form_data.dart';
+import 'validation/validation.dart';
+import 'validation/validation_result.dart';
 
 /// Controls the streams for a SmartForm.
 class SmartFormController {

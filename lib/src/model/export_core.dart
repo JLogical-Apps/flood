@@ -1,7 +1,6 @@
 export 'async_loadable.dart';
 export 'combined_latest_model.dart';
 export 'future_value.dart';
-export 'load_more_button.dart';
 export 'mapped_model.dart';
 export 'model.dart';
 export 'model_extensions.dart';
@@ -10,3 +9,4 @@ export 'model_store.dart';
 export 'paginated_lists.dart';
 export 'paginated_model_list.dart';
 export 'pagination_result.dart';
+export 'value_stream_model.dart';

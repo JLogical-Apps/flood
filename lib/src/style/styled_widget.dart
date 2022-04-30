@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/style.dart';
 import 'package:jlogical_utils/src/style/style_builder.dart';
+import 'package:jlogical_utils/src/style/style_context.dart';
 
 /// The base class for widgets that are rendered by a [Style].
 /// Override [buildStyled] to call the [Style]'s builder method.

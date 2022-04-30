@@ -6,7 +6,8 @@ import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_loading_indicator.dart';
 import 'package:jlogical_utils/src/style/widgets/pages/styled_page.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_error_text.dart';
-import 'package:jlogical_utils/src/utils/utils.dart';
+
+import '../../utils/export.dart';
 
 class SplashPage extends HookWidget {
   final Widget child;

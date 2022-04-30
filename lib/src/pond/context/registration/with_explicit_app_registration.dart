@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart' as flutter;
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
@@ -34,8 +33,7 @@ mixin WithExplicitAppRegistration implements AppRegistration {
   List<TypeStateSerializer> get typeStateSerializers =>
       _appModules.expand((module) => module.typeStateSerializers).toList();
 
-  List<flutter.NavigatorObserver> get navigatorObservers =>
-      _appModules.expand((module) => module.navigatorObservers).toList();
+  List get navigatorObservers => _appModules.expand((module) => module.navigatorObservers).toList();
 
   Entity? constructEntityRuntimeOrNull(ValueObject initialState) {
     return entityRegistrations

@@ -1,6 +1,6 @@
 import 'package:colorize_lumberdash/colorize_lumberdash.dart';
 import 'package:interact/interact.dart';
-import 'package:jlogical_utils/src/utils/util.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:lumberdash/lumberdash.dart' as lumberdash;
 
 import 'automation_interactor.dart';

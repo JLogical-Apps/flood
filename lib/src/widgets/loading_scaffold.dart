@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import 'export.dart';
 
 /// Util widget of an empty scaffold with a centered loading icon.
 class LoadingScaffold extends StatelessWidget {

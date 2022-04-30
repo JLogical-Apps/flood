@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/widgets/pages/styled_page.dart';
+
+import '../text/styled_error_text.dart';
 
 /// Page that shows an error.
 class StyledErrorPage extends StatelessWidget {

@@ -2,10 +2,15 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/request/without_cache_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/without_cache_query.dart';
-import 'package:jlogical_utils/src/utils/marker.dart';
+
+import '../../../utils/export_core.dart';
+import '../../context/app_context.dart';
+import '../../record/record.dart';
+import '../derived/mapped_query_request.dart';
+import '../query.dart';
 
 @marker
 abstract class QueryRequest<R extends Record, T> extends Equatable {

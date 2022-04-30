@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:rxdart/rxdart.dart';
+
+import 'async_loadable.dart';
+import 'future_value.dart';
 
 /// A model that is has a root stream, but can be reloaded using a [loader].
 class ValueStreamModel<T> extends AsyncLoadable<T> {

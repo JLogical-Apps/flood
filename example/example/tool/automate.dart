@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:jlogical_utils/automation.dart';
-import 'package:jlogical_utils/utils.dart';
+import 'package:jlogical_utils/jlogical_utils_core.dart';
 
 Future<void> main(List<String> args) async {
   await automate(

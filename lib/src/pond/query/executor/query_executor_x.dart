@@ -1,9 +1,9 @@
-import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../model/export_core.dart';
 import '../derived/derived_query_request.dart';
 import '../request/without_cache_query_request.dart';
 

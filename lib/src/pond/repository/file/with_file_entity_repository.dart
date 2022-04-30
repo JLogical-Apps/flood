@@ -1,10 +1,18 @@
 import 'dart:io';
 
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/entity_inflater.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/file_query_executor.dart';
 import 'package:jlogical_utils/src/pond/state/persistence/json_state_persister.dart';
 import 'package:jlogical_utils/src/pond/state/persistence/state_persister.dart';
+import 'package:jlogical_utils/src/pond/state/state.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
+
+import '../../context/app_context.dart';
+import '../../query/executor/query_executor.dart';
+import '../../query/query.dart';
+import '../../query/request/result/query_pagination_result_controller.dart';
+import '../entity_repository.dart';
+import '../with_cache_entity_repository.dart';
 
 mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRepository {
   StatePersister<String> get statePersister => JsonStatePersister();

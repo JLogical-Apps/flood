@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_error_text.dart';
 
-import '../../../../jlogical_utils.dart';
+import '../../../form/export.dart';
 
 /// Styled SmartErrorField that uses a [StyledErrorText].
 class StyledSmartErrorField extends SmartFormField {

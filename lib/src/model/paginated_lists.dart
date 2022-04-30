@@ -1,14 +1,11 @@
 import 'dart:math';
 
-import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:uuid/uuid.dart';
+import 'package:jlogical_utils/src/persistence/export_core.dart';
 
-import 'models.dart';
+import 'pagination_result.dart';
 
 /// Util methods for paginating lists.
 class PaginatedLists {
-  static const _uuid = Uuid();
-
   PaginatedLists._();
 
   /// Paginates the list of [items] with pages of size [size].
@@ -19,7 +16,7 @@ class PaginatedLists {
 
   static PaginationResult<T> _paginate<T>(
       {required List<T> items, String idGenerator(T value)?, required int size, required int lastIndex}) {
-    idGenerator ??= (_) => _uuid.v4();
+    idGenerator ??= (_) => UuidIdGenerator().getId();
     var maxIndex = lastIndex + size;
     var results = items.getRange(lastIndex, min(items.length, maxIndex)).toList();
     return PaginationResult(

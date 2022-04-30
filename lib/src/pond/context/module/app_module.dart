@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
 import 'package:jlogical_utils/src/pond/context/registration/entity_registration.dart';
@@ -12,7 +11,7 @@ abstract class AppModule {
 
   List<TypeStateSerializer> get typeStateSerializers => [];
 
-  List<NavigatorObserver> get navigatorObservers => [];
+  List get navigatorObservers => [];
 
   void onRegister(AppRegistration registration) {}
 

@@ -1,6 +1,7 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/property/modifier/context/property_modifier_context.dart';
 
+import '../../validation/validator.dart';
+import '../property.dart';
 import 'context/property_modifier_context_provider.dart';
 
 abstract class PropertyModifier<T> {

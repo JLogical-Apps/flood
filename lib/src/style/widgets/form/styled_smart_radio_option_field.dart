@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import '../../../form/export.dart';
+import '../input/styled_radio.dart';
 
 /// Styled SmartRadioOptionField that uses a [StyledRadio].
 /// This should be used in conjunction with [SmartRadioGroup].

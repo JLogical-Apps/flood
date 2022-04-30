@@ -1,4 +1,4 @@
-import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 
 class NullableTypeStateSerializer<T> extends TypeStateSerializer<T?> {
   final TypeStateSerializer<T> typeStateSerializer;

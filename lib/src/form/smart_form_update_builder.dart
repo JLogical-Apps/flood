@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:provider/provider.dart';
+
+import '../utils/export.dart';
+import 'smart_form_controller.dart';
 
 /// Builds on every update to the surrounding SmartForm.
 /// Can be used to dynamically show/hide SmartFormFields.

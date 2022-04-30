@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:jlogical_utils/src/pond/context/directory/directory_provider.dart';
-import 'package:path_provider/path_provider.dart';
 
 class DirectoryBundle implements DirectoryProvider {
   @override
@@ -13,9 +12,5 @@ class DirectoryBundle implements DirectoryProvider {
 
   static DirectoryBundle empty() {
     return DirectoryBundle();
-  }
-
-  static Future<DirectoryBundle> generate() async {
-    return DirectoryBundle(supportDirectory: await getApplicationSupportDirectory());
   }
 }

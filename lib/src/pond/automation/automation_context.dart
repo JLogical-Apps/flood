@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:collection/collection.dart';
-import 'package:jlogical_utils/automation.dart';
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 import 'package:jlogical_utils/src/pond/automation/automation_interactor.dart';
@@ -14,6 +13,7 @@ import 'package:jlogical_utils/src/utils/file_extensions.dart';
 
 import '../modules/environment/environment.dart';
 import 'automation.dart';
+import 'automation_module.dart';
 
 class AutomationContext
     with WithConsoleAutomationOutput, WithDcliAutomationInteractor, WithPubspecPackageRegistration

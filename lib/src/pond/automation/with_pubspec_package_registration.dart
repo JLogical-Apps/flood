@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
-import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 import 'package:jlogical_utils/src/pond/automation/package_registration.dart';
-import 'package:jlogical_utils/src/utils/file_extensions.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:process_run/shell.dart';
+
+import '../../persistence/export_core.dart';
 
 mixin WithPubspecPackageRegistration implements PackageRegistration {
   Map<String, dynamic>? _parsedPubspec;

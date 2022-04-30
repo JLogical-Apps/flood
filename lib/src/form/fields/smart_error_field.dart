@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import '../smart_form_controller.dart';
+import '../smart_form_field.dart';
 
 /// Only shows up when an error is present with its name.
 class SmartErrorField extends SmartFormField {
@@ -14,7 +16,8 @@ class SmartErrorField extends SmartFormField {
         );
 
   @override
-  Widget buildForm(BuildContext context, dynamic value, String? error, bool enabled, SmartFormController smartFormController) {
+  Widget buildForm(
+      BuildContext context, dynamic value, String? error, bool enabled, SmartFormController smartFormController) {
     if (error == null) {
       return SizedBox.shrink();
     } else {

@@ -1,5 +1,4 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
-
+import '../../context/module/app_module.dart';
 import 'analytics_event.dart';
 
 abstract class AnalyticsService extends AppModule {

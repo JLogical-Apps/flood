@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:jlogical_utils/src/pond/automation/automation.dart';
 import 'package:jlogical_utils/src/pond/automation/automations_provider.dart';
-import 'package:jlogical_utils/src/utils/file_extensions.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import 'automate.dart';
 

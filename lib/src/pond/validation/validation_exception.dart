@@ -1,4 +1,4 @@
-import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/pond/validation/validator.dart';
 
 class ValidationException {
   final Validator failedValidator;

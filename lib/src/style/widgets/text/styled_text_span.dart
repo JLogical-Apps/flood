@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/styled_widget.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
+
+import '../../style.dart';
+import '../../style_context.dart';
 
 class StyledTextSpan extends StyledWidget {
   final List<StyledText> children;

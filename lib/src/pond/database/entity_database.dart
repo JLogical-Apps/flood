@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:jlogical_utils/src/model/future_value.dart';
+import 'package:jlogical_utils/src/model/export_core.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/database/database.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
@@ -8,8 +8,9 @@ import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
-import 'package:jlogical_utils/src/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../../utils/export_core.dart';
 
 class EntityDatabase implements Database {
   final List<EntityRepository> _repositories;

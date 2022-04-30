@@ -1,5 +1,5 @@
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
-import 'package:jlogical_utils/src/utils/format.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 class StringTypeStateSerializer extends TypeStateSerializer<String> {
   @override

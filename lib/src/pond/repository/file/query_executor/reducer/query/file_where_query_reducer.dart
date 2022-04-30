@@ -1,5 +1,3 @@
-import 'package:jlogical_utils/src/patterns/resolver/resolver.dart';
-import 'package:jlogical_utils/src/patterns/resolver/with_wrapper_resolver.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_query_predicate_reducer.dart';
@@ -12,6 +10,8 @@ import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/p
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/predicate/file_less_than_or_equal_to_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/predicate/file_less_than_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
+
+import '../../../../../../patterns/export_core.dart';
 
 class FileWhereQueryReducer extends AbstractQueryReducer<WhereQuery, Iterable<State>>
     with WithWrapperResolver<AbstractQueryPredicate, AbstractQueryPredicateReducer>

@@ -1,7 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import '../../emphasis.dart';
+import '../../style.dart';
+import '../../style_context.dart';
+import '../../styled_widget.dart';
 
 class StyledButton extends StyledWidget {
   /// The text of the button.

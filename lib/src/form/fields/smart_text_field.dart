@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../jlogical_utils.dart';
+import '../../widgets/export.dart';
 import '../smart_form_controller.dart';
 import '../smart_form_field.dart';
 import '../validation/validation.dart';
@@ -47,7 +47,8 @@ class SmartTextField extends SmartFormField<String> {
         );
 
   @override
-  Widget buildForm(BuildContext context, String value, String? error, bool enabled, SmartFormController smartFormController) {
+  Widget buildForm(
+      BuildContext context, String value, String? error, bool enabled, SmartFormController smartFormController) {
     return InputField(
       label: label,
       keyboardType: keyboardType,

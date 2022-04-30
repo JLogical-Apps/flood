@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import '../../style.dart';
+import '../../style_context.dart';
+import '../../styled_widget.dart';
 
 class StyledDateField extends StyledWidget {
   final String? label;

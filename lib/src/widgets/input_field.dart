@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 /// Text field with additional functionality.
 class InputField extends StatefulWidget {

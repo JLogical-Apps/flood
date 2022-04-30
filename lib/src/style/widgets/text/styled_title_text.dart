@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_overrides.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_style.dart';
+
+import '../../style.dart';
 
 class StyledTitleText extends StyledText {
   const StyledTitleText(String text, {Key? key, StyledTextOverrides? textOverrides})

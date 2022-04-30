@@ -1,5 +1,14 @@
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:flutter/material.dart';
+import 'package:jlogical_utils/src/style/style_context.dart';
+import 'package:jlogical_utils/src/style/widgets/text/styled_body_text.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
+
+import '../../style.dart';
+import '../../styled_widget.dart';
+import 'styled_input_text.dart';
+import 'styled_text.dart';
+import 'styled_text_overrides.dart';
+import 'styled_text_span.dart';
 
 class StyledDescriptionText extends StyledWidget {
   final String inputString;

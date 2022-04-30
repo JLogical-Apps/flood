@@ -1,9 +1,9 @@
-import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
+import 'package:collection/collection.dart';
 import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
-import 'package:collection/collection.dart';
-import 'package:jlogical_utils/src/utils/collection_extensions.dart';
+import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 mixin WithPropertiesState on Record {
   List<Property> get properties => [];

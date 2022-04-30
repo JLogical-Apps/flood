@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 /// A result that contains pagination results.
 class PaginationResult<T> {

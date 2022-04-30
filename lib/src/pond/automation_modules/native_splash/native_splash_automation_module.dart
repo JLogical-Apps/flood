@@ -1,10 +1,14 @@
 import 'dart:io';
 
 import 'package:image/image.dart';
-import 'package:jlogical_utils/automation.dart';
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 import 'package:jlogical_utils/src/persistence/data_source/file_data_source.dart';
 import 'package:jlogical_utils/src/utils/file_extensions.dart';
+
+import '../../automation/automation_context.dart';
+import '../../automation/automation_module.dart';
+import '../../automation/automations_provider.dart';
+import '../build/building_automation_module.dart';
 
 class NativeSplashAutomationModule extends AutomationModule implements BuildingAutomationModule {
   final File imageFile;

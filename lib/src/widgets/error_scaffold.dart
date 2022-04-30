@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import 'error_text.dart';
 
 /// Util widget of a scaffold with a centered error text.
 class ErrorScaffold extends StatelessWidget {

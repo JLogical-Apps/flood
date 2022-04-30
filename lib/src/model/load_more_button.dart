@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
 
-import 'models.dart';
+import '../widgets/export.dart';
+import 'paginated_model_list.dart';
 
 /// A button that handles loading more pages in a paginated model list.
 class LoadMoreButton<T> extends StatelessWidget {

@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:jlogical_utils/src/model/future_value.dart';
-import 'package:jlogical_utils/src/patterns/cache/cache.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
@@ -11,11 +9,13 @@ import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/local_query_executor.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
-import 'package:jlogical_utils/src/utils/stream_extensions.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:lumberdash/lumberdash.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:synchronized/synchronized.dart';
 
+import '../../model/export_core.dart';
+import '../../patterns/export_core.dart';
 import '../query/request/first_or_null_query_request.dart';
 import '../query/request/result/query_pagination_result_controller.dart';
 import 'entity_repository.dart';

@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
-import 'package:jlogical_utils/src/patterns/resolver/resolver.dart';
-import 'package:jlogical_utils/src/patterns/resolver/with_wrapper_resolver.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/abstract_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/predicate/abstract_query_predicate_reducer.dart';
@@ -12,6 +10,8 @@ import 'package:jlogical_utils/src/pond/repository/firestore/query_executor/redu
 import 'package:jlogical_utils/src/pond/repository/firestore/query_executor/reducer/predicate/firestore_greater_than_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/firestore/query_executor/reducer/predicate/firestore_less_than_or_equal_to_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/firestore/query_executor/reducer/predicate/firestore_less_than_query_predicate_reducer.dart';
+
+import '../../../../../../patterns/export_core.dart';
 
 class FirestoreWhereQueryReducer extends AbstractQueryReducer<WhereQuery, firestore.Query>
     with WithWrapperResolver<AbstractQueryPredicate, AbstractQueryPredicateReducer<dynamic, firestore.Query>>

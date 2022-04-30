@@ -1,7 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
-import 'package:jlogical_utils/jlogical_utils.dart';
 
+import '../../query/executor/query_executor.dart';
+import '../../query/query.dart';
 import '../../query/reducer/entity_inflater.dart';
+import '../../query/request/result/query_pagination_result_controller.dart';
+import '../../state/state.dart';
+import '../entity_repository.dart';
+import '../with_cache_entity_repository.dart';
 import 'query_executor/firestore_query_executor.dart';
 
 mixin WithFirestoreEntityRepository on EntityRepository implements WithCacheEntityRepository {

@@ -1,5 +1,13 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
+import 'package:jlogical_utils/src/pond/query/executor/query_executor_x.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../../model/export_core.dart';
+import '../query/request/query_request.dart';
+import '../record/entity.dart';
+import '../record/record.dart';
+import '../state/state.dart';
+import 'entity_repository.dart';
 
 mixin WithEntityRepositoryDelegator implements EntityRepository {
   EntityRepository get entityRepository;

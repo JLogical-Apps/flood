@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
-import 'package:jlogical_utils/src/utils/file_extensions.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 mixin WithFileDataSource on DataSource<String> {
   /// The file this is pointing to.

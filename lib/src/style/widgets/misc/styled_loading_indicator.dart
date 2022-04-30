@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import '../../../widgets/export.dart';
+import '../../style.dart';
+import '../../style_context.dart';
+import '../../styled_widget.dart';
 
 /// Loading indicator.
 class StyledLoadingIndicator extends StyledWidget {

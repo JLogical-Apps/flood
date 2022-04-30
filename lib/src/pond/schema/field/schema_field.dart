@@ -1,6 +1,5 @@
 import 'dart:core' as core;
 
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/schema/field/embedded_schema_field.dart';
 import 'package:jlogical_utils/src/pond/schema/field/int_schema_field.dart';
 import 'package:jlogical_utils/src/pond/schema/field/list_schema_field.dart';
@@ -8,6 +7,7 @@ import 'package:jlogical_utils/src/pond/schema/field/present_schema_field.dart';
 import 'package:jlogical_utils/src/pond/schema/field/required_schema_field.dart';
 import 'package:jlogical_utils/src/pond/schema/field/string_schema_field.dart';
 
+import '../../record/value_object.dart';
 import 'bool_schema_field.dart';
 
 abstract class SchemaField {

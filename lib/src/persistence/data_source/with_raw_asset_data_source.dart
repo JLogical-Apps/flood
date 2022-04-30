@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
-import 'package:jlogical_utils/src/utils/util.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 /// Gets a version from an asset.
 mixin WithRawAssetDataSource on DataSource<ByteData> {

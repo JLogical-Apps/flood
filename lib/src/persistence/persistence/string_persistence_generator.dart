@@ -1,4 +1,4 @@
-import '../export.dart';
+import 'package:jlogical_utils/src/persistence/persistence/persistence_generator.dart';
 
 /// A persistence generator that generates json.
 abstract class StringPersistenceGenerator<T> implements PersistenceGenerator<T, String> {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../jlogical_utils.dart';
+import '../../../form/export.dart';
+import '../input/styled_date_field.dart';
 
 /// Styled SmartDateField that uses a [StyledDateField].
 class StyledSmartDateField extends SmartFormField<DateTime> {

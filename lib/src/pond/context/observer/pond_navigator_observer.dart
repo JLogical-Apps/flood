@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/context/app_context.dart';
 
 class PondNavigatorObserver extends NavigatorObserver {
-  List<NavigatorObserver> get observers => AppContext.global.navigatorObservers;
+  List get observers => AppContext.global.navigatorObservers;
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {

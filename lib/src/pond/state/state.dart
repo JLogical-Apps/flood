@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/utils/collection_extensions.dart';
+import 'package:jlogical_utils/src/pond/state/stateful.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
+
+import '../query/query.dart';
 
 class State extends Equatable {
   final String? id;
@@ -10,10 +12,10 @@ class State extends Equatable {
   State({this.id, this.type, required this.values});
 
   Map<String, dynamic> get fullValues => {
-    ...values,
-    Query.id: id,
-    Query.type: type,
-  };
+        ...values,
+        Query.id: id,
+        Query.type: type,
+      };
 
   static State? extractFromOrNull(dynamic value, {String? typeFallback, String? idOverride}) {
     if (value is State) {

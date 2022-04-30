@@ -1,5 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import '../../context/app_context.dart';
+import '../../context/module/app_module.dart';
+import '../config/config_module.dart';
+import 'environment.dart';
 
 class EnvironmentModule extends AppModule {
   late final Environment environment;

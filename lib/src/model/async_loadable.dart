@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:jlogical_utils/src/model/mapped_model.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../jlogical_utils.dart';
+import 'future_value.dart';
+import 'mapped_model.dart';
 
 /// An async value that can be loaded.
 abstract class AsyncLoadable<T> {

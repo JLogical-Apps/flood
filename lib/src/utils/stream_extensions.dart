@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:jlogical_utils/src/model/future_value.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../model/export_core.dart';
 
 extension ValueStreamExtensions<T> on ValueStream<T> {
   /// Returns the value of the stream without needing to listen to it.

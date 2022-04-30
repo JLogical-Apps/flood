@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../jlogical_utils.dart';
+import '../model/export_core.dart';
 
 /// Helper for using a value stream.
 T useValueStream<T>(ValueStream<T> stream) {

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
-import '../../../../jlogical_utils.dart';
+import '../../style.dart';
+import '../../style_context.dart';
+import '../../styled_widget.dart';
+import 'styled_text_overrides.dart';
 
 /// Styled field that parses markdown into a StyledTextSpan.
 class StyledMarkdownText extends StyledWidget {

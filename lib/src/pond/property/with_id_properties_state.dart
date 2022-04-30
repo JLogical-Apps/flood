@@ -1,4 +1,6 @@
-import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/pond/property/property.dart';
+import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/utils/collection_extensions.dart';
 
 mixin WithIdPropertiesState on Record {

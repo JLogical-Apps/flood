@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:jlogical_utils/src/model/async_loadable.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
+import 'async_loadable.dart';
 import 'future_value.dart';
 
 /// An async loadable whose value can be changed programatically.
