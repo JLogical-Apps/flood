@@ -9,6 +9,7 @@ import 'package:jlogical_utils/src/pond/type_state_serializers/string_type_state
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 
 import '../context/registration/app_registration.dart';
+import 'config/config_module.dart';
 import 'environment/environment_module.dart';
 import 'logging/default_logging_module.dart';
 
@@ -20,7 +21,7 @@ class CoreFlutterModule extends AppModule {
       ];
 
   Future<void> initialize(AppRegistration registration) async {
-    registration.register(ConfigModule());
+    registration.register(await ConfigModule.create());
     registration.register(await EnvironmentModule.create());
     registration.register(DefaultLoggingModule());
     registration.register(this);
