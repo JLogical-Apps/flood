@@ -27,3 +27,12 @@ T? guard<T>(T func(), {void onError(dynamic error)?}) {
     return null;
   }
 }
+
+Future<T?> guardAsync<T>(Future<T> func(), {void onError(dynamic error)?}) async {
+  try {
+    return await func();
+  } catch (e) {
+    onError?.call(e);
+    return null;
+  }
+}

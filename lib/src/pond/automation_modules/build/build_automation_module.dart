@@ -11,8 +11,9 @@ class BuildAutomationModule extends AutomationModule {
   List<Command> get commands => [
         SimpleCommand(
           name: 'build',
+          displayName: 'Build',
           description: 'Builds the app.',
-          runner: (args) => _build,
+          runner: (args) => _build(args),
           category: 'Build',
           parameters: {
             'clean': CommandParameter.bool(

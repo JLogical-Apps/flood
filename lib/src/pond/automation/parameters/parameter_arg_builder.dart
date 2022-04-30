@@ -1,4 +1,4 @@
-import 'package:dcli/dcli.dart';
+import 'package:args/args.dart';
 import 'package:jlogical_utils/src/patterns/command/parameter/command_parameter.dart';
 import 'package:jlogical_utils/src/patterns/wrapper/with_subtype_wrapper.dart';
 import 'package:jlogical_utils/src/patterns/wrapper/wrapper.dart';

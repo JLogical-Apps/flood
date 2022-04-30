@@ -30,7 +30,9 @@ class NativeSplashAutomationModule extends AutomationModule implements BuildingA
           displayName: 'Setup',
           description: 'Sets the native splash screen of the app.',
           category: 'Native Splash',
-          runner: (args) {},
+          runner: (args) async {
+            await _setNativeSplash();
+          },
         ),
       ];
 

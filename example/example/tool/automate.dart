@@ -10,7 +10,7 @@ Future<void> main(List<String> args) async {
 }
 
 AutomationContext getAutomationContext() {
-  return AutomationContext()
+  return DefaultAutomationContext()
     ..registerModule(EnvironmentAutomationModule())
     ..registerModule(AppIconAutomationModule(
         appIconForegroundFile: Directory.current / 'assets' - 'logo_foreground.png',
