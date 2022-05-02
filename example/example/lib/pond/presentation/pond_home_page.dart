@@ -18,6 +18,7 @@ class PondHomePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final errorModel = useMemoized(() => Model(loader: () => throw Exception('hA!')));
     final userEntityController = useEntity<UserEntity>(userId);
     final userBudgetsController = useQuery(
       Query.from<BudgetEntity>()
@@ -54,66 +55,71 @@ class PondHomePage extends HookWidget {
                   builder: (QueryPaginationResultController<BudgetEntity> budgetsController) {
                     return HookBuilder(builder: (context) {
                       final results = useValueStream(budgetsController.resultsX);
-                      return StyledCategory.medium(
-                        headerText: 'Budgets',
-                        actions: [
-                          ActionItem(
-                            name: 'Create',
-                            description: 'Create a budget for this user.',
-                            color: Colors.green,
-                            leading: Icon(Icons.monetization_on),
-                            onPerform: () async {
-                              final draftEntity = await Singleton.getOrCreate<BudgetDraftEntity, BudgetDraft>();
-                              final budgetDraft = draftEntity.value.sourcePrototype;
-
-                              final data = await StyledDialog.smartForm(
-                                context: context,
-                                onFormChange: (controller) async {
-                                  final budget = Budget()..nameProperty.setUnvalidated(controller.getData('name'));
-                                  final budgetDraft = BudgetDraft()..sourcePrototype = budget;
-                                  draftEntity..value = budgetDraft;
-                                  await draftEntity.createOrSave();
-                                },
-                                children: [
-                                  StyledSmartTextField(
-                                    name: 'name',
-                                    label: 'Name',
-                                    initialValue: budgetDraft.nameProperty.getUnvalidated(),
-                                    validators: [Validation.required()],
-                                  ),
-                                ],
-                              ).show(context);
-
-                              if (data == null) {
-                                return;
-                              }
-
-                              await draftEntity.delete();
-
-                              final budget = Budget()
-                                ..nameProperty.value = data['name']
-                                ..ownerProperty.value = userId;
-
-                              final budgetEntity = BudgetEntity()..value = budget;
-
-                              await budgetEntity.create();
-                              await BudgetCreatedAnalytic().log();
-                            },
-                          ),
-                        ],
-                        noChildrenWidget: StyledContentSubtitleText('No budgets'),
+                      return Column(
                         children: [
-                          ...results.map((budget) => BudgetCard(
-                                budgetId: budget.id!,
-                                key: ValueKey(budget.id),
-                              )),
-                          if (budgetsController.canLoadMore)
-                            StyledButton.low(
-                              text: 'Load More',
-                              onTapped: () async {
-                                await budgetsController.loadMore();
-                              },
-                            ),
+                          ModelBuilder.styled(model: errorModel, builder: (_) => StyledBodyText('Huh?')),
+                          StyledCategory.medium(
+                            headerText: 'Budgets',
+                            actions: [
+                              ActionItem(
+                                name: 'Create',
+                                description: 'Create a budget for this user.',
+                                color: Colors.green,
+                                leading: Icon(Icons.monetization_on),
+                                onPerform: () async {
+                                  final draftEntity = await Singleton.getOrCreate<BudgetDraftEntity, BudgetDraft>();
+                                  final budgetDraft = draftEntity.value.sourcePrototype;
+
+                                  final data = await StyledDialog.smartForm(
+                                    context: context,
+                                    onFormChange: (controller) async {
+                                      final budget = Budget()..nameProperty.setUnvalidated(controller.getData('name'));
+                                      final budgetDraft = BudgetDraft()..sourcePrototype = budget;
+                                      draftEntity..value = budgetDraft;
+                                      await draftEntity.createOrSave();
+                                    },
+                                    children: [
+                                      StyledSmartTextField(
+                                        name: 'name',
+                                        label: 'Name',
+                                        initialValue: budgetDraft.nameProperty.getUnvalidated(),
+                                        validators: [Validation.required()],
+                                      ),
+                                    ],
+                                  ).show(context);
+
+                                  if (data == null) {
+                                    return;
+                                  }
+
+                                  await draftEntity.delete();
+
+                                  final budget = Budget()
+                                    ..nameProperty.value = data['name']
+                                    ..ownerProperty.value = userId;
+
+                                  final budgetEntity = BudgetEntity()..value = budget;
+
+                                  await budgetEntity.create();
+                                  await BudgetCreatedAnalytic().log();
+                                },
+                              ),
+                            ],
+                            noChildrenWidget: StyledContentSubtitleText('No budgets'),
+                            children: [
+                              ...results.map((budget) => BudgetCard(
+                                    budgetId: budget.id!,
+                                    key: ValueKey(budget.id),
+                                  )),
+                              if (budgetsController.canLoadMore)
+                                StyledButton.low(
+                                  text: 'Load More',
+                                  onTapped: () async {
+                                    await budgetsController.loadMore();
+                                  },
+                                ),
+                            ],
+                          ),
                         ],
                       );
                     });

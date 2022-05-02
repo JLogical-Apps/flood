@@ -19,18 +19,15 @@ class FutureValue<T> with _$FutureValue<T> {
   /// If an exception occurred, returns an error src.model.
   static Future<FutureValue<T>> guard<T>(Future<T> future(), {void onError(dynamic error)?}) async {
     late FutureValue<T> value;
-    await runZonedGuarded(
-      () async {
-        var data = await future();
-        value = FutureValue.loaded(value: data);
-      },
-      (_error, stackTrack) {
-        print(_error);
-        print(stackTrack);
-        onError?.call(_error);
-        value = FutureValue.error(error: _error);
-      },
-    );
+    try {
+      var data = await future();
+      value = FutureValue.loaded(value: data);
+    } catch (e, stack) {
+      print(e);
+      print(stack);
+      onError?.call(e);
+      value = FutureValue.error(error: e);
+    }
     return value;
   }
 
