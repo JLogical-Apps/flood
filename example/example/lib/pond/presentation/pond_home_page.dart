@@ -18,7 +18,6 @@ class PondHomePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final errorModel = useMemoized(() => Model(loader: () => throw Exception('hA!')));
     final userEntityController = useEntity<UserEntity>(userId);
     final userBudgetsController = useQuery(
       Query.from<BudgetEntity>()
@@ -57,7 +56,6 @@ class PondHomePage extends HookWidget {
                       final results = useValueStream(budgetsController.resultsX);
                       return Column(
                         children: [
-                          ModelBuilder.styled(model: errorModel, builder: (_) => StyledBodyText('Huh?')),
                           StyledCategory.medium(
                             headerText: 'Budgets',
                             actions: [
