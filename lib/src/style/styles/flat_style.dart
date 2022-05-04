@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/style/emphasis.dart';
 import 'package:jlogical_utils/src/style/style.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_category.dart';
@@ -1303,17 +1304,21 @@ class FlatStyle extends Style {
     required BuildContext context,
     required Widget Function(BuildContext context) page,
   }) {
+    log('Navigating to $P');
     return Navigator.of(context).push(MaterialPageRoute(builder: page, settings: RouteSettings(name: '$P')));
   }
 
   @override
   void navigateBack<T>({required BuildContext context, T? result}) {
+    log('Navigating Back');
     Navigator.of(context).pop(result);
   }
 
   @override
-  void navigateReplacement({required BuildContext context, required Widget Function(BuildContext context) newPage}) {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: newPage));
+  void navigateReplacement<P extends Widget>(
+      {required BuildContext context, required P Function(BuildContext context) newPage}) {
+    log('Navigating Replacement to $P');
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: newPage, settings: RouteSettings(name: '$P')));
   }
 
   Future<void> _showActionsDialog(

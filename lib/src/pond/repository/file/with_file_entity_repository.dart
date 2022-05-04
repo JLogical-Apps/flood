@@ -8,6 +8,7 @@ import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../../context/app_context.dart';
+import '../../modules/logging/default_logging_module.dart';
 import '../../query/executor/query_executor.dart';
 import '../../query/query.dart';
 import '../../query/request/result/query_pagination_result_controller.dart';
@@ -41,7 +42,7 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
     }
 
     final contents = await file.readAsString();
-    return guard(() => statePersister.inflate(contents), onError: (e) => print(e));
+    return guard(() => statePersister.inflate(contents), onError: (e) => logError(e));
   }
 
   @override

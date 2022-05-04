@@ -24,6 +24,9 @@ Future<void> main() async {
   }, (err, stack) {
     print(err);
     print(stack);
+
+    logError(err);
+    logError(stack);
   });
 }
 
@@ -93,11 +96,17 @@ class HomePage extends StatelessWidget {
                           },
                           onDone: (context) async {
                             final loggedInId = await locate<AuthService>().getCurrentlyLoggedInUserId();
-                            context.style().navigateReplacement(
-                                  context: context,
-                                  newPage: (_) =>
-                                      loggedInId == null ? PondLoginPage() : PondHomePage(userId: loggedInId),
-                                );
+                            if (loggedInId == null) {
+                              context.style().navigateReplacement(
+                                    context: context,
+                                    newPage: (_) => PondLoginPage(),
+                                  );
+                            } else {
+                              context.style().navigateReplacement(
+                                    context: context,
+                                    newPage: (_) => PondHomePage(userId: loggedInId),
+                                  );
+                            }
                           },
                         ),
                       )));

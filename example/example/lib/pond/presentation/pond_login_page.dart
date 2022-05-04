@@ -59,7 +59,7 @@ class PondLoginPage extends HookWidget {
                                             password: data['password'],
                                           );
                                     } catch (e) {
-                                      print(e);
+                                      logError(e);
                                       smartFormController.setError(name: 'email', error: e.toString());
                                       return;
                                     }

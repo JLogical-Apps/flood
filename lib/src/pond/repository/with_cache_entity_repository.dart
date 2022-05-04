@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:jlogical_utils/src/pond/modules/logging/default_logging_module.dart';
 import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 import 'package:jlogical_utils/src/pond/query/query.dart';
 import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
@@ -10,7 +11,6 @@ import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/local_query_executor.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
-import 'package:lumberdash/lumberdash.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:synchronized/synchronized.dart';
 
@@ -27,6 +27,8 @@ mixin WithCacheEntityRepository on EntityRepository {
   final Map<QueryRequest, Completer<dynamic>> _queryCompleterByQueryRequest = {};
   final Map<Query, QueryPaginationResultController> _sourcePaginationResultControllerByQuery = {};
 
+  String get repositoryName => runtimeType.toString();
+
   QueryExecutor getQueryExecutor({
     required void onPaginationControllerCreated(Query query, QueryPaginationResultController controller),
   });
@@ -41,6 +43,8 @@ mixin WithCacheEntityRepository on EntityRepository {
   Future<void> saveState(State state) async {
     final id = state.id ?? (throw Exception('Cannot save entity that has a null id!'));
 
+    log('$repositoryName: Saving id [$id] with [$state]');
+
     _stateByIdCache.save(id, state);
     await _saveLock.synchronized(() => super.saveState(state));
   }
@@ -48,6 +52,8 @@ mixin WithCacheEntityRepository on EntityRepository {
   @override
   Future<void> deleteState(State state) async {
     final id = state.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
+
+    log('$repositoryName: Deleting id [$id] with [$state]');
 
     await super.deleteState(state);
 
@@ -92,7 +98,7 @@ mixin WithCacheEntityRepository on EntityRepository {
       _queryCompleterByQueryRequest[queryRequest] = completer;
 
       await onWithoutCacheQueryExecuted(queryRequest);
-      logMessage('Using without-cache query [$queryRequest]');
+      log('Using without-cache query [$queryRequest]');
       result = await getQueryExecutor(
         onPaginationControllerCreated: (query, paginationController) =>
             _sourcePaginationResultControllerByQuery[query] = paginationController,

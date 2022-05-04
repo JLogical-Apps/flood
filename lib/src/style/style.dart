@@ -135,7 +135,8 @@ abstract class Style {
   void navigateBack<T>({required BuildContext context, T? result}) => throw UnimplementedError();
 
   /// Replaces the current page with [newPage].
-  void navigateReplacement({required BuildContext context, required Widget Function(BuildContext context) newPage}) =>
+  void navigateReplacement<P extends Widget>(
+          {required BuildContext context, required P Function(BuildContext context) newPage}) =>
       throw UnimplementedError();
 }
 

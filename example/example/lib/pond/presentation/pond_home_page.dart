@@ -7,6 +7,7 @@ import 'package:example/pond/presentation/pond_budget_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../domain/budget/budget_draft.dart';
 import 'pond_login_page.dart';
@@ -41,6 +42,12 @@ class PondHomePage extends HookWidget {
                 onRefresh: () => Future.wait([userEntityController.reload(), userBudgetsController.reload()]),
                 titleText: 'Home: ${userEntity.value.nameProperty.value}',
                 actions: [
+                  ActionItem(
+                      name: 'Share Logs',
+                      onPerform: () async {
+                        final logFile = await locate<DefaultLoggingModule>().getLogFile();
+                        await Share.shareFiles([logFile.path], text: 'Logs');
+                      }),
                   ActionItem(
                     name: 'Log Out',
                     onPerform: () async {

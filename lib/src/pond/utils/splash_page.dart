@@ -8,6 +8,7 @@ import 'package:jlogical_utils/src/style/widgets/pages/styled_page.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_error_text.dart';
 
 import '../../utils/export.dart';
+import '../modules/logging/default_logging_module.dart';
 
 class SplashPage extends HookWidget {
   final Widget child;
@@ -29,8 +30,8 @@ class SplashPage extends HookWidget {
           await AppContext.global.load();
           await onDone?.call(context);
         } catch (e, stack) {
-          print(e);
-          print(stack);
+          logError(e);
+          logError(stack);
           error.value = e.toString();
         }
       }();

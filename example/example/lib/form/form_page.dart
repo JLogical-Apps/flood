@@ -147,8 +147,6 @@ class FormPage extends HookWidget {
             FutureButton(
               child: Text('SIGN UP'),
               onPressed: () async {
-                print(smartFormController.getData('type'));
-
                 // Wait one second just for dramatic effect.
                 await Future.delayed(Duration(seconds: 1));
 

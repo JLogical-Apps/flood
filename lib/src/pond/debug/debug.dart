@@ -8,6 +8,7 @@ import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../automation/automation_context.dart';
 import '../automation_modules/build/build_automation_module.dart';
+import '../modules/logging/default_logging_module.dart';
 
 const int _pondPort = 1236;
 const int _debugViewPort = 1237;
@@ -42,8 +43,9 @@ Future<void> debug({AutomationContext? automationContext}) async {
                 await guardAsync(() => pondHost.run(commandName: 'list_commands').timeout(Duration(seconds: 1)));
 
             return [...?remoteCommands, ...?automationCommands];
-          } catch (e) {
-            print(e);
+          } catch (e, stack) {
+            logError(e);
+            logError(stack);
           }
         },
       ),

@@ -8,4 +8,6 @@ abstract class LoggingService extends AppModule {
   void logError(dynamic obj);
 
   void logFatal(dynamic obj);
+
+  List<String> getLogs();
 }

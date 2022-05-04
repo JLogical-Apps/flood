@@ -19,6 +19,7 @@ dependencies:
   loading_overlay: 0.3.0
   path: ^1.8.0
   rxdart: ^0.27.1
+  share_plus: ^4.0.4
 
 flutter:
   uses-material-design: true
