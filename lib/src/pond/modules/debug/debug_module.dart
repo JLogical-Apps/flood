@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
@@ -33,7 +35,7 @@ class DebugModule extends AppModule {
         .whereType<DebuggableModule>()
         .expand((debuggableModule) => debuggableModule.debugCommands);
 
-    try {
+    await runZonedGuarded(() async {
       await RemoteHost.connect(
         address: loopbackAddress,
         port: debugPort,
@@ -50,6 +52,6 @@ class DebugModule extends AppModule {
           ...debugCommands,
         ],
       );
-    } catch (e) {}
+    }, (e, stack) {});
   }
 }
