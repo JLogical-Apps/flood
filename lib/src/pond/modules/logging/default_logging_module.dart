@@ -24,7 +24,7 @@ class DefaultLoggingModule extends AppModule {
   }
 
   Future<File> getLogFile() async {
-    final logFile = AppContext.global.supportDirectory / 'logs' - 'logs-${DateTime.now()}';
+    final logFile = AppContext.global.supportDirectory / 'logs' - 'logs-${DateTime.now().formatDateTime(includeSeconds: true)}.txt';
     await logFile.ensureCreated();
     debugPrint(_loggingService.getLogs().join('\n'));
     await logFile.writeAsString(_loggingService.getLogs().join('\n'));
