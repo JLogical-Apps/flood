@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/modules/command/command_stub.dart';
@@ -24,25 +25,31 @@ class DebugModule extends AppModule {
 
   @override
   Future<void> onLoad(AppContext appContext) async {
+    if (kReleaseMode) {
+      return;
+    }
+
     final debugCommands = AppContext.global.appModules
         .whereType<DebuggableModule>()
         .expand((debuggableModule) => debuggableModule.debugCommands);
 
-    await RemoteHost.connect(
-      address: loopbackAddress,
-      port: debugPort,
-      commands: [
-        SimpleCommand(
-          name: 'list_commands',
-          runner: (args) {
-            return debugCommands
-                .map((command) => CommandStub.fromCommand(command))
-                .map((stub) => stub.state.values)
-                .toList();
-          },
-        ),
-        ...debugCommands,
-      ],
-    );
+    try {
+      await RemoteHost.connect(
+        address: loopbackAddress,
+        port: debugPort,
+        commands: [
+          SimpleCommand(
+            name: 'list_commands',
+            runner: (args) {
+              return debugCommands
+                  .map((command) => CommandStub.fromCommand(command))
+                  .map((stub) => stub.state.values)
+                  .toList();
+            },
+          ),
+          ...debugCommands,
+        ],
+      );
+    } catch (e) {}
   }
 }
