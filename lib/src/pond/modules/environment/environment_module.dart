@@ -24,4 +24,6 @@ class EnvironmentModule extends AppModule {
 
 extension AppContextEnvironmentExtension on AppContext {
   Environment get environment => locate<EnvironmentModule>().environment;
+
+  Environment? get environmentOrNull => locateOrNull<EnvironmentModule>()?.environment;
 }

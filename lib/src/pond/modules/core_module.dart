@@ -1,4 +1,6 @@
 import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
+import 'package:jlogical_utils/src/pond/modules/logging/default_logging_module.dart';
+import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/bool_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/date_time_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/double_type_state_serializer.dart';
@@ -13,6 +15,10 @@ class CoreModule extends AppModule {
         ..._coreTypeStateSerializers,
         ..._nullableCoreTypeStateSerializers,
       ];
+
+  void onRegister(AppRegistration registration) {
+    registration.register(DefaultLoggingModule());
+  }
 
   static List<TypeStateSerializer> get _coreTypeStateSerializers => [
         IntTypeStateSerializer(),

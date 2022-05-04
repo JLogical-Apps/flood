@@ -12,19 +12,20 @@ import 'package:jlogical_utils/src/utils/export_core.dart';
 import '../environment/environment.dart';
 
 class DefaultLoggingModule extends AppModule {
-  late LoggingService _loggingService = _getLoggingService(AppContext.global.environment);
+  late LoggingService _loggingService = _getLoggingService(AppContext.global.environmentOrNull);
 
   @override
   void onRegister(AppRegistration registration) {
     registration.register<LoggingService>(_loggingService);
   }
 
-  LoggingService _getLoggingService(Environment environment) {
+  LoggingService _getLoggingService(Environment? environment) {
     return ConsoleLoggingService();
   }
 
   Future<File> getLogFile() async {
-    final logFile = AppContext.global.supportDirectory / 'logs' - 'logs-${DateTime.now().formatDateTime(includeSeconds: true)}.txt';
+    final logFile =
+        AppContext.global.supportDirectory / 'logs' - 'logs-${DateTime.now().formatDateTime(includeSeconds: true)}.txt';
     await logFile.ensureCreated();
     debugPrint(_loggingService.getLogs().join('\n'));
     await logFile.writeAsString(_loggingService.getLogs().join('\n'));
