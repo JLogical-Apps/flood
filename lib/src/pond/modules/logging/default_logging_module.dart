@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
@@ -27,7 +26,6 @@ class DefaultLoggingModule extends AppModule {
     final logFile =
         AppContext.global.supportDirectory / 'logs' - 'logs-${DateTime.now().formatDateTime(includeSeconds: true)}.txt';
     await logFile.ensureCreated();
-    debugPrint(_loggingService.getLogs().join('\n'));
     await logFile.writeAsString(_loggingService.getLogs().join('\n'));
 
     return logFile;

@@ -44,7 +44,6 @@ List<Budget> budgets = [
 void main() {
   setUp(() async {
     AppContext.global = AppContext.createForTesting()
-      ..registerForTesting()
       ..register(LocalEnvelopeRepository())
       ..register(LocalBudgetRepository());
 
@@ -131,9 +130,7 @@ void main() {
   });
 
   test('query from abstract class', () async {
-    AppContext.global = AppContext.createForTesting()
-      ..registerForTesting()
-      ..register(LocalBudgetTransactionRepository());
+    AppContext.global = AppContext.createForTesting()..register(LocalBudgetTransactionRepository());
 
     final envelopeTransaction = EnvelopeTransactionEntity()
       ..value = (EnvelopeTransaction()
@@ -171,9 +168,7 @@ void main() {
   });
 
   test('where contains', () async {
-    AppContext.global = AppContext.createForTesting()
-      ..registerForTesting()
-      ..register(LocalLuckyNumbersRepository());
+    AppContext.global = AppContext.createForTesting()..register(LocalLuckyNumbersRepository());
 
     final firstFive = [1, 2, 3, 4, 5];
     final firstEvens = [2, 4, 6, 8, 10];

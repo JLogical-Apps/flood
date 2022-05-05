@@ -2,7 +2,6 @@ import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/modules/command/command_module.dart';
 import 'package:jlogical_utils/src/pond/modules/command/command_stub.dart';
-import 'package:jlogical_utils/src/pond/modules/core_module.dart';
 import 'package:jlogical_utils/src/remote/export_core.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 
@@ -22,12 +21,12 @@ Future<void> debug({AutomationContext? automationContext}) async {
     automationContext.registerModule(BuildAutomationModule());
   }
 
-  AppContext.createGlobal()
-    ..register(CoreModule())
-    ..register(CommandModule());
+  final context = await AppContext.create();
+  context..register(CommandModule());
 
   final pondHost = await RemoteHost.initialize(port: _pondPort);
-  final debugViewHost = await RemoteHost.initialize(
+
+  await RemoteHost.initialize(
     port: _debugViewPort,
     commands: [
       SimpleCommand(

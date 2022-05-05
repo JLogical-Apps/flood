@@ -32,6 +32,29 @@ class DebugPage extends HookWidget {
         child: Builder(builder: (context) {
           return ModelBuilder.styledPage(
               model: commandsModel,
+              loadingWidget: StyledPage(
+                body: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    StyledContentHeaderText('Connecting to Debugger...'),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    StyledLoadingIndicator(),
+                  ],
+                ),
+              ),
+              errorBuilder: (error) => StyledPage(
+                    onRefresh: () async {
+                      await commandsModel.load();
+                    },
+                    body: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        StyledContentHeaderText('Unable to connect to the debugger. Ensure the debugger is running.'),
+                      ],
+                    ),
+                  ),
               builder: (List<CommandStub> stubs) {
                 var commandsByCategory = stubs.groupListsBy((x) => x.categoryProperty.value);
                 final uncategorizedCategory = commandsByCategory.remove(null) ?? [];

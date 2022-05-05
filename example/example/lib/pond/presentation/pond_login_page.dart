@@ -6,7 +6,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class PondLoginPage extends HookWidget {
-  static Style style = DeltaStyle(backgroundColor: Color(0xff030818));
+  static Style style = DeltaStyle(
+    backgroundColor: Color(0xFF2F2F2F),
+    primaryColor: Color(0xFFE0B7B7),
+    accentColor: Color(0xFF94BFA7),
+  );
 
   @override
   Widget build(BuildContext context) {

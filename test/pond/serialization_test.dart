@@ -76,7 +76,6 @@ void main() {
 
   test('serializing value objects', () async {
     AppContext.global = AppContext.createForTesting()
-      ..registerForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
@@ -107,7 +106,6 @@ void main() {
 
   test('serializing lists', () {
     AppContext.global = AppContext.createForTesting()
-      ..registerForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<Color, Color?>(() => Color()),
@@ -177,7 +175,6 @@ void main() {
 
   test('serializing & deserializing abstract class', () {
     AppContext.global = AppContext.createForTesting()
-      ..registerForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),

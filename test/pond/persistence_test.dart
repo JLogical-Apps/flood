@@ -8,7 +8,6 @@ import 'entities/envelope_transaction.dart';
 void main() {
   test('json', () {
     AppContext.global = AppContext.createForTesting()
-      ..registerForTesting()
       ..register(SimpleAppModule(
         valueObjectRegistrations: [
           ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),

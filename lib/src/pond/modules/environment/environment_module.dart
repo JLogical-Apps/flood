@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import '../../context/app_context.dart';
 import '../../context/module/app_module.dart';
 import '../config/config_module.dart';
@@ -16,9 +14,21 @@ class EnvironmentModule extends AppModule {
 
   static Future<EnvironmentModule> create() async {
     final module = EnvironmentModule._();
-    module.environment =
-        kReleaseMode ? Environment.production : await locate<ConfigModule>().getEnvironmentFromConfig();
+    module.environment = await _getEnvironment();
     return module;
+  }
+
+  static Future<Environment> _getEnvironment() async {
+    if (AppContext.global.isRelease) {
+      return Environment.production;
+    }
+
+    final configEnvironment = await locateOrNull<ConfigModule>()?.getEnvironmentFromConfig();
+    if (configEnvironment != null) {
+      return configEnvironment;
+    }
+
+    return Environment.testing;
   }
 }
 

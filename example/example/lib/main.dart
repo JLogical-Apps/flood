@@ -130,8 +130,7 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> _initPond() async {
-    final appContext = AppContext.createGlobal();
-    await appContext.registerForApp();
+    final appContext = await AppContext.create();
     appContext
       ..register(await FirebaseModule.create(app: DefaultFirebaseOptions.currentPlatform))
       ..register(DebugModule())
@@ -165,8 +164,7 @@ class HomePage extends StatelessWidget {
   }
 
   Future<void> _initDebugPond() async {
-    final appContext = await AppContext.createGlobal();
-    await appContext.registerForWeb();
+    final appContext = await AppContext.create();
     appContext..register(CommandModule());
   }
 }
