@@ -21,7 +21,10 @@ class AppIconAutomationModule extends AutomationModule
   final List<AppIconBanner> banners;
 
   @override
-  String get name => 'App Icon';
+  String get name => 'app_icon';
+
+  @override
+  bool get modifyCommandNames => false;
 
   AppIconAutomationModule({
     required this.appIconForegroundFile,

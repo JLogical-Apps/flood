@@ -15,7 +15,11 @@ class NativeSplashAutomationModule extends AutomationModule implements BuildingA
 
   final int imageSize;
 
-  String get name => 'Native Splash';
+  @override
+  String get name => 'native_splash';
+
+  @override
+  bool get modifyCommandNames => false;
 
   NativeSplashAutomationModule({
     required this.imageFile,

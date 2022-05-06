@@ -55,7 +55,7 @@ abstract class EntityRepository extends AppModule
   @override
   List<Command> get debugCommands => [
         SimpleCommand(
-          name: '${runtimeType.toString()}_get',
+          name: 'get',
           displayName: 'Get by ID',
           description: 'Get a state by an ID.',
           category: runtimeType.toString(),
@@ -69,7 +69,7 @@ abstract class EntityRepository extends AppModule
           },
         ),
         SimpleCommand(
-          name: '${runtimeType.toString()}_get_all',
+          name: 'get_all',
           displayName: 'Get All',
           description: 'Gets the first 20 elements (only the first 20 to prevent over-excessive billing).',
           category: runtimeType.toString(),

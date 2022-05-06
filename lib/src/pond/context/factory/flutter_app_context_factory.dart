@@ -12,11 +12,11 @@ import '../directory/directory_bundle.dart';
 import '../metadata/context_metadata.dart';
 
 Future<void> buildBaseAppContext(AppContext context) async {
-  context.contextMetadata = ContextMetadata(buildType: BuildType.debug);
+  context.contextMetadata = ContextMetadata(buildType: kReleaseMode ? BuildType.release : BuildType.debug);
   context.register(CoreModule());
 
-  final isTest = Platform.environment.containsKey('FLUTTER_TEST');
   final isWeb = kIsWeb;
+  final isTest = isWeb ? false : Platform.environment.containsKey('FLUTTER_TEST');
 
   if (isTest) {
     context.register(EnvironmentModule.createForTesting());

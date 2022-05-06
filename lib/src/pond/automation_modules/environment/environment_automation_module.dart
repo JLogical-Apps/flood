@@ -8,12 +8,15 @@ import '../../modules/environment/environment.dart';
 
 class EnvironmentAutomationModule extends AutomationModule {
   @override
-  String get name => 'Environment';
+  String get name => 'environment';
+
+  @override
+  bool get modifyCommandNames => false;
 
   @override
   List<Command> get commands => [
         SimpleCommand(
-          name: 'environment_set',
+          name: 'environment',
           displayName: 'Set Environment',
           description: 'Set the environment.',
           category: 'Environment',

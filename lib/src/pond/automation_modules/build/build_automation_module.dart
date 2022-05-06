@@ -5,7 +5,10 @@ import '../../automation/automation_module.dart';
 
 class BuildAutomationModule extends AutomationModule {
   @override
-  String get name => 'Build';
+  String get name => 'build';
+
+  @override
+  bool get modifyCommandNames => false;
 
   @override
   List<Command> get commands => [

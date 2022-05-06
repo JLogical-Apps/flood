@@ -9,7 +9,7 @@ import '../../modules/environment/environment.dart';
 
 class FirebaseAutomationModule extends AutomationModule implements EnvironmentListeningAutomationModule {
   @override
-  String get name => 'Firebase';
+  String get name => 'firebase';
 
   @override
   List<Command> get commands => [

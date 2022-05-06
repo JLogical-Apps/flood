@@ -18,9 +18,8 @@ abstract class AutomationContext implements ConsoleInteractor, PackageRegistrati
 
   List<AutomationModule> modules = [];
 
-  List<Command> get commands => modules.expand((element) => element.commands).toList();
-
-  CommandRunner get commandRunner => CommandRunner(commands: commands);
+  List<Command> get unparentedCommands =>
+      modules.where((module) => !module.modifyCommandNames).expand((module) => module.commands).toList();
 
   void registerModule(AutomationModule module) {
     modules.add(module);

@@ -14,8 +14,6 @@ abstract class Command {
 
   String? get description => null;
 
-  String? get category;
-
   Map<String, CommandParameter> get parameters;
 
   FutureOr onExecute(Map<String, dynamic> args);

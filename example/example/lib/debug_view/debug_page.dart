@@ -103,6 +103,7 @@ class DebugPage extends HookWidget {
                             commandStub: stub,
                             onExecute: (args) async {
                               args['_source'] = stub.extraValues['_source'];
+                              args['_module'] = stub.extraValues['_module'];
 
                               final client = remoteClientModel.get();
                               return await client.run(

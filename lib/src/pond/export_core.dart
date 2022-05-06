@@ -23,7 +23,6 @@ export 'modules/auth/signup_failure.dart';
 export 'modules/command/command_module.dart';
 export 'modules/command/command_parameter_stub.dart';
 export 'modules/command/command_stub.dart';
-export 'modules/debug/debug_module.dart';
 export 'modules/debug/debuggable_module.dart';
 export 'modules/draft/draft.dart';
 export 'modules/draft/draft_entity.dart';

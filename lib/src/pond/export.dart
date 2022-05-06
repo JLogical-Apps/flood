@@ -9,6 +9,7 @@ export 'modules/auth/default_auth_module.dart';
 export 'modules/config/config_data_source.dart';
 export 'modules/config/config_module.dart';
 export 'modules/core_module.dart';
+export 'modules/debug/debug_module.dart';
 export 'modules/environment/environment_module.dart';
 export 'modules/firebase/firebase_module.dart';
 export 'modules/logging/default_logging_module.dart';

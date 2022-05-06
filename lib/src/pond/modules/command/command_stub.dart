@@ -25,12 +25,12 @@ class CommandStub extends ValueObject {
         parametersProperty,
       ];
 
-  static CommandStub fromCommand(Command command) {
+  static CommandStub fromCommand(Command command, {String? category}) {
     return CommandStub()
       ..nameProperty.value = command.name
       ..displayNameProperty.value = command.displayName
       ..descriptionProperty.value = command.description
-      ..categoryProperty.value = command.category
+      ..categoryProperty.value = category
       ..parametersProperty.value =
           command.parameters.mapToIterable((name, param) => CommandParameterStub.fromParameter(name, param)).toList();
   }

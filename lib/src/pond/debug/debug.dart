@@ -12,8 +12,10 @@ import '../modules/logging/default_logging_module.dart';
 const int _pondPort = 1236;
 const int _debugViewPort = 1237;
 
-const String _sourceField = '_source';
+const String _fieldSource = '_source';
 const String _sourceAutomation = 'automation';
+
+const String _fieldModule = '_module';
 
 Future<void> debug({AutomationContext? automationContext}) async {
   if (automationContext != null) {
@@ -33,8 +35,11 @@ Future<void> debug({AutomationContext? automationContext}) async {
         name: 'list_commands',
         runner: (args) async {
           try {
-            final automationCommands = automationContext?.commands
-                .map((command) => CommandStub.fromCommand(command)..extraValues[_sourceField] = _sourceAutomation)
+            final automationCommands = automationContext?.modules
+                .expand(
+                    (module) => module.commands.map((command) => CommandStub.fromCommand(command, category: module.name)
+                      ..extraValues[_fieldSource] = _sourceAutomation
+                      ..extraValues[_fieldModule] = module.name))
                 .map((stub) => stub.state.values)
                 .toList();
 
@@ -50,11 +55,17 @@ Future<void> debug({AutomationContext? automationContext}) async {
       ),
       SimpleCommand.wildcard(runner: (args) async {
         final name = args.remove('_name');
-        final source = args.remove(_sourceField);
+        final moduleName = args.remove(_fieldModule);
+        final source = args.remove(_fieldSource);
         try {
           if (source == _sourceAutomation) {
-            automationContext?.args = args;
-            return await automationContext?.commandRunner.run(commandName: name, args: args);
+            automationContext!.args = args;
+            final command = _getAutomationCommand(
+              context: automationContext,
+              commandName: name,
+              moduleName: moduleName,
+            );
+            return command.run(args);
           } else {
             return await pondHost.run(commandName: name, args: args);
           }
@@ -64,4 +75,17 @@ Future<void> debug({AutomationContext? automationContext}) async {
       }),
     ],
   );
+}
+
+Command _getAutomationCommand({
+  required AutomationContext context,
+  required String? moduleName,
+  required String commandName,
+}) {
+  if (moduleName == null) {
+    return context.unparentedCommands.firstWhere((command) => command.name == commandName);
+  }
+
+  final module = context.modules.firstWhere((module) => module.name == moduleName);
+  return module.commands.firstWhere((command) => command.name == commandName);
 }

@@ -5,21 +5,20 @@ import 'package:jlogical_utils/src/patterns/command/parameter/command_parameter.
 
 class SimpleCommand extends Command {
   @override
-  final String name;
+  String name;
 
   @override
-  final String displayName;
+  String displayName;
 
   @override
-  final String? description;
+  String? description;
+
+  String? category;
 
   @override
-  final String? category;
+  Map<String, CommandParameter> parameters;
 
-  @override
-  final Map<String, CommandParameter> parameters;
-
-  final FutureOr Function(Map<String, dynamic> args) runner;
+  FutureOr Function(Map<String, dynamic> args) runner;
 
   SimpleCommand({
     required this.name,
@@ -34,10 +33,18 @@ class SimpleCommand extends Command {
     String? displayName,
     this.description,
     this.parameters: const {},
+    this.category,
     required this.runner,
   })  : name = Command.wildcardName,
-        category = null,
         this.displayName = displayName ?? 'Wildcard';
+
+  SimpleCommand.fromCommand(Command command)
+      : name = command.name,
+        displayName = command.displayName,
+        parameters = command.parameters,
+        description = command.description,
+        category = (command as SimpleCommand?)?.category,
+        runner = command.run;
 
   @override
   FutureOr onExecute(Map<String, dynamic> args) => runner(args);
