@@ -50,10 +50,9 @@ dependencies:
   url_launcher: ^6.0.2
 
   # Backend
-  freezed_annotation: ^0.14.2
+  freezed_annotation: ^2.0.3
   intersperse: ^2.0.0
   intl: ^0.17.0
-  json_serializable: ^4.1.3
   json2yaml: ^2.0.0
   path: ^1.8.0
   path_provider: ^2.0.8
@@ -76,7 +75,7 @@ dev_dependencies:
     sdk: flutter
 
   build_runner: ^2.0.5 # flutter packages pub run build_runner watch
-  freezed: ^0.14.2
+  freezed: ^2.0.3
 
 flutter:
   uses-material-design: true
