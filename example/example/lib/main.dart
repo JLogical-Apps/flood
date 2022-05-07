@@ -36,10 +36,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: CustomTheme.lightTheme(
-        primaryColor: Colors.blue,
-        accentColor: Colors.purple,
-      ),
       navigatorObservers: [
         PondNavigatorObserver(),
       ],
