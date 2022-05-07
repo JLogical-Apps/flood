@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/record/immutability_violation_error.dart';
 import 'package:rxdart/rxdart.dart';
 

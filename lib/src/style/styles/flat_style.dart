@@ -24,6 +24,7 @@ import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_span.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_style.dart';
 import 'package:jlogical_utils/src/utils/export.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';

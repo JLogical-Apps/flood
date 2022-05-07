@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:jlogical_utils/src/utils/export.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../smart_form_controller.dart';
 

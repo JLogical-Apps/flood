@@ -1,7 +1,6 @@
 export 'context/app_context.dart';
 export 'context/directory/directory_bundle.dart';
 export 'context/observer/pond_navigator_observer.dart';
-export 'export_core.dart';
 export 'modules/analytics/default_analytics_module.dart';
 export 'modules/app_version/app_version_module.dart';
 export 'modules/auth/default_auth_module.dart';

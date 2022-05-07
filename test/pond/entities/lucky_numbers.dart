@@ -1,4 +1,4 @@
-import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 
 class LuckyNumbers extends ValueObject {
   late final luckyNumbersProperty = ListFieldProperty<int>(name: 'luckyNumbers');

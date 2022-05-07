@@ -1,6 +1,7 @@
 import 'package:jlogical_utils/src/model/model.dart';
 
 import '../../../persistence/export.dart';
+import '../../../persistence/export_core.dart';
 import 'config_module.dart';
 
 class AppConfigModule extends ConfigModule {

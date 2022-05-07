@@ -1,4 +1,4 @@
-import 'package:jlogical_utils/src/utils/export.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'smart_form.dart';

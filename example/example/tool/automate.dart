@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/jlogical_utils_cli.dart';
 
 Future<void> main(List<String> args) async {

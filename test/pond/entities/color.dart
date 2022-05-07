@@ -1,4 +1,4 @@
-import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 
 class Color extends ValueObject {
   late final rgbProperty = MapFieldProperty<String, int>(name: 'rgb').required();

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/state/persistence/json_state_persister.dart';
 
 import 'entities/budget_transaction.dart';

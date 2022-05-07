@@ -1,6 +1,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/src/pond/utils/entity_controller.dart';
 import 'package:jlogical_utils/src/pond/utils/query_controller.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../../utils/export.dart';
 import '../query/query.dart';
