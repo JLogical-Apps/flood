@@ -1,15 +1,15 @@
 import '../../validator.dart';
 import 'max_length_validation_exception.dart';
 
-class MaxLengthValidator extends Validator<dynamic> {
+class MaxLengthValidator<T> extends Validator<T> {
   final int maxLength;
 
   MaxLengthValidator({required this.maxLength});
 
   @override
-  void onValidate(dynamic value) {
+  void onValidate(T value) {
     if (value == null) {
-      return;
+      throw MaxLengthValidationException(validator: this, failedValue: value);
     }
 
     final string = value.toString();

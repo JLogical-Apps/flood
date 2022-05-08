@@ -5,25 +5,35 @@ void main() {
   test('different validation techniques.', () async {
     const nonNullObject = 1;
 
-    final validation = Validation.required();
+    final validator = Validator.required();
 
-    expect(() => validation.validate(nonNullObject), returnsNormally);
-    expect(() => validation.validate(null), throwsA(isA<RequiredValidationException>()));
+    expect(() => validator.validate(nonNullObject), returnsNormally);
+    expect(() => validator.validate(null), throwsA(isA<RequiredValidationException>()));
 
-    expect(await validation.isValid(nonNullObject), isTrue);
-    expect(await validation.isValid(null), isFalse);
+    expect(await validator.isValid(nonNullObject), isTrue);
+    expect(await validator.isValid(null), isFalse);
 
-    expect(await validation.getException(nonNullObject), isNull);
-    expect(await validation.getException(null), isA<RequiredValidationException>());
+    expect(await validator.getException(nonNullObject), isNull);
+    expect(await validator.getException(null), isA<RequiredValidationException>());
   });
 
   test('required', () async {
     const nonNullObject = 1;
+    const emptyString = '';
+    const letters = 'abc';
+    const emptyList = [];
+    const nonEmptyList = [1, 2, 3];
 
-    final validation = Validation.required();
+    final validator = Validator.required();
 
-    expect(() => validation.validate(nonNullObject), returnsNormally);
-    expect(() => validation.validate(null), throwsA(isA<RequiredValidationException>()));
+    expect(() => validator.validate(nonNullObject), returnsNormally);
+    expect(() => validator.validate(null), throwsA(isA<RequiredValidationException>()));
+    expect(() => validator.validate(true), returnsNormally);
+    expect(() => validator.validate(false), throwsA(isA<RequiredValidationException>()));
+    expect(() => validator.validate(letters), returnsNormally);
+    expect(() => validator.validate(emptyString), throwsA(isA<RequiredValidationException>()));
+    expect(() => validator.validate(nonEmptyList), returnsNormally);
+    expect(() => validator.validate(emptyList), throwsA(isA<RequiredValidationException>()));
   });
 
   test('min length', () async {
@@ -31,10 +41,10 @@ void main() {
     const fiveLetters = 'abcde';
     const minLength = 3;
 
-    final threeLettersMinValidation = Validation.minLength(minLength);
+    final threeLettersMinValidator = Validator.minLength(minLength);
 
-    expect(() => threeLettersMinValidation.validate(empty), throwsA(isA<MinLengthValidationException>()));
-    expect(() => threeLettersMinValidation.validate(fiveLetters), returnsNormally);
+    expect(() => threeLettersMinValidator.validate(empty), throwsA(isA<MinLengthValidationException>()));
+    expect(() => threeLettersMinValidator.validate(fiveLetters), returnsNormally);
   });
 
   test('max length', () async {
@@ -42,10 +52,10 @@ void main() {
     const fiveLetters = 'abcde';
     const maxLength = 3;
 
-    final threeLettersMaxValidation = Validation.maxLength(maxLength);
+    final threeLettersMaxValidator = Validator.maxLength(maxLength);
 
-    expect(() => threeLettersMaxValidation.validate(empty), returnsNormally);
-    expect(() => threeLettersMaxValidation.validate(fiveLetters), throwsA(isA<MaxLengthValidationException>()));
+    expect(() => threeLettersMaxValidator.validate(empty), returnsNormally);
+    expect(() => threeLettersMaxValidator.validate(fiveLetters), throwsA(isA<MaxLengthValidationException>()));
   });
 
   test('parsing int', () async {
@@ -53,11 +63,11 @@ void main() {
     const intString = '35';
     const doubleString = '12.36';
 
-    final isIntValidation = Validation.isInt();
+    final isIntValidator = Validator.isInt();
 
-    expect(() => isIntValidation.validate(letters), throwsA(isA<IsIntValidationException>()));
-    expect(() => isIntValidation.validate(intString), returnsNormally);
-    expect(() => isIntValidation.validate(doubleString), throwsA(isA<IsIntValidationException>()));
+    expect(() => isIntValidator.validate(letters), throwsA(isA<IsIntValidationException>()));
+    expect(() => isIntValidator.validate(intString), returnsNormally);
+    expect(() => isIntValidator.validate(doubleString), throwsA(isA<IsIntValidationException>()));
   });
 
   test('parsing double', () async {
@@ -65,11 +75,11 @@ void main() {
     const intString = '35';
     const doubleString = '12.36';
 
-    final isDoubleValidation = Validation.isDouble();
+    final isDoubleValidator = Validator.isDouble();
 
-    expect(() => isDoubleValidation.validate(letters), throwsA(isA<IsDoubleValidationException>()));
-    expect(() => isDoubleValidation.validate(intString), returnsNormally);
-    expect(() => isDoubleValidation.validate(doubleString), returnsNormally);
+    expect(() => isDoubleValidator.validate(letters), throwsA(isA<IsDoubleValidationException>()));
+    expect(() => isDoubleValidator.validate(intString), returnsNormally);
+    expect(() => isDoubleValidator.validate(doubleString), returnsNormally);
   });
 
   test('parsing currency', () async {
@@ -78,12 +88,12 @@ void main() {
     const doubleString = '12.36';
     const currencyString = r'$112,212.36';
 
-    final isCurrencyValidation = Validation.isCurrency();
+    final isCurrencyValidator = Validator.isCurrency();
 
-    expect(() => isCurrencyValidation.validate(letters), throwsA(isA<IsCurrencyValidationException>()));
-    expect(() => isCurrencyValidation.validate(intString), returnsNormally);
-    expect(() => isCurrencyValidation.validate(doubleString), returnsNormally);
-    expect(() => isCurrencyValidation.validate(currencyString), returnsNormally);
+    expect(() => isCurrencyValidator.validate(letters), throwsA(isA<IsCurrencyValidationException>()));
+    expect(() => isCurrencyValidator.validate(intString), returnsNormally);
+    expect(() => isCurrencyValidator.validate(doubleString), returnsNormally);
+    expect(() => isCurrencyValidator.validate(currencyString), returnsNormally);
   });
 
   test('email', () async {
@@ -91,10 +101,40 @@ void main() {
     const letters = 'abc';
     const email = 'a@b.com';
 
-    final isEmailValidation = Validation.isEmail();
+    final isEmailValidator = Validator.isEmail();
 
-    expect(() => isEmailValidation.validate(empty), returnsNormally);
-    expect(() => isEmailValidation.validate(letters), throwsA(isA<IsEmailValidationException>()));
-    expect(() => isEmailValidation.validate(email), returnsNormally);
+    expect(() => isEmailValidator.validate(empty), returnsNormally);
+    expect(() => isEmailValidator.validate(letters), throwsA(isA<IsEmailValidationException>()));
+    expect(() => isEmailValidator.validate(email), returnsNormally);
+  });
+
+  test('password', () async {
+    const empty = '';
+    const threeLetters = 'abc';
+    const eightLetters = 'abcdefgh';
+
+    final isPasswordValidator = Validator.isPassword();
+
+    expect(() => isPasswordValidator.validate(empty), throwsA(isA<RequiredValidationException>()));
+    expect(() => isPasswordValidator.validate(threeLetters), throwsA(isA<MinLengthValidationException>()));
+    expect(() => isPasswordValidator.validate(eightLetters), returnsNormally);
+  });
+
+  test('datetime', () async {
+    final today = DateTime.now();
+    final yesterday = today.subtract(Duration(days: 1));
+    final tomorrow = today.add(Duration(days: 1));
+
+    final isAfterTodayValidator = Validator.isAfter(today);
+
+    expect(() => isAfterTodayValidator.validate(yesterday), throwsA(isA<IsAfterValidationException>()));
+    expect(() => isAfterTodayValidator.validate(today), throwsA(isA<IsAfterValidationException>()));
+    expect(() => isAfterTodayValidator.validate(tomorrow), returnsNormally);
+
+    final isBeforeTodayValidator = Validator.isBefore(today);
+
+    expect(() => isBeforeTodayValidator.validate(yesterday), returnsNormally);
+    expect(() => isBeforeTodayValidator.validate(today), throwsA(isA<IsBeforeValidationException>()));
+    expect(() => isBeforeTodayValidator.validate(tomorrow), throwsA(isA<IsBeforeValidationException>()));
   });
 }

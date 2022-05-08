@@ -2,21 +2,20 @@ import 'dart:async';
 
 import '../validator.dart';
 
-class ComposedValidator<C> extends Validator<C> {
-  final List<Validator<C>> validators;
-
-  ComposedValidator({required this.validators});
+abstract class ComposedValidator<C> extends Validator<C> {
+  List<Validator<C>> get validators;
 
   @override
-  FutureOr onValidate(C context) async {
+  Future onValidate(C context) async {
     for (final validator in validators) {
       await validator.onValidate(context);
     }
   }
+}
 
+class SimpleComposedValidator<C> extends ComposedValidator<C> {
   @override
-  ComposedValidator<C> then(Validator<C> otherValidator) {
-    validators.add(otherValidator);
-    return this;
-  }
+  final List<Validator<C>> validators;
+
+  SimpleComposedValidator({required this.validators});
 }

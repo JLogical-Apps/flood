@@ -1,15 +1,15 @@
 import '../../validator.dart';
 import 'min_length_validation_exception.dart';
 
-class MinLengthValidator extends Validator<dynamic> {
+class MinLengthValidator<T> extends Validator<T> {
   final int minLength;
 
   MinLengthValidator({required this.minLength});
 
   @override
-  void onValidate(dynamic value) {
+  void onValidate(T value) {
     if (value == null) {
-      return;
+      throw MinLengthValidationException(validator: this, failedValue: value);
     }
 
     final string = value.toString();

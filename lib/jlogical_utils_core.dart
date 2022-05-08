@@ -1,3 +1,4 @@
+export 'src/form/export_core.dart';
 export 'src/model/export_core.dart';
 export 'src/patterns/export_core.dart';
 export 'src/persistence/export_core.dart';
