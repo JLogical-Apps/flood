@@ -1,6 +1,6 @@
 import 'package:jlogical_utils/src/pond/property/modifier/context/property_modifier_context.dart';
 
-import '../../validation/validator.dart';
+import '../../../patterns/export_core.dart';
 import '../property.dart';
 import 'context/property_modifier_context_provider.dart';
 
@@ -11,7 +11,7 @@ abstract class PropertyModifier<T> {
 
   Property<T> get property => context.property;
 
-  Validator? get validator => null;
+  SyncValidator? get validator => null;
 
   T Function(T propertyValue)? get getTransformer => null;
 

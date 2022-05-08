@@ -17,5 +17,5 @@ class ComputedProperty<T> extends Property<T> with WithGlobalTypeSerializer {
   }
 
   @override
-  void validate() {}
+  void onValidateSync(void empty) {}
 }

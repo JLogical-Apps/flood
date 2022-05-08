@@ -11,7 +11,7 @@ class SimpleFormFieldValidator<V> extends FormFieldValidator<V> {
   SimpleFormFieldValidator({required this.validator});
 
   @override
-  FutureOr onValidate(FormFieldValidationContext<V> context) {
+  FutureOr onValidate(FormFieldValidationContext context) {
     return validator(context.value, context.form);
   }
 }

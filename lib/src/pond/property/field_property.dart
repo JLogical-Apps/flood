@@ -2,13 +2,13 @@ import 'package:jlogical_utils/src/pond/property/modifier/fallback_replacement_m
 import 'package:jlogical_utils/src/pond/property/modifier/required_property_modifier.dart';
 import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/property/with_global_type_serializer.dart';
-import 'package:jlogical_utils/src/pond/validation/validator.dart';
 
+import '../../patterns/export_core.dart';
 import 'modifier/fallback_property_modifier.dart';
 import 'modifier/property_modifier.dart';
 
 class FieldProperty<T> extends Property<T?> with WithGlobalTypeSerializer {
-  final List<Validator> validators;
+  final List<SyncValidator> validators;
   final List<PropertyModifier<T?>> modifiers;
 
   T? _value;
@@ -43,12 +43,13 @@ class FieldProperty<T> extends Property<T?> with WithGlobalTypeSerializer {
     });
   }
 
-  void validate() {
+  @override
+  void onValidateSync(_) {
     modifiers.forEach((modifier) {
       modifier.propertyModifierContextProvider = this;
-      modifier.validator?.validate();
+      modifier.validator?.validateSync(null);
     });
-    validators.forEach((validator) => validator.validate());
+    validators.forEach((validator) => validator.validateSync(null));
   }
 
   FieldProperty<T> required() {

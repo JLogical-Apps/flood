@@ -44,7 +44,7 @@ class DebugCommandPage extends HookWidget {
                       return;
                     }
 
-                    final data = result.valueByName!;
+                    final data = result._valueByName!;
 
                     final args = commandStub.parametersProperty.value!
                         .map((stub) =>

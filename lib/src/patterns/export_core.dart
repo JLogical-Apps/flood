@@ -8,6 +8,8 @@ export 'resolver/with_resolver_provider.dart';
 export 'resolver/with_typed_resolver.dart';
 export 'resolver/with_wrapper_resolver.dart';
 export 'resolver/wrapper_resolver.dart';
+export 'validation/sync_validator.dart';
+export 'validation/validation_exception.dart';
 export 'validation/validator.dart';
 export 'validation/validators/datetime/is_after_validation_exception.dart';
 export 'validation/validators/datetime/is_before_validation_exception.dart';

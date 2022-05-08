@@ -1,14 +1,15 @@
 import 'package:jlogical_utils/src/pond/validation/validation_state.dart';
 
+import '../../patterns/export_core.dart';
 import '../state/stateful.dart';
-import '../validation/validator.dart';
 
-abstract class Record implements Stateful, Validator {
+abstract class Record with SyncValidator<void> implements Stateful, Validator<void> {
   ValidationState validationState = ValidationState.unvalidated;
 
   void validateRecord();
 
-  void validate() {
+  @override
+  void onValidateSync(_) {
     try {
       validateRecord();
       validationState = ValidationState.validated;

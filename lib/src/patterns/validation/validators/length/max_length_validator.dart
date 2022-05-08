@@ -1,13 +1,13 @@
-import '../../validator.dart';
+import '../../sync_validator.dart';
 import 'max_length_validation_exception.dart';
 
-class MaxLengthValidator<T> extends Validator<T> {
+class MaxLengthValidator<T> extends SyncValidator<T> {
   final int maxLength;
 
   MaxLengthValidator({required this.maxLength});
 
   @override
-  void onValidate(T value) {
+  void onValidateSync(T value) {
     if (value == null) {
       throw MaxLengthValidationException(validator: this, failedValue: value);
     }

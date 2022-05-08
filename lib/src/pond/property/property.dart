@@ -3,12 +3,12 @@ import 'package:jlogical_utils/src/pond/property/context/property_context_provid
 import 'package:jlogical_utils/src/pond/property/modifier/context/property_modifier_context_provider.dart';
 import 'package:jlogical_utils/src/pond/record/immutability_violation_error.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
-import 'package:jlogical_utils/src/pond/validation/validator.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 
+import '../../patterns/export_core.dart';
 import 'modifier/context/property_modifier_context.dart';
 
-abstract class Property<T> with EquatableMixin implements PropertyModifierContextProvider<T>, Validator {
+abstract class Property<T> with EquatableMixin, SyncValidator<void> implements PropertyModifierContextProvider<T> {
   final String name;
 
   T? getUnvalidated();
@@ -22,7 +22,7 @@ abstract class Property<T> with EquatableMixin implements PropertyModifierContex
   }
 
   T get value {
-    validate();
+    validate(null);
     return getUnvalidated() as T;
   }
 
@@ -38,7 +38,7 @@ abstract class Property<T> with EquatableMixin implements PropertyModifierContex
 
     setUnvalidated(value);
 
-    validate();
+    validate(null);
   }
 
   PropertyContextProvider? _propertyContextProvider;

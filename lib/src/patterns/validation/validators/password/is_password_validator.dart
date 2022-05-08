@@ -1,13 +1,15 @@
 import 'package:jlogical_utils/src/patterns/validation/util/composed_validator.dart';
 import 'package:jlogical_utils/src/patterns/validation/validator.dart';
 
-class IsPasswordValidator extends ComposedValidator<String> {
+import '../../sync_validator.dart';
+
+class IsPasswordValidator extends SyncComposedValidator<String> {
   final int minLength;
 
   IsPasswordValidator({this.minLength: 6});
 
   @override
-  List<Validator<String>> get validators => [
+  List<SyncValidator<String>> get validators => [
         Validator.required(),
         Validator.minLength(minLength),
       ];

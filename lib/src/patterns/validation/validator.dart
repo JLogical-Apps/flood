@@ -14,6 +14,7 @@ import 'validators/parsing/is_currency_validator.dart';
 import 'validators/parsing/is_double_validator.dart';
 import 'validators/parsing/is_int_validator.dart';
 import 'validators/password/is_password_validator.dart';
+import 'validators/util/mapped_validator.dart';
 
 /// Validates data [V] with the [onValidate].
 abstract class Validator<V> {
@@ -87,5 +88,9 @@ extension DefaultValidatorExtensions<V> on Validator<V> {
     } on ValidationException catch (e) {
       return e;
     }
+  }
+
+  MappedValidator<U, V> map<U>(V mapper(U value)) {
+    return MappedValidator(parent: this, valueMapper: mapper);
   }
 }

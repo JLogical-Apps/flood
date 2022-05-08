@@ -54,7 +54,7 @@ class PondLoginPage extends HookWidget {
                                     if (!result.isValid) {
                                       return;
                                     }
-                                    final data = result.valueByName!;
+                                    final data = result._valueByName!;
 
                                     late String userId;
                                     try {
@@ -120,7 +120,7 @@ class PondLoginPage extends HookWidget {
                                                   return;
                                                 }
 
-                                                final data = result.valueByName!;
+                                                final data = result._valueByName!;
                                                 late String userId;
                                                 try {
                                                   userId = await AppContext.global.locate<AuthService>().signup(

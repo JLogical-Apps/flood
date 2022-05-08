@@ -103,7 +103,7 @@ void main() {
 
     final isEmailValidator = Validator.isEmail();
 
-    expect(() => isEmailValidator.validate(empty), returnsNormally);
+    expect(() => isEmailValidator.validate(empty), throwsA(isA<IsEmailValidationException>()));
     expect(() => isEmailValidator.validate(letters), throwsA(isA<IsEmailValidationException>()));
     expect(() => isEmailValidator.validate(email), returnsNormally);
   });
@@ -136,5 +136,17 @@ void main() {
     expect(() => isBeforeTodayValidator.validate(yesterday), returnsNormally);
     expect(() => isBeforeTodayValidator.validate(today), throwsA(isA<IsBeforeValidationException>()));
     expect(() => isBeforeTodayValidator.validate(tomorrow), throwsA(isA<IsBeforeValidationException>()));
+  });
+
+  test('mapped', () async {
+    const listOfValidWords = ['apple', 'banana', 'cashew'];
+    const listOfInvalidWords = ['a', 'b', 'c'];
+    const minLength = 3;
+
+    final firstWordThreeLettersValidator = Validator.minLength(minLength).map((List list) => list[0]);
+
+    expect(() => firstWordThreeLettersValidator.validate(listOfValidWords), returnsNormally);
+    expect(() => firstWordThreeLettersValidator.validate(listOfInvalidWords),
+        throwsA(isA<MinLengthValidationException>()));
   });
 }

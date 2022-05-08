@@ -26,7 +26,7 @@ class UnvalidatedProperty<T> extends Property<T?> {
   TypeStateSerializer get typeStateSerializer => parentProperty.typeStateSerializer;
 
   @override
-  void validate() {
+  void onValidateSync(void empty) {
     return;
   }
 }

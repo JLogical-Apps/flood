@@ -1,7 +1,7 @@
 import '../form_model.dart';
 
-class FormFieldValidationContext<T> {
-  final T value;
+class FormFieldValidationContext {
+  final dynamic value;
   final FormModel form;
 
   const FormFieldValidationContext({required this.value, required this.form});

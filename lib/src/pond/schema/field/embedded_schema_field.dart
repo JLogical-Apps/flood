@@ -1,6 +1,6 @@
+import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/pond/schema/field/schema_field.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
-import 'package:jlogical_utils/src/pond/validation/validator.dart';
 
 import '../../record/value_object.dart';
 
@@ -17,7 +17,7 @@ class EmbeddedSchemaField<V extends ValueObject> extends SchemaField {
     }
 
     final valueObject = ValueObject.fromStateOrNull<V>(state);
-    if (valueObject == null || !valueObject.isValid()) {
+    if (valueObject == null || !valueObject.isValidSync(null)) {
       return false;
     }
 

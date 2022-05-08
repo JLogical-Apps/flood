@@ -13,10 +13,14 @@ class FormModel implements Validator<void> {
 
   final BehaviorSubject<Map<String, dynamic>> _valueByNameX;
 
-  Map<String, dynamic> get valueByName => _valueByNameX.value;
+  ValueStream<Map<String, dynamic>> get valueByNameX => _valueByNameX;
 
-  FormModel({required this.fields}) : _valueByNameX = BehaviorSubject.seeded(_initialValueByName(fields)) {
-    fields.forEach((field) => field.valueX = _valueByNameX.mapWithValue((valueByName) => valueByName[field.name]));
+  final Map<String, dynamic> _valueByName;
+
+  FormModel({required this.fields})
+      : _valueByNameX = BehaviorSubject.seeded(_initialValueByName(fields)),
+        _valueByName = _initialValueByName(fields) {
+    fields.forEach((field) => field.initialize(this));
   }
 
   dynamic operator [](String fieldName) {
@@ -28,10 +32,11 @@ class FormModel implements Validator<void> {
   }
 
   V get<V>(String fieldName) {
-    return getFieldByName(fieldName).value;
+    return _valueByName[fieldName];
   }
 
   void set(String fieldName, dynamic value) {
+    _valueByName[fieldName] = value;
     _valueByNameX.value = _valueByNameX.value.copy()..set(fieldName, value);
   }
 
@@ -44,13 +49,13 @@ class FormModel implements Validator<void> {
       return FormResult(valueByName: null);
     }
 
-    return FormResult(valueByName: valueByName);
+    return FormResult(valueByName: _valueByName);
   }
 
   @override
   Future onValidate(void empty) async {
     for (final field in fields) {
-      final fieldValidationContext = FormFieldValidationContext(value: valueByName[field.name], form: this);
+      final fieldValidationContext = FormFieldValidationContext(value: _valueByName[field.name], form: this);
       await field.onValidate(fieldValidationContext);
     }
   }

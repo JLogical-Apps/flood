@@ -1,11 +1,11 @@
-import 'package:jlogical_utils/src/patterns/validation/validator.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 
+import '../../sync_validator.dart';
 import 'is_email_validation_exception.dart';
 
-class IsEmailValidator extends Validator<String> {
+class IsEmailValidator extends SyncValidator<String> {
   @override
-  void onValidate(String value) {
+  void onValidateSync(String value) {
     if (!value.isEmail) {
       throw IsEmailValidationException(validator: this, failedValue: value);
     }

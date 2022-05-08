@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -60,17 +62,21 @@ void main() {
     expect(result.isValid, isFalse);
   });
 
-  test('reactivity', () {
+  test('reactivity', () async {
     const name = 'Jake';
 
     final formModel = _initFormModel();
 
-    var nameChanged = false;
-    formModel.getFieldByName('name').valueX.listen((_) => nameChanged = true);
+    final completer = Completer();
+    formModel.getFieldByName('name').valueX.listen((_) {
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    });
 
     formModel['name'] = name;
 
-    expect(nameChanged, isTrue);
+    await completer.future;
   });
 }
 

@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
@@ -29,8 +30,9 @@ mixin WithPropertiesState on Record {
     });
   }
 
+  @override
   void validateRecord() {
-    properties.forEach((element) => element.validate());
+    properties.forEach((element) => element.validateSync(null));
   }
 
   Future resolve() async {

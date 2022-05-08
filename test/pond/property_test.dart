@@ -221,7 +221,7 @@ void main() {
   });
 
   test('required validation working', () {
-    expect(() => Color()..validate(), throwsA(isA<ValidationException>()));
+    expect(() => Color().validateSync(null), throwsA(isA<ValidationException>()));
   });
 
   test('fallback working', () async {

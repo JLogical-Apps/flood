@@ -6,7 +6,7 @@ import '../../../patterns/export_core.dart';
 import '../form_model.dart';
 import 'form_field_validation_context.dart';
 
-abstract class FormFieldValidator<V> extends Validator<FormFieldValidationContext<V>> {
+abstract class FormFieldValidator<V> extends Validator<FormFieldValidationContext> {
   static SimpleFormFieldValidator<V> of<V>(FutureOr validator(V value, FormModel form)) {
     return SimpleFormFieldValidator(validator: validator);
   }

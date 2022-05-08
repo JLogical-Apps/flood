@@ -1,13 +1,13 @@
-import '../../validator.dart';
+import '../../sync_validator.dart';
 import 'is_before_validation_exception.dart';
 
-class IsBeforeValidator extends Validator<DateTime?> {
+class IsBeforeValidator extends SyncValidator<DateTime?> {
   final DateTime before;
 
   IsBeforeValidator({required this.before});
 
   @override
-  void onValidate(DateTime? value) {
+  void onValidateSync(DateTime? value) {
     if (value == null) {
       return;
     }

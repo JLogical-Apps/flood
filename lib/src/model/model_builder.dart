@@ -64,13 +64,13 @@ class ModelBuilder<V> extends HookWidget {
   }
 
   static Widget _defaultErrorBuilder(dynamic error) => Center(
-        child: ErrorText(
+        child: Text(
           error.toString(),
-          error: error,
+          style: TextStyle(color: Colors.red),
         ),
       );
 
-  static Widget _scaffoldErrorBuilder(dynamic error) => ErrorScaffold(error: error);
+  static Widget _scaffoldErrorBuilder(dynamic error) => Scaffold(body: _defaultErrorBuilder(error));
 
   static Widget _styledErrorBuilder(dynamic error) => StyledErrorText(error.toString());
 

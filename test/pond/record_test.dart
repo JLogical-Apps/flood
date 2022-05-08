@@ -82,7 +82,7 @@ void main() {
         'g': 255,
         'b': 255,
       }
-      ..validate();
+      ..validate(null);
 
     expect(
       () => color.rgbProperty.value = {'r': 0, 'g': 0, 'b': 0},
