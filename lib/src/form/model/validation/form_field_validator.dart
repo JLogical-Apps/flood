@@ -12,8 +12,8 @@ abstract class FormFieldValidator<V> extends Validator<FormFieldValidationContex
   }
 }
 
-extension FormFieldValidatorExtensions on Validator {
-  FormFieldValidator<V> forForm<V>() {
+extension FormFieldValidatorExtensions<V> on Validator<V> {
+  FormFieldValidator<V> forForm() {
     return SimpleFormFieldValidator(validator: (value, form) => validate(value));
   }
 }

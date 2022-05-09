@@ -44,6 +44,10 @@ class FormModel implements Validator<void> {
     return fields.firstWhere((field) => field.name == fieldName);
   }
 
+  ValueStream<V> getFieldValueXByName<V>(String fieldName) {
+    return getFieldByName(fieldName).valueX as ValueStream<V>;
+  }
+
   Future<FormResult> submit() async {
     if (!await isValid(null)) {
       return FormResult(valueByName: null);

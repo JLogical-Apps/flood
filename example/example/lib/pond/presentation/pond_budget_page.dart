@@ -64,7 +64,7 @@ class PondBudgetPage extends HookWidget {
                             color: Colors.green,
                             leading: Icon(Icons.mail),
                             onPerform: () async {
-                              final data = await StyledDialog.smartForm(context: context, children: [
+                              final data = await StyledDialog.form(context: context, children: [
                                 StyledSmartTextField(
                                   name: 'name',
                                   label: 'Name',
@@ -111,7 +111,7 @@ class PondBudgetPage extends HookWidget {
                                 color: Colors.green,
                                 leading: Icon(Icons.swap_calls),
                                 onPerform: () async {
-                                  final data = await StyledDialog.smartForm(context: context, children: [
+                                  final data = await StyledDialog.form(context: context, children: [
                                     StyledSmartOptionsField<EnvelopeEntity>(
                                       name: 'from',
                                       label: 'From',

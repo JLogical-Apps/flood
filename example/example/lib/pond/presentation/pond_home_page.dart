@@ -75,7 +75,7 @@ class PondHomePage extends HookWidget {
                                   final draftEntity = await Singleton.getOrCreate<BudgetDraftEntity, BudgetDraft>();
                                   final budgetDraft = draftEntity.value.sourcePrototype;
 
-                                  final data = await StyledDialog.smartForm(
+                                  final data = await StyledDialog.form(
                                     context: context,
                                     onFormChange: (controller) async {
                                       final budget = Budget()..nameProperty.setUnvalidated(controller.getData('name'));

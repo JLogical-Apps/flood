@@ -20,5 +20,6 @@ export 'validation/validators/parsing/is_currency_validation_exception.dart';
 export 'validation/validators/parsing/is_double_validation_exception.dart';
 export 'validation/validators/parsing/is_int_validation_exception.dart';
 export 'validation/validators/required/required_validation_exception.dart';
+export 'validation/with_multiple_validators.dart';
 export 'wrapper/with_subtype_wrapper.dart';
 export 'wrapper/wrapper.dart';

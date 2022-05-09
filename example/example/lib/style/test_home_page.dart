@@ -61,15 +61,19 @@ class TestHomePage extends HookWidget {
                   description: 'Create a new envelope.',
                   leading: StyledIcon(Icons.create),
                   onPerform: () {
-                    final controller = SmartFormController();
+                    final form = FormModel(fields: [
+                      StringFormField(
+                        name: 'name',
+                      ),
+                    ]);
                     style.showDialog(
                       context: context,
                       dialog: StyledDialog(
-                        body: SmartForm(
-                          controller: controller,
+                        body: FormModelBuilder(
+                          form: form,
                           child: ScrollColumn.withScrollbar(
                             children: [
-                              StyledSmartTextField(
+                              StyledStringFormField(
                                 name: 'name',
                                 label: 'Name',
                                 maxLength: 25,
@@ -77,7 +81,7 @@ class TestHomePage extends HookWidget {
                               StyledButton.high(
                                 text: 'Save',
                                 onTapped: () async {
-                                  await controller.validate();
+                                  await form.submit();
                                   await Future.delayed(Duration(seconds: 1));
                                 },
                               ),
@@ -104,7 +108,7 @@ class TestHomePage extends HookWidget {
                     headerText: 'Create Transaction',
                     leading: StyledIcon(Icons.compare_arrows),
                     onTapped: () async {
-                      StyledDialog.smartForm(
+                      StyledDialog.form(
                         context: context,
                         titleText: 'Create Transaction',
                         children: [
