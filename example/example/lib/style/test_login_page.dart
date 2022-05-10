@@ -28,14 +28,14 @@ class TestLoginPage extends HookWidget {
                 children: [
                   StyledSmartTextField(
                     name: 'username',
-                    label: 'Username',
+                    labelText: 'Username',
                     validators: [
                       Validation.required(),
                     ],
                   ),
                   StyledSmartTextField(
                     name: 'password',
-                    label: 'Password',
+                    labelText: 'Password',
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
                     validators: [
@@ -44,7 +44,7 @@ class TestLoginPage extends HookWidget {
                   ),
                   StyledSmartOptionsField(
                     name: 'favoriteFood',
-                    label: 'Favorite Food',
+                    labelText: 'Favorite Food',
                     options: ['Pizza', 'Hamburger', 'Pineapples'],
                     validators: [
                       Validation.required(),
@@ -52,7 +52,7 @@ class TestLoginPage extends HookWidget {
                   ),
                   StyledSmartDateField(
                     name: 'dob',
-                    label: 'Date of Birth',
+                    labelText: 'Date of Birth',
                     validators: [Validation.isBeforeNow()],
                   ),
                   SmartRadioGroup(group: 'gender'),
@@ -62,13 +62,13 @@ class TestLoginPage extends HookWidget {
                       StyledSmartRadioOptionField<String>(
                         group: 'gender',
                         radioValue: 'male',
-                        label: 'Male',
+                        labelText: 'Male',
                         validators: [Validation.required()],
                       ),
                       StyledSmartRadioOptionField<String>(
                         group: 'gender',
                         radioValue: 'female',
-                        label: 'Female',
+                        labelText: 'Female',
                       ),
                     ],
                   ),

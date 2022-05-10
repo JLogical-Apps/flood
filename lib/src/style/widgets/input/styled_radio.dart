@@ -5,13 +5,15 @@ import '../../style_context.dart';
 import '../../styled_widget.dart';
 
 class StyledRadio<T> extends StyledWidget {
+  final String? labelText;
+
+  final Widget? label;
+
   /// The value of the group this radio is in.
   final T groupValue;
 
   /// The value of this radio.
   final T radioValue;
-
-  final String? label;
 
   /// If not null, then the error associated with this radio.
   final String? errorText;
@@ -20,9 +22,10 @@ class StyledRadio<T> extends StyledWidget {
   final void Function(T value)? onChanged;
 
   StyledRadio({
+    this.labelText,
+    this.label,
     required this.groupValue,
     required this.radioValue,
-    this.label,
     this.errorText,
     this.onChanged,
   });

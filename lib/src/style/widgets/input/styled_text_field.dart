@@ -5,7 +5,9 @@ import '../../style_context.dart';
 import '../../styled_widget.dart';
 
 class StyledTextField extends StyledWidget {
-  final String? label;
+  final String? labelText;
+  final Widget? label;
+
   final Widget? leading;
   final Widget? trailing;
 
@@ -25,6 +27,7 @@ class StyledTextField extends StyledWidget {
 
   StyledTextField({
     Key? key,
+    this.labelText,
     this.label,
     this.leading,
     this.trailing,

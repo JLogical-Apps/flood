@@ -247,14 +247,14 @@ class TestOnboardingPage extends HookWidget {
                 StyledBodyText('Here are some other styled widgets as well.'),
                 StyledDivider(),
                 StyledTextField(
-                  label: 'Name',
+                  labelText: 'Name',
                   initialText: 'John Doe',
                 ),
                 StyledDivider(),
                 StyledCategory.high(
                   children: [
                     StyledTextField(
-                      label: 'Name',
+                      labelText: 'Name',
                       initialText: 'John Doe',
                     ),
                   ],
@@ -293,7 +293,7 @@ class TestOnboardingPage extends HookWidget {
                 ),
                 StyledDivider(),
                 StyledDropdown<String>(
-                  label: 'Favorite Food',
+                  labelText: 'Favorite Food',
                   value: 'Pizza',
                   options: ['Pizza', 'Ice Cream', 'Soggy Waffles'],
                   onChanged: (value) => favoriteFood.value = value!,
@@ -302,7 +302,7 @@ class TestOnboardingPage extends HookWidget {
                 StyledCategory.high(
                   children: [
                     StyledDropdown<String>(
-                      label: 'Favorite Food',
+                      labelText: 'Favorite Food',
                       value: 'Pizza',
                       options: ['Pizza', 'Ice Cream', 'Soggy Waffles'],
                       onChanged: (value) => favoriteFood.value = value!,
@@ -314,13 +314,13 @@ class TestOnboardingPage extends HookWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     StyledRadio<String>(
-                      label: 'Male',
+                      labelText: 'Male',
                       radioValue: 'male',
                       groupValue: gender.value,
                       onChanged: (value) => gender.value = value,
                     ),
                     StyledRadio<String>(
-                      label: 'Female',
+                      labelText: 'Female',
                       radioValue: 'female',
                       groupValue: gender.value,
                       onChanged: (value) => gender.value = value,
@@ -334,13 +334,13 @@ class TestOnboardingPage extends HookWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         StyledRadio<String>(
-                          label: 'Male',
+                          labelText: 'Male',
                           radioValue: 'male',
                           groupValue: gender.value,
                           onChanged: (value) => gender.value = value,
                         ),
                         StyledRadio<String>(
-                          label: 'Female',
+                          labelText: 'Female',
                           radioValue: 'female',
                           groupValue: gender.value,
                           onChanged: (value) => gender.value = value,

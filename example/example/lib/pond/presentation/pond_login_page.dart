@@ -29,7 +29,7 @@ class PondLoginPage extends HookWidget {
                           children: [
                             StyledSmartTextField(
                               name: 'email',
-                              label: 'Email',
+                              labelText: 'Email',
                               validators: [
                                 Validation.required(),
                                 Validation.isEmail(),
@@ -37,7 +37,7 @@ class PondLoginPage extends HookWidget {
                             ),
                             StyledSmartTextField(
                               name: 'password',
-                              label: 'Password',
+                              labelText: 'Password',
                               validators: [
                                 Validation.required(),
                                 Validation.isPassword(),
@@ -90,14 +90,14 @@ class PondLoginPage extends HookWidget {
                                           children: [
                                             StyledSmartTextField(
                                               name: 'name',
-                                              label: 'Name',
+                                              labelText: 'Name',
                                               validators: [
                                                 Validation.required(),
                                               ],
                                             ),
                                             StyledSmartTextField(
                                               name: 'email',
-                                              label: 'Email',
+                                              labelText: 'Email',
                                               validators: [
                                                 Validation.required(),
                                                 Validation.isEmail(),
@@ -105,7 +105,7 @@ class PondLoginPage extends HookWidget {
                                             ),
                                             StyledSmartTextField(
                                               name: 'password',
-                                              label: 'Password',
+                                              labelText: 'Password',
                                               validators: [
                                                 Validation.required(),
                                                 Validation.isPassword(),

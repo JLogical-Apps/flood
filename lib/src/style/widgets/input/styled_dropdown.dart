@@ -6,7 +6,9 @@ import '../../styled_widget.dart';
 
 /// Dropdown that contains a [value] and renders the available options using [builder] or a default.
 class StyledDropdown<T> extends StyledWidget {
-  final String? label;
+  final String? labelText;
+
+  final Widget? label;
 
   /// The value of the dropdown.
   final T? value;
@@ -27,6 +29,7 @@ class StyledDropdown<T> extends StyledWidget {
   final void Function(T? value)? onChanged;
 
   StyledDropdown({
+    this.labelText,
     this.label,
     this.value,
     this.builder,

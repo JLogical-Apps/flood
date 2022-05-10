@@ -75,7 +75,7 @@ class TestHomePage extends HookWidget {
                             children: [
                               StyledStringFormField(
                                 name: 'name',
-                                label: 'Name',
+                                labelText: 'Name',
                                 maxLength: 25,
                               ),
                               StyledButton.high(
@@ -110,23 +110,29 @@ class TestHomePage extends HookWidget {
                     onTapped: () async {
                       StyledDialog.form(
                         context: context,
+                        form: FormModel(
+                          fields: [
+                            StringFormField(name: 'name').required(),
+                            StringFormField(name: 'amount').isCurrency(),
+                          ],
+                        ),
                         titleText: 'Create Transaction',
                         children: [
-                          StyledSmartTextField(
+                          StyledTextFormField(
                             name: 'name',
-                            label: 'Name',
+                            labelText: 'Name',
                           ),
                           StyledSmartTextField(
                             name: 'amount',
-                            label: 'Amount (\$)',
+                            labelText: 'Amount (\$)',
                           ),
                           StyledSmartDateField(
                             name: 'date',
-                            label: 'Transaction Date',
+                            labelText: 'Transaction Date',
                           ),
                           StyledSmartTextField(
                             name: 'notes',
-                            label: 'Notes',
+                            labelText: 'Notes',
                             maxLines: 3,
                             keyboardType: TextInputType.multiline,
                           ),
@@ -137,8 +143,8 @@ class TestHomePage extends HookWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              StyledSmartRadioOptionField(radioValue: 'payment', group: 'type', label: 'Payment'),
-                              StyledSmartRadioOptionField(radioValue: 'refund', group: 'type', label: 'Refund'),
+                              StyledSmartRadioOptionField(radioValue: 'payment', group: 'type', labelText: 'Payment'),
+                              StyledSmartRadioOptionField(radioValue: 'refund', group: 'type', labelText: 'Refund'),
                             ],
                           ),
                         ],

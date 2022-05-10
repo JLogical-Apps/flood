@@ -29,14 +29,14 @@ class FormPage extends HookWidget {
                 Text("We don't like names that start with \"A\""),
                 SmartTextField(
                   name: 'name',
-                  label: 'Name',
+                  labelText: 'Name',
                   validators: [
                     Validation.required(),
                   ],
                 ),
                 SmartDateField(
                   name: 'bornDate',
-                  label: 'Born',
+                  labelText: 'Born',
                   validators: [
                     Validation.isBeforeNow(),
                     Validation.isBefore(
@@ -47,7 +47,7 @@ class FormPage extends HookWidget {
                 ),
                 SmartTextField(
                   name: 'age',
-                  label: 'Age',
+                  labelText: 'Age',
                   suggestedValue: '42',
                   validators: [
                     Validation.isInteger(),
@@ -61,7 +61,7 @@ class FormPage extends HookWidget {
                 ),
                 SmartTextField(
                   name: 'email',
-                  label: 'Email',
+                  labelText: 'Email',
                   validators: [
                     Validation.required(),
                     Validation.isEmail(),
@@ -70,7 +70,7 @@ class FormPage extends HookWidget {
                 ),
                 SmartTextField(
                   name: 'password',
-                  label: 'Password',
+                  labelText: 'Password',
                   validators: [
                     Validation.isPassword(),
                   ],
@@ -79,14 +79,14 @@ class FormPage extends HookWidget {
                 ),
                 SmartTextField(
                   name: 'confirmPassword',
-                  label: 'Confirm Password',
+                  labelText: 'Confirm Password',
                   validators: [Validation.isConfirmPassword(passwordFieldName: 'password')],
                   obscureText: true,
                   keyboardType: TextInputType.visiblePassword,
                 ),
                 SmartOptionsField<String?>(
                   name: 'food',
-                  label: 'Favorite Food',
+                  labelText: 'Favorite Food',
                   options: ['Pizza', 'Burger', 'Jalapeno'],
                   initialValue: null,
                   canBeNone: false,
@@ -100,7 +100,7 @@ class FormPage extends HookWidget {
                     if (shouldShow) {
                       return SmartOptionsField<String?>(
                         name: 'topping',
-                        label: 'Favorite Topping',
+                        labelText: 'Favorite Topping',
                         canBeNone: true,
                         options: ['Pepperoni', 'Pineapple'],
                         initialValue: null,
@@ -131,12 +131,12 @@ class FormPage extends HookWidget {
                     SmartRadioOptionField(
                       radioValue: 'payment',
                       group: 'type',
-                      label: Text('Payment'),
+                      labelText: Text('Payment'),
                     ),
                     SmartRadioOptionField(
                       radioValue: 'refund',
                       group: 'type',
-                      label: Text('Refund'),
+                      labelText: Text('Refund'),
                     ),
                   ],
                 ),

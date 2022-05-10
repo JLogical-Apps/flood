@@ -86,7 +86,7 @@ class PondHomePage extends HookWidget {
                                     children: [
                                       StyledSmartTextField(
                                         name: 'name',
-                                        label: 'Name',
+                                        labelText: 'Name',
                                         initialValue: budgetDraft.nameProperty.getUnvalidated(),
                                         validators: [Validation.required()],
                                       ),

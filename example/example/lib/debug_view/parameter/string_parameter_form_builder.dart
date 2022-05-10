@@ -11,7 +11,7 @@ class StringParameterFormBuilder extends ParameterFormBuilder {
       children: [
         StyledSmartTextField(
           name: parameterStub.nameProperty.value!,
-          label: parameterStub.displayNameProperty.value!,
+          labelText: parameterStub.displayNameProperty.value!,
           validators: [
             if (parameterStub.requiredProperty.value!) Validation.required(),
           ],

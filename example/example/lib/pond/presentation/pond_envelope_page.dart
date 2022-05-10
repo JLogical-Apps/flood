@@ -55,14 +55,14 @@ class PondEnvelopePage extends HookWidget {
                                 final data = await StyledDialog.form(context: context, children: [
                                   StyledSmartTextField(
                                     name: 'name',
-                                    label: 'Name',
+                                    labelText: 'Name',
                                     validators: [
                                       Validation.required(),
                                     ],
                                   ),
                                   StyledSmartTextField(
                                     name: 'amount',
-                                    label: 'Amount',
+                                    labelText: 'Amount',
                                     validators: [
                                       Validation.required(),
                                       Validation.isCurrency(),

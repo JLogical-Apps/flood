@@ -5,7 +5,9 @@ import '../../style_context.dart';
 import '../../styled_widget.dart';
 
 class StyledDateField extends StyledWidget {
-  final String? label;
+  final Widget? label;
+  final String? labelText;
+
   final Widget? leading;
   final Widget? trailing;
 
@@ -20,6 +22,7 @@ class StyledDateField extends StyledWidget {
 
   StyledDateField({
     this.label,
+    this.labelText,
     this.leading,
     this.trailing,
     this.date,

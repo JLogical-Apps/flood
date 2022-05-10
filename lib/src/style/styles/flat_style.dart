@@ -23,7 +23,6 @@ import 'package:jlogical_utils/src/style/widgets/text/styled_error_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_span.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_style.dart';
-import 'package:jlogical_utils/src/utils/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -619,13 +618,14 @@ class FlatStyle extends Style {
 
   @override
   Widget textField(BuildContext context, StyleContext styleContext, StyledTextField textField) {
+    final label = textField.labelText.mapIfNonNull((label) => StyledContentSubtitleText(label)) ?? textField.label;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (textField.label != null) StyledContentSubtitleText(textField.label!),
+          if (label != null) label,
           TextFormField(
             initialValue: textField.initialText,
             style: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(
@@ -709,6 +709,7 @@ class FlatStyle extends Style {
 
   @override
   Widget dropdown<T>(BuildContext context, StyleContext styleContext, StyledDropdown<T> dropdown) {
+    final label = dropdown.labelText.mapIfNonNull((label) => StyledContentSubtitleText(label)) ?? dropdown.label;
     final _builder = dropdown.builder ??
         (item) => StyledBodyText(
               item?.toString() ?? 'None',
@@ -720,10 +721,7 @@ class FlatStyle extends Style {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (dropdown.label != null)
-            StyledContentSubtitleText(
-              dropdown.label!,
-            ),
+          if (label != null) label,
           DropdownButtonFormField<T?>(
             isExpanded: true,
             value: dropdown.value,
@@ -834,6 +832,11 @@ class FlatStyle extends Style {
   }
 
   Widget radio<T>(BuildContext context, StyleContext styleContext, StyledRadio<T> radio) {
+    final label = radio.labelText.mapIfNonNull((label) => StyledContentSubtitleText(
+              label,
+              textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
+            )) ??
+        radio.label;
     return GestureDetector(
       onTap: radio.onChanged != null ? () => radio.onChanged!(radio.radioValue) : null,
       child: Column(
@@ -841,11 +844,7 @@ class FlatStyle extends Style {
         children: [
           Row(
             children: [
-              if (radio.label != null)
-                StyledContentSubtitleText(
-                  radio.label!,
-                  textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
-                ),
+              if (label != null) label,
               Radio<T>(
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 value: radio.radioValue,
@@ -869,6 +868,7 @@ class FlatStyle extends Style {
     final initialDate = dateField.date ?? DateTime.now();
     return StyledTextField(
       key: ObjectKey(initialDate),
+      labelText: dateField.labelText,
       label: dateField.label,
       errorText: dateField.errorText,
       leading: dateField.leading ?? StyledIcon(Icons.calendar_today),

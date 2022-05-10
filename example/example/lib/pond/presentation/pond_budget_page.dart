@@ -67,7 +67,7 @@ class PondBudgetPage extends HookWidget {
                               final data = await StyledDialog.form(context: context, children: [
                                 StyledSmartTextField(
                                   name: 'name',
-                                  label: 'Name',
+                                  labelText: 'Name',
                                   validators: [Validation.required()],
                                 ),
                               ]).show(context);
@@ -114,25 +114,25 @@ class PondBudgetPage extends HookWidget {
                                   final data = await StyledDialog.form(context: context, children: [
                                     StyledSmartOptionsField<EnvelopeEntity>(
                                       name: 'from',
-                                      label: 'From',
+                                      labelText: 'From',
                                       options: [...envelopesQueryController.value.get()],
                                       builder: (envelopeEntity) => StyledBodyText(
-                                        envelopeEntity?.value.nameProperty.value ?? 'None',
+                                        envelopeEntity?.radioValue.nameProperty.radioValue ?? 'None',
                                         textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
                                       ),
                                     ),
                                     StyledSmartOptionsField<EnvelopeEntity>(
                                       name: 'to',
-                                      label: 'To',
+                                      labelText: 'To',
                                       options: [...envelopesQueryController.value.get()],
                                       builder: (envelopeEntity) => StyledBodyText(
-                                        envelopeEntity?.value.nameProperty.value ?? 'None',
+                                        envelopeEntity?.radioValue.nameProperty.radioValue ?? 'None',
                                         textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
                                       ),
                                     ),
                                     StyledSmartTextField(
                                       name: 'amount',
-                                      label: 'Amount',
+                                      labelText: 'Amount',
                                       validators: [
                                         Validation.required(),
                                         Validation.isCurrency(),
