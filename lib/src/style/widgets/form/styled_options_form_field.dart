@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../form/export.dart';
+import '../../../form/export_core.dart';
 import '../input/styled_dropdown.dart';
 
-class StyledOptionsFormField<T> extends FormFieldModelWidget<T?> {
+class StyledOptionsFormField<T> extends FormFieldModelWidget<OptionsFormField<T>, T?> {
   final String? labelText;
 
   final Widget? label;
@@ -22,13 +23,13 @@ class StyledOptionsFormField<T> extends FormFieldModelWidget<T?> {
         );
 
   @override
-  Widget buildField(BuildContext context, T? value) {
+  Widget buildField(BuildContext context, OptionsFormField<T> field, T? value) {
     return StyledDropdown<T>(
       value: value,
       onChanged: (value) => setValue(context, value),
       label: label,
-      options: options,
-      canBeNone: canBeNone,
+      options: field.options,
+      canBeNone: field.canBeNone,
       builder: builder,
     );
   }

@@ -7,7 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import 'form_model.dart';
 import 'validation/form_field_validator.dart';
 
-class FormFieldModel<V>
+abstract class FormFieldModel<V>
     with WithMultipleValidators<FormFieldValidationContext>
     implements Validator<FormFieldValidationContext> {
   final String name;

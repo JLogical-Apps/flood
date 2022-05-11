@@ -5,12 +5,12 @@ import 'package:provider/provider.dart';
 
 import '../../utils/export.dart';
 
-abstract class FormFieldModelWidget<T> extends HookWidget {
+abstract class FormFieldModelWidget<F extends FormFieldModel<T>, T> extends HookWidget {
   final String name;
 
   FormFieldModelWidget({Key? key, required this.name}) : super(key: key);
 
-  Widget buildField(BuildContext context, T value);
+  Widget buildField(BuildContext context, F field, T value);
 
   void setValue(BuildContext context, T newValue) {
     getFormModel(context)[name] = newValue;
@@ -26,9 +26,12 @@ abstract class FormFieldModelWidget<T> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final valueX = useMemoized(() => getFormModel(context).getFieldValueXByName(name));
+    final form = getFormModel(context);
+    final field = form.getFieldByName(name);
+
+    final valueX = useMemoized(() => form.getFieldValueXByName(name));
     final value = useValueStream(valueX);
 
-    return buildField(context, value);
+    return buildField(context, field as F, value);
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../form/export.dart';
+import '../../../form/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledCurrencyFormField extends FormFieldModelWidget<double> {
+class StyledCurrencyFormField extends FormFieldModelWidget<DoubleFormField, double> {
   final String? labelText;
 
   final Widget? label;
@@ -27,7 +28,7 @@ class StyledCurrencyFormField extends FormFieldModelWidget<double> {
         );
 
   @override
-  Widget buildField(BuildContext context, double value) {
+  Widget buildField(BuildContext context, DoubleFormField field, double value) {
     return StyledTextField(
       labelText: labelText,
       label: label,

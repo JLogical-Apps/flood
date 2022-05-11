@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../form/export.dart';
+import '../../../form/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledTextFormField extends FormFieldModelWidget<String> {
+class StyledTextFormField extends FormFieldModelWidget<StringFormField, String> {
   final String? labelText;
 
   final Widget? label;
@@ -44,7 +45,7 @@ class StyledTextFormField extends FormFieldModelWidget<String> {
         );
 
   @override
-  Widget buildField(BuildContext context, String value) {
+  Widget buildField(BuildContext context, StringFormField field, String value) {
     return StyledTextField(
       labelText: labelText,
       label: label,

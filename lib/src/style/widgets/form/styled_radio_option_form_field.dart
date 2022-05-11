@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../form/export.dart';
+import '../../../form/export_core.dart';
 import '../input/styled_radio.dart';
 
-class StyledRadioOptionFormField<T> extends FormFieldModelWidget<bool> {
+class StyledRadioOptionFormField<T> extends FormFieldModelWidget<BoolFormField, bool> {
   final String? labelText;
 
   final Widget? label;
@@ -23,7 +24,7 @@ class StyledRadioOptionFormField<T> extends FormFieldModelWidget<bool> {
         );
 
   @override
-  Widget buildField(BuildContext context, bool value) {
+  Widget buildField(BuildContext context, BoolFormField field, bool value) {
     _updateValue(context, value);
     return StyledRadio<T?>(
       groupValue: value ? this.radioValue : null,

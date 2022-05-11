@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../form/export.dart';
+import '../../../form/export_core.dart';
 import '../input/styled_checkbox.dart';
 
-class StyledBoolFormField extends FormFieldModelWidget<bool> {
+class StyledBoolFormField extends FormFieldModelWidget<BoolFormField, bool> {
   final String? labelText;
 
   final Widget? label;
@@ -19,7 +20,7 @@ class StyledBoolFormField extends FormFieldModelWidget<bool> {
         );
 
   @override
-  Widget buildField(BuildContext context, bool value) {
+  Widget buildField(BuildContext context, BoolFormField field, bool value) {
     return StyledCheckbox(
       value: value,
       label: label,
