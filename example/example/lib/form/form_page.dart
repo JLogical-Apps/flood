@@ -6,8 +6,8 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 class FormPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    /// The last result of whether the form was successful or not.
-    /// If [null], then the form hasn't been validated yet.
+    /// The last result of whether the port was successful or not.
+    /// If [null], then the port hasn't been validated yet.
     var successX = useObservable<bool?>(() => null);
 
     /// The background color of the page.

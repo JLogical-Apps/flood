@@ -61,16 +61,16 @@ class TestHomePage extends HookWidget {
                   description: 'Create a new envelope.',
                   leading: StyledIcon(Icons.create),
                   onPerform: () {
-                    final form = FormModel(fields: [
-                      StringFormField(
+                    final port = Port(fields: [
+                      StringPortField(
                         name: 'name',
                       ),
                     ]);
                     style.showDialog(
                       context: context,
                       dialog: StyledDialog(
-                        body: FormModelBuilder(
-                          form: form,
+                        body: PortBuilder(
+                          port: port,
                           child: ScrollColumn.withScrollbar(
                             children: [
                               StyledStringFormField(
@@ -81,7 +81,7 @@ class TestHomePage extends HookWidget {
                               StyledButton.high(
                                 text: 'Save',
                                 onTapped: () async {
-                                  await form.submit();
+                                  await port.submit();
                                   await Future.delayed(Duration(seconds: 1));
                                 },
                               ),
@@ -108,17 +108,17 @@ class TestHomePage extends HookWidget {
                     headerText: 'Create Transaction',
                     leading: StyledIcon(Icons.compare_arrows),
                     onTapped: () async {
-                      StyledDialog.form(
+                      StyledDialog.port(
                         context: context,
-                        form: FormModel(
+                        port: Port(
                           fields: [
-                            StringFormField(name: 'name').required(),
-                            StringFormField(name: 'amount').isCurrency(),
+                            StringPortField(name: 'name').required(),
+                            StringPortField(name: 'amount').isCurrency(),
                           ],
                         ),
                         titleText: 'Create Transaction',
                         children: [
-                          StyledTextFormField(
+                          StyledTextPortField(
                             name: 'name',
                             labelText: 'Name',
                           ),

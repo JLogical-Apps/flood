@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/src/form/ui/form_model_builder.dart';
 import 'package:jlogical_utils/src/style/style.dart';
 
-import '../../../form/export_core.dart';
+import '../../../port/export.dart';
+import '../../../port/export_core.dart';
 import '../input/styled_button.dart';
 
 /// Not a widget. Used to provide information for [Style.showDialog].
@@ -89,35 +89,35 @@ class StyledDialog<T> {
     );
   }
 
-  /// Wraps a styled dialog around a smart form and returns the data from the smart form.
-  static StyledDialog<Map<String, dynamic>?> form({
+  /// Wraps a styled dialog around a smart port and returns the data from the smart port.
+  static StyledDialog<Map<String, dynamic>?> port({
     required BuildContext context,
     String? titleText,
     Widget? title,
-    required FormModel form,
+    required Port port,
     required List<Widget> children,
-    Widget Function(FormModel form)? confirmButtonBuilder,
+    Widget Function(Port port)? confirmButtonBuilder,
   }) {
     final style = context.style();
 
     final _confirmButtonBuilder = confirmButtonBuilder ??
-        (form) => StyledButton.high(
+        (port) => StyledButton.high(
               text: 'Save',
               icon: Icons.save,
               onTapped: () async {
-                final result = await form.submit();
+                final result = await port.submit();
                 if (result.isValid) {
                   style.navigateBack(context: context, result: result.valueByName);
                 }
               },
             );
-    final confirmButton = _confirmButtonBuilder(form);
+    final confirmButton = _confirmButtonBuilder(port);
 
     return StyledDialog(
       titleText: titleText,
       title: title,
-      body: FormModelBuilder(
-        form: form,
+      body: PortBuilder(
+        port: port,
         child: Column(
           children: [
             ...children,

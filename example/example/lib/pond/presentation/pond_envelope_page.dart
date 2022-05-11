@@ -52,7 +52,7 @@ class PondEnvelopePage extends HookWidget {
                               color: Colors.green,
                               leading: Icon(Icons.swap_calls),
                               onPerform: () async {
-                                final data = await StyledDialog.form(context: context, children: [
+                                final data = await StyledDialog.port(context: context, children: [
                                   StyledSmartTextField(
                                     name: 'name',
                                     labelText: 'Name',
