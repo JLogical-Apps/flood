@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:jlogical_utils/src/port/model/port_component.dart';
+import 'package:jlogical_utils/src/port/model/port_value_component.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -9,7 +11,9 @@ import 'port_result.dart';
 import 'validation/port_field_validation_context.dart';
 
 class Port implements Validator<void> {
-  final List<PortField> fields;
+  final List<PortComponent> components;
+
+  List<PortField> get fields => components.whereType<PortField>().toList();
 
   final BehaviorSubject<Map<String, dynamic>> _valueByNameX;
 
@@ -17,10 +21,34 @@ class Port implements Validator<void> {
 
   final Map<String, dynamic> _valueByName;
 
-  Port({required this.fields})
-      : _valueByNameX = BehaviorSubject.seeded(_initialValueByName(fields)),
-        _valueByName = _initialValueByName(fields) {
-    fields.forEach((field) => field.initialize(this));
+  /// Predicate for whether to validate this.
+  /// By default, always validates.
+  bool Function(Port port) validationPredicate = _defaultValidationPredicate;
+
+  Port({List<PortField>? fields})
+      : components = [...?fields],
+        _valueByNameX = BehaviorSubject.seeded({}),
+        _valueByName = {} {
+    fields?.forEach((field) => withComponent(field));
+  }
+
+  Port withComponent(PortComponent component) {
+    components.add(component);
+    if (component is PortValueComponent) {
+      _valueByNameX.value = _valueByNameX.value.copy()..set(component.name, component.initialValue);
+      _valueByName[component.name] = component.initialValue;
+    }
+    component.initialize(this);
+    return this;
+  }
+
+  Port withField(PortField field) {
+    return withComponent(field);
+  }
+
+  Port validateIf(bool predicate(Port port)) {
+    validationPredicate = predicate;
+    return this;
   }
 
   dynamic operator [](String fieldName) {
@@ -58,13 +86,18 @@ class Port implements Validator<void> {
 
   @override
   Future onValidate(_) async {
+    final shouldValidate = validationPredicate(this);
+    if (!shouldValidate) {
+      return;
+    }
+
     for (final field in fields) {
       final fieldValidationContext = PortFieldValidationContext(value: _valueByName[field.name], port: this);
       await field.validate(fieldValidationContext);
     }
   }
+}
 
-  static Map<String, dynamic> _initialValueByName(List<PortField> fields) {
-    return fields.map((field) => MapEntry(field.name, field.initialValue)).toMap();
-  }
+bool _defaultValidationPredicate(Port port) {
+  return true;
 }

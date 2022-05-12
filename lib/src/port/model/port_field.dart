@@ -1,4 +1,5 @@
 import 'package:jlogical_utils/src/patterns/export_core.dart';
+import 'package:jlogical_utils/src/port/model/port_value_component.dart';
 import 'package:jlogical_utils/src/port/model/validation/is_confirm_password_validator.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -7,7 +8,7 @@ import 'port.dart';
 import 'validation/port_field_validation_context.dart';
 import 'validation/port_field_validator.dart';
 
-abstract class PortField<V>
+abstract class PortField<V> extends PortValueComponent<V>
     with WithMultipleValidators<PortFieldValidationContext>
     implements Validator<PortFieldValidationContext> {
   final String name;
@@ -17,17 +18,21 @@ abstract class PortField<V>
 
   final V initialValue;
 
-  late Port port;
   late ValueStream<V> valueX;
 
   V get value => port[name];
+
+  /// Predicate for whether to validate this.
+  /// By default, always validates.
+  bool Function(V value, Port port) validationPredicate = _defaultValidationPredicate;
 
   PortField({
     required this.name,
     required this.initialValue,
   });
 
-  void initialize(Port port) {
+  @override
+  void onInitialize() {
     valueX = port.valueByNameX.mapWithValue((valueByName) => valueByName[name]);
   }
 
@@ -41,11 +46,26 @@ abstract class PortField<V>
     return this;
   }
 
+  PortField<V> validateIf(bool predicate(V value, Port port)) {
+    validationPredicate = predicate;
+    return this;
+  }
+
   PortField<V> required() => withSimpleValidator(Validator.required());
 
   PortField<V> minLength(int minLength) => withSimpleValidator(Validator.minLength(minLength));
 
   PortField<V> maxLength(int maxLength) => withSimpleValidator(Validator.maxLength(maxLength));
+
+  @override
+  Future<void> onValidate(PortFieldValidationContext context) async {
+    final shouldValidate = validationPredicate(value, port);
+    if (!shouldValidate) {
+      return;
+    }
+
+    await super.onValidate(context);
+  }
 }
 
 extension StringPortFieldModelExtensions on PortField<String> {
@@ -60,4 +80,8 @@ extension StringPortFieldModelExtensions on PortField<String> {
   PortField<String> isPassword() => withSimpleValidator(Validator.isPassword());
 
   PortField<String> isConfirmPassword() => withValidator(IsConfirmPasswordValidator());
+}
+
+bool _defaultValidationPredicate<T>(T value, Port port) {
+  return true;
 }

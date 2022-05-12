@@ -252,6 +252,64 @@ void main() {
 
     await completer.future;
   });
+
+  test('conditional validation of Port.', () async {
+    const empty = '';
+    const name = 'John Doe';
+
+    final disablingForm = Port(fields: [
+      BoolPortField(
+        name: 'enabled',
+        initialValue: true,
+      ),
+      StringPortField(name: 'name').required(),
+    ]).validateIf((port) => port['enabled']);
+
+    disablingForm['enabled'] = true;
+    disablingForm['name'] = empty;
+    await expectInvalidForm(disablingForm);
+
+    disablingForm['enabled'] = true;
+    disablingForm['name'] = name;
+    await expectValidForm(disablingForm);
+
+    disablingForm['enabled'] = false;
+    disablingForm['name'] = empty;
+    await expectValidForm(disablingForm);
+
+    disablingForm['enabled'] = false;
+    disablingForm['name'] = name;
+    await expectValidForm(disablingForm);
+  });
+
+  test('conditional validation of field.', () async {
+    const empty = '';
+    const name = 'John Doe';
+
+    final form = Port(fields: [
+      BoolPortField(
+        name: 'enabled',
+        initialValue: true,
+      ),
+      StringPortField(name: 'name').required().validateIf((value, port) => port['enabled']),
+    ]);
+
+    form['enabled'] = true;
+    form['name'] = empty;
+    await expectInvalidForm(form);
+
+    form['enabled'] = true;
+    form['name'] = name;
+    await expectValidForm(form);
+
+    form['enabled'] = false;
+    form['name'] = empty;
+    await expectValidForm(form);
+
+    form['enabled'] = false;
+    form['name'] = name;
+    await expectValidForm(form);
+  });
 }
 
 Port _getSignupForm() {
