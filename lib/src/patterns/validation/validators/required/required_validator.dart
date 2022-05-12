@@ -7,23 +7,23 @@ class RequiredValidator<C> extends SyncValidator<C> {
   @override
   void onValidateSync(C value) {
     if (value == null) {
-      throw RequiredValidationException(validator: this, failedValue: value);
+      throw RequiredValidationException(failedValue: value);
     }
 
     if (value == false) {
-      throw RequiredValidationException(validator: this, failedValue: value);
+      throw RequiredValidationException(failedValue: value);
     }
 
     if (value is String && value.isBlank) {
-      throw RequiredValidationException(validator: this, failedValue: value);
+      throw RequiredValidationException(failedValue: value);
     }
 
     if (value is Iterable && value.isEmpty) {
-      throw RequiredValidationException(validator: this, failedValue: value);
+      throw RequiredValidationException(failedValue: value);
     }
 
     if (value is Map && value.isEmpty) {
-      throw RequiredValidationException(validator: this, failedValue: value);
+      throw RequiredValidationException(failedValue: value);
     }
   }
 }

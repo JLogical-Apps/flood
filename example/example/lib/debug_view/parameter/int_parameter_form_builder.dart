@@ -6,16 +6,21 @@ class IntParameterFormBuilder extends ParameterFormBuilder {
   @override
   String get handledType => 'int';
 
+  Port getForm(CommandParameterStub parameterStub) {
+    return Port(
+      fields: [
+        StringPortField(name: parameterStub.nameProperty.value!)
+            .withSimpleValidatorIf(Validator.required(), addIf: parameterStub.requiredProperty.value!),
+      ],
+    );
+  }
+
   Widget buildForm(CommandParameterStub parameterStub) {
     return Column(
       children: [
-        StyledSmartTextField(
+        StyledTextPortField(
           name: parameterStub.nameProperty.value!,
           labelText: parameterStub.displayNameProperty.value!,
-          validators: [
-            if (parameterStub.requiredProperty.value!) Validation.required(),
-            Validation.isInteger(),
-          ],
         ),
         if (parameterStub.descriptionProperty.value != null)
           StyledBodyText(

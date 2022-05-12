@@ -1,8 +1,5 @@
-import 'validator.dart';
-
-abstract class ValidationException<TValidator extends Validator<V>, V> {
-  final TValidator validator;
+abstract class ValidationException<V> {
   final V failedValue;
 
-  ValidationException({required this.validator, required this.failedValue});
+  ValidationException({required this.failedValue});
 }

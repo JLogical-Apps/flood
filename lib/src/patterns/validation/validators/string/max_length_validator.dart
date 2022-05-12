@@ -9,12 +9,12 @@ class MaxLengthValidator<T> extends SyncValidator<T> {
   @override
   void onValidateSync(T value) {
     if (value == null) {
-      throw MaxLengthValidationException(validator: this, failedValue: value);
+      throw MaxLengthValidationException(failedValue: value, maxLength: maxLength);
     }
 
     final string = value.toString();
     if (string.length > maxLength) {
-      throw MaxLengthValidationException(validator: this, failedValue: value);
+      throw MaxLengthValidationException(failedValue: value, maxLength: maxLength);
     }
   }
 }

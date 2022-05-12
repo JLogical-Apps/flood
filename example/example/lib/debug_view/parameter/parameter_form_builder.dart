@@ -4,6 +4,8 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 abstract class ParameterFormBuilder extends Wrapper<CommandParameterStub> {
   String get handledType;
 
+  Port getForm(CommandParameterStub parameterStub);
+
   Widget buildForm(CommandParameterStub parameterStub);
 
   /// Transforms the [formValue] into a value to be passed along to the command as an arg.

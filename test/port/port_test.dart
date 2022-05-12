@@ -412,6 +412,31 @@ void main() {
     form['name'] = name;
     await expectValidForm(form);
   });
+
+  test('custom form validation', () async {
+    const empty = '';
+    const registeredEmail = 'a@b.com';
+    const unregisteredEmail = 'test@test.com';
+
+    const registeredEmails = [registeredEmail];
+    final loginForm = Port(fields: [
+      StringPortField(name: 'email').required().isEmail(),
+    ]).withValidator(Validator.of((port) {
+      String email = port['email'];
+      if (!registeredEmails.contains(email)) {
+        throw _UnregisteredEmailValidationException(failedValue: email);
+      }
+    }));
+
+    loginForm['email'] = empty;
+    await expectInvalidForm(loginForm);
+
+    loginForm['email'] = registeredEmail;
+    await expectValidForm(loginForm);
+
+    loginForm['email'] = unregisteredEmail;
+    await expectInvalidForm(loginForm);
+  });
 }
 
 Port _getSignupForm() {
@@ -423,6 +448,10 @@ Port _getSignupForm() {
       StringPortField(name: 'confirmPassword').required().isConfirmPassword(),
     ],
   );
+}
+
+class _UnregisteredEmailValidationException extends ValidationException {
+  _UnregisteredEmailValidationException({required super.failedValue});
 }
 
 Future expectValidForm(Port port) async {

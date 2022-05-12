@@ -4,11 +4,16 @@ import 'package:jlogical_utils/src/patterns/validation/simple_validator.dart';
 import 'package:jlogical_utils/src/patterns/validation/util/composed_validator.dart';
 import 'package:jlogical_utils/src/patterns/validation/validators/datetime/is_after_validator.dart';
 import 'package:jlogical_utils/src/patterns/validation/validators/datetime/is_before_validator.dart';
-import 'package:jlogical_utils/src/patterns/validation/validators/length/max_length_validator.dart';
-import 'package:jlogical_utils/src/patterns/validation/validators/length/min_length_validator.dart';
+import 'package:jlogical_utils/src/patterns/validation/validators/num/is_greater_than_validator.dart';
+import 'package:jlogical_utils/src/patterns/validation/validators/num/is_less_than_validator.dart';
+import 'package:jlogical_utils/src/patterns/validation/validators/num/range_validator.dart';
 import 'package:jlogical_utils/src/patterns/validation/validators/required/required_validator.dart';
+import 'package:jlogical_utils/src/patterns/validation/validators/string/max_length_validator.dart';
+import 'package:jlogical_utils/src/patterns/validation/validators/string/min_length_validator.dart';
 
 import 'validation_exception.dart';
+import 'validators/datetime/is_after_now_validator.dart';
+import 'validators/datetime/is_before_now_validator.dart';
 import 'validators/email/is_email_validator.dart';
 import 'validators/list/is_one_of_validator.dart';
 import 'validators/parsing/is_currency_validator.dart';
@@ -68,12 +73,32 @@ abstract class Validator<V> {
     return IsAfterValidator(after: after);
   }
 
+  static IsAfterNowValidator isAfterNow() {
+    return IsAfterNowValidator();
+  }
+
   static IsBeforeValidator isBefore(DateTime before) {
     return IsBeforeValidator(before: before);
   }
 
+  static IsBeforeNowValidator isBeforeNow() {
+    return IsBeforeNowValidator();
+  }
+
   static IsOneOfValidator<T> isOneOf<T>(List<T> options) {
     return IsOneOfValidator(options: options);
+  }
+
+  static IsGreaterThanValidator isGreaterThan(num greaterThan) {
+    return IsGreaterThanValidator(greaterThan);
+  }
+
+  static IsLessThanValidator isLessThan(num lessThan) {
+    return IsLessThanValidator(lessThan);
+  }
+
+  static RangeValidator range(num min, num max) {
+    return RangeValidator(min: min, max: max);
   }
 }
 

@@ -9,12 +9,12 @@ class MinLengthValidator<T> extends SyncValidator<T> {
   @override
   void onValidateSync(T value) {
     if (value == null) {
-      throw MinLengthValidationException(validator: this, failedValue: value);
+      throw MinLengthValidationException(failedValue: value, minLength: minLength);
     }
 
     final string = value.toString();
     if (string.length < minLength) {
-      throw MinLengthValidationException(validator: this, failedValue: value);
+      throw MinLengthValidationException(failedValue: value, minLength: minLength);
     }
   }
 }

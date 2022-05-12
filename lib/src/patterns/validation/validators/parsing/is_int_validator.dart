@@ -8,7 +8,7 @@ class IsIntValidator extends SyncValidator<String> {
   void onValidateSync(String value) {
     final parse = value.tryParseIntAfterClean(cleanCommas: false, cleanCurrency: false);
     if (parse == null) {
-      throw IsIntValidationException(validator: this, failedValue: value);
+      throw IsIntValidationException(failedValue: value);
     }
   }
 }

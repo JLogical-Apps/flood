@@ -10,7 +10,7 @@ class IsConfirmPasswordValidator extends PortFieldValidator<String> {
   @override
   void onValidate(PortFieldValidationContext context) {
     if (context.port[passwordFieldName] != context.value) {
-      throw IsConfirmPasswordValidationException(validator: this, failedValue: context);
+      throw IsConfirmPasswordValidationException(failedValue: context);
     }
   }
 }

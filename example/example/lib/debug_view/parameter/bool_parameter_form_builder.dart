@@ -6,10 +6,18 @@ class BoolParameterFormBuilder extends ParameterFormBuilder {
   @override
   String get handledType => 'bool';
 
+  Port getForm(CommandParameterStub parameterStub) {
+    return Port(
+      fields: [
+        BoolPortField(name: parameterStub.nameProperty.value!),
+      ],
+    );
+  }
+
   Widget buildForm(CommandParameterStub parameterStub) {
     return Column(
       children: [
-        StyledSmartBoolField(
+        StyledCheckboxPortField(
           name: parameterStub.nameProperty.value!,
           labelText: parameterStub.displayNameProperty.value,
         ),

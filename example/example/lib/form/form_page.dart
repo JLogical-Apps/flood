@@ -8,18 +8,56 @@ class FormPage extends HookWidget {
   Widget build(BuildContext context) {
     /// The last result of whether the port was successful or not.
     /// If [null], then the port hasn't been validated yet.
-    var successX = useObservable<bool?>(() => null);
+    final success = useState<bool?>(null);
 
-    /// The background color of the page.
-    var backgroundColor = useComputed(() => successX.mapWithValue(_getBackgroundColor)).value;
+    final backgroundColor = success.value.mapIfNonNull(_getBackgroundColor);
 
-    var smartFormController = useMemoized(() => SmartFormController());
+    final port = useMemoized(() => Port(
+          fields: [
+            StringPortField(name: 'name').required(),
+            DatePortField(name: 'bornDate')
+                .required()
+                .isBeforeNow()
+                .isBefore(DateTime.now().subtract(Duration(days: 365 * 18))),
+            IntPortField(name: 'age').required().range(18, 100),
+            StringPortField(name: 'email').required().isEmail(),
+            StringPortField(name: 'password').required().isPassword(),
+            StringPortField(name: 'confirmPassword').required().isConfirmPassword(),
+            OptionsPortField<String>(
+              name: 'food',
+              options: ['Pizza', 'Burger', 'Jalapeno'],
+              canBeNone: false,
+            ),
+            OptionsPortField(
+              name: 'topping',
+              options: ['Pepperoni', 'Pineapple'],
+              canBeNone: true,
+            ).validateIf((value, port) => port['food'] == 'Pizza'),
+            BoolPortField(name: 'acceptTerms').required(),
+            OptionsPortField(
+              name: 'type',
+              options: ['Payment', 'Refund'],
+            ).required(),
+          ],
+        ).withValidator(Validator.of((port) {
+          String name = port['name'];
+          if (name.toLowerCase().startsWith('a')) {
+            return {'name': 'Cannot have a name that starts with "A"!'};
+          }
+
+          String email = port['email'];
+          if (email.toLowerCase().startsWith('a')) {
+            return {'network': 'Network error occurred.'};
+          }
+
+          return null;
+        })));
 
     return Scaffold(
       appBar: AppBar(title: Text('FORMS')),
       backgroundColor: backgroundColor,
-      body: SmartForm(
-        controller: smartFormController,
+      body: PortBuilder(
+        port: port,
         child: ScrollColumn.withScrollbar(
           children: [
             CategoryCard(
@@ -27,116 +65,68 @@ class FormPage extends HookWidget {
               leading: Icon(Icons.person_add),
               children: [
                 Text("We don't like names that start with \"A\""),
-                SmartTextField(
+                StyledTextPortField(
                   name: 'name',
                   labelText: 'Name',
-                  validators: [
-                    Validation.required(),
-                  ],
                 ),
-                SmartDateField(
+                StyledDatePortField(
                   name: 'bornDate',
                   labelText: 'Born',
-                  validators: [
-                    Validation.isBeforeNow(),
-                    Validation.isBefore(
-                      latest: DateTime.now().subtract(Duration(days: 365 * 18)),
-                      onBefore: 'Must be 18 or older to sign up.',
-                    ),
-                  ],
                 ),
-                SmartTextField(
+                StyledTextPortField(
                   name: 'age',
                   labelText: 'Age',
                   suggestedValue: '42',
-                  validators: [
-                    Validation.isInteger(),
-                    Validation.range(
-                      minimum: 18,
-                      maximum: 100,
-                      onTooSmall: (_) => 'Need to be at least 18 to sign up!',
-                      onTooLarge: (_) => 'How are you even that old?',
-                    ).fromParsed(),
-                  ],
                 ),
-                SmartTextField(
+                StyledTextPortField(
                   name: 'email',
                   labelText: 'Email',
-                  validators: [
-                    Validation.required(),
-                    Validation.isEmail(),
-                  ],
                   keyboardType: TextInputType.emailAddress,
                 ),
-                SmartTextField(
+                StyledTextPortField(
                   name: 'password',
                   labelText: 'Password',
-                  validators: [
-                    Validation.isPassword(),
-                  ],
                   obscureText: true,
                   keyboardType: TextInputType.visiblePassword,
                 ),
-                SmartTextField(
+                StyledTextPortField(
                   name: 'confirmPassword',
                   labelText: 'Confirm Password',
-                  validators: [Validation.isConfirmPassword(passwordFieldName: 'password')],
                   obscureText: true,
                   keyboardType: TextInputType.visiblePassword,
                 ),
-                SmartOptionsField<String?>(
+                StyledOptionsPortField<String?>(
                   name: 'food',
                   labelText: 'Favorite Food',
-                  options: ['Pizza', 'Burger', 'Jalapeno'],
-                  initialValue: null,
-                  canBeNone: false,
-                  validators: [
-                    Validation.required(),
-                  ],
                 ),
-                SmartFormUpdateBuilder(
-                  builder: (context, controller) {
-                    final shouldShow = controller.getData('food') == 'Pizza';
+                PortUpdateBuilder(
+                  builder: (port) {
+                    final shouldShow = port['food'] == 'Pizza';
                     if (shouldShow) {
-                      return SmartOptionsField<String?>(
+                      return StyledOptionsPortField<String?>(
                         name: 'topping',
                         labelText: 'Favorite Topping',
-                        canBeNone: true,
-                        options: ['Pepperoni', 'Pineapple'],
-                        initialValue: null,
-                        enabled: shouldShow,
-                        validators: [
-                          Validation.required(),
-                        ],
                       );
                     }
                     return Container();
                   },
                 ),
-                SmartBoolField(
+                StyledCheckboxPortField(
                   name: 'acceptTerms',
-                  child: Text('Accept the Terms and Conditions'),
-                  validators: [Validation.required(onEmpty: 'Must be accepted to create an account!')],
-                ),
-                SmartRadioGroup(
-                  group: 'type',
-                  // initialValue: 'payment',
-                  validators: [
-                    Validation.required(),
-                  ],
+                  label: Text('Accept the Terms and Conditions'),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SmartRadioOptionField(
+                    StyledRadioOptionPortField(
+                      groupName: 'type',
                       radioValue: 'payment',
-                      group: 'type',
-                      labelText: Text('Payment'),
+                      labelText: 'Payment',
                     ),
-                    SmartRadioOptionField(
+                    StyledRadioOptionPortField(
+                      groupName: 'type',
                       radioValue: 'refund',
-                      group: 'type',
-                      labelText: Text('Refund'),
+                      labelText: 'Refund',
                     ),
                   ],
                 ),
@@ -150,25 +140,12 @@ class FormPage extends HookWidget {
                 // Wait one second just for dramatic effect.
                 await Future.delayed(Duration(seconds: 1));
 
-                var result = await smartFormController.validate();
-                successX.value = result.isValid;
+                var result = await port.submit();
+                success.value = result.isValid;
               },
             ),
           ],
         ),
-        postValidator: (data) {
-          String name = data['name'];
-          if (name.toLowerCase().startsWith('a')) {
-            return {'name': 'Cannot have a name that starts with "A"!'};
-          }
-
-          String email = data['email'];
-          if (email.toLowerCase().startsWith('a')) {
-            return {'network': 'Network error occurred.'};
-          }
-
-          return null;
-        },
       ),
     );
   }

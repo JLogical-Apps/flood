@@ -8,7 +8,7 @@ class IsDoubleValidator extends SyncValidator<String> {
   void onValidateSync(String value) {
     final parse = value.tryParseDoubleAfterClean(cleanCommas: false, cleanCurrency: false);
     if (parse == null) {
-      throw IsDoubleValidationException(validator: this, failedValue: value);
+      throw IsDoubleValidationException(failedValue: value);
     }
   }
 }

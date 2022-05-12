@@ -41,8 +41,22 @@ abstract class PortField<V> extends PortValueComponent<V>
     return this;
   }
 
+  PortField<V> withValidatorIf(PortFieldValidator<V> validator, {required bool addIf}) {
+    if (addIf) {
+      validators.add(validator);
+    }
+    return this;
+  }
+
   PortField<V> withSimpleValidator(Validator<V> validator) {
     validators.add(validator.forPort());
+    return this;
+  }
+
+  PortField<V> withSimpleValidatorIf(Validator<V> validator, {required bool addIf}) {
+    if (addIf) {
+      validators.add(validator.forPort());
+    }
     return this;
   }
 
@@ -56,6 +70,8 @@ abstract class PortField<V> extends PortValueComponent<V>
   PortField<V> minLength(int minLength) => withSimpleValidator(Validator.minLength(minLength));
 
   PortField<V> maxLength(int maxLength) => withSimpleValidator(Validator.maxLength(maxLength));
+
+  PortField<V> isOneOf(List<V> options) => withSimpleValidator(Validator.isOneOf(options));
 
   @override
   Future<void> onValidate(PortFieldValidationContext context) async {
@@ -80,6 +96,24 @@ extension StringPortFieldModelExtensions on PortField<String> {
   PortField<String> isPassword() => withSimpleValidator(Validator.isPassword());
 
   PortField<String> isConfirmPassword() => withValidator(IsConfirmPasswordValidator());
+}
+
+extension DatePortFieldModelExtensions on PortField<DateTime> {
+  PortField<DateTime> isBefore(DateTime date) => withSimpleValidator(Validator.isBefore(date));
+
+  PortField<DateTime> isBeforeNow() => withSimpleValidator(Validator.isBeforeNow());
+
+  PortField<DateTime> isAfter(DateTime date) => withSimpleValidator(Validator.isAfter(date));
+
+  PortField<DateTime> isAfterNow() => withSimpleValidator(Validator.isAfterNow());
+}
+
+extension NumPortFieldModelExtensions on PortField<num> {
+  PortField<num> isLessThan(num lessThan) => withSimpleValidator(Validator.isLessThan(lessThan));
+
+  PortField<num> isGreaterThan(num greaterThan) => withSimpleValidator(Validator.isGreaterThan(greaterThan));
+
+  PortField<num> range(num min, num max) => withSimpleValidator(Validator.range(min, max));
 }
 
 bool _defaultValidationPredicate<T>(T value, Port port) {

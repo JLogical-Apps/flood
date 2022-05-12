@@ -8,7 +8,7 @@ class IsCurrencyValidator extends SyncValidator<String> {
   void onValidateSync(String value) {
     final parse = value.tryParseDoubleAfterClean(cleanCommas: true, cleanCurrency: true);
     if (parse == null) {
-      throw IsCurrencyValidationException(validator: this, failedValue: value);
+      throw IsCurrencyValidationException(failedValue: value);
     }
   }
 }

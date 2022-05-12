@@ -17,7 +17,7 @@ class DebugCommandPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final smartFormController = useMemoized(() => SmartFormController());
+    final port = useMemoized(() => Port());
 
     final commandResult = useState<dynamic>(null);
     final outputLoaded = useState<bool>(false);
@@ -27,8 +27,8 @@ class DebugCommandPage extends HookWidget {
       child: Builder(builder: (context) {
         return StyledPage(
           titleText: commandStub.displayNameProperty.value,
-          body: SmartForm(
-            controller: smartFormController,
+          body: PortBuilder(
+            port: port,
             child: ScrollColumn.withScrollbar(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -39,24 +39,22 @@ class DebugCommandPage extends HookWidget {
                 StyledButton.high(
                   text: 'Execute',
                   onTapped: () async {
-                    final result = await smartFormController.validate();
+                    final result = await port.submit();
                     if (!result.isValid) {
                       return;
                     }
 
-                    final data = result._valueByName!;
-
                     final args = commandStub.parametersProperty.value!
                         .map((stub) =>
-                            MapEntry(stub.nameProperty.value!, _getArgValue(stub, data[stub.nameProperty.value!])))
+                            MapEntry(stub.nameProperty.value!, _getArgValue(stub, result[stub.nameProperty.value!])))
                         .toMap();
 
                     commandResult.value = await onExecute(args);
                     outputLoaded.value = true;
                   },
                 ),
-                SmartFormUpdateBuilder(builder: (context, controller) {
-                  return _executeCommandText(controller);
+                PortUpdateBuilder(builder: (port) {
+                  return _executeCommandText(port);
                 }),
                 StyledDivider(),
                 if (outputLoaded.value)
@@ -71,10 +69,10 @@ class DebugCommandPage extends HookWidget {
     );
   }
 
-  StyledDescriptionText _executeCommandText(SmartFormController controller) {
+  StyledDescriptionText _executeCommandText(Port port) {
     final parameters = commandStub.parametersProperty.value!.map((param) {
       final name = param.nameProperty.value!;
-      return '  >$name<: ${_getArgValue(param, controller.getDataOrNull(name))}';
+      return '  >$name<: ${_getArgValue(param, port[name])}';
     }).join('\n');
     return StyledDescriptionText(
       inputString: '>${commandStub.nameProperty.value}<\n$parameters',

@@ -7,7 +7,7 @@ class IsEmailValidator extends SyncValidator<String> {
   @override
   void onValidateSync(String value) {
     if (!value.isEmail) {
-      throw IsEmailValidationException(validator: this, failedValue: value);
+      throw IsEmailValidationException(failedValue: value);
     }
   }
 }

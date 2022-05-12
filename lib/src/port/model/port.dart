@@ -27,6 +27,8 @@ class Port implements Validator<void> {
   /// By default, always validates.
   bool Function(Port port) validationPredicate = _defaultValidationPredicate;
 
+  final List<Validator<Port>> additionalValidators = [];
+
   Port({List<PortComponent>? fields})
       : components = [...?fields],
         _valueByNameX = BehaviorSubject.seeded({}),
@@ -50,6 +52,11 @@ class Port implements Validator<void> {
 
   Port validateIf(bool predicate(Port port)) {
     validationPredicate = predicate;
+    return this;
+  }
+
+  Port withValidator(Validator<Port> validator) {
+    additionalValidators.add(validator);
     return this;
   }
 
@@ -109,6 +116,10 @@ class Port implements Validator<void> {
       final validator = component as Validator<PortFieldValidationContext>;
       final fieldValidationContext = PortFieldValidationContext(value: _valueByName[component.name], port: this);
       await validator.validate(fieldValidationContext);
+    }
+
+    for (final validator in additionalValidators) {
+      await validator.validate(this);
     }
   }
 }

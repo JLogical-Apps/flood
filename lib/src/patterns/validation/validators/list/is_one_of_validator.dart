@@ -9,7 +9,7 @@ class IsOneOfValidator<T> extends SyncValidator<T> {
   @override
   void onValidateSync(T value) {
     if (!options.contains(value)) {
-      throw IsOneOfValidationException(validator: this, failedValue: value);
+      throw IsOneOfValidationException(failedValue: value);
     }
   }
 }
