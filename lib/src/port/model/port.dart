@@ -57,10 +57,10 @@ class Port implements Validator<void> {
   }
 
   @override
-  Future onValidate(void empty) async {
+  Future onValidate(_) async {
     for (final field in fields) {
       final fieldValidationContext = PortFieldValidationContext(value: _valueByName[field.name], port: this);
-      await field.onValidate(fieldValidationContext);
+      await field.validate(fieldValidationContext);
     }
   }
 

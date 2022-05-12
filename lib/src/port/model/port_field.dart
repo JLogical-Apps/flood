@@ -1,11 +1,9 @@
-import 'dart:async';
-
 import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/port/model/validation/is_confirm_password_validator.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'port_model.dart';
+import 'port.dart';
 import 'validation/port_field_validation_context.dart';
 import 'validation/port_field_validator.dart';
 
@@ -32,9 +30,6 @@ abstract class PortField<V>
   void initialize(Port port) {
     valueX = port.valueByNameX.mapWithValue((valueByName) => valueByName[name]);
   }
-
-  /// Maps the [value] to the value that will be outputted when submitted.
-  FutureOr submitMapper(V value) => value;
 
   PortField<V> withValidator(PortFieldValidator<V> validator) {
     validators.add(validator);

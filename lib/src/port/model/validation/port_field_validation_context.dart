@@ -1,4 +1,4 @@
-import '../port_model.dart';
+import '../port.dart';
 
 class PortFieldValidationContext {
   final dynamic value;

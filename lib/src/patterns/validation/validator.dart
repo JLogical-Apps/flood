@@ -10,6 +10,7 @@ import 'package:jlogical_utils/src/patterns/validation/validators/required/requi
 
 import 'validation_exception.dart';
 import 'validators/email/is_email_validator.dart';
+import 'validators/list/is_one_of_validator.dart';
 import 'validators/parsing/is_currency_validator.dart';
 import 'validators/parsing/is_double_validator.dart';
 import 'validators/parsing/is_int_validator.dart';
@@ -69,6 +70,10 @@ abstract class Validator<V> {
 
   static IsBeforeValidator isBefore(DateTime before) {
     return IsBeforeValidator(before: before);
+  }
+
+  static IsOneOfValidator<T> isOneOf<T>(List<T> options) {
+    return IsOneOfValidator(options: options);
   }
 }
 

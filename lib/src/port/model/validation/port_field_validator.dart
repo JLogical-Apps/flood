@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import '../../../patterns/export_core.dart';
-import '../port_model.dart';
+import '../port.dart';
 import 'port_field_validation_context.dart';
 import 'simple_port_field_validator.dart';
 

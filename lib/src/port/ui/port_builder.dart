@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../model/port_model.dart';
+import '../model/port.dart';
 
 class PortBuilder extends StatelessWidget {
   final Port port;

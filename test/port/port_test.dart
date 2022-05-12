@@ -211,7 +211,28 @@ void main() {
     await expectValidForm(passwordForm);
   });
 
-  test('options', () async {});
+  test('options', () async {
+    const male = 'm';
+    const female = 'f';
+    const invalidGender = 'g';
+    const options = [male, female];
+
+    final genderForm = Port(fields: [
+      OptionsPortField(name: 'gender', options: options, initialValue: male).required(),
+    ]);
+
+    genderForm['gender'] = null;
+    await expectInvalidForm(genderForm);
+
+    genderForm['gender'] = male;
+    await expectValidForm(genderForm);
+
+    genderForm['gender'] = female;
+    await expectValidForm(genderForm);
+
+    genderForm['gender'] = invalidGender;
+    await expectInvalidForm(genderForm);
+  });
 
   test('embedded forms', () async {});
 

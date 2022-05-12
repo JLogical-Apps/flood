@@ -16,6 +16,7 @@ export 'validation/validators/datetime/is_before_validation_exception.dart';
 export 'validation/validators/email/is_email_validation_exception.dart';
 export 'validation/validators/length/max_length_validation_exception.dart';
 export 'validation/validators/length/min_length_validation_exception.dart';
+export 'validation/validators/list/is_one_of_validation_exception.dart';
 export 'validation/validators/parsing/is_currency_validation_exception.dart';
 export 'validation/validators/parsing/is_double_validation_exception.dart';
 export 'validation/validators/parsing/is_int_validation_exception.dart';

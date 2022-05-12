@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../utils/export.dart';
 import '../model/port_field.dart';
-import '../model/port_model.dart';
+import '../model/port.dart';
 
 abstract class PortFieldWidget<F extends PortField<T>, T> extends HookWidget {
   final String name;
