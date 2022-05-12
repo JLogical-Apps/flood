@@ -42,10 +42,10 @@ void main() {
     final result = await formModel.submit();
 
     expect(result.isValid, isTrue);
-    expect(result.data['name'], name);
-    expect(result.data['email'], email);
-    expect(result.data['password'], password);
-    expect(result.data['confirmPassword'], password);
+    expect(result['name'], name);
+    expect(result['email'], email);
+    expect(result['password'], password);
+    expect(result['confirmPassword'], password);
   });
 
   test('string validation.', () async {
@@ -234,7 +234,109 @@ void main() {
     await expectInvalidForm(genderForm);
   });
 
-  test('embedded forms', () async {});
+  test('embedded Ports', () async {
+    const empty = '';
+    const name = 'John Doe';
+    const food = 'Pizza';
+
+    final registrationForm = Port(fields: [
+      EmbeddedPortField(
+        name: 'user',
+        port: Port(fields: [
+          StringPortField(name: 'name').required(),
+        ]),
+      ),
+      EmbeddedPortField(
+        name: 'order',
+        port: Port(fields: [
+          StringPortField(name: 'food').required(),
+        ]),
+      ),
+    ]);
+
+    registrationForm['user']['name'] = empty;
+    registrationForm['order']['food'] = empty;
+    await expectInvalidForm(registrationForm);
+
+    registrationForm['user']['name'] = name;
+    registrationForm['order']['food'] = empty;
+    await expectInvalidForm(registrationForm);
+
+    registrationForm['user']['name'] = empty;
+    registrationForm['order']['food'] = food;
+    await expectInvalidForm(registrationForm);
+
+    registrationForm['user']['name'] = name;
+    registrationForm['order']['food'] = food;
+    await expectValidForm(registrationForm);
+
+    final result = await registrationForm.submit();
+    expect(result['user'], {'name': name});
+    expect(result['order'], {'food': food});
+  });
+
+  test('spotlight', () async {
+    const empty = '';
+    const personalOption = 'personal';
+    const businessOption = 'business';
+    const personalName = 'John Doe';
+    const businessName = 'JLogical';
+
+    final formWithSpotlight = Port(fields: [
+      PortSpotlight(
+        optionFieldName: 'type',
+        canBeNone: false,
+        candidates: [
+          EmbeddedPortField(
+            name: personalOption,
+            port: Port(
+              fields: [
+                StringPortField(name: 'name').required(),
+              ],
+            ),
+          ),
+          EmbeddedPortField(
+            name: businessOption,
+            port: Port(
+              fields: [
+                StringPortField(name: 'businessName').required(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ]);
+
+    formWithSpotlight['type'] = null;
+    formWithSpotlight[personalOption]['name'] = empty;
+    formWithSpotlight[businessOption]['businessName'] = empty;
+    await expectInvalidForm(formWithSpotlight);
+
+    formWithSpotlight['type'] = null;
+    formWithSpotlight[personalOption]['name'] = personalName;
+    formWithSpotlight[businessOption]['businessName'] = businessName;
+    await expectInvalidForm(formWithSpotlight);
+
+    formWithSpotlight['type'] = personalOption;
+    formWithSpotlight[personalOption]['name'] = empty;
+    formWithSpotlight[businessOption]['businessName'] = empty;
+    await expectInvalidForm(formWithSpotlight);
+
+    formWithSpotlight['type'] = personalOption;
+    formWithSpotlight[personalOption]['name'] = personalName;
+    formWithSpotlight[businessOption]['businessName'] = empty;
+    await expectValidForm(formWithSpotlight);
+
+    formWithSpotlight['type'] = personalOption;
+    formWithSpotlight[personalOption]['name'] = empty;
+    formWithSpotlight[businessOption]['businessName'] = businessName;
+    await expectInvalidForm(formWithSpotlight);
+
+    formWithSpotlight['type'] = businessOption;
+    formWithSpotlight[personalOption]['name'] = empty;
+    formWithSpotlight[businessOption]['businessName'] = businessName;
+    await expectValidForm(formWithSpotlight);
+  });
 
   test('reactivity', () async {
     const name = 'John Doe';

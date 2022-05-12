@@ -5,5 +5,7 @@ class PortResult {
 
   bool get isValid => valueByName != null;
 
-  Map<String, dynamic> get data => valueByName!;
+  operator [](String name) {
+    return valueByName![name];
+  }
 }

@@ -15,6 +15,8 @@ class Port implements Validator<void> {
 
   List<PortField> get fields => components.whereType<PortField>().toList();
 
+  List<PortValueComponent> get valueComponents => components.whereType<PortValueComponent>().toList();
+
   final BehaviorSubject<Map<String, dynamic>> _valueByNameX;
 
   ValueStream<Map<String, dynamic>> get valueByNameX => _valueByNameX;
@@ -25,7 +27,7 @@ class Port implements Validator<void> {
   /// By default, always validates.
   bool Function(Port port) validationPredicate = _defaultValidationPredicate;
 
-  Port({List<PortField>? fields})
+  Port({List<PortComponent>? fields})
       : components = [...?fields],
         _valueByNameX = BehaviorSubject.seeded({}),
         _valueByName = {} {
@@ -68,8 +70,12 @@ class Port implements Validator<void> {
     _valueByNameX.value = _valueByNameX.value.copy()..set(fieldName, value);
   }
 
+  PortValueComponent getValueComponentByName(String componentName) {
+    return valueComponents.firstWhere((component) => component.name == componentName);
+  }
+
   PortField getFieldByName(String fieldName) {
-    return fields.firstWhere((field) => field.name == fieldName);
+    return getValueComponentByName(fieldName) as PortField;
   }
 
   ValueStream<V> getFieldValueXByName<V>(String fieldName) {
@@ -81,7 +87,11 @@ class Port implements Validator<void> {
       return PortResult(valueByName: null);
     }
 
-    return PortResult(valueByName: _valueByName);
+    final submittedValues = await Future.wait(
+        _valueByName.mapToIterable((name, value) async => await getValueComponentByName(name).submitMapper(value)));
+    var submittedValueByName = Map.fromIterables(_valueByName.keys, submittedValues);
+
+    return PortResult(valueByName: submittedValueByName);
   }
 
   @override
@@ -91,9 +101,14 @@ class Port implements Validator<void> {
       return;
     }
 
-    for (final field in fields) {
-      final fieldValidationContext = PortFieldValidationContext(value: _valueByName[field.name], port: this);
-      await field.validate(fieldValidationContext);
+    for (final component in valueComponents) {
+      if (component is! Validator<PortFieldValidationContext>) {
+        continue;
+      }
+
+      final validator = component as Validator<PortFieldValidationContext>;
+      final fieldValidationContext = PortFieldValidationContext(value: _valueByName[component.name], port: this);
+      await validator.validate(fieldValidationContext);
     }
   }
 }
