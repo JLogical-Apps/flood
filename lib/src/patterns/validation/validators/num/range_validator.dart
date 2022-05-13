@@ -3,14 +3,14 @@ import 'package:jlogical_utils/src/patterns/validation/util/composed_validator.d
 
 import '../../validator.dart';
 
-class RangeValidator extends SyncComposedValidator<num> {
-  final num min;
-  final num max;
+class RangeValidator<N extends num> extends SyncComposedValidator<N?> {
+  final N min;
+  final N max;
 
   RangeValidator({required this.min, required this.max});
 
   @override
-  List<SyncValidator<num>> get validators => [
+  List<SyncValidator<N?>> get validators => [
         Validator.isLessThan(max),
         Validator.isGreaterThan(min),
       ];

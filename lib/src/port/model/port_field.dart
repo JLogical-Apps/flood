@@ -88,36 +88,36 @@ abstract class PortField<V> extends PortValueComponent<V>
   }
 }
 
-extension StringPortFieldModelExtensions on PortField<String> {
-  PortField<String> isInt() => withSimpleValidator(Validator.isInt());
+extension StringPortFieldModelExtensions on PortField<String?> {
+  PortField<String?> isInt() => withSimpleValidator(Validator.isInt());
 
-  PortField<String> isDouble() => withSimpleValidator(Validator.isDouble());
+  PortField<String?> isDouble() => withSimpleValidator(Validator.isDouble());
 
-  PortField<String> isCurrency() => withSimpleValidator(Validator.isCurrency());
+  PortField<String?> isCurrency() => withSimpleValidator(Validator.isCurrency());
 
-  PortField<String> isEmail() => withSimpleValidator(Validator.isEmail());
+  PortField<String?> isEmail() => withSimpleValidator(Validator.isEmail());
 
-  PortField<String> isPassword() => withSimpleValidator(Validator.isPassword());
+  PortField<String?> isPassword() => withSimpleValidator(Validator.isPassword());
 
-  PortField<String> isConfirmPassword() => withValidator(IsConfirmPasswordValidator());
+  PortField<String?> isConfirmPassword() => withValidator(IsConfirmPasswordValidator());
 }
 
-extension DatePortFieldModelExtensions on PortField<DateTime> {
-  PortField<DateTime> isBefore(DateTime date) => withSimpleValidator(Validator.isBefore(date));
+extension DatePortFieldModelExtensions on PortField<DateTime?> {
+  PortField<DateTime?> isBefore(DateTime date) => withSimpleValidator(Validator.isBefore(date));
 
-  PortField<DateTime> isBeforeNow() => withSimpleValidator(Validator.isBeforeNow());
+  PortField<DateTime?> isBeforeNow() => withSimpleValidator(Validator.isBeforeNow());
 
-  PortField<DateTime> isAfter(DateTime date) => withSimpleValidator(Validator.isAfter(date));
+  PortField<DateTime?> isAfter(DateTime date) => withSimpleValidator(Validator.isAfter(date));
 
-  PortField<DateTime> isAfterNow() => withSimpleValidator(Validator.isAfterNow());
+  PortField<DateTime?> isAfterNow() => withSimpleValidator(Validator.isAfterNow());
 }
 
-extension NumPortFieldModelExtensions on PortField<num> {
-  PortField<num> isLessThan(num lessThan) => withSimpleValidator(Validator.isLessThan(lessThan));
+extension NumPortFieldModelExtensions<N extends num> on PortField<N?> {
+  PortField<N?> isLessThan(N lessThan) => withSimpleValidator(Validator.isLessThan(lessThan));
 
-  PortField<num> isGreaterThan(num greaterThan) => withSimpleValidator(Validator.isGreaterThan(greaterThan));
+  PortField<N?> isGreaterThan(N greaterThan) => withSimpleValidator(Validator.isGreaterThan(greaterThan));
 
-  PortField<num> range(num min, num max) => withSimpleValidator(Validator.range(min, max));
+  PortField<N?> range(N min, N max) => withSimpleValidator(Validator.range(min, max));
 }
 
 bool _defaultValidationPredicate<T>(T value, Port port) {

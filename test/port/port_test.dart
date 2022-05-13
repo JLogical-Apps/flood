@@ -6,9 +6,9 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 void main() {
   test('initial values.', () {
     final formModel = _getSignupForm();
-    expect(formModel['name'], '');
-    expect(formModel['email'], '');
-    expect(formModel['password'], '');
+    expect(formModel['name'], isNull);
+    expect(formModel['email'], isNull);
+    expect(formModel['password'], isNull);
   });
 
   test('changing values.', () {

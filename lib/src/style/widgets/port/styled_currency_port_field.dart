@@ -5,7 +5,7 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledCurrencyPortField extends PortFieldWidget<CurrencyPortField, int> with WithPortExceptionTextGetter {
+class StyledCurrencyPortField extends PortFieldWidget<CurrencyPortField, int?> with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;
@@ -33,13 +33,13 @@ class StyledCurrencyPortField extends PortFieldWidget<CurrencyPortField, int> wi
         );
 
   @override
-  Widget buildField(BuildContext context, CurrencyPortField field, int value, Object? exception) {
+  Widget buildField(BuildContext context, CurrencyPortField field, int? value, Object? exception) {
     return StyledTextField(
       labelText: labelText,
       label: label,
       errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(decimal: true, signed: true),
-      initialText: '${value.formatCentsAsCurrency()}',
+      initialText: value?.formatCentsAsCurrency(),
       hintText: suggestedValue?.formatCentsAsCurrency(),
       onChanged: (text) {
         final parsedDouble = text.tryParseDoubleAfterClean(cleanCommas: true, cleanCurrency: true);

@@ -5,7 +5,7 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledDoublePortField extends PortFieldWidget<DoublePortField, double> with WithPortExceptionTextGetter {
+class StyledDoublePortField extends PortFieldWidget<DoublePortField, double?> with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;
@@ -33,13 +33,13 @@ class StyledDoublePortField extends PortFieldWidget<DoublePortField, double> wit
         );
 
   @override
-  Widget buildField(BuildContext context, DoublePortField field, double value, Object? exception) {
+  Widget buildField(BuildContext context, DoublePortField field, double? value, Object? exception) {
     return StyledTextField(
       labelText: labelText,
       label: label,
       errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(decimal: true, signed: true),
-      initialText: '${value.formatIntOrDouble()}',
+      initialText: value?.formatIntOrDouble(),
       hintText: suggestedValue?.formatIntOrDouble(),
       onChanged: (text) {
         final parsedDouble = text.tryParseDoubleAfterClean(cleanCommas: true);

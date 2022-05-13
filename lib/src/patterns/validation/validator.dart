@@ -89,15 +89,15 @@ abstract class Validator<V> {
     return IsOneOfValidator(options: options);
   }
 
-  static IsGreaterThanValidator isGreaterThan(num greaterThan) {
+  static IsGreaterThanValidator<N> isGreaterThan<N extends num>(N greaterThan) {
     return IsGreaterThanValidator(greaterThan);
   }
 
-  static IsLessThanValidator isLessThan(num lessThan) {
+  static IsLessThanValidator<N> isLessThan<N extends num>(N lessThan) {
     return IsLessThanValidator(lessThan);
   }
 
-  static RangeValidator range(num min, num max) {
+  static RangeValidator<N> range<N extends num>(N min, N max) {
     return RangeValidator(min: min, max: max);
   }
 }

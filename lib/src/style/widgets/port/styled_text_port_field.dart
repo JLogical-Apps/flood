@@ -4,7 +4,7 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledTextPortField extends PortFieldWidget<StringPortField, String> with WithPortExceptionTextGetter {
+class StyledTextPortField extends PortFieldWidget<StringPortField, String?> with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;
@@ -49,7 +49,7 @@ class StyledTextPortField extends PortFieldWidget<StringPortField, String> with 
         );
 
   @override
-  Widget buildField(BuildContext context, StringPortField field, String value, Object? exception) {
+  Widget buildField(BuildContext context, StringPortField field, String? value, Object? exception) {
     return StyledTextField(
       labelText: labelText,
       label: label,
