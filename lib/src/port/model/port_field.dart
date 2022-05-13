@@ -19,8 +19,11 @@ abstract class PortField<V> extends PortValueComponent<V>
   final V initialValue;
 
   late ValueStream<V> valueX;
+  late ValueStream<Object?> exceptionX;
 
   V get value => port[name];
+
+  Object? get exception => port.getExceptionByName(name);
 
   /// Predicate for whether to validate this.
   /// By default, always validates.
@@ -34,6 +37,7 @@ abstract class PortField<V> extends PortValueComponent<V>
   @override
   void onInitialize() {
     valueX = port.valueByNameX.mapWithValue((valueByName) => valueByName[name]);
+    exceptionX = port.exceptionByNameX.mapWithValue((exceptionByName) => exceptionByName[name]);
   }
 
   PortField<V> withValidator(PortFieldValidator<V> validator) {

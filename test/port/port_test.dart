@@ -344,15 +344,17 @@ void main() {
     final formModel = _getSignupForm();
 
     final completer = Completer();
-    formModel.getFieldByName('name').valueX.listen((_) {
-      if (!completer.isCompleted) {
-        completer.complete();
+    formModel.getFieldByName('name').valueX.listen((value) {
+      if (!completer.isCompleted && value == name) {
+        completer.complete(value);
       }
     });
 
     formModel['name'] = name;
 
-    await completer.future;
+    final value = await completer.future;
+
+    expect(value, name);
   });
 
   test('conditional validation of Port.', () async {
@@ -436,6 +438,52 @@ void main() {
 
     loginForm['email'] = unregisteredEmail;
     await expectInvalidForm(loginForm);
+  });
+
+  test('field errors', () async {
+    const empty = '';
+    const invalidEmail = 'asj@';
+    const shortPassword = 'pass';
+    const invalidPassword = r'pa$$w0rd';
+
+    final form = _getSignupForm();
+    form['name'] = empty;
+    form['email'] = invalidEmail;
+    form['password'] = shortPassword;
+    form['confirmPassword'] = invalidPassword;
+
+    final result = await form.submit();
+
+    expect(result.exception['name'], isA<RequiredValidationException>());
+    expect(result.exception['email'], isA<IsEmailValidationException>());
+    expect(result.exception['password'], isA<MinLengthValidationException>());
+    expect(result.exception['confirmPassword'], isA<IsConfirmPasswordValidationException>());
+
+    expect(form.getFieldByName('name').exception, isA<RequiredValidationException>());
+    expect(form.getFieldByName('email').exception, isA<IsEmailValidationException>());
+    expect(form.getFieldByName('password').exception, isA<MinLengthValidationException>());
+    expect(form.getFieldByName('confirmPassword').exception, isA<IsConfirmPasswordValidationException>());
+  });
+
+  test('reactive errors', () async {
+    const empty = '';
+
+    final formModel = _getSignupForm();
+
+    final completer = Completer();
+    formModel.getFieldByName('name').exceptionX.listen((exception) {
+      if (!completer.isCompleted && exception != null) {
+        completer.complete(exception);
+      }
+    });
+
+    formModel['name'] = empty;
+
+    await formModel.submit();
+
+    final exception = await completer.future;
+
+    expect(exception, isA<RequiredValidationException>());
   });
 }
 

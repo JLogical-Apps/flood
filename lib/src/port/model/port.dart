@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:jlogical_utils/src/port/model/port_component.dart';
 import 'package:jlogical_utils/src/port/model/port_value_component.dart';
+import 'package:jlogical_utils/src/port/model/validation/port_field_validation_exception.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -9,6 +10,7 @@ import '../../patterns/export_core.dart';
 import 'port_field.dart';
 import 'port_result.dart';
 import 'validation/port_field_validation_context.dart';
+import 'validation/port_submit_exception.dart';
 
 class Port implements Validator<void> {
   final List<PortComponent> components;
@@ -17,11 +19,17 @@ class Port implements Validator<void> {
 
   List<PortValueComponent> get valueComponents => components.whereType<PortValueComponent>().toList();
 
-  final BehaviorSubject<Map<String, dynamic>> _valueByNameX;
+  final BehaviorSubject<Map<String, dynamic>> _valueByNameX = BehaviorSubject.seeded({});
 
   ValueStream<Map<String, dynamic>> get valueByNameX => _valueByNameX;
 
-  final Map<String, dynamic> _valueByName;
+  final Map<String, dynamic> _valueByName = {};
+
+  final BehaviorSubject<Map<String, dynamic>> _exceptionByNameX = BehaviorSubject.seeded({});
+
+  ValueStream<Map<String, dynamic>> get exceptionByNameX => _exceptionByNameX;
+
+  final Map<String, dynamic> _exceptionByName = {};
 
   /// Predicate for whether to validate this.
   /// By default, always validates.
@@ -29,10 +37,7 @@ class Port implements Validator<void> {
 
   final List<Validator<Port>> additionalValidators = [];
 
-  Port({List<PortComponent>? fields})
-      : components = [...?fields],
-        _valueByNameX = BehaviorSubject.seeded({}),
-        _valueByName = {} {
+  Port({List<PortComponent>? fields}) : components = [...?fields] {
     fields?.forEach((field) => withComponent(field));
   }
 
@@ -89,9 +94,25 @@ class Port implements Validator<void> {
     return getFieldByName(fieldName).valueX as ValueStream<V>;
   }
 
+  Object? getExceptionByName(String fieldName) {
+    return _exceptionByName[fieldName];
+  }
+
   Future<PortResult> submit() async {
-    if (!await isValid(null)) {
-      return PortResult(valueByName: null);
+    final exception = await getException(null);
+    if (exception != null) {
+      if (exception is! PortSubmitException) {
+        throw exception;
+      }
+
+      _exceptionByName.clear();
+      exception.fieldExceptionByName.forEach((name, exception) {
+        _exceptionByName[name] = exception;
+      });
+
+      _exceptionByNameX.value = _exceptionByName;
+
+      return PortResult(exception: exception);
     }
 
     final submittedValues = await Future.wait(
@@ -108,6 +129,8 @@ class Port implements Validator<void> {
       return;
     }
 
+    var errorByName = <String, dynamic>{};
+
     for (final component in valueComponents) {
       if (component is! Validator<PortFieldValidationContext>) {
         continue;
@@ -115,11 +138,23 @@ class Port implements Validator<void> {
 
       final validator = component as Validator<PortFieldValidationContext>;
       final fieldValidationContext = PortFieldValidationContext(value: _valueByName[component.name], port: this);
-      await validator.validate(fieldValidationContext);
+      final error = await validator.getException(fieldValidationContext);
+      if (error != null) {
+        errorByName[component.name] = error;
+      }
     }
 
     for (final validator in additionalValidators) {
-      await validator.validate(this);
+      final exception = await validator.getException(this);
+      if (exception is! PortFieldValidationException) {
+        throw exception;
+      }
+
+      errorByName[exception.failedValue.name] = exception.exception;
+    }
+
+    if (errorByName.isNotEmpty) {
+      throw PortSubmitException(fieldExceptionByName: errorByName, failedValue: this);
     }
   }
 }
