@@ -113,7 +113,7 @@ class TestHomePage extends HookWidget {
                         port: Port(
                           fields: [
                             StringPortField(name: 'name').required(),
-                            StringPortField(name: 'amount').isCurrency(),
+                            CurrencyPortField(name: 'amount'),
                             DatePortField(name: 'date'),
                             StringPortField(name: 'notes'),
                             OptionsPortField(name: 'type', options: ['payment', 'refund'], initialValue: 'payment')
@@ -126,7 +126,7 @@ class TestHomePage extends HookWidget {
                             name: 'name',
                             labelText: 'Name',
                           ),
-                          StyledTextPortField(
+                          StyledCurrencyPortField(
                             name: 'amount',
                             labelText: 'Amount (\$)',
                           ),

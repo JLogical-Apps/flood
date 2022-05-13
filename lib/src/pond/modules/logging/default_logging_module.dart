@@ -33,17 +33,17 @@ class DefaultLoggingModule extends AppModule {
 }
 
 void log(dynamic obj) {
-  locate<LoggingService>().log(obj);
+  locateOrNull<LoggingService>()?.log(obj);
 }
 
 void logWarning(dynamic obj) {
-  locate<LoggingService>().log(obj);
+  locateOrNull<LoggingService>()?.logWarning(obj);
 }
 
 void logError(dynamic obj) {
-  locate<LoggingService>().log(obj);
+  locateOrNull<LoggingService>()?.logError(obj);
 }
 
 void logFatal(dynamic obj) {
-  locate<LoggingService>().log(obj);
+  locateOrNull<LoggingService>()?.logFatal(obj);
 }
