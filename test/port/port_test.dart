@@ -421,14 +421,7 @@ void main() {
     const unregisteredEmail = 'test@test.com';
 
     const registeredEmails = [registeredEmail];
-    final loginForm = Port(fields: [
-      StringPortField(name: 'email').required().isEmail(),
-    ]).withValidator(Validator.of((port) {
-      String email = port['email'];
-      if (!registeredEmails.contains(email)) {
-        throw _UnregisteredEmailValidationException(failedValue: email);
-      }
-    }));
+    final loginForm = _getLoginForm(registeredEmails);
 
     loginForm['email'] = empty;
     await expectInvalidForm(loginForm);
@@ -458,11 +451,21 @@ void main() {
     expect(result.exception['email'], isA<IsEmailValidationException>());
     expect(result.exception['password'], isA<MinLengthValidationException>());
     expect(result.exception['confirmPassword'], isA<IsConfirmPasswordValidationException>());
+  });
 
-    expect(form.getFieldByName('name').exception, isA<RequiredValidationException>());
-    expect(form.getFieldByName('email').exception, isA<IsEmailValidationException>());
-    expect(form.getFieldByName('password').exception, isA<MinLengthValidationException>());
-    expect(form.getFieldByName('confirmPassword').exception, isA<IsConfirmPasswordValidationException>());
+  test('field errors in additional validator', () async {
+    const registeredEmail = 'a@b.com';
+    const unregisteredEmail = 'test@test.com';
+
+    const registeredEmails = [registeredEmail];
+    final loginForm = _getLoginForm(registeredEmails);
+
+    loginForm['email'] = unregisteredEmail;
+
+    final result = await loginForm.submit();
+
+    expect(result.isValid, isFalse);
+    expect(result.exception['email'], isA<_UnregisteredEmailValidationException>());
   });
 
   test('reactive errors', () async {
@@ -487,6 +490,17 @@ void main() {
   });
 }
 
+Port _getLoginForm(List<String> registeredEmails) {
+  return Port(fields: [
+    StringPortField(name: 'email').required().isEmail(),
+  ]).withValidator(Validator.of((port) {
+    String email = port['email'];
+    if (!registeredEmails.contains(email)) {
+      throw _UnregisteredEmailValidationException(failedValue: email).forField('email');
+    }
+  }));
+}
+
 Port _getSignupForm() {
   return Port(
     fields: [
@@ -498,7 +512,7 @@ Port _getSignupForm() {
   );
 }
 
-class _UnregisteredEmailValidationException extends ValidationException {
+class _UnregisteredEmailValidationException extends ValidationException<String> {
   _UnregisteredEmailValidationException({required super.failedValue});
 }
 

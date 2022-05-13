@@ -6,7 +6,7 @@ class PortResult {
 
   const PortResult({this.valueByName, PortSubmitException? exception}) : _exception = exception;
 
-  bool get isValid => _exception != null;
+  bool get isValid => _exception == null;
 
   PortSubmitException get exception => _exception!;
 

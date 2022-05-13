@@ -146,11 +146,15 @@ class Port implements Validator<void> {
 
     for (final validator in additionalValidators) {
       final exception = await validator.getException(this);
+      if (exception == null) {
+        continue;
+      }
+
       if (exception is! PortFieldValidationException) {
         throw exception;
       }
 
-      errorByName[exception.failedValue.name] = exception.exception;
+      errorByName[exception.failedValue] = exception.exception;
     }
 
     if (errorByName.isNotEmpty) {

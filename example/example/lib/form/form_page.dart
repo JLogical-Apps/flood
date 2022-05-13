@@ -42,12 +42,12 @@ class FormPage extends HookWidget {
         ).withValidator(Validator.of((port) {
           String name = port['name'];
           if (name.toLowerCase().startsWith('a')) {
-            return {'name': 'Cannot have a name that starts with "A"!'};
+            throw ValidationException(failedValue: 'Cannot have a name that starts with "A"!').forField('name');
           }
 
           String email = port['email'];
           if (email.toLowerCase().startsWith('a')) {
-            return {'network': 'Network error occurred.'};
+            throw ValidationException(failedValue: 'Network error occurred').forField('network');
           }
 
           return null;
