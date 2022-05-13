@@ -4,7 +4,7 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_date_field.dart';
 
-class StyledDatePortField extends PortFieldWidget<DatePortField, DateTime> with WithPortFieldWidgetExceptionTextGetter {
+class StyledDatePortField extends PortFieldWidget<DatePortField, DateTime> with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;

@@ -4,7 +4,7 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_checkbox.dart';
 
-class StyledCheckboxPortField extends PortFieldWidget<BoolPortField, bool> with WithPortFieldWidgetExceptionTextGetter {
+class StyledCheckboxPortField extends PortFieldWidget<BoolPortField, bool> with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;

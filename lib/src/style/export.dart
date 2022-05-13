@@ -31,6 +31,7 @@ export 'widgets/pages/styled_tabbed_page.dart';
 export 'widgets/port/styled_checkbox_port_field.dart';
 export 'widgets/port/styled_currency_port_field.dart';
 export 'widgets/port/styled_date_port_field.dart';
+export 'widgets/port/styled_exception_port_field.dart';
 export 'widgets/port/styled_int_port_field.dart';
 export 'widgets/port/styled_options_port_field.dart';
 export 'widgets/port/styled_radio_option_port_field.dart';

@@ -5,7 +5,7 @@ import '../../../port/export_core.dart';
 import '../input/styled_dropdown.dart';
 
 class StyledOptionsPortField<T> extends PortFieldWidget<OptionsPortField<T>, T?>
-    with WithPortFieldWidgetExceptionTextGetter {
+    with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;

@@ -1,9 +1,7 @@
 import '../model/exception/exception_text_getter.dart';
 import '../model/port.dart';
-import '../model/port_field.dart';
-import '../ui/port_field_widget.dart';
 
-mixin WithPortFieldWidgetExceptionTextGetter<F extends PortField<T>, T> on PortFieldWidget<F, T> {
+mixin WithPortExceptionTextGetter {
   ExceptionTextGetter? get exceptionTextGetterOverride;
 
   ExceptionTextGetter getDefaultExceptionTextGetter() => Port.config.defaultExceptionTextGetter;

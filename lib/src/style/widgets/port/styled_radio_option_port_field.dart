@@ -5,7 +5,7 @@ import '../../../port/export_core.dart';
 import '../input/styled_radio.dart';
 
 class StyledRadioOptionPortField<T> extends PortFieldWidget<BoolPortField, bool>
-    with WithPortFieldWidgetExceptionTextGetter {
+    with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;

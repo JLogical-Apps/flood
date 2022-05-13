@@ -130,10 +130,10 @@ class FormPage extends HookWidget {
                     ),
                   ],
                 ),
-                SmartErrorField(name: 'type'),
+                StyledExceptionPortField(name: 'type'),
               ],
             ),
-            SmartErrorField(name: 'network'), // Show a network error if the email starts with 'a'.
+            StyledExceptionPortField(name: 'network'), // Show a network error if the email starts with 'a'.
             FutureButton(
               child: Text('SIGN UP'),
               onPressed: () async {

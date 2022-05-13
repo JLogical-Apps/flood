@@ -9,7 +9,7 @@ import '../model/port_field.dart';
 abstract class PortFieldWidget<F extends PortField<T>, T> extends HookWidget {
   final String name;
 
-  PortFieldWidget({Key? key, required this.name}) : super(key: key);
+  PortFieldWidget({super.key, required this.name});
 
   Widget buildField(BuildContext context, F field, T value, Object? exception);
 

@@ -5,7 +5,7 @@ import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
 class StyledCurrencyPortField extends PortFieldWidget<DoublePortField, double>
-    with WithPortFieldWidgetExceptionTextGetter {
+    with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;

@@ -1,6 +1,7 @@
 export 'category_card.dart';
 export 'clickable_card.dart';
 export 'duration_input_field.dart';
+export 'empty_widget.dart';
 export 'future_button.dart';
 export 'input_field.dart';
 export 'loading_scaffold.dart';
