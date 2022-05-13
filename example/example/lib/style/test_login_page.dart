@@ -12,72 +12,68 @@ class TestLoginPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final smartFormController = useMemoized(() => SmartFormController());
+    final port = useMemoized(() => Port(
+          fields: [
+            StringPortField(name: 'username').required(),
+            StringPortField(name: 'password').required().isPassword(),
+            OptionsPortField(
+              name: 'favoriteFood',
+              options: ['Pizza', 'Hamburger', 'Pineapples'],
+            ).required(),
+            DatePortField(name: 'dob').required().isBeforeNow(),
+            OptionsPortField(name: 'gender', options: ['m', 'f']).required(),
+            BoolPortField(name: 'acceptTerms').required(),
+          ],
+        ));
     return StyleProvider(
       style: style,
       child: StyledPage(
         onRefresh: () async {
           await Future.delayed(Duration(seconds: 1));
         },
-        body: SmartForm(
-          controller: smartFormController,
+        body: PortBuilder(
+          port: port,
           child: ScrollColumn.withScrollbar(
             children: [
               StyledCategory.medium(
                 headerText: 'Login',
                 children: [
-                  StyledSmartTextField(
+                  StyledTextPortField(
                     name: 'username',
                     labelText: 'Username',
-                    validators: [
-                      Validation.required(),
-                    ],
                   ),
-                  StyledSmartTextField(
+                  StyledTextPortField(
                     name: 'password',
                     labelText: 'Password',
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
-                    validators: [
-                      Validation.required(),
-                    ],
                   ),
-                  StyledSmartOptionsField(
+                  StyledOptionsPortField(
                     name: 'favoriteFood',
                     labelText: 'Favorite Food',
-                    options: ['Pizza', 'Hamburger', 'Pineapples'],
-                    validators: [
-                      Validation.required(),
-                    ],
                   ),
-                  StyledSmartDateField(
+                  StyledDatePortField(
                     name: 'dob',
                     labelText: 'Date of Birth',
-                    validators: [Validation.isBeforeNow()],
                   ),
-                  SmartRadioGroup(group: 'gender'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      StyledSmartRadioOptionField<String>(
-                        group: 'gender',
-                        radioValue: 'male',
+                      StyledRadioOptionPortField<String>(
+                        groupName: 'gender',
+                        radioValue: 'm',
                         labelText: 'Male',
-                        validators: [Validation.required()],
                       ),
-                      StyledSmartRadioOptionField<String>(
-                        group: 'gender',
-                        radioValue: 'female',
+                      StyledRadioOptionPortField<String>(
+                        groupName: 'gender',
+                        radioValue: 'f',
                         labelText: 'Female',
                       ),
                     ],
                   ),
-                  StyledSmartBoolField(
+                  StyledCheckboxPortField(
                     name: 'acceptTerms',
                     labelText: 'Accept Terms and Conditions?',
-                    validators: [
-                      Validation.required(onEmpty: 'Must be accepted to log in!'),
-                    ],
                   ),
                   ButtonBar(
                     children: [
@@ -89,7 +85,7 @@ class TestLoginPage extends HookWidget {
                         text: 'Log In',
                         onTapped: () async {
                           await Future.delayed(Duration(seconds: 1));
-                          await smartFormController.validate();
+                          await port.submit();
                         },
                       ),
                     ],

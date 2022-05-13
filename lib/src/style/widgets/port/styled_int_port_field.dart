@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../../../port/export.dart';
 import '../../../port/export_core.dart';
@@ -38,9 +39,16 @@ class StyledIntPortField extends PortFieldWidget<IntPortField, int> with WithPor
       label: label,
       errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(signed: true),
-      initialText: '$value',
-      hintText: suggestedValue?.toString(),
-      onChanged: (text) => setValue(context, int.tryParse(text) ?? 0),
+      initialText: '${value.formatIntOrDouble()}',
+      hintText: suggestedValue?.formatIntOrDouble(),
+      onChanged: (text) {
+        final parsedInt = text.tryParseIntAfterClean(cleanCommas: true);
+        if (parsedInt == null) {
+          return;
+        }
+
+        setValue(context, parsedInt);
+      },
       enabled: enabled,
     );
   }

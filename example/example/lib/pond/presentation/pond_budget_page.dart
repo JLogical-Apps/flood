@@ -64,13 +64,20 @@ class PondBudgetPage extends HookWidget {
                             color: Colors.green,
                             leading: Icon(Icons.mail),
                             onPerform: () async {
-                              final data = await StyledDialog.port(context: context, children: [
-                                StyledSmartTextField(
-                                  name: 'name',
-                                  labelText: 'Name',
-                                  validators: [Validation.required()],
+                              final data = await StyledDialog.port(
+                                context: context,
+                                port: Port(
+                                  fields: [
+                                    StringPortField(name: 'name').required(),
+                                  ],
                                 ),
-                              ]).show(context);
+                                children: [
+                                  StyledTextPortField(
+                                    name: 'name',
+                                    labelText: 'Name',
+                                  ),
+                                ],
+                              ).show(context);
 
                               if (data == null) {
                                 return;
@@ -111,34 +118,44 @@ class PondBudgetPage extends HookWidget {
                                 color: Colors.green,
                                 leading: Icon(Icons.swap_calls),
                                 onPerform: () async {
-                                  final data = await StyledDialog.port(context: context, children: [
-                                    StyledSmartOptionsField<EnvelopeEntity>(
-                                      name: 'from',
-                                      labelText: 'From',
-                                      options: [...envelopesQueryController.value.get()],
-                                      builder: (envelopeEntity) => StyledBodyText(
-                                        envelopeEntity?.radioValue.nameProperty.radioValue ?? 'None',
-                                        textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
-                                      ),
-                                    ),
-                                    StyledSmartOptionsField<EnvelopeEntity>(
-                                      name: 'to',
-                                      labelText: 'To',
-                                      options: [...envelopesQueryController.value.get()],
-                                      builder: (envelopeEntity) => StyledBodyText(
-                                        envelopeEntity?.radioValue.nameProperty.radioValue ?? 'None',
-                                        textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
-                                      ),
-                                    ),
-                                    StyledSmartTextField(
-                                      name: 'amount',
-                                      labelText: 'Amount',
-                                      validators: [
-                                        Validation.required(),
-                                        Validation.isCurrency(),
+                                  final data = await StyledDialog.port(
+                                    context: context,
+                                    port: Port(
+                                      fields: [
+                                        OptionsPortField<EnvelopeEntity>(
+                                          name: 'from',
+                                          options: envelopesQueryController.value.get(),
+                                        ),
+                                        OptionsPortField<EnvelopeEntity>(
+                                          name: 'to',
+                                          options: envelopesQueryController.value.get(),
+                                        ),
+                                        CurrencyPortField(name: 'amount').required(),
                                       ],
                                     ),
-                                  ]).show(context);
+                                    children: [
+                                      StyledOptionsPortField<EnvelopeEntity>(
+                                        name: 'from',
+                                        labelText: 'From',
+                                        builder: (envelopeEntity) => StyledBodyText(
+                                          envelopeEntity?.value.nameProperty.value ?? 'None',
+                                          textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
+                                        ),
+                                      ),
+                                      StyledOptionsPortField<EnvelopeEntity>(
+                                        name: 'to',
+                                        labelText: 'To',
+                                        builder: (envelopeEntity) => StyledBodyText(
+                                          envelopeEntity?.value.nameProperty.value ?? 'None',
+                                          textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
+                                        ),
+                                      ),
+                                      StyledCurrencyPortField(
+                                        name: 'amount',
+                                        labelText: 'Amount',
+                                      ),
+                                    ],
+                                  ).show(context);
 
                                   if (data == null) {
                                     return;

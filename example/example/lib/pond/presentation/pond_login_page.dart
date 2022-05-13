@@ -14,7 +14,14 @@ class PondLoginPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final smartFormController = useMemoized(() => SmartFormController());
+    final port = useMemoized(
+      () => Port(
+        fields: [
+          StringPortField(name: 'email').required().isEmail(),
+          StringPortField(name: 'password').required().isPassword(),
+        ],
+      ),
+    );
     return StyleProvider(
         style: style,
         child: Builder(
@@ -22,26 +29,18 @@ class PondLoginPage extends HookWidget {
                   titleText: 'Login',
                   body: ScrollColumn.withScrollbar(
                     children: [
-                      SmartForm(
-                        controller: smartFormController,
+                      PortBuilder(
+                        port: port,
                         child: StyledCategory.medium(
                           headerText: 'Login',
                           children: [
-                            StyledSmartTextField(
+                            StyledTextPortField(
                               name: 'email',
                               labelText: 'Email',
-                              validators: [
-                                Validation.required(),
-                                Validation.isEmail(),
-                              ],
                             ),
-                            StyledSmartTextField(
+                            StyledTextPortField(
                               name: 'password',
                               labelText: 'Password',
-                              validators: [
-                                Validation.required(),
-                                Validation.isPassword(),
-                              ],
                               obscureText: true,
                             ),
                             Row(
@@ -50,21 +49,20 @@ class PondLoginPage extends HookWidget {
                                 StyledButton.low(
                                   text: 'Log In',
                                   onTapped: () async {
-                                    final result = await smartFormController.validate();
+                                    final result = await port.submit();
                                     if (!result.isValid) {
                                       return;
                                     }
-                                    final data = result._valueByName!;
 
                                     late String userId;
                                     try {
                                       userId = await AppContext.global.locate<AuthService>().login(
-                                            email: data['email'],
-                                            password: data['password'],
+                                            email: result['email'],
+                                            password: result['password'],
                                           );
                                     } catch (e) {
                                       logError(e);
-                                      smartFormController.setError(name: 'email', error: e.toString());
+                                      port.setException(name: 'email', exception: e.toString());
                                       return;
                                     }
 
@@ -81,60 +79,54 @@ class PondLoginPage extends HookWidget {
                                 StyledButton.high(
                                   text: 'Sign Up',
                                   onTapped: () async {
-                                    final smartFormController = SmartFormController();
+                                    final port = Port(
+                                      fields: [
+                                        StringPortField(name: 'name').required(),
+                                        StringPortField(name: 'email').required().isEmail(),
+                                        StringPortField(name: 'password').required().isPassword(),
+                                      ],
+                                    );
                                     final signupDialog = StyledDialog(
                                       titleText: 'Sign Up',
-                                      body: SmartForm(
-                                        controller: smartFormController,
+                                      body: PortBuilder(
+                                        port: port,
                                         child: Column(
                                           children: [
-                                            StyledSmartTextField(
+                                            StyledTextPortField(
                                               name: 'name',
                                               labelText: 'Name',
-                                              validators: [
-                                                Validation.required(),
-                                              ],
                                             ),
-                                            StyledSmartTextField(
+                                            StyledTextPortField(
                                               name: 'email',
                                               labelText: 'Email',
-                                              validators: [
-                                                Validation.required(),
-                                                Validation.isEmail(),
-                                              ],
                                             ),
-                                            StyledSmartTextField(
+                                            StyledTextPortField(
                                               name: 'password',
                                               labelText: 'Password',
-                                              validators: [
-                                                Validation.required(),
-                                                Validation.isPassword(),
-                                              ],
                                               obscureText: true,
                                             ),
                                             StyledButton.high(
                                               text: 'Sign Up',
                                               onTapped: () async {
-                                                final result = await smartFormController.validate();
+                                                final result = await port.submit();
                                                 if (!result.isValid) {
                                                   return;
                                                 }
 
-                                                final data = result._valueByName!;
                                                 late String userId;
                                                 try {
                                                   userId = await AppContext.global.locate<AuthService>().signup(
-                                                        email: data['email'],
-                                                        password: data['password'],
+                                                        email: result['email'],
+                                                        password: result['password'],
                                                       );
                                                 } catch (e) {
-                                                  smartFormController.setError(name: 'email', error: e.toString());
+                                                  port.setException(name: 'email', exception: e.toString());
                                                   return;
                                                 }
 
                                                 final user = User()
-                                                  ..nameProperty.value = data['name']
-                                                  ..emailProperty.value = data['email'];
+                                                  ..nameProperty.value = result['name']
+                                                  ..emailProperty.value = result['email'];
 
                                                 final userEntity = UserEntity()
                                                   ..value = user

@@ -277,7 +277,7 @@ class TestOnboardingPage extends HookWidget {
                 ),
                 StyledDivider(),
                 StyledDateField(
-                  label: 'Date',
+                  labelText: 'Date',
                   date: DateTime.now(),
                   onChanged: (value) => date.value = value,
                 ),
@@ -285,7 +285,7 @@ class TestOnboardingPage extends HookWidget {
                 StyledCategory.high(
                   children: [
                     StyledDateField(
-                      label: 'Date',
+                      labelText: 'Date',
                       date: DateTime.now(),
                       onChanged: (value) => date.value = value,
                     ),

@@ -77,18 +77,24 @@ class PondHomePage extends HookWidget {
 
                                   final data = await StyledDialog.port(
                                     context: context,
-                                    onFormChange: (controller) async {
-                                      final budget = Budget()..nameProperty.setUnvalidated(controller.getData('name'));
-                                      final budgetDraft = BudgetDraft()..sourcePrototype = budget;
-                                      draftEntity..value = budgetDraft;
-                                      await draftEntity.createOrSave();
-                                    },
+                                    port: Port(
+                                      fields: [
+                                        StringPortField(
+                                          name: 'name',
+                                          initialValue: budgetDraft.nameProperty.getUnvalidated(),
+                                        ).required(),
+                                      ],
+                                    ),
+                                    // TODO onFormChange: (controller) async {
+                                    //   final budget = Budget()..nameProperty.setUnvalidated(controller.getData('name'));
+                                    //   final budgetDraft = BudgetDraft()..sourcePrototype = budget;
+                                    //   draftEntity..value = budgetDraft;
+                                    //   await draftEntity.createOrSave();
+                                    // },
                                     children: [
-                                      StyledSmartTextField(
+                                      StyledTextPortField(
                                         name: 'name',
                                         labelText: 'Name',
-                                        initialValue: budgetDraft.nameProperty.getUnvalidated(),
-                                        validators: [Validation.required()],
                                       ),
                                     ],
                                   ).show(context);

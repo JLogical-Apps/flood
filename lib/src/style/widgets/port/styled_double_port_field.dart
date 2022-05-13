@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledDoublePortField extends PortFieldWidget<DoublePortField, double>
-    with WithPortExceptionTextGetter {
+class StyledDoublePortField extends PortFieldWidget<DoublePortField, double> with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;
@@ -39,9 +39,16 @@ class StyledDoublePortField extends PortFieldWidget<DoublePortField, double>
       label: label,
       errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(decimal: true, signed: true),
-      initialText: '$value',
-      hintText: suggestedValue?.toString(),
-      onChanged: (text) => setValue(context, double.tryParse(text) ?? 0),
+      initialText: '${value.formatIntOrDouble()}',
+      hintText: suggestedValue?.formatIntOrDouble(),
+      onChanged: (text) {
+        final parsedDouble = text.tryParseDoubleAfterClean(cleanCommas: true);
+        if (parsedDouble == null) {
+          return;
+        }
+
+        setValue(context, parsedDouble);
+      },
       enabled: enabled,
     );
   }

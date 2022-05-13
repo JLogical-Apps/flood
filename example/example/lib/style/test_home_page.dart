@@ -73,7 +73,7 @@ class TestHomePage extends HookWidget {
                           port: port,
                           child: ScrollColumn.withScrollbar(
                             children: [
-                              StyledStringFormField(
+                              StyledTextPortField(
                                 name: 'name',
                                 labelText: 'Name',
                                 maxLength: 25,
@@ -114,6 +114,10 @@ class TestHomePage extends HookWidget {
                           fields: [
                             StringPortField(name: 'name').required(),
                             StringPortField(name: 'amount').isCurrency(),
+                            DatePortField(name: 'date'),
+                            StringPortField(name: 'notes'),
+                            OptionsPortField(name: 'type', options: ['payment', 'refund'], initialValue: 'payment')
+                                .required(),
                           ],
                         ),
                         titleText: 'Create Transaction',
@@ -122,29 +126,33 @@ class TestHomePage extends HookWidget {
                             name: 'name',
                             labelText: 'Name',
                           ),
-                          StyledSmartTextField(
+                          StyledTextPortField(
                             name: 'amount',
                             labelText: 'Amount (\$)',
                           ),
-                          StyledSmartDateField(
+                          StyledDatePortField(
                             name: 'date',
                             labelText: 'Transaction Date',
                           ),
-                          StyledSmartTextField(
+                          StyledTextPortField(
                             name: 'notes',
                             labelText: 'Notes',
                             maxLines: 3,
                             keyboardType: TextInputType.multiline,
                           ),
-                          SmartRadioGroup(
-                            group: 'type',
-                            initialValue: 'payment',
-                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              StyledSmartRadioOptionField(radioValue: 'payment', group: 'type', labelText: 'Payment'),
-                              StyledSmartRadioOptionField(radioValue: 'refund', group: 'type', labelText: 'Refund'),
+                              StyledRadioOptionPortField(
+                                radioValue: 'payment',
+                                groupName: 'type',
+                                labelText: 'Payment',
+                              ),
+                              StyledRadioOptionPortField(
+                                radioValue: 'refund',
+                                groupName: 'type',
+                                labelText: 'Refund',
+                              ),
                             ],
                           ),
                         ],

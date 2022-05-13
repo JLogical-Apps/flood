@@ -52,30 +52,31 @@ class PondEnvelopePage extends HookWidget {
                               color: Colors.green,
                               leading: Icon(Icons.swap_calls),
                               onPerform: () async {
-                                final data = await StyledDialog.port(context: context, children: [
-                                  StyledSmartTextField(
-                                    name: 'name',
-                                    labelText: 'Name',
-                                    validators: [
-                                      Validation.required(),
+                                final data = await StyledDialog.port(
+                                  context: context,
+                                  port: Port(
+                                    fields: [
+                                      StringPortField(name: 'name').required(),
+                                      CurrencyPortField(name: 'amount').required(),
                                     ],
                                   ),
-                                  StyledSmartTextField(
-                                    name: 'amount',
-                                    labelText: 'Amount',
-                                    validators: [
-                                      Validation.required(),
-                                      Validation.isCurrency(),
-                                    ],
-                                  ),
-                                ]).show(context);
+                                  children: [
+                                    StyledTextPortField(
+                                      name: 'name',
+                                      labelText: 'Name',
+                                    ),
+                                    StyledCurrencyPortField(
+                                      name: 'amount',
+                                      labelText: 'Amount',
+                                    ),
+                                  ],
+                                ).show(context);
 
                                 if (data == null) {
                                   return;
                                 }
 
-                                final amountCents =
-                                    (data['amount'].toString().tryParseDoubleAfterClean()! * 100).round();
+                                final amountCents = data['amount'];
                                 final envelopeTransaction = EnvelopeTransaction()
                                   ..nameProperty.value = data['name']
                                   ..amountProperty.value = amountCents

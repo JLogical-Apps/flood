@@ -101,6 +101,11 @@ class Port implements Validator<void> {
     return _exceptionByName[fieldName];
   }
 
+  void setException({required String name, required dynamic exception}) {
+    _exceptionByNameX.value = _exceptionByNameX.value.copy()..set(name, exception);
+    _exceptionByName[name] = exception;
+  }
+
   ValueStream<Object?> getExceptionXByName(String fieldName) {
     return getFieldByName(fieldName).exceptionX;
   }
