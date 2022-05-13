@@ -4,7 +4,7 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledIntPortField extends PortFieldWidget<IntPortField, int> {
+class StyledIntPortField extends PortFieldWidget<IntPortField, int> with WithPortFieldWidgetExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;
@@ -15,6 +15,9 @@ class StyledIntPortField extends PortFieldWidget<IntPortField, int> {
 
   final bool enabled;
 
+  @override
+  final ExceptionTextGetter? exceptionTextGetterOverride;
+
   StyledIntPortField({
     Key? key,
     required String name,
@@ -22,16 +25,18 @@ class StyledIntPortField extends PortFieldWidget<IntPortField, int> {
     this.label,
     this.suggestedValue,
     this.enabled: true,
+    this.exceptionTextGetterOverride,
   }) : super(
           key: key,
           name: name,
         );
 
   @override
-  Widget buildField(BuildContext context, IntPortField field, int value) {
+  Widget buildField(BuildContext context, IntPortField field, int value, Object? exception) {
     return StyledTextField(
       labelText: labelText,
       label: label,
+      errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(signed: true),
       initialText: '$value',
       hintText: suggestedValue?.toString(),

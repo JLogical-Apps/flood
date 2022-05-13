@@ -4,7 +4,8 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_radio.dart';
 
-class StyledRadioOptionPortField<T> extends PortFieldWidget<BoolPortField, bool> {
+class StyledRadioOptionPortField<T> extends PortFieldWidget<BoolPortField, bool>
+    with WithPortFieldWidgetExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;
@@ -12,24 +13,30 @@ class StyledRadioOptionPortField<T> extends PortFieldWidget<BoolPortField, bool>
   /// The value this option will set when selected.
   final T radioValue;
 
+  @override
+  final ExceptionTextGetter? exceptionTextGetterOverride;
+
   StyledRadioOptionPortField({
     Key? key,
     required String groupName,
     this.labelText,
     this.label,
     required this.radioValue,
+    this.exceptionTextGetterOverride,
   }) : super(
           key: key,
           name: groupName,
         );
 
   @override
-  Widget buildField(BuildContext context, BoolPortField field, bool value) {
+  Widget buildField(BuildContext context, BoolPortField field, bool value, Object? exception) {
     _updateValue(context, value);
     return StyledRadio<T?>(
+      label: label,
+      labelText: labelText,
+      errorText: getExceptionText(exception),
       groupValue: value ? this.radioValue : null,
       radioValue: radioValue,
-      label: label,
       onChanged: (value) => getPort(context)[name] = value,
     );
   }

@@ -4,7 +4,8 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledCurrencyPortField extends PortFieldWidget<DoublePortField, double> {
+class StyledCurrencyPortField extends PortFieldWidget<DoublePortField, double>
+    with WithPortFieldWidgetExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;
@@ -15,6 +16,9 @@ class StyledCurrencyPortField extends PortFieldWidget<DoublePortField, double> {
 
   final bool enabled;
 
+  @override
+  final ExceptionTextGetter? exceptionTextGetterOverride;
+
   StyledCurrencyPortField({
     Key? key,
     required String name,
@@ -22,16 +26,18 @@ class StyledCurrencyPortField extends PortFieldWidget<DoublePortField, double> {
     this.label,
     this.suggestedValue,
     this.enabled: true,
+    this.exceptionTextGetterOverride,
   }) : super(
           key: key,
           name: name,
         );
 
   @override
-  Widget buildField(BuildContext context, DoublePortField field, double value) {
+  Widget buildField(BuildContext context, DoublePortField field, double value, Object? exception) {
     return StyledTextField(
       labelText: labelText,
       label: label,
+      errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(decimal: true, signed: true),
       initialText: '$value',
       hintText: suggestedValue?.toString(),

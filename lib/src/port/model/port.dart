@@ -7,12 +7,15 @@ import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../patterns/export_core.dart';
+import '../config/port_config.dart';
 import 'port_field.dart';
 import 'port_result.dart';
 import 'validation/port_field_validation_context.dart';
 import 'validation/port_submit_exception.dart';
 
 class Port implements Validator<void> {
+  static PortConfig config = PortConfig();
+
   final List<PortComponent> components;
 
   List<PortField> get fields => components.whereType<PortField>().toList();
@@ -96,6 +99,10 @@ class Port implements Validator<void> {
 
   Object? getExceptionByName(String fieldName) {
     return _exceptionByName[fieldName];
+  }
+
+  ValueStream<Object?> getExceptionXByName(String fieldName) {
+    return getFieldByName(fieldName).exceptionX;
   }
 
   Future<PortResult> submit() async {

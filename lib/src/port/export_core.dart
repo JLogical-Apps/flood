@@ -1,4 +1,7 @@
+export 'config/port_config.dart';
 export 'model/components/port_spotlight.dart';
+export 'model/exception/exception_text_getter.dart';
+export 'model/exception/to_string_exception_text_getter.dart';
 export 'model/fields/bool_port_field.dart';
 export 'model/fields/date_port_field.dart';
 export 'model/fields/double_port_field.dart';
