@@ -78,22 +78,27 @@ class FlatStyle extends Style {
   @override
   Widget page(BuildContext context, StyleContext styleContext, StyledPage styledPage) {
     final backgroundColor = styledPage.backgroundColor ?? styleContext.backgroundColor;
+    final appBarTitle = styledPage.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
+              titleText,
+              textOverrides: StyledTextOverrides(
+                fontWeight: FontWeight.bold,
+              ),
+            )) ??
+        styledPage.title;
+
+    final shouldShowAppBar = appBarTitle != null || styledPage.actions.isNotEmpty || Navigator.of(context).canPop();
     return HookBuilder(
       builder: (context) {
         final refreshController = useMemoized(() => RefreshController(initialRefresh: false));
         return Scaffold(
           backgroundColor: backgroundColor,
-          appBar: _styledAppBar(
-            context,
-            title: styledPage.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
-                      titleText,
-                      textOverrides: StyledTextOverrides(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )) ??
-                styledPage.title,
-            actions: styledPage.actions,
-          ),
+          appBar: shouldShowAppBar
+              ? _styledAppBar(
+                  context,
+                  title: appBarTitle,
+                  actions: styledPage.actions,
+                )
+              : null,
           body: StyleContextProvider(
             styleContext: styleContextFromBackground(backgroundColor),
             child: styledPage.onRefresh == null
