@@ -9,6 +9,7 @@ class PortBuilder extends StatelessWidget {
   final Widget child;
 
   PortBuilder({
+    super.key,
     required this.port,
     required this.child,
   });
