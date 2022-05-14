@@ -33,6 +33,7 @@ import '../../widgets/export.dart';
 import '../style_context.dart';
 import '../style_context_provider.dart';
 import '../style_provider.dart';
+import '../widgets/content/styled_container.dart';
 import '../widgets/input/action_item.dart';
 import '../widgets/misc/styled_chip.dart';
 import '../widgets/misc/styled_loading_indicator.dart';
@@ -940,6 +941,30 @@ class FlatStyle extends Style {
               if (result != null) dateField.onChanged!(result);
             }
           : null,
+    );
+  }
+
+  @override
+  Widget container(BuildContext context, StyleContext styleContext, StyledContainer container) {
+    // Flat Style treats low and medium emphasis contents as the same.
+    final backgroundColor = container.color ??
+        container.emphasis.map<Color>(
+          low: () => styleContext.backgroundColor,
+          medium: () => styleContext.backgroundColorSoft,
+          high: () => styleContext.emphasisColor,
+        );
+
+    final newStyleContext = styleContextFromBackground(backgroundColor);
+
+    return StyleContextProvider(
+      styleContext: newStyleContext,
+      child: Material(
+        color: backgroundColor,
+        child: InkWell(
+          onTap: container.onTapped,
+          child: container.child,
+        ),
+      ),
     );
   }
 

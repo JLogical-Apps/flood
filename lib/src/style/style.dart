@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_category.dart';
+import 'package:jlogical_utils/src/style/widgets/content/styled_container.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_date_field.dart';
@@ -98,6 +99,11 @@ abstract class Style {
       throw UnimplementedError();
 
   // === CONTENT ===
+
+  /// A blank container with no additional styling. Simply used to change colors and provide more user-control.
+  Widget container(BuildContext context, StyleContext styleContext, StyledContainer container) =>
+      throw UnimplementedError();
+
   /// A container for content. This should respond to the content having different emphases.
   Widget content(BuildContext context, StyleContext styleContext, StyledContent content) => throw UnimplementedError();
 

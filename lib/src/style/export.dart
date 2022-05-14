@@ -7,6 +7,7 @@ export 'styled_widget.dart';
 export 'styles/delta_style.dart';
 export 'styles/flat_style.dart';
 export 'widgets/content/styled_category.dart';
+export 'widgets/content/styled_container.dart';
 export 'widgets/content/styled_content.dart';
 export 'widgets/input/action_item.dart';
 export 'widgets/input/styled_button.dart';

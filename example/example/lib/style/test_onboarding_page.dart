@@ -383,6 +383,19 @@ class TestOnboardingPage extends HookWidget {
                     ),
                   ],
                 ),
+                StyledContainer(
+                  color: Colors.green,
+                  child: SizedBox(
+                    width: 200,
+                    height: 100,
+                    child: Center(
+                      child: StyledBodyText('Custom container'),
+                    ),
+                  ),
+                  onTapped: () {
+                    print('hey');
+                  },
+                ),
               ],
             ),
           ),
