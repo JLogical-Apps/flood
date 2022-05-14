@@ -18,7 +18,7 @@ class StylesPage extends StatelessWidget {
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => TestOnboardingPage(
                       style: FlatStyle(
-                        backgroundColor: Color(0xFFEEEEEE),
+                        backgroundColor: Colors.white,
                         primaryColor: Color(0xFF003959),
                       ),
                       styleName: 'Flat Light',

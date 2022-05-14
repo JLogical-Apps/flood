@@ -23,6 +23,7 @@ import 'package:jlogical_utils/src/style/widgets/text/styled_error_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_span.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_style.dart';
+import 'package:jlogical_utils/src/utils/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -625,92 +626,105 @@ class FlatStyle extends Style {
   @override
   Widget textField(BuildContext context, StyleContext styleContext, StyledTextField textField) {
     final label = textField.labelText.mapIfNonNull((label) => StyledContentSubtitleText(label)) ?? textField.label;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (label != null) label,
-          TextFormField(
-            initialValue: textField.initialText,
-            style: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(
-              color: styleContext.foregroundColor,
-            ),
-            readOnly: !textField.enabled,
-            obscureText: textField.obscureText,
-            maxLength: textField.maxLength,
-            maxLengthEnforcement: MaxLengthEnforcement.none,
-            buildCounter: (context, {required int currentLength, required bool isFocused, int? maxLength}) {
-              if (maxLength == null) {
-                return null;
-              }
+    return HookBuilder(builder: (context) {
+      final focusNode = useFocusNode();
+      final isFocused = useState(false);
+      useOneTimeEffect(() {
+        final listener = () {
+          isFocused.value = focusNode.hasFocus;
+        };
+        focusNode.addListener(listener);
+        return () => focusNode.removeListener(listener);
+      });
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (label != null) label,
+            TextFormField(
+              focusNode: focusNode,
+              initialValue: textField.initialText,
+              style: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(
+                color: styleContext.foregroundColor,
+              ),
+              readOnly: !textField.enabled,
+              obscureText: textField.obscureText,
+              maxLength: textField.maxLength,
+              maxLengthEnforcement: MaxLengthEnforcement.none,
+              buildCounter: (context, {required int currentLength, required bool isFocused, int? maxLength}) {
+                if (maxLength == null) {
+                  return null;
+                }
 
-              final delta = maxLength - currentLength;
+                final delta = maxLength - currentLength;
 
-              return delta < 20
-                  ? StyledBodyText(
-                      '$currentLength / $maxLength',
-                      textOverrides: StyledTextOverrides(
-                        fontColor: currentLength > maxLength ? Colors.red : null,
-                      ),
-                    )
-                  : null;
-            },
-            decoration: InputDecoration(
-              prefixIcon: textField.leading,
-              suffixIcon: textField.trailing,
-              fillColor: styleContext.backgroundColorSoft,
-              filled: true,
-              errorText: textField.errorText,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  width: 0.5,
-                  color: styleContext.foregroundColorSoft,
+                return delta < 20
+                    ? StyledBodyText(
+                        '$currentLength / $maxLength',
+                        textOverrides: StyledTextOverrides(
+                          fontColor: currentLength > maxLength ? Colors.red : null,
+                        ),
+                      )
+                    : null;
+              },
+              decoration: InputDecoration(
+                prefixIcon: textField.leading,
+                suffixIcon: textField.trailing,
+                fillColor: isFocused.value ? styleContext.backgroundColor : styleContext.backgroundColorSoft,
+                focusColor: styleContext.foregroundColor,
+                filled: true,
+                errorText: textField.errorText,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: styleContext.foregroundColorSoft,
+                  ),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: Colors.red,
+                  ),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    width: 2,
+                    color: Colors.red,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    width: 2,
+                    color: styleContext.emphasisColor,
+                  ),
+                ),
+                hintText: textField.hintText,
+                hintStyle: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(
+                  color: styleContext.emphasisColorSoft,
+                  fontStyle: FontStyle.italic,
                 ),
               ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  width: 1,
-                  color: Colors.red,
-                ),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  width: 1,
-                  color: Colors.red,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  width: 1,
-                  color: styleContext.emphasisColor,
-                ),
-              ),
-              hintText: textField.hintText,
-              hintStyle: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(
-                color: styleContext.emphasisColorSoft,
-                fontStyle: FontStyle.italic,
-              ),
+              cursorColor: primaryColor,
+              onTap: textField.onTap,
+              onChanged: textField.onChanged,
+              maxLines: textField.maxLines,
+              keyboardType: textField.keyboardType,
+              textCapitalization: textField.textCapitalization ?? TextCapitalization.sentences,
             ),
-            cursorColor: primaryColor,
-            onTap: textField.onTap,
-            onChanged: textField.onChanged,
-            maxLines: textField.maxLines,
-            keyboardType: textField.keyboardType,
-            textCapitalization: textField.textCapitalization ?? TextCapitalization.sentences,
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   @override
@@ -892,6 +906,7 @@ class FlatStyle extends Style {
                         onPrimary: styleContextFromBackground(primaryColor).foregroundColor,
                         surface: primaryColor,
                         onSurface: initialStyleContext.foregroundColor,
+                        brightness: primaryColor.computeLuminance() > 0.5 ? Brightness.dark : Brightness.light,
                       ),
                       dialogTheme: DialogTheme(
                         backgroundColor: backgroundColorSoft,
