@@ -503,9 +503,8 @@ class FlatStyle extends Style {
                       ),
                       label: child ?? Container(),
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(button.color ?? styleContext.emphasisColor),
-                        overlayColor: MaterialStateProperty.all(
-                            softenColor(button.color ?? styleContext.emphasisColor).withOpacity(0.8)),
+                        backgroundColor: MaterialStateProperty.all(backgroundColor),
+                        overlayColor: MaterialStateProperty.all(softenColor(backgroundColor).withOpacity(0.8)),
                         shape: MaterialStateProperty.all(
                             RoundedRectangleBorder(borderRadius: button.borderRadius ?? BorderRadius.circular(12))),
                       ),
@@ -513,6 +512,8 @@ class FlatStyle extends Style {
             );
           },
           medium: () {
+            final backgroundColor = button.color ?? styleContext.backgroundColor;
+
             final child = button.text.mapIfNonNull((text) => StyledButtonText(text)) ?? button.child;
             final leading = button.icon.mapIfNonNull((icon) => StyledIcon.medium(button.icon!)) ?? button.leading;
 
@@ -1394,7 +1395,7 @@ class FlatStyle extends Style {
     final isBackgroundVariant = _isBackgroundVariant(backgroundColor);
     final isNeutralBackground = _isNeutralColor(backgroundColor);
 
-    final foregroundColor = backgroundColor.computeLuminance() < 0.6 ? Colors.white : Colors.black;
+    final foregroundColor = backgroundColor.computeLuminance() < 0.5 ? Colors.white : Colors.black;
     final emphasisColor = (isBackgroundVariant || isNeutralBackground) ? primaryColor : foregroundColor;
 
     return StyleContext(
