@@ -13,10 +13,10 @@ class FirebaseModule extends AppModule {
 
   FirebaseModule._({required this.app});
 
-  static Future<FirebaseModule> create({required FirebaseOptions app}) async {
+  static Future<FirebaseModule> create({required FirebaseOptions app, bool forceInitialize: false}) async {
     final module = FirebaseModule._(app: app);
 
-    if (AppContext.global.environment.index >= Environment.qa.index) {
+    if (forceInitialize || AppContext.global.environment.index >= Environment.qa.index) {
       await Firebase.initializeApp(options: app);
     }
 
