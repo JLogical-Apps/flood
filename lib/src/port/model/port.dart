@@ -16,7 +16,7 @@ import 'validation/port_submit_exception.dart';
 class Port implements Validator<void> {
   static PortConfig config = PortConfig();
 
-  final List<PortComponent> components;
+  final List<PortComponent> components = [];
 
   List<PortField> get fields => components.whereType<PortField>().toList();
 
@@ -40,7 +40,7 @@ class Port implements Validator<void> {
 
   final List<Validator<Port>> additionalValidators = [];
 
-  Port({List<PortComponent>? fields}) : components = [...?fields] {
+  Port({List<PortComponent>? fields}) {
     fields?.forEach((field) => withComponent(field));
   }
 
