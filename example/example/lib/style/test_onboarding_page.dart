@@ -248,6 +248,7 @@ class TestOnboardingPage extends HookWidget {
                 StyledTextField(
                   labelText: 'Name',
                   initialText: 'John Doe',
+                  leading: StyledIcon(Icons.person),
                 ),
                 StyledDivider(),
                 StyledCategory.high(

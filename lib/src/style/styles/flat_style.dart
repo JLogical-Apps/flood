@@ -714,7 +714,7 @@ class FlatStyle extends Style {
                   fontStyle: FontStyle.italic,
                 ),
               ),
-              cursorColor: primaryColor,
+              cursorColor: styleContext.emphasisColorSoft,
               onTap: textField.onTap,
               onChanged: textField.onChanged,
               maxLines: textField.maxLines,
@@ -735,6 +735,8 @@ class FlatStyle extends Style {
               item?.toString() ?? 'None',
               textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
             );
+
+    final backgroundStyleContext = styleContextFromBackground(styleContext.backgroundColorSoft);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -749,7 +751,7 @@ class FlatStyle extends Style {
             hint: StyledBodyText(
               'Select an option',
               textOverrides: StyledTextOverrides(
-                fontColor: styleContext.emphasisColor,
+                fontColor: styleContext.emphasisColorSoft,
                 padding: EdgeInsets.zero,
                 fontStyle: FontStyle.italic,
               ),
@@ -758,18 +760,23 @@ class FlatStyle extends Style {
               Icons.arrow_drop_down,
               paddingOverride: EdgeInsets.zero,
             ),
-            style:
-                toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(color: styleContext.foregroundColor),
+            style: toTextStyle(styledTextStyle: bodyTextStyle(backgroundStyleContext)),
             decoration: InputDecoration(
                 errorText: dropdown.errorText,
                 filled: true,
                 fillColor: styleContext.backgroundColorSoft,
-                focusedBorder: InputBorder.none,
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: styleContext.emphasisColor,
+                    width: 2,
+                  ),
+                ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: styleContext.foregroundColor,
-                    width: 0.5,
+                    width: 1,
                   ),
                 ),
                 errorBorder: OutlineInputBorder(
@@ -787,7 +794,10 @@ class FlatStyle extends Style {
                       value: value,
                       child: StyleProvider(
                         style: this,
-                        child: _builder(value),
+                        child: StyleContextProvider(
+                          styleContext: backgroundStyleContext,
+                          child: _builder(value),
+                        ),
                       ),
                     ))
                 .toList(),
