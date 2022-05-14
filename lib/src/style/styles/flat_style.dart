@@ -1414,7 +1414,7 @@ class FlatStyle extends Style {
   /// Whether the [color] is a neutral color.
   bool _isNeutralColor(Color color) {
     final luminance = color.computeLuminance();
-    return luminance < 0.05 || luminance > 0.95;
+    return luminance < 0.03 || luminance > 0.97;
   }
 
   /// An AnimatedCrossFade that fades between [child] and a loading indicator depending on whether [isLoading] is true.
