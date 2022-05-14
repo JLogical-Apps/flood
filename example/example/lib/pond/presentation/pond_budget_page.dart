@@ -161,10 +161,8 @@ class PondBudgetPage extends HookWidget {
                                     return;
                                   }
 
-                                  final amountCents =
-                                      (data['amount'].toString().tryParseDoubleAfterClean()! * 100).round();
                                   final transferTransaction = TransferTransaction()
-                                    ..amountProperty.value = amountCents
+                                    ..amountProperty.value = data['amount']
                                     ..fromProperty.reference = data['from']
                                     ..toProperty.reference = data['to']
                                     ..budgetProperty.value = budgetId;
