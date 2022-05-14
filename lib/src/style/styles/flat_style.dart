@@ -952,7 +952,11 @@ class FlatStyle extends Style {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (header != null || content.leading != null || content.trailing != null || primaryActions.isNotEmpty)
+            if (header != null ||
+                body != null ||
+                content.leading != null ||
+                content.trailing != null ||
+                primaryActions.isNotEmpty)
               MediaQuery(
                 data: MediaQuery.of(context).copyWith(padding: EdgeInsets.zero),
                 child: ListTile(
