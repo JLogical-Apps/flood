@@ -436,15 +436,18 @@ class FlatStyle extends Style {
   Widget textSpan(BuildContext context, StyleContext styleContext, StyledTextSpan textSpan) {
     return Padding(
       padding: EdgeInsets.all(8),
-      child: Text.rich(TextSpan(
-          children: textSpan.children
-              .map((text) => TextSpan(
-                  text: text.text,
-                  style: toTextStyle(
-                    styledTextStyle: text.getStyle(this, styleContext),
-                    overrides: text.overrides,
-                  )))
-              .toList())),
+      child: Text.rich(
+        TextSpan(
+            children: textSpan.children
+                .map((text) => TextSpan(
+                    text: text.text,
+                    style: toTextStyle(
+                      styledTextStyle: text.getStyle(this, styleContext),
+                      overrides: text.overrides,
+                    )))
+                .toList()),
+        textAlign: textSpan.textAlign,
+      ),
     );
   }
 
