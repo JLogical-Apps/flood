@@ -7,6 +7,6 @@ class OptionsPortField<T> extends PortField<T?> {
   bool canBeNone;
 
   OptionsPortField({required super.name, super.initialValue, required this.options, this.canBeNone: true}) {
-    withSimpleValidator(Validator.isOneOf(options));
+    withSimpleValidator(Validator.of((value) => Validator.isOneOf(options).validate(value!)));
   }
 }
