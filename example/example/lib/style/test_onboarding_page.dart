@@ -396,6 +396,33 @@ class TestOnboardingPage extends HookWidget {
                     print('hey');
                   },
                 ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: 200,
+                  child: StyledCarousel(
+                    showNavigation: true,
+                    children: [
+                      StyledContent.high(
+                        headerText: 'Child 1',
+                      ),
+                      StyledContent.high(
+                        headerText: 'Child 2',
+                      ),
+                      StyledContent.high(
+                        headerText: 'Child 3',
+                      ),
+                    ]
+                        .map((child) => Column(
+                              children: [
+                                Expanded(child: child),
+                                SizedBox(
+                                  height: 50,
+                                )
+                              ],
+                            ))
+                        .toList(),
+                  ),
+                ),
               ],
             ),
           ),

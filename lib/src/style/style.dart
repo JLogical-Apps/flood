@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/src/style/style_context.dart';
+import 'package:jlogical_utils/src/style/widgets/carousel/styled_carousel.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_category.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_container.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
@@ -122,6 +123,10 @@ abstract class Style {
 
   /// A divider.
   Widget divider(BuildContext context, StyleContext styleContext, StyledDivider divider) => throw UnimplementedError();
+
+  /// A carousel. Provides a view of several widgets in a line.
+  Widget carousel(BuildContext context, StyleContext styleContext, StyledCarousel carousel) =>
+      throw UnimplementedError();
 
   // === ACTIONS ===
 

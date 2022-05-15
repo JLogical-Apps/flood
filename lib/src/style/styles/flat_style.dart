@@ -33,6 +33,7 @@ import '../../widgets/export.dart';
 import '../style_context.dart';
 import '../style_context_provider.dart';
 import '../style_provider.dart';
+import '../widgets/carousel/styled_carousel.dart';
 import '../widgets/content/styled_container.dart';
 import '../widgets/input/action_item.dart';
 import '../widgets/misc/styled_chip.dart';
@@ -213,134 +214,54 @@ class FlatStyle extends Style {
     StyleContext styleContext,
     StyledOnboardingPage onboardingPage,
   ) {
-    return HookBuilder(
-      builder: (context) {
-        final pageController = useMemoized(() => PageController());
-        final page = useState(0);
-
-        return Scaffold(
-          backgroundColor: backgroundColor,
-          body: Stack(
-            children: [
-              SafeArea(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: PageView(
-                        controller: pageController,
-                        allowImplicitScrolling: true,
-                        scrollBehavior: CupertinoScrollBehavior(),
-                        onPageChanged: (_page) => page.value = _page,
-                        children: onboardingPage.sections
-                            .map((section) => SafeArea(
-                                  child: Column(
-                                    children: [
-                                      StyleContextProvider(
-                                        styleContext: styleContextFromBackground(backgroundColor),
-                                        child: Expanded(
-                                          child: Center(
-                                              child: section.headerIcon.mapIfNonNull((icon) => StyledIcon.high(
-                                                        icon,
-                                                        size: 60,
-                                                      )) ??
-                                                  section.header),
-                                          flex: 1,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Center(
-                                            child: section.titleText.mapIfNonNull((text) => StyledTitleText(
-                                                      text,
-                                                    )) ??
-                                                section.title),
-                                        flex: 1,
-                                      ),
-                                      SizedBox(
-                                        height: 40,
-                                      ),
-                                      Expanded(
-                                        child: Center(
-                                            child: section.bodyText.mapIfNonNull((text) => StyledBodyText(
-                                                      text,
-                                                    )) ??
-                                                section.body),
-                                        flex: 2,
-                                      ),
-                                      SizedBox(
-                                        height: 60,
-                                      ),
-                                    ],
-                                  ),
-                                ))
-                            .toList(),
+    return StyledPage(
+      body: StyledCarousel(
+        children: onboardingPage.sections
+            .map((section) => SafeArea(
+                  child: Column(
+                    children: [
+                      StyleContextProvider(
+                        styleContext: styleContextFromBackground(backgroundColor),
+                        child: Expanded(
+                          child: Center(
+                              child: section.headerIcon.mapIfNonNull((icon) => StyledIcon.high(
+                                        icon,
+                                        size: 60,
+                                      )) ??
+                                  section.header),
+                          flex: 1,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              if (onboardingPage.onSkip != null)
-                Positioned(
-                  bottom: 10,
-                  left: 10,
-                  width: 100,
-                  child: SafeArea(
-                    child: animatedFadeIn(
-                      isVisible: page.value < onboardingPage.sections.length - 1,
-                      child: StyledButton.low(
-                        text: 'Skip',
-                        onTapped:
-                            page.value < onboardingPage.sections.length - 1 ? () => onboardingPage.onSkip!() : null,
+                      Expanded(
+                        child: Center(
+                            child: section.titleText.mapIfNonNull((text) => StyledTitleText(
+                                      text,
+                                    )) ??
+                                section.title),
+                        flex: 1,
                       ),
-                    ),
-                  ),
-                ),
-              Positioned.fill(
-                child: SafeArea(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: AnimatedSmoothIndicator(
-                      activeIndex: page.value,
-                      count: onboardingPage.sections.length,
-                      effect: WormEffect(
-                        activeDotColor: primaryColor,
-                        dotColor: styleContext.backgroundColorSoft,
+                      SizedBox(
+                        height: 40,
                       ),
-                    ),
+                      Expanded(
+                        child: Center(
+                            child: section.bodyText.mapIfNonNull((text) => StyledBodyText(
+                                      text,
+                                    )) ??
+                                section.body),
+                        flex: 2,
+                      ),
+                      SizedBox(
+                        height: 60,
+                      ),
+                    ],
                   ),
-                ),
-                bottom: 20,
-              ),
-              Positioned(
-                bottom: 10,
-                right: 10,
-                width: 100,
-                child: SafeArea(
-                  child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 400),
-                    child: page.value == onboardingPage.sections.length - 1
-                        ? StyledButton.high(
-                            key: ValueKey('done'), // Key is needed for AnimatedSwitcher to fade between buttons.
-                            text: 'Done',
-                            onTapped: onboardingPage.onComplete,
-                          )
-                        : StyledButton.low(
-                            key: ValueKey('next'),
-                            text: 'Next',
-                            onTapped: () {
-                              pageController.animateToPage(
-                                page.value + 1,
-                                duration: Duration(milliseconds: 400),
-                                curve: Curves.easeInOutCubic,
-                              );
-                            },
-                          ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+                ))
+            .toList(),
+        onComplete: onboardingPage.onComplete,
+        onSkip: onboardingPage.onSkip,
+        showNavigation: true,
+      ),
     );
   }
 
@@ -1265,6 +1186,95 @@ class FlatStyle extends Style {
   Widget divider(BuildContext context, StyleContext styleContext, StyledDivider divider) {
     return Divider(
       color: styleContext.backgroundColorSoft.withOpacity(0.4),
+    );
+  }
+
+  @override
+  Widget carousel(BuildContext context, StyleContext styleContext, StyledCarousel carousel) {
+    return HookBuilder(
+      builder: (context) {
+        final pageController = useMemoized(() => carousel.pageController ?? PageController());
+        final page = useState(pageController.initialPage);
+
+        return Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: PageView(
+                      controller: pageController,
+                      physics: carousel.allowUserNavigation ? null : NeverScrollableScrollPhysics(),
+                      scrollBehavior: CupertinoScrollBehavior(),
+                      onPageChanged: (_page) => page.value = _page,
+                      children: carousel.children,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (carousel.showNavigation && carousel.onSkip != null)
+              Positioned(
+                bottom: 10,
+                left: 10,
+                width: 100,
+                child: SafeArea(
+                  child: animatedFadeIn(
+                    isVisible: page.value < carousel.children.length - 1,
+                    child: StyledButton.low(
+                      text: 'Skip',
+                      onTapped: page.value < carousel.children.length - 1 ? () => carousel.onSkip!() : null,
+                    ),
+                  ),
+                ),
+              ),
+            Positioned.fill(
+              child: SafeArea(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: AnimatedSmoothIndicator(
+                    activeIndex: page.value,
+                    count: carousel.children.length,
+                    effect: WormEffect(
+                      activeDotColor: primaryColor,
+                      dotColor: styleContext.backgroundColorSoft,
+                    ),
+                  ),
+                ),
+              ),
+              bottom: 20,
+            ),
+            if (carousel.showNavigation)
+              Positioned(
+                bottom: 10,
+                right: 10,
+                width: 100,
+                child: SafeArea(
+                  child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 400),
+                    child: page.value == carousel.children.length - 1
+                        ? StyledButton.high(
+                            key: ValueKey('done'), // Key is needed for AnimatedSwitcher to fade between buttons.
+                            text: 'Done',
+                            onTapped: carousel.onComplete,
+                          )
+                        : StyledButton.low(
+                            key: ValueKey('next'),
+                            text: 'Next',
+                            onTapped: () {
+                              pageController.animateToPage(
+                                page.value + 1,
+                                duration: Duration(milliseconds: 400),
+                                curve: Curves.easeInOutCubic,
+                              );
+                            },
+                          ),
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
