@@ -9,7 +9,7 @@ class StyledTextSpan extends StyledWidget {
   final List<StyledText> children;
   final TextAlign? textAlign;
 
-  const StyledTextSpan({Key? key, required this.children, required this.textAlign}) : super(key: key);
+  const StyledTextSpan({Key? key, required this.children, this.textAlign}) : super(key: key);
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
