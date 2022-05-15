@@ -256,6 +256,7 @@ class TestOnboardingPage extends HookWidget {
                     StyledTextField(
                       labelText: 'Name',
                       initialText: 'John Doe',
+                      enabled: false,
                     ),
                   ],
                 ),

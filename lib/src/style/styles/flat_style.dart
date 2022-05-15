@@ -673,7 +673,7 @@ class FlatStyle extends Style {
               decoration: InputDecoration(
                 prefixIcon: textField.leading,
                 suffixIcon: textField.trailing,
-                fillColor: isFocused.value ? styleContext.backgroundColor : styleContext.backgroundColorSoft,
+                fillColor: !textField.enabled || isFocused.value ? styleContext.backgroundColor : styleContext.backgroundColorSoft,
                 focusColor: styleContext.foregroundColor,
                 filled: true,
                 errorText: textField.errorText,
