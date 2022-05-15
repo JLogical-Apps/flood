@@ -1,8 +1,6 @@
 import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/port/model/port_value_component.dart';
 import 'package:jlogical_utils/src/port/model/validation/is_confirm_password_validator.dart';
-import 'package:jlogical_utils/src/utils/export_core.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'port.dart';
 import 'validation/port_field_validation_context.dart';
@@ -18,9 +16,6 @@ abstract class PortField<V> extends PortValueComponent<V>
 
   final V initialValue;
 
-  late ValueStream<V> valueX;
-  late ValueStream<Object?> exceptionX;
-
   V get value => port[name];
 
   Object? get exception => port.getExceptionByName(name);
@@ -33,12 +28,6 @@ abstract class PortField<V> extends PortValueComponent<V>
     required this.name,
     required this.initialValue,
   });
-
-  @override
-  void onInitialize() {
-    valueX = port.valueByNameX.mapWithValue((valueByName) => valueByName[name]);
-    exceptionX = port.exceptionByNameX.mapWithValue((exceptionByName) => exceptionByName[name]);
-  }
 
   PortField<V> withValidator(PortFieldValidator<V> validator) {
     validators.add(validator);

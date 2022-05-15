@@ -481,7 +481,7 @@ packages:
       name: flutter_mobx
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5+1"
+    version: "2.0.6+1"
   flutter_picker:
     dependency: "direct main"
     description:
@@ -708,7 +708,7 @@ packages:
       name: mobx
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.7+2"
   nested:
     dependency: transitive
     description:

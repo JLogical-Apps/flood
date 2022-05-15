@@ -344,7 +344,7 @@ void main() {
     final formModel = _getSignupForm();
 
     final completer = Completer();
-    formModel.getFieldByName('name').valueX.listen((value) {
+    formModel.getFieldValueXByName('name').listen((value) {
       if (!completer.isCompleted && value == name) {
         completer.complete(value);
       }
@@ -474,7 +474,7 @@ void main() {
     final formModel = _getSignupForm();
 
     final completer = Completer();
-    formModel.getFieldByName('name').exceptionX.listen((exception) {
+    formModel.getExceptionXByName('name').listen((exception) {
       if (!completer.isCompleted && exception != null) {
         completer.complete(exception);
       }
