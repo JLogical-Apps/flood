@@ -94,7 +94,7 @@ class Port implements Validator<void> {
   }
 
   ValueStream<V> getFieldValueXByName<V>(String fieldName) {
-    return getFieldByName(fieldName).valueX as ValueStream<V>;
+    return valueByNameX.mapWithValue((valueByName) => valueByName[fieldName]);
   }
 
   Object? getExceptionByName(String fieldName) {
@@ -107,7 +107,7 @@ class Port implements Validator<void> {
   }
 
   ValueStream<Object?> getExceptionXByName(String fieldName) {
-    return getFieldByName(fieldName).exceptionX;
+    return exceptionByNameX.mapWithValue((exceptionByName) => exceptionByName[fieldName]);
   }
 
   Future<PortResult> submit() async {

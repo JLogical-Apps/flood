@@ -11,46 +11,52 @@ import 'styled_text_overrides.dart';
 class StyledMarkdownText extends StyledWidget {
   final String markdown;
 
+  final WrapAlignment? textAlign;
+
   final void Function(String href)? onLinkTapped;
 
-  const StyledMarkdownText({Key? key, required this.markdown, this.onLinkTapped}) : super(key: key);
+  const StyledMarkdownText({Key? key, required this.markdown, this.textAlign, this.onLinkTapped}) : super(key: key);
 
   @override
   Widget buildStyled(BuildContext context, Style style, StyleContext styleContext) {
-    return MarkdownBody(
-      data: markdown,
-      styleSheet: MarkdownStyleSheet(
-        p: style.toTextStyle(styledTextStyle: style.bodyTextStyle(styleContext)),
-        h1: style.toTextStyle(styledTextStyle: style.titleTextStyle(styleContext)),
-        h2: style.toTextStyle(styledTextStyle: style.subtitleTextStyle(styleContext)),
-        h3: style.toTextStyle(styledTextStyle: style.contentHeaderTextStyle(styleContext)),
-        h4: style.toTextStyle(styledTextStyle: style.contentSubtitleTextStyle(styleContext)),
-        code: style
-            .toTextStyle(
-              styledTextStyle: style.bodyTextStyle(styleContext),
-              overrides: StyledTextOverrides(
-                fontColor: styleContext.emphasisColor,
-                fontWeight: FontWeight.bold,
-              ),
-            )
-            .copyWith(backgroundColor: Colors.transparent),
-        // MarkdownBody defaults to a white background for some reason.
-        a: style.toTextStyle(
-          styledTextStyle: style.bodyTextStyle(styleContext),
-          overrides: StyledTextOverrides(
-            fontColor: styleContext.emphasisColor,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.3,
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: MarkdownBody(
+        data: markdown,
+        styleSheet: MarkdownStyleSheet(
+          textAlign: textAlign ?? WrapAlignment.start,
+          p: style.toTextStyle(styledTextStyle: style.bodyTextStyle(styleContext)),
+          h1: style.toTextStyle(styledTextStyle: style.titleTextStyle(styleContext)),
+          h2: style.toTextStyle(styledTextStyle: style.subtitleTextStyle(styleContext)),
+          h3: style.toTextStyle(styledTextStyle: style.contentHeaderTextStyle(styleContext)),
+          h4: style.toTextStyle(styledTextStyle: style.contentSubtitleTextStyle(styleContext)),
+          code: style
+              .toTextStyle(
+                styledTextStyle: style.bodyTextStyle(styleContext),
+                overrides: StyledTextOverrides(
+                  fontColor: styleContext.emphasisColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+              .copyWith(backgroundColor: Colors.transparent),
+          // MarkdownBody defaults to a white background for some reason.
+          a: style.toTextStyle(
+            styledTextStyle: style.bodyTextStyle(styleContext),
+            overrides: StyledTextOverrides(
+              fontColor: styleContext.emphasisColor,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.3,
+            ),
           ),
         ),
+        softLineBreak: true,
+        onTapLink: (_, href, __) {
+          if (href == null) {
+            return;
+          }
+          onLinkTapped.mapIfNonNull((onLinkTapped) => onLinkTapped(href));
+        },
       ),
-      softLineBreak: true,
-      onTapLink: (_, href, __) {
-        if (href == null) {
-          return;
-        }
-        onLinkTapped.mapIfNonNull((onLinkTapped) => onLinkTapped(href));
-      },
     );
   }
 }
