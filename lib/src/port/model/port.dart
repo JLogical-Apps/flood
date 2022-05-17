@@ -13,7 +13,9 @@ import 'port_result.dart';
 import 'validation/port_field_validation_context.dart';
 import 'validation/port_submit_exception.dart';
 
-class Port implements Validator<void> {
+/// [T] is the value that is returned when submitted. By default, returns a Map<String, dynamic> but can be overridden
+/// by calling [withSubmitMapper].
+class Port<T> implements Validator<void> {
   static PortConfig config = PortConfig();
 
   final List<PortComponent> components = [];
@@ -36,11 +38,12 @@ class Port implements Validator<void> {
 
   /// Predicate for whether to validate this.
   /// By default, always validates.
-  bool Function(Port port) validationPredicate = _defaultValidationPredicate;
+  bool Function(Port port) _validationPredicate = _defaultValidationPredicate;
 
-  final List<Validator<Port>> additionalValidators = [];
+  final List<Validator<Port>> _additionalValidators = [];
 
-  dynamic Function(Map<String, dynamic> resultValueByName)? submitMapper;
+  /// Maps the result to another value.
+  T Function(Map<String, dynamic> resultValueByName)? _submitMapper;
 
   Port({List<PortComponent>? fields}) {
     fields?.forEach((field) => withComponent(field));
@@ -61,17 +64,17 @@ class Port implements Validator<void> {
   }
 
   Port validateIf(bool predicate(Port port)) {
-    validationPredicate = predicate;
+    _validationPredicate = predicate;
     return this;
   }
 
   Port withValidator(Validator<Port> validator) {
-    additionalValidators.add(validator);
+    _additionalValidators.add(validator);
     return this;
   }
 
-  Port withResultMapper(dynamic submitMapper(Map<String, dynamic> resultValueByName)) {
-    this.submitMapper = submitMapper;
+  Port withResultMapper(T submitMapper(Map<String, dynamic> resultValueByName)) {
+    this._submitMapper = submitMapper;
     return this;
   }
 
@@ -139,8 +142,8 @@ class Port implements Validator<void> {
     var submittedValueByName = Map.fromIterables(_valueByName.keys, submittedValues);
 
     dynamic result = submittedValueByName;
-    if (submitMapper != null) {
-      result = submitMapper!(result);
+    if (_submitMapper != null) {
+      result = _submitMapper!(result);
     }
 
     return PortResult(result: result);
@@ -148,7 +151,7 @@ class Port implements Validator<void> {
 
   @override
   Future onValidate(_) async {
-    final shouldValidate = validationPredicate(this);
+    final shouldValidate = _validationPredicate(this);
     if (!shouldValidate) {
       return;
     }
@@ -168,7 +171,7 @@ class Port implements Validator<void> {
       }
     }
 
-    for (final validator in additionalValidators) {
+    for (final validator in _additionalValidators) {
       final exception = await validator.getException(this);
       if (exception == null) {
         continue;
