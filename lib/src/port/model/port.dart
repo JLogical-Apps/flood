@@ -49,7 +49,7 @@ class Port<T> implements Validator<void> {
     fields?.forEach((field) => withComponent(field));
   }
 
-  Port withComponent(PortComponent component) {
+  Port<T> withComponent(PortComponent component) {
     components.add(component);
     if (component is PortValueComponent) {
       _valueByNameX.value = _valueByNameX.value.copy()..set(component.name, component.initialValue);
@@ -59,21 +59,21 @@ class Port<T> implements Validator<void> {
     return this;
   }
 
-  Port withField(PortField field) {
+  Port<T> withField(PortField field) {
     return withComponent(field);
   }
 
-  Port validateIf(bool predicate(Port port)) {
+  Port<T> validateIf(bool predicate(Port port)) {
     _validationPredicate = predicate;
     return this;
   }
 
-  Port withValidator(Validator<Port> validator) {
+  Port<T> withValidator(Validator<Port> validator) {
     _additionalValidators.add(validator);
     return this;
   }
 
-  Port withSubmitMapper(T submitMapper(Map<String, dynamic> resultValueByName)) {
+  Port<T> withSubmitMapper(T submitMapper(Map<String, dynamic> resultValueByName)) {
     this._submitMapper = submitMapper;
     return this;
   }
