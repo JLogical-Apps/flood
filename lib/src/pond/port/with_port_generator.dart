@@ -5,8 +5,9 @@ import '../property/with_properties_state.dart';
 mixin WithPortGenerator<V> implements WithPropertiesState {
   List<PortField> get portFields;
 
-  Port<V> toPort() {
-    return Port<V>(fields: portFields).withSubmitMapper((resultValueByName) {
+  Port<V> toPort({List<PortField>? fields}) {
+    fields ??= portFields;
+    return Port<V>(fields: fields).withSubmitMapper((resultValueByName) {
       var stateValues = state.values;
       resultValueByName.forEach((name, value) {
         stateValues[name] = value;
