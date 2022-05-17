@@ -27,6 +27,8 @@ export 'modules/debug/debuggable_module.dart';
 export 'modules/draft/draft.dart';
 export 'modules/draft/draft_entity.dart';
 export 'modules/environment/environment.dart';
+export 'port/port_field_generator_extension.dart';
+export 'port/with_port_generator.dart';
 export 'property/computed_property.dart';
 export 'property/field_property.dart';
 export 'property/list_computed_property.dart';

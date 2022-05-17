@@ -120,7 +120,7 @@ class Port<T> implements Validator<void> {
     return exceptionByNameX.mapWithValue((exceptionByName) => exceptionByName[fieldName]);
   }
 
-  Future<PortResult> submit() async {
+  Future<PortResult<T>> submit() async {
     final exception = await getException(null);
     if (exception != null) {
       if (exception is! PortSubmitException) {
