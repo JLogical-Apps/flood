@@ -40,6 +40,8 @@ class Port implements Validator<void> {
 
   final List<Validator<Port>> additionalValidators = [];
 
+  dynamic Function(Map<String, dynamic> resultValueByName)? submitMapper;
+
   Port({List<PortComponent>? fields}) {
     fields?.forEach((field) => withComponent(field));
   }
@@ -65,6 +67,11 @@ class Port implements Validator<void> {
 
   Port withValidator(Validator<Port> validator) {
     additionalValidators.add(validator);
+    return this;
+  }
+
+  Port withResultMapper(dynamic submitMapper(Map<String, dynamic> resultValueByName)) {
+    this.submitMapper = submitMapper;
     return this;
   }
 
@@ -131,7 +138,12 @@ class Port implements Validator<void> {
         _valueByName.mapToIterable((name, value) async => await getValueComponentByName(name).submitMapper(value)));
     var submittedValueByName = Map.fromIterables(_valueByName.keys, submittedValues);
 
-    return PortResult(valueByName: submittedValueByName);
+    dynamic result = submittedValueByName;
+    if (submitMapper != null) {
+      result = submitMapper!(result);
+    }
+
+    return PortResult(result: result);
   }
 
   @override

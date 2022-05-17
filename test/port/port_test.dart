@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -488,6 +489,27 @@ void main() {
 
     expect(exception, isA<RequiredValidationException>());
   });
+
+  test('result mapper', () async {
+    const name = 'John Doe';
+    const email = 'a@b.com';
+    const password = 'password';
+    const confirmPassword = 'password';
+
+    final signupPort = _getSignupForm().withResultMapper((result) {
+      final user = User(name: result['name'], email: result['email']);
+      return user;
+    });
+
+    signupPort['name'] = name;
+    signupPort['email'] = email;
+    signupPort['password'] = password;
+    signupPort['confirmPassword'] = confirmPassword;
+
+    final result = await signupPort.submit();
+
+    expect(result.result, User(name: name, email: email));
+  });
 }
 
 Port _getLoginForm(List<String> registeredEmails) {
@@ -510,6 +532,16 @@ Port _getSignupForm() {
       StringPortField(name: 'confirmPassword').required().isConfirmPassword(),
     ],
   );
+}
+
+class User extends Equatable {
+  final String name;
+  final String email;
+
+  const User({required this.name, required this.email});
+
+  @override
+  List<Object> get props => [name, email];
 }
 
 class _UnregisteredEmailValidationException extends ValidationException<String> {

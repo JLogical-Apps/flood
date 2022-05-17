@@ -107,7 +107,7 @@ class StyledDialog<T> {
               onTapped: () async {
                 final result = await port.submit();
                 if (result.isValid) {
-                  style.navigateBack(context: context, result: result.valueByName);
+                  style.navigateBack(context: context, result: result.result);
                 }
               },
             );

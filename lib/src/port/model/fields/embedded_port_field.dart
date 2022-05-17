@@ -12,6 +12,6 @@ class EmbeddedPortField extends PortField<Port> {
   @override
   FutureOr submitMapper(Port value) async {
     final result = await value.submit();
-    return result.valueByName;
+    return result.result;
   }
 }
