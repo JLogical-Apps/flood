@@ -122,7 +122,7 @@ class User extends ValueObject with WithPortGenerator<User> {
   @override
   List<PortField> get portFields => [
         nameProperty.toPortField().required(),
-        emailProperty.toPortField().required(),
+        emailProperty.toPortField().isEmail().required(),
         genderProperty.toOptionsPortField(['m', 'f']).required(),
         isArchivedProperty.toPortField(),
       ];

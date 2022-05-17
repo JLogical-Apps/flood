@@ -3,6 +3,7 @@ import 'package:jlogical_utils/src/port/export_core.dart';
 
 import '../../property/field_property.dart';
 
-abstract class AbstractFieldAdapter extends Wrapper<FieldProperty> {
-  PortField toPortField(FieldProperty property);
+abstract class AbstractFieldAdapter<P extends FieldProperty<V>, V> extends Wrapper<FieldProperty>
+    with WithSubtypeWrapper<P, FieldProperty> {
+  PortField<V?> toPortField(P property);
 }

@@ -3,14 +3,9 @@ import 'package:jlogical_utils/src/port/export_core.dart';
 
 import 'abstract_field_adapter.dart';
 
-class DoubleFieldAdapter extends AbstractFieldAdapter {
+class DoubleFieldAdapter extends AbstractFieldAdapter<FieldProperty<double>, double?> {
   @override
-  bool shouldWrap(FieldProperty value) {
-    return value is FieldProperty<double>;
-  }
-
-  @override
-  PortField toPortField(FieldProperty property) {
+  PortField<double?> toPortField(FieldProperty<double> property) {
     return DoublePortField(name: property.name, initialValue: property.getUnvalidated());
   }
 }

@@ -3,14 +3,9 @@ import 'package:jlogical_utils/src/port/export_core.dart';
 
 import 'abstract_field_adapter.dart';
 
-class BoolFieldAdapter extends AbstractFieldAdapter {
+class BoolFieldAdapter extends AbstractFieldAdapter<FieldProperty<bool>, bool> {
   @override
-  bool shouldWrap(FieldProperty value) {
-    return value is FieldProperty<bool>;
-  }
-
-  @override
-  PortField toPortField(FieldProperty property) {
+  PortField<bool> toPortField(FieldProperty<bool> property) {
     return BoolPortField(name: property.name, initialValue: property.getUnvalidated());
   }
 }
