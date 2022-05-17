@@ -73,7 +73,7 @@ class Port<T> implements Validator<void> {
     return this;
   }
 
-  Port withResultMapper(T submitMapper(Map<String, dynamic> resultValueByName)) {
+  Port withSubmitMapper(T submitMapper(Map<String, dynamic> resultValueByName)) {
     this._submitMapper = submitMapper;
     return this;
   }

@@ -496,7 +496,7 @@ void main() {
     const password = 'password';
     const confirmPassword = 'password';
 
-    final signupPort = _getSignupForm().withResultMapper((result) {
+    final signupPort = _getSignupForm().withSubmitMapper((result) {
       final user = User(name: result['name'], email: result['email']);
       return user;
     });
