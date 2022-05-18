@@ -90,11 +90,11 @@ class StyledDialog<T> {
   }
 
   /// Wraps a styled dialog around a smart port and returns the data from the smart port.
-  static StyledDialog<Map<String, dynamic>?> port({
+  static StyledDialog<T> port<T>({
     required BuildContext context,
     String? titleText,
     Widget? title,
-    required Port port,
+    required Port<T> port,
     required List<Widget> children,
     Widget Function(Port port)? confirmButtonBuilder,
   }) {
