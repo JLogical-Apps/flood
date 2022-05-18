@@ -30,6 +30,10 @@ mixin WithPropertiesState on Record {
     });
   }
 
+  void clearExtraValues() {
+    extraValues.clear();
+  }
+
   @override
   void validateRecord() {
     properties.forEach((element) => element.validateSync(null));
