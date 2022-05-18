@@ -5,7 +5,7 @@ class StyledReadonlyTextField extends StatelessWidget {
   final Widget? label;
   final String? labelText;
 
-  final String text;
+  final String? text;
 
   final int maxLines;
 
