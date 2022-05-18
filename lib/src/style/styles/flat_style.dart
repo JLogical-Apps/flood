@@ -597,7 +597,9 @@ class FlatStyle extends Style {
               decoration: InputDecoration(
                 prefixIcon: textField.leading,
                 suffixIcon: textField.trailing,
-                fillColor: !textField.enabled || isFocused.value ? styleContext.backgroundColor : styleContext.backgroundColorSoft,
+                fillColor: !textField.enabled || isFocused.value
+                    ? styleContext.backgroundColor
+                    : styleContext.backgroundColorSoft,
                 focusColor: styleContext.foregroundColor,
                 filled: true,
                 errorText: textField.errorText,
@@ -1184,8 +1186,16 @@ class FlatStyle extends Style {
 
   @override
   Widget divider(BuildContext context, StyleContext styleContext, StyledDivider divider) {
+    final color = divider.emphasis.map(
+      high: () => styleContext.emphasisColor.withOpacity(0.8),
+      medium: () => styleContext.foregroundColor.withOpacity(0.7),
+      low: () => styleContext.backgroundColorSoft.withOpacity(0.4),
+    );
     return Divider(
-      color: styleContext.backgroundColorSoft.withOpacity(0.4),
+      color: color,
+      thickness: divider.thickness,
+      indent: 4,
+      endIndent: 4,
     );
   }
 
