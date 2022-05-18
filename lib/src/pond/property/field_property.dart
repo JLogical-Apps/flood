@@ -50,6 +50,10 @@ class FieldProperty<T> extends Property<T?> with WithGlobalTypeSerializer {
       modifier.validator?.validateSync(null);
     });
     validators.forEach((validator) => validator.validateSync(null));
+
+    if (_value is SyncValidator) {
+      (_value as SyncValidator).validateSync(null);
+    }
   }
 
   FieldProperty<T> required() {

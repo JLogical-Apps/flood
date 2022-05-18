@@ -9,7 +9,7 @@ class FallbackReplacementPropertyModifier<T> extends PropertyModifier<T> {
         if (value == null) {
           value = fallbackGetter();
           if (value != null) {
-            property.value = value;
+            property.setUnvalidated(value);
           }
         }
         return value;

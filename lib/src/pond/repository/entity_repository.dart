@@ -1,6 +1,7 @@
 import 'package:jlogical_utils/src/patterns/command/command.dart';
 import 'package:jlogical_utils/src/patterns/command/parameter/command_parameter.dart';
 import 'package:jlogical_utils/src/patterns/command/simple_command.dart';
+import 'package:jlogical_utils/src/patterns/export_core.dart';
 import 'package:jlogical_utils/src/pond/context/module/app_module.dart';
 import 'package:jlogical_utils/src/pond/database/query/with_query_cache_manager.dart';
 import 'package:jlogical_utils/src/pond/modules/debug/debuggable_module.dart';
@@ -25,6 +26,7 @@ abstract class EntityRepository extends AppModule
 
   Future<void> save(Entity entity) async {
     await entity.beforeSave();
+    await entity.validate(null);
     await saveState(entity.state);
     await entity.afterSave();
   }

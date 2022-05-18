@@ -6,6 +6,8 @@ import 'package:rxdart/rxdart.dart';
 import 'entities/color.dart';
 import 'entities/envelope.dart';
 import 'entities/envelope_entity.dart';
+import 'entities/envelope_transaction.dart';
+import 'entities/envelope_transaction_entity.dart';
 import 'query_test.dart';
 
 void main() {
@@ -168,6 +170,15 @@ void main() {
 
     expect(envelopeModification.nameProperty.value, 'Giving');
     expect(envelopeModification.amountProperty.value, 12 * 100);
+  });
+
+  test('saving invalid ValueObject throws.', () {
+    AppContext.global = AppContext.createForTesting()..register(LocalBudgetTransactionRepository());
+
+    final transaction = EnvelopeTransaction()..nameProperty.setUnvalidated(null);
+    final entity = EnvelopeTransactionEntity()..value = transaction;
+
+    expect(() => entity.create(), throwsA(isA<ValidationException>()));
   });
 }
 

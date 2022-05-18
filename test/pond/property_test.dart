@@ -258,6 +258,13 @@ void main() {
     expect(money.dollarsProperty.value, dollars);
     expect(money.state.fullValues['dollars'], dollars);
   });
+
+  test('setting invalid ValueObject in FieldProperty throws.', () {
+    final userAvatar = UserAvatar();
+
+    expect(() => Color().validateSync(null), throwsA(isA<ValidationException>()));
+    expect(() => userAvatar.colorProperty.value = Color(), throwsA(isA<ValidationException>()));
+  });
 }
 
 class LocalUserRepository extends DefaultLocalRepository<UserEntity, User> {

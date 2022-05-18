@@ -22,7 +22,7 @@ abstract class Property<T> with EquatableMixin, SyncValidator<void> implements P
   }
 
   T get value {
-    validate(null);
+    validateSync(null);
     return getUnvalidated() as T;
   }
 
@@ -38,7 +38,7 @@ abstract class Property<T> with EquatableMixin, SyncValidator<void> implements P
 
     setUnvalidated(value);
 
-    validate(null);
+    validateSync(null);
   }
 
   PropertyContextProvider? _propertyContextProvider;
