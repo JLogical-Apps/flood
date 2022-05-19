@@ -30,6 +30,15 @@ class PondBudgetPage extends HookWidget {
           .paginate(limit: 2),
     );
 
+    final queriesController = useQueries<EnvelopeEntity, EnvelopeEntity?>(envelopesQueryController.model
+            .getOrNull()
+            ?.map((envelopeEntity) => Query.getById<EnvelopeEntity>(envelopeEntity.id!))
+            .toList() ??
+        []);
+
+    print('UPDATED ENVELOPES ' +
+        queriesController.map((controller) => controller.model.getOrNull()?.value.amountProperty.value).join(','));
+
     final budgetAmountX = useComputed(() => envelopesQueryController.model.valueX.mapWithValue(
         (maybeEnvelopeEntities) => maybeEnvelopeEntities.mapIfPresent<int>((envelopeEntities) =>
             envelopeEntities.sumBy((envelopeEntity) => envelopeEntity.value.amountProperty.value!).round())));

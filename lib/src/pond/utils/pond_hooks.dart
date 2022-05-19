@@ -34,6 +34,15 @@ QueryController<R, T> useQuery<R extends Record, T>(QueryRequest<R, T> queryRequ
   return useQueryOrNull(queryRequest)!;
 }
 
+List<QueryController<R, T>> useQueries<R extends Record, T>(List<QueryRequest<R, T>> queryRequests) {
+  final queryControllers = useMemoized(
+    () => queryRequests.map((queryRequest) => QueryController(queryRequest: queryRequest)).toList(),
+    queryRequests,
+  );
+  useModels(queryControllers.map((queryController) => queryController.model).toList());
+  return queryControllers;
+}
+
 QueryController<E, E?> useSingleton<E extends Entity<V>, V extends ValueObject>() {
   return useQuery(Query.from<E>().firstOrNull().map((value) => value ?? Singleton.createDefault<E, V>()));
 }

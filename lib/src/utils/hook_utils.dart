@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../model/export_core.dart';
@@ -14,6 +15,13 @@ T useValueStream<T>(ValueStream<T> stream) {
 T? useValueStreamOrNull<T>(ValueStream<T>? stream) {
   useStream(stream);
   return stream?.value;
+}
+
+/// Helper for using a variable number of value streams.
+List<T> useValueStreams<T>(List<ValueStream<T>> streams) {
+  final combinedStream = useMemoized(() => streams.combineLatestWithValue((s) => s), streams);
+  useStream(combinedStream);
+  return combinedStream.value.toList();
 }
 
 /// Performs an action only once in a HookWidget. Similar to [initState] of a StatefulWidget.
@@ -54,6 +62,12 @@ M? useModelOrNull<M extends AsyncLoadable<V>, V>(M? model) {
 
 M useModel<M extends AsyncLoadable<V>, V>(M model) {
   return useModelOrNull(model)!;
+}
+
+List<M> useModels<M extends AsyncLoadable<V>, V>(List<M> models) {
+  models.forEach((model) => model.ensureLoadingStarted());
+  useValueStreams(models.map((model) => model.valueX).toList());
+  return models;
 }
 
 /// Listens to a stream and disposes of the listener when the widget is disposed.
