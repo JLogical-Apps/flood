@@ -3,6 +3,7 @@ export 'file_extensions.dart';
 export 'format.dart';
 export 'image_utils.dart';
 export 'marker.dart';
+export 'num_extensions.dart';
 export 'pair.dart';
 export 'stream_extensions.dart';
 export 'stream_utils.dart';
