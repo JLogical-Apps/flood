@@ -6,7 +6,7 @@ import 'package:jlogical_utils/src/port/model/port_field.dart';
 
 class EmbeddedPortField extends PortField<Port> {
   EmbeddedPortField({required super.name, required Port port}) : super(initialValue: port) {
-    withSimpleValidator(Validator.of((_) => port.validate(null)));
+    withSimpleValidator(Validator.of((_) => port.submit()));
   }
 
   @override
