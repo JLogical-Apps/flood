@@ -42,6 +42,11 @@ class StyledCurrencyPortField extends PortFieldWidget<CurrencyPortField, int?> w
       initialText: value?.formatCentsAsCurrency(),
       hintText: suggestedValue?.formatCentsAsCurrency(),
       onChanged: (text) {
+        if (text.isBlank) {
+          setValue(context, null);
+          return;
+        }
+
         final parsedDouble = text.tryParseDoubleAfterClean(cleanCommas: true, cleanCurrency: true);
         if (parsedDouble == null) {
           return;

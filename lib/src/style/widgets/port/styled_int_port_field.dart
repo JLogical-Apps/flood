@@ -42,6 +42,11 @@ class StyledIntPortField extends PortFieldWidget<IntPortField, int?> with WithPo
       initialText: value?.formatIntOrDouble(),
       hintText: suggestedValue?.formatIntOrDouble(),
       onChanged: (text) {
+        if (text.isBlank) {
+          setValue(context, null);
+          return;
+        }
+
         final parsedInt = text.tryParseIntAfterClean(cleanCommas: true);
         if (parsedInt == null) {
           return;

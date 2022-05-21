@@ -42,6 +42,11 @@ class StyledDoublePortField extends PortFieldWidget<DoublePortField, double?> wi
       initialText: value?.formatIntOrDouble(),
       hintText: suggestedValue?.formatIntOrDouble(),
       onChanged: (text) {
+        if (text.isBlank) {
+          setValue(context, null);
+          return;
+        }
+
         final parsedDouble = text.tryParseDoubleAfterClean(cleanCommas: true);
         if (parsedDouble == null) {
           return;
