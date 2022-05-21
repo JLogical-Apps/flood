@@ -121,13 +121,15 @@ class Port<T> implements Validator<void> {
   }
 
   Future<PortResult<T>> submit() async {
+    _exceptionByName.clear();
+    _exceptionByNameX.value = _exceptionByName;
+
     final exception = await getException(null);
     if (exception != null) {
       if (exception is! PortSubmitException) {
         throw exception;
       }
 
-      _exceptionByName.clear();
       exception.fieldExceptionByName.forEach((name, exception) {
         _exceptionByName[name] = exception;
       });
