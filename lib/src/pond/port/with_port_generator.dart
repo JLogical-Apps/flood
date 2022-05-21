@@ -18,3 +18,20 @@ mixin WithPortGenerator<V> implements WithPropertiesState {
     });
   }
 }
+
+mixin WithAsyncPortGenerator<V> implements WithPropertiesState {
+  Future<List<PortField>> get portFields;
+
+  Future<Port<V>> toPortAsync({List<PortField>? fields}) async {
+    fields ??= await portFields;
+    return Port<V>(fields: fields).withSubmitMapper((resultValueByName) {
+      var stateValues = state.values;
+      resultValueByName.forEach((name, value) {
+        stateValues[name] = value;
+      });
+      state = state.copyWith(values: stateValues);
+
+      return this as V;
+    });
+  }
+}
