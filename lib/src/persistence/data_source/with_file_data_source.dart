@@ -7,6 +7,11 @@ mixin WithFileDataSource on DataSource<String> {
   /// The file this is pointing to.
   File get file;
 
+  @override
+  Future<bool> exists() {
+    return file.exists();
+  }
+
   Future<String?> getData() async {
     if (!await file.exists()) return null;
 

@@ -13,6 +13,11 @@ abstract class DataSource<T> {
 
   /// Deletes the data source.
   Future<void> delete();
+
+  /// Returns whether data already exists at this source.
+  Future<bool> exists() async {
+    return (await getData()) != null;
+  }
 }
 
 extension DataSourceExtensions<T> on DataSource<T> {
@@ -20,6 +25,12 @@ extension DataSourceExtensions<T> on DataSource<T> {
       DataSourceMapper(
         parent: this,
         onSave: onSave,
+        onLoad: onLoad,
+      );
+
+  DataSourceMapper<T, T2> mapLoad<T2>({required T2? Function(T? persisted) onLoad}) => DataSourceMapper(
+        parent: this,
+        onSave: (_) => throw UnimplementedError(),
         onLoad: onLoad,
       );
 }

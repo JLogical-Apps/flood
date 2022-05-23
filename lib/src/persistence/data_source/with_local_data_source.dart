@@ -8,6 +8,11 @@ mixin WithLocalDataSource<T> on DataSource<T> {
   late T? _data = initialData;
 
   @override
+  Future<bool> exists() async {
+    return _data != null;
+  }
+
+  @override
   Future<T?> getData() async {
     return _data;
   }
