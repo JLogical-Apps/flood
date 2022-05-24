@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/export.dart';
 import '../model/port.dart';
 
-class PortUpdateBuilder extends StatelessWidget {
+class PortUpdateBuilder extends HookWidget {
   final Widget Function(Port port) builder;
 
   PortUpdateBuilder({required this.builder});
@@ -13,7 +14,7 @@ class PortUpdateBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     final port = Provider.of<Port>(context, listen: false);
     final valueByNameX = port.valueByNameX;
-    final valueByName = useValueStream(valueByNameX);
+    useValueStream(valueByNameX);
 
     return builder(port);
   }
