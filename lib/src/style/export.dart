@@ -39,6 +39,7 @@ export 'widgets/port/styled_int_port_field.dart';
 export 'widgets/port/styled_options_port_field.dart';
 export 'widgets/port/styled_radio_option_port_field.dart';
 export 'widgets/port/styled_text_port_field.dart';
+export 'widgets/port/styled_upload_port_field.dart';
 export 'widgets/text/styled_body_text.dart';
 export 'widgets/text/styled_button_text.dart';
 export 'widgets/text/styled_content_header_text.dart';

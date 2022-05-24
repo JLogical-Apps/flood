@@ -65,6 +65,12 @@ class TestHomePage extends HookWidget {
                       StringPortField(
                         name: 'name',
                       ),
+                      RawPortField(
+                        name: 'image',
+                      ),
+                      BoolPortField(
+                        name: 'imageChanged',
+                      )
                     ]);
                     style.showDialog(
                       context: context,
@@ -78,6 +84,7 @@ class TestHomePage extends HookWidget {
                                 labelText: 'Name',
                                 maxLength: 25,
                               ),
+                              StyledUploadPortField(name: 'image'),
                               StyledButton.high(
                                 text: 'Save',
                                 onTapped: () async {
