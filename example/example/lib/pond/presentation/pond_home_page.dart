@@ -26,6 +26,13 @@ class PondHomePage extends HookWidget {
           .orderByDescending(ValueObject.timeCreatedField)
           .paginate(),
     );
+
+    userEntityController.value.getOrNull()?.value.profilePictureProperty.ensureLoadedAndGet();
+    final pictureData =
+        useValueStreamOrNull(userEntityController.value.getOrNull()?.value.profilePictureProperty.valueX);
+    print('asset is ${userEntityController.value.getOrNull()?.value.profilePictureProperty.asset}');
+    print('user is ${userEntityController.value.getOrNull()?.value}');
+
     return Banner(
       message: AppContext.global.environment.name.toUpperCase(),
       location: BannerLocation.topEnd,
@@ -42,6 +49,27 @@ class PondHomePage extends HookWidget {
                 onRefresh: () => Future.wait([userEntityController.reload(), userBudgetsController.reload()]),
                 titleText: 'Home: ${userEntity.value.nameProperty.value}',
                 actions: [
+                  ActionItem(
+                      name: 'Edit Profile',
+                      onPerform: () async {
+                        final port = userEntity.value.toPort();
+                        final result = await StyledDialog.port(
+                          context: context,
+                          port: port,
+                          children: [
+                            StyledTextPortField(name: 'name'),
+                            StyledTextPortField(name: 'email'),
+                            StyledUploadPortField(name: 'profilePicture'),
+                          ],
+                        ).show(context);
+
+                        if (result == null) {
+                          return;
+                        }
+
+                        userEntity.value = result;
+                        await userEntity.save();
+                      }),
                   ActionItem(
                       name: 'Share Logs',
                       onPerform: () async {
@@ -63,6 +91,12 @@ class PondHomePage extends HookWidget {
                       final results = useValueStream(budgetsController.resultsX);
                       return Column(
                         children: [
+                          if (pictureData != null)
+                            Image.memory(
+                              pictureData,
+                              width: 200,
+                              height: 200,
+                            ),
                           StyledCategory.medium(
                             headerText: 'Budgets',
                             actions: [
