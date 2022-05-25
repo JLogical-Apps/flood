@@ -91,7 +91,7 @@ class AnimatedFocusLightState extends State<AnimatedFocusLight> with TickerProvi
 
     _controllerPulse.addListener(_repositionListener);
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) => _runFocus());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _runFocus());
     super.initState();
   }
 

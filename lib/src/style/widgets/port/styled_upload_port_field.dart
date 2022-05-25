@@ -3,9 +3,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/port/model/fields/asset_port_field.dart';
-import 'package:jlogical_utils/src/style/export.dart';
 import 'package:jlogical_utils/src/utils/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -18,6 +18,7 @@ import '../misc/styled_icon.dart';
 import '../misc/styled_loading_indicator.dart';
 import '../text/styled_body_text.dart';
 import '../text/styled_error_text.dart';
+import '../text/styled_text_overrides.dart';
 
 class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> with WithPortExceptionTextGetter {
   static const double _imageWidth = 200;
@@ -79,8 +80,8 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
                   child: StyledLoadingIndicator(),
                 ),
               if (assetValue != null)
-                Image.memory(
-                  assetValue,
+                StyledLoadingImage(
+                  image: MemoryImage(assetValue),
                   width: _imageWidth,
                   height: _imageHeight,
                 ),

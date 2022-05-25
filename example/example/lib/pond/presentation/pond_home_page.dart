@@ -86,9 +86,9 @@ class PondHomePage extends HookWidget {
                       final pictureData = useAssetField(userEntity.value.profilePictureProperty);
                       return Column(
                         children: [
-                          if (pictureData != null)
-                            Image.memory(
-                              pictureData,
+                          if (userEntity.value.profilePictureProperty.value != null)
+                            StyledLoadingImage(
+                              image: pictureData.mapIfNonNull((data) => MemoryImage(data)),
                               width: 200,
                               height: 200,
                             ),

@@ -61,17 +61,17 @@ class TestHomePage extends HookWidget {
                   description: 'Create a new envelope.',
                   leading: StyledIcon(Icons.create),
                   onPerform: () {
-                    final port = Port(fields: [
-                      StringPortField(
-                        name: 'name',
-                      ),
-                      RawPortField(
-                        name: 'image',
-                      ),
-                      BoolPortField(
-                        name: 'imageChanged',
-                      )
-                    ]);
+                    final port = Port(
+                      fields: [
+                        StringPortField(
+                          name: 'name',
+                        ),
+                        AssetPortField(
+                          assetType: ImageAsset,
+                          name: 'image',
+                        ),
+                      ],
+                    );
                     style.showDialog(
                       context: context,
                       dialog: StyledDialog(
