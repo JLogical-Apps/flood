@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -76,4 +77,13 @@ void useListen<V>(Stream<V> stream, void onValueChanged(V value)) {
     var subscription = stream.listen(onValueChanged);
     return subscription.cancel;
   });
+}
+
+T? useAssetFieldOrNull<T>(AssetFieldProperty<Asset<T>, T>? assetFieldProperty) {
+  assetFieldProperty?.ensureLoadedAndGet();
+  return useValueStreamOrNull<T?>(assetFieldProperty?.valueX);
+}
+
+T? useAssetField<T>(AssetFieldProperty<Asset<T>, T> assetFieldProperty) {
+  return useAssetFieldOrNull(assetFieldProperty);
 }

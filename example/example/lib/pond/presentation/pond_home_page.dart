@@ -27,12 +27,6 @@ class PondHomePage extends HookWidget {
           .paginate(),
     );
 
-    userEntityController.value.getOrNull()?.value.profilePictureProperty.ensureLoadedAndGet();
-    final pictureData =
-        useValueStreamOrNull(userEntityController.value.getOrNull()?.value.profilePictureProperty.valueX);
-    print('asset is ${userEntityController.value.getOrNull()?.value.profilePictureProperty.asset}');
-    print('user is ${userEntityController.value.getOrNull()?.value}');
-
     return Banner(
       message: AppContext.global.environment.name.toUpperCase(),
       location: BannerLocation.topEnd,
@@ -89,6 +83,7 @@ class PondHomePage extends HookWidget {
                   builder: (QueryPaginationResultController<BudgetEntity> budgetsController) {
                     return HookBuilder(builder: (context) {
                       final results = useValueStream(budgetsController.resultsX);
+                      final pictureData = useAssetField(userEntity.value.profilePictureProperty);
                       return Column(
                         children: [
                           if (pictureData != null)
