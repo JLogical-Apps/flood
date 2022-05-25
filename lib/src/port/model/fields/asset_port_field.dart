@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:jlogical_utils/src/utils/export_core.dart';
-
 import '../../../pond/export.dart';
 import '../port_field.dart';
 
@@ -20,14 +18,15 @@ class AssetPortField extends PortField<String?> {
       return;
     }
 
-    final oldAsset =
-        initialValue.mapIfNonNull((value) => locate<AssetModule>().getAssetProviderRuntime(assetType).from(value));
-    await oldAsset?.deleteIfUploaded();
+    if (initialValue != null) {
+      await locate<AssetModule>().deleteAssetRuntime(assetType: assetType, id: initialValue!);
+    }
+
     value = null;
 
     if (preview != null) {
-      final asset = await locate<AssetModule>().getAssetProviderRuntime(assetType).create(preview);
-      value = asset.id;
+      final id = await locate<AssetModule>().uploadAssetRuntime(assetType: assetType, value: preview);
+      value = id;
     }
 
     return value;

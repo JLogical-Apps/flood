@@ -78,12 +78,3 @@ void useListen<V>(Stream<V> stream, void onValueChanged(V value)) {
     return subscription.cancel;
   });
 }
-
-T? useAssetFieldOrNull<T>(AssetFieldProperty<Asset<T>, T>? assetFieldProperty) {
-  assetFieldProperty?.ensureLoadedAndGet();
-  return useValueStreamOrNull<T?>(assetFieldProperty?.valueX);
-}
-
-T? useAssetField<T>(AssetFieldProperty<Asset<T>, T> assetFieldProperty) {
-  return useAssetFieldOrNull(assetFieldProperty);
-}

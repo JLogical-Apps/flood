@@ -5,6 +5,7 @@ export 'modules/analytics/default_analytics_module.dart';
 export 'modules/app_version/app_version_module.dart';
 export 'modules/asset/asset.dart';
 export 'modules/asset/asset_field_property.dart';
+export 'modules/asset/asset_hooks.dart';
 export 'modules/asset/asset_module.dart';
 export 'modules/asset/asset_provider.dart';
 export 'modules/asset/image/file_image_asset_provider.dart';

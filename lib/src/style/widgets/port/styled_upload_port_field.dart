@@ -1,11 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
-import 'package:jlogical_utils/src/port/model/fields/asset_port_field.dart';
 import 'package:jlogical_utils/src/utils/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,6 +12,7 @@ import '../../../port/export_core.dart';
 import '../content/styled_content.dart';
 import '../input/styled_button.dart';
 import '../misc/styled_icon.dart';
+import '../misc/styled_loading_image.dart';
 import '../misc/styled_loading_indicator.dart';
 import '../text/styled_body_text.dart';
 import '../text/styled_error_text.dart';
@@ -53,17 +51,10 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
       field.isChanged = value;
     });
 
-    final loadedInitialValue = useState<Uint8List?>(null);
-    useOneTimeEffect(() {
-      () async {
-        final asset =
-            value.mapIfNonNull((value) => locate<AssetModule>().getAssetProviderRuntime(field.assetType).from(value));
-        final data = await asset?.model.ensureLoadedAndGet();
-        loadedInitialValue.value = data as Uint8List?;
-      }();
-    });
+    final initialValueModel = useModelOrNull(value
+        .mapIfNonNull((value) => locate<AssetModule>().getAssetModelRuntime(assetType: field.assetType, id: value)));
 
-    final assetValue = preview ?? loadedInitialValue.value;
+    final assetValue = preview ?? initialValueModel?.getOrNull();
 
     return StyledContent(
       headerText: labelText ?? 'Upload',
