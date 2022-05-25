@@ -424,6 +424,11 @@ class TestOnboardingPage extends HookWidget {
                         .toList(),
                   ),
                 ),
+                StyledLoadingImage(
+                  image: null,
+                  width: 200,
+                  height: 200,
+                ),
               ],
             ),
           ),
