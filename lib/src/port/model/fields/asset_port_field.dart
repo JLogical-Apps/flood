@@ -15,7 +15,7 @@ class AssetPortField extends PortField<String?> {
   @override
   Future submitMapper(String? value) async {
     if (!isChanged) {
-      return;
+      return value;
     }
 
     if (initialValue != null) {

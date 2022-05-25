@@ -16,7 +16,7 @@ mixin WithRawFileDataSource on DataSource<Uint8List> {
   Future<Uint8List?> getData() async {
     if (!await file.exists()) return null;
 
-    return await file.readAsBytes();
+    return await guardAsync(() => file.readAsBytes());
   }
 
   Future<void> saveData(Uint8List data) async {

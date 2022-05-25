@@ -37,7 +37,6 @@ class StyledLoadingImage extends StatelessWidget {
         width: width,
         height: height,
         curve: Curves.easeInOutCubic,
-        syncDuration: Duration.zero,
       ),
     );
   }
