@@ -141,7 +141,6 @@ class FlatStyle extends Style {
           Builder(builder: (context) {
             return actionButton(
               context,
-              styleContext: styleContext,
               actions: actions,
               color: styleContext.emphasisColor,
             );
@@ -538,7 +537,6 @@ class FlatStyle extends Style {
   Widget menuButton(BuildContext context, StyleContext styleContext, StyledMenuButton menuButton) {
     return actionButton(
       context,
-      styleContext: styleContext,
       actions: menuButton.actions,
       color: menuButton.emphasis.map(
         high: () => styleContext.emphasisColor,
@@ -925,7 +923,6 @@ class FlatStyle extends Style {
           ? null
           : () => _showActionsDialog(
                 context,
-                styleContext: newStyleContext,
                 actions: secondaryActions,
               ),
       child: StyleContextProvider(
@@ -953,7 +950,6 @@ class FlatStyle extends Style {
                             if (primaryActions.isNotEmpty)
                               actionButton(
                                 context,
-                                styleContext: styleContext,
                                 actions: primaryActions,
                               ),
                           ],
@@ -1011,7 +1007,6 @@ class FlatStyle extends Style {
                                 if (category.actions.isNotEmpty)
                                   actionButton(
                                     context,
-                                    styleContext: styleContext,
                                     actions: category.actions,
                                   ),
                               ],
@@ -1053,7 +1048,6 @@ class FlatStyle extends Style {
                                   if (category.actions.isNotEmpty)
                                     actionButton(
                                       context,
-                                      styleContext: styleContext,
                                       actions: category.actions,
                                     ),
                                 ],
@@ -1088,7 +1082,6 @@ class FlatStyle extends Style {
                               if (category.actions.isNotEmpty)
                                 actionButton(
                                   context,
-                                  styleContext: styleContext,
                                   actions: category.actions,
                                 ),
                             ],
@@ -1408,36 +1401,38 @@ class FlatStyle extends Style {
   Future<void> _showActionsDialog(
     BuildContext context, {
     required List<ActionItem> actions,
-    required StyleContext styleContext,
   }) {
     return showDialog(
       context: context,
       dialog: StyledDialog(
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: actions
-                  .map<Widget>((action) => Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          splashColor: styleContext.backgroundColorSoft,
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            action.perform(context);
-                          },
-                          child: ListTile(
-                            title: StyledContentSubtitleText(
-                              action.name,
-                              textOverrides: StyledTextOverrides(fontColor: action.color),
+        body: StyleContextProvider(
+          styleContext: initialStyleContext,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: actions
+                    .map<Widget>((action) => Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            splashColor: initialStyleContext.backgroundColorSoft,
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              action.perform(context);
+                            },
+                            child: ListTile(
+                              title: StyledContentSubtitleText(
+                                action.name,
+                                textOverrides: StyledTextOverrides(fontColor: action.color),
+                              ),
+                              subtitle: action.description != null ? StyledBodyText(action.description!) : null,
+                              leading: action.icon != null
+                                  ? StyledIcon(action.icon!, colorOverride: action.color)
+                                  : action.leading,
                             ),
-                            subtitle: action.description != null ? StyledBodyText(action.description!) : null,
-                            leading: action.icon != null
-                                ? StyledIcon(action.icon!, colorOverride: action.color)
-                                : action.leading,
                           ),
-                        ),
-                      ))
-                  .toList() +
-              [SafeArea(child: Container())],
+                        ))
+                    .toList() +
+                [SafeArea(child: Container())],
+          ),
         ),
       ),
     );
@@ -1445,7 +1440,6 @@ class FlatStyle extends Style {
 
   Widget actionButton(
     BuildContext context, {
-    required StyleContext styleContext,
     required List<ActionItem> actions,
     Color? color,
   }) {
@@ -1459,7 +1453,6 @@ class FlatStyle extends Style {
         _showActionsDialog(
           context,
           actions: actions,
-          styleContext: styleContext,
         );
       },
     );
