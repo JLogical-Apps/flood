@@ -1,4 +1,3 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 

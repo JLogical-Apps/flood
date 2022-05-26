@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import '../../../pond/export.dart';
+import '../../../pond/context/app_context.dart';
+import '../../../pond/modules/asset/asset_module.dart';
 import '../port_field.dart';
 
 class AssetPortField extends PortField<String?> {
