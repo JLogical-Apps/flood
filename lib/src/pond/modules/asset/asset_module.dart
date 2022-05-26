@@ -26,6 +26,12 @@ class AssetModule extends AppModule {
   Future<String> uploadAsset(Asset asset) async {
     final id = await assetProvider.upload(asset);
 
+    asset = Asset(
+      id: id,
+      name: asset.name,
+      value: asset.value,
+    );
+
     final loadedModel = assetProvider.getModelById(id)
       ..hasStartedLoading = true
       ..setLoaded(asset);
