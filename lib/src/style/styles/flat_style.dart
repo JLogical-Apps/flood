@@ -1364,10 +1364,13 @@ class FlatStyle extends Style {
     final backgroundColor = message.backgroundColorOverride ?? initialStyleContext.emphasisColorSoft;
     await ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(
-          content: StyleContextProvider(
-            styleContext: styleContextFromBackground(backgroundColor),
-            child: StyledBodyText(
-              message.messageText,
+          content: StyleProvider(
+            style: this,
+            child: StyleContextProvider(
+              styleContext: styleContextFromBackground(backgroundColor),
+              child: StyledBodyText(
+                message.messageText,
+              ),
             ),
           ),
           backgroundColor: backgroundColor,
