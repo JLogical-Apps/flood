@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:example/pond/domain/user/user_entity.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -12,7 +10,7 @@ class Budget extends ValueObject {
   static const String ownerField = 'owner';
   late final ownerProperty = ReferenceFieldProperty<UserEntity>(name: ownerField);
 
-  late final imagesProperty = ListAssetFieldProperty<ImageAsset, Uint8List>(name: 'images');
+  late final imagesProperty = ListAssetFieldProperty(name: 'images');
 
   @override
   List<Property> get properties =>

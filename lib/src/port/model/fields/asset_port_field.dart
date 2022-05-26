@@ -1,18 +1,15 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import '../../../pond/context/app_context.dart';
+import '../../../pond/modules/asset/asset.dart';
 import '../../../pond/modules/asset/asset_module.dart';
 import '../port_field.dart';
 
 class AssetPortField extends PortField<String?> {
-  final Type assetType;
-
   bool isChanged = false;
-  Uint8List? preview;
-  String? filename;
+  Asset? newAsset;
 
-  AssetPortField({required super.name, super.initialValue, required this.assetType});
+  AssetPortField({required super.name, super.initialValue});
 
   @override
   Future submitMapper(String? value) async {
@@ -21,17 +18,13 @@ class AssetPortField extends PortField<String?> {
     }
 
     if (initialValue != null) {
-      await locate<AssetModule>().deleteAssetRuntime(assetType: assetType, id: initialValue!);
+      await locate<AssetModule>().deleteAsset(initialValue!);
     }
 
     value = null;
 
-    if (preview != null) {
-      final id = await locate<AssetModule>().uploadAssetRuntime(
-        assetType: assetType,
-        value: preview,
-        suffix: filename,
-      );
+    if (newAsset != null) {
+      final id = await locate<AssetModule>().uploadAsset(newAsset!);
       value = id;
     }
 

@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:example/pond/domain/budget/budget_entity.dart';
 import 'package:example/pond/domain/budget_transaction/budget_transaction.dart';
 import 'package:example/pond/domain/budget_transaction/budget_transaction_entity.dart';
@@ -11,7 +9,6 @@ import 'package:example/pond/presentation/pond_login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
-import 'package:collection/collection.dart';
 
 import '../domain/budget/budget.dart';
 import 'pond_envelope_page.dart';
@@ -39,8 +36,7 @@ class PondBudgetPage extends HookWidget {
             envelopeEntities.sumBy((envelopeEntity) => envelopeEntity.value.amountProperty.value!).round())));
     final maybeBudgetAmount = useValueStream(budgetAmountX);
 
-    final imageAssets =
-        useAssets<ImageAsset, Uint8List>(budgetEntityController.model.getOrNull()?.value.imagesProperty.value ?? []);
+    final imageAssets = useAssets(budgetEntityController.model.getOrNull()?.value.imagesProperty.value ?? []);
 
     return StyleProvider(
       style: PondLoginPage.style,
@@ -55,13 +51,13 @@ class PondBudgetPage extends HookWidget {
                   ActionItem(
                       name: 'Upload Image',
                       onPerform: () async {
-                        final asset = await locate<AssetModule>().pickAsset<ImageAsset, Uint8List>();
+                        final asset = await ImageAssetPicker.pickImageFromGallery();
                         if (asset == null) {
                           return;
                         }
 
                         final newBudget = Budget()..copyFrom(budget);
-                        await newBudget.imagesProperty.uploadNewAsset(asset.value, suffix: asset.id);
+                        await newBudget.imagesProperty.uploadNewAsset(asset);
 
                         budgetEntity.value = newBudget;
                         await budgetEntity.save();
@@ -76,29 +72,32 @@ class PondBudgetPage extends HookWidget {
                     'Budget: ${budget.nameProperty.value}\n${maybeBudgetAmount.mapIfPresent((amount) => amount.formatCentsAsCurrency()).get(orElse: () => 'N/A')}',
                 body: ScrollColumn.withScrollbar(
                   children: [
-                    ...imageAssets.mapIndexed((i, imageBytes) => GestureDetector(
-                          onTap: () async {
-                            final delete = await StyledDialog.yesNo(
-                              context: context,
-                              titleText: 'Confirm Delete',
-                              children: [StyledBodyText('Are you sure you want to delete this?')],
-                            ).show(context);
-                            if (delete != true) {
-                              return;
-                            }
+                    for (final imageAsset in imageAssets)
+                      GestureDetector(
+                        onTap: imageAsset == null
+                            ? null
+                            : () async {
+                                final delete = await StyledDialog.yesNo(
+                                  context: context,
+                                  titleText: 'Confirm Delete',
+                                  children: [StyledBodyText('Are you sure you want to delete this?')],
+                                ).show(context);
+                                if (delete != true) {
+                                  return;
+                                }
 
-                            final newBudget = Budget()..copyFrom(budget);
-                            await newBudget.imagesProperty.deleteAsset(budget.imagesProperty.value![i]);
+                                final newBudget = Budget()..copyFrom(budget);
+                                await newBudget.imagesProperty.deleteAsset(imageAsset.id!);
 
-                            budgetEntity.value = newBudget;
-                            await budgetEntity.save();
-                          },
-                          child: StyledLoadingImage(
-                            image: imageBytes.mapIfNonNull((imageBytes) => MemoryImage(imageBytes)),
-                            width: 200,
-                            height: 200,
-                          ),
-                        )),
+                                budgetEntity.value = newBudget;
+                                await budgetEntity.save();
+                              },
+                        child: StyledLoadingImage(
+                          image: imageAsset.mapIfNonNull((asset) => MemoryImage(asset.value)),
+                          width: 200,
+                          height: 200,
+                        ),
+                      ),
                     ModelBuilder.styled(
                       model: envelopesQueryController.model,
                       builder: (List<EnvelopeEntity> envelopeEntities) {

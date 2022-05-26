@@ -1,6 +1,9 @@
-abstract class Asset<T> {
-  final String id;
-  final T value;
+import 'dart:typed_data';
 
-  const Asset({required this.id, required this.value});
+class Asset {
+  final String? id;
+  final String name;
+  final Uint8List value;
+
+  const Asset({this.id, required this.name, required this.value});
 }

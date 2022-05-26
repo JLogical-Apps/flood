@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -7,11 +9,11 @@ import '../../property/list_field_property.dart';
 import 'asset.dart';
 import 'asset_module.dart';
 
-class ListAssetFieldProperty<A extends Asset<T>, T> extends ListFieldProperty<String> {
-  late BehaviorSubject<List<Model<T?>>> _modelsX;
+class ListAssetFieldProperty extends ListFieldProperty<String> {
+  late BehaviorSubject<List<Model<Asset?>>> _modelsX;
 
-  late ValueStream<List<T?>> valuesX =
-      _modelsX.mapWithValue((models) => models.map((model) => model.value.getOrNull()).toList());
+  late ValueStream<List<Uint8List?>> valuesX =
+      _modelsX.mapWithValue((models) => models.map((model) => model.value.getOrNull()?.value).toList());
 
   ListAssetFieldProperty({required super.name}) {
     _modelsX = BehaviorSubject.seeded(_getAssetModels());
@@ -20,10 +22,8 @@ class ListAssetFieldProperty<A extends Asset<T>, T> extends ListFieldProperty<St
     });
   }
 
-  Type get assetType => A;
-
-  Future<void> uploadNewAsset(T assetValue, {String? suffix}) async {
-    final id = await locate<AssetModule>().uploadAsset<A, T>(assetValue, suffix: suffix);
+  Future<void> uploadNewAsset(Asset asset) async {
+    final id = await locate<AssetModule>().uploadAsset(asset);
     value = [...?value, id];
   }
 
@@ -32,11 +32,11 @@ class ListAssetFieldProperty<A extends Asset<T>, T> extends ListFieldProperty<St
       throw Exception('Cannot find asset with id [$assetId] in this property: [$this]');
     }
 
-    await locate<AssetModule>().deleteAsset<A>(assetId);
+    await locate<AssetModule>().deleteAsset(assetId);
     value = [...?value]..remove(assetId);
   }
 
-  List<Model<T?>> _getAssetModels() {
-    return value?.map((assetId) => locate<AssetModule>().getAssetModel<A, T>(assetId)).toList() ?? [];
+  List<Model<Asset?>> _getAssetModels() {
+    return value?.map((assetId) => locate<AssetModule>().getAssetModel(assetId)).toList() ?? [];
   }
 }

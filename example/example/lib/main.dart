@@ -130,7 +130,7 @@ class HomePage extends StatelessWidget {
     appContext
       ..register(await FirebaseModule.create(app: DefaultFirebaseOptions.currentPlatform))
       ..register(DebugModule())
-      ..register(AssetModule().withAssetProvider(DefaultImageAssetProvider()).withAssetPicker(GalleryImagePicker()))
+      ..register(AssetModule(assetProvider: DefaultAssetProvider()))
       ..register(DefaultAnalyticsModule())
       ..register(BudgetRepository())
       ..register(BudgetDraftRepository())

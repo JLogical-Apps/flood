@@ -67,7 +67,6 @@ class TestHomePage extends HookWidget {
                           name: 'name',
                         ),
                         AssetPortField(
-                          assetType: ImageAsset,
                           name: 'image',
                         ),
                       ],

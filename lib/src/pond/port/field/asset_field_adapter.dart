@@ -7,6 +7,6 @@ import 'abstract_field_adapter.dart';
 class AssetFieldAdapter extends AbstractFieldAdapter<AssetFieldProperty, String?> {
   @override
   PortField<String?> toPortField(AssetFieldProperty property) {
-    return AssetPortField(name: property.name, initialValue: property.getUnvalidated(), assetType: property.assetType);
+    return AssetPortField(name: property.name, initialValue: property.getUnvalidated());
   }
 }

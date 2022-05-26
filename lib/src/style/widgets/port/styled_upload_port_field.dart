@@ -1,11 +1,7 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/utils/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
-import 'package:path/path.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../port/export.dart';
@@ -40,15 +36,10 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
 
   @override
   Widget buildField(BuildContext context, AssetPortField field, String? value, Object? exception) {
-    final previewX = useObservable<Uint8List?>(() => null);
-    final preview = previewX.value;
-    useListen(previewX, (Uint8List? value) {
-      field.preview = value;
-    });
-
-    final filenameX = useObservable<String?>(() => null);
-    useListen(filenameX, (String? value) {
-      field.filename = value;
+    final newAssetX = useObservable<Asset?>(() => null);
+    final preview = newAssetX.value;
+    useListen(newAssetX, (Asset? value) {
+      field.newAsset = value;
     });
 
     final isChangedX = useObservable<bool>(() => false);
@@ -57,8 +48,7 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
       field.isChanged = value;
     });
 
-    final initialValueModel = useModelOrNull(value
-        .mapIfNonNull((value) => locate<AssetModule>().getAssetModelRuntime(assetType: field.assetType, id: value)));
+    final initialValueModel = useModelOrNull(value.mapIfNonNull((value) => locate<AssetModule>().getAssetModel(value)));
 
     final assetValue = preview ?? initialValueModel?.getOrNull();
 
@@ -78,7 +68,7 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
                 ),
               if (assetValue != null)
                 StyledLoadingImage(
-                  image: MemoryImage(assetValue),
+                  image: MemoryImage(assetValue.value),
                   width: _imageWidth,
                   height: _imageHeight,
                 ),
@@ -90,15 +80,14 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
                     onPressed: () async {
                       final isChanged = field.initialValue != null;
 
-                      previewX.value = null;
-                      filenameX.value = null;
+                      newAssetX.value = null;
                       isChangedX.value = isChanged;
                     },
                   ),
                   IconButton(
                     icon: StyledIcon(Icons.swap_horiz),
                     onPressed: () async {
-                      await upload(previewX: previewX, isChangedX: isChangedX, filenameX: filenameX);
+                      await upload(newAssetX: newAssetX, isChangedX: isChangedX);
                     },
                   ),
                 ],
@@ -110,7 +99,7 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
             icon: Icons.upload,
             text: 'Upload',
             onTapped: () async {
-              await upload(previewX: previewX, isChangedX: isChangedX, filenameX: filenameX);
+              await upload(newAssetX: newAssetX, isChangedX: isChangedX);
             },
           ),
         if (preview == null && value != null && isChanged) ...[
@@ -124,14 +113,13 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
                     IconButton(
                       icon: StyledIcon(Icons.add_photo_alternate),
                       onPressed: () async {
-                        await upload(previewX: previewX, isChangedX: isChangedX, filenameX: filenameX);
+                        await upload(newAssetX: newAssetX, isChangedX: isChangedX);
                       },
                     ),
                     IconButton(
                       icon: StyledIcon(Icons.unarchive),
                       onPressed: () async {
-                        previewX.value = null;
-                        filenameX.value = null;
+                        newAssetX.value = null;
                         isChangedX.value = false;
                       },
                     ),
@@ -146,19 +134,15 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
   }
 
   Future<void> upload({
-    required BehaviorSubject<Uint8List?> previewX,
-    required BehaviorSubject<String?> filenameX,
+    required BehaviorSubject<Asset?> newAssetX,
     required BehaviorSubject<bool> isChangedX,
   }) async {
-    final picker = ImagePicker();
-    final imageFile = await picker.pickImage(source: ImageSource.gallery);
-    if (imageFile == null) {
+    final asset = await ImageAssetPicker.pickImageFromGallery();
+    if (asset == null) {
       return;
     }
 
-    final imageBytes = await imageFile.readAsBytes();
-    previewX.value = imageBytes;
-    filenameX.value = basename(imageFile.path);
+    newAssetX.value = asset;
     isChangedX.value = true;
   }
 }

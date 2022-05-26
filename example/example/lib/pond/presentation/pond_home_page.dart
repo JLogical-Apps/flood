@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:example/pond/domain/budget/budget.dart';
 import 'package:example/pond/domain/budget/budget_draft_entity.dart';
 import 'package:example/pond/domain/budget/budget_entity.dart';
@@ -85,13 +83,12 @@ class PondHomePage extends HookWidget {
                   builder: (QueryPaginationResultController<BudgetEntity> budgetsController) {
                     return HookBuilder(builder: (context) {
                       final results = useValueStream(budgetsController.resultsX);
-                      final pictureData =
-                          useAssetOrNull<ImageAsset, Uint8List>(userEntity.value.profilePictureProperty.value);
+                      final pictureAsset = useAssetOrNull(userEntity.value.profilePictureProperty.value);
                       return Column(
                         children: [
                           if (userEntity.value.profilePictureProperty.value != null)
                             StyledLoadingImage(
-                              image: pictureData.mapIfNonNull((data) => MemoryImage(data)),
+                              image: pictureAsset.mapIfNonNull((asset) => MemoryImage(asset.value)),
                               width: 200,
                               height: 200,
                             ),
