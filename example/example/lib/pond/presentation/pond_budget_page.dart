@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:example/pond/domain/budget/budget_entity.dart';
 import 'package:example/pond/domain/budget_transaction/budget_transaction.dart';
 import 'package:example/pond/domain/budget_transaction/budget_transaction_entity.dart';
@@ -9,7 +11,9 @@ import 'package:example/pond/presentation/pond_login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:collection/collection.dart';
 
+import '../domain/budget/budget.dart';
 import 'pond_envelope_page.dart';
 import 'transaction_card.dart';
 
@@ -30,16 +34,13 @@ class PondBudgetPage extends HookWidget {
           .paginate(limit: 2),
     );
 
-    final queriesController = useQueries<EnvelopeEntity, EnvelopeEntity?>(envelopesQueryController.model
-            .getOrNull()
-            ?.map((envelopeEntity) => Query.getById<EnvelopeEntity>(envelopeEntity.id!))
-            .toList() ??
-        []);
-
     final budgetAmountX = useComputed(() => envelopesQueryController.model.valueX.mapWithValue(
         (maybeEnvelopeEntities) => maybeEnvelopeEntities.mapIfPresent<int>((envelopeEntities) =>
             envelopeEntities.sumBy((envelopeEntity) => envelopeEntity.value.amountProperty.value!).round())));
     final maybeBudgetAmount = useValueStream(budgetAmountX);
+
+    final imageAssets =
+        useAssets<ImageAsset, Uint8List>(budgetEntityController.model.getOrNull()?.value.imagesProperty.value ?? []);
 
     return StyleProvider(
       style: PondLoginPage.style,
@@ -50,6 +51,22 @@ class PondBudgetPage extends HookWidget {
             builder: (BudgetEntity budgetEntity) {
               final budget = budgetEntity.value;
               return StyledPage(
+                actions: [
+                  ActionItem(
+                      name: 'Upload Image',
+                      onPerform: () async {
+                        final asset = await locate<AssetModule>().pickAsset<ImageAsset, Uint8List>();
+                        if (asset == null) {
+                          return;
+                        }
+
+                        final newBudget = Budget()..copyFrom(budget);
+                        await newBudget.imagesProperty.uploadNewAsset(asset.value, suffix: asset.id);
+
+                        budgetEntity.value = newBudget;
+                        await budgetEntity.save();
+                      }),
+                ],
                 onRefresh: () => Future.wait([
                   budgetEntityController.reload(),
                   envelopesQueryController.reload(),
@@ -57,146 +74,171 @@ class PondBudgetPage extends HookWidget {
                 ]),
                 titleText:
                     'Budget: ${budget.nameProperty.value}\n${maybeBudgetAmount.mapIfPresent((amount) => amount.formatCentsAsCurrency()).get(orElse: () => 'N/A')}',
-                body: ScrollColumn.withScrollbar(children: [
-                  ModelBuilder.styled(
-                    model: envelopesQueryController.model,
-                    builder: (List<EnvelopeEntity> envelopeEntities) {
-                      return StyledCategory.medium(
-                        headerText: 'Envelopes',
-                        actions: [
-                          ActionItem(
-                            name: 'Create',
-                            description: 'Create new Envelope',
-                            color: Colors.green,
-                            leading: Icon(Icons.mail),
-                            onPerform: () async {
-                              final data = await StyledDialog.port(
-                                context: context,
-                                port: Port(
-                                  fields: [
-                                    StringPortField(name: 'name').required(),
-                                  ],
-                                ),
-                                children: [
-                                  StyledTextPortField(
-                                    name: 'name',
-                                    labelText: 'Name',
-                                  ),
-                                ],
-                              ).show(context);
+                body: ScrollColumn.withScrollbar(
+                  children: [
+                    ...imageAssets.mapIndexed((i, imageBytes) => GestureDetector(
+                          onTap: () async {
+                            final delete = await StyledDialog.yesNo(
+                              context: context,
+                              titleText: 'Confirm Delete',
+                              children: [StyledBodyText('Are you sure you want to delete this?')],
+                            ).show(context);
+                            if (delete != true) {
+                              return;
+                            }
 
-                              if (data == null) {
-                                return;
-                              }
+                            final newBudget = Budget()..copyFrom(budget);
+                            await newBudget.imagesProperty.deleteAsset(budget.imagesProperty.value![i]);
 
-                              final envelope = Envelope()
-                                ..nameProperty.value = data['name']
-                                ..amountProperty.value = 0
-                                ..budgetProperty.value = budgetId;
-                              final envelopeEntity = EnvelopeEntity()..value = envelope;
-
-                              await envelopeEntity.create();
-                            },
+                            budgetEntity.value = newBudget;
+                            await budgetEntity.save();
+                          },
+                          child: StyledLoadingImage(
+                            image: imageBytes.mapIfNonNull((imageBytes) => MemoryImage(imageBytes)),
+                            width: 200,
+                            height: 200,
                           ),
-                        ],
-                        noChildrenWidget: StyledContentSubtitleText('No envelopes'),
-                        children: [
-                          ...envelopeEntities.map((envelopeEntity) => EnvelopeCard(
-                                envelopeId: envelopeEntity.id!,
-                                key: ValueKey(envelopeEntity.id),
-                              )),
-                        ],
-                      );
-                    },
-                  ),
-                  ModelBuilder.styled(
-                    model: transactionsQueryController.model,
-                    builder: (QueryPaginationResultController<BudgetTransactionEntity> budgetTransactionsController) {
-                      return HookBuilder(builder: (context) {
-                        final transactions = useValueStream(budgetTransactionsController.resultsX);
+                        )),
+                    ModelBuilder.styled(
+                      model: envelopesQueryController.model,
+                      builder: (List<EnvelopeEntity> envelopeEntities) {
                         return StyledCategory.medium(
-                          headerText: 'Transactions',
+                          headerText: 'Envelopes',
                           actions: [
-                            if (envelopesQueryController.value is FutureValueLoaded)
-                              ActionItem(
-                                name: 'Create Transfer',
-                                description: 'Create new transfer',
-                                color: Colors.green,
-                                leading: Icon(Icons.swap_calls),
-                                onPerform: () async {
-                                  final data = await StyledDialog.port(
-                                    context: context,
-                                    port: Port(
-                                      fields: [
-                                        OptionsPortField<EnvelopeEntity>(
-                                          name: 'from',
-                                          options: envelopesQueryController.value.get(),
-                                        ),
-                                        OptionsPortField<EnvelopeEntity>(
-                                          name: 'to',
-                                          options: envelopesQueryController.value.get(),
-                                        ),
-                                        CurrencyPortField(name: 'amount').required(),
-                                      ],
-                                    ),
-                                    children: [
-                                      StyledOptionsPortField<EnvelopeEntity>(
-                                        name: 'from',
-                                        labelText: 'From',
-                                        builder: (envelopeEntity) => StyledBodyText(
-                                          envelopeEntity?.value.nameProperty.value ?? 'None',
-                                          textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
-                                        ),
-                                      ),
-                                      StyledOptionsPortField<EnvelopeEntity>(
-                                        name: 'to',
-                                        labelText: 'To',
-                                        builder: (envelopeEntity) => StyledBodyText(
-                                          envelopeEntity?.value.nameProperty.value ?? 'None',
-                                          textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
-                                        ),
-                                      ),
-                                      StyledCurrencyPortField(
-                                        name: 'amount',
-                                        labelText: 'Amount',
-                                      ),
+                            ActionItem(
+                              name: 'Create',
+                              description: 'Create new Envelope',
+                              color: Colors.green,
+                              leading: Icon(Icons.mail),
+                              onPerform: () async {
+                                final data = await StyledDialog.port(
+                                  context: context,
+                                  port: Port(
+                                    fields: [
+                                      StringPortField(name: 'name').required(),
                                     ],
-                                  ).show(context);
+                                  ),
+                                  children: [
+                                    StyledTextPortField(
+                                      name: 'name',
+                                      labelText: 'Name',
+                                    ),
+                                  ],
+                                ).show(context);
 
-                                  if (data == null) {
-                                    return;
-                                  }
+                                if (data == null) {
+                                  return;
+                                }
 
-                                  final transferTransaction = TransferTransaction()
-                                    ..amountProperty.value = data['amount']
-                                    ..fromProperty.reference = data['from']
-                                    ..toProperty.reference = data['to']
-                                    ..budgetProperty.value = budgetId;
-                                  final transferTransactionEntity = TransferTransactionEntity()
-                                    ..value = transferTransaction;
-                                  await transferTransactionEntity.create();
-                                },
-                              ),
+                                final envelope = Envelope()
+                                  ..nameProperty.value = data['name']
+                                  ..amountProperty.value = 0
+                                  ..budgetProperty.value = budgetId;
+                                final envelopeEntity = EnvelopeEntity()..value = envelope;
+
+                                await envelopeEntity.create();
+                              },
+                            ),
                           ],
-                          noChildrenWidget: StyledContentSubtitleText('No transactions'),
+                          noChildrenWidget: StyledContentSubtitleText('No envelopes'),
                           children: [
-                            ...transactions.map((transactionEntity) => TransactionCard(
-                                  transactionId: transactionEntity.id!,
-                                  key: ValueKey(transactionEntity.id!),
+                            ...envelopeEntities.map((envelopeEntity) => EnvelopeCard(
+                                  envelopeId: envelopeEntity.id!,
+                                  key: ValueKey(envelopeEntity.id),
                                 )),
-                            if (budgetTransactionsController.canLoadMore)
-                              StyledButton.low(
-                                text: 'Load More',
-                                onTapped: () async {
-                                  await budgetTransactionsController.loadMore();
-                                },
-                              ),
                           ],
                         );
-                      });
-                    },
-                  )
-                ]),
+                      },
+                    ),
+                    ModelBuilder.styled(
+                      model: transactionsQueryController.model,
+                      builder: (QueryPaginationResultController<BudgetTransactionEntity> budgetTransactionsController) {
+                        return HookBuilder(builder: (context) {
+                          final transactions = useValueStream(budgetTransactionsController.resultsX);
+                          return StyledCategory.medium(
+                            headerText: 'Transactions',
+                            actions: [
+                              if (envelopesQueryController.value is FutureValueLoaded)
+                                ActionItem(
+                                  name: 'Create Transfer',
+                                  description: 'Create new transfer',
+                                  color: Colors.green,
+                                  leading: Icon(Icons.swap_calls),
+                                  onPerform: () async {
+                                    final data = await StyledDialog.port(
+                                      context: context,
+                                      port: Port(
+                                        fields: [
+                                          OptionsPortField<EnvelopeEntity>(
+                                            name: 'from',
+                                            options: envelopesQueryController.value.get(),
+                                          ),
+                                          OptionsPortField<EnvelopeEntity>(
+                                            name: 'to',
+                                            options: envelopesQueryController.value.get(),
+                                          ),
+                                          CurrencyPortField(name: 'amount').required(),
+                                        ],
+                                      ),
+                                      children: [
+                                        StyledOptionsPortField<EnvelopeEntity>(
+                                          name: 'from',
+                                          labelText: 'From',
+                                          builder: (envelopeEntity) => StyledBodyText(
+                                            envelopeEntity?.value.nameProperty.value ?? 'None',
+                                            textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
+                                          ),
+                                        ),
+                                        StyledOptionsPortField<EnvelopeEntity>(
+                                          name: 'to',
+                                          labelText: 'To',
+                                          builder: (envelopeEntity) => StyledBodyText(
+                                            envelopeEntity?.value.nameProperty.value ?? 'None',
+                                            textOverrides: StyledTextOverrides(padding: EdgeInsets.zero),
+                                          ),
+                                        ),
+                                        StyledCurrencyPortField(
+                                          name: 'amount',
+                                          labelText: 'Amount',
+                                        ),
+                                      ],
+                                    ).show(context);
+
+                                    if (data == null) {
+                                      return;
+                                    }
+
+                                    final transferTransaction = TransferTransaction()
+                                      ..amountProperty.value = data['amount']
+                                      ..fromProperty.reference = data['from']
+                                      ..toProperty.reference = data['to']
+                                      ..budgetProperty.value = budgetId;
+                                    final transferTransactionEntity = TransferTransactionEntity()
+                                      ..value = transferTransaction;
+                                    await transferTransactionEntity.create();
+                                  },
+                                ),
+                            ],
+                            noChildrenWidget: StyledContentSubtitleText('No transactions'),
+                            children: [
+                              ...transactions.map((transactionEntity) => TransactionCard(
+                                    transactionId: transactionEntity.id!,
+                                    key: ValueKey(transactionEntity.id!),
+                                  )),
+                              if (budgetTransactionsController.canLoadMore)
+                                StyledButton.low(
+                                  text: 'Load More',
+                                  onTapped: () async {
+                                    await budgetTransactionsController.loadMore();
+                                  },
+                                ),
+                            ],
+                          );
+                        });
+                      },
+                    )
+                  ],
+                ),
               );
             },
           );

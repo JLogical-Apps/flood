@@ -12,3 +12,9 @@ T? useAssetOrNull<A extends Asset<T>, T>(String? id) {
 T? useAsset<A extends Asset<T>, T>(String id) {
   return useAssetOrNull<A, T>(id);
 }
+
+List<T?> useAssets<A extends Asset<T>, T>(List<String> ids) {
+  return useModels(ids.map((id) => locate<AssetModule>().getAssetModel<A, T>(id)).toList())
+      .map((model) => model.getOrNull())
+      .toList();
+}
