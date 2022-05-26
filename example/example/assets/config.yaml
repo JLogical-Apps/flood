@@ -1,4 +1,4 @@
-env: device
+env: alpha
 reset: false
 version: 2
 min_version: 3

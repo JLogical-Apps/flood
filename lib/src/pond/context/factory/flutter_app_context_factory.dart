@@ -24,7 +24,10 @@ Future<void> buildBaseAppContext(AppContext context) async {
     context.register<ConfigModule>(await AppConfigModule.create());
     context.register(await EnvironmentModule.create());
   } else {
-    context.directoryProvider = DirectoryBundle(supportDirectory: await getApplicationSupportDirectory());
+    context.directoryProvider = DirectoryBundle(
+      supportDirectory: await getApplicationSupportDirectory(),
+      cacheDirectory: await getTemporaryDirectory(),
+    );
     context.register<ConfigModule>(await AppConfigModule.create());
     context.register(await EnvironmentModule.create());
   }

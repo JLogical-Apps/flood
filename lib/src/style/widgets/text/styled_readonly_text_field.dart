@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import '../input/styled_text_field.dart';
 
 class StyledReadonlyTextField extends StatelessWidget {
   final Widget? label;

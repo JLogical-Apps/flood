@@ -13,16 +13,6 @@ class FileImageAssetProvider extends ImageAssetProvider {
     return RawFileDataSource(file: _getFileFromId(id));
   }
 
-  @override
-  Future<String> upload(Uint8List value) async {
-    final id = UuidIdGenerator().getId();
-    final dataSource = RawFileDataSource(file: _getFileFromId(id));
-
-    await dataSource.saveData(value);
-
-    return id;
-  }
-
   Directory get _baseDirectory => AppContext.global.supportDirectory / 'assets' / 'images';
 
   File _getFileFromId(String id) {

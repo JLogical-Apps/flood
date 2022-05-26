@@ -6,4 +6,6 @@ mixin WithDirectoryProviderDelegator implements DirectoryProvider {
   DirectoryProvider get directoryProvider;
 
   Directory get supportDirectory => directoryProvider.supportDirectory;
+
+  Directory get cacheDirectory => directoryProvider.cacheDirectory;
 }

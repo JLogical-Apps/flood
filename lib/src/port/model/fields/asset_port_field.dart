@@ -9,6 +9,7 @@ class AssetPortField extends PortField<String?> {
 
   bool isChanged = false;
   Uint8List? preview;
+  String? filename;
 
   AssetPortField({required super.name, super.initialValue, required this.assetType});
 
@@ -25,7 +26,11 @@ class AssetPortField extends PortField<String?> {
     value = null;
 
     if (preview != null) {
-      final id = await locate<AssetModule>().uploadAssetRuntime(assetType: assetType, value: preview);
+      final id = await locate<AssetModule>().uploadAssetRuntime(
+        assetType: assetType,
+        value: preview,
+        suffix: filename,
+      );
       value = id;
     }
 

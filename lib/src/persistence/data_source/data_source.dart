@@ -2,6 +2,8 @@ import 'package:jlogical_utils/src/persistence/data_source/mappers/data_source_m
 import 'package:jlogical_utils/src/persistence/data_source/mappers/json_data_source_mapper.dart';
 import 'package:jlogical_utils/src/persistence/data_source/mappers/yaml_data_source_mapper.dart';
 
+import 'cached_data_source.dart';
+
 /// A data source is a special service that reads and updates data from a particular source.
 /// [T] is the type of data this data source points to.
 abstract class DataSource<T> {
@@ -33,6 +35,10 @@ extension DataSourceExtensions<T> on DataSource<T> {
         onSave: (_) => throw UnimplementedError(),
         onLoad: onLoad,
       );
+
+  CachedDataSource<T> withCache(DataSource<T> cacheDataSource) {
+    return CachedDataSource(sourceDataSource: this, cacheDataSource: cacheDataSource);
+  }
 }
 
 extension StringDataSourceExtensions on DataSource<String> {

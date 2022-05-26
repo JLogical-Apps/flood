@@ -28,7 +28,7 @@ class AssetModule extends AppModule {
   }
 
   Future<void> deleteAssetRuntime({required Type assetType, required String id}) async {
-    _assetCache.remove(_getAssetId(id));
+    _assetCache.get(_getAssetId(id))?.setLoaded(null);
     await _getAssetProviderRuntime(assetType).getDataSource(id).delete();
   }
 
@@ -36,8 +36,8 @@ class AssetModule extends AppModule {
     return deleteAssetRuntime(assetType: A, id: id);
   }
 
-  Future<String> uploadAssetRuntime({required Type assetType, required dynamic value}) async {
-    final id = await _getAssetProviderRuntime(assetType).upload(value);
+  Future<String> uploadAssetRuntime({required Type assetType, required dynamic value, String? suffix}) async {
+    final id = await _getAssetProviderRuntime(assetType).upload(value, suffix: suffix);
 
     final loadedModel = _getAssetProviderRuntime(assetType).getModelById(id)
       ..hasStartedLoading = true
@@ -47,8 +47,8 @@ class AssetModule extends AppModule {
     return id;
   }
 
-  Future<String> uploadAsset<A extends Asset<T>, T>(T value) {
-    return uploadAssetRuntime(assetType: A, value: value);
+  Future<String> uploadAsset<A extends Asset<T>, T>(T value, {String? suffix}) {
+    return uploadAssetRuntime(assetType: A, value: value, suffix: suffix);
   }
 
   String _getAssetId<A extends Asset>(String id) {

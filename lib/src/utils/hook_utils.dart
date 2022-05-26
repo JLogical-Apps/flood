@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/utils/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
+import 'package:path/path.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../port/export.dart';
@@ -43,6 +44,11 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
     final preview = previewX.value;
     useListen(previewX, (Uint8List? value) {
       field.preview = value;
+    });
+
+    final filenameX = useObservable<String?>(() => null);
+    useListen(filenameX, (String? value) {
+      field.filename = value;
     });
 
     final isChangedX = useObservable<bool>(() => false);
@@ -85,13 +91,14 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
                       final isChanged = field.initialValue != null;
 
                       previewX.value = null;
+                      filenameX.value = null;
                       isChangedX.value = isChanged;
                     },
                   ),
                   IconButton(
                     icon: StyledIcon(Icons.swap_horiz),
                     onPressed: () async {
-                      await upload(previewX: previewX, isChangedX: isChangedX);
+                      await upload(previewX: previewX, isChangedX: isChangedX, filenameX: filenameX);
                     },
                   ),
                 ],
@@ -103,7 +110,7 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
             icon: Icons.upload,
             text: 'Upload',
             onTapped: () async {
-              await upload(previewX: previewX, isChangedX: isChangedX);
+              await upload(previewX: previewX, isChangedX: isChangedX, filenameX: filenameX);
             },
           ),
         if (preview == null && value != null && isChanged) ...[
@@ -117,13 +124,14 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
                     IconButton(
                       icon: StyledIcon(Icons.add_photo_alternate),
                       onPressed: () async {
-                        await upload(previewX: previewX, isChangedX: isChangedX);
+                        await upload(previewX: previewX, isChangedX: isChangedX, filenameX: filenameX);
                       },
                     ),
                     IconButton(
                       icon: StyledIcon(Icons.unarchive),
                       onPressed: () async {
                         previewX.value = null;
+                        filenameX.value = null;
                         isChangedX.value = false;
                       },
                     ),
@@ -139,6 +147,7 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
 
   Future<void> upload({
     required BehaviorSubject<Uint8List?> previewX,
+    required BehaviorSubject<String?> filenameX,
     required BehaviorSubject<bool> isChangedX,
   }) async {
     final picker = ImagePicker();
@@ -149,6 +158,7 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?> wit
 
     final imageBytes = await imageFile.readAsBytes();
     previewX.value = imageBytes;
+    filenameX.value = basename(imageFile.path);
     isChangedX.value = true;
   }
 }

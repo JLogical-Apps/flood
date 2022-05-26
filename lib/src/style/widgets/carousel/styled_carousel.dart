@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+
+import '../../export.dart';
 
 class StyledCarousel extends StyledWidget {
   final List<Widget> children;
