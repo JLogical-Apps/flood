@@ -23,6 +23,9 @@ class StyledPage extends StyledWidget {
   /// Callback for when the user refreshes the page.
   final Future<void> Function()? onRefresh;
 
+  /// Whether to indicate the page is loading something.
+  final bool isLoading;
+
   const StyledPage({
     this.titleText,
     this.title,
@@ -30,6 +33,7 @@ class StyledPage extends StyledWidget {
     this.backgroundColor,
     this.actions: const [],
     this.onRefresh,
+    this.isLoading: false,
   });
 
   @override

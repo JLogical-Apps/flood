@@ -31,6 +31,8 @@ class PondBudgetPage extends HookWidget {
           .paginate(limit: 2),
     );
 
+    final isLoading = useState<bool>(false);
+
     final budgetAmountX = useComputed(() => envelopesQueryController.model.valueX.mapWithValue(
         (maybeEnvelopeEntities) => maybeEnvelopeEntities.mapIfPresent<int>((envelopeEntities) =>
             envelopeEntities.sumBy((envelopeEntity) => envelopeEntity.value.amountProperty.value!).round())));
@@ -47,6 +49,7 @@ class PondBudgetPage extends HookWidget {
             builder: (BudgetEntity budgetEntity) {
               final budget = budgetEntity.value;
               return StyledPage(
+                isLoading: isLoading.value,
                 actions: [
                   ActionItem(
                     name: 'Take Picture',
@@ -71,11 +74,15 @@ class PondBudgetPage extends HookWidget {
                         return;
                       }
 
+                      isLoading.value = true;
+
                       final newBudget = Budget()..copyFrom(budget);
                       await newBudget.imagesProperty.uploadNewAsset(asset);
 
                       budgetEntity.value = newBudget;
                       await budgetEntity.save();
+
+                      isLoading.value = false;
                     },
                   ),
                 ],
@@ -102,11 +109,15 @@ class PondBudgetPage extends HookWidget {
                                   return;
                                 }
 
+                                isLoading.value = true;
+
                                 final newBudget = Budget()..copyFrom(budget);
                                 await newBudget.imagesProperty.deleteAsset(imageAsset.id!);
 
                                 budgetEntity.value = newBudget;
                                 await budgetEntity.save();
+
+                                isLoading.value = false;
                               },
                         child: StyledLoadingImage(
                           image: imageAsset.mapIfNonNull((asset) => MemoryImage(asset.value)),

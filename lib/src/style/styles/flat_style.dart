@@ -25,6 +25,7 @@ import 'package:jlogical_utils/src/style/widgets/text/styled_text_span.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_style.dart';
 import 'package:jlogical_utils/src/utils/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -93,34 +94,40 @@ class FlatStyle extends Style {
     return HookBuilder(
       builder: (context) {
         final refreshController = useMemoized(() => RefreshController(initialRefresh: false));
-        return Scaffold(
-          backgroundColor: backgroundColor,
-          appBar: shouldShowAppBar
-              ? _styledAppBar(
-                  context,
-                  title: appBarTitle,
-                  actions: styledPage.actions,
-                )
-              : null,
-          body: StyleContextProvider(
-            styleContext: styleContextFromBackground(backgroundColor),
-            child: styledPage.onRefresh == null
-                ? styledPage.body
-                : SmartRefresher(
-                    controller: refreshController,
-                    header: WaterDropMaterialHeader(
-                      color: styleContext.emphasisColor,
-                      backgroundColor: styleContext.backgroundColorSoft,
+        return LoadingOverlay(
+          isLoading: styledPage.isLoading,
+          progressIndicator: StyledLoadingIndicator(color: initialStyleContext.emphasisColor),
+          color: initialStyleContext.emphasisColorSoft,
+          opacity: 0.2,
+          child: Scaffold(
+            backgroundColor: backgroundColor,
+            appBar: shouldShowAppBar
+                ? _styledAppBar(
+                    context,
+                    title: appBarTitle,
+                    actions: styledPage.actions,
+                  )
+                : null,
+            body: StyleContextProvider(
+              styleContext: styleContextFromBackground(backgroundColor),
+              child: styledPage.onRefresh == null
+                  ? styledPage.body
+                  : SmartRefresher(
+                      controller: refreshController,
+                      header: WaterDropMaterialHeader(
+                        color: styleContext.emphasisColor,
+                        backgroundColor: styleContext.backgroundColorSoft,
+                      ),
+                      enablePullDown: styledPage.onRefresh != null,
+                      onRefresh: styledPage.onRefresh != null
+                          ? () async {
+                              await styledPage.onRefresh!();
+                              refreshController.refreshCompleted();
+                            }
+                          : null,
+                      child: styledPage.body,
                     ),
-                    enablePullDown: styledPage.onRefresh != null,
-                    onRefresh: styledPage.onRefresh != null
-                        ? () async {
-                            await styledPage.onRefresh!();
-                            refreshController.refreshCompleted();
-                          }
-                        : null,
-                    child: styledPage.body,
-                  ),
+            ),
           ),
         );
       },
