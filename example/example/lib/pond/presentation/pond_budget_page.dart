@@ -49,19 +49,35 @@ class PondBudgetPage extends HookWidget {
               return StyledPage(
                 actions: [
                   ActionItem(
-                      name: 'Upload Image',
-                      onPerform: () async {
-                        final asset = await ImageAssetPicker.pickImageFromGallery();
-                        if (asset == null) {
-                          return;
-                        }
+                    name: 'Take Picture',
+                    onPerform: () async {
+                      final asset = await ImageAssetPicker.pickImageFromCamera();
+                      if (asset == null) {
+                        return;
+                      }
 
-                        final newBudget = Budget()..copyFrom(budget);
-                        await newBudget.imagesProperty.uploadNewAsset(asset);
+                      final newBudget = Budget()..copyFrom(budget);
+                      await newBudget.imagesProperty.uploadNewAsset(asset);
 
-                        budgetEntity.value = newBudget;
-                        await budgetEntity.save();
-                      }),
+                      budgetEntity.value = newBudget;
+                      await budgetEntity.save();
+                    },
+                  ),
+                  ActionItem(
+                    name: 'Upload Image',
+                    onPerform: () async {
+                      final asset = await ImageAssetPicker.pickImageFromGallery();
+                      if (asset == null) {
+                        return;
+                      }
+
+                      final newBudget = Budget()..copyFrom(budget);
+                      await newBudget.imagesProperty.uploadNewAsset(asset);
+
+                      budgetEntity.value = newBudget;
+                      await budgetEntity.save();
+                    },
+                  ),
                 ],
                 onRefresh: () => Future.wait([
                   budgetEntityController.reload(),

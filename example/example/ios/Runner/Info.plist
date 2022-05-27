@@ -46,6 +46,8 @@
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Upload photos to envelopes!</string>
+		<string>Upload photos to envelopes.</string>
+		<key>NSCameraUsageDescription</key>
+        <string>Take pictures and upload them to budgets.</string>
 	</dict>
 </plist>
