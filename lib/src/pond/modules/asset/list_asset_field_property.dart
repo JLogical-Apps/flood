@@ -39,4 +39,8 @@ class ListAssetFieldProperty extends ListFieldProperty<String> {
   List<Model<Asset?>> getAssetModels() {
     return value?.map((assetId) => locate<AssetModule>().getAssetModel(assetId)).toList() ?? [];
   }
+
+  Future<List<Asset?>> getAssets() async {
+    return await Future.wait(getAssetModels().map((model) => model.ensureLoadedAndGet()));
+  }
 }

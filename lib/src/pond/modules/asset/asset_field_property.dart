@@ -42,4 +42,8 @@ class AssetFieldProperty extends FieldProperty<String> {
   Model<Asset?>? getAssetModel() {
     return value.mapIfNonNull((value) => locate<AssetModule>().getAssetModel(value));
   }
+
+  Future<Asset?> getAsset() async {
+    return await getAssetModel()?.ensureLoadedAndGet();
+  }
 }
