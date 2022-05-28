@@ -17,10 +17,10 @@ class AssetFieldProperty extends FieldProperty<String> {
       Stream<Uint8List?>.empty().publishValueSeeded(null));
 
   AssetFieldProperty({required super.name}) {
-    _modelX = BehaviorSubject.seeded(_getAssetModel());
+    _modelX = BehaviorSubject.seeded(getAssetModel());
     withListener((assetId) {
       if (assetId != null) {
-        _modelX.value = _getAssetModel();
+        _modelX.value = getAssetModel();
       }
     });
   }
@@ -39,7 +39,7 @@ class AssetFieldProperty extends FieldProperty<String> {
     }
   }
 
-  Model<Asset?>? _getAssetModel() {
+  Model<Asset?>? getAssetModel() {
     return value.mapIfNonNull((value) => locate<AssetModule>().getAssetModel(value));
   }
 }

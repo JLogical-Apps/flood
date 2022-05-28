@@ -16,9 +16,9 @@ class ListAssetFieldProperty extends ListFieldProperty<String> {
       _modelsX.mapWithValue((models) => models.map((model) => model.value.getOrNull()?.value).toList());
 
   ListAssetFieldProperty({required super.name}) {
-    _modelsX = BehaviorSubject.seeded(_getAssetModels());
+    _modelsX = BehaviorSubject.seeded(getAssetModels());
     withListener((assetIds) {
-      _modelsX.value = _getAssetModels();
+      _modelsX.value = getAssetModels();
     });
   }
 
@@ -36,7 +36,7 @@ class ListAssetFieldProperty extends ListFieldProperty<String> {
     value = [...?value]..remove(assetId);
   }
 
-  List<Model<Asset?>> _getAssetModels() {
+  List<Model<Asset?>> getAssetModels() {
     return value?.map((assetId) => locate<AssetModule>().getAssetModel(assetId)).toList() ?? [];
   }
 }
