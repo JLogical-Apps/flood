@@ -38,6 +38,12 @@ extension IterableExtensions<T> on Iterable<T> {
   }
 }
 
+extension NullableiterableExtensions<T> on Iterable<T?> {
+  Iterable<T> whereNonNull() {
+    return where((item) => item != null).map((item) => item!);
+  }
+}
+
 extension MapExtensions<K, V> on Map<K, V> {
   /// Returns a copy of the map.
   /// Can provide an optional key copier or value copier to copy the items in a specific way.
