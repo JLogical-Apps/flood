@@ -24,6 +24,22 @@ class Asset {
     return file;
   }
 
+  Future<File> ensureCachedToFile() async {
+    final file = AppContext.global.cacheDirectory - name;
+    if (await file.exists()) {
+      return file;
+    }
+
+    return await cacheToFile();
+  }
+
+  Future<void> clearCachedFile() async {
+    final file = AppContext.global.cacheDirectory - name;
+    if (await file.exists()) {
+      await file.delete();
+    }
+  }
+
   bool get isImage => mimeType?.startsWith('image') == true;
 
   bool get isVideo => mimeType?.startsWith('video') == true;

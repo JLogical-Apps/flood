@@ -65,6 +65,23 @@ class PondHomePage extends HookWidget {
                         await userEntity.save();
                       }),
                   ActionItem(
+                    name: 'Upload Video',
+                    color: Colors.blue,
+                    icon: Icons.video_call,
+                    onPerform: () async {
+                      final asset = await VideoAssetPicker.pickVideoFromGallery();
+                      if(asset == null) {
+                        return;
+                      }
+
+                      final user = userEntity.value;
+                      await user.profilePictureProperty.uploadNewAssetAndSet(asset);
+
+                      userEntity.value = user;
+                      await userEntity.save();
+                    },
+                  ),
+                  ActionItem(
                       name: 'Share Logs',
                       onPerform: () async {
                         final logFile = await locate<DefaultLoggingModule>().getLogFile();
@@ -92,17 +109,13 @@ class PondHomePage extends HookWidget {
                   builder: (QueryPaginationResultController<BudgetEntity> budgetsController) {
                     return HookBuilder(builder: (context) {
                       final results = useValueStream(budgetsController.resultsX);
-                      final pictureAsset = useAssetOrNull(userEntity.value.profilePictureProperty.value);
                       return Column(
                         children: [
                           if (userEntity.value.profilePictureProperty.value != null)
-                            StyledLoadingImage(
-                              image: pictureAsset.mapIfNonNull((asset) => MemoryImage(asset.value)),
-                              width: 200,
-                              height: 200,
-                              onTapped: () {
-                                print('hey');
-                              },
+                            StyledLoadingAsset(
+                              assetId: userEntity.value.profilePictureProperty.value!,
+                              width: 300,
+                              height: 300,
                             ),
                           StyledCategory.medium(
                             headerText: 'Budgets',

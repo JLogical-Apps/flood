@@ -1,3 +1,5 @@
+import 'package:jlogical_utils/jlogical_utils.dart';
+
 import '../../../model/export_core.dart';
 import '../../../patterns/export_core.dart';
 import '../../context/module/app_module.dart';
@@ -28,6 +30,7 @@ class AssetModule extends AppModule {
 
     final isAlreadyUploaded = asset.id != null;
     if (isAlreadyUploaded) {
+      await asset.clearCachedFile();
       getAssetModel(id).setLoaded(asset);
       return id;
     }
@@ -42,6 +45,8 @@ class AssetModule extends AppModule {
       ..hasStartedLoading = true
       ..setLoaded(asset);
     _assetCache.save(id, loadedModel);
+
+    await asset.clearCachedFile();
 
     return id;
   }
