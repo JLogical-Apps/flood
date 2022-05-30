@@ -50,7 +50,7 @@ class PondEnvelopePage extends HookWidget {
                               name: 'Create Payment',
                               description: 'Create new payment',
                               color: Colors.green,
-                              leading: Icon(Icons.swap_calls),
+                              icon: Icons.swap_calls,
                               onPerform: () async {
                                 final data = await StyledDialog.port(
                                   context: context,

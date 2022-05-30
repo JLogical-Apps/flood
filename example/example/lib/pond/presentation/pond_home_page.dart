@@ -102,7 +102,7 @@ class PondHomePage extends HookWidget {
                                 name: 'Create',
                                 description: 'Create a budget for this user.',
                                 color: Colors.green,
-                                leading: Icon(Icons.monetization_on),
+                                icon: Icons.monetization_on,
                                 onPerform: () async {
                                   final draftEntity = await Singleton.getOrCreate<BudgetDraftEntity, BudgetDraft>();
                                   final budgetDraft = draftEntity.value.sourcePrototype;
@@ -200,7 +200,7 @@ class BudgetCard extends HookWidget {
               name: 'Delete',
               description: 'Delete this budget.',
               color: Colors.red,
-              leading: Icon(Icons.delete),
+              icon: Icons.delete,
               onPerform: () async {
                 final dialog = StyledDialog.yesNo(
                   context: context,

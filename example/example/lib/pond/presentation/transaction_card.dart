@@ -31,7 +31,7 @@ class TransactionCard extends HookWidget {
                 name: 'Delete',
                 description: 'Delete this transaction.',
                 color: Colors.red,
-                leading: Icon(Icons.delete),
+                icon: Icons.delete,
                 onPerform: () async {
                   final dialog = StyledDialog.yesNo(
                     context: context,
@@ -69,7 +69,7 @@ class TransactionCard extends HookWidget {
                 name: 'Delete',
                 description: 'Delete this transaction.',
                 color: Colors.red,
-                leading: Icon(Icons.delete),
+                icon: Icons.delete,
                 onPerform: () async {
                   final dialog = StyledDialog.yesNo(
                     context: context,

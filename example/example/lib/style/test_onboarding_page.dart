@@ -165,7 +165,7 @@ class TestOnboardingPage extends HookWidget {
                       name: 'Edit',
                       description: 'Edit the envelope.',
                       color: Colors.orange,
-                      leading: StyledIcon(Icons.edit),
+                      icon: Icons.edit,
                       onPerform: () {
                         print('This does not actually do anything.');
                       },

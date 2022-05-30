@@ -59,7 +59,7 @@ class TestHomePage extends HookWidget {
                   name: 'Create Envelope',
                   color: Colors.green,
                   description: 'Create a new envelope.',
-                  leading: StyledIcon(Icons.create),
+                  icon: Icons.create,
                   onPerform: () {
                     final port = Port(
                       fields: [
@@ -101,7 +101,7 @@ class TestHomePage extends HookWidget {
                 ActionItem(
                   name: 'Login',
                   color: Colors.blue,
-                  leading: StyledIcon(Icons.face),
+                  icon: Icons.face,
                   onPerform: () {
                     style.navigateTo(context: context, page: (context) => TestLoginPage(style: style));
                   },

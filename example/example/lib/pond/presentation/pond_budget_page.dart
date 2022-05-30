@@ -135,7 +135,7 @@ class PondBudgetPage extends HookWidget {
                               name: 'Create',
                               description: 'Create new Envelope',
                               color: Colors.green,
-                              leading: Icon(Icons.mail),
+                              icon: Icons.mail,
                               onPerform: () async {
                                 final data = await StyledDialog.port(
                                   context: context,
@@ -189,7 +189,7 @@ class PondBudgetPage extends HookWidget {
                                   name: 'Create Transfer',
                                   description: 'Create new transfer',
                                   color: Colors.green,
-                                  leading: Icon(Icons.swap_calls),
+                                  icon: Icons.swap_calls,
                                   onPerform: () async {
                                     final data = await StyledDialog.port(
                                       context: context,
@@ -304,7 +304,7 @@ class EnvelopeCard extends HookWidget {
               name: 'Delete',
               description: 'Delete this envelope.',
               color: Colors.red,
-              leading: Icon(Icons.delete),
+              icon: Icons.delete,
               onPerform: () async {
                 final dialog = StyledDialog.yesNo(
                   context: context,

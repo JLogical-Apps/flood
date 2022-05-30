@@ -1434,9 +1434,8 @@ class FlatStyle extends Style {
                                 textOverrides: StyledTextOverrides(fontColor: action.color),
                               ),
                               subtitle: action.description != null ? StyledBodyText(action.description!) : null,
-                              leading: action.icon != null
-                                  ? StyledIcon(action.icon!, colorOverride: action.color)
-                                  : action.leading,
+                              leading: action.icon
+                                  .mapIfNonNull((icon) => StyledIcon(action.icon!, colorOverride: action.color)),
                             ),
                           ),
                         ))
