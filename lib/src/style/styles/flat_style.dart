@@ -162,7 +162,7 @@ class FlatStyle extends Style {
             builder: (context) {
               return actionButton(
                 context,
-                actions: actions,
+                actions: lowMediumActions,
                 color: styleContext.emphasisColor,
               );
             },
