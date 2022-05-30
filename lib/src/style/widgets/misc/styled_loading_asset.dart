@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:video_player/video_player.dart';
-import '../../../model/export_core.dart';
 import '../../../utils/hook_utils.dart';
 import '../text/styled_error_text.dart';
 import 'styled_loading_image.dart';
@@ -14,7 +13,7 @@ import 'package:jlogical_utils/src/style/widgets/misc/styled_loading_indicator.d
 import '../../../pond/export.dart';
 
 class StyledLoadingAsset extends HookWidget {
-  final String assetId;
+  final Asset? asset;
 
   final void Function()? onTapped;
 
@@ -26,7 +25,7 @@ class StyledLoadingAsset extends HookWidget {
 
   const StyledLoadingAsset({
     super.key,
-    required this.assetId,
+    required this.asset,
     this.onTapped,
     this.width,
     this.height,
@@ -37,21 +36,13 @@ class StyledLoadingAsset extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final assetModel = useModel(locate<AssetModule>().getAssetModel(assetId));
-    final asset = assetModel.getOrNull();
-
     final assetFile = useState<File?>(null);
 
-    useListen(
-      assetModel.valueX,
-      (FutureValue<Asset?> maybeAsset) async {
-        final asset = maybeAsset.getOrNull();
-        if (asset == null) {
-          return;
-        }
-
-        assetFile.value = await asset.ensureCachedToFile();
-      },
+    useMemoizedFuture(
+      () => () async {
+        assetFile.value = await asset?.ensureCachedToFile();
+      }(),
+      [asset?.value.hashCode],
     );
 
     if (asset == null) {
@@ -62,9 +53,9 @@ class StyledLoadingAsset extends HookWidget {
       );
     }
 
-    if (asset.isImage) {
+    if (asset!.isImage) {
       return StyledLoadingImage(
-        image: MemoryImage(asset.value),
+        image: MemoryImage(asset!.value),
         onTapped: onTapped,
         width: width,
         height: height,
@@ -74,7 +65,7 @@ class StyledLoadingAsset extends HookWidget {
       );
     }
 
-    if (asset.isVideo) {
+    if (asset!.isVideo) {
       return StyledLoadingVideo(
         video: assetFile.value.mapIfNonNull((file) => VideoPlayerController.file(file)),
         onTapped: onTapped,

@@ -70,7 +70,7 @@ class PondHomePage extends HookWidget {
                     icon: Icons.video_call,
                     onPerform: () async {
                       final asset = await VideoAssetPicker.pickVideoFromGallery();
-                      if(asset == null) {
+                      if (asset == null) {
                         return;
                       }
 
@@ -95,25 +95,18 @@ class PondHomePage extends HookWidget {
                       context.style().navigateReplacement(context: context, newPage: (_) => PondLoginPage());
                     },
                   ),
-                  ActionItem.high(
-                    name: 'Do something pointless',
-                    icon: Icons.account_balance,
-                    onPerform: () async {
-                      await Future.delayed(Duration(seconds: 2));
-                      print('hye');
-                    }
-                  ),
                 ],
                 body: ModelBuilder.styled(
                   model: userBudgetsController.model,
                   builder: (QueryPaginationResultController<BudgetEntity> budgetsController) {
                     return HookBuilder(builder: (context) {
                       final results = useValueStream(budgetsController.resultsX);
+                      final profilePictureAsset = useAssetOrNull(userEntity.value.profilePictureProperty.value);
                       return Column(
                         children: [
                           if (userEntity.value.profilePictureProperty.value != null)
                             StyledLoadingAsset(
-                              assetId: userEntity.value.profilePictureProperty.value!,
+                              asset: profilePictureAsset,
                               width: 300,
                               height: 300,
                             ),
