@@ -11,7 +11,7 @@ abstract class AssetProvider {
 
   /// Uploads [value] and returns its id.
   Future<String> upload(Asset asset) async {
-    final id = idGenerator.getId(asset) + asset.name;
+    final id = asset.id ?? (idGenerator.getId(asset) + asset.name);
 
     final dataSource = getDataSource(id);
 
