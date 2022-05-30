@@ -91,6 +91,9 @@ class PondHomePage extends HookWidget {
                               image: pictureAsset.mapIfNonNull((asset) => MemoryImage(asset.value)),
                               width: 200,
                               height: 200,
+                              onTapped: () {
+                                print('hey');
+                              },
                             ),
                           StyledCategory.medium(
                             headerText: 'Budgets',
