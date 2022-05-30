@@ -28,7 +28,7 @@ class AssetModule extends AppModule {
 
     final isAlreadyUploaded = asset.id != null;
     if (isAlreadyUploaded) {
-      assetProvider.getModelById(id).setLoaded(asset);
+      getAssetModel(id).setLoaded(asset);
       return id;
     }
 
