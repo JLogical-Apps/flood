@@ -984,14 +984,7 @@ class FlatStyle extends Style {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             if (content.trailing != null) content.trailing!,
-                            ...highActions.map((action) => Tooltip(
-                                  message: action.description,
-                                  child: StyledIconButton(
-                                    icon: action.icon ?? Icons.circle,
-                                    color: action.color,
-                                    onTapped: action.onPerform,
-                                  ),
-                                )),
+                            ...highActions.map((action) => _iconButtonFromAction(context, action: action)),
                             if (mediumActions.isNotEmpty)
                               actionButton(
                                 context,
@@ -1023,6 +1016,9 @@ class FlatStyle extends Style {
     final header = category.headerText != null ? StyledContentHeaderText(category.headerText!) : category.header;
     final body = category.bodyText != null ? StyledContentSubtitleText(category.bodyText!) : category.body;
 
+    final highActions = category.actions.where((action) => action.emphasis == Emphasis.high).toList();
+    final lowMediumActions = category.actions.where((action) => action.emphasis != Emphasis.high).toList();
+
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(padding: EdgeInsets.zero),
       child: category.emphasis.map(
@@ -1044,11 +1040,12 @@ class FlatStyle extends Style {
                       title: header != null ? header : body,
                       subtitle: header != null ? body : null,
                       leading: category.leading,
-                      trailing: category.trailing != null || category.actions.isNotEmpty
+                      trailing: category.trailing != null || lowMediumActions.isNotEmpty || highActions.isNotEmpty
                           ? Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 if (category.trailing != null) category.trailing!,
+                                ...highActions.map((action) => _iconButtonFromAction(context, action: action)),
                                 if (category.actions.isNotEmpty)
                                   actionButton(
                                     context,
@@ -1085,11 +1082,12 @@ class FlatStyle extends Style {
                         title: header != null ? header : body,
                         subtitle: header != null ? body : null,
                         leading: category.leading,
-                        trailing: category.trailing != null || category.actions.isNotEmpty
+                        trailing: category.trailing != null || lowMediumActions.isNotEmpty || highActions.isNotEmpty
                             ? Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   if (category.trailing != null) category.trailing!,
+                                  ...highActions.map((action) => _iconButtonFromAction(context, action: action)),
                                   if (category.actions.isNotEmpty)
                                     actionButton(
                                       context,
@@ -1119,11 +1117,12 @@ class FlatStyle extends Style {
                     title: header != null ? header : body,
                     subtitle: header != null ? body : null,
                     leading: category.leading,
-                    trailing: category.trailing != null || category.actions.isNotEmpty
+                    trailing: category.trailing != null || lowMediumActions.isNotEmpty || highActions.isNotEmpty
                         ? Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               if (category.trailing != null) category.trailing!,
+                              ...highActions.map((action) => _iconButtonFromAction(context, action: action)),
                               if (category.actions.isNotEmpty)
                                 actionButton(
                                   context,
@@ -1553,6 +1552,17 @@ class FlatStyle extends Style {
             child: StyledLoadingIndicator(color: loadingIndicatorColor),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _iconButtonFromAction(BuildContext context, {required ActionItem action}) {
+    return Tooltip(
+      message: action.name,
+      child: StyledIconButton(
+        icon: action.icon ?? Icons.circle,
+        onTapped: action.onPerform,
+        color: action.color ?? context.styleContext().emphasisColor,
       ),
     );
   }
