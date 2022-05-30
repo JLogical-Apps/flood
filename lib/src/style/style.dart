@@ -3,6 +3,7 @@ import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:jlogical_utils/src/style/widgets/carousel/styled_carousel.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_category.dart';
 import 'package:jlogical_utils/src/style/widgets/content/styled_container.dart';
+import 'package:jlogical_utils/src/style/widgets/input/action_item.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_date_field.dart';
@@ -134,20 +135,28 @@ abstract class Style {
   Future<T?> showDialog<T>({required BuildContext context, required StyledDialog<T> dialog}) =>
       throw UnimplementedError();
 
+  /// Shows a menu with a list of [actions].
+  Future<void> showMenu({required BuildContext context, required List<ActionItem> actions}) =>
+      throw UnimplementedError();
+
   Future<void> showMessage({required BuildContext context, required StyledMessage message}) =>
       throw UnimplementedError();
 
   /// Navigates to the [page] and returns the value given when [navigateBack] is called.
-  Future<T?> navigateTo<T, P extends Widget>(
-          {required BuildContext context, required P Function(BuildContext context) page}) =>
+  Future<T?> navigateTo<T, P extends Widget>({
+    required BuildContext context,
+    required P Function(BuildContext context) page,
+  }) =>
       throw UnimplementedError();
 
   /// Navigates back and returns an optional [result].
   void navigateBack<T>({required BuildContext context, T? result}) => throw UnimplementedError();
 
   /// Replaces the current page with [newPage].
-  void navigateReplacement<P extends Widget>(
-          {required BuildContext context, required P Function(BuildContext context) newPage}) =>
+  void navigateReplacement<P extends Widget>({
+    required BuildContext context,
+    required P Function(BuildContext context) newPage,
+  }) =>
       throw UnimplementedError();
 }
 

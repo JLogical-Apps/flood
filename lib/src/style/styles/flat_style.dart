@@ -958,8 +958,8 @@ class FlatStyle extends Style {
       onTap: content.onTapped,
       onLongPress: lowActions.isEmpty
           ? null
-          : () => _showActionsDialog(
-                context,
+          : () => showMenu(
+                context: context,
                 actions: lowActions,
               ),
       child: StyleContextProvider(
@@ -1405,6 +1405,44 @@ class FlatStyle extends Style {
     return result;
   }
 
+  @override
+  Future<void> showMenu({required BuildContext context, required List<ActionItem> actions}) {
+    return showDialog(
+      context: context,
+      dialog: StyledDialog(
+        body: StyleContextProvider(
+          styleContext: initialStyleContext,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: actions
+                    .map<Widget>((action) => Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            splashColor: initialStyleContext.backgroundColorSoft,
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              action.perform(context);
+                            },
+                            child: ListTile(
+                              title: StyledContentSubtitleText(
+                                action.name,
+                                textOverrides: StyledTextOverrides(fontColor: action.color),
+                              ),
+                              subtitle: action.description != null ? StyledBodyText(action.description!) : null,
+                              leading: action.icon
+                                  .mapIfNonNull((icon) => StyledIcon(action.icon!, colorOverride: action.color)),
+                            ),
+                          ),
+                        ))
+                    .toList() +
+                [SafeArea(child: Container())],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
   Future<void> showMessage({required BuildContext context, required StyledMessage message}) async {
     final backgroundColor = message.backgroundColorOverride ?? initialStyleContext.emphasisColorSoft;
     await ScaffoldMessenger.of(context)
@@ -1446,45 +1484,6 @@ class FlatStyle extends Style {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: newPage, settings: RouteSettings(name: '$P')));
   }
 
-  Future<void> _showActionsDialog(
-    BuildContext context, {
-    required List<ActionItem> actions,
-  }) {
-    return showDialog(
-      context: context,
-      dialog: StyledDialog(
-        body: StyleContextProvider(
-          styleContext: initialStyleContext,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: actions
-                    .map<Widget>((action) => Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            splashColor: initialStyleContext.backgroundColorSoft,
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              action.perform(context);
-                            },
-                            child: ListTile(
-                              title: StyledContentSubtitleText(
-                                action.name,
-                                textOverrides: StyledTextOverrides(fontColor: action.color),
-                              ),
-                              subtitle: action.description != null ? StyledBodyText(action.description!) : null,
-                              leading: action.icon
-                                  .mapIfNonNull((icon) => StyledIcon(action.icon!, colorOverride: action.color)),
-                            ),
-                          ),
-                        ))
-                    .toList() +
-                [SafeArea(child: Container())],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget actionButton(
     BuildContext context, {
     required List<ActionItem> actions,
@@ -1497,8 +1496,8 @@ class FlatStyle extends Style {
         paddingOverride: EdgeInsets.zero,
       ),
       onPressed: () {
-        _showActionsDialog(
-          context,
+        showMenu(
+          context: context,
           actions: actions,
         );
       },
