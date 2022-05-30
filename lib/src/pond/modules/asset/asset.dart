@@ -3,13 +3,16 @@ import 'dart:typed_data';
 
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
+import 'package:mime/mime.dart';
 
 class Asset {
   final String? id;
   final String name;
   final Uint8List value;
 
-  const Asset({this.id, required this.name, required this.value});
+  late final String? mimeType = lookupMimeType(name);
+
+  Asset({this.id, required this.name, required this.value});
 
   Asset withValue(Uint8List newValue) {
     return Asset(id: id, name: name, value: newValue);
@@ -20,4 +23,12 @@ class Asset {
     await file.writeAsBytes(value);
     return file;
   }
+
+  bool get isImage => mimeType?.startsWith('image') == true;
+
+  bool get isVideo => mimeType?.startsWith('video') == true;
+
+  bool get isText => mimeType?.startsWith('text') == true;
+
+  bool get isBinary => mimeType?.startsWith('application') == true;
 }

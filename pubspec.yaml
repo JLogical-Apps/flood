@@ -46,6 +46,7 @@ dependencies:
   get_it: 7.2.0
   image: ^3.1.1
   interact: ^2.1.1
+  mime: ^1.0.2
   process_run: ^0.12.3+2
   provider: ^6.0.3
   shared_preferences: ^2.0.6
