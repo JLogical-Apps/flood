@@ -11,6 +11,10 @@ class Asset {
 
   const Asset({this.id, required this.name, required this.value});
 
+  Asset withValue(Uint8List newValue) {
+    return Asset(id: id, name: name, value: value);
+  }
+
   Future<File> cacheToFile() async {
     final file = AppContext.global.cacheDirectory - name;
     await file.writeAsBytes(value);
