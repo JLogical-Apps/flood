@@ -182,9 +182,8 @@ class TestHomePage extends HookWidget {
                                     Icons.chevron_right,
                                   ),
                                   actions: [
-                                    ActionItem(
+                                    ActionItem.low(
                                       name: 'Test',
-                                      type: ActionItemType.secondary,
                                     ),
                                   ],
                                 ))

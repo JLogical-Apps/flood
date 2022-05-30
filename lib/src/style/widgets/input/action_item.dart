@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../emphasis.dart';
+
 /// An action that can be performed.
 class ActionItem {
   final String name;
@@ -8,7 +10,7 @@ class ActionItem {
   final IconData? icon;
 
   final Color? color;
-  final ActionItemType type;
+  final Emphasis emphasis;
 
   final VoidCallback? onPerform;
   final void Function(BuildContext context)? onPerformWithContext;
@@ -18,10 +20,37 @@ class ActionItem {
     this.description,
     this.icon,
     this.color,
-    this.type: ActionItemType.primary,
+    this.emphasis: Emphasis.medium,
     this.onPerform,
     this.onPerformWithContext,
   });
+
+  const ActionItem.high({
+    required this.name,
+    this.description,
+    this.icon,
+    this.color,
+    this.onPerform,
+    this.onPerformWithContext,
+  }) : emphasis = Emphasis.high;
+
+  const ActionItem.medium({
+    required this.name,
+    this.description,
+    this.icon,
+    this.color,
+    this.onPerform,
+    this.onPerformWithContext,
+  }) : emphasis = Emphasis.medium;
+
+  const ActionItem.low({
+    required this.name,
+    this.description,
+    this.icon,
+    this.color,
+    this.onPerform,
+    this.onPerformWithContext,
+  }) : emphasis = Emphasis.low;
 
   void perform(BuildContext context) {
     if (onPerformWithContext != null) {
@@ -32,12 +61,4 @@ class ActionItem {
       onPerform!();
     }
   }
-}
-
-enum ActionItemType {
-  /// Action that is easily viewable/accessible.
-  primary,
-
-  /// Action that is more subtle.
-  secondary
 }

@@ -72,10 +72,19 @@ class PondHomePage extends HookWidget {
                       }),
                   ActionItem(
                     name: 'Log Out',
+                    icon: Icons.logout,
                     onPerform: () async {
                       await locate<AuthService>().logout();
                       context.style().navigateReplacement(context: context, newPage: (_) => PondLoginPage());
                     },
+                  ),
+                  ActionItem.high(
+                    name: 'Do something pointless',
+                    icon: Icons.account_balance,
+                    onPerform: () async {
+                      await Future.delayed(Duration(seconds: 2));
+                      print('hye');
+                    }
                   ),
                 ],
                 body: ModelBuilder.styled(
@@ -196,6 +205,13 @@ class BudgetCard extends HookWidget {
             context.style().navigateTo(context: context, page: (context) => PondBudgetPage(budgetId: budgetEntity.id!));
           },
           actions: [
+            ActionItem.high(
+              name: 'Share',
+              description: 'Share this budget.',
+              icon: Icons.ios_share,
+              color: Colors.blue,
+              onPerform: () {},
+            ),
             ActionItem(
               name: 'Delete',
               description: 'Delete this budget.',

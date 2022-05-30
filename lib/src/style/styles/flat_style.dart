@@ -37,6 +37,7 @@ import '../style_provider.dart';
 import '../widgets/carousel/styled_carousel.dart';
 import '../widgets/content/styled_container.dart';
 import '../widgets/input/action_item.dart';
+import '../widgets/input/styled_icon_button.dart';
 import '../widgets/misc/styled_chip.dart';
 import '../widgets/misc/styled_loading_indicator.dart';
 import '../widgets/misc/styled_message.dart';
@@ -136,6 +137,10 @@ class FlatStyle extends Style {
 
   AppBar _styledAppBar(BuildContext context, {Widget? title, List<ActionItem> actions: const []}) {
     final styleContext = context.styleContext();
+
+    final highActions = actions.where((action) => action.emphasis == Emphasis.high).toList();
+    final lowMediumActions = actions.where((action) => action.emphasis != Emphasis.high).toList();
+
     return AppBar(
       backgroundColor: styleContext.backgroundColor,
       title: title,
@@ -144,14 +149,24 @@ class FlatStyle extends Style {
       foregroundColor: styleContext.emphasisColor,
       iconTheme: IconThemeData(color: styleContext.emphasisColor),
       actions: [
-        if (actions.isNotEmpty)
-          Builder(builder: (context) {
-            return actionButton(
-              context,
-              actions: actions,
-              color: styleContext.emphasisColor,
-            );
-          }),
+        ...highActions.map((action) => Tooltip(
+              message: action.name,
+              child: StyledIconButton(
+                icon: action.icon ?? Icons.circle,
+                onTapped: action.onPerform,
+                color: action.color,
+              ),
+            )),
+        if (lowMediumActions.isNotEmpty)
+          Builder(
+            builder: (context) {
+              return actionButton(
+                context,
+                actions: actions,
+                color: styleContext.emphasisColor,
+              );
+            },
+          ),
       ],
     );
   }
@@ -402,6 +417,20 @@ class FlatStyle extends Style {
               await onTapped();
               if (isMounted()) isLoading.value = false;
             });
+
+        final isIconButton = button.text == null && button.icon != null;
+        if (isIconButton) {
+          return IconButton(
+            icon: _loadingCrossFade(
+              isLoading: isLoading.value,
+              child: StyledIcon(
+                button.icon!,
+                colorOverride: button.color ?? styleContext.emphasisColor,
+              ),
+            ),
+            onPressed: onTapped,
+          );
+        }
 
         return button.emphasis.map(
           high: () {
@@ -916,8 +945,9 @@ class FlatStyle extends Style {
     final header = content.headerText != null ? StyledContentHeaderText(content.headerText!) : content.header;
     final body = content.bodyText != null ? StyledContentSubtitleText(content.bodyText!) : content.body;
 
-    final primaryActions = content.actions.where((action) => action.type == ActionItemType.primary).toList();
-    final secondaryActions = content.actions.where((action) => action.type == ActionItemType.secondary).toList();
+    final highActions = content.actions.where((action) => action.emphasis == Emphasis.high).toList();
+    final mediumActions = content.actions.where((action) => action.emphasis == Emphasis.medium).toList();
+    final lowActions = content.actions.where((action) => action.emphasis == Emphasis.low).toList();
 
     return ClickableCard(
       elevation: 0,
@@ -926,11 +956,11 @@ class FlatStyle extends Style {
       borderRadius: content.borderRadius ?? BorderRadius.circular(12),
       splashColor: softenColor(backgroundColor).withOpacity(0.8),
       onTap: content.onTapped,
-      onLongPress: secondaryActions.isEmpty
+      onLongPress: lowActions.isEmpty
           ? null
           : () => _showActionsDialog(
                 context,
-                actions: secondaryActions,
+                actions: lowActions,
               ),
       child: StyleContextProvider(
         styleContext: newStyleContext,
@@ -941,7 +971,7 @@ class FlatStyle extends Style {
                 body != null ||
                 content.leading != null ||
                 content.trailing != null ||
-                primaryActions.isNotEmpty)
+                mediumActions.isNotEmpty)
               MediaQuery(
                 data: MediaQuery.of(context).copyWith(padding: EdgeInsets.zero),
                 child: ListTile(
@@ -949,15 +979,23 @@ class FlatStyle extends Style {
                   title: header != null ? header : body,
                   subtitle: header != null ? body : null,
                   leading: content.leading,
-                  trailing: content.trailing != null || primaryActions.isNotEmpty
+                  trailing: content.trailing != null || mediumActions.isNotEmpty
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             if (content.trailing != null) content.trailing!,
-                            if (primaryActions.isNotEmpty)
+                            ...highActions.map((action) => Tooltip(
+                                  message: action.description,
+                                  child: StyledIconButton(
+                                    icon: action.icon ?? Icons.circle,
+                                    color: action.color,
+                                    onTapped: action.onPerform,
+                                  ),
+                                )),
+                            if (mediumActions.isNotEmpty)
                               actionButton(
                                 context,
-                                actions: primaryActions,
+                                actions: mediumActions,
                               ),
                           ],
                         )
