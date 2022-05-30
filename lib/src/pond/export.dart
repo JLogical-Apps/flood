@@ -14,6 +14,7 @@ export 'modules/asset/firebase_storage_asset_provider.dart';
 export 'modules/asset/image_asset_picker.dart';
 export 'modules/asset/list_asset_field_property.dart';
 export 'modules/asset/local_asset_provider.dart';
+export 'modules/asset/video_asset_picker.dart';
 export 'modules/auth/default_auth_module.dart';
 export 'modules/auth/default_auth_module.dart';
 export 'modules/config/config_data_source.dart';
