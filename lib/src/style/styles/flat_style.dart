@@ -1046,10 +1046,10 @@ class FlatStyle extends Style {
                               children: [
                                 if (category.trailing != null) category.trailing!,
                                 ...highActions.map((action) => _iconButtonFromAction(context, action: action)),
-                                if (category.actions.isNotEmpty)
+                                if (lowMediumActions.isNotEmpty)
                                   actionButton(
                                     context,
-                                    actions: category.actions,
+                                    actions: lowMediumActions,
                                   ),
                               ],
                             )
@@ -1088,10 +1088,10 @@ class FlatStyle extends Style {
                                 children: [
                                   if (category.trailing != null) category.trailing!,
                                   ...highActions.map((action) => _iconButtonFromAction(context, action: action)),
-                                  if (category.actions.isNotEmpty)
+                                  if (lowMediumActions.isNotEmpty)
                                     actionButton(
                                       context,
-                                      actions: category.actions,
+                                      actions: lowMediumActions,
                                     ),
                                 ],
                               )
@@ -1123,10 +1123,10 @@ class FlatStyle extends Style {
                             children: [
                               if (category.trailing != null) category.trailing!,
                               ...highActions.map((action) => _iconButtonFromAction(context, action: action)),
-                              if (category.actions.isNotEmpty)
+                              if (lowMediumActions.isNotEmpty)
                                 actionButton(
                                   context,
-                                  actions: category.actions,
+                                  actions: lowMediumActions,
                                 ),
                             ],
                           )
