@@ -12,7 +12,7 @@ class Asset {
   const Asset({this.id, required this.name, required this.value});
 
   Asset withValue(Uint8List newValue) {
-    return Asset(id: id, name: name, value: value);
+    return Asset(id: id, name: name, value: newValue);
   }
 
   Future<File> cacheToFile() async {
