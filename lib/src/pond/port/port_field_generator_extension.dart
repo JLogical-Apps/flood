@@ -15,7 +15,7 @@ extension PortFieldGeneratorExtension<V> on FieldProperty<V> {
 }
 
 extension EmbeddedFieldGeneratorExtension<V extends ValueObject> on FieldProperty<V> {
-  PortField<Port> toEmbeddedPortField(Port portBuilder(V? currentEmbeddedValue)) {
+  PortField<Port?> toEmbeddedPortField(Port portBuilder(V? currentEmbeddedValue)) {
     return EmbeddedPortField(name: name, port: portBuilder(getUnvalidated()));
   }
 }
