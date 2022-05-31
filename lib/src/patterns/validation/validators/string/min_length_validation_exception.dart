@@ -6,4 +6,9 @@ class MinLengthValidationException extends ValidationException<dynamic> {
   MinLengthValidationException({required super.failedValue, required this.minLength});
 
   int get length => failedValue?.toString().length ?? 0;
+
+  @override
+  String toString() {
+    return 'Cannot be shorter than $minLength characters!';
+  }
 }

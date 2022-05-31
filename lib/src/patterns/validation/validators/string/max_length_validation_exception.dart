@@ -6,4 +6,9 @@ class MaxLengthValidationException extends ValidationException<dynamic> {
   MaxLengthValidationException({required super.failedValue, required this.maxLength});
 
   int get length => failedValue?.toString().length ?? 0;
+
+  @override
+  String toString() {
+    return 'Cannot be longer than $maxLength characters!';
+  }
 }

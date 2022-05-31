@@ -13,7 +13,7 @@ class IsLessThanValidator<N extends num> extends SyncValidator<N?> {
     }
 
     if (value >= lessThan) {
-      throw IsLessThanValidationException(failedValue: value);
+      throw IsLessThanValidationException(failedValue: value, lessThan: lessThan);
     }
   }
 }

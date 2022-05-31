@@ -13,7 +13,7 @@ class IsBeforeValidator extends SyncValidator<DateTime?> {
     }
 
     if (!value.isBefore(before)) {
-      throw IsBeforeValidationException(failedValue: value);
+      throw IsBeforeValidationException(failedValue: value, before: before);
     }
   }
 }

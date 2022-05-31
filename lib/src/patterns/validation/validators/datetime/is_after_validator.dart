@@ -12,7 +12,7 @@ class IsAfterValidator extends SyncValidator<DateTime?> {
       return;
     }
     if (!value.isAfter(after)) {
-      throw IsAfterValidationException(failedValue: value);
+      throw IsAfterValidationException(failedValue: value, after: after);
     }
   }
 }

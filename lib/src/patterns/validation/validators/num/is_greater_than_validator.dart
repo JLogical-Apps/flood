@@ -14,7 +14,7 @@ class IsGreaterThanValidator<N extends num> extends SyncValidator<N?> {
     }
 
     if (value <= greaterThan) {
-      throw IsGreaterThanValidationException(failedValue: value);
+      throw IsGreaterThanValidationException(failedValue: value, greaterThan: greaterThan);
     }
   }
 }
