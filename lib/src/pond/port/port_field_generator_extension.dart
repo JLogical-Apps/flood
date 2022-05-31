@@ -19,3 +19,9 @@ extension EmbeddedFieldGeneratorExtension<V extends ValueObject> on FieldPropert
     return EmbeddedPortField(name: name, port: portBuilder(getUnvalidated()));
   }
 }
+
+extension IntPortFieldGeneratorExtension on FieldProperty<int> {
+  CurrencyPortField toCentsCurrencyPortField() {
+    return CurrencyPortField(name: name, initialValue: getUnvalidated());
+  }
+}
