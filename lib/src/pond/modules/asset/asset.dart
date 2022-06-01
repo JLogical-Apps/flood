@@ -15,7 +15,7 @@ class Asset {
 
   Asset({this.id, required this.name, required this.value});
 
-  Future<Asset> fromFile(File file) async {
+  static Future<Asset> fromFile(File file) async {
     if (!await file.exists()) {
       throw Exception('Cannot get asset from file [${file.path}]');
     }
