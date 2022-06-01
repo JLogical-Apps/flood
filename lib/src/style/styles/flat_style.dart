@@ -921,7 +921,7 @@ class FlatStyle extends Style {
                   shape: BoxShape.circle,
                   border: Border.fromBorderSide(
                     BorderSide(
-                      color: Colors.white,
+                      color: styleContext.foregroundColor,
                       width: 3,
                     ),
                   ),
@@ -963,7 +963,7 @@ class FlatStyle extends Style {
                                       shape: BoxShape.circle,
                                       border: Border.fromBorderSide(
                                         BorderSide(
-                                          color: Colors.white,
+                                          color: initialStyleContext.foregroundColor,
                                           width: isSelected ? 3 : 0,
                                         ),
                                       ),
