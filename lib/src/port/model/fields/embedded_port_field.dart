@@ -19,7 +19,13 @@ class EmbeddedPortField extends PortField<Port> {
   EmbeddedPortField({required super.name, required Port port, bool enabled: true})
       : _enabledX = BehaviorSubject.seeded(enabled),
         super(initialValue: port) {
-    withSimpleValidator(Validator.of((_) => port.submit(throwExceptionIfFail: true)));
+    withSimpleValidator(Validator.of((_) async {
+      if (!enabled) {
+        return;
+      }
+
+      await port.submit(throwExceptionIfFail: true);
+    }));
   }
 
   @override
