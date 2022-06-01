@@ -53,6 +53,7 @@ class PondHomePage extends HookWidget {
                           children: [
                             StyledTextPortField(name: 'name'),
                             StyledTextPortField(name: 'email'),
+                            StyledColorPortField(name: 'color', canBeNone: true),
                             StyledUploadPortField(name: 'profilePicture'),
                           ],
                         ).show(context);

@@ -6,6 +6,7 @@ import 'package:jlogical_utils/src/style/widgets/content/styled_container.dart';
 import 'package:jlogical_utils/src/style/widgets/input/action_item.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_checkbox.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_color_picker.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_date_field.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_dropdown.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_menu_button.dart';
@@ -98,6 +99,10 @@ abstract class Style {
 
   /// A field that allows the user to select a date.
   Widget dateField(BuildContext context, StyleContext styleContext, StyledDateField dateField) =>
+      throw UnimplementedError();
+
+  /// A field that allows the user to select a color.
+  Widget colorPicker(BuildContext context, StyleContext styleContext, StyledColorPicker colorPicker) =>
       throw UnimplementedError();
 
   // === CONTENT ===

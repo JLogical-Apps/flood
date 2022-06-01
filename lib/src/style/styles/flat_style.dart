@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/style/emphasis.dart';
 import 'package:jlogical_utils/src/style/style.dart';
@@ -896,6 +897,117 @@ class FlatStyle extends Style {
               FocusScope.of(context).requestFocus(FocusNode());
 
               if (result != null) dateField.onChanged!(result);
+            }
+          : null,
+    );
+  }
+
+  @override
+  Widget colorPicker(BuildContext context, StyleContext styleContext, StyledColorPicker colorPicker) {
+    final initialColor = colorPicker.color;
+    return StyledTextField(
+      key: ObjectKey(initialColor),
+      labelText: colorPicker.labelText,
+      label: colorPicker.label,
+      errorText: colorPicker.errorText,
+      leading: initialColor == null
+          ? StyledIcon(Icons.radio_button_unchecked)
+          : Padding(
+              padding: EdgeInsets.all(8),
+              child: Container(
+                width: 0, // Prevent it from fully expanding.
+                decoration: BoxDecoration(
+                  color: initialColor,
+                  shape: BoxShape.circle,
+                  border: Border.fromBorderSide(
+                    BorderSide(
+                      color: Colors.white,
+                      width: 3,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+      hintText: 'Select a color',
+      initialText: initialColor?.value.toRadixString(16).mapIfNonNull((color) => '#$color'),
+      enabled: true,
+      onTap: colorPicker.onChanged != null
+          ? () async {
+              final result = await showDialog(
+                context: context,
+                dialog: StyledDialog(
+                  titleText: 'Select Color',
+                  body: HookBuilder(
+                    builder: (context) {
+                      final selectedColor = useState<int?>(initialColor?.value);
+                      final canBeNone = colorPicker.canBeNone;
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Wrap(
+                              spacing: 10,
+                              runSpacing: 10,
+                              alignment: WrapAlignment.center,
+                              children: colorPicker.allowedColors.map((color) {
+                                final isSelected = selectedColor.value == color.value;
+                                return GestureDetector(
+                                  onTap: () {
+                                    selectedColor.value = color.value;
+                                  },
+                                  child: Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      color: color,
+                                      shape: BoxShape.circle,
+                                      border: Border.fromBorderSide(
+                                        BorderSide(
+                                          color: Colors.white,
+                                          width: isSelected ? 3 : 0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (canBeNone)
+                                StyledButton.low(
+                                  text: 'Clear',
+                                  icon: Icons.clear,
+                                  onTapped: () {
+                                    selectedColor.value = null;
+                                  },
+                                ),
+                              StyledButton.high(
+                                text: 'Save',
+                                icon: Icons.save,
+                                onTapped: () {
+                                  context.style().navigateBack(context: context, result: [selectedColor.value]);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              );
+
+              FocusScope.of(context).requestFocus(FocusNode());
+
+              if (result != null) {
+                int? newColorValue = result[0];
+                final newColor = newColorValue.mapIfNonNull((value) => Color(value));
+
+                colorPicker.onChanged!(newColor);
+              }
             }
           : null,
     );
