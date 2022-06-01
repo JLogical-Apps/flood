@@ -20,7 +20,7 @@ class EmbeddedPortField extends PortField<Port> {
       : _enabledX = BehaviorSubject.seeded(enabled),
         super(initialValue: port) {
     withSimpleValidator(Validator.of((_) async {
-      if (!enabled) {
+      if (!this.enabled) {
         return;
       }
 
