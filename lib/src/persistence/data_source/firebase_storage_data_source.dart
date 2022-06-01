@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 
 import '../../pond/modules/logging/default_logging_module.dart';
 import 'data_source.dart';
@@ -15,7 +17,14 @@ class FirebaseStorageDataSource extends DataSource<Uint8List> {
   @override
   Future<Uint8List?> getData() async {
     logWarning('Getting data from Firebase Storage: $storagePath');
-    return await storageReference.getData();
+
+    final file = Directory.systemTemp - '${UuidIdGenerator().getId()}.tmp';
+    await storageReference.writeToFile(file);
+
+    final data = await file.readAsBytes();
+    await file.delete();
+
+    return data;
   }
 
   @override

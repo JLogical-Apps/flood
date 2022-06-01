@@ -12,7 +12,7 @@ class FirebaseStorageAssetProvider extends AssetProvider {
   final Directory cacheDirectory;
 
   FirebaseStorageAssetProvider({Directory? cacheDirectory})
-      : this.cacheDirectory = cacheDirectory ?? AppContext.global.cacheDirectory / 'image';
+      : this.cacheDirectory = cacheDirectory ?? AppContext.global.cacheDirectory / 'assets';
 
   @override
   DataSource<Asset> getDataSource(String id) {
