@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:mime/mime.dart';
+import 'package:path/path.dart';
 
 class Asset {
   final String? id;
@@ -13,6 +14,15 @@ class Asset {
   late final String? mimeType = lookupMimeType(name);
 
   Asset({this.id, required this.name, required this.value});
+
+  Future<Asset> fromFile(File file) async {
+    if (!await file.exists()) {
+      throw Exception('Cannot get asset from file [${file.path}]');
+    }
+
+    final fileData = await file.readAsBytes();
+    return Asset(name: basename(file.path), value: fileData);
+  }
 
   Asset withValue(Uint8List newValue) {
     return Asset(id: id, name: name, value: newValue);
