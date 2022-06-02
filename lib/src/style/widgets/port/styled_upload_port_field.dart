@@ -15,7 +15,7 @@ import '../text/styled_body_text.dart';
 import '../text/styled_error_text.dart';
 import '../text/styled_text_overrides.dart';
 
-class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, String> with WithPortExceptionTextGetter {
+class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, String?> with WithPortExceptionTextGetter {
   static const double _imageWidth = 200;
   static const double _imageHeight = 200;
 

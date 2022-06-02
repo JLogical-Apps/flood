@@ -9,7 +9,10 @@ class AssetPortField extends PortField<String?> {
   bool isChanged = false;
   Asset? newAsset;
 
-  AssetPortField({required super.name, super.initialValue});
+  /// Whether to keep the id of the asset.
+  final bool keepId;
+
+  AssetPortField({required super.name, super.initialValue, this.keepId: false});
 
   @override
   Future submitMapper(String? value) async {
@@ -17,11 +20,31 @@ class AssetPortField extends PortField<String?> {
       return value;
     }
 
+    if (keepId) {
+      return await _replaceAsset();
+    } else {
+      return await _deleteAndCreateAsset();
+    }
+  }
+
+  Future<String?> _replaceAsset() async {
+    String? value;
+
+    if (newAsset != null) {
+      final uploadAsset = newAsset!.withId(initialValue);
+      final id = await locate<AssetModule>().uploadAsset(uploadAsset);
+      value = id;
+    }
+
+    return value;
+  }
+
+  Future<String?> _deleteAndCreateAsset() async {
     if (initialValue != null) {
       await locate<AssetModule>().deleteAsset(initialValue!);
     }
 
-    value = null;
+    String? value;
 
     if (newAsset != null) {
       final id = await locate<AssetModule>().uploadAsset(newAsset!);

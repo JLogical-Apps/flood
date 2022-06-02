@@ -24,6 +24,14 @@ class Asset {
     return Asset(name: basename(file.path), value: fileData);
   }
 
+  Asset withId(String? id) {
+    return Asset(id: id, name: name, value: value);
+  }
+
+  Asset withName(String name) {
+    return Asset(id: id, name: name, value: value);
+  }
+
   Asset withValue(Uint8List newValue) {
     return Asset(id: id, name: name, value: newValue);
   }
