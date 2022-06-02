@@ -17,6 +17,10 @@ class DoublePortField extends PortField<double?> {
     }
 
     if (rawValue is String) {
+      if(rawValue.isBlank) {
+        return null;
+      }
+
       IsDoubleValidator().validateSync(rawValue);
       return rawValue.tryParseDoubleAfterClean(cleanCurrency: false, cleanCommas: true)!;
     }

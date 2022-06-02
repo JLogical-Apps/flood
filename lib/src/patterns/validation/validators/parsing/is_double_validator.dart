@@ -10,7 +10,7 @@ class IsDoubleValidator extends SyncValidator<String?> {
       return;
     }
 
-    final parse = value.tryParseDoubleAfterClean(cleanCommas: false, cleanCurrency: false);
+    final parse = value.tryParseDoubleAfterClean(cleanCommas: true, cleanCurrency: false);
     if (parse == null) {
       throw IsDoubleValidationException(failedValue: value);
     }

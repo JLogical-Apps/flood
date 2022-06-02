@@ -21,6 +21,10 @@ class IntPortField extends PortField<int?> {
     }
 
     if (rawValue is String) {
+      if(rawValue.isBlank) {
+        return null;
+      }
+
       IsIntValidator().validateSync(rawValue);
       return rawValue.tryParseIntAfterClean()!;
     }

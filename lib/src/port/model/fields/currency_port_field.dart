@@ -21,6 +21,10 @@ class CurrencyPortField extends PortField<int?> {
     }
 
     if (rawValue is String) {
+      if(rawValue.isBlank) {
+        return null;
+      }
+
       IsCurrencyValidator().validateSync(rawValue);
       final dollars = rawValue.tryParseDoubleAfterClean(cleanCommas: true, cleanCurrency: true)!;
       final cents = (dollars * 100).round();
