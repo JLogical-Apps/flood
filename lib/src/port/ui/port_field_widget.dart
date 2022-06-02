@@ -6,14 +6,20 @@ import '../../utils/export.dart';
 import '../model/port.dart';
 import '../model/port_field.dart';
 
-abstract class PortFieldWidget<F extends PortField<T>, T> extends HookWidget {
+/// A widget that builds and updates a PortField of type [F] with an internal state of [R],
+/// which [F] should be able to translate into [T] in its `valueParser` method.
+abstract class PortFieldWidget<F extends PortField<T>, T, R> extends HookWidget {
   final String name;
 
   PortFieldWidget({super.key, required this.name});
 
-  Widget buildField(BuildContext context, F field, T value, Object? exception);
+  Widget buildField(BuildContext context, F field, R value, Object? exception);
 
-  void setValue(BuildContext context, T newValue) {
+  R getInitialRawValue(T portValue) {
+    return portValue as R;
+  }
+
+  void setValue(BuildContext context, R newValue) {
     getPort(context)[name] = newValue;
   }
 
@@ -29,6 +35,10 @@ abstract class PortFieldWidget<F extends PortField<T>, T> extends HookWidget {
   Widget build(BuildContext context) {
     final port = getPort(context);
     final field = port.getFieldByName(name);
+
+    useOneTimeEffect(() {
+      port[name] = getInitialRawValue(port[name]);
+    });
 
     final valueX = useMemoized(() => port.getFieldValueXByName(name));
     final value = useValueStream(valueX);

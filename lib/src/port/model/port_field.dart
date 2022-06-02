@@ -14,9 +14,11 @@ abstract class PortField<V> extends PortValueComponent<V>
   @override
   final List<PortFieldValidator<V>> validators = [];
 
-  final V initialValue;
+  final dynamic initialValue;
 
-  V get value => port[name];
+  dynamic get rawValue => port[name];
+
+  V get value => valueParser(rawValue);
 
   Object? get exception => port.getExceptionByName(name);
 

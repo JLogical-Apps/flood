@@ -1,5 +1,3 @@
-import 'package:jlogical_utils/jlogical_utils.dart';
-
 import '../../../model/export_core.dart';
 import '../../../patterns/export_core.dart';
 import '../../context/module/app_module.dart';

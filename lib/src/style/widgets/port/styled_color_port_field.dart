@@ -5,7 +5,7 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_color_picker.dart';
 
-class StyledColorPortField extends PortFieldWidget<IntPortField, int?> with WithPortExceptionTextGetter {
+class StyledColorPortField extends PortFieldWidget<IntPortField, int?, int?> with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;

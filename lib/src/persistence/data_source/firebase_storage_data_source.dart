@@ -2,9 +2,10 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../../pond/modules/logging/default_logging_module.dart';
+import '../ids/uuid_id_generator.dart';
 import 'data_source.dart';
 
 class FirebaseStorageDataSource extends DataSource<Uint8List> {

@@ -4,7 +4,7 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_radio.dart';
 
-class StyledRadioOptionPortField<T> extends PortFieldWidget<OptionsPortField<T>, T?> with WithPortExceptionTextGetter {
+class StyledRadioOptionPortField<T> extends PortFieldWidget<OptionsPortField<T>, T?, T?> with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;

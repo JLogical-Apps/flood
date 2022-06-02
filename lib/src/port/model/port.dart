@@ -143,8 +143,10 @@ class Port<T> implements Validator<void> {
       return PortResult(exception: exception);
     }
 
-    final submittedValues = await Future.wait(
-        _valueByName.mapToIterable((name, value) async => await getValueComponentByName(name).submitMapper(value)));
+    final submittedValues = await Future.wait(_valueByName.mapToIterable((name, value) async {
+      final valueComponent = getValueComponentByName(name);
+      return await valueComponent.submitMapper(valueComponent.valueParser(value));
+    }));
     var submittedValueByName = Map.fromIterables(_valueByName.keys, submittedValues);
 
     dynamic result = submittedValueByName;
@@ -169,11 +171,15 @@ class Port<T> implements Validator<void> {
         continue;
       }
 
-      final validator = component as Validator<PortFieldValidationContext>;
-      final fieldValidationContext = PortFieldValidationContext(value: _valueByName[component.name], port: this);
-      final error = await validator.getException(fieldValidationContext);
-      if (error != null) {
-        errorByName[component.name] = error;
+      try {
+        final validator = component as Validator<PortFieldValidationContext>;
+        final fieldValidationContext = PortFieldValidationContext(
+          value: component.valueParser(get(component.name)),
+          port: this,
+        );
+        await validator.validate(fieldValidationContext);
+      } catch (e) {
+        errorByName[component.name] = e;
       }
     }
 

@@ -5,14 +5,14 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledIntPortField extends PortFieldWidget<IntPortField, int?> with WithPortExceptionTextGetter {
+class StyledIntPortField extends PortFieldWidget<IntPortField, int?, String> with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;
 
   /// The suggested value to show if no input is typed in.
   /// Sets this as the value of the FormField if no input has been typed in.
-  final int? suggestedValue;
+  final String? suggestedValue;
 
   final bool enabled;
 
@@ -20,40 +20,31 @@ class StyledIntPortField extends PortFieldWidget<IntPortField, int?> with WithPo
   final ExceptionTextGetter? exceptionTextGetterOverride;
 
   StyledIntPortField({
-    Key? key,
-    required String name,
+    super.key,
+    required super.name,
     this.labelText,
     this.label,
     this.suggestedValue,
     this.enabled: true,
     this.exceptionTextGetterOverride,
-  }) : super(
-          key: key,
-          name: name,
-        );
+  });
 
   @override
-  Widget buildField(BuildContext context, IntPortField field, int? value, Object? exception) {
+  String getInitialRawValue(int? portValue) {
+    return portValue?.formatIntOrDouble() ?? '';
+  }
+
+  @override
+  Widget buildField(BuildContext context, IntPortField field, dynamic value, Object? exception) {
+    value = value as String;
     return StyledTextField(
       labelText: labelText,
       label: label,
       errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(signed: true),
-      initialText: value?.formatIntOrDouble(),
-      hintText: suggestedValue?.formatIntOrDouble(),
-      onChanged: (text) {
-        if (text.isBlank) {
-          setValue(context, null);
-          return;
-        }
-
-        final parsedInt = text.tryParseIntAfterClean(cleanCommas: true);
-        if (parsedInt == null) {
-          return;
-        }
-
-        setValue(context, parsedInt);
-      },
+      initialText: value,
+      hintText: suggestedValue,
+      onChanged: (text) => setValue(context, text),
       enabled: enabled,
     );
   }

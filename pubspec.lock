@@ -196,7 +196,7 @@ packages:
       name: cli_script
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.4"
+    version: "0.2.6"
   clock:
     dependency: transitive
     description:
@@ -252,7 +252,7 @@ packages:
       name: convert
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   cross_file:
     dependency: transitive
     description:
@@ -502,7 +502,7 @@ packages:
       name: flutter_markdown
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.10+1"
+    version: "0.6.10+2"
   flutter_mobx:
     dependency: "direct main"
     description:
@@ -1322,7 +1322,7 @@ packages:
       name: video_player_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.4"
+    version: "2.3.5"
   video_player_avfoundation:
     dependency: transitive
     description:

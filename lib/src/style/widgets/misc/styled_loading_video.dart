@@ -1,7 +1,8 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/widgets/misc/styled_loading_indicator.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:video_player/video_player.dart';
 
 class StyledLoadingVideo extends HookWidget {

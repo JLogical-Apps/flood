@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/widgets/input/styled_button.dart';
 
 class StyledIconButton extends StatelessWidget {
   final IconData icon;
