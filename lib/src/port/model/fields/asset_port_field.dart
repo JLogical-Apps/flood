@@ -20,17 +20,20 @@ class AssetPortField extends PortField<String?> {
       return value;
     }
 
-    if (initialValue != null) {
-      await locate<AssetModule>().deleteAsset(initialValue!);
-    }
+    value = null;
 
     if (forcedAssetId != null) {
       newAsset = newAsset?.withId(forcedAssetId);
+      value = forcedAssetId;
     }
 
     if (newAsset != null) {
       final id = await locate<AssetModule>().uploadAsset(newAsset!);
       value = id;
+    }
+
+    if (initialValue != null) {
+      await locate<AssetModule>().deleteAsset(initialValue!);
     }
 
     return value;

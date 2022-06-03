@@ -97,7 +97,7 @@ class PondBudgetPage extends HookWidget {
                   children: [
                     for (final imageAsset in imageAssets)
                       GestureDetector(
-                        onTap: imageAsset == null
+                        onTap: imageAsset.getOrNull() == null
                             ? null
                             : () async {
                                 final delete = await StyledDialog.yesNo(
@@ -112,7 +112,7 @@ class PondBudgetPage extends HookWidget {
                                 isLoading.value = true;
 
                                 final newBudget = Budget()..copyFrom(budget);
-                                await newBudget.imagesProperty.deleteAsset(imageAsset.id!);
+                                await newBudget.imagesProperty.deleteAsset(imageAsset.getOrNull()!.id!);
 
                                 budgetEntity.value = newBudget;
                                 await budgetEntity.save();
@@ -120,7 +120,7 @@ class PondBudgetPage extends HookWidget {
                                 isLoading.value = false;
                               },
                         child: StyledLoadingImage(
-                          image: imageAsset.mapIfNonNull((asset) => MemoryImage(asset.value)),
+                          image: imageAsset.mapIfNonNull((asset) => MemoryImage(asset.getOrNull()!.value)),
                           width: 200,
                           height: 200,
                         ),

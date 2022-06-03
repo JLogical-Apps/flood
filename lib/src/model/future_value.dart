@@ -15,6 +15,12 @@ class FutureValue<T> with _$FutureValue<T> {
 
   const factory FutureValue.error({Object? error}) = FutureValueError<T>;
 
+  bool get isLoading => this is FutureValueInitial;
+
+  bool get isLoaded => this is FutureValueLoaded;
+
+  bool get isError => this is FutureValueError;
+
   /// Invokes the future and returns the result of it in a loaded future value.
   /// If an exception occurred, returns an error src.model.
   static Future<FutureValue<T>> guard<T>(Future<T> future(), {void onError(dynamic error)?}) async {

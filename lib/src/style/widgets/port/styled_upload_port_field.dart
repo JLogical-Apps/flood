@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/utils/export.dart';
-import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../port/export.dart';
@@ -48,7 +47,7 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
       field.isChanged = value;
     });
 
-    final initialValueModel = useModelOrNull(value.mapIfNonNull((value) => locate<AssetModule>().getAssetModel(value)));
+    final initialValueModel = useAssetOrNull(value);
 
     final assetValue = preview ?? initialValueModel?.getOrNull();
 

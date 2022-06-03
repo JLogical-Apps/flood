@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:video_player/video_player.dart';
+import '../../../model/export_core.dart';
 import '../../../utils/hook_utils.dart';
 import '../text/styled_error_text.dart';
 import 'styled_loading_image.dart';
@@ -13,7 +14,7 @@ import 'package:jlogical_utils/src/style/widgets/misc/styled_loading_indicator.d
 import '../../../pond/export.dart';
 
 class StyledLoadingAsset extends HookWidget {
-  final Asset? asset;
+  final FutureValue<Asset?> maybeAsset;
 
   final void Function()? onTapped;
 
@@ -23,15 +24,19 @@ class StyledLoadingAsset extends HookWidget {
   final EdgeInsets? paddingOverride;
   final Alignment? alignment;
 
+  /// Widget to display if there is no asset.
+  final Widget? emptyWidget;
+
   const StyledLoadingAsset({
     super.key,
-    required this.asset,
+    required this.maybeAsset,
     this.onTapped,
     this.width,
     this.height,
     this.fit: BoxFit.cover,
     this.paddingOverride,
     this.alignment,
+    this.emptyWidget,
   });
 
   @override
@@ -40,43 +45,52 @@ class StyledLoadingAsset extends HookWidget {
 
     useMemoizedFuture(
       () => () async {
-        assetFile.value = await asset?.ensureCachedToFile();
+        assetFile.value = await maybeAsset.getOrNull()?.ensureCachedToFile();
       }(),
-      [asset?.value.hashCode],
+      [maybeAsset.getOrNull()?.value.hashCode],
     );
 
-    if (asset == null) {
-      return SizedBox(
-        width: width,
-        height: height,
-        child: StyledLoadingIndicator(),
-      );
-    }
+    return maybeAsset.when(
+      initial: () {
+        return SizedBox(
+          width: width,
+          height: height,
+          child: StyledLoadingIndicator(),
+        );
+      },
+      loaded: (asset) {
+        if (asset == null) {
+          return emptyWidget ?? SizedBox.shrink();
+        }
+        if (asset.isImage) {
+          return StyledLoadingImage(
+            image: MemoryImage(asset.value),
+            onTapped: onTapped,
+            width: width,
+            height: height,
+            fit: fit,
+            paddingOverride: paddingOverride,
+            alignment: alignment,
+          );
+        }
 
-    if (asset!.isImage) {
-      return StyledLoadingImage(
-        image: MemoryImage(asset!.value),
-        onTapped: onTapped,
-        width: width,
-        height: height,
-        fit: fit,
-        paddingOverride: paddingOverride,
-        alignment: alignment,
-      );
-    }
+        if (asset.isVideo) {
+          return StyledLoadingVideo(
+            video: assetFile.value.mapIfNonNull((file) => VideoPlayerController.file(file)),
+            onTapped: onTapped,
+            width: width,
+            height: height,
+            fit: fit,
+            paddingOverride: paddingOverride,
+            alignment: alignment,
+          );
+        }
 
-    if (asset!.isVideo) {
-      return StyledLoadingVideo(
-        video: assetFile.value.mapIfNonNull((file) => VideoPlayerController.file(file)),
-        onTapped: onTapped,
-        width: width,
-        height: height,
-        fit: fit,
-        paddingOverride: paddingOverride,
-        alignment: alignment,
-      );
-    }
-
-    return StyledErrorText('Unable to render asset!');
+        return StyledErrorText('Unable to render asset!');
+      },
+      error: (error) {
+        return StyledErrorText(error.toString());
+      },
+    );
   }
 }
