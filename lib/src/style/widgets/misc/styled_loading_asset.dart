@@ -39,6 +39,18 @@ class StyledLoadingAsset extends HookWidget {
     this.emptyWidget,
   });
 
+  StyledLoadingAsset.loaded({
+    super.key,
+    required Asset? asset,
+    this.onTapped,
+    this.width,
+    this.height,
+    this.fit: BoxFit.cover,
+    this.paddingOverride,
+    this.alignment,
+    this.emptyWidget,
+  }) : maybeAsset = FutureValue.loaded(value: asset);
+
   @override
   Widget build(BuildContext context) {
     final assetFile = useState<File?>(null);
