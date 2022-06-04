@@ -1,3 +1,5 @@
+import 'package:jlogical_utils/src/utils/export_core.dart';
+
 import '../port_field.dart';
 
 class StringPortField extends PortField<String?> {
@@ -5,6 +7,11 @@ class StringPortField extends PortField<String?> {
 
   @override
   String? valueParser(dynamic rawValue) {
-    return rawValue?.toString();
+    String? value = rawValue?.toString();
+    if (value?.isBlank == true) {
+      value = null;
+    }
+
+    return value;
   }
 }
