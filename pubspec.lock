@@ -287,7 +287,7 @@ packages:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   dart_console:
     dependency: "direct main"
     description:
@@ -308,14 +308,14 @@ packages:
       name: dcli
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.30.2"
+    version: "1.31.0"
   dcli_core:
     dependency: transitive
     description:
       name: dcli_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.30.2"
+    version: "1.31.0"
   equatable:
     dependency: "direct main"
     description:
@@ -645,7 +645,7 @@ packages:
       name: image_picker_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.4+13"
+    version: "0.8.5"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -960,7 +960,7 @@ packages:
       name: pubspec
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   pubspec_parse:
     dependency: transitive
     description:
@@ -1168,7 +1168,7 @@ packages:
       name: system_info2
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   term_glyph:
     dependency: transitive
     description:
