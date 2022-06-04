@@ -37,6 +37,10 @@ class FutureValue<T> with _$FutureValue<T> {
     return value;
   }
 
+  static FutureValue<T> ofNullable<T>(T? value) {
+    return value == null ? FutureValue.initial() : FutureValue.loaded(value: value);
+  }
+
   /// Returns the value of the future-value, or [orElse] if in an error/loading state, or throws an exception.
   T get({T orElse()?}) => maybeWhen(
       loaded: (value) => value,

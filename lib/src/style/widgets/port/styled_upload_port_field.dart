@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/utils/export.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../model/export_core.dart';
 import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../content/styled_content.dart';
 import '../input/styled_button.dart';
 import '../misc/styled_icon.dart';
-import '../misc/styled_loading_image.dart';
-import '../misc/styled_loading_indicator.dart';
+import '../misc/styled_loading_asset.dart';
 import '../text/styled_body_text.dart';
 import '../text/styled_error_text.dart';
 import '../text/styled_text_overrides.dart';
@@ -47,9 +48,9 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
       field.isChanged = value;
     });
 
-    final initialValueModel = useAssetOrNull(value);
+    final initialValueAsset = useAssetOrNull(value);
 
-    final assetValue = preview ?? initialValueModel?.getOrNull();
+    final assetValue = preview.mapIfNonNull((value) => FutureValue.loaded(value: value)) ?? initialValueAsset;
 
     return StyledContent(
       headerText: labelText ?? 'Upload',
@@ -59,15 +60,9 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (assetValue == null)
-                SizedBox(
-                  width: _imageWidth,
-                  height: _imageHeight,
-                  child: StyledLoadingIndicator(),
-                ),
               if (assetValue != null)
-                StyledLoadingImage(
-                  image: MemoryImage(assetValue.value),
+                StyledLoadingAsset(
+                  maybeAsset: assetValue,
                   width: _imageWidth,
                   height: _imageHeight,
                 ),
@@ -102,30 +97,29 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
             },
           ),
         if (preview == null && value != null && isChanged) ...[
-          if (isChanged)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                StyledBodyText('Removed', textOverrides: StyledTextOverrides(fontStyle: FontStyle.italic)),
-                Column(
-                  children: [
-                    IconButton(
-                      icon: StyledIcon(Icons.add_photo_alternate),
-                      onPressed: () async {
-                        await upload(newAssetX: newAssetX, isChangedX: isChangedX);
-                      },
-                    ),
-                    IconButton(
-                      icon: StyledIcon(Icons.unarchive),
-                      onPressed: () async {
-                        newAssetX.value = null;
-                        isChangedX.value = false;
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              StyledBodyText('Removed', textOverrides: StyledTextOverrides(fontStyle: FontStyle.italic)),
+              Column(
+                children: [
+                  IconButton(
+                    icon: StyledIcon(Icons.add_photo_alternate),
+                    onPressed: () async {
+                      await upload(newAssetX: newAssetX, isChangedX: isChangedX);
+                    },
+                  ),
+                  IconButton(
+                    icon: StyledIcon(Icons.unarchive),
+                    onPressed: () async {
+                      newAssetX.value = null;
+                      isChangedX.value = false;
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
         if (exception != null) StyledErrorText(getExceptionText(exception) ?? ''),
       ],
