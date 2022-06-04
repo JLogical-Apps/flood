@@ -12,7 +12,8 @@ class AssetPortField extends PortField<String?> {
   /// If non-null, the id to use to upload new assets with.
   final String? forcedAssetId;
 
-  AssetPortField({required super.name, super.initialValue, this.forcedAssetId});
+  AssetPortField({required super.name, String? initialValue, this.forcedAssetId})
+      : super(initialValue: initialValue ?? forcedAssetId);
 
   @override
   Future submitMapper(String? value) async {
