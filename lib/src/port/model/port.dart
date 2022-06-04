@@ -24,11 +24,16 @@ class Port<T> implements Validator<void> {
 
   List<PortValueComponent> get valueComponents => components.whereType<PortValueComponent>().toList();
 
-  final BehaviorSubject<Map<String, dynamic>> _valueByNameX = BehaviorSubject.seeded({});
+  final BehaviorSubject<Map<String, dynamic>> _rawValueByNameX = BehaviorSubject.seeded({});
 
-  ValueStream<Map<String, dynamic>> get valueByNameX => _valueByNameX;
+  ValueStream<Map<String, dynamic>> get rawValueByNameX => _rawValueByNameX;
 
-  final Map<String, dynamic> _valueByName = {};
+  final Map<String, dynamic> _rawValueByName = {};
+
+  late ValueStream<Map<String, dynamic>> valueByNameX = _rawValueByNameX
+      .mapWithValue((rawValueByName) => rawValueByName.map((name, rawValue) => getFieldByName(name).value));
+
+  Map<String, dynamic> get valueByName => _rawValueByName.map((name, rawValue) => MapEntry(name, getFieldByName(name).value));
 
   final BehaviorSubject<Map<String, dynamic>> _exceptionByNameX = BehaviorSubject.seeded({});
 
@@ -52,8 +57,8 @@ class Port<T> implements Validator<void> {
   Port<T> withComponent(PortComponent component) {
     components.add(component);
     if (component is PortValueComponent) {
-      _valueByNameX.value = _valueByNameX.value.copy()..set(component.name, component.initialValue);
-      _valueByName[component.name] = component.initialValue;
+      _rawValueByNameX.value = _rawValueByNameX.value.copy()..set(component.name, component.initialValue);
+      _rawValueByName[component.name] = component.initialValue;
     }
     component.initialize(this);
     return this;
@@ -87,12 +92,16 @@ class Port<T> implements Validator<void> {
   }
 
   V get<V>(String fieldName) {
-    return _valueByName[fieldName];
+    return valueByName[fieldName];
+  }
+
+  dynamic getRaw(String fieldName) {
+    return _rawValueByName[fieldName];
   }
 
   void set(String fieldName, dynamic value) {
-    _valueByName[fieldName] = value;
-    _valueByNameX.value = _valueByNameX.value.copy()..set(fieldName, value);
+    _rawValueByName[fieldName] = value;
+    _rawValueByNameX.value = _rawValueByNameX.value.copy()..set(fieldName, value);
   }
 
   PortValueComponent getValueComponentByName(String componentName) {
@@ -101,6 +110,10 @@ class Port<T> implements Validator<void> {
 
   PortField getFieldByName(String fieldName) {
     return getValueComponentByName(fieldName) as PortField;
+  }
+
+  ValueStream<dynamic> getRawFieldValueXByName(String fieldName) {
+    return _rawValueByNameX.mapWithValue((valueByName) => valueByName[fieldName]);
   }
 
   ValueStream<V> getFieldValueXByName<V>(String fieldName) {
@@ -143,11 +156,11 @@ class Port<T> implements Validator<void> {
       return PortResult(exception: exception);
     }
 
-    final submittedValues = await Future.wait(_valueByName.mapToIterable((name, value) async {
+    final submittedValues = await Future.wait(_rawValueByName.mapToIterable((name, value) async {
       final valueComponent = getValueComponentByName(name);
       return await valueComponent.submitMapper(valueComponent.valueParser(value));
     }));
-    var submittedValueByName = Map.fromIterables(_valueByName.keys, submittedValues);
+    var submittedValueByName = Map.fromIterables(_rawValueByName.keys, submittedValues);
 
     dynamic result = submittedValueByName;
     if (_submitMapper != null) {

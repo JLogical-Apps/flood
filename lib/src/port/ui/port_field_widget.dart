@@ -40,12 +40,12 @@ abstract class PortFieldWidget<F extends PortField<T>, T, R> extends HookWidget 
       port[name] = getInitialRawValue(port[name]);
     });
 
-    final valueX = useMemoized(() => port.getFieldValueXByName(name));
-    final value = useValueStream(valueX);
+    final rawValueX = useMemoized(() => port.getRawFieldValueXByName(name));
+    final rawValue = useValueStream(rawValueX);
 
     final exceptionX = useMemoized(() => port.getExceptionXByName(name));
     final exception = useValueStream(exceptionX);
 
-    return buildField(context, field as F, value, exception);
+    return buildField(context, field as F, rawValue, exception);
   }
 }

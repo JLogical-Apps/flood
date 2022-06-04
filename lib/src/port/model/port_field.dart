@@ -16,7 +16,7 @@ abstract class PortField<V> extends PortValueComponent<V>
 
   final dynamic initialValue;
 
-  dynamic get rawValue => port[name];
+  dynamic get rawValue => port.getRaw(name);
 
   V get value => valueParser(rawValue);
 

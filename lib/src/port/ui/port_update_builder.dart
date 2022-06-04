@@ -13,7 +13,7 @@ class PortUpdateBuilder extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final port = Provider.of<Port>(context, listen: false);
-    final valueByNameX = port.valueByNameX;
+    final valueByNameX = port.rawValueByNameX;
     useValueStream(valueByNameX);
 
     return builder(port);
