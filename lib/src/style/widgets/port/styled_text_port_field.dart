@@ -4,7 +4,7 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledTextPortField extends PortFieldWidget<StringPortField, String?, String> with WithPortExceptionTextGetter {
+class StyledTextPortField extends PortFieldWidget<StringPortField, String?, String?> with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;
@@ -46,11 +46,6 @@ class StyledTextPortField extends PortFieldWidget<StringPortField, String?, Stri
   });
 
   @override
-  String getInitialRawValue(String? portValue) {
-    return portValue ?? '';
-  }
-
-  @override
   Widget buildField(BuildContext context, StringPortField field, String? value, Object? exception) {
     return StyledTextField(
       labelText: labelText,
@@ -59,7 +54,13 @@ class StyledTextPortField extends PortFieldWidget<StringPortField, String?, Stri
       keyboardType: keyboardType,
       initialText: value,
       hintText: suggestedValue,
-      onChanged: (text) => setValue(context, text),
+      onChanged: (text) {
+        String? value = text;
+        if(text.isEmpty) {
+          value = null;
+        }
+        setValue(context, value);
+      },
       obscureText: obscureText,
       maxLength: maxLength,
       maxLines: maxLines,
