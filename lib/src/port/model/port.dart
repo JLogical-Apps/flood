@@ -33,7 +33,8 @@ class Port<T> implements Validator<void> {
   late ValueStream<Map<String, dynamic>> valueByNameX = _rawValueByNameX
       .mapWithValue((rawValueByName) => rawValueByName.map((name, rawValue) => getFieldByName(name).value));
 
-  Map<String, dynamic> get valueByName => _rawValueByName.map((name, rawValue) => MapEntry(name, getFieldByName(name).value));
+  Map<String, dynamic> get valueByName =>
+      _rawValueByName.map((name, rawValue) => MapEntry(name, getFieldByName(name).value));
 
   final BehaviorSubject<Map<String, dynamic>> _exceptionByNameX = BehaviorSubject.seeded({});
 
