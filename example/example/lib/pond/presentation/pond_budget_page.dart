@@ -137,13 +137,20 @@ class PondBudgetPage extends HookWidget {
                               color: Colors.green,
                               icon: Icons.mail,
                               onPerform: () async {
+                                final port = Port(
+                                  fields: [
+                                    StringPortField(name: 'name').required(),
+                                  ],
+                                );
+
+                                () async {
+                                  await Future.delayed(Duration(seconds: 2));
+                                  port.setFallback('name', 'Envelope');
+                                }();
+
                                 final data = await StyledDialog.port(
                                   context: context,
-                                  port: Port(
-                                    fields: [
-                                      StringPortField(name: 'name').required(),
-                                    ],
-                                  ),
+                                  port: port,
                                   children: [
                                     StyledTextPortField(
                                       name: 'name',

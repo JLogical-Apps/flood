@@ -37,7 +37,7 @@ abstract class PortFieldWidget<F extends PortField<T>, T, R> extends HookWidget 
     final field = port.getFieldByName(name);
 
     useOneTimeEffect(() {
-      port[name] = getInitialRawValue(port[name]);
+      port[name] = getInitialRawValue(field.getValue(withFallback: false));
     });
 
     final rawValueX = useMemoized(() => port.getRawFieldValueXByName(name));
@@ -45,6 +45,9 @@ abstract class PortFieldWidget<F extends PortField<T>, T, R> extends HookWidget 
 
     final exceptionX = useMemoized(() => port.getExceptionXByName(name));
     final exception = useValueStream(exceptionX);
+
+    final fallbackX = useMemoized(() => port.getFallbackXByName(name));
+    useValueStream(fallbackX);
 
     return buildField(context, field as F, rawValue, exception);
   }

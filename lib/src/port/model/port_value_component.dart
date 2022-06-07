@@ -27,7 +27,16 @@ abstract class PortValueComponent<V> extends PortComponent {
 
   Object? get exception => port.getExceptionByName(name);
 
-  V get value => valueParser(rawValue) ?? fallback;
+  V get value => getValue();
+
+  V getValue({bool withFallback: true}) {
+    var value = valueParser(rawValue);
+    if (value == null && withFallback) {
+      value = fallback;
+    }
+
+    return value;
+  }
 }
 
 V _defaultSubmitMapper<V>(V value) => value;

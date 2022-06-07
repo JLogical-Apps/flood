@@ -36,8 +36,8 @@ class Port<T> implements Validator<void> {
 
   final Map<String, dynamic> _fallbackByName = {};
 
-  late ValueStream<Map<String, dynamic>> valueByNameX = _rawValueByNameX
-      .mapWithValue((rawValueByName) => rawValueByName.map((name, rawValue) => getFieldByName(name).value));
+  late ValueStream<Map<String, dynamic>> valueByNameX = _rawValueByNameX.mapWithValue(
+      (rawValueByName) => rawValueByName.map((name, rawValue) => MapEntry(name, getFieldByName(name).value)));
 
   Map<String, dynamic> get valueByName =>
       _rawValueByName.map((name, rawValue) => MapEntry(name, getFieldByName(name).value));
@@ -180,7 +180,7 @@ class Port<T> implements Validator<void> {
 
     final submittedValues = await Future.wait(_rawValueByName.mapToIterable((name, value) async {
       final valueComponent = getValueComponentByName(name);
-      return await valueComponent.submitMapper(valueComponent.valueParser(value));
+      return await valueComponent.submitMapper(valueComponent.value);
     }));
     var submittedValueByName = Map.fromIterables(_rawValueByName.keys, submittedValues);
 
@@ -209,13 +209,17 @@ class Port<T> implements Validator<void> {
       try {
         final validator = component as Validator<PortFieldValidationContext>;
         final fieldValidationContext = PortFieldValidationContext(
-          value: component.valueParser(get(component.name)),
+          value: component.value,
           port: this,
         );
         await validator.validate(fieldValidationContext);
       } catch (e) {
         errorByName[component.name] = e;
       }
+    }
+
+    if (errorByName.isNotEmpty) {
+      throw PortSubmitException(fieldExceptionByName: errorByName, failedValue: this);
     }
 
     for (final validator in _additionalValidators) {

@@ -510,6 +510,22 @@ void main() {
 
     expect(result.result, User(name: name, email: email));
   });
+
+  test('fallback', () async {
+    const name = 'John Doe';
+
+    final port = Port(
+      fields: [
+        StringPortField(name: 'name', initialFallback: name),
+      ],
+    );
+
+    port['name'] = null;
+
+    final result = await port.submit();
+
+    expect(result.result['name'], name);
+  });
 }
 
 Port _getLoginForm(List<String> registeredEmails) {
