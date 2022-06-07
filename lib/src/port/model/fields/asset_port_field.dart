@@ -12,7 +12,7 @@ class AssetPortField extends PortField<String?> {
   /// If non-null, the id to use to upload new assets with.
   final String? forcedAssetId;
 
-  AssetPortField({required super.name, String? initialValue, this.forcedAssetId})
+  AssetPortField({required super.name, String? initialValue, this.forcedAssetId, super.initialFallback})
       : super(initialValue: initialValue ?? forcedAssetId);
 
   @override

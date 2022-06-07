@@ -4,7 +4,7 @@ import '../../../patterns/export_core.dart';
 import '../port_field.dart';
 
 class DoublePortField extends PortField<double?> {
-  DoublePortField({required super.name, super.initialValue});
+  DoublePortField({required super.name, super.initialValue, super.initialFallback});
 
   @override
   double? valueParser(dynamic rawValue) {

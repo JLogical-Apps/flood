@@ -42,7 +42,7 @@ class StyledDoublePortField extends PortFieldWidget<DoublePortField, double?, St
       errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(decimal: true, signed: true),
       initialText: value,
-      hintText: suggestedValue,
+      hintText: field.fallback ?? suggestedValue,
       onChanged: (text) => setValue(context, text),
       enabled: enabled,
     );

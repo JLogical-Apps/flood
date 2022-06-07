@@ -7,6 +7,8 @@ abstract class PortValueComponent<V> extends PortComponent {
 
   dynamic get initialValue;
 
+  dynamic get initialFallback;
+
   /// Converts the [rawValue] of the component into its value [V] type.
   V valueParser(dynamic rawValue) {
     if (rawValue is V) {
@@ -18,6 +20,14 @@ abstract class PortValueComponent<V> extends PortComponent {
 
   /// Maps [value] to the value that should be in the final port results.
   FutureOr submitMapper(V value) => _defaultSubmitMapper(value);
+
+  dynamic get rawValue => port.getRaw(name);
+
+  dynamic get fallback => port.getFallback(name);
+
+  Object? get exception => port.getExceptionByName(name);
+
+  V get value => valueParser(rawValue) ?? fallback;
 }
 
 V _defaultSubmitMapper<V>(V value) => value;

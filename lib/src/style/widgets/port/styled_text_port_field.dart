@@ -34,8 +34,6 @@ class StyledTextPortField extends PortFieldWidget<StringPortField, String?, Stri
     return portValue?.toString() ?? '';
   }
 
-
-
   StyledTextPortField({
     super.key,
     required super.name,
@@ -59,7 +57,7 @@ class StyledTextPortField extends PortFieldWidget<StringPortField, String?, Stri
       errorText: getExceptionText(exception),
       keyboardType: keyboardType,
       initialText: value,
-      hintText: suggestedValue,
+      hintText: field.fallback ?? suggestedValue,
       onChanged: (text) => setValue(context, text),
       obscureText: obscureText,
       maxLength: maxLength,

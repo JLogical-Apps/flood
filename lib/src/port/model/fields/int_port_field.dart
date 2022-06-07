@@ -4,7 +4,7 @@ import 'package:jlogical_utils/src/utils/export_core.dart';
 import '../port_field.dart';
 
 class IntPortField extends PortField<int?> {
-  IntPortField({required super.name, super.initialValue});
+  IntPortField({required super.name, super.initialValue, super.initialFallback});
 
   @override
   int? valueParser(dynamic rawValue) {

@@ -4,7 +4,7 @@ import '../../../patterns/export_core.dart';
 import '../port_field.dart';
 
 class CurrencyPortField extends PortField<int?> {
-  CurrencyPortField({required super.name, super.initialValue});
+  CurrencyPortField({required super.name, super.initialValue, super.initialFallback});
 
   @override
   int? valueParser(dynamic rawValue) {

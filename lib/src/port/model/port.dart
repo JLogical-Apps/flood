@@ -30,6 +30,12 @@ class Port<T> implements Validator<void> {
 
   final Map<String, dynamic> _rawValueByName = {};
 
+  final BehaviorSubject<Map<String, dynamic>> _fallbackByNameX = BehaviorSubject.seeded({});
+
+  ValueStream<Map<String, dynamic>> get fallbackByNameX => _fallbackByNameX;
+
+  final Map<String, dynamic> _fallbackByName = {};
+
   late ValueStream<Map<String, dynamic>> valueByNameX = _rawValueByNameX
       .mapWithValue((rawValueByName) => rawValueByName.map((name, rawValue) => getFieldByName(name).value));
 
@@ -58,8 +64,8 @@ class Port<T> implements Validator<void> {
   Port<T> withComponent(PortComponent component) {
     components.add(component);
     if (component is PortValueComponent) {
-      _rawValueByNameX.value = _rawValueByNameX.value.copy()..set(component.name, component.initialValue);
-      _rawValueByName[component.name] = component.initialValue;
+      set(component.name, component.initialValue);
+      setFallback(component.name, component.initialFallback);
     }
     component.initialize(this);
     return this;
@@ -100,9 +106,20 @@ class Port<T> implements Validator<void> {
     return _rawValueByName[fieldName];
   }
 
+  dynamic getFallback(String fieldName) {
+    return _fallbackByName[fieldName];
+  }
+
   void set(String fieldName, dynamic value) {
     _rawValueByName[fieldName] = value;
-    _rawValueByNameX.value = _rawValueByNameX.value.copy()..set(fieldName, value);
+
+    final newRawValueByNameX = _rawValueByNameX.value.copy()..set(fieldName, value);
+    _rawValueByNameX.value = newRawValueByNameX;
+  }
+
+  void setFallback(String fieldName, dynamic fallback) {
+    _fallbackByName[fieldName] = fallback;
+    _fallbackByNameX.value = _fallbackByNameX.value.copy()..set(fieldName, fallback);
   }
 
   PortValueComponent getValueComponentByName(String componentName) {
@@ -119,6 +136,10 @@ class Port<T> implements Validator<void> {
 
   ValueStream<V> getFieldValueXByName<V>(String fieldName) {
     return valueByNameX.mapWithValue((valueByName) => valueByName[fieldName]);
+  }
+
+  ValueStream<dynamic> getFallbackXByName(String fieldName) {
+    return _fallbackByNameX.mapWithValue((fallbackByName) => fallbackByName[fieldName]);
   }
 
   Object? getExceptionByName(String fieldName) {

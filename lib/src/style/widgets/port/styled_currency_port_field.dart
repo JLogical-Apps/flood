@@ -43,7 +43,7 @@ class StyledCurrencyPortField extends PortFieldWidget<CurrencyPortField, int?, S
       errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(decimal: true, signed: true),
       initialText: value,
-      hintText: suggestedValue,
+      hintText: field.fallback ?? suggestedValue,
       onChanged: (text) => setValue(context, text),
       enabled: enabled,
     );

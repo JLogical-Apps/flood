@@ -43,7 +43,7 @@ class StyledIntPortField extends PortFieldWidget<IntPortField, int?, String> wit
       errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(signed: true),
       initialText: value,
-      hintText: suggestedValue,
+      hintText: field.fallback ?? suggestedValue,
       onChanged: (text) => setValue(context, text),
       enabled: enabled,
     );

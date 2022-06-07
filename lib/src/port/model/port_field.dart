@@ -11,16 +11,12 @@ abstract class PortField<V> extends PortValueComponent<V>
     implements Validator<PortFieldValidationContext> {
   final String name;
 
+  final V? initialFallback;
+
   @override
   final List<PortFieldValidator<V>> validators = [];
 
   final dynamic initialValue;
-
-  dynamic get rawValue => port.getRaw(name);
-
-  V get value => valueParser(rawValue);
-
-  Object? get exception => port.getExceptionByName(name);
 
   /// Predicate for whether to validate this.
   /// By default, always validates.
@@ -29,6 +25,7 @@ abstract class PortField<V> extends PortValueComponent<V>
   PortField({
     required this.name,
     required this.initialValue,
+    this.initialFallback,
   });
 
   PortField<V> withValidator(PortFieldValidator<V> validator) {
