@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:jlogical_utils/src/utils/export_core.dart';
 
 part 'future_value.freezed.dart';
 
@@ -39,6 +40,22 @@ class FutureValue<T> with _$FutureValue<T> {
 
   static FutureValue<T> ofNullable<T>(T? value) {
     return value == null ? FutureValue.initial() : FutureValue.loaded(value: value);
+  }
+
+  FutureValue<List> operator +(FutureValue other) {
+    final error = this.as<FutureValueError>()?.error ?? other.as<FutureValueError>()?.error;
+    if (error != null) {
+      return FutureValue.error(error: error);
+    }
+
+    if (this.isLoading || other.isLoading) {
+      return FutureValue.initial();
+    }
+
+    final value = this.get();
+    final otherValue = other.get();
+
+    return FutureValue.loaded(value: [value, otherValue]);
   }
 
   /// Returns the value of the future-value, or [orElse] if in an error/loading state, or throws an exception.
