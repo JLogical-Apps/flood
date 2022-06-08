@@ -29,17 +29,15 @@ class StyledLoadingImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ImageFade(
+        FadeInImage(
           image: image ?? MemoryImage(kTransparentImage),
-          placeholder: AnimatedOpacity(
-              opacity: image == null ? 1 : 0,
-              duration: Duration(milliseconds: 500),
-              child: StyledLoadingIndicator(isSpinning: image == null)),
+          placeholder: MemoryImage(kTransparentImage),
           alignment: alignment ?? Alignment.center,
           fit: fit,
           width: width,
           height: height,
-          curve: Curves.easeInOutCubic,
+          fadeInCurve: Curves.easeInOutCubic,
+          fadeOutCurve: Curves.easeInOutCubic,
         ),
         Positioned.fill(
           child: Material(
