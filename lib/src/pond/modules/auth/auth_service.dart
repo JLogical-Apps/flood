@@ -18,6 +18,9 @@ abstract class AuthService extends AppModule {
   /// Logs out of the currently logged-in user.
   Future<void> logout();
 
+  /// Deletes the currently logged-in account.
+  Future<void> deleteCurrentAccount();
+
   Future<void> onReset(AppContext context) async {
     await logout();
   }

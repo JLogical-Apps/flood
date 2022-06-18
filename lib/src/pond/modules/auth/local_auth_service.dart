@@ -50,6 +50,18 @@ class LocalAuthService extends AuthService {
   Future<void> logout() async {
     loggedInUserId = null;
   }
+
+  @override
+  Future<void> deleteCurrentAccount() async {
+    final loggedInUserId = await getCurrentlyLoggedInUserId();
+    if (loggedInUserId == null) {
+      throw Exception('Cannot delete current account if not logged in!');
+    }
+
+    userIdByLogin.remove(loggedInUserId);
+
+    await logout();
+  }
 }
 
 /// Token used to simulate logging in. Only used for local testing purposes.

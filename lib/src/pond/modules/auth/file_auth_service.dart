@@ -100,6 +100,20 @@ class FileAuthService extends AuthService {
     await loggedInUserIdDataSource.delete();
     await registeredUsersDataSource.delete();
   }
+
+  @override
+  Future<void> deleteCurrentAccount() async {
+    final loggedInUserId = await getCurrentlyLoggedInUserId();
+    if (loggedInUserId == null) {
+      throw Exception('Cannot delete current account if not logged in!');
+    }
+
+    final registeredUsers = await registeredUsersDataSource.getData() ?? {};
+    registeredUsers.remove(loggedInUserId);
+    await registeredUsersDataSource.saveData(registeredUsers);
+
+    await logout();
+  }
 }
 
 /// Token used to simulate logging in. Only used for local testing purposes.

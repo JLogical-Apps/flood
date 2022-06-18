@@ -58,4 +58,12 @@ class FirebaseAuthService extends AuthService {
   Future<void> logout() {
     return auth.signOut();
   }
+
+  @override
+  Future<void> deleteCurrentAccount() async {
+    final firebaseUser = auth.currentUser;
+    await firebaseUser?.delete();
+
+    await logout();
+  }
 }
