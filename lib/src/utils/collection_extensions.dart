@@ -62,6 +62,10 @@ extension MapExtensions<K, V> on Map<K, V> {
   Iterable<R> mapToIterable<R>(R mapper(K key, V value)) {
     return entries.map((entry) => mapper(entry.key, entry.value));
   }
+
+  Map<K, V> where(bool predicate(K key, V value)) {
+    return entries.where((entry) => predicate(entry.key, entry.value)).toMap();
+  }
 }
 
 extension JsonExtensions on Map<String, dynamic> {
