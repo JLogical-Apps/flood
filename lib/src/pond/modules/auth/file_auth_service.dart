@@ -109,7 +109,7 @@ class FileAuthService extends AuthService {
     }
 
     final registeredUsers = await registeredUsersDataSource.getData() ?? {};
-    registeredUsers.remove(loggedInUserId);
+    registeredUsers.removeWhere((loginToken, id) => id == loggedInUserId);
     await registeredUsersDataSource.saveData(registeredUsers);
 
     await logout();

@@ -58,7 +58,7 @@ class LocalAuthService extends AuthService {
       throw Exception('Cannot delete current account if not logged in!');
     }
 
-    userIdByLogin.remove(loggedInUserId);
+    userIdByLogin.removeWhere((loginToken, id) => id == loggedInUserId);
 
     await logout();
   }
