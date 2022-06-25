@@ -11,6 +11,7 @@ export 'navigation_card.dart';
 export 'navigation_card.dart';
 export 'refresh_scaffold.dart';
 export 'scroll_column.dart';
+export 'scroll_row.dart';
 export 'smart_image.dart';
 export 'tutorial/target/target_content.dart';
 export 'tutorial/target/target_focus.dart';
