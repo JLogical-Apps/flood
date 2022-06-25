@@ -83,7 +83,7 @@ class TestHomePage extends HookWidget {
                                 labelText: 'Name',
                                 maxLength: 25,
                               ),
-                              StyledUploadPortField(name: 'image'),
+                              StyledUploadPortField(name: 'image', uploadType: UploadType.image),
                               StyledButton.high(
                                 text: 'Save',
                                 onTapped: () async {

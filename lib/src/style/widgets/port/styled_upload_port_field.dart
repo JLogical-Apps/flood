@@ -19,6 +19,8 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
   static const double _imageWidth = 200;
   static const double _imageHeight = 200;
 
+  final UploadType uploadType;
+
   final String? labelText;
 
   final Widget? leading;
@@ -29,6 +31,7 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
   StyledUploadPortField({
     super.key,
     required super.name,
+    required this.uploadType,
     this.labelText,
     this.leading,
     this.exceptionTextGetterOverride,
@@ -130,7 +133,7 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
     required BehaviorSubject<Asset?> newAssetX,
     required BehaviorSubject<bool> isChangedX,
   }) async {
-    final asset = await ImageAssetPicker.pickImageFromGallery();
+    final asset = await _pickAsset();
     if (asset == null) {
       return;
     }
@@ -138,4 +141,18 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
     newAssetX.value = asset;
     isChangedX.value = true;
   }
+
+  Future<Asset?> _pickAsset() {
+    switch (uploadType) {
+      case UploadType.image:
+        return ImageAssetPicker.pickImageFromGallery();
+      case UploadType.video:
+        return VideoAssetPicker.pickVideoFromGallery();
+    }
+  }
+}
+
+enum UploadType {
+  image,
+  video,
 }
