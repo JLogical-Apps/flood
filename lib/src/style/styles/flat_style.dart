@@ -28,6 +28,7 @@ import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
 import '../../widgets/export.dart';
@@ -39,6 +40,7 @@ import '../widgets/content/styled_container.dart';
 import '../widgets/input/action_item.dart';
 import '../widgets/input/styled_color_picker.dart';
 import '../widgets/input/styled_icon_button.dart';
+import '../widgets/misc/styled_calendar.dart';
 import '../widgets/misc/styled_chip.dart';
 import '../widgets/misc/styled_loading_indicator.dart';
 import '../widgets/misc/styled_message.dart';
@@ -53,6 +55,7 @@ import '../widgets/text/styled_title_text.dart';
 
 class FlatStyle extends Style {
   final Color primaryColor;
+  final Color accentColor;
 
   Color get primaryColorSoft => softenColor(primaryColor);
 
@@ -69,6 +72,7 @@ class FlatStyle extends Style {
 
   FlatStyle({
     this.primaryColor: Colors.blue,
+    this.accentColor: Colors.purple,
     this.backgroundColor: Colors.white,
     this.titleTextStyleOverride,
     this.subtitleTextStyleOverride,
@@ -1267,6 +1271,61 @@ class FlatStyle extends Style {
         size: icon.size,
       ),
     );
+  }
+
+  @override
+  Widget calendar(BuildContext context, StyleContext styleContext, StyledCalendar calendar) {
+    return HookBuilder(builder: (context) {
+      final focusedDay = useState<DateTime>(DateTime.now());
+      final selectedDay = useState<DateTime>(DateTime.now());
+
+      return TableCalendar<CalendarEvent>(
+        focusedDay: focusedDay.value,
+        selectedDayPredicate: (date) => selectedDay.value == date,
+        eventLoader: (date) =>
+            calendar.events.where((event) => event.date.withoutTime() == date.withoutTime()).toList(),
+        onDaySelected: (selected, focused) {
+          focusedDay.value = focused;
+          selectedDay.value = selected;
+          calendar.onDateSelected?.call(selected);
+        },
+        firstDay: DateTime.fromMicrosecondsSinceEpoch(0),
+        lastDay: DateTime.now().add(Duration(days: 100000)),
+        sixWeekMonthsEnforced: true,
+        availableCalendarFormats: {CalendarFormat.month: 'Month'},
+        calendarStyle: CalendarStyle(
+          defaultTextStyle: toTextStyle(styledTextStyle: buttonTextStyle(styleContext)),
+          weekendTextStyle:
+              toTextStyle(styledTextStyle: buttonTextStyle(styleContext).copyWith(fontWeight: FontWeight.w500)),
+          outsideTextStyle:
+              toTextStyle(styledTextStyle: buttonTextStyle(styleContext).copyWith(fontWeight: FontWeight.w100)),
+          selectedDecoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: styleContext.emphasisColorSoft,
+          ),
+          markerSize: 14,
+          markerDecoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: accentColor.withOpacity(0.8),
+          ),
+          todayDecoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: styleContext.emphasisColorSoft.withOpacity(0.5),
+          ),
+        ),
+        headerStyle: HeaderStyle(
+          leftChevronIcon: StyledIcon.high(Icons.chevron_left),
+          rightChevronIcon: StyledIcon.high(Icons.chevron_right),
+          titleTextStyle: toTextStyle(styledTextStyle: contentHeaderTextStyle(styleContext)),
+          titleCentered: true,
+        ),
+        daysOfWeekStyle: DaysOfWeekStyle(
+          weekdayStyle: toTextStyle(styledTextStyle: contentSubtitleTextStyle(styleContext)),
+          weekendStyle: toTextStyle(styledTextStyle: contentSubtitleTextStyle(styleContext)),
+        ),
+        shouldFillViewport: true,
+      );
+    });
   }
 
   @override

@@ -20,6 +20,7 @@ export 'widgets/input/styled_icon_button.dart';
 export 'widgets/input/styled_menu_button.dart';
 export 'widgets/input/styled_radio.dart';
 export 'widgets/input/styled_text_field.dart';
+export 'widgets/misc/styled_calendar.dart';
 export 'widgets/misc/styled_chip.dart';
 export 'widgets/misc/styled_divider.dart';
 export 'widgets/misc/styled_icon.dart';

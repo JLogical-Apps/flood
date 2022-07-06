@@ -110,6 +110,16 @@ class TestHomePage extends HookWidget {
               icon: Icon(Icons.attach_money),
               body: ScrollColumn.withScrollbar(
                 children: [
+                  SizedBox(
+                    height: 550,
+                    child: StyledCalendar(
+                      events: [
+                        CalendarEvent(date: DateTime.now()),
+                        CalendarEvent(date: DateTime.now()),
+                        CalendarEvent(date: DateTime.now()),
+                      ],
+                    ),
+                  ),
                   StyledContent.high(
                     headerText: 'Create Transaction',
                     leading: StyledIcon(Icons.compare_arrows),

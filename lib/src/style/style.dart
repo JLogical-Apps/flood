@@ -12,6 +12,7 @@ import 'package:jlogical_utils/src/style/widgets/input/styled_dropdown.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_menu_button.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_radio.dart';
 import 'package:jlogical_utils/src/style/widgets/input/styled_text_field.dart';
+import 'package:jlogical_utils/src/style/widgets/misc/styled_calendar.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_chip.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_divider.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_icon.dart';
@@ -123,6 +124,9 @@ abstract class Style {
 
   /// An icon. This should respond to the icon having different emphases.
   Widget icon(BuildContext context, StyleContext styleContext, StyledIcon icon) => throw UnimplementedError();
+
+  /// A calendar.
+  Widget calendar(BuildContext context, StyleContext styleContext, StyledCalendar calendar) => throw UnimplementedError();
 
   /// A chip. This should respond to the chip having different emphases.
   Widget chip(BuildContext context, StyleContext styleContext, StyledChip chip) => throw UnimplementedError();

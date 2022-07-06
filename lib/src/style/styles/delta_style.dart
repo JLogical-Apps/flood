@@ -19,13 +19,11 @@ import 'flat_style.dart';
 
 /// Extends [FlatStyle] with overridden styles.
 class DeltaStyle extends FlatStyle {
-  /// The accent color that accents the primary color.
-  final Color accentColor;
 
   DeltaStyle({
     Color primaryColor: Colors.green,
     Color backgroundColor: Colors.white,
-    this.accentColor: Colors.purple,
+    super.accentColor: Colors.purple,
   }) : super(
           primaryColor: primaryColor,
           backgroundColor: backgroundColor,

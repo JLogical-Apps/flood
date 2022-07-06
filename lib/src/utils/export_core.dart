@@ -1,4 +1,5 @@
 export 'collection_extensions.dart';
+export 'date_time_utils.dart';
 export 'file_extensions.dart';
 export 'format.dart';
 export 'image_utils.dart';
