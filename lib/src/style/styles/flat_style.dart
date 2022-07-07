@@ -1301,12 +1301,12 @@ class FlatStyle extends Style {
               toTextStyle(styledTextStyle: buttonTextStyle(styleContext).copyWith(fontWeight: FontWeight.w100)),
           selectedDecoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: styleContext.emphasisColorSoft,
+            color: accentColor,
           ),
           markerSize: 14,
           markerDecoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: accentColor.withOpacity(0.8),
+            color: styleContext.emphasisColor.withOpacity(0.8),
           ),
           todayDecoration: BoxDecoration(
             shape: BoxShape.circle,
