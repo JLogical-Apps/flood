@@ -4,7 +4,8 @@ import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_date_field.dart';
 
-class StyledDatePortField extends PortFieldWidget<DatePortField, DateTime?, DateTime?> with WithPortExceptionTextGetter {
+class StyledDatePortField extends PortFieldWidget<DatePortField, DateTime?, DateTime?>
+    with WithPortExceptionTextGetter {
   final String? labelText;
 
   final Widget? label;
@@ -22,6 +23,11 @@ class StyledDatePortField extends PortFieldWidget<DatePortField, DateTime?, Date
           key: key,
           name: name,
         );
+
+  @override
+  DateTime? getInitialRawValue(DateTime? portValue) {
+    return portValue ?? DateTime.now();
+  }
 
   @override
   Widget buildField(BuildContext context, DatePortField field, DateTime? value, Object? exception) {
