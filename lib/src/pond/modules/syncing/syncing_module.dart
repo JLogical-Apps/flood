@@ -1,68 +1,56 @@
 import 'dart:async';
 import 'dart:collection';
-import 'package:collection/collection.dart';
-import 'package:jlogical_utils/src/pond/query/executor/query_executor.dart';
 
-import '../../record/entity.dart';
+import 'package:collection/collection.dart';
+
 import '../../context/app_context.dart';
 import '../../context/module/app_module.dart';
 import '../../context/registration/app_registration.dart';
 import '../../query/request/query_request.dart';
+import '../../record/entity.dart';
+import '../../repository/entity_repository.dart';
 import '../../state/state.dart';
 import '../logging/default_logging_module.dart';
-import 'query_download_scope.dart';
-import 'sync_action.dart';
-import '../../repository/entity_repository.dart';
+import 'sync_download_action.dart';
+import 'sync_publish_action.dart';
 import 'syncing_repository.dart';
 
 class SyncingModule extends AppModule {
-  final List<QueryDownloadScope> _queryDownloads = [];
-  final Queue<SyncAction> _syncActionsQueue = Queue();
-
-  static const _initialLoadTimeout = const Duration(seconds: 3);
-
-  Future<void> onLoad(AppRegistration registration) async {
-    await Future(() async {
-      for (final queryDownload in _queryDownloads) {
-        final queryRequest = queryDownload.queryRequestGetter();
-        await queryRequest.get();
-      }
-    }).timeout(_initialLoadTimeout);
-  }
+  final List<SyncDownloadAction> _downloadActions = [];
+  final Queue<SyncPublishAction> _publishActionsQueue = Queue();
 
   /// Register a scope to download when [download] is called.
   void registerQueryDownload(QueryRequest queryRequestGetter()) {
-    _queryDownloads.add(QueryDownloadScope(queryRequestGetter));
+    _downloadActions.add(QuerySyncDownloadAction(queryRequestGetter));
   }
 
   /// Publish all pending changes to source repositories.
   Future<void> publish() async {
     try {
-      while (_syncActionsQueue.isNotEmpty) {
-        final syncAction = _syncActionsQueue.first;
+      while (_publishActionsQueue.isNotEmpty) {
+        final syncAction = _publishActionsQueue.first;
         await syncAction.publish();
-        _syncActionsQueue.removeFirst();
+        _publishActionsQueue.removeFirst();
       }
     } catch (e) {
       logError(e);
     }
   }
 
-  /// Download all scopes to local repositories.
   Future<void> download() async {
-    for (final queryDownloadScope in _queryDownloads) {
-      final queryRequest = queryDownloadScope.getQueryRequest();
-      final sourceRepository = getSourceRepositoryRuntime(queryRequest.query.recordType);
-      await sourceRepository.executeQuery(queryRequest);
-    }
+    await Future.wait(_downloadActions.map((action) => action.download()));
   }
 
-  Future<void> enqueueSave(State state) async {
-    _syncActionsQueue.add(SaveSyncAction(state: state));
+  Future<void> enqueueSave(State state) {
+    return enqueueSyncPublishAction(SaveSyncPublishAction(state: state));
   }
 
-  Future<void> enqueueDelete(State state) async {
-    _syncActionsQueue.add(DeleteSyncAction(state: state));
+  Future<void> enqueueDelete(State state) {
+    return enqueueSyncPublishAction(DeleteSyncPublishAction(state: state));
+  }
+
+  Future<void> enqueueSyncPublishAction(SyncPublishAction action) async {
+    _publishActionsQueue.add(action);
   }
 
   EntityRepository? getSourceRepositoryRuntimeOrNull(Type entityType) {

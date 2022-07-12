@@ -3,17 +3,17 @@ import 'package:jlogical_utils/src/pond/modules/syncing/syncing_module.dart';
 import '../../context/app_context.dart';
 import '../../state/state.dart';
 
-abstract class SyncAction {
+abstract class SyncPublishAction {
   final State state;
 
-  SyncAction({required this.state});
+  SyncPublishAction({required this.state});
 
   /// Action to perform when publishing this sync action to a source repository.
   Future<void> publish();
 }
 
-class SaveSyncAction extends SyncAction {
-  SaveSyncAction({required super.state});
+class SaveSyncPublishAction extends SyncPublishAction {
+  SaveSyncPublishAction({required super.state});
 
   @override
   Future<void> publish() async {
@@ -22,8 +22,8 @@ class SaveSyncAction extends SyncAction {
   }
 }
 
-class DeleteSyncAction extends SyncAction {
-  DeleteSyncAction({required super.state});
+class DeleteSyncPublishAction extends SyncPublishAction {
+  DeleteSyncPublishAction({required super.state});
 
   @override
   Future<void> publish() async {

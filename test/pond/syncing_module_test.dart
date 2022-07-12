@@ -47,10 +47,7 @@ void main() {
 
     // Reinitialize AppContext with SyncingModule.
     AppContext.global = AppContext.createForTesting()
-      ..register(SyncingManualUserRepository(
-        localRepository: localRepository,
-        sourceRepository: sourceRepository,
-      ))
+      ..register(sourceRepository.asSyncingRepository<UserEntity, User>(localRepository: localRepository))
       ..register(SyncingModule()..registerQueryDownload(() => Query.from<UserEntity>().all()));
 
     final userCountQuery = Query.from<UserEntity>().all().map((users) => users.length);
@@ -59,7 +56,6 @@ void main() {
     expect(await sourceRepository.executeQuery(userCountQuery), 2);
 
     await locate<SyncingModule>().download();
-    await Future.delayed(Duration(milliseconds: 100));
 
     expect(await localRepository.executeQuery(userCountQuery), 2);
     expect(await sourceRepository.executeQuery(userCountQuery), 2);
@@ -77,16 +73,6 @@ class SyncingUserRepository extends SyncingRepository<UserEntity, User> {
 
   @override
   late EntityRepository sourceRepository = LocalUserRepository(onStateSaved: onSourceStateSaved);
-}
-
-class SyncingManualUserRepository extends SyncingRepository<UserEntity, User> {
-  @override
-  final EntityRepository localRepository;
-
-  @override
-  final EntityRepository sourceRepository;
-
-  SyncingManualUserRepository({required this.localRepository, required this.sourceRepository});
 }
 
 class LocalUserRepository extends DefaultLocalRepository<UserEntity, User> {
