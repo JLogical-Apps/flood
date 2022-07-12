@@ -25,4 +25,15 @@ class LocalWithoutCacheQueryRequestReducer<R extends Record>
           queryRequest: queryRequest.queryRequest,
         );
   }
+
+  @override
+  Future<void> reduce({
+    required Iterable<State> accumulation,
+    required WithoutCacheQueryRequest<R, dynamic> queryRequest,
+  }) async {
+    return await queryRequestReducerResolverGetter().resolve(queryRequest.queryRequest).reduce(
+          accumulation: accumulation,
+          queryRequest: queryRequest.queryRequest,
+        );
+  }
 }

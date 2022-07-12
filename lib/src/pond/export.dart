@@ -24,6 +24,8 @@ export 'modules/debug/debug_module.dart';
 export 'modules/environment/environment_module.dart';
 export 'modules/firebase/firebase_module.dart';
 export 'modules/logging/default_logging_module.dart';
+export 'modules/syncing/syncing_module.dart';
+export 'modules/syncing/syncing_repository.dart';
 export 'repository/adapting/default_abstract_adapting_repository.dart';
 export 'repository/adapting/default_adapting_repository.dart';
 export 'repository/firestore/default_abstract_firestore_repository.dart';

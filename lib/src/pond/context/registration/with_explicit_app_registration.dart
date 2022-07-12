@@ -45,7 +45,7 @@ mixin WithExplicitAppRegistration implements AppRegistration {
   ValueObject? constructValueObjectRuntimeOrNull(Type valueObjectType) {
     return valueObjectRegistrations
         .firstWhereOrNull((registration) => registration.valueObjectType == valueObjectType)
-        ?.onCreate!();
+        ?.create();
   }
 
   ValueObject? constructValueObjectFromStateOrNull(State state) {
@@ -58,7 +58,7 @@ mixin WithExplicitAppRegistration implements AppRegistration {
         registration.valueObjectType.toString() == state.type ||
         registration.nullableValueObjectType.toString() == state.type);
     if (valueObjectRegistration != null) {
-      final valueObject = valueObjectRegistration.onCreate!();
+      final valueObject = valueObjectRegistration.create();
       valueObject.state = state;
 
       return valueObject;
@@ -71,7 +71,7 @@ mixin WithExplicitAppRegistration implements AppRegistration {
 
       final valueObjectRegistration =
           valueObjectRegistrations.firstWhereOrNull((registration) => registration.valueObjectType == valueObjectType);
-      final valueObject = valueObjectRegistration?.onCreate!();
+      final valueObject = valueObjectRegistration?.create();
       valueObject?.state = state;
 
       return valueObject;
@@ -118,6 +118,29 @@ mixin WithExplicitAppRegistration implements AppRegistration {
     }
 
     return false;
+  }
+
+  @override
+  Type? getTypeByNameOrNull(String typeName) {
+    final valueObjectRegistration = valueObjectRegistrations
+        .firstWhereOrNull((registration) => registration.valueObjectType.toString() == typeName);
+    if (valueObjectRegistration != null) {
+      return valueObjectRegistration.valueObjectType;
+    }
+
+    final nullableValueObjectRegistration = valueObjectRegistrations
+        .firstWhereOrNull((registration) => registration.nullableValueObjectType.toString() == typeName);
+    if (nullableValueObjectRegistration != null) {
+      return nullableValueObjectRegistration.valueObjectType;
+    }
+
+    final entityRegistration =
+        entityRegistrations.firstWhereOrNull((registration) => registration.entityType.toString() == typeName);
+    if (entityRegistration != null) {
+      return entityRegistration.entityType;
+    }
+
+    return null;
   }
 
   bool _isValueObjectSubtype(Type a, Type b) {

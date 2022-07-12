@@ -61,6 +61,7 @@ mixin WithFirestoreEntityRepository on EntityRepository implements WithCacheEnti
         },
         entityInflater: (entity) async {
           saveToCache(entity);
+          onEntityInflated(entity);
           await entity.onInitialize();
         },
       ),

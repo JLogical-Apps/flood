@@ -26,6 +26,7 @@ mixin WithLocalEntityRepository on EntityRepository implements WithCacheEntityRe
       stateById: getStateById(),
       entityInflater: EntityInflater(
         entityInflater: (entity) async {
+          onEntityInflated(entity);
           await entity.onInitialize();
         },
         stateInitializer: (state) async {

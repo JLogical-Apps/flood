@@ -64,6 +64,7 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
         },
         entityInflater: (entity) async {
           saveToCache(entity);
+          onEntityInflated(entity);
           await entity.onInitialize();
         },
       ),

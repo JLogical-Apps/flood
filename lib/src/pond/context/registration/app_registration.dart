@@ -17,6 +17,8 @@ abstract class AppRegistration {
 
   bool isSubtype(Type a, Type b);
 
+  Type? getTypeByNameOrNull(String typeName);
+
   Set<Type> getDescendants(Type type);
 
   void register<T>(T obj);
@@ -67,6 +69,10 @@ extension DefaultAppRegistration on AppRegistration {
   Entity constructEntityFromState(State state) {
     return constructEntityFromStateOrNull(state) ??
         (throw Exception('Could not construct an Entity from the state [$state]'));
+  }
+
+  Type getTypeByName(String typeName) {
+    return getTypeByNameOrNull(typeName) ?? (throw Exception('Unable to locate registered Type for [$typeName]'));
   }
 
   TypeStateSerializer getTypeStateSerializerByType<T>() {

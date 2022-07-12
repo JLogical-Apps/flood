@@ -41,6 +41,22 @@ mixin WithSyncResolverQueryExecutor<C> implements QueryExecutor {
 
   @override
   Future<T> onExecuteQuery<R extends Record, T>(QueryRequest<R, T> queryRequest) async {
-    return executeQuerySync<R, T>(queryRequest);
+    final queryChain = queryRequest.query.getQueryChain();
+
+    // [accumulation] represents all the records that match the query.
+    C? accumulation;
+    for (final query in queryChain) {
+      final queryReducer = getQueryReducerResolver(queryRequest).resolve(query);
+      accumulation = queryReducer.reduceSync(accumulation: accumulation, query: query);
+    }
+
+    final _accumulation = accumulation ??
+        (throw Exception(
+            'No aggregate for the query request $queryRequest has been established. This probably means the query request doesn\'t have a parent query.'));
+
+    final queryRequestReducer = getQueryRequestReducerResolver<R>().resolve(queryRequest);
+    final output = await queryRequestReducer.reduce(accumulation: _accumulation, queryRequest: queryRequest);
+
+    return output;
   }
 }

@@ -25,5 +25,7 @@ class ValueObjectRegistration<V extends ValueObject, NullableV extends ValueObje
 
   Type get nullableValueObjectType => NullableV;
 
+  V create() => onCreate!();
+
   static Set<Type> get _baseParentTypes => {ValueObject, Record};
 }
