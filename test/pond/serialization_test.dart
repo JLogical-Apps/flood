@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/type_state_serializers/dynamic_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/list_type_state_serializer.dart';
+import 'package:jlogical_utils/src/pond/type_state_serializers/map_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/value_object_type_state_serializer.dart';
 
 import 'entities/budget_transaction.dart';
@@ -136,9 +138,6 @@ void main() {
     );
 
     expect(() => colorSerializer.deserialize([null]), throwsA(isA<Exception>()));
-
-    final nullableColorSerializer = ListTypeStateSerializer<Color?>();
-    expect(nullableColorSerializer.deserialize([null]), [null]);
   });
 
   test('serializing maps', () {
@@ -235,6 +234,51 @@ void main() {
 
     deserializedWrapper = valueObjectSerializer.deserialize(serialized) as BudgetTransactionWrapper;
     expect(deserializedWrapper.budgetTransactionProperty.value, isA<TransferTransaction>());
+  });
+
+  test('dynamic type state serializer', () {
+    AppContext.global = AppContext.createForTesting();
+
+    final dynamicTypeStateSerializer = DynamicTypeStateSerializer();
+
+    expect(dynamicTypeStateSerializer.deserialize(false), false);
+    expect(dynamicTypeStateSerializer.serialize(false), false);
+
+    expect(dynamicTypeStateSerializer.deserialize('true'), 'true');
+    expect(dynamicTypeStateSerializer.serialize('true'), 'true');
+
+    expect(dynamicTypeStateSerializer.deserialize(3), 3);
+    expect(dynamicTypeStateSerializer.serialize(3), 3);
+
+    const numbers = [1, 2, 3];
+    expect(dynamicTypeStateSerializer.serialize(numbers), numbers);
+    expect(dynamicTypeStateSerializer.deserialize(numbers), numbers);
+
+    const complexList = [
+      false,
+      1,
+      'two',
+      [3, 3.14]
+    ];
+    expect(dynamicTypeStateSerializer.serialize(complexList), complexList);
+    expect(dynamicTypeStateSerializer.deserialize(complexList), complexList);
+
+    const numbersMap = {'one': 1, 'two': 2, 'three': 3};
+    expect(dynamicTypeStateSerializer.serialize(numbersMap), numbersMap);
+    expect(dynamicTypeStateSerializer.deserialize(numbersMap), numbersMap);
+
+    const complexMap = {
+      'one': 1,
+      3: 'pi',
+      false: ['false', false, 0],
+      1: {
+        'string': 'one',
+        'num': 1,
+        'bool': true,
+      },
+    };
+    expect(dynamicTypeStateSerializer.serialize(complexMap), complexMap);
+    expect(dynamicTypeStateSerializer.deserialize(complexMap), complexMap);
   });
 }
 

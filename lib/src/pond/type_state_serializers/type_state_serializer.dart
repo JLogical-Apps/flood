@@ -3,5 +3,15 @@ abstract class TypeStateSerializer<T> {
 
   T deserialize(dynamic value);
 
-  Type get type => T;
+  bool matchesType(Type type) {
+    return T == type;
+  }
+
+  bool matchesSerializing(dynamic value) {
+    return value is T;
+  }
+
+  bool matchesDeserializing(dynamic value) {
+    return value is T;
+  }
 }

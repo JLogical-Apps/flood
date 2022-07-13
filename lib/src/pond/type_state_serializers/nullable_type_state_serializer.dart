@@ -14,4 +14,14 @@ class NullableTypeStateSerializer<T> extends TypeStateSerializer<T?> {
   T? deserialize(value) {
     return value == null ? null : typeStateSerializer.deserialize(value);
   }
+
+  @override
+  bool matchesSerializing(value) {
+    return value == null || typeStateSerializer.matchesSerializing(value);
+  }
+
+  @override
+  bool matchesDeserializing(value) {
+    return value == null || typeStateSerializer.matchesDeserializing(value);
+  }
 }

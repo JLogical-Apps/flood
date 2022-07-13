@@ -15,6 +15,12 @@ abstract class AppRegistration {
 
   TypeStateSerializer getTypeStateSerializerByTypeRuntime(Type type);
 
+  /// Gets the appropriate type state serializer to serialize [value].
+  TypeStateSerializer getTypeStateSerializerBySerializeValue(dynamic value);
+
+  /// Gets the appropriate type state serializer to deserialize [value].
+  TypeStateSerializer getTypeStateSerializerByDeserializeValue(dynamic value);
+
   bool isSubtype(Type a, Type b);
 
   Type? getTypeByNameOrNull(String typeName);

@@ -9,9 +9,7 @@ import 'package:jlogical_utils/src/pond/record/entity.dart';
 import 'package:jlogical_utils/src/pond/record/value_object.dart';
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
-import 'package:jlogical_utils/src/pond/type_state_serializers/nullable_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
-import 'package:jlogical_utils/src/pond/type_state_serializers/value_object_type_state_serializer.dart';
 
 import 'entity_registration.dart';
 
@@ -80,26 +78,22 @@ mixin WithExplicitAppRegistration implements AppRegistration {
     return null;
   }
 
+  @override
   TypeStateSerializer getTypeStateSerializerByTypeRuntime(Type type) {
-    final typeStateSerializer = typeStateSerializers.firstWhereOrNull((serializer) => serializer.type == type);
-    if (typeStateSerializer != null) {
-      return typeStateSerializer;
-    }
+    return typeStateSerializers.firstWhereOrNull((serializer) => serializer.matchesType(type)) ??
+        (throw Exception('Unable to find a type state serializer for type [$type]'));
+  }
 
-    final hasValueObjectRegistration =
-        valueObjectRegistrations.any((registration) => registration.valueObjectType == type);
+  @override
+  TypeStateSerializer getTypeStateSerializerBySerializeValue(dynamic value) {
+    return typeStateSerializers.firstWhereOrNull((serializer) => serializer.matchesSerializing(value)) ??
+        (throw Exception('Unable to find a type state serializer to serialize value [$value]'));
+  }
 
-    if (hasValueObjectRegistration) {
-      return ValueObjectTypeStateSerializer();
-    }
-
-    final hasNullableValueObjectRegistration =
-        valueObjectRegistrations.any((registration) => registration.nullableValueObjectType == type);
-    if (hasNullableValueObjectRegistration) {
-      return NullableTypeStateSerializer(ValueObjectTypeStateSerializer());
-    }
-
-    throw Exception('Unable to find a type state serializer for type [$type]');
+  @override
+  TypeStateSerializer getTypeStateSerializerByDeserializeValue(dynamic value) {
+    return typeStateSerializers.firstWhereOrNull((serializer) => serializer.matchesDeserializing(value)) ??
+        (throw Exception('Unable to find a type state serializer to deserialize value [$value]'));
   }
 
   bool isSubtype(Type a, Type b) {
@@ -107,7 +101,8 @@ mixin WithExplicitAppRegistration implements AppRegistration {
       return true;
     }
 
-    final isValueObject = valueObjectRegistrations.any((registration) => registration.valueObjectType == a);
+    final isValueObject = valueObjectRegistrations
+        .any((registration) => registration.valueObjectType == a || registration.nullableValueObjectType == a);
     if (isValueObject) {
       return _isValueObjectSubtype(a, b);
     }
@@ -147,9 +142,12 @@ mixin WithExplicitAppRegistration implements AppRegistration {
     if (a == b) {
       return true;
     }
+    if (b == ValueObject) {
+      return true;
+    }
 
-    final valueObjectRegistrationA =
-        valueObjectRegistrations.firstWhereOrNull((registration) => registration.valueObjectType == a);
+    final valueObjectRegistrationA = valueObjectRegistrations.firstWhereOrNull(
+        (registration) => registration.valueObjectType == a || registration.nullableValueObjectType == a);
     if (valueObjectRegistrationA == null) {
       return false;
     }
@@ -159,6 +157,9 @@ mixin WithExplicitAppRegistration implements AppRegistration {
 
   bool _isEntitySubtype(Type a, Type b) {
     if (a == b) {
+      return true;
+    }
+    if (b == Entity) {
       return true;
     }
 

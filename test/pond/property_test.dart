@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/jlogical_utils.dart' hide Draft;
 
 import 'entities/budget.dart';
 import 'entities/color.dart';
@@ -10,6 +10,7 @@ import 'entities/palette.dart';
 import 'entities/palette_stats.dart';
 import 'entities/transaction.dart';
 import 'entities/user.dart';
+import 'entities/draft.dart';
 import 'entities/user_avatar.dart';
 import 'entities/user_entity.dart';
 
@@ -264,6 +265,17 @@ void main() {
 
     expect(() => Color().validateSync(null), throwsA(isA<ValidationException>()));
     expect(() => userAvatar.colorProperty.value = Color(), throwsA(isA<ValidationException>()));
+  });
+
+  test('ValueObject with dynamic map property.', () {
+    AppContext.global = AppContext.createForTesting();
+
+    final rgbMap = {'r': 0, 'g': 122, 'b': 255};
+    final color = Color()..rgbProperty.value = rgbMap;
+    final draft = Draft();
+    draft.draftState = color.state;
+
+    expect(draft.stateProperty.value, color.state.fullValues);
   });
 }
 

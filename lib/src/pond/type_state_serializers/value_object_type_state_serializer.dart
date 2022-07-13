@@ -22,4 +22,19 @@ class ValueObjectTypeStateSerializer extends TypeStateSerializer<ValueObject> {
         State.extractFromOrNull(value) ?? (throw Exception('Cannot extract state for ValueObject from $value'));
     return AppContext.global.constructValueObjectFromState(state);
   }
+
+  @override
+  bool matchesType(Type type) {
+    return AppContext.global.isSubtype(type, ValueObject);
+  }
+
+  @override
+  bool matchesSerializing(value) {
+    return value is ValueObject;
+  }
+
+  @override
+  bool matchesDeserializing(value) {
+    return false;
+  }
 }
