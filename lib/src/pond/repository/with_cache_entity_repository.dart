@@ -91,7 +91,8 @@ mixin WithCacheEntityRepository on EntityRepository {
     if (queryRequest.isWithoutCache()) {
       var completer = _queryCompleterByQueryRequest[queryRequest];
       if (completer != null) {
-        return await completer.future;
+        await completer.future;
+        return executeQuerySync(queryRequest);
       }
 
       completer = Completer();

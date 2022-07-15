@@ -29,15 +29,15 @@ class ConsoleLoggingService extends LoggingService {
   }
 
   @override
-  void logError(obj) {
-    final message = '$obj';
+  void logError(obj, {StackTrace? stack}) {
+    final message = '$obj\n$stack';
     lumberdash.logError(message);
     logHistory.add(message);
   }
 
   @override
-  void logFatal(obj) {
-    final message = '$obj';
+  void logFatal(obj, {StackTrace? stack}) {
+    final message = '$obj\n$stack';
     lumberdash.logFatal(message);
     logHistory.add(message);
   }

@@ -3,6 +3,7 @@ import 'package:jlogical_utils/src/pond/query/executor/query_executor_x.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../model/export_core.dart';
+import '../context/module/app_module.dart';
 import '../query/request/query_request.dart';
 import '../record/entity.dart';
 import '../record/record.dart';
@@ -11,6 +12,10 @@ import 'entity_repository.dart';
 
 mixin WithEntityRepositoryDelegator implements EntityRepository {
   EntityRepository get entityRepository;
+
+  /// Register the [entityRepository] instead of the current repository.
+  @override
+  AppModule get registerTarget => entityRepository;
 
   @override
   List<Type> get handledEntityTypes => entityRepository.handledEntityTypes;

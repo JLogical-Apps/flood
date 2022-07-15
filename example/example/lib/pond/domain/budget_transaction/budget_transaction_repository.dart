@@ -45,4 +45,11 @@ class BudgetTransactionRepository
         EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(() => EnvelopeTransactionEntity()),
         EntityRegistration<TransferTransactionEntity, TransferTransaction>(() => TransferTransactionEntity()),
       ];
+
+  @override
+  EntityRepository getFirestoreRepository() {
+    return super
+        .getFirestoreRepository()
+        .asSyncingRepository<BudgetTransactionEntity, BudgetTransaction>(localRepository: getFileRepository());
+  }
 }

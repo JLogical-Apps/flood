@@ -1,11 +1,5 @@
-import 'package:jlogical_utils/src/pond/modules/syncing/syncing_module.dart';
-
-import '../../context/app_context.dart';
-import '../../query/executor/query_executor.dart';
-import '../../query/query.dart';
-import '../../query/request/result/query_pagination_result_controller.dart';
-import '../../repository/entity_repository.dart';
-import '../../state/state.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:rxdart/rxdart.dart';
 
 mixin WithSyncingRepository on EntityRepository {
   EntityRepository get localRepository;
@@ -27,9 +21,12 @@ mixin WithSyncingRepository on EntityRepository {
   }
 
   @override
-  QueryExecutor getQueryExecutor({
-    required void Function(Query query, QueryPaginationResultController controller) onPaginationControllerCreated,
-  }) {
-    return localRepository;
+  Future<T> onExecuteQuery<R extends Record, T>(QueryRequest<R, T> queryRequest) {
+    return localRepository.executeQuery(queryRequest);
+  }
+
+  @override
+  ValueStream<FutureValue<T>> onExecuteQueryX<R extends Record, T>(QueryRequest<R, T> queryRequest) {
+    return localRepository.executeQueryX(queryRequest);
   }
 }

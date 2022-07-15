@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:example/firebase_options.dart';
 import 'package:example/model/model_page.dart';
+import 'package:example/pond/domain/assets/adapting_asset_provider.dart';
 import 'package:example/pond/domain/budget/budget_repository.dart';
+import 'package:example/pond/domain/budget_transaction/budget_transaction_entity.dart';
 import 'package:example/pond/domain/budget_transaction/budget_transaction_repository.dart';
 import 'package:example/pond/domain/envelope/envelope_repository.dart';
 import 'package:example/pond/domain/user/user_repository.dart';
@@ -13,7 +15,9 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 import 'debug_view/debug_page.dart';
 import 'form/form_page.dart';
+import 'pond/domain/budget/budget.dart';
 import 'pond/domain/budget/budget_draft_repository.dart';
+import 'pond/domain/budget/budget_entity.dart';
 import 'pond/domain/user/user.dart';
 import 'pond/domain/user/user_entity.dart';
 import 'pond/presentation/pond_login_page.dart';
@@ -130,7 +134,7 @@ class HomePage extends StatelessWidget {
     appContext
       ..register(await FirebaseModule.create(app: DefaultFirebaseOptions.currentPlatform))
       ..register(DebugModule())
-      ..register(AssetModule(assetProvider: DefaultAssetProvider()))
+      ..register(AssetModule(assetProvider: AdaptingAssetProvider()))
       ..register(DefaultAnalyticsModule())
       ..register(BudgetRepository())
       ..register(BudgetDraftRepository())
@@ -157,7 +161,49 @@ class HomePage extends StatelessWidget {
           onSave: (obj) => throw UnimplementedError(),
           onLoad: (yaml) => yaml?['min_version'],
         ),
-      ));
+      ))
+      ..register(SyncingModule()
+        ..registerQueryDownload(() async =>
+            (await _getLoggedInUserId()).mapIfNonNull((loggedInUserId) => Query.getById<UserEntity>(loggedInUserId)))
+        ..registerQueryDownload(() async => (await _getLoggedInUserId())
+            .mapIfNonNull((loggedInUserId) => UserEntity.getBudgetsQueryFromUser(loggedInUserId).all()))
+        ..registerQueryDownloads(() async {
+          final budgetEntities = await _getCurrentBudgetEntities();
+          return budgetEntities.map((entity) => BudgetEntity.getEnvelopesQueryFromBudget(entity.id!).all()).toList();
+        })
+        ..registerQueryDownloads(() async {
+          final budgetEntities = await _getCurrentBudgetEntities();
+          return budgetEntities
+              .map((entity) => BudgetTransactionEntity.getBudgetTransactionsQueryFromBudget(entity.id!).all())
+              .toList();
+        })
+        ..registerDownload(AssetSyncDownloadAction(downloadAssetIdsGetter: () async {
+          final loggedInUserId = await _getLoggedInUserId();
+          if (loggedInUserId == null) {
+            return [];
+          }
+
+          final loggedInUserEntity =
+              await locate<SyncingModule>().executeQueryOnSource(Query.getById<UserEntity>(loggedInUserId));
+          final profilePictureId = loggedInUserEntity?.value.profilePictureProperty.value;
+          return [
+            if (profilePictureId != null) profilePictureId,
+          ];
+        })));
+  }
+
+  Future<String?> _getLoggedInUserId() {
+    return locate<AuthService>().getCurrentlyLoggedInUserId();
+  }
+
+  Future<List<BudgetEntity>> _getCurrentBudgetEntities() async {
+    final loggedInUserId = await _getLoggedInUserId();
+    if (loggedInUserId == null) {
+      return [];
+    }
+
+    return await locate<SyncingModule>().executeQueryOnSource<BudgetEntity, List<BudgetEntity>>(
+        UserEntity.getBudgetsQueryFromUser(loggedInUserId).all());
   }
 
   Future<void> _initDebugPond() async {

@@ -22,13 +22,9 @@ class PondBudgetPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final budgetEntityController = useEntity<BudgetEntity>(budgetId);
-    final envelopesQueryController = useQuery(
-      Query.from<EnvelopeEntity>().where(Envelope.budgetField, isEqualTo: budgetId).all(),
-    );
+    final envelopesQueryController = useQuery(BudgetEntity.getEnvelopesQueryFromBudget(budgetId).all());
     final transactionsQueryController = useQuery(
-      Query.from<BudgetTransactionEntity>()
-          .where(BudgetTransaction.budgetField, isEqualTo: budgetId)
-          .paginate(limit: 2),
+      BudgetTransactionEntity.getBudgetTransactionsQueryFromBudget(budgetId).paginate(limit: 2),
     );
 
     final isLoading = useState<bool>(false);

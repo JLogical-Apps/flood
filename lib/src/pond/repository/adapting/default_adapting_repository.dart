@@ -17,6 +17,7 @@ abstract class DefaultAdaptingRepository<E extends Entity<V>, V extends ValueObj
     with WithEntityRepositoryDelegator {
   String get dataPath;
 
+  @override
   late EntityRepository entityRepository = getRepository(AppContext.global.environment);
 
   EntityRepository getRepository(Environment environment) {

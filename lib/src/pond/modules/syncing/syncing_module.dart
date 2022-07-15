@@ -2,43 +2,56 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:collection/collection.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/publish_actions/sync_publish_action_entity.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/sync_publish_actions_repository.dart';
 
-import '../../context/app_context.dart';
-import '../../context/module/app_module.dart';
-import '../../context/registration/app_registration.dart';
-import '../../query/query.dart';
-import '../../query/request/query_request.dart';
-import '../../record/entity.dart';
-import '../../record/value_object.dart';
-import '../../repository/entity_repository.dart';
-import '../../state/state.dart';
-import '../logging/default_logging_module.dart';
+import 'local_sync_publish_actions_repository.dart';
 import 'publish_actions/delete_sync_publish_action.dart';
 import 'publish_actions/delete_sync_publish_action_entity.dart';
 import 'publish_actions/save_sync_publish_action.dart';
 import 'publish_actions/save_sync_publish_action_entity.dart';
-import 'sync_download_action.dart';
-import 'syncing_repository.dart';
 
 class SyncingModule extends AppModule {
+  final EntityRepository syncPublishActionsRepository;
+
+  SyncingModule({EntityRepository? syncPublishActionsRepository})
+      : this.syncPublishActionsRepository = syncPublishActionsRepository ?? SyncPublishActionsRepository();
+
+  SyncingModule.testing() : syncPublishActionsRepository = LocalSyncPublishActionsRepository();
+
   final List<SyncDownloadAction> _downloadActions = [];
   final Queue<SyncPublishActionEntity> _publishActionEntitiesQueue = Queue();
 
   @override
   void onRegister(AppRegistration registration) {
-    registration.register(SyncPublishActionsRepository());
+    registration.register(syncPublishActionsRepository);
   }
 
   @override
   Future<void> onLoad(AppContext appContext) async {
     await _loadPendingPublishActions();
+    () async {
+      await download();
+      await publish();
+    }();
   }
 
   /// Register a scope to download when [download] is called.
-  void registerQueryDownload(QueryRequest queryRequestGetter()) {
+  void registerQueryDownload(FutureOr<QueryRequest?> queryRequestGetter()) {
+    _downloadActions.add(QuerySyncDownloadAction(() async {
+      final queryRequest = await queryRequestGetter();
+      return [if (queryRequest != null) queryRequest];
+    }));
+  }
+
+  /// Register a scope to download when [download] is called.
+  void registerQueryDownloads(FutureOr<List<QueryRequest>> queryRequestGetter()) {
     _downloadActions.add(QuerySyncDownloadAction(queryRequestGetter));
+  }
+
+  void registerDownload(SyncDownloadAction syncDownloadAction) {
+    _downloadActions.add(syncDownloadAction);
   }
 
   /// Publish all pending changes to source repositories.
@@ -57,7 +70,10 @@ class SyncingModule extends AppModule {
   }
 
   Future<void> download() async {
-    await Future.wait(_downloadActions.map((action) => action.download()));
+    await Future.wait(_downloadActions.map((action) => guardAsync(
+          () => action.download(),
+          onStackedError: (error, stack) => logError(error, stack: stack),
+        )));
   }
 
   Future<void> enqueueSave(State state) {
@@ -72,6 +88,12 @@ class SyncingModule extends AppModule {
   Future<void> enqueueSyncPublishAction(SyncPublishActionEntity action) async {
     _publishActionEntitiesQueue.add(action);
     await action.create();
+  }
+
+  Future<T> executeQueryOnSource<R extends Record, T>(QueryRequest<R, T> queryRequest) async {
+    final sourceRepository = getSourceRepositoryRuntime(queryRequest.query.recordType);
+    final result = await sourceRepository.executeQuery(queryRequest);
+    return result;
   }
 
   EntityRepository? getSourceRepositoryRuntimeOrNull(Type entityType) {

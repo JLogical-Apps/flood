@@ -40,10 +40,10 @@ void logWarning(dynamic obj) {
   locateOrNull<LoggingService>()?.logWarning(obj);
 }
 
-void logError(dynamic obj) {
-  locateOrNull<LoggingService>()?.logError(obj);
+void logError(dynamic obj, {StackTrace? stack}) {
+  locateOrNull<LoggingService>()?.logError(obj, stack: stack);
 }
 
-void logFatal(dynamic obj) {
-  locateOrNull<LoggingService>()?.logFatal(obj);
+void logFatal(dynamic obj, {StackTrace? stack}) {
+  locateOrNull<LoggingService>()?.logFatal(obj, stack: stack);
 }

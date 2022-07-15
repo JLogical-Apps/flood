@@ -25,39 +25,52 @@ abstract class DefaultAbstractAdaptingRepository<E extends Entity<V>, V extends 
     return typeName;
   }
 
+  @override
   late EntityRepository entityRepository = _getEntityRepository();
 
   EntityRepository _getEntityRepository() {
     switch (AppContext.global.environment) {
       case Environment.testing:
-        return SimpleLocalRepository<E, V>(
-          valueObjectRegistrations: valueObjectRegistrations,
-          entityRegistrations: entityRegistrations,
-          stateInitializer: initializeState,
-        );
+        return getLocalRepository();
       case Environment.device:
-        return SimpleFileRepository<E, V>(
-          dataPath: dataPath,
-          valueObjectRegistrations: valueObjectRegistrations,
-          entityRegistrations: entityRegistrations,
-          stateInitializer: initializeState,
-        );
+        return getFileRepository();
       case Environment.qa:
       case Environment.uat:
       case Environment.alpha:
       case Environment.beta:
       case Environment.production:
-        return SimpleFirestoreRepository<E, V>(
-          dataPath: dataPath,
-          unionTypeFieldName: unionTypeFieldName,
-          unionTypeConverterGetter: unionTypeConverter,
-          valueObjectRegistrations: valueObjectRegistrations,
-          entityRegistrations: entityRegistrations,
-          stateInitializer: initializeState,
-        );
+        return getFirestoreRepository();
       default:
         throw UnimplementedError();
     }
+  }
+
+  EntityRepository getLocalRepository() {
+    return SimpleLocalRepository<E, V>(
+      valueObjectRegistrations: valueObjectRegistrations,
+      entityRegistrations: entityRegistrations,
+      stateInitializer: initializeState,
+    );
+  }
+
+  EntityRepository getFileRepository() {
+    return SimpleFileRepository<E, V>(
+      dataPath: dataPath,
+      valueObjectRegistrations: valueObjectRegistrations,
+      entityRegistrations: entityRegistrations,
+      stateInitializer: initializeState,
+    );
+  }
+
+  EntityRepository getFirestoreRepository() {
+    return SimpleFirestoreRepository<E, V>(
+      dataPath: dataPath,
+      unionTypeFieldName: unionTypeFieldName,
+      unionTypeConverterGetter: unionTypeConverter,
+      valueObjectRegistrations: valueObjectRegistrations,
+      entityRegistrations: entityRegistrations,
+      stateInitializer: initializeState,
+    );
   }
 
   @override

@@ -5,9 +5,9 @@ abstract class LoggingService extends AppModule {
 
   void logWarning(dynamic obj);
 
-  void logError(dynamic obj);
+  void logError(dynamic obj, {StackTrace? stack});
 
-  void logFatal(dynamic obj);
+  void logFatal(dynamic obj, {StackTrace? stack});
 
   List<String> getLogs();
 }

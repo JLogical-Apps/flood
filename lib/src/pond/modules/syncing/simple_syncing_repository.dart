@@ -1,6 +1,7 @@
 import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/repository/with_entity_repository_delegator.dart';
 
+import '../../context/module/app_module.dart';
 import '../../record/entity.dart';
 import '../../record/value_object.dart';
 import 'syncing_repository.dart';
@@ -17,4 +18,8 @@ class SimpleSyncingRepository<E extends Entity<V>, V extends ValueObject> extend
 
   @override
   EntityRepository get entityRepository => localRepository;
+
+  /// Don't register [localRepository], register this.
+  @override
+  AppModule get registerTarget => this;
 }

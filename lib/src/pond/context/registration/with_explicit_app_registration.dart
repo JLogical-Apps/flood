@@ -225,15 +225,20 @@ mixin WithExplicitAppRegistration implements AppRegistration {
   }
 
   void register<T>(T obj) {
-    _registrationByType[T] = obj;
-
+    Object? registerTarget = obj;
     if (obj is AppModule) {
-      appModules.add(obj);
-      obj.onRegister(this);
+      registerTarget = obj.registerTarget;
     }
 
-    if (obj is EntityRepository) {
-      _entityDatabase.registerRepository(obj);
+    _registrationByType[T] = registerTarget;
+
+    if (registerTarget is AppModule) {
+      appModules.add(registerTarget);
+      registerTarget.onRegister(this);
+    }
+
+    if (registerTarget is EntityRepository) {
+      _entityDatabase.registerRepository(registerTarget);
     }
   }
 

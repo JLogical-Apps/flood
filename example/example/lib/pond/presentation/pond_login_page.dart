@@ -60,6 +60,7 @@ class PondLoginPage extends HookWidget {
                                             email: result['email'],
                                             password: result['password'],
                                           );
+                                      await locate<SyncingModule>().download();
                                     } catch (e) {
                                       logError(e);
                                       port.setException(name: 'email', exception: e.toString());

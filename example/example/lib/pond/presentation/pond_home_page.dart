@@ -30,8 +30,6 @@ class PondHomePage extends HookWidget {
     return Banner(
       message: AppContext.global.environment.name.toUpperCase(),
       location: BannerLocation.topEnd,
-      textDirection: TextDirection.ltr,
-      layoutDirection: TextDirection.ltr,
       color: Colors.red,
       child: StyleProvider(
         style: PondLoginPage.style,

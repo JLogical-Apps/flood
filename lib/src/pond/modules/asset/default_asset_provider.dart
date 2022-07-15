@@ -22,11 +22,23 @@ class DefaultAssetProvider extends AssetProvider {
 
     switch (environment) {
       case Environment.testing:
-        return LocalAssetProvider();
+        return getLocalAssetProvider();
       case Environment.device:
-        return FileAssetProvider();
+        return getFileAssetProvider();
       default:
-        return FirebaseStorageAssetProvider();
+        return getOnlineAssetProvider();
     }
+  }
+
+  AssetProvider getLocalAssetProvider() {
+    return LocalAssetProvider();
+  }
+
+  AssetProvider getFileAssetProvider() {
+    return FileAssetProvider();
+  }
+
+  AssetProvider getOnlineAssetProvider() {
+    return FirebaseStorageAssetProvider();
   }
 }

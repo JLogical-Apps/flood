@@ -1,5 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/pond/modules/syncing/local_sync_publish_actions_repository.dart';
+import 'package:jlogical_utils/src/pond/modules/syncing/publish_actions/save_sync_publish_action.dart';
+import 'package:jlogical_utils/src/pond/modules/syncing/publish_actions/save_sync_publish_action_entity.dart';
 
 void main() {
   test('publishing uploads entities.', () async {
@@ -7,7 +10,7 @@ void main() {
     var sourceStatesSaved = 0;
 
     AppContext.global = AppContext.createForTesting()
-      ..register(SyncingModule())
+      ..register(SyncingModule.testing())
       ..register(SyncingUserRepository(
         onCacheStateSaved: (s) => cacheStatesSaved++,
         onSourceStateSaved: (s) => sourceStatesSaved++,
@@ -26,6 +29,45 @@ void main() {
 
     expect(cacheStatesSaved, 2);
     expect(sourceStatesSaved, 2);
+  });
+
+  test('loading pending publishes and publishing uploads entities and clears queue.', () async {
+    AppContext.global = AppContext.createForTesting();
+
+    final pendingUserEntities = [
+      UserEntity()
+        ..id = 'a'
+        ..value = (User()..emailProperty.value = 'a@a.com'),
+      UserEntity()
+        ..id = 'b'
+        ..value = (User()..emailProperty.value = 'b@b.com'),
+    ];
+    final pendingSaveEntities = pendingUserEntities.map((entity) => SaveSyncPublishActionEntity()
+      ..id = entity.id
+      ..value = (SaveSyncPublishAction.fromSaveState(entity.state)));
+    final pendingSaveStates = pendingSaveEntities.map((entity) => entity.state).toList();
+
+    final localSyncPublishActionsRepository = LocalSyncPublishActionsRepository();
+    for (final state in pendingSaveStates) {
+      await localSyncPublishActionsRepository.saveState(state);
+    }
+
+    final syncingUserRepository =
+        LocalUserRepository().asSyncingRepository<UserEntity, User>(localRepository: LocalUserRepository());
+
+    AppContext.global = AppContext.createForTesting()
+      ..register(SyncingModule(syncPublishActionsRepository: localSyncPublishActionsRepository))
+      ..register(syncingUserRepository);
+    await AppContext.global.load();
+
+    final newUserEntity = UserEntity()..value = (User()..emailProperty.value = 'c@c.com');
+    await newUserEntity.create();
+
+    await locate<SyncingModule>().publish();
+
+    final userEntities = await syncingUserRepository.sourceRepository.executeQuery(Query.from<UserEntity>().all());
+
+    expect(userEntities, unorderedEquals([newUserEntity, ...pendingUserEntities]));
   });
 
   test('download downloads entities.', () async {
@@ -48,7 +90,7 @@ void main() {
     // Reinitialize AppContext with SyncingModule.
     AppContext.global = AppContext.createForTesting()
       ..register(sourceRepository.asSyncingRepository<UserEntity, User>(localRepository: localRepository))
-      ..register(SyncingModule()..registerQueryDownload(() => Query.from<UserEntity>().all()));
+      ..register(SyncingModule.testing()..registerQueryDownload(() => Query.from<UserEntity>().all()));
 
     final userCountQuery = Query.from<UserEntity>().all().map((users) => users.length);
 

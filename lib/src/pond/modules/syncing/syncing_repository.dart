@@ -5,7 +5,7 @@ import '../../repository/with_cache_entity_repository.dart';
 import 'with_syncing_repository.dart';
 
 abstract class SyncingRepository<E extends Entity<V>, V extends ValueObject> extends DefaultRepository<E, V>
-    with WithSyncingRepository, WithCacheEntityRepository {
+    with WithSyncingRepository {
 
   SyncingRepository() {
     sourceRepository.entityInflatedX.listen((entity) {

@@ -20,4 +20,8 @@ abstract class AppModule {
 
   /// Called when the app is "force-reset".
   Future<void> onReset(AppContext appContext) async {}
+
+  /// The app module to register.
+  /// Replacing this will register [registerTarget] instead of this.
+  AppModule get registerTarget => this;
 }

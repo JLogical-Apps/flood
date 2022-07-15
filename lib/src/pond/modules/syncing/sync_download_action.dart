@@ -1,17 +1,21 @@
-import '../../query/request/query_request.dart';
+import 'dart:async';
+
+import 'package:jlogical_utils/jlogical_utils.dart';
 
 abstract class SyncDownloadAction {
   Future<void> download();
 }
 
 class QuerySyncDownloadAction extends SyncDownloadAction {
-  final QueryRequest Function() queryRequestGetter;
+  final FutureOr<List<QueryRequest>> Function() queryRequestsGetter;
 
-  QuerySyncDownloadAction(this.queryRequestGetter);
+  QuerySyncDownloadAction(this.queryRequestsGetter);
 
   @override
   Future<void> download() async {
-    final queryRequest = queryRequestGetter();
-    await queryRequest.get();
+    final queryRequests = await queryRequestsGetter();
+    for (final queryRequest in queryRequests) {
+      await locate<SyncingModule>().executeQueryOnSource(queryRequest);
+    }
   }
 }

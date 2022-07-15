@@ -19,20 +19,30 @@ extension NullableObjectExtensions<T> on T? {
 }
 
 /// Runs [func] in a try-catch. If an exception occurred, calls [onError] and returns null.
-T? guard<T>(T func(), {void onError(dynamic error)?}) {
+T? guard<T>(
+  T func(), {
+  void onError(dynamic error)?,
+  void onStackedError(dynamic error, StackTrace stack)?,
+}) {
   try {
     return func();
-  } catch (e) {
+  } catch (e, s) {
     onError?.call(e);
+    onStackedError?.call(e, s);
     return null;
   }
 }
 
-Future<T?> guardAsync<T>(Future<T> func(), {void onError(dynamic error)?}) async {
+Future<T?> guardAsync<T>(
+  Future<T> func(), {
+  void onError(dynamic error)?,
+  void onStackedError(dynamic error, StackTrace stack)?,
+}) async {
   try {
     return await func();
-  } catch (e) {
+  } catch (e, s) {
     onError?.call(e);
+    onStackedError?.call(e, s);
     return null;
   }
 }
