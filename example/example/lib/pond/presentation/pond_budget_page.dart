@@ -1,5 +1,4 @@
 import 'package:example/pond/domain/budget/budget_entity.dart';
-import 'package:example/pond/domain/budget_transaction/budget_transaction.dart';
 import 'package:example/pond/domain/budget_transaction/budget_transaction_entity.dart';
 import 'package:example/pond/domain/budget_transaction/transfer_transaction.dart';
 import 'package:example/pond/domain/budget_transaction/transfer_transaction_entity.dart';
@@ -116,7 +115,9 @@ class PondBudgetPage extends HookWidget {
                                 isLoading.value = false;
                               },
                         child: StyledLoadingImage(
-                          image: imageAsset.mapIfNonNull((asset) => MemoryImage(asset.getOrNull()!.value)),
+                          image: imageAsset.mapIfNonNull((maybeAsset) => maybeAsset
+                              .mapIfPresent((asset) => asset?.value.mapIfNonNull((value) => MemoryImage(value)))
+                              .getOrNull()),
                           width: 200,
                           height: 200,
                         ),

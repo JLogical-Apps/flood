@@ -39,5 +39,9 @@ class SyncPublishActionsRepository extends DefaultAbstractFileRepository<SyncPub
         EntityRegistration<SaveSyncPublishActionEntity, SaveSyncPublishAction>(() => SaveSyncPublishActionEntity()),
         EntityRegistration<DeleteSyncPublishActionEntity, DeleteSyncPublishAction>(
             () => DeleteSyncPublishActionEntity()),
+        EntityRegistration<AssetUploadSyncPublishActionEntity, AssetUploadSyncPublishAction>(
+            () => AssetUploadSyncPublishActionEntity()),
+        EntityRegistration<AssetDeleteSyncPublishActionEntity, AssetDeleteSyncPublishAction>(
+            () => AssetDeleteSyncPublishActionEntity()),
       ];
 }

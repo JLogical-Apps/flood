@@ -15,7 +15,6 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 import 'debug_view/debug_page.dart';
 import 'form/form_page.dart';
-import 'pond/domain/budget/budget.dart';
 import 'pond/domain/budget/budget_draft_repository.dart';
 import 'pond/domain/budget/budget_entity.dart';
 import 'pond/domain/user/user.dart';
@@ -134,7 +133,7 @@ class HomePage extends StatelessWidget {
     appContext
       ..register(await FirebaseModule.create(app: DefaultFirebaseOptions.currentPlatform))
       ..register(DebugModule())
-      ..register(AssetModule(assetProvider: AdaptingAssetProvider()))
+      ..register(AssetModule(assetProvider: AdaptingAssetProvider().assetProvider))
       ..register(DefaultAnalyticsModule())
       ..register(BudgetRepository())
       ..register(BudgetDraftRepository())
@@ -186,8 +185,13 @@ class HomePage extends StatelessWidget {
           final loggedInUserEntity =
               await locate<SyncingModule>().executeQueryOnSource(Query.getById<UserEntity>(loggedInUserId));
           final profilePictureId = loggedInUserEntity?.value.profilePictureProperty.value;
+
+          final budgetEntities = await _getCurrentBudgetEntities();
+          final budgetImageIds = budgetEntities.expand((entity) => entity.value.imagesProperty.value!).toList();
+
           return [
             if (profilePictureId != null) profilePictureId,
+            ...budgetImageIds,
           ];
         })));
   }

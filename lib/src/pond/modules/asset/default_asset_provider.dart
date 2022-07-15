@@ -9,7 +9,7 @@ import 'file_asset_provider.dart';
 import 'firebase_storage_asset_provider.dart';
 import 'local_asset_provider.dart';
 
-class DefaultAssetProvider extends AssetProvider {
+class DefaultAssetProvider {
   late AssetProvider assetProvider = _getAssetProvider();
 
   @override
