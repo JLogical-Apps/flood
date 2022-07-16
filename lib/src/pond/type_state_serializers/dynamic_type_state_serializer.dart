@@ -5,11 +5,19 @@ import 'type_state_serializer.dart';
 class DynamicTypeStateSerializer extends TypeStateSerializer<dynamic> {
   @override
   serialize(value) {
-    return AppContext.global.getTypeStateSerializerBySerializeValue(value).serialize(value);
+    final serializer = AppContext.global.getTypeStateSerializerBySerializeValue(value);
+    if (serializer is DynamicTypeStateSerializer) {
+      return value;
+    }
+    return serializer.serialize(value);
   }
 
   @override
   deserialize(value) {
-    return AppContext.global.getTypeStateSerializerByDeserializeValue(value).deserialize(value);
+    final serializer = AppContext.global.getTypeStateSerializerByDeserializeValue(value);
+    if (serializer is DynamicTypeStateSerializer) {
+      return value;
+    }
+    return serializer.deserialize(value);
   }
 }

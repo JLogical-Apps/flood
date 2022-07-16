@@ -16,10 +16,10 @@ import 'package:jlogical_utils/src/pond/type_state_serializers/value_object_type
 
 class CoreModule extends AppModule {
   @override
-  List<TypeStateSerializer> get typeStateSerializers => [
-        ..._coreTypeStateSerializers,
-        ..._nullableCoreTypeStateSerializers,
-      ];
+  late final List<TypeStateSerializer> typeStateSerializers = [
+    ..._coreTypeStateSerializers,
+    ..._nullableCoreTypeStateSerializers,
+  ];
 
   void onRegister(AppRegistration registration) {
     registration.register(DefaultLoggingModule());

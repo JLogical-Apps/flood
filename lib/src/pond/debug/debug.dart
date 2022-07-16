@@ -48,8 +48,7 @@ Future<void> debug({AutomationContext? automationContext}) async {
 
             return [...?remoteCommands, ...?automationCommands];
           } catch (e, stack) {
-            logError(e);
-            logError(stack);
+            logError(e, stack: stack);
           }
         },
       ),

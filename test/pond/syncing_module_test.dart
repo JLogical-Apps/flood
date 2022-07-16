@@ -14,6 +14,7 @@ void main() {
       ..register(SyncingUserRepository(
         onCacheStateSaved: (s) => cacheStatesSaved++,
         onSourceStateSaved: (s) => sourceStatesSaved++,
+        publishOnSave: false,
       ));
 
     final userEntities = [
@@ -24,6 +25,33 @@ void main() {
 
     expect(cacheStatesSaved, 2);
     expect(sourceStatesSaved, 0);
+
+    await locate<SyncingModule>().publish();
+
+    expect(cacheStatesSaved, 2);
+    expect(sourceStatesSaved, 2);
+  });
+
+  test('publish on save', () async {
+    var cacheStatesSaved = 0;
+    var sourceStatesSaved = 0;
+
+    AppContext.global = AppContext.createForTesting()
+      ..register(SyncingModule.testing())
+      ..register(SyncingUserRepository(
+        onCacheStateSaved: (s) => cacheStatesSaved++,
+        onSourceStateSaved: (s) => sourceStatesSaved++,
+        publishOnSave: true,
+      ));
+
+    final userEntities = [
+      UserEntity()..value = (User()..emailProperty.value = 'a@a.com'),
+      UserEntity()..value = (User()..emailProperty.value = 'b@b.com'),
+    ];
+    await Future.wait(userEntities.map((user) => user.create()));
+
+    expect(cacheStatesSaved, 2);
+    expect(sourceStatesSaved, 2);
 
     await locate<SyncingModule>().publish();
 
@@ -52,8 +80,7 @@ void main() {
       await localSyncPublishActionsRepository.saveState(state);
     }
 
-    final syncingUserRepository =
-        LocalUserRepository().asSyncingRepository<UserEntity, User>(localRepository: LocalUserRepository());
+    final syncingUserRepository = LocalUserRepository().asSyncingRepository(localRepository: LocalUserRepository());
 
     AppContext.global = AppContext.createForTesting()
       ..register(SyncingModule(syncPublishActionsRepository: localSyncPublishActionsRepository))
@@ -89,7 +116,7 @@ void main() {
 
     // Reinitialize AppContext with SyncingModule.
     AppContext.global = AppContext.createForTesting()
-      ..register(sourceRepository.asSyncingRepository<UserEntity, User>(localRepository: localRepository))
+      ..register(sourceRepository.asSyncingRepository(localRepository: localRepository))
       ..register(SyncingModule.testing()..registerQueryDownload(() => Query.from<UserEntity>().all()));
 
     final userCountQuery = Query.from<UserEntity>().all().map((users) => users.length);
@@ -104,11 +131,11 @@ void main() {
   });
 }
 
-class SyncingUserRepository extends SyncingRepository<UserEntity, User> {
+class SyncingUserRepository extends SyncingRepository {
   final void Function(State state) onCacheStateSaved;
   final void Function(State state) onSourceStateSaved;
 
-  SyncingUserRepository({required this.onCacheStateSaved, required this.onSourceStateSaved});
+  SyncingUserRepository({required this.onCacheStateSaved, required this.onSourceStateSaved, super.publishOnSave});
 
   @override
   late EntityRepository localRepository = LocalUserRepository(onStateSaved: onCacheStateSaved);

@@ -10,6 +10,9 @@ class AssetUploadSyncPublishAction extends SyncPublishAction {
   }
 
   @override
+  List<Property> get properties => super.properties + [assetIdProperty];
+
+  @override
   Future<void> publish() async {
     final assetProvider = locate<AssetModule>().assetProvider;
     if (assetProvider is! SyncingAssetProvider) {

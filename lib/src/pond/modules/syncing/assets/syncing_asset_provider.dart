@@ -1,5 +1,7 @@
 import 'package:jlogical_utils/src/pond/modules/syncing/assets/publish_actions/asset_delete_sync_publish_action.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/assets/publish_actions/asset_delete_sync_publish_action_entity.dart';
+import 'package:jlogical_utils/src/pond/modules/syncing/assets/publish_actions/asset_upload_sync_publish_action.dart';
+import 'package:jlogical_utils/src/pond/modules/syncing/assets/publish_actions/asset_upload_sync_publish_action_entity.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/syncing_module.dart';
 
 import '../../../../persistence/export_core.dart';
@@ -31,21 +33,21 @@ class _SyncingDataSource extends DataSource<Asset> {
   _SyncingDataSource({required this.localDataSource, required this.assetId});
 
   @override
+  Future<void> saveData(Asset data) async {
+    await localDataSource.saveData(data);
+    await syncingModule.enqueueSyncPublishAction(
+        AssetUploadSyncPublishActionEntity()..value = (AssetUploadSyncPublishAction.fromAssetId(assetId)));
+  }
+
+  @override
   Future<void> delete() async {
+    await localDataSource.delete();
     await syncingModule.enqueueSyncPublishAction(
         AssetDeleteSyncPublishActionEntity()..value = (AssetDeleteSyncPublishAction.fromAssetId(assetId)));
-    await localDataSource.delete();
   }
 
   @override
   Future<Asset?> getData() {
     return localDataSource.getData();
-  }
-
-  @override
-  Future<void> saveData(Asset data) async {
-    await syncingModule.enqueueSyncPublishAction(
-        AssetDeleteSyncPublishActionEntity()..value = (AssetDeleteSyncPublishAction.fromAssetId(assetId)));
-    await localDataSource.saveData(data);
   }
 }

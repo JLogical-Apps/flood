@@ -48,8 +48,6 @@ class BudgetTransactionRepository
 
   @override
   EntityRepository getFirestoreRepository() {
-    return super
-        .getFirestoreRepository()
-        .asSyncingRepository<BudgetTransactionEntity, BudgetTransaction>(localRepository: getFileRepository());
+    return super.getFirestoreRepository().asSyncingRepository(localRepository: getFileRepository());
   }
 }

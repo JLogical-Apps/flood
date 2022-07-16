@@ -1,16 +1,16 @@
+import '../../repository/entity_repository.dart';
 import 'simple_syncing_repository.dart';
 import 'syncing_repository.dart';
-import '../../repository/entity_repository.dart';
-import '../../record/value_object.dart';
-import '../../record/entity.dart';
 
 extension SyncRepositoryExtensions on EntityRepository {
-  SyncingRepository asSyncingRepository<E extends Entity<V>, V extends ValueObject>({
+  SyncingRepository asSyncingRepository({
     required EntityRepository localRepository,
+    bool publishOnSave: true,
   }) {
-    return SimpleSyncingRepository<E, V>(
+    return SimpleSyncingRepository(
       localRepository: localRepository,
       sourceRepository: this,
+      publishOnSave: publishOnSave,
     );
   }
 }

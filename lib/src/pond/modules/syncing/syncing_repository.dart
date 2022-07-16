@@ -1,26 +1,25 @@
 import '../../context/app_context.dart';
-import '../../record/entity.dart';
-import '../../record/value_object.dart';
-import '../../repository/default_repository.dart';
+import '../../context/registration/entity_registration.dart';
+import '../../context/registration/value_object_registration.dart';
+import '../../repository/entity_repository.dart';
+import '../../repository/with_id_generator.dart';
 import 'with_syncing_repository.dart';
 
-abstract class SyncingRepository<E extends Entity<V>, V extends ValueObject> extends DefaultRepository<E, V>
-    with WithSyncingRepository {
-  SyncingRepository() {
+abstract class SyncingRepository extends EntityRepository with WithSyncingRepository, WithIdGenerator {
+  @override
+  final bool publishOnSave;
+
+  SyncingRepository({this.publishOnSave: true}) {
     sourceRepository.entityInflatedX.listen((entity) {
       localRepository.saveState(entity.state);
     });
   }
 
-  E createEntity() {
-    return localRepository.entityRegistrations.firstWhere((registration) => registration.entityType == E).create() as E;
-  }
+  @override
+  List<ValueObjectRegistration> get valueObjectRegistrations => localRepository.valueObjectRegistrations;
 
-  V createValueObject() {
-    return localRepository.valueObjectRegistrations
-        .firstWhere((registration) => registration.valueObjectType == V)
-        .create() as V;
-  }
+  @override
+  List<EntityRegistration> get entityRegistrations => localRepository.entityRegistrations;
 
   Future<void> onReset(AppContext context) async {
     await Future.wait([localRepository.onReset(context), sourceRepository.onReset(context)]);

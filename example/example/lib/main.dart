@@ -28,8 +28,7 @@ Future<void> main() async {
     print(err);
     print(stack);
 
-    logError(err);
-    logError(stack);
+    logError(err, stack: stack);
   });
 }
 

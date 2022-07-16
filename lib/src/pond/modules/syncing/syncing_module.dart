@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/publish_actions/sync_publish_action_entity.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/sync_publish_actions_repository.dart';
+import 'package:synchronized/synchronized.dart';
 
 import 'local_sync_publish_actions_repository.dart';
 import 'publish_actions/delete_sync_publish_action.dart';
@@ -32,8 +33,8 @@ class SyncingModule extends AppModule {
   Future<void> onLoad(AppContext appContext) async {
     await _loadPendingPublishActions();
     () async {
-      await download();
       await publish();
+      await download();
     }();
   }
 
@@ -54,18 +55,27 @@ class SyncingModule extends AppModule {
     _downloadActions.add(syncDownloadAction);
   }
 
+  static final _publishLock = Lock();
+
   /// Publish all pending changes to source repositories.
   Future<void> publish() async {
     try {
-      while (_publishActionEntitiesQueue.isNotEmpty) {
-        final actionEntity = _publishActionEntitiesQueue.first;
-        await actionEntity.value.publish();
-
-        _publishActionEntitiesQueue.removeFirst();
-        await actionEntity.delete();
+      // No need to re-publish if publishing is happening currently.
+      if (_publishLock.locked) {
+        return;
       }
-    } catch (e) {
-      logError(e);
+
+      await _publishLock.synchronized(() async {
+        while (_publishActionEntitiesQueue.isNotEmpty) {
+          final actionEntity = _publishActionEntitiesQueue.first;
+          await actionEntity.value.publish();
+
+          _publishActionEntitiesQueue.removeFirst();
+          await actionEntity.delete();
+        }
+      });
+    } catch (e, stack) {
+      logError(e, stack: stack);
     }
   }
 

@@ -99,7 +99,7 @@ mixin WithCacheEntityRepository on EntityRepository {
       _queryCompleterByQueryRequest[queryRequest] = completer;
 
       await onWithoutCacheQueryExecuted(queryRequest);
-      log('Using without-cache query [$queryRequest]');
+      log('[$runtimeType] Using without-cache query [$queryRequest]');
       result = await getQueryExecutor(
         onPaginationControllerCreated: (query, paginationController) =>
             _sourcePaginationResultControllerByQuery[query] = paginationController,

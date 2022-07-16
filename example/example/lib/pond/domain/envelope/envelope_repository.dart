@@ -24,8 +24,6 @@ class EnvelopeRepository extends DefaultAdaptingRepository<EnvelopeEntity, Envel
 
   @override
   EntityRepository getFirestoreRepository() {
-    return super
-        .getFirestoreRepository()
-        .asSyncingRepository<EnvelopeEntity, Envelope>(localRepository: getFileRepository());
+    return super.getFirestoreRepository().asSyncingRepository(localRepository: getFileRepository());
   }
 }

@@ -10,6 +10,9 @@ class AssetDeleteSyncPublishAction extends SyncPublishAction {
   }
 
   @override
+  List<Property> get properties => super.properties + [assetIdProperty];
+
+  @override
   Future<void> publish() async {
     final assetProvider = locate<AssetModule>().assetProvider;
     if (assetProvider is! SyncingAssetProvider) {
@@ -18,6 +21,11 @@ class AssetDeleteSyncPublishAction extends SyncPublishAction {
 
     final assetId = assetIdProperty.value!;
 
-    await assetProvider.sourceAssetProvider.getDataSource(assetId).delete();
+    final dataSource = assetProvider.sourceAssetProvider.getDataSource(assetId);
+    if (!await dataSource.exists()) {
+      return;
+    }
+
+    await dataSource.delete();
   }
 }

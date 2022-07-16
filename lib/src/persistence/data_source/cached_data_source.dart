@@ -31,6 +31,16 @@ class CachedDataSource<T> extends DataSource<T> {
   }
 
   @override
+  Future<bool> exists() async {
+    final existsInCache = await cacheDataSource.exists();
+    if (existsInCache) {
+      return true;
+    }
+
+    return await sourceDataSource.exists();
+  }
+
+  @override
   Future<void> delete() async {
     await sourceDataSource.delete();
     await cacheDataSource.delete();

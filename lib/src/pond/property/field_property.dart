@@ -5,6 +5,7 @@ import 'package:jlogical_utils/src/pond/property/property.dart';
 import 'package:jlogical_utils/src/pond/property/with_global_type_serializer.dart';
 
 import '../../patterns/export_core.dart';
+import '../modules/logging/default_logging_module.dart';
 import 'modifier/fallback_property_modifier.dart';
 import 'modifier/property_modifier.dart';
 
@@ -48,7 +49,12 @@ class FieldProperty<T> extends Property<T?> with WithGlobalTypeSerializer {
   void onValidateSync(_) {
     modifiers.forEach((modifier) {
       modifier.propertyModifierContextProvider = this;
-      modifier.validator?.validateSync(null);
+      try {
+        modifier.validator?.validateSync(null);
+      } catch (e) {
+        logError('Failed property validation for [$name]:\n$e');
+        throw e;
+      }
     });
     validators.forEach((validator) => validator.validateSync(null));
 

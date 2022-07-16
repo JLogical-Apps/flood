@@ -39,4 +39,10 @@ class FirebaseStorageDataSource extends DataSource<Uint8List> {
     logWarning('Deleting from Firebase Storage: $storagePath');
     return storageReference.delete();
   }
+
+  @override
+  Future<bool> exists() async {
+    final downloadUrl = await guardAsync(() => storageReference.getDownloadURL());
+    return downloadUrl != null;
+  }
 }

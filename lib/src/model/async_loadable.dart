@@ -46,7 +46,10 @@ abstract class AsyncLoadable<T> {
 
     _completer = Completer();
 
-    final loadedValue = await FutureValue.guard(() async => await loader());
+    final loadedValue = await FutureValue.guard(
+      () async => await loader(),
+      onStackedError: (e, s) => print('$e\n$s'),
+    );
 
     // Once the model completes loading, notify other [load] calls that the load has finished.
     _completer!.complete();

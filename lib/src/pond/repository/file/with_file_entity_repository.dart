@@ -42,7 +42,7 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
     }
 
     final contents = await file.readAsString();
-    return guard(() => statePersister.inflate(contents), onError: (e) => logError(e));
+    return guard(() => statePersister.inflate(contents), onStackedError: (e, stack) => logError(e, stack: stack));
   }
 
   @override
