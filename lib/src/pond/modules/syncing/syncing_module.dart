@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/publish_actions/sync_publish_action_entity.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/sync_publish_actions_repository.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:synchronized/synchronized.dart';
 
 import 'local_sync_publish_actions_repository.dart';
@@ -15,6 +16,9 @@ import 'publish_actions/save_sync_publish_action_entity.dart';
 
 class SyncingModule extends AppModule {
   final EntityRepository syncPublishActionsRepository;
+
+  final BehaviorSubject<FutureValue<void>> _syncingStatusX = BehaviorSubject.seeded(FutureValue.initial());
+  late final ValueStream<FutureValue<void>> syncingStatusX = _syncingStatusX;
 
   SyncingModule({EntityRepository? syncPublishActionsRepository})
       : this.syncPublishActionsRepository = syncPublishActionsRepository ?? SyncPublishActionsRepository();
@@ -31,10 +35,10 @@ class SyncingModule extends AppModule {
 
   @override
   Future<void> onLoad(AppContext appContext) async {
+    _syncingStatusX.value = FutureValue.initial();
     await _loadPendingPublishActions();
     () async {
-      await publish();
-      await download();
+      await reload();
     }();
   }
 
@@ -57,6 +61,11 @@ class SyncingModule extends AppModule {
 
   static final _publishLock = Lock();
 
+  Future<void> reload() async {
+    await publish();
+    await download();
+  }
+
   /// Publish all pending changes to source repositories.
   Future<void> publish() async {
     try {
@@ -66,6 +75,7 @@ class SyncingModule extends AppModule {
       }
 
       await _publishLock.synchronized(() async {
+        _syncingStatusX.value = FutureValue.initial();
         while (_publishActionEntitiesQueue.isNotEmpty) {
           final actionEntity = _publishActionEntitiesQueue.first;
           await actionEntity.value.publish();
@@ -73,17 +83,35 @@ class SyncingModule extends AppModule {
           _publishActionEntitiesQueue.removeFirst();
           await actionEntity.delete();
         }
+        _syncingStatusX.value = FutureValue.loaded(value: null);
       });
-    } catch (e, stack) {
-      logError(e, stack: stack);
+    } catch (e) {
+      _syncingStatusX.value = FutureValue.error(error: e);
+      rethrow;
     }
   }
 
   Future<void> download() async {
-    await Future.wait(_downloadActions.map((action) => guardAsync(
-          () => action.download(),
-          onStackedError: (error, stack) => logError(error, stack: stack),
-        )));
+    try {
+      _syncingStatusX.value = FutureValue.initial();
+      for (final downloadAction in _downloadActions) {
+        await downloadAction.download().timeout(Duration(seconds: 12));
+      }
+      _syncingStatusX.value = FutureValue.loaded(value: null);
+    } catch (e) {
+      _syncingStatusX.value = FutureValue.error(error: e);
+      rethrow;
+    }
+  }
+
+  Future<void> deleteLocalChanges() async {
+    for (final publishAction in _publishActionEntitiesQueue) {
+      await publishAction.delete();
+    }
+
+    _publishActionEntitiesQueue.clear();
+
+    await download();
   }
 
   Future<void> enqueueSave(State state) {

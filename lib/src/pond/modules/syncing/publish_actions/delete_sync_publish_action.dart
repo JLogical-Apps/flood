@@ -22,6 +22,6 @@ class DeleteSyncPublishAction extends SyncPublishAction {
   @override
   Future<void> publish() async {
     final sourceRepository = locate<SyncingModule>().getSourceRepositoryByState(deleteState);
-    await sourceRepository.deleteState(deleteState);
+    await sourceRepository.deleteState(deleteState).timeout(Duration(seconds: 8));
   }
 }

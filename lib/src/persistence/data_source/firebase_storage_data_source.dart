@@ -35,9 +35,13 @@ class FirebaseStorageDataSource extends DataSource<Uint8List> {
   }
 
   @override
-  Future<void> delete() {
+  Future<void> delete() async {
+    if (!await exists()) {
+      return;
+    }
+
     logWarning('Deleting from Firebase Storage: $storagePath');
-    return storageReference.delete();
+    await storageReference.delete();
   }
 
   @override

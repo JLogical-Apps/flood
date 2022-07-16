@@ -22,6 +22,6 @@ class SaveSyncPublishAction extends SyncPublishAction {
   @override
   Future<void> publish() async {
     final sourceRepository = locate<SyncingModule>().getSourceRepositoryByState(saveState);
-    await sourceRepository.saveState(saveState);
+    await sourceRepository.saveState(saveState).timeout(Duration(seconds: 8));
   }
 }

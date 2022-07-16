@@ -26,6 +26,6 @@ class AssetDeleteSyncPublishAction extends SyncPublishAction {
       return;
     }
 
-    await dataSource.delete();
+    await dataSource.delete().timeout(Duration(seconds: 8));
   }
 }
