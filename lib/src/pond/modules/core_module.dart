@@ -9,6 +9,7 @@ import 'package:jlogical_utils/src/pond/type_state_serializers/int_type_state_se
 import 'package:jlogical_utils/src/pond/type_state_serializers/list_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/map_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/nullable_type_state_serializer_extension.dart';
+import 'package:jlogical_utils/src/pond/type_state_serializers/nullable_value_object_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/string_type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/value_object_type_state_serializer.dart';
@@ -27,7 +28,7 @@ class CoreModule extends AppModule {
     DateTimeTypeStateSerializer(),
     DateTimeTypeStateSerializer().asNullable(),
     ValueObjectTypeStateSerializer(),
-    ValueObjectTypeStateSerializer().asNullable(),
+    NullableValueObjectTypeStateSerializer(),
     ListTypeStateSerializer(),
     ListTypeStateSerializer().asNullable(),
     MapTypeStateSerializer(),

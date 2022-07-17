@@ -280,6 +280,36 @@ void main() {
     expect(dynamicTypeStateSerializer.serialize(complexMap), complexMap);
     expect(dynamicTypeStateSerializer.deserialize(complexMap), complexMap);
   });
+
+  test('isSubtype', () {
+    AppContext.global = AppContext.createForTesting()
+      ..register(SimpleAppModule(
+        valueObjectRegistrations: [
+          ValueObjectRegistration<BudgetTransaction, BudgetTransaction?>.abstract(),
+          ValueObjectRegistration<EnvelopeTransaction, EnvelopeTransaction?>(
+            () => EnvelopeTransaction(),
+            parents: {BudgetTransaction},
+          ),
+          ValueObjectRegistration<TransferTransaction, TransferTransaction?>(
+            () => TransferTransaction(),
+            parents: {BudgetTransaction},
+          ),
+          ValueObjectRegistration<BudgetTransactionWrapper, BudgetTransactionWrapper?>(BudgetTransactionWrapper.new),
+        ],
+        entityRegistrations: [
+          EntityRegistration<BudgetTransactionEntity, BudgetTransaction>.abstract(),
+          EntityRegistration<EnvelopeTransactionEntity, EnvelopeTransaction>(() => EnvelopeTransactionEntity()),
+          EntityRegistration<TransferTransactionEntity, TransferTransaction>(
+            () => TransferTransactionEntity(),
+          ),
+        ],
+      ));
+
+    expect(AppContext.global.isSubtype(BudgetTransaction, ValueObject), true);
+    expect(AppContext.global.isSubtype(BudgetTransaction, getRuntimeType<ValueObject?>()), true);
+    expect(AppContext.global.isSubtype(getRuntimeType<BudgetTransaction?>(), ValueObject), false);
+    expect(AppContext.global.isSubtype(getRuntimeType<BudgetTransaction?>(), getRuntimeType<ValueObject?>()), true);
+  });
 }
 
 class BudgetTransactionWrapper extends ValueObject {

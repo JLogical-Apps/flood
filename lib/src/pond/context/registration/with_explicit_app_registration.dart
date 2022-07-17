@@ -146,8 +146,8 @@ mixin WithExplicitAppRegistration implements AppRegistration {
     if (b == getRuntimeType<ValueObject?>()) {
       return true;
     }
-    if (b == ValueObject && !a.isNullable()) {
-      return true;
+    if (a.isNullable() && !b.isNullable()) {
+      return false;
     }
 
     final valueObjectRegistrationA = valueObjectRegistrations.firstWhereOrNull(
@@ -163,8 +163,11 @@ mixin WithExplicitAppRegistration implements AppRegistration {
     if (a == b) {
       return true;
     }
-    if (b == Entity) {
+    if (b == getRuntimeType<Entity?>()) {
       return true;
+    }
+    if (a.isNullable() && !b.isNullable()) {
+      return false;
     }
 
     final entityRegistrationA = entityRegistrations.firstWhereOrNull((registration) => registration.entityType == a);
