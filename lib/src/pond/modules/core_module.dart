@@ -31,9 +31,9 @@ class CoreModule extends AppModule {
         StringTypeStateSerializer(),
         BoolTypeStateSerializer(),
         DateTimeTypeStateSerializer(),
+        ValueObjectTypeStateSerializer(),
         ListTypeStateSerializer(),
         MapTypeStateSerializer(),
-        ValueObjectTypeStateSerializer(),
         DynamicTypeStateSerializer(),
       ];
 

@@ -35,6 +35,6 @@ class ValueObjectTypeStateSerializer extends TypeStateSerializer<ValueObject> {
 
   @override
   bool matchesDeserializing(value) {
-    return false;
+    return value is Map && value.containsKey(Query.type);
   }
 }

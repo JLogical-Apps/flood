@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart' hide Draft;
+import 'package:jlogical_utils/src/pond/type_state_serializers/dynamic_type_state_serializer.dart';
+import 'package:jlogical_utils/src/pond/type_state_serializers/value_object_type_state_serializer.dart';
 
 import 'entities/budget.dart';
 import 'entities/color.dart';
@@ -276,6 +278,22 @@ void main() {
     draft.draftState = color.state;
 
     expect(draft.stateProperty.value, color.state.fullValues);
+  });
+
+  test('dynamic deserializer with null ValueObject in property.', () {
+    AppContext.global = AppContext.createForTesting()
+      ..register(SimpleAppModule(
+          valueObjectRegistrations: [ValueObjectRegistration<UserAvatar, UserAvatar?>(() => UserAvatar())]));
+
+    final userAvatar = UserAvatar();
+    final dynamicSerializer = DynamicTypeStateSerializer();
+    final valueObjectSerializer = ValueObjectTypeStateSerializer();
+
+    expect(dynamicSerializer.serialize(userAvatar), valueObjectSerializer.serialize(userAvatar));
+
+    final serialized = valueObjectSerializer.serialize(userAvatar);
+
+    expect(dynamicSerializer.deserialize(serialized), valueObjectSerializer.deserialize(serialized));
   });
 }
 
