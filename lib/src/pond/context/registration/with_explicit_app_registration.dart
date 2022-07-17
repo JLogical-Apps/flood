@@ -11,6 +11,7 @@ import 'package:jlogical_utils/src/pond/repository/entity_repository.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/pond/type_state_serializers/type_state_serializer.dart';
 
+import '../../../utils/export_core.dart';
 import 'entity_registration.dart';
 
 mixin WithExplicitAppRegistration implements AppRegistration {
@@ -142,7 +143,10 @@ mixin WithExplicitAppRegistration implements AppRegistration {
     if (a == b) {
       return true;
     }
-    if (b == ValueObject) {
+    if (b == getRuntimeType<ValueObject?>()) {
+      return true;
+    }
+    if (b == ValueObject && !a.isNullable()) {
       return true;
     }
 
