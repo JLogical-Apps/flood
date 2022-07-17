@@ -20,6 +20,9 @@ class StyledPage extends StyledWidget {
   /// Actions that can be performed associated with the page.
   final List<ActionItem> actions;
 
+  /// Additional widgets to display before the menu button.
+  final List<Widget> actionBarWidgets;
+
   /// Callback for when the user refreshes the page.
   final Future<void> Function()? onRefresh;
 
@@ -32,6 +35,7 @@ class StyledPage extends StyledWidget {
     required this.body,
     this.backgroundColor,
     this.actions: const [],
+    this.actionBarWidgets: const [],
     this.onRefresh,
     this.isLoading: false,
   });

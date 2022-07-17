@@ -90,13 +90,14 @@ class FlatStyle extends Style {
     final backgroundColor = styledPage.backgroundColor ?? styleContext.backgroundColor;
     final appBarTitle = styledPage.titleText.mapIfNonNull((titleText) => StyledContentHeaderText(
               titleText,
-              textOverrides: StyledTextOverrides(
-                fontWeight: FontWeight.bold,
-              ),
+              textOverrides: StyledTextOverrides(fontWeight: FontWeight.bold),
             )) ??
         styledPage.title;
 
-    final shouldShowAppBar = appBarTitle != null || styledPage.actions.isNotEmpty || Navigator.of(context).canPop();
+    final shouldShowAppBar = appBarTitle != null ||
+        styledPage.actions.isNotEmpty ||
+        styledPage.actionBarWidgets.isNotEmpty ||
+        Navigator.of(context).canPop();
     return HookBuilder(
       builder: (context) {
         final refreshController = useMemoized(() => RefreshController(initialRefresh: false));
@@ -112,6 +113,7 @@ class FlatStyle extends Style {
                     context,
                     title: appBarTitle,
                     actions: styledPage.actions,
+                    actionBarWidgets: styledPage.actionBarWidgets,
                   )
                 : null,
             body: StyleContextProvider(
@@ -140,7 +142,12 @@ class FlatStyle extends Style {
     );
   }
 
-  AppBar _styledAppBar(BuildContext context, {Widget? title, List<ActionItem> actions: const []}) {
+  AppBar _styledAppBar(
+    BuildContext context, {
+    Widget? title,
+    List<ActionItem> actions: const [],
+    List<Widget> actionBarWidgets: const [],
+  }) {
     final styleContext = context.styleContext();
 
     final highActions = actions.where((action) => action.emphasis == Emphasis.high).toList();
@@ -154,6 +161,7 @@ class FlatStyle extends Style {
       foregroundColor: styleContext.emphasisColor,
       iconTheme: IconThemeData(color: styleContext.emphasisColor),
       actions: [
+        ...actionBarWidgets,
         ...highActions.map((action) => Tooltip(
               message: action.name,
               child: StyledIconButton(
