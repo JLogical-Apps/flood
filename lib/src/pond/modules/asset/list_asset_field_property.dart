@@ -23,8 +23,8 @@ class ListAssetFieldProperty extends ListFieldProperty<String> {
   }
 
   Future<void> uploadNewAsset(Asset asset) async {
-    final id = await locate<AssetModule>().uploadAsset(asset);
-    value = [...?value, id];
+    final uploadedAsset = await locate<AssetModule>().uploadAsset(asset);
+    value = [...?value, uploadedAsset.id!];
   }
 
   Future<void> deleteAsset(String assetId) async {

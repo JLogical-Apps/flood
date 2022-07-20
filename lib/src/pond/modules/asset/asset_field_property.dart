@@ -34,8 +34,8 @@ class AssetFieldProperty extends FieldProperty<String> {
     }
 
     if (assetValue != null) {
-      final id = await locate<AssetModule>().uploadAsset(assetValue);
-      value = id;
+      final uploadedAsset = await locate<AssetModule>().uploadAsset(assetValue);
+      value = uploadedAsset.id!;
     }
   }
 

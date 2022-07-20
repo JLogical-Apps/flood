@@ -1,6 +1,7 @@
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
+import '../../../persistence/export_core.dart';
 import 'asset.dart';
 
 class VideoAssetPicker {
@@ -20,6 +21,9 @@ class VideoAssetPicker {
     }
 
     final videoBytes = await videoFile.readAsBytes();
-    return Asset(name: basename(videoFile.path), value: videoBytes);
+    return Asset.createNew(
+      id: UuidIdGenerator().getId() + basename(videoFile.path),
+      value: videoBytes,
+    );
   }
 }

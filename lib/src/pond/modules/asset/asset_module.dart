@@ -18,34 +18,34 @@ class AssetModule extends AppModule {
     );
   }
 
+  void saveAssetToCache(Asset asset) {
+    final id = asset.id!;
+    _assetCache.putIfAbsent(id, () => assetProvider.getModelById(id)).setLoaded(asset);
+  }
+
   Future<void> deleteAsset(String id) async {
     _assetCache.get(id)?.setLoaded(null);
     await assetProvider.getDataSource(id).delete();
   }
 
-  Future<String> uploadAsset(Asset asset) async {
-    final id = await assetProvider.upload(asset);
+  Future<Asset> uploadAsset(Asset asset) async {
+    final uploadedAsset = await assetProvider.upload(asset);
+    final id = uploadedAsset.id!;
 
     final isAlreadyUploaded = asset.id != null;
     if (isAlreadyUploaded) {
       await asset.clearCachedFile();
-      getAssetModel(id).setLoaded(asset);
-      return id;
+      getAssetModel(id).setLoaded(uploadedAsset);
+      return uploadedAsset;
     }
-
-    asset = Asset(
-      id: id,
-      name: asset.name,
-      value: asset.value,
-    );
 
     final loadedModel = assetProvider.getModelById(id)
       ..hasStartedLoading = true
-      ..setLoaded(asset);
+      ..setLoaded(uploadedAsset);
     _assetCache.save(id, loadedModel);
 
     await asset.clearCachedFile();
 
-    return id;
+    return uploadedAsset;
   }
 }

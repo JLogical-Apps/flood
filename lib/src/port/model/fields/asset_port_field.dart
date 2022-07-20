@@ -24,13 +24,13 @@ class AssetPortField extends PortField<String?> {
     value = null;
 
     if (forcedAssetId != null) {
-      newAsset = newAsset?.withId(forcedAssetId);
+      newAsset = newAsset?.copyWith(id: forcedAssetId);
       value = forcedAssetId;
     }
 
     if (newAsset != null) {
-      final id = await locate<AssetModule>().uploadAsset(newAsset!);
-      value = id;
+      final uploadedAsset = await locate<AssetModule>().uploadAsset(newAsset!);
+      value = uploadedAsset.id!;
     }
 
     if (initialValue != null && forcedAssetId == null) {

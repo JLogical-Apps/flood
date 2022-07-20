@@ -4,16 +4,23 @@ import 'dart:typed_data';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:mime/mime.dart';
-import 'package:path/path.dart';
+
+import 'asset_metadata.dart';
 
 class Asset {
   final String? id;
-  final String name;
   final Uint8List value;
 
-  late final String? mimeType = lookupMimeType(name);
+  /// The metadata of the asset. [null] if it hasn't been retrieved from an AssetProvider.
+  final AssetMetadata? metadata;
 
-  Asset({this.id, required this.name, required this.value});
+  late final String? mimeType = name.mapIfNonNull((name) => lookupMimeType(name));
+
+  Asset({this.id, required this.value, required this.metadata});
+
+  Asset.createNew({this.id, required this.value}) : metadata = null;
+
+  String? get name => id;
 
   static Future<Asset> fromFile(File file) async {
     if (!await file.exists()) {
@@ -21,29 +28,30 @@ class Asset {
     }
 
     final fileData = await file.readAsBytes();
-    return Asset(name: basename(file.path), value: fileData);
+    return Asset(
+      value: fileData,
+      metadata: AssetMetadata(
+        lastUpdated: await file.lastModified(),
+      ),
+    );
   }
 
-  Asset withId(String? id) {
-    return Asset(id: id, name: name, value: value);
-  }
-
-  Asset withName(String name) {
-    return Asset(id: id, name: name, value: value);
-  }
-
-  Asset withValue(Uint8List newValue) {
-    return Asset(id: id, name: name, value: newValue);
+  Asset copyWith({String? id, Uint8List? value, AssetMetadata? metadata}) {
+    return Asset(
+      id: id ?? this.id,
+      value: value ?? this.value,
+      metadata: metadata ?? this.metadata,
+    );
   }
 
   Future<File> cacheToFile() async {
-    final file = AppContext.global.cacheDirectory - name;
+    final file = AppContext.global.cacheDirectory - name!;
     await file.writeAsBytes(value);
     return file;
   }
 
   Future<File> ensureCachedToFile() async {
-    final file = AppContext.global.cacheDirectory - name;
+    final file = AppContext.global.cacheDirectory - name!;
     if (await file.exists()) {
       return file;
     }
@@ -52,7 +60,7 @@ class Asset {
   }
 
   Future<void> clearCachedFile() async {
-    final file = AppContext.global.cacheDirectory - name;
+    final file = AppContext.global.cacheDirectory - name!;
     if (await file.exists()) {
       await file.delete();
     }

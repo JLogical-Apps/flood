@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:jlogical_utils/src/persistence/data_source/mappers/data_source_mapper.dart';
 import 'package:jlogical_utils/src/persistence/data_source/mappers/json_data_source_mapper.dart';
 import 'package:jlogical_utils/src/persistence/data_source/mappers/yaml_data_source_mapper.dart';
@@ -23,7 +25,7 @@ abstract class DataSource<T> {
 }
 
 extension DataSourceExtensions<T> on DataSource<T> {
-  DataSourceMapper<T, T2> map<T2>({required T Function(T2 obj) onSave, required T2? Function(T? persisted) onLoad}) =>
+  DataSourceMapper<T, T2> map<T2>({required FutureOr<T> Function(T2 obj) onSave, required FutureOr<T2?> Function(T? persisted) onLoad}) =>
       DataSourceMapper(
         parent: this,
         onSave: onSave,

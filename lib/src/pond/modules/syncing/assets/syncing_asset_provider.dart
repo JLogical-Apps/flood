@@ -7,6 +7,7 @@ import 'package:jlogical_utils/src/pond/modules/syncing/syncing_module.dart';
 import '../../../../persistence/export_core.dart';
 import '../../../context/app_context.dart';
 import '../../asset/asset.dart';
+import '../../asset/asset_metadata.dart';
 import '../../asset/asset_provider.dart';
 
 /// Connects an asset provider to the syncing system so pending uploads are uploaded.
@@ -20,6 +21,11 @@ class SyncingAssetProvider extends AssetProvider {
   @override
   DataSource<Asset> getDataSource(String id) {
     return _SyncingDataSource(localDataSource: localAssetProvider.getDataSource(id), assetId: id);
+  }
+
+  @override
+  DataSource<AssetMetadata> getMetadataDataSource(String id) {
+    return localAssetProvider.getMetadataDataSource(id);
   }
 }
 

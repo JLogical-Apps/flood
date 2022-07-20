@@ -1,21 +1,23 @@
+import 'dart:async';
+
 import 'package:jlogical_utils/src/persistence/data_source/data_source.dart';
 
 mixin WithMapperDataSource<P, T> on DataSource<T> {
   DataSource<P> get parent;
 
-  P saveMapped(T obj);
+  FutureOr<P> saveMapped(T obj);
 
-  T? loadMapped(P? obj);
+  FutureOr<T?> loadMapped(P? obj);
 
   @override
   Future<T?> getData() async {
     final parentData = await parent.getData();
-    return loadMapped(parentData);
+    return await loadMapped(parentData);
   }
 
   @override
   Future<void> saveData(T data) async {
-    final persisted = saveMapped(data);
+    final persisted = await saveMapped(data);
     await parent.saveData(persisted);
   }
 
