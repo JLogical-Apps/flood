@@ -95,7 +95,7 @@ class SyncingModule extends AppModule {
     try {
       _syncingStatusX.value = FutureValue.initial();
       for (final downloadAction in _downloadActions) {
-        await downloadAction.download().timeout(Duration(seconds: 12));
+        await downloadAction.download();
       }
       _syncingStatusX.value = FutureValue.loaded(value: null);
     } catch (e) {

@@ -18,7 +18,6 @@ class AssetSyncDownloadAction extends SyncDownloadAction {
 
   Future<void> _downloadAssetIfFound(String assetId) async {
     if (await _localHasSameOrNewerVersion(assetId)) {
-      print('HAS SAME/NEWER VERSION');
       return;
     }
 
@@ -27,7 +26,7 @@ class AssetSyncDownloadAction extends SyncDownloadAction {
       return;
     }
 
-    final asset = await sourceDataSource.getData();
+    final asset = await sourceDataSource.getData().timeout(Duration(seconds: 30));
     if (asset == null) {
       return;
     }
