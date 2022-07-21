@@ -38,7 +38,10 @@ class FirebaseStorageAssetProvider extends AssetProvider {
     return CustomDataSource(
       onGet: () async {
         final reference = FirebaseStorage.instance.ref(id);
-        final metadata = await reference.getMetadata();
+        final metadata = await guardAsync(() => reference.getMetadata());
+        if (metadata == null) {
+          return null;
+        }
         return AssetMetadata(lastUpdated: metadata.updated);
       },
       onSave: (metadata) => throw UnimplementedError(),
