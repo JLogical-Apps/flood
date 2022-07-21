@@ -38,6 +38,6 @@ class NullableValueObjectTypeStateSerializer extends TypeStateSerializer<ValueOb
 
   @override
   bool matchesDeserializing(value) {
-    return value == null || (value is Map && value.containsKey(Query.type));
+    return false;
   }
 }

@@ -290,10 +290,19 @@ void main() {
     final valueObjectSerializer = ValueObjectTypeStateSerializer();
 
     expect(dynamicSerializer.serialize(userAvatar), valueObjectSerializer.serialize(userAvatar));
+  });
 
-    final serialized = valueObjectSerializer.serialize(userAvatar);
+  test('value object in map dynamic deserializer deserializes into a map.', () {
+    AppContext.global = AppContext.createForTesting()
+      ..register(SimpleAppModule(
+          valueObjectRegistrations: [ValueObjectRegistration<UserAvatar, UserAvatar?>(() => UserAvatar())]));
 
-    expect(dynamicSerializer.deserialize(serialized), valueObjectSerializer.deserialize(serialized));
+    final userAvatar = UserAvatar();
+    final dynamicSerializer = DynamicTypeStateSerializer();
+    final valueObjectSerializer = ValueObjectTypeStateSerializer();
+
+    final serializedState = valueObjectSerializer.serialize(userAvatar);
+    expect(dynamicSerializer.deserialize(serializedState), serializedState);
   });
 }
 
