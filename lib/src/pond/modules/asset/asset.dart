@@ -22,13 +22,14 @@ class Asset {
 
   String? get name => id;
 
-  static Future<Asset> fromFile(File file) async {
+  static Future<Asset> fromFile(File file, {String? id}) async {
     if (!await file.exists()) {
       throw Exception('Cannot get asset from file [${file.path}]');
     }
 
     final fileData = await file.readAsBytes();
     return Asset(
+      id: id,
       value: fileData,
       metadata: AssetMetadata(
         lastUpdated: await file.lastModified(),
