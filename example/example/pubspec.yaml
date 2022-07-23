@@ -21,11 +21,18 @@ dependencies:
   rxdart: ^0.27.1
   share_plus: ^4.0.4
 
+dev_dependencies:
+  flutter_launcher_icons: ^0.9.2
+  flutter_native_splash: ^2.2.5
+
 flutter:
   uses-material-design: true
 
   assets:
     - assets/
-dev_dependencies:
-  flutter_launcher_icons: ^0.9.2
-  flutter_native_splash: ^1.3.3
+
+dependency_overrides:
+  fwfh_text_style:
+    git:
+      url: https://github.com/eliudio/flutter_widget_from_html.git
+      path: packages/fwfh_text_style

@@ -2,16 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:jlogical_utils/src/utils/export_core.dart';
-import 'package:video_player/video_player.dart';
+import 'package:jlogical_utils/src/style/widgets/misc/styled_loading_indicator.dart';
+
 import '../../../model/export_core.dart';
+import '../../../pond/export.dart';
 import '../../../utils/hook_utils.dart';
 import '../text/styled_error_text.dart';
 import 'styled_loading_image.dart';
 import 'styled_loading_video.dart';
-import 'package:jlogical_utils/src/style/widgets/misc/styled_loading_indicator.dart';
-
-import '../../../pond/export.dart';
 
 class StyledLoadingAsset extends HookWidget {
   final FutureValue<Asset?> maybeAsset;
@@ -88,7 +86,7 @@ class StyledLoadingAsset extends HookWidget {
 
         if (asset.isVideo) {
           return StyledLoadingVideo(
-            video: assetFile.value.mapIfNonNull((file) => VideoPlayerController.file(file)),
+            videoFile: assetFile.value,
             onTapped: onTapped,
             width: width,
             height: height,

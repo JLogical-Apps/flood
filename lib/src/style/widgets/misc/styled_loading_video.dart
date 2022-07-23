@@ -1,12 +1,13 @@
-import 'package:chewie/chewie.dart';
+import 'dart:io';
+
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/src/style/widgets/misc/styled_loading_indicator.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
-import 'package:video_player/video_player.dart';
 
 class StyledLoadingVideo extends HookWidget {
-  final VideoPlayerController? video;
+  final File? videoFile;
 
   final void Function()? onTapped;
 
@@ -18,7 +19,7 @@ class StyledLoadingVideo extends HookWidget {
 
   const StyledLoadingVideo({
     super.key,
-    required this.video,
+    required this.videoFile,
     this.onTapped,
     this.width,
     this.height,
@@ -29,14 +30,26 @@ class StyledLoadingVideo extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chewieController = useMemoized(
-      () => video.mapIfNonNull((video) => ChewieController(
-            videoPlayerController: video,
-            autoInitialize: true,
-            showOptions: onTapped == null,
-            showControls: onTapped == null,
-          )..setVolume(0)),
-      [video],
+    final betterPlayerController = useMemoized(
+      () {
+        final controller = videoFile.mapIfNonNull((videoFile) => BetterPlayerController(
+              BetterPlayerConfiguration(
+                autoPlay: true,
+                looping: true,
+                controlsConfiguration: BetterPlayerControlsConfiguration(showControls: onTapped == null),
+              ),
+              betterPlayerDataSource: BetterPlayerDataSource.file(videoFile.path),
+            )..setVolume(0));
+        if (controller != null) {
+          controller.addEventsListener((BetterPlayerEvent event) {
+            if (event.betterPlayerEventType == BetterPlayerEventType.initialized) {
+              controller.setOverriddenAspectRatio(controller.videoPlayerController!.value.aspectRatio);
+            }
+          });
+        }
+        return controller;
+      },
+      [videoFile?.path],
     );
 
     return Stack(
@@ -44,17 +57,9 @@ class StyledLoadingVideo extends HookWidget {
         SizedBox(
           width: width,
           height: height,
-          child: AnimatedCrossFade(
-            firstChild: chewieController != null ? Chewie(controller: chewieController) : StyledLoadingIndicator(),
-            secondChild: AnimatedOpacity(
-              opacity: video == null ? 1 : 0,
-              duration: Duration(milliseconds: 500),
-              child: StyledLoadingIndicator(isSpinning: video == null),
-            ),
-            alignment: alignment ?? Alignment.center,
-            duration: Duration(milliseconds: 300),
-            crossFadeState: CrossFadeState.showFirst,
-          ),
+          child: betterPlayerController == null
+              ? StyledLoadingIndicator()
+              : BetterPlayer(controller: betterPlayerController),
         ),
         if (onTapped != null)
           Positioned.fill(

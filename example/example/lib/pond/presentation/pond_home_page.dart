@@ -4,6 +4,7 @@ import 'package:example/pond/domain/budget/budget_entity.dart';
 import 'package:example/pond/domain/user/user_entity.dart';
 import 'package:example/pond/presentation/budget_created_analytic.dart';
 import 'package:example/pond/presentation/pond_budget_page.dart';
+import 'package:example/pond/presentation/video_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -164,6 +165,14 @@ class PondHomePage extends HookWidget {
                               maybeAsset: profilePictureAsset,
                               width: 300,
                               height: 300,
+                              fit: BoxFit.contain,
+                              onTapped: () {
+                                context.style().navigateTo(
+                                    context: context,
+                                    page: (_) => VideoPage(
+                                          assetId: userEntity.value.profilePictureProperty.value!,
+                                        ));
+                              },
                             ),
                           StyledCategory.medium(
                             headerText: 'Budgets',
