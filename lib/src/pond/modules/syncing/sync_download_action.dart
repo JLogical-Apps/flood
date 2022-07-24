@@ -15,7 +15,7 @@ class QuerySyncDownloadAction extends SyncDownloadAction {
   Future<void> download() async {
     final queryRequests = await queryRequestsGetter();
     for (final queryRequest in queryRequests) {
-      await locate<SyncingModule>().executeQueryOnSource(queryRequest).timeout(Duration(seconds: 8));
+      await locate<SyncingModule>().executeQueryOnSource(queryRequest).timeout(Duration(seconds: 30));
     }
   }
 }
