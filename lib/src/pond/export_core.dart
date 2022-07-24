@@ -19,6 +19,7 @@ export 'debug/debug.dart';
 export 'modules/analytics/analytics_event.dart';
 export 'modules/auth/auth_service.dart';
 export 'modules/auth/login_failure.dart';
+export 'modules/auth/password_resettable.dart';
 export 'modules/auth/signup_failure.dart';
 export 'modules/command/command_module.dart';
 export 'modules/command/command_parameter_stub.dart';

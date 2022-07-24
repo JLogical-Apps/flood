@@ -2,9 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase;
 
 import 'auth_service.dart';
 import 'login_failure.dart';
+import 'password_resettable.dart';
 import 'signup_failure.dart';
 
-class FirebaseAuthService extends AuthService {
+class FirebaseAuthService extends AuthService implements PasswordResettable {
   static late final firebase.FirebaseAuth auth = firebase.FirebaseAuth.instance;
 
   @override
@@ -65,5 +66,10 @@ class FirebaseAuthService extends AuthService {
     await firebaseUser?.delete();
 
     await logout();
+  }
+
+  @override
+  Future<void> onResetPassword(String email) async {
+    await auth.sendPasswordResetEmail(email: email);
   }
 }

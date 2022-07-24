@@ -22,6 +22,10 @@ class PondLoginPage extends HookWidget {
         ],
       ),
     );
+
+    final canResetPassword = locate<AuthService>() is PasswordResettable;
+    final resetPasswordMessage = useState<String?>(null);
+
     return StyleProvider(
         style: style,
         child: Builder(
@@ -153,7 +157,23 @@ class PondLoginPage extends HookWidget {
                                   },
                                 )
                               ],
-                            )
+                            ),
+                            if (canResetPassword)
+                              StyledButton.low(
+                                text: 'Forgot Password?',
+                                color: context.styleContext().foregroundColorSoft,
+                                onTapped: () async {
+                                  final passwordResettable = locate<AuthService>() as PasswordResettable;
+                                  try {
+                                    final email = port['email'] ?? '';
+                                    await passwordResettable.onResetPassword(email);
+                                    resetPasswordMessage.value = 'A password reset email has been sent to $email';
+                                  } catch (e) {
+                                    resetPasswordMessage.value = e.toString();
+                                  }
+                                },
+                              ),
+                            if (resetPasswordMessage.value != null) StyledBodyText(resetPasswordMessage.value!),
                           ],
                         ),
                       ),
