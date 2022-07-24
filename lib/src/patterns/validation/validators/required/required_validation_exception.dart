@@ -5,6 +5,6 @@ class RequiredValidationException<V> extends ValidationException<V> {
 
   @override
   String toString() {
-    return 'Required [$failedValue]!';
+    return 'Required!';
   }
 }
