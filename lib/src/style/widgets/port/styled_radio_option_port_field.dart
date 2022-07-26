@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:jlogical_utils/src/style/widgets/port/with_required_label_getter.dart';
 
 import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_radio.dart';
 
-class StyledRadioOptionPortField<T> extends PortFieldWidget<OptionsPortField<T>, T?, T?> with WithPortExceptionTextGetter {
+class StyledRadioOptionPortField<T> extends PortFieldWidget<OptionsPortField<T>, T?, T?>
+    with WithPortExceptionTextGetter, WithRequiredLabelGetter {
+  @override
   final String? labelText;
 
+  @override
   final Widget? label;
+
+  @override
+  final bool? showRequiredIndicator;
 
   /// The value this option will set when selected.
   final T radioValue;
@@ -20,6 +27,7 @@ class StyledRadioOptionPortField<T> extends PortFieldWidget<OptionsPortField<T>,
     required String groupName,
     this.labelText,
     this.label,
+    this.showRequiredIndicator,
     required this.radioValue,
     this.exceptionTextGetterOverride,
   }) : super(
@@ -30,8 +38,7 @@ class StyledRadioOptionPortField<T> extends PortFieldWidget<OptionsPortField<T>,
   @override
   Widget buildField(BuildContext context, OptionsPortField<T> field, T? value, Object? exception) {
     return StyledRadio<T?>(
-      label: label,
-      labelText: labelText,
+      label: getRequiredLabel(context, field: field),
       errorText: getExceptionText(exception),
       groupValue: value,
       radioValue: radioValue,

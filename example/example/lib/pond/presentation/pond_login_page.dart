@@ -41,11 +41,13 @@ class PondLoginPage extends HookWidget {
                             StyledTextPortField(
                               name: 'email',
                               labelText: 'Email',
+                              showRequiredIndicator: false,
                             ),
                             StyledTextPortField(
                               name: 'password',
                               labelText: 'Password',
                               obscureText: true,
+                              showRequiredIndicator: false,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,

@@ -5,6 +5,7 @@ import 'package:jlogical_utils/src/port/model/validation/is_confirm_password_val
 import 'port.dart';
 import 'validation/port_field_validation_context.dart';
 import 'validation/port_field_validator.dart';
+import 'validation/required_port_field_validator.dart';
 
 abstract class PortField<V> extends PortValueComponent<V>
     with WithMultipleValidators<PortFieldValidationContext>
@@ -57,7 +58,9 @@ abstract class PortField<V> extends PortValueComponent<V>
     return this;
   }
 
-  PortField<V> required() => withSimpleValidator(Validator.required());
+  PortField<V> required() => withValidator(RequiredPortFieldValidator());
+
+  bool isRequired() => validators.any((validator) => validator is RequiredPortFieldValidator);
 
   PortField<V> minLength(int minLength) => withSimpleValidator(Validator.minLength(minLength));
 

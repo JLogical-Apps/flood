@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/style/widgets/port/with_required_label_getter.dart';
 
 import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledTextPortField extends PortFieldWidget<StringPortField, String?, String> with WithPortExceptionTextGetter {
+class StyledTextPortField extends PortFieldWidget<StringPortField, String?, String>
+    with WithPortExceptionTextGetter, WithRequiredLabelGetter {
+  @override
   final String? labelText;
 
+  @override
   final Widget? label;
+
+  @override
+  final bool? showRequiredIndicator;
 
   /// The suggested value to show if no input is typed in.
   /// Sets this as the value of the FormField if no input has been typed in.
@@ -30,6 +38,7 @@ class StyledTextPortField extends PortFieldWidget<StringPortField, String?, Stri
   @override
   final ExceptionTextGetter? exceptionTextGetterOverride;
 
+  @override
   String getInitialRawValue(String? portValue) {
     return portValue?.toString() ?? '';
   }
@@ -39,6 +48,7 @@ class StyledTextPortField extends PortFieldWidget<StringPortField, String?, Stri
     required super.name,
     this.labelText,
     this.label,
+    this.showRequiredIndicator,
     this.suggestedValue,
     this.keyboardType: TextInputType.text,
     this.textCapitalization: TextCapitalization.sentences,
@@ -52,8 +62,7 @@ class StyledTextPortField extends PortFieldWidget<StringPortField, String?, Stri
   @override
   Widget buildField(BuildContext context, StringPortField field, String? value, Object? exception) {
     return StyledTextField(
-      labelText: labelText,
-      label: label,
+      label: getRequiredLabel(context, field: field),
       errorText: getExceptionText(exception),
       keyboardType: keyboardType,
       initialText: value,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
+import 'package:jlogical_utils/src/style/widgets/port/with_required_label_getter.dart';
 import 'package:jlogical_utils/src/utils/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -12,16 +13,25 @@ import '../input/styled_button.dart';
 import '../misc/styled_icon.dart';
 import '../misc/styled_loading_asset.dart';
 import '../text/styled_body_text.dart';
+import '../text/styled_content_header_text.dart';
 import '../text/styled_error_text.dart';
 import '../text/styled_text_overrides.dart';
 
-class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, String?> with WithPortExceptionTextGetter {
+class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, String?>
+    with WithPortExceptionTextGetter, WithRequiredLabelGetter {
   static const double _imageWidth = 200;
   static const double _imageHeight = 200;
 
   final UploadType uploadType;
 
+  @override
   final String? labelText;
+
+  @override
+  final Widget? label;
+
+  @override
+  final bool? showRequiredIndicator;
 
   final Widget? leading;
 
@@ -33,6 +43,8 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
     required super.name,
     required this.uploadType,
     this.labelText,
+    this.label,
+    this.showRequiredIndicator,
     this.leading,
     this.exceptionTextGetterOverride,
   });
@@ -56,7 +68,7 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
     final assetValue = preview.mapIfNonNull((value) => FutureValue.loaded(value: value)) ?? initialValueAsset;
 
     return StyledContent(
-      headerText: labelText ?? 'Upload',
+      header: getRequiredLabel(context, field: field, labelTextBuilder: StyledContentHeaderText.new),
       leading: leading ?? StyledIcon(Icons.image),
       children: [
         if (preview != null || (value != null && !isChanged))

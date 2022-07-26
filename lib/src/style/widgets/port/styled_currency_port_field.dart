@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jlogical_utils/src/style/widgets/port/with_required_label_getter.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../../../port/export.dart';
@@ -6,10 +7,15 @@ import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
 class StyledCurrencyPortField extends PortFieldWidget<CurrencyPortField, int?, String>
-    with WithPortExceptionTextGetter {
+    with WithPortExceptionTextGetter, WithRequiredLabelGetter {
+  @override
   final String? labelText;
 
+  @override
   final Widget? label;
+
+  @override
+  final bool? showRequiredIndicator;
 
   /// The suggested value to show if no input is typed in.
   /// Sets this as the value of the FormField if no input has been typed in.
@@ -25,6 +31,7 @@ class StyledCurrencyPortField extends PortFieldWidget<CurrencyPortField, int?, S
     required super.name,
     this.labelText,
     this.label,
+    this.showRequiredIndicator,
     this.suggestedValue,
     this.enabled: true,
     this.exceptionTextGetterOverride,
@@ -38,8 +45,7 @@ class StyledCurrencyPortField extends PortFieldWidget<CurrencyPortField, int?, S
   @override
   Widget buildField(BuildContext context, CurrencyPortField field, String value, Object? exception) {
     return StyledTextField(
-      labelText: labelText,
-      label: label,
+      label: getRequiredLabel(context, field: field),
       errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(decimal: true, signed: true),
       initialText: value,

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:jlogical_utils/src/style/widgets/port/with_required_label_getter.dart';
 
 import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_date_field.dart';
 
 class StyledDatePortField extends PortFieldWidget<DatePortField, DateTime?, DateTime?>
-    with WithPortExceptionTextGetter {
+    with WithPortExceptionTextGetter, WithRequiredLabelGetter {
+  @override
   final String? labelText;
 
+  @override
   final Widget? label;
+
+  @override
+  final bool? showRequiredIndicator;
 
   @override
   final ExceptionTextGetter? exceptionTextGetterOverride;
@@ -18,6 +24,7 @@ class StyledDatePortField extends PortFieldWidget<DatePortField, DateTime?, Date
     required String name,
     this.labelText,
     this.label,
+    this.showRequiredIndicator,
     this.exceptionTextGetterOverride,
   }) : super(
           key: key,
@@ -32,8 +39,7 @@ class StyledDatePortField extends PortFieldWidget<DatePortField, DateTime?, Date
   @override
   Widget buildField(BuildContext context, DatePortField field, DateTime? value, Object? exception) {
     return StyledDateField(
-      label: label,
-      labelText: labelText,
+      label: getRequiredLabel(context, field: field),
       errorText: getExceptionText(exception),
       date: value,
       onChanged: (value) => setValue(context, value),

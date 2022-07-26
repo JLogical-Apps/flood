@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:jlogical_utils/src/style/widgets/port/with_required_label_getter.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../../../port/export.dart';
 import '../../../port/export_core.dart';
 import '../input/styled_text_field.dart';
 
-class StyledIntPortField extends PortFieldWidget<IntPortField, int?, String> with WithPortExceptionTextGetter {
+class StyledIntPortField extends PortFieldWidget<IntPortField, int?, String>
+    with WithPortExceptionTextGetter, WithRequiredLabelGetter {
+  @override
   final String? labelText;
 
+  @override
   final Widget? label;
+
+  @override
+  final bool? showRequiredIndicator;
 
   /// The suggested value to show if no input is typed in.
   /// Sets this as the value of the FormField if no input has been typed in.
@@ -24,6 +31,7 @@ class StyledIntPortField extends PortFieldWidget<IntPortField, int?, String> wit
     required super.name,
     this.labelText,
     this.label,
+    this.showRequiredIndicator,
     this.suggestedValue,
     this.enabled: true,
     this.exceptionTextGetterOverride,
@@ -38,8 +46,7 @@ class StyledIntPortField extends PortFieldWidget<IntPortField, int?, String> wit
   Widget buildField(BuildContext context, IntPortField field, dynamic value, Object? exception) {
     value = value as String;
     return StyledTextField(
-      labelText: labelText,
-      label: label,
+      label: getRequiredLabel(context, field: field),
       errorText: getExceptionText(exception),
       keyboardType: TextInputType.numberWithOptions(signed: true),
       initialText: value,
