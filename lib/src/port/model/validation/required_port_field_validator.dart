@@ -9,6 +9,6 @@ import 'port_field_validator.dart';
 class RequiredPortFieldValidator<V> extends PortFieldValidator<V> {
   @override
   FutureOr onValidate(PortFieldValidationContext value) {
-    return RequiredValidator().validate(value);
+    return RequiredValidator().validate(value.value);
   }
 }
