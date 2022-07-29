@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Card that shows navigation.
@@ -69,7 +68,7 @@ class NavigationCard extends StatelessWidget {
 
   Color _getIconColor(BuildContext context) {
     if (fillColor) {
-      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5)
+      return useWhiteForeground(_getBackgroundColor(context))
           ? Theme.of(context).primaryIconTheme.color!
           : Theme.of(context).iconTheme.color!;
     } else {
@@ -79,7 +78,7 @@ class NavigationCard extends StatelessWidget {
 
   TextStyle _getTitleTextStyle(BuildContext context) {
     if (fillColor) {
-      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5)
+      return useWhiteForeground(_getBackgroundColor(context))
           ? Theme.of(context).primaryTextTheme.subtitle1!
           : Theme.of(context).textTheme.subtitle1!;
     } else {
@@ -89,7 +88,7 @@ class NavigationCard extends StatelessWidget {
 
   TextStyle _getSubtitleTextStyle(BuildContext context) {
     if (fillColor) {
-      return useWhiteForeground(_getBackgroundColor(context), bias: 1.5)
+      return useWhiteForeground(_getBackgroundColor(context))
           ? Theme.of(context).primaryTextTheme.bodyText2!
           : Theme.of(context).textTheme.bodyText2!;
     } else {
@@ -135,4 +134,8 @@ class NavigationCard extends StatelessWidget {
       margin: margin,
     );
   }
+}
+
+bool useWhiteForeground(Color color) {
+  return color.computeLuminance() < 0.5;
 }
