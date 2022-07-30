@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:filesize/filesize.dart';
 
 /// Extension methods for formatting.
 extension NumberFormatUtil on num {
@@ -23,6 +24,12 @@ extension IntFormatUtil on int {
   /// Formats this amount of cents as currency.
   String formatCentsAsCurrency() {
     return (this / 100).formatCurrency();
+  }
+
+  /// Formats this amount of bytes as a label.
+  /// For example, '4900' would be 4.9 GB
+  String formatBytesToLabel() {
+    return filesize(this);
   }
 }
 
