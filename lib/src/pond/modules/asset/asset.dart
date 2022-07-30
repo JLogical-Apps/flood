@@ -33,6 +33,8 @@ class Asset {
       value: fileData,
       metadata: AssetMetadata(
         lastUpdated: await file.lastModified(),
+        timeCreated: DateTime.now(),
+        size: await file.length(),
       ),
     );
   }

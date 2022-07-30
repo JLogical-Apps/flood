@@ -1,6 +1,8 @@
 import '../../../model/export_core.dart';
 import '../../../patterns/export_core.dart';
+import '../../context/app_context.dart';
 import '../../context/module/app_module.dart';
+import '../../context/registration/app_registration.dart';
 import 'asset.dart';
 import 'asset_provider.dart';
 
@@ -10,6 +12,16 @@ class AssetModule extends AppModule {
   final Cache<String, Model<Asset?>> _assetCache = Cache();
 
   AssetModule({required this.assetProvider});
+
+  @override
+  void onRegister(AppRegistration registration) {
+    assetProvider.onRegister(registration);
+  }
+
+  @override
+  Future<void> onReset(AppContext context) {
+    return assetProvider.onReset(context);
+  }
 
   Model<Asset?> getAssetModel(String id) {
     return _assetCache.putIfAbsent(

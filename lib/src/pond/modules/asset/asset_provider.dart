@@ -1,9 +1,19 @@
+import 'dart:async';
+
 import '../../../model/export_core.dart';
 import '../../../persistence/export_core.dart';
+import '../../context/app_context.dart';
+import '../../context/registration/app_registration.dart';
 import 'asset.dart';
 import 'asset_metadata.dart';
 
 abstract class AssetProvider {
+  /// Called when the provider is registered to the asset module.
+  void onRegister(AppRegistration registration) {}
+
+  /// Called when the provider is registered and the asset module is reset.
+  Future<void> onReset(AppContext context) async {}
+
   /// Returns the data source associated with [id].
   DataSource<Asset> getDataSource(String id);
 

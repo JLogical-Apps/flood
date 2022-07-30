@@ -6,6 +6,7 @@ import 'package:jlogical_utils/src/pond/modules/syncing/syncing_module.dart';
 
 import '../../../../persistence/export_core.dart';
 import '../../../context/app_context.dart';
+import '../../../context/registration/app_registration.dart';
 import '../../asset/asset.dart';
 import '../../asset/asset_metadata.dart';
 import '../../asset/asset_provider.dart';
@@ -17,6 +18,18 @@ class SyncingAssetProvider extends AssetProvider {
   final AssetProvider sourceAssetProvider;
 
   SyncingAssetProvider({required this.localAssetProvider, required this.sourceAssetProvider});
+
+  @override
+  void onRegister(AppRegistration registration) {
+    localAssetProvider.onRegister(registration);
+    sourceAssetProvider.onRegister(registration);
+  }
+
+  @override
+  Future<void> onReset(AppContext context) async {
+    await localAssetProvider.onReset(context);
+    await sourceAssetProvider.onReset(context);
+  }
 
   @override
   DataSource<Asset> getDataSource(String id) {

@@ -170,12 +170,11 @@ class PondHomePage extends HookWidget {
                               },
                             ),
                           ),
-                          if (profilePictureAsset != null)
+                          if (profilePictureAsset != null) ...[
                             StyledLoadingAsset(
                               maybeAsset: profilePictureAsset,
                               width: 300,
                               height: 300,
-                              fit: BoxFit.contain,
                               onTapped: () {
                                 context.style().navigateTo(
                                     context: context,
@@ -184,6 +183,12 @@ class PondHomePage extends HookWidget {
                                         ));
                               },
                             ),
+                            StyledBodyText('Size: ${profilePictureAsset.getOrNull()?.metadata?.size}'),
+                            StyledBodyText(
+                                'Last Updated: ${profilePictureAsset.getOrNull()?.metadata?.lastUpdated?.toLocal()}'),
+                            StyledBodyText(
+                                'Time Created: ${profilePictureAsset.getOrNull()?.metadata?.timeCreated?.toLocal()}'),
+                          ],
                           StyledCategory.medium(
                             headerText: 'Budgets',
                             actions: [

@@ -5,14 +5,13 @@ import '../../context/app_context.dart';
 import '../../export_core.dart';
 import 'asset.dart';
 import 'asset_provider.dart';
-import 'file_asset_provider.dart';
-import 'firebase_storage_asset_provider.dart';
+import 'file/file_asset_provider.dart';
+import 'firebase/firebase_storage_asset_provider.dart';
 import 'local_asset_provider.dart';
 
 class DefaultAssetProvider {
   late AssetProvider assetProvider = _getAssetProvider();
 
-  @override
   DataSource<Asset> getDataSource(String id) {
     return assetProvider.getDataSource(id);
   }
