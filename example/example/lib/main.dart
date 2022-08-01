@@ -160,39 +160,45 @@ class HomePage extends StatelessWidget {
           onLoad: (yaml) => yaml?['min_version'],
         ),
       ))
-      ..register(SyncingModule()
-        ..registerQueryDownload(() async =>
-            (await _getLoggedInUserId()).mapIfNonNull((loggedInUserId) => Query.getById<UserEntity>(loggedInUserId)))
-        ..registerQueryDownload(() async => (await _getLoggedInUserId())
-            .mapIfNonNull((loggedInUserId) => UserEntity.getBudgetsQueryFromUser(loggedInUserId).all()))
-        ..registerQueryDownloads(() async {
-          final budgetEntities = await _getCurrentBudgetEntities();
-          return budgetEntities.map((entity) => BudgetEntity.getEnvelopesQueryFromBudget(entity.id!).all()).toList();
-        })
-        ..registerQueryDownloads(() async {
-          final budgetEntities = await _getCurrentBudgetEntities();
-          return budgetEntities
-              .map((entity) => BudgetTransactionEntity.getBudgetTransactionsQueryFromBudget(entity.id!).all())
-              .toList();
-        })
-        ..registerDownload(AssetSyncDownloadAction(downloadAssetIdsGetter: () async {
-          final loggedInUserId = await _getLoggedInUserId();
-          if (loggedInUserId == null) {
-            return [];
-          }
+      ..register(SimpleAdaptingModule(moduleGetter: (environment) {
+        if (environment.index < Environment.uat.index) {
+          return null;
+        }
 
-          final loggedInUserEntity =
-              await locate<SyncingModule>().executeQueryOnSource(Query.getById<UserEntity>(loggedInUserId));
-          final profilePictureId = loggedInUserEntity?.value.profilePictureProperty.value;
+        return SyncingModule()
+          ..registerQueryDownload(() async =>
+              (await _getLoggedInUserId()).mapIfNonNull((loggedInUserId) => Query.getById<UserEntity>(loggedInUserId)))
+          ..registerQueryDownload(() async => (await _getLoggedInUserId())
+              .mapIfNonNull((loggedInUserId) => UserEntity.getBudgetsQueryFromUser(loggedInUserId).all()))
+          ..registerQueryDownloads(() async {
+            final budgetEntities = await _getCurrentBudgetEntities();
+            return budgetEntities.map((entity) => BudgetEntity.getEnvelopesQueryFromBudget(entity.id!).all()).toList();
+          })
+          ..registerQueryDownloads(() async {
+            final budgetEntities = await _getCurrentBudgetEntities();
+            return budgetEntities
+                .map((entity) => BudgetTransactionEntity.getBudgetTransactionsQueryFromBudget(entity.id!).all())
+                .toList();
+          })
+          ..registerDownload(AssetSyncDownloadAction(downloadAssetIdsGetter: () async {
+            final loggedInUserId = await _getLoggedInUserId();
+            if (loggedInUserId == null) {
+              return [];
+            }
 
-          final budgetEntities = await _getCurrentBudgetEntities();
-          final budgetImageIds = budgetEntities.expand((entity) => entity.value.imagesProperty.value!).toList();
+            final loggedInUserEntity =
+                await locate<SyncingModule>().executeQueryOnSource(Query.getById<UserEntity>(loggedInUserId));
+            final profilePictureId = loggedInUserEntity?.value.profilePictureProperty.value;
 
-          return [
-            if (profilePictureId != null) profilePictureId,
-            ...budgetImageIds,
-          ];
-        })));
+            final budgetEntities = await _getCurrentBudgetEntities();
+            final budgetImageIds = budgetEntities.expand((entity) => entity.value.imagesProperty.value!).toList();
+
+            return [
+              if (profilePictureId != null) profilePictureId,
+              ...budgetImageIds,
+            ];
+          }));
+      }));
   }
 
   Future<String?> _getLoggedInUserId() {

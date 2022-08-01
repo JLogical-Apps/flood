@@ -231,13 +231,20 @@ mixin WithExplicitAppRegistration implements AppRegistration {
         ?.entityType;
   }
 
-  void register<T>(T obj) {
+  @override
+  void registerRuntime(Type type, dynamic obj) {
     Object? registerTarget = obj;
+    Type? registerTargetType = type;
     if (obj is AppModule) {
       registerTarget = obj.registerTarget;
+      registerTargetType = obj.registerTargetType ?? registerTargetType;
     }
 
-    _registrationByType[T] = registerTarget;
+    if (registerTarget == null) {
+      return;
+    }
+
+    _registrationByType[registerTargetType] = registerTarget;
 
     if (registerTarget is AppModule) {
       appModules.add(registerTarget);

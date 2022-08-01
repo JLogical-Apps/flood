@@ -27,7 +27,8 @@ abstract class AppRegistration {
 
   Set<Type> getDescendants(Type type);
 
-  void register<T>(T obj);
+  /// Registers a dependency that can later be accessed via [locateOrNull].
+  void registerRuntime(Type type, dynamic obj);
 
   T? locateOrNull<T>();
 }
@@ -83,6 +84,10 @@ extension DefaultAppRegistration on AppRegistration {
 
   TypeStateSerializer getTypeStateSerializerByType<T>() {
     return getTypeStateSerializerByTypeRuntime(T);
+  }
+
+  void register<T>(T obj) {
+    registerRuntime(T, obj);
   }
 
   T locate<T>() {

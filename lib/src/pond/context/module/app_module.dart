@@ -23,5 +23,11 @@ abstract class AppModule {
 
   /// The app module to register.
   /// Replacing this will register [registerTarget] instead of this.
-  AppModule get registerTarget => this;
+  /// If [null], then no module will be registered.
+  AppModule? get registerTarget => this;
+
+  /// The type of the module to register.
+  /// Replacing this will register [registerTarget] with [registerTargetType] as its key.
+  /// If [null], then will use the [registerTarget]'s runtime type.
+  Type? get registerTargetType => null;
 }

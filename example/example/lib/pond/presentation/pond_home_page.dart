@@ -28,7 +28,7 @@ class PondHomePage extends HookWidget {
           .paginate(),
     );
 
-    final syncingStatus = useValueStream(locate<SyncingModule>().syncingStatusX);
+    final syncingStatus = useValueStreamOrNull(locateOrNull<SyncingModule>()?.syncingStatusX);
 
     return Banner(
       message: AppContext.global.environment.name.toUpperCase(),
@@ -116,60 +116,61 @@ class PondHomePage extends HookWidget {
                       final profilePictureAsset = useAssetOrNull(userEntity.value.profilePictureProperty.value);
                       return ScrollColumn(
                         children: [
-                          syncingStatus.when(
-                            initial: () => StyledLoadingIndicator(),
-                            loaded: (_) => StyledIcon(Icons.check_circle),
-                            error: (e) => StyledButton.low(
-                              icon: Icons.error,
-                              onTapped: () async {
-                                final nextAction = await StyledDialog(
-                                  titleText: 'Resolve Error',
-                                  body: Builder(builder: (context) {
-                                    return Column(
-                                      children: [
-                                        StyledBodyText(
-                                          'There was an error syncing and saving your changes online. Please make sure you are connected to the internet. If you are connected and this problem still occurs, consider deleting your local changes, as something may have gone wrong.',
-                                        ),
-                                        StyledBodyText('Here is the error that occurred: '),
-                                        StyledErrorText(e.toString()),
-                                        StyledContent.high(
-                                          headerText: 'Retry',
-                                          bodyText: 'Try to sync/save again.',
-                                          onTapped: () => context.style().navigateBack(
-                                                context: context,
-                                                result: 'retry',
-                                              ),
-                                          trailing: StyledIcon(Icons.chevron_right),
-                                        ),
-                                        StyledContent.high(
-                                          headerText: 'Delete Local Changes',
-                                          bodyText:
-                                              'Delete your local changes so that the next time you are synced, it will be synced with what is online.',
-                                          onTapped: () => context.style().navigateBack(
-                                                context: context,
-                                                result: 'delete',
-                                              ),
-                                          trailing: StyledIcon(Icons.chevron_right),
-                                        ),
-                                      ],
-                                    );
-                                  }),
-                                ).show(context);
-                                if (nextAction == null) {
-                                  return;
-                                }
+                          if (syncingStatus != null)
+                            syncingStatus.when(
+                              initial: () => StyledLoadingIndicator(),
+                              loaded: (_) => StyledIcon(Icons.check_circle),
+                              error: (e) => StyledButton.low(
+                                icon: Icons.error,
+                                onTapped: () async {
+                                  final nextAction = await StyledDialog(
+                                    titleText: 'Resolve Error',
+                                    body: Builder(builder: (context) {
+                                      return Column(
+                                        children: [
+                                          StyledBodyText(
+                                            'There was an error syncing and saving your changes online. Please make sure you are connected to the internet. If you are connected and this problem still occurs, consider deleting your local changes, as something may have gone wrong.',
+                                          ),
+                                          StyledBodyText('Here is the error that occurred: '),
+                                          StyledErrorText(e.toString()),
+                                          StyledContent.high(
+                                            headerText: 'Retry',
+                                            bodyText: 'Try to sync/save again.',
+                                            onTapped: () => context.style().navigateBack(
+                                                  context: context,
+                                                  result: 'retry',
+                                                ),
+                                            trailing: StyledIcon(Icons.chevron_right),
+                                          ),
+                                          StyledContent.high(
+                                            headerText: 'Delete Local Changes',
+                                            bodyText:
+                                                'Delete your local changes so that the next time you are synced, it will be synced with what is online.',
+                                            onTapped: () => context.style().navigateBack(
+                                                  context: context,
+                                                  result: 'delete',
+                                                ),
+                                            trailing: StyledIcon(Icons.chevron_right),
+                                          ),
+                                        ],
+                                      );
+                                    }),
+                                  ).show(context);
+                                  if (nextAction == null) {
+                                    return;
+                                  }
 
-                                switch (nextAction) {
-                                  case 'retry':
-                                    await locate<SyncingModule>().reload();
-                                    break;
-                                  case 'delete':
-                                    await locate<SyncingModule>().deleteLocalChanges();
-                                    break;
-                                }
-                              },
+                                  switch (nextAction) {
+                                    case 'retry':
+                                      await locate<SyncingModule>().reload();
+                                      break;
+                                    case 'delete':
+                                      await locate<SyncingModule>().deleteLocalChanges();
+                                      break;
+                                  }
+                                },
+                              ),
                             ),
-                          ),
                           if (profilePictureAsset != null) ...[
                             StyledLoadingAsset(
                               maybeAsset: profilePictureAsset,
