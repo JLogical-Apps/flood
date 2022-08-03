@@ -9,4 +9,8 @@ environment:
 version: 1.0.0
 
 dependencies:
-  jlogical_utils_core: ^1.0.0
+  jlogical_utils_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/jlogical_utils_core
