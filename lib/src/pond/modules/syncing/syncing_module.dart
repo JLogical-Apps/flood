@@ -151,6 +151,10 @@ class SyncingModule extends AppModule {
   }
 
   EntityRepository? getSourceRepositoryOrNull<E extends Entity>() {
+    return getSourceRepositoryRuntimeOrNull(E);
+  }
+
+  EntityRepository getSourceRepository<E extends Entity>() {
     return getSourceRepositoryRuntimeOrNull(E) ?? (throw Exception('Unable to find source repository for entity [$E]'));
   }
 
