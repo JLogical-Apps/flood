@@ -8,16 +8,18 @@ import '../../model/export_core.dart';
 
 class QueryController<R extends Record, T> {
   final QueryRequest<R, T> queryRequest;
+  final QueryExecutorX queryExecutorX;
 
   late AsyncLoadable<T> model = ValueStreamModel(
-    valueX: AppContext.global.executeQueryX(queryRequest),
-    loader: () => AppContext.global.executeQuery(queryRequest.withoutCache()),
+    valueX: queryExecutorX.executeQueryX(queryRequest),
+    loader: () => queryExecutorX.executeQuery(queryRequest.withoutCache()),
     hasStartedLoading: true,
   );
 
   FutureValue<T> get value => model.value;
 
-  QueryController({required this.queryRequest});
+  QueryController({required this.queryRequest, QueryExecutorX? queryExecutorX})
+      : this.queryExecutorX = queryExecutorX ?? AppContext.global;
 
   Future<void> reload() async {
     model.load();
