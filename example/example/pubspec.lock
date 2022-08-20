@@ -68,14 +68,14 @@ packages:
       path: "../../packages/jlogical_utils"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "0.0.1"
   jlogical_utils_core:
     dependency: "direct overridden"
     description:
       path: "../../packages/jlogical_utils_core"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "0.0.1"
   material_color_utilities:
     dependency: transitive
     description:
@@ -104,6 +104,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
+  pond_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/pond_core"
+      relative: true
+    source: path
+    version: "0.0.1"
+  pond_environment_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/pond_components/core/environment"
+      relative: true
+    source: path
+    version: "0.0.1"
   sky_engine:
     dependency: transitive
     description: flutter

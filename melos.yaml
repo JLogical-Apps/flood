@@ -1,4 +1,4 @@
-name: FlutterFire
+name: jlogical_utils
 
 packages:
   - packages/**

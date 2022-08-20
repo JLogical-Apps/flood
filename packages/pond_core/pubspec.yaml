@@ -1,0 +1,12 @@
+name: pond_core
+description: The core Pond Framework.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+version: 0.0.1
+
+dependencies:
+  # None yet
