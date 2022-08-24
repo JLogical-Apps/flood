@@ -4,14 +4,7 @@ packages:
   pond_core:
     dependency: "direct main"
     description:
-      path: "../pond/pond_core"
-      relative: true
-    source: path
-    version: "0.0.1"
-  pond_environment_core:
-    dependency: "direct main"
-    description:
-      path: "../pond/pond_components/core/environment"
+      path: "../pond_core"
       relative: true
     source: path
     version: "0.0.1"

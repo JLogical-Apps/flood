@@ -8,17 +8,24 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  pond:
+    dependency: "direct main"
+    description:
+      path: "../pond/pond"
+      relative: true
+    source: path
+    version: "0.0.1"
   pond_core:
     dependency: "direct overridden"
     description:
-      path: "../pond_core"
+      path: "../pond/pond_core"
       relative: true
     source: path
     version: "0.0.1"
   pond_environment_core:
     dependency: "direct overridden"
     description:
-      path: "../pond_components/core/environment"
+      path: "../pond/pond_components/core/environment"
       relative: true
     source: path
     version: "0.0.1"

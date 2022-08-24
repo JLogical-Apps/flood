@@ -104,17 +104,24 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
+  pond:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/pond/pond"
+      relative: true
+    source: path
+    version: "0.0.1"
   pond_core:
     dependency: "direct overridden"
     description:
-      path: "../../packages/pond_core"
+      path: "../../packages/pond/pond_core"
       relative: true
     source: path
     version: "0.0.1"
   pond_environment_core:
     dependency: "direct overridden"
     description:
-      path: "../../packages/pond_components/core/environment"
+      path: "../../packages/pond/pond_components/core/environment"
       relative: true
     source: path
     version: "0.0.1"
