@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:mime/mime.dart';
@@ -47,13 +48,21 @@ class Asset {
     );
   }
 
-  Future<File> cacheToFile() async {
+  Future<File?> cacheToFile() async {
+    if(kIsWeb) {
+      return null;
+    }
+
     final file = AppContext.global.cacheDirectory - name!;
     await file.writeAsBytes(value);
     return file;
   }
 
-  Future<File> ensureCachedToFile() async {
+  Future<File?> ensureCachedToFile() async {
+    if(kIsWeb) {
+      return null;
+    }
+
     final file = AppContext.global.cacheDirectory - name!;
     if (await file.exists()) {
       return file;
@@ -63,6 +72,10 @@ class Asset {
   }
 
   Future<void> clearCachedFile() async {
+    if(kIsWeb) {
+      return;
+    }
+
     final file = AppContext.global.cacheDirectory - name!;
     if (await file.exists()) {
       await file.delete();

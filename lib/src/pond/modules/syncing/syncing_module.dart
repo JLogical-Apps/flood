@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/publish_actions/sync_publish_action_entity.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/sync_publish_actions_repository.dart';
@@ -21,7 +22,8 @@ class SyncingModule extends AppModule {
   late final ValueStream<FutureValue<void>> syncingStatusX = _syncingStatusX;
 
   SyncingModule({EntityRepository? syncPublishActionsRepository})
-      : this.syncPublishActionsRepository = syncPublishActionsRepository ?? SyncPublishActionsRepository();
+      : this.syncPublishActionsRepository = syncPublishActionsRepository ??
+            (kIsWeb ? LocalSyncPublishActionsRepository() : SyncPublishActionsRepository());
 
   SyncingModule.testing() : syncPublishActionsRepository = LocalSyncPublishActionsRepository();
 

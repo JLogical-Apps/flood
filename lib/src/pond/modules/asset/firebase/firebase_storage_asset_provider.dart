@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 import '../../../../persistence/export_core.dart';
 import '../asset.dart';
 import '../asset_metadata.dart';
@@ -15,7 +17,7 @@ class FirebaseStorageAssetProvider extends AssetProvider {
 
   @override
   DataSource<Asset> getDataSource(String id) {
-    return FirebaseStorageAssetDataSource(assetId: id).withCache(FileAssetDataSource(assetId: id));
+    return FirebaseStorageAssetDataSource(assetId: id).withCache(kIsWeb ? LocalDataSource() : FileAssetDataSource(assetId: id));
   }
 
   @override

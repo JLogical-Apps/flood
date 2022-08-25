@@ -18,6 +18,9 @@ class UserRepository extends DefaultAdaptingRepository<UserEntity, User> {
 
   @override
   EntityRepository getFirestoreRepository() {
-    return super.getFirestoreRepository().asSyncingRepository(localRepository: getFileRepository());
+    return super.getFirestoreRepository().asWebAdaptingSyncingRepository(
+          localRepository: getLocalRepository(),
+          fileRepository: getFileRepository(),
+        );
   }
 }

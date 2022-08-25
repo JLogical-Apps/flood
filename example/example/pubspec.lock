@@ -35,7 +35,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.9.0"
+    version: "2.8.2"
   basic_utils:
     dependency: transitive
     description:
@@ -91,7 +91,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.0"
   charcode:
     dependency: transitive
     description:
@@ -126,14 +126,14 @@ packages:
       name: cli_script
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.6"
+    version: "0.2.4"
   clock:
     dependency: transitive
     description:
       name: clock
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "1.1.0"
   cloud_firestore:
     dependency: transitive
     description:
@@ -217,7 +217,7 @@ packages:
       name: dart_console
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.2"
+    version: "1.1.1"
   dart_console2:
     dependency: transitive
     description:
@@ -259,7 +259,7 @@ packages:
       name: fake_async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.3.1"
+    version: "1.3.0"
   ffi:
     dependency: transitive
     description:
@@ -479,14 +479,12 @@ packages:
     source: hosted
     version: "2.1.0"
   fwfh_text_style:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/fwfh_text_style"
-      ref: HEAD
-      resolved-ref: "1801d080f4db1ade24047be67cb0425d2bc28817"
-      url: "https://github.com/eliudio/flutter_widget_from_html.git"
-    source: git
-    version: "2.7.3+3"
+      name: fwfh_text_style
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.22.08"
   get_it:
     dependency: transitive
     description:
@@ -682,21 +680,21 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.12"
+    version: "0.12.11"
   material_color_utilities:
     dependency: transitive
     description:
       name: material_color_utilities
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.5"
+    version: "0.1.4"
   meta:
     dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0"
+    version: "1.7.0"
   mime:
     dependency: transitive
     description:
@@ -731,7 +729,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.2"
+    version: "1.8.1"
   path_provider:
     dependency: transitive
     description:
@@ -1044,7 +1042,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.1"
+    version: "1.8.2"
   sqflite:
     dependency: transitive
     description:
@@ -1086,7 +1084,7 @@ packages:
       name: string_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "1.1.0"
   synchronized:
     dependency: transitive
     description:
@@ -1114,14 +1112,14 @@ packages:
       name: term_glyph
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.0"
   test_api:
     dependency: transitive
     description:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.12"
+    version: "0.4.9"
   tint:
     dependency: transitive
     description:

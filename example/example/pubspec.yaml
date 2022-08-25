@@ -30,9 +30,3 @@ flutter:
 
   assets:
     - assets/
-
-dependency_overrides:
-  fwfh_text_style:
-    git:
-      url: https://github.com/eliudio/flutter_widget_from_html.git
-      path: packages/fwfh_text_style

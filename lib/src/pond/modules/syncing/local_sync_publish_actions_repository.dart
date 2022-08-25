@@ -8,7 +8,8 @@ import 'package:jlogical_utils/src/pond/modules/syncing/publish_actions/sync_pub
 import 'publish_actions/delete_sync_publish_action.dart';
 import 'publish_actions/delete_sync_publish_action_entity.dart';
 
-class LocalSyncPublishActionsRepository extends DefaultAbstractLocalRepository<SyncPublishActionEntity, SyncPublishAction> {
+class LocalSyncPublishActionsRepository
+    extends DefaultAbstractLocalRepository<SyncPublishActionEntity, SyncPublishAction> {
   @override
   List<ValueObjectRegistration> get valueObjectRegistrations => [
         ValueObjectRegistration<SyncPublishAction, SyncPublishAction?>.abstract(),
@@ -36,5 +37,9 @@ class LocalSyncPublishActionsRepository extends DefaultAbstractLocalRepository<S
         EntityRegistration<SaveSyncPublishActionEntity, SaveSyncPublishAction>(() => SaveSyncPublishActionEntity()),
         EntityRegistration<DeleteSyncPublishActionEntity, DeleteSyncPublishAction>(
             () => DeleteSyncPublishActionEntity()),
+        EntityRegistration<AssetUploadSyncPublishActionEntity, AssetUploadSyncPublishAction>(
+            () => AssetUploadSyncPublishActionEntity()),
+        EntityRegistration<AssetDeleteSyncPublishActionEntity, AssetDeleteSyncPublishAction>(
+            () => AssetDeleteSyncPublishActionEntity()),
       ];
 }

@@ -19,6 +19,9 @@ class BudgetRepository extends DefaultAdaptingRepository<BudgetEntity, Budget> {
 
   @override
   EntityRepository getFirestoreRepository() {
-    return super.getFirestoreRepository().asSyncingRepository(localRepository: getFileRepository());
+    return super.getFirestoreRepository().asWebAdaptingSyncingRepository(
+          localRepository: getLocalRepository(),
+          fileRepository: getFileRepository(),
+        );
   }
 }

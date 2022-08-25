@@ -150,16 +150,6 @@ class HomePage extends StatelessWidget {
           await userEntity.save();
         },
       ))
-      ..register(AppVersionModule(
-        currentVersionProvider: ConfigDataSource().map(
-          onSave: (obj) => throw UnimplementedError(),
-          onLoad: (yaml) => yaml?['version'],
-        ),
-        minimumVersionProvider: ConfigDataSource().map(
-          onSave: (obj) => throw UnimplementedError(),
-          onLoad: (yaml) => yaml?['min_version'],
-        ),
-      ))
       ..register(SimpleAdaptingModule(moduleGetter: (environment) {
         if (environment.index < Environment.uat.index) {
           return null;

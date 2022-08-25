@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 
 import '../../pond/modules/logging/default_logging_module.dart';
@@ -19,13 +20,17 @@ class FirebaseStorageDataSource extends DataSource<Uint8List> {
   Future<Uint8List?> getData() async {
     logWarning('Getting data from Firebase Storage: $storagePath');
 
-    final file = Directory.systemTemp - '${UuidIdGenerator().getId()}.tmp';
-    await storageReference.writeToFile(file);
+    if (kIsWeb) {
+      return storageReference.getData();
+    } else {
+      final file = Directory.systemTemp - '${UuidIdGenerator().getId()}.tmp';
+      await storageReference.writeToFile(file);
 
-    final data = await file.readAsBytes();
-    await file.delete();
+      final data = await file.readAsBytes();
+      await file.delete();
 
-    return data;
+      return data;
+    }
   }
 
   @override
