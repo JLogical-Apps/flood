@@ -18,4 +18,6 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/pond
+      path: packages/pond/pond
+dev_dependencies:
+  lints: ^2.0.0

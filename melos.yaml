@@ -3,3 +3,9 @@ name: jlogical_utils
 packages:
   - packages/**
   - example/**
+
+scripts:
+  test:
+    name: test
+    description: 'Tests every module'
+    run: melos exec --fail-fast -- flutter analyze . && melos exec --depends-on="test" --fail-fast -- flutter test . && melos exec --depends-on="flutter_test" --fail-fast -- flutter test .

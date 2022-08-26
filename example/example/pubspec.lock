@@ -41,6 +41,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_hooks:
+    dependency: transitive
+    description:
+      name: flutter_hooks
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.18.5+1"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -48,6 +55,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.3"
+  flutter_lints:
+    dependency: "direct dev"
+    description:
+      name: flutter_lints
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   flutter_native_splash:
     dependency: "direct dev"
     description:
@@ -76,6 +90,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  lints:
+    dependency: transitive
+    description:
+      name: lints
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   material_color_utilities:
     dependency: transitive
     description:
@@ -115,13 +136,6 @@ packages:
     dependency: "direct overridden"
     description:
       path: "../../packages/pond/pond_core"
-      relative: true
-    source: path
-    version: "0.0.1"
-  pond_environment_core:
-    dependency: "direct overridden"
-    description:
-      path: "../../packages/pond/pond_components/core/environment"
       relative: true
     source: path
     version: "0.0.1"
@@ -165,6 +179,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.4"
+  utils_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/utils/utils_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   vector_math:
     dependency: transitive
     description:
@@ -187,4 +208,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.16.0 <3.0.0"
+  dart: ">=2.17.0 <3.0.0"
+  flutter: ">=3.0.0"
