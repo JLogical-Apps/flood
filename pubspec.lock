@@ -577,14 +577,12 @@ packages:
     source: hosted
     version: "2.1.3"
   fwfh_text_style:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/fwfh_text_style"
-      ref: HEAD
-      resolved-ref: "1801d080f4db1ade24047be67cb0425d2bc28817"
-      url: "https://github.com/eliudio/flutter_widget_from_html.git"
-    source: git
-    version: "2.7.3+3"
+      name: fwfh_text_style
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.22.08"
   get_it:
     dependency: "direct main"
     description:
