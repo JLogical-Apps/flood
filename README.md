@@ -9,4 +9,52 @@ modify the example app to include anything that would help with testing.
 
 ## Packages
 
-All utilities are isolated into separate packages in `packages`.
+All utilities are isolated into separate packages in `packages`. This allows each package to
+explicitly declare its dependencies and not depend on frameworks it doesn't need. For example, a CLI
+module cannot depend on Flutter, so the separate packages allow to clearly know whether a package
+depends on Flutter or not.
+
+The structure of this repository is called a `monorepo`. The `monorepo` is managed by a dart package
+called [melos](https://pub.dev/packages/melos). More details on the tools `melos` provides are down
+below.
+
+Each package is a separate Dart project with its own `pubspec.yaml` file and `lib` folder.
+
+### Types of packages
+
+Some packages define utilities for a Flutter app and contain utilities to be used in all contexts (
+such as a CLI). Since CLIs cannot depend on Flutter, we break up such packages into a `core` package
+and a regular package.
+
+Packages that end with `_core` define core functionality of the package that can be used in all
+contexts. Packages that do not end in `_core` are assumed to depend on Flutter.
+
+### Referencing another package
+
+In the case where a package needs to depend on another package, for example, `pond_core`
+depends on the `utils_core` package, use this pattern in the `pubspec.yaml` of `pond_core`:
+
+```yaml
+dependencies:
+  utils_core: # Must be the name of the package as defined in its `pubspec.yaml` `name` field. 
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git # Reference the git repository.
+      ref: master # Must use master
+      path: packages/utils/utils_core # The path of the package 
+```
+
+## Setup
+
+Install melos using their [installation guide](https://pub.dev/packages/melos#getting-started)
+
+## Development
+
+### Adding a new dependency
+
+Run `melos bootstrap` (`melos bs` for short) every time you add a new dependency to any of the
+package (including `example`!). This will link all your packages up internally and get all the
+external packages as well.
+
+### Testing
+
+Run `melos run test` to run tests on all the packages.
