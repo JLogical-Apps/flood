@@ -91,6 +91,7 @@ class PondLoginPage extends HookWidget {
                                         StringPortField(name: 'name').required(),
                                         StringPortField(name: 'email').required().isEmail(),
                                         StringPortField(name: 'password').required().isPassword(),
+                                        StringPortField(name: 'confirmPassword').required().isConfirmPassword(),
                                       ],
                                     );
                                     final signupDialog = StyledDialog(
@@ -110,6 +111,11 @@ class PondLoginPage extends HookWidget {
                                             StyledTextPortField(
                                               name: 'password',
                                               labelText: 'Password',
+                                              obscureText: true,
+                                            ),
+                                            StyledTextPortField(
+                                              name: 'confirmPassword',
+                                              labelText: 'Confirm Password',
                                               obscureText: true,
                                             ),
                                             StyledButton.high(

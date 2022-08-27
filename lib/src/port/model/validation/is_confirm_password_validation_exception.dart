@@ -3,4 +3,9 @@ import 'port_field_validation_context.dart';
 
 class IsConfirmPasswordValidationException extends ValidationException<PortFieldValidationContext> {
   IsConfirmPasswordValidationException({required super.failedValue});
+
+  @override
+  String toString() {
+    return 'Does not match password!';
+  }
 }
