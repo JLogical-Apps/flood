@@ -23,23 +23,6 @@ class Asset {
 
   String? get name => id;
 
-  static Future<Asset> fromFile(File file, {String? id}) async {
-    if (!await file.exists()) {
-      throw Exception('Cannot get asset from file [${file.path}]');
-    }
-
-    final fileData = await file.readAsBytes();
-    return Asset(
-      id: id,
-      value: fileData,
-      metadata: AssetMetadata(
-        lastUpdated: await file.lastModified(),
-        timeCreated: DateTime.now(),
-        size: await file.length(),
-      ),
-    );
-  }
-
   Asset copyWith({String? id, Uint8List? value, AssetMetadata? metadata}) {
     return Asset(
       id: id ?? this.id,
@@ -49,7 +32,7 @@ class Asset {
   }
 
   Future<File?> cacheToFile() async {
-    if(kIsWeb) {
+    if (kIsWeb) {
       return null;
     }
 
@@ -59,7 +42,7 @@ class Asset {
   }
 
   Future<File?> ensureCachedToFile() async {
-    if(kIsWeb) {
+    if (kIsWeb) {
       return null;
     }
 
@@ -72,7 +55,7 @@ class Asset {
   }
 
   Future<void> clearCachedFile() async {
-    if(kIsWeb) {
+    if (kIsWeb) {
       return;
     }
 

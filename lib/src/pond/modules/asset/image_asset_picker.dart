@@ -22,7 +22,7 @@ class ImageAssetPicker {
 
     final imageBytes = await imageFile.readAsBytes();
     return Asset.createNew(
-      id: UuidIdGenerator().getId() + basename(imageFile.path),
+      id: UuidIdGenerator().getId() + basename(imageFile.name),
       value: imageBytes,
     );
   }

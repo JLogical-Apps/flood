@@ -16,16 +16,21 @@ import 'publish_actions/save_sync_publish_action.dart';
 import 'publish_actions/save_sync_publish_action_entity.dart';
 
 class SyncingModule extends AppModule {
+  /// The repository to save the SyncPublishActionEntities.
   final EntityRepository syncPublishActionsRepository;
 
-  final BehaviorSubject<FutureValue<void>> _syncingStatusX = BehaviorSubject.seeded(FutureValue.initial());
+  /// Whether the syncing module is disabled, so no syncing will occur.
+  final bool isDisabled;
+
+  late final BehaviorSubject<FutureValue<void>> _syncingStatusX =
+      BehaviorSubject.seeded(isDisabled ? FutureValue.error(error: 'Syncing is disabled.') : FutureValue.initial());
   late final ValueStream<FutureValue<void>> syncingStatusX = _syncingStatusX;
 
-  SyncingModule({EntityRepository? syncPublishActionsRepository})
+  SyncingModule({EntityRepository? syncPublishActionsRepository, this.isDisabled: false})
       : this.syncPublishActionsRepository = syncPublishActionsRepository ??
             (kIsWeb ? LocalSyncPublishActionsRepository() : SyncPublishActionsRepository());
 
-  SyncingModule.testing() : syncPublishActionsRepository = LocalSyncPublishActionsRepository();
+  SyncingModule.testing({this.isDisabled: false}) : syncPublishActionsRepository = LocalSyncPublishActionsRepository();
 
   final List<SyncDownloadAction> _downloadActions = [];
   final Queue<SyncPublishActionEntity> _publishActionEntitiesQueue = Queue();
@@ -37,6 +42,10 @@ class SyncingModule extends AppModule {
 
   @override
   Future<void> onLoad(AppContext appContext) async {
+    if (isDisabled) {
+      return;
+    }
+
     _syncingStatusX.value = FutureValue.initial();
     await _loadPendingPublishActions();
     () async {
@@ -64,12 +73,18 @@ class SyncingModule extends AppModule {
   static final _publishLock = Lock();
 
   Future<void> reload() async {
+    if (isDisabled) {
+      return;
+    }
     await publish();
     await download();
   }
 
   /// Publish all pending changes to source repositories.
   Future<void> publish() async {
+    if (isDisabled) {
+      return;
+    }
     try {
       // No need to re-publish if publishing is happening currently.
       if (_publishLock.locked) {
@@ -94,6 +109,9 @@ class SyncingModule extends AppModule {
   }
 
   Future<void> download() async {
+    if (isDisabled) {
+      return;
+    }
     try {
       _syncingStatusX.value = FutureValue.initial();
       for (final downloadAction in _downloadActions) {

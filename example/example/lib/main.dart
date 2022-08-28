@@ -10,6 +10,7 @@ import 'package:example/pond/domain/envelope/envelope_repository.dart';
 import 'package:example/pond/domain/user/user_repository.dart';
 import 'package:example/pond/presentation/pond_home_page.dart';
 import 'package:example/style/styles_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -155,7 +156,7 @@ class HomePage extends StatelessWidget {
           return null;
         }
 
-        return SyncingModule()
+        return SyncingModule(isDisabled: kIsWeb)
           ..registerQueryDownload(() async =>
               (await _getLoggedInUserId()).mapIfNonNull((loggedInUserId) => Query.getById<UserEntity>(loggedInUserId)))
           ..registerQueryDownload(() async => (await _getLoggedInUserId())

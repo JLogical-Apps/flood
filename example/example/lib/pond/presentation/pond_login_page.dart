@@ -62,10 +62,10 @@ class PondLoginPage extends HookWidget {
 
                                     late String userId;
                                     try {
-                                      userId = await AppContext.global.locate<AuthService>().login(
-                                            email: result['email'],
-                                            password: result['password'],
-                                          );
+                                      userId = await locate<AuthService>().login(
+                                        email: result['email'],
+                                        password: result['password'],
+                                      );
                                       await locate<SyncingModule>().download();
                                     } catch (e, stack) {
                                       logError(e, stack: stack);
@@ -132,6 +132,7 @@ class PondLoginPage extends HookWidget {
                                                         email: result['email'],
                                                         password: result['password'],
                                                       );
+                                                  await locate<SyncingModule>().download();
                                                 } catch (e) {
                                                   port.setException(name: 'email', exception: e.toString());
                                                   return;

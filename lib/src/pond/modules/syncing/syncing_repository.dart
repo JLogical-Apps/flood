@@ -1,3 +1,5 @@
+import 'package:jlogical_utils/src/pond/export.dart';
+
 import '../../context/app_context.dart';
 import '../../context/registration/entity_registration.dart';
 import '../../context/registration/value_object_registration.dart';
@@ -11,7 +13,9 @@ abstract class SyncingRepository extends EntityRepository with WithSyncingReposi
 
   SyncingRepository({this.publishOnSave: true}) {
     sourceRepository.entityInflatedX.listen((entity) {
-      localRepository.saveState(entity.state);
+      if (!locate<SyncingModule>().isDisabled) {
+        localRepository.saveState(entity.state);
+      }
     });
   }
 

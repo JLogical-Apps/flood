@@ -11,13 +11,15 @@ import 'firebase_storage_asset_data_source.dart';
 import 'firebase_storage_asset_metadata_data_source.dart';
 
 class FirebaseStorageAssetProvider extends AssetProvider {
-  static const assetTimeCreatedField = 'assetTimeCreated';
-
   FirebaseStorageAssetProvider({Directory? cacheDirectory});
 
   @override
   DataSource<Asset> getDataSource(String id) {
-    return FirebaseStorageAssetDataSource(assetId: id).withCache(kIsWeb ? LocalDataSource() : FileAssetDataSource(assetId: id));
+    DataSource<Asset> dataSource = FirebaseStorageAssetDataSource(assetId: id);
+    if (!kIsWeb) {
+      dataSource = dataSource.withCache(FileAssetDataSource(assetId: id));
+    }
+    return dataSource;
   }
 
   @override

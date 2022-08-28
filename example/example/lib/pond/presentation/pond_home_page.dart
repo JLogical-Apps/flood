@@ -28,7 +28,9 @@ class PondHomePage extends HookWidget {
           .paginate(),
     );
 
-    final syncingStatus = useValueStreamOrNull(locateOrNull<SyncingModule>()?.syncingStatusX);
+    final syncingModule = locateOrNull<SyncingModule>();
+    final syncingStatus =
+        useValueStreamOrNull(syncingModule?.isDisabled ?? true ? null : syncingModule!.syncingStatusX);
 
     return Banner(
       message: AppContext.global.environment.name.toUpperCase(),

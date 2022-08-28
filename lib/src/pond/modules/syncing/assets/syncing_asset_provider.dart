@@ -33,11 +33,17 @@ class SyncingAssetProvider extends AssetProvider {
 
   @override
   DataSource<Asset> getDataSource(String id) {
+    if (locate<SyncingModule>().isDisabled) {
+      return sourceAssetProvider.getDataSource(id);
+    }
     return _SyncingDataSource(localDataSource: localAssetProvider.getDataSource(id), assetId: id);
   }
 
   @override
   DataSource<AssetMetadata> getMetadataDataSource(String id) {
+    if (locate<SyncingModule>().isDisabled) {
+      return sourceAssetProvider.getMetadataDataSource(id);
+    }
     return localAssetProvider.getMetadataDataSource(id);
   }
 }
