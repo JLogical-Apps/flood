@@ -26,7 +26,7 @@ class AssetSyncDownloadAction extends SyncDownloadAction {
       return;
     }
 
-    final asset = await sourceDataSource.getData().timeout(Duration(seconds: 30));
+    final asset = await sourceDataSource.getData();
     if (asset == null) {
       return;
     }

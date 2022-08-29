@@ -31,6 +31,6 @@ class AssetUploadSyncPublishAction extends SyncPublishAction {
       return;
     }
 
-    await assetProvider.sourceAssetProvider.getDataSource(assetId).saveData(asset).timeout(Duration(seconds: 30));
+    await assetProvider.sourceAssetProvider.getDataSource(assetId).saveData(asset);
   }
 }
