@@ -54,16 +54,25 @@ class SyncingModule extends AppModule {
   }
 
   /// Register a scope to download when [download] is called.
-  void registerQueryDownload(FutureOr<QueryRequest?> queryRequestGetter()) {
-    _downloadActions.add(QuerySyncDownloadAction(() async {
-      final queryRequest = await queryRequestGetter();
-      return [if (queryRequest != null) queryRequest];
-    }));
+  void registerQueryDownload(
+    FutureOr<QueryRequest?> queryRequestGetter(), {
+    SyncDownloadPriority priority: SyncDownloadPriority.high,
+  }) {
+    _downloadActions.add(QuerySyncDownloadAction(
+      () async {
+        final queryRequest = await queryRequestGetter();
+        return [if (queryRequest != null) queryRequest];
+      },
+      priority: priority,
+    ));
   }
 
   /// Register a scope to download when [download] is called.
-  void registerQueryDownloads(FutureOr<List<QueryRequest>> queryRequestGetter()) {
-    _downloadActions.add(QuerySyncDownloadAction(queryRequestGetter));
+  void registerQueryDownloads(
+    FutureOr<List<QueryRequest>> queryRequestGetter(), {
+    SyncDownloadPriority priority: SyncDownloadPriority.high,
+  }) {
+    _downloadActions.add(QuerySyncDownloadAction(queryRequestGetter, priority: priority));
   }
 
   void registerDownload(SyncDownloadAction syncDownloadAction) {
