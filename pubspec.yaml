@@ -63,6 +63,7 @@ dependencies:
   json2yaml: ^2.0.0
   path: ^1.8.0
   path_provider: ^2.0.8
+  pool: ^1.5.1
   rxdart: ^0.27.1
   shelf_web_socket: ^1.0.1
   synchronized: ^3.0.0

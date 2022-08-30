@@ -821,6 +821,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.6.1"
+  pool:
+    dependency: transitive
+    description:
+      name: pool
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.5.1"
   posix:
     dependency: transitive
     description:

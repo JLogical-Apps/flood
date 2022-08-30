@@ -171,24 +171,27 @@ class HomePage extends StatelessWidget {
                 .map((entity) => BudgetTransactionEntity.getBudgetTransactionsQueryFromBudget(entity.id!).all())
                 .toList();
           })
-          ..registerDownload(AssetSyncDownloadAction(downloadAssetIdsGetter: () async {
-            final loggedInUserId = await _getLoggedInUserId();
-            if (loggedInUserId == null) {
-              return [];
-            }
+          ..registerDownload(AssetSyncDownloadAction(
+            downloadAssetIdsGetter: () async {
+              final loggedInUserId = await _getLoggedInUserId();
+              if (loggedInUserId == null) {
+                return [];
+              }
 
-            final loggedInUserEntity =
-                await locate<SyncingModule>().executeQueryOnSource(Query.getById<UserEntity>(loggedInUserId));
-            final profilePictureId = loggedInUserEntity?.value.profilePictureProperty.value;
+              final loggedInUserEntity =
+                  await locate<SyncingModule>().executeQueryOnSource(Query.getById<UserEntity>(loggedInUserId));
+              final profilePictureId = loggedInUserEntity?.value.profilePictureProperty.value;
 
-            final budgetEntities = await _getCurrentBudgetEntities();
-            final budgetImageIds = budgetEntities.expand((entity) => entity.value.imagesProperty.value!).toList();
+              final budgetEntities = await _getCurrentBudgetEntities();
+              final budgetImageIds = budgetEntities.expand((entity) => entity.value.imagesProperty.value!).toList();
 
-            return [
-              if (profilePictureId != null) profilePictureId,
-              ...budgetImageIds,
-            ];
-          }));
+              return [
+                if (profilePictureId != null) profilePictureId,
+                ...budgetImageIds,
+              ];
+            },
+            priority: SyncDownloadPriority.low,
+          ));
       }));
   }
 

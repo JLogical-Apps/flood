@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/publish_actions/sync_publish_action_entity.dart';
 import 'package:jlogical_utils/src/pond/modules/syncing/sync_publish_actions_repository.dart';
+import 'package:pool/pool.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:synchronized/synchronized.dart';
 
@@ -34,6 +35,7 @@ class SyncingModule extends AppModule {
 
   final List<SyncDownloadAction> _downloadActions = [];
   final Queue<SyncPublishActionEntity> _publishActionEntitiesQueue = Queue();
+  final Pool _pool = Pool(10, timeout: Duration(seconds: 30));
 
   @override
   void onRegister(AppRegistration registration) {
@@ -48,9 +50,7 @@ class SyncingModule extends AppModule {
 
     _syncingStatusX.value = FutureValue.initial();
     await _loadPendingPublishActions();
-    () async {
-      await reload();
-    }();
+    await reload();
   }
 
   /// Register a scope to download when [download] is called.
@@ -114,14 +114,32 @@ class SyncingModule extends AppModule {
     }
     try {
       _syncingStatusX.value = FutureValue.initial();
-      for (final downloadAction in _downloadActions) {
-        await downloadAction.download();
-      }
-      _syncingStatusX.value = FutureValue.loaded(value: null);
+      await _downloadHighPriorityDownloads();
+      () async {
+        try {
+          await _downloadLowPriorityDownloads();
+          _syncingStatusX.value = FutureValue.loaded(value: null);
+        } catch (e) {
+          _syncingStatusX.value = FutureValue.error(error: e);
+          rethrow;
+        }
+      }();
     } catch (e) {
       _syncingStatusX.value = FutureValue.error(error: e);
       rethrow;
     }
+  }
+
+  Future<void> _downloadHighPriorityDownloads() async {
+    await Future.wait(_downloadActions
+        .where((download) => download.priority == SyncDownloadPriority.high)
+        .map((download) => _pool.withResource(download.download)));
+  }
+
+  Future<void> _downloadLowPriorityDownloads() async {
+    await Future.wait(_downloadActions
+        .where((download) => download.priority == SyncDownloadPriority.low)
+        .map((download) => _pool.withResource(download.download)));
   }
 
   Future<void> deleteLocalChanges() async {
