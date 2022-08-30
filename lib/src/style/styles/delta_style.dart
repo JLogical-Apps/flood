@@ -19,11 +19,16 @@ import 'flat_style.dart';
 
 /// Extends [FlatStyle] with overridden styles.
 class DeltaStyle extends FlatStyle {
-
   DeltaStyle({
     Color primaryColor: Colors.green,
     Color backgroundColor: Colors.white,
     super.accentColor: Colors.purple,
+    super.titleTextStyleOverride,
+    super.subtitleTextStyleOverride,
+    super.contentHeaderTextStyleOverride,
+    super.contentSubtitleTextStyleOverride,
+    super.bodyTextStyleOverride,
+    super.buttonTextStyleOverride,
   }) : super(
           primaryColor: primaryColor,
           backgroundColor: backgroundColor,
