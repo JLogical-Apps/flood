@@ -13,7 +13,7 @@ abstract class SyncDownloadAction {
 class QuerySyncDownloadAction extends SyncDownloadAction {
   final FutureOr<List<QueryRequest>> Function() queryRequestsGetter;
 
-  QuerySyncDownloadAction(this.queryRequestsGetter, {super.priority});
+  QuerySyncDownloadAction(this.queryRequestsGetter, {super.priority: SyncDownloadPriority.high});
 
   @override
   Future<void> download() async {

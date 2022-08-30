@@ -6,7 +6,10 @@ class AssetSyncDownloadAction extends SyncDownloadAction {
   late SyncingAssetProvider assetProvider = locate<AssetModule>().assetProvider.as<SyncingAssetProvider>() ??
       (throw Exception('Cannot download assets from an asset provider that isn\'t a SyncingAssetProvider!'));
 
-  AssetSyncDownloadAction({required this.downloadAssetIdsGetter, super.priority});
+  AssetSyncDownloadAction({
+    required this.downloadAssetIdsGetter,
+    super.priority: SyncDownloadPriority.high,
+  });
 
   @override
   Future<void> download() async {
