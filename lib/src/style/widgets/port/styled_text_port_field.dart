@@ -21,6 +21,8 @@ class StyledTextPortField extends PortFieldWidget<StringPortField, String?, Stri
   /// Sets this as the value of the FormField if no input has been typed in.
   final String? suggestedValue;
 
+  final Color? backgroundColor;
+
   final TextInputType keyboardType;
 
   final TextCapitalization textCapitalization;
@@ -50,6 +52,7 @@ class StyledTextPortField extends PortFieldWidget<StringPortField, String?, Stri
     this.label,
     this.showRequiredIndicator,
     this.suggestedValue,
+    this.backgroundColor,
     this.keyboardType: TextInputType.text,
     this.textCapitalization: TextCapitalization.sentences,
     this.obscureText: false,
@@ -69,6 +72,7 @@ class StyledTextPortField extends PortFieldWidget<StringPortField, String?, Stri
       hintText: field.fallback ?? suggestedValue,
       onChanged: (text) => setValue(context, text),
       obscureText: obscureText,
+      backgroundColor: backgroundColor,
       maxLength: maxLength,
       maxLines: maxLines,
       textCapitalization: textCapitalization,
