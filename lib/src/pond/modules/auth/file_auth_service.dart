@@ -114,6 +114,30 @@ class FileAuthService extends AuthService {
 
     await logout();
   }
+
+  /// Emulates phone number verification by asking the user to type in the same phone number as the sms code.
+  @override
+  Future<String> loginWithPhoneNumber({
+    required String phoneNumber,
+    required Future<String?> Function() smsCodeGetter,
+  }) async {
+    final smsCode = await smsCodeGetter();
+    if (phoneNumber != smsCode) {
+      throw Exception('Invalid SMS Code! Use the phone number as the SMS code.');
+    }
+
+    // Generate a user with fake email and password and login/signup.
+    final userEmail = '$phoneNumber@phone.com';
+    final userPassword = phoneNumber;
+
+    final registeredUsers = (await registeredUsersDataSource.getData()) ?? {};
+    final alreadyLoggedIn = registeredUsers.entries.any((entry) => entry.key.email == userEmail);
+    if (alreadyLoggedIn) {
+      return await login(email: userEmail, password: userPassword);
+    } else {
+      return await signup(email: userEmail, password: userPassword);
+    }
+  }
 }
 
 /// Token used to simulate logging in. Only used for local testing purposes.

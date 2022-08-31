@@ -15,6 +15,15 @@ abstract class AuthService extends AppModule {
   /// Can throw [SignupFailure].
   Future<String> signup({required String email, required String password});
 
+  /// Logs in with [phoneNumber]. Creates a new account if one doesn't exist already.
+  ///
+  /// A verification code is sent to the phone. To confirm the code, [smsCodeGetter] is called.
+  /// It should return the verification code the user types in, or null if the user cancelled the verification.
+  Future<String> loginWithPhoneNumber({
+    required String phoneNumber,
+    required Future<String?> Function() smsCodeGetter,
+  });
+
   /// Logs out of the currently logged-in user.
   Future<void> logout();
 

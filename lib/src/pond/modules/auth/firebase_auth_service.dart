@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
+import 'package:flutter/foundation.dart';
 
 import 'auth_service.dart';
 import 'login_failure.dart';
@@ -71,5 +74,48 @@ class FirebaseAuthService extends AuthService implements PasswordResettable {
   @override
   Future<void> onResetPassword(String email) async {
     await auth.sendPasswordResetEmail(email: email);
+  }
+
+  /// Follow the directions on https://firebase.google.com/docs/auth/flutter/phone-auth to set the app up.
+  @override
+  Future<String> loginWithPhoneNumber({
+    required String phoneNumber,
+    required Future<String?> Function() smsCodeGetter,
+  }) async {
+    if (kIsWeb) {
+      final confirmation = await auth.signInWithPhoneNumber(phoneNumber);
+      final smsCode = await smsCodeGetter();
+      if (smsCode == null) {
+        throw Exception('Phone Number verification was cancelled.');
+      }
+      final credentials = await confirmation.confirm(smsCode);
+      final user = credentials.user ?? (throw Exception('Error when signing in with verification code.'));
+      return user.uid;
+    } else {
+      final userCompleter = Completer<firebase.User>();
+      await auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (credential) async {
+          final result = await auth.signInWithCredential(credential);
+          userCompleter.complete(result.user ?? (throw Exception('Cannot login with user from verification code.')));
+        },
+        verificationFailed: (error) => throw error,
+        codeSent: (verificationId, resendToken) async {
+          final smsCode = await smsCodeGetter();
+          if (smsCode == null) {
+            return;
+          }
+          final credentials = await auth.signInWithCredential(
+              firebase.PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode));
+          userCompleter
+              .complete(credentials.user ?? (throw Exception('Cannot login with user from verification code.')));
+        },
+        codeAutoRetrievalTimeout: (id) {
+          throw Exception('Automatic SMS verification timed-out. Please try again later.');
+        },
+      );
+      final user = await userCompleter.future;
+      return user.uid;
+    }
   }
 }

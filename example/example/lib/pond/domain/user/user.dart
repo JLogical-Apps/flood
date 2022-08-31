@@ -2,7 +2,8 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class User extends ValueObject with WithPortGenerator<User> {
   late final nameProperty = FieldProperty<String>(name: 'name').required();
-  late final emailProperty = FieldProperty<String>(name: 'email').required();
+  late final emailProperty = FieldProperty<String>(name: 'email');
+  late final phoneNumberProperty = FieldProperty<String>(name: 'phone');
   late final profilePictureProperty = AssetFieldProperty(name: 'profilePicture');
   late final colorProperty = FieldProperty<int>(name: 'color');
 
@@ -12,6 +13,7 @@ class User extends ValueObject with WithPortGenerator<User> {
       [
         nameProperty,
         emailProperty,
+        phoneNumberProperty,
         profilePictureProperty,
         colorProperty,
       ];

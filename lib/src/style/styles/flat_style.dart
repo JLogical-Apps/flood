@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -427,7 +429,10 @@ class FlatStyle extends Style {
               if (isLoading.value) return;
 
               isLoading.value = true;
-              await onTapped();
+              await runZonedGuarded(onTapped, (error, stack) {
+                if (isMounted()) isLoading.value = false;
+                throw error;
+              });
               if (isMounted()) isLoading.value = false;
             });
 
