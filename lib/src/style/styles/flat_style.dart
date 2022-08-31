@@ -65,23 +65,10 @@ class FlatStyle extends Style {
 
   Color get backgroundColorSoft => softenColor(backgroundColor);
 
-  final StyledTextStyle? titleTextStyleOverride;
-  final StyledTextStyle? subtitleTextStyleOverride;
-  final StyledTextStyle? contentHeaderTextStyleOverride;
-  final StyledTextStyle? contentSubtitleTextStyleOverride;
-  final StyledTextStyle? bodyTextStyleOverride;
-  final StyledTextStyle? buttonTextStyleOverride;
-
   FlatStyle({
     this.primaryColor: Colors.blue,
     this.accentColor: Colors.purple,
     this.backgroundColor: Colors.white,
-    this.titleTextStyleOverride,
-    this.subtitleTextStyleOverride,
-    this.contentHeaderTextStyleOverride,
-    this.contentSubtitleTextStyleOverride,
-    this.bodyTextStyleOverride,
-    this.buttonTextStyleOverride,
   });
 
   @override
@@ -302,9 +289,7 @@ class FlatStyle extends Style {
   }
 
   @override
-  StyledTextStyle titleTextStyle(StyleContext styleContext) =>
-      titleTextStyleOverride ??
-      StyledTextStyle(
+  StyledTextStyle titleTextStyle(StyleContext styleContext) => StyledTextStyle(
         fontFamily: 'Montserrat',
         fontColor: styleContext.emphasisColor,
         fontSize: 38,
@@ -315,9 +300,7 @@ class FlatStyle extends Style {
       );
 
   @override
-  StyledTextStyle subtitleTextStyle(StyleContext styleContext) =>
-      subtitleTextStyleOverride ??
-      StyledTextStyle(
+  StyledTextStyle subtitleTextStyle(StyleContext styleContext) => StyledTextStyle(
         fontFamily: 'Quicksand',
         fontColor: styleContext.foregroundColor,
         fontSize: 28,
@@ -326,9 +309,7 @@ class FlatStyle extends Style {
       );
 
   @override
-  StyledTextStyle contentHeaderTextStyle(StyleContext styleContext) =>
-      contentHeaderTextStyleOverride ??
-      StyledTextStyle(
+  StyledTextStyle contentHeaderTextStyle(StyleContext styleContext) => StyledTextStyle(
         fontFamily: 'Quicksand',
         fontColor: styleContext.emphasisColor,
         fontSize: 16,
@@ -337,9 +318,7 @@ class FlatStyle extends Style {
       );
 
   @override
-  StyledTextStyle contentSubtitleTextStyle(StyleContext styleContext) =>
-      contentSubtitleTextStyleOverride ??
-      StyledTextStyle(
+  StyledTextStyle contentSubtitleTextStyle(StyleContext styleContext) => StyledTextStyle(
         fontFamily: 'Lato',
         fontColor: styleContext.foregroundColorSoft,
         fontSize: 14,
@@ -347,9 +326,7 @@ class FlatStyle extends Style {
       );
 
   @override
-  StyledTextStyle bodyTextStyle(StyleContext styleContext) =>
-      bodyTextStyleOverride ??
-      StyledTextStyle(
+  StyledTextStyle bodyTextStyle(StyleContext styleContext) => StyledTextStyle(
         fontFamily: 'Lato',
         fontColor: styleContext.foregroundColor,
         fontSize: 14,
@@ -357,9 +334,7 @@ class FlatStyle extends Style {
       );
 
   @override
-  StyledTextStyle buttonTextStyle(StyleContext styleContext) =>
-      bodyTextStyleOverride ??
-      StyledTextStyle(
+  StyledTextStyle buttonTextStyle(StyleContext styleContext) => StyledTextStyle(
         fontFamily: 'Lato',
         fontColor: styleContext.foregroundColor,
         fontSize: 12,

@@ -23,12 +23,6 @@ class DeltaStyle extends FlatStyle {
     Color primaryColor: Colors.green,
     Color backgroundColor: Colors.white,
     super.accentColor: Colors.purple,
-    super.titleTextStyleOverride,
-    super.subtitleTextStyleOverride,
-    super.contentHeaderTextStyleOverride,
-    super.contentSubtitleTextStyleOverride,
-    super.bodyTextStyleOverride,
-    super.buttonTextStyleOverride,
   }) : super(
           primaryColor: primaryColor,
           backgroundColor: backgroundColor,
