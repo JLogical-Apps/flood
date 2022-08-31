@@ -66,4 +66,5 @@ export 'widgets/text/styled_subtitle_text.dart';
 export 'widgets/text/styled_text.dart';
 export 'widgets/text/styled_text_overrides.dart';
 export 'widgets/text/styled_text_span.dart';
+export 'widgets/text/styled_text_style.dart';
 export 'widgets/text/styled_title_text.dart';
