@@ -573,6 +573,11 @@ class FlatStyle extends Style {
   @override
   Widget textField(BuildContext context, StyleContext styleContext, StyledTextField textField) {
     final label = textField.labelText.mapIfNonNull((label) => StyledContentSubtitleText(label)) ?? textField.label;
+
+    if (textField.backgroundColor != null) {
+      styleContext = styleContextFromBackground(textField.backgroundColor!);
+    }
+
     return HookBuilder(builder: (context) {
       final focusNode = useFocusNode();
       final isFocused = useState(false);

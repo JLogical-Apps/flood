@@ -14,6 +14,8 @@ class StyledSmartTextField extends SmartFormField<String> {
   /// Adds this as the value to the SmartFormField if no input has been typed in.
   final String? suggestedValue;
 
+  final Color? backgroundColor;
+
   /// The keyboard type to show.
   final TextInputType keyboardType;
 
@@ -37,6 +39,7 @@ class StyledSmartTextField extends SmartFormField<String> {
     String? initialValue,
     this.suggestedValue,
     List<Validation<String>>? validators,
+    this.backgroundColor,
     this.keyboardType: TextInputType.text,
     this.textCapitalization: TextCapitalization.sentences,
     this.obscureText: false,
@@ -65,6 +68,7 @@ class StyledSmartTextField extends SmartFormField<String> {
       hintText: suggestedValue,
       onChanged: (text) => smartFormController.setData(name: name, value: text),
       errorText: error,
+      backgroundColor: backgroundColor,
       obscureText: obscureText,
       maxLength: maxLength,
       maxLines: maxLines,

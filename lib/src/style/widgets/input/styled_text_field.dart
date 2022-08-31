@@ -15,6 +15,7 @@ class StyledTextField extends StyledWidget {
   final String? hintText;
   final String? errorText;
 
+  final Color? backgroundColor;
   final TextInputType? keyboardType;
   final TextCapitalization? textCapitalization;
   final bool obscureText;
@@ -34,6 +35,7 @@ class StyledTextField extends StyledWidget {
     this.initialText,
     this.hintText,
     this.errorText,
+    this.backgroundColor,
     this.keyboardType,
     this.textCapitalization,
     this.obscureText: false,
