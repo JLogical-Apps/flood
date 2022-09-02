@@ -1725,6 +1725,11 @@ class FlatStyle extends Style {
 
   /// Softens colors by making light colors darker and dark colors lighter.
   static Color softenColor(Color color) {
+    final isAlmostWhite = color.computeLuminance() > 0.8;
+    if (isAlmostWhite) {
+      return Colors.white;
+    }
+
     return color.computeLuminance() < 0.5 ? color.lighten() : color.darken(5);
   }
 }
