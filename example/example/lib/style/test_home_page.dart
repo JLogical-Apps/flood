@@ -185,7 +185,7 @@ class TestHomePage extends HookWidget {
                         crossAxisCount: 2,
                         physics: NeverScrollableScrollPhysics(),
                         children: envelopes
-                            .map((envelope) => StyledContent.medium(
+                            .map((envelope) => StyledContent.low(
                                   headerText: envelope['name']!.as<String>(),
                                   bodyText: (envelope['amount']!.as<int>()! / 100).formatCurrency(),
                                   trailing: StyledIcon(

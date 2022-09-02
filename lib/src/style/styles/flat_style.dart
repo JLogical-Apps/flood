@@ -1034,7 +1034,7 @@ class FlatStyle extends Style {
     // Flat Style treats low and medium emphasis contents as the same.
     final backgroundColor = content.backgroundColorOverride ??
         content.emphasis.map<Color>(
-          low: () => styleContext.backgroundColorSoft,
+          low: () => styleContext.backgroundColor,
           medium: () => styleContext.backgroundColorSoft,
           high: () => styleContext.emphasisColor,
         );
@@ -1725,7 +1725,11 @@ class FlatStyle extends Style {
 
   /// Softens colors by making light colors darker and dark colors lighter.
   static Color softenColor(Color color) {
-    final isAlmostWhite = color.computeLuminance() > 0.8;
+    if (color == Colors.white) {
+      return color.darken(5);
+    }
+
+    final isAlmostWhite = color.computeLuminance() > 0.85;
     if (isAlmostWhite) {
       return Colors.white;
     }
