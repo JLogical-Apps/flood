@@ -111,7 +111,7 @@ class TestHomePage extends HookWidget {
               body: ScrollColumn.withScrollbar(
                 children: [
                   SizedBox(
-                    height: 550,
+                    height: 350,
                     child: StyledCalendar(
                       events: [
                         CalendarEvent(date: DateTime.now()),
@@ -185,7 +185,7 @@ class TestHomePage extends HookWidget {
                         crossAxisCount: 2,
                         physics: NeverScrollableScrollPhysics(),
                         children: envelopes
-                            .map((envelope) => StyledContent.medium(
+                            .map((envelope) => StyledContent.low(
                                   headerText: envelope['name']!.as<String>(),
                                   bodyText: (envelope['amount']!.as<int>()! / 100).formatCurrency(),
                                   trailing: StyledIcon(
