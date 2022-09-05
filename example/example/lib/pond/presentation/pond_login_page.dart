@@ -24,12 +24,12 @@ class PondLoginPage extends HookWidget {
                     StyledTab(
                       title: 'Login with Email',
                       icon: Icon(Icons.email),
-                      body: HookBuilder(builder: (context) => _emailLoginBody(context)),
+                      body: HookBuilder(builder: (_) => _emailLoginBody(context)),
                     ),
                     StyledTab(
                       title: 'Login with Phone',
                       icon: Icon(Icons.phone),
-                      body: HookBuilder(builder: (context) => _phoneLoginBody(context)),
+                      body: HookBuilder(builder: (_) => _phoneLoginBody(context)),
                     )
                   ],
                 )));
@@ -238,7 +238,7 @@ class PondLoginPage extends HookWidget {
                       try {
                         userId = await locate<AuthService>().loginWithPhoneNumber(
                           phoneNumber: phone,
-                          smsCodeGetter: () async {
+                          smsCodeGetter: (smsCodeType) async {
                             final smsCodeResult = await StyledDialog.port(
                               context: context,
                               port: Port(
@@ -246,17 +246,18 @@ class PondLoginPage extends HookWidget {
                                   StringPortField(name: 'smsCode').required(),
                                 ],
                               ),
-                              titleText: 'SMS Code Verification',
                               children: [
                                 StyledBodyText(
                                     'A verification text has been sent to $phone. Type in the code you received there.'),
+                                if (smsCodeType == SmsCodeRequestType.retry)
+                                  StyledErrorText('Incorrect code sent. Try again.'),
                                 StyledTextPortField(
                                   name: 'smsCode',
                                   labelText: 'SMS Code',
                                 ),
                               ],
                             ).show(context);
-                            return smsCodeResult['smsCode'];
+                            return smsCodeResult?['smsCode'];
                           },
                         );
 

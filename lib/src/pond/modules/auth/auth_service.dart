@@ -21,7 +21,7 @@ abstract class AuthService extends AppModule {
   /// It should return the verification code the user types in, or null if the user cancelled the verification.
   Future<String> loginWithPhoneNumber({
     required String phoneNumber,
-    required Future<String?> Function() smsCodeGetter,
+    required Future<String?> Function(SmsCodeRequestType requestType) smsCodeGetter,
   });
 
   /// Logs out of the currently logged-in user.
@@ -33,4 +33,12 @@ abstract class AuthService extends AppModule {
   Future<void> onReset(AppContext context) async {
     await logout();
   }
+}
+
+enum SmsCodeRequestType {
+  /// This is the first time the user is typing in their credentials.
+  first,
+
+  /// The user has failed, so this is a retry.
+  retry,
 }
