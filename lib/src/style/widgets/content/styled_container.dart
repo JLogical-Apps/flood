@@ -7,10 +7,13 @@ import '../../style_context.dart';
 
 class StyledContainer extends StyledWidget {
   final Color? color;
-
+  final double? width;
+  final double? height;
   final Widget? child;
-
   final Emphasis emphasis;
+
+  final BorderRadius? borderRadius;
+  final EdgeInsets? padding;
 
   /// Action to perform when this container is tapped.
   final void Function()? onTapped;
@@ -18,30 +21,46 @@ class StyledContainer extends StyledWidget {
   const StyledContainer({
     super.key,
     this.color,
+    this.width,
+    this.height,
     this.child,
     this.emphasis: Emphasis.low,
+    this.borderRadius,
+    this.padding,
     this.onTapped,
   });
 
   const StyledContainer.low({
     super.key,
     this.color,
+    this.width,
+    this.height,
     this.child,
     this.onTapped,
+    this.borderRadius,
+    this.padding,
   }) : emphasis = Emphasis.low;
 
   const StyledContainer.medium({
     super.key,
     this.color,
+    this.width,
+    this.height,
     this.child,
     this.onTapped,
+    this.borderRadius,
+    this.padding,
   }) : emphasis = Emphasis.medium;
 
   const StyledContainer.high({
     super.key,
     this.color,
+    this.width,
+    this.height,
     this.child,
     this.onTapped,
+    this.borderRadius,
+    this.padding,
   }) : emphasis = Emphasis.high;
 
   @override

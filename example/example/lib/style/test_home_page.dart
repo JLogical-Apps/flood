@@ -111,7 +111,7 @@ class TestHomePage extends HookWidget {
               body: ScrollColumn.withScrollbar(
                 children: [
                   SizedBox(
-                    height: 550,
+                    height: 350,
                     child: StyledCalendar(
                       events: [
                         CalendarEvent(date: DateTime.now()),

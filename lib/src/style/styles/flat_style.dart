@@ -1019,11 +1019,22 @@ class FlatStyle extends Style {
 
     return StyleContextProvider(
       styleContext: newStyleContext,
-      child: Material(
-        color: backgroundColor,
-        child: InkWell(
-          onTap: container.onTapped,
-          child: container.child,
+      child: Padding(
+        padding: container.padding ?? EdgeInsets.zero,
+        child: ClipRRect(
+          borderRadius: container.borderRadius,
+          child: Material(
+            color: backgroundColor,
+            child: InkWell(
+              onTap: container.onTapped,
+              borderRadius: container.borderRadius,
+              child: Container(
+                width: container.width,
+                height: container.height,
+                child: container.child,
+              ),
+            ),
+          ),
         ),
       ),
     );
