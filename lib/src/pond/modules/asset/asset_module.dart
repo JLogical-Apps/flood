@@ -23,10 +23,11 @@ class AssetModule extends AppModule {
     return assetProvider.onReset(context);
   }
 
-  Model<Asset?> getAssetModel(String id) {
+  Model<Asset?> getAssetModel(String id, {AssetProvider? assetProvider}) {
+    assetProvider ??= this.assetProvider;
     return _assetCache.putIfAbsent(
       id,
-      () => assetProvider.getModelById(id)..ensureLoadingStarted(),
+      () => assetProvider!.getModelById(id)..ensureLoadingStarted(),
     );
   }
 
