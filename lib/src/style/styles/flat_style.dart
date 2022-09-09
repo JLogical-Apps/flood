@@ -1022,7 +1022,7 @@ class FlatStyle extends Style {
       child: Padding(
         padding: container.padding ?? EdgeInsets.zero,
         child: ClipRRect(
-          borderRadius: container.borderRadius,
+          borderRadius: container.borderRadius ?? BorderRadius.zero,
           child: Material(
             color: backgroundColor,
             child: InkWell(
