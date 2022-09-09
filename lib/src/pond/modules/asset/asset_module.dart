@@ -9,7 +9,7 @@ import 'asset_provider.dart';
 class AssetModule extends AppModule {
   final AssetProvider assetProvider;
 
-  final Cache<String, Model<Asset?>> _assetCache = Cache();
+  final Map<AssetProvider, Cache<String, Model<Asset?>>> _assetCacheByProvider = {};
 
   AssetModule({required this.assetProvider});
 
@@ -25,7 +25,7 @@ class AssetModule extends AppModule {
 
   Model<Asset?> getAssetModel(String id, {AssetProvider? assetProvider}) {
     assetProvider ??= this.assetProvider;
-    return _assetCache.putIfAbsent(
+    return _getAssetCacheFromProvider(assetProvider).putIfAbsent(
       id,
       () => assetProvider!.getModelById(id)..ensureLoadingStarted(),
     );
@@ -33,11 +33,11 @@ class AssetModule extends AppModule {
 
   void saveAssetToCache(Asset asset) {
     final id = asset.id!;
-    _assetCache.putIfAbsent(id, () => assetProvider.getModelById(id)).setLoaded(asset);
+    _getAssetCacheFromProvider(assetProvider).putIfAbsent(id, () => assetProvider.getModelById(id)).setLoaded(asset);
   }
 
   Future<void> deleteAsset(String id) async {
-    _assetCache.get(id)?.setLoaded(null);
+    _getAssetCacheFromProvider(assetProvider).get(id)?.setLoaded(null);
     await assetProvider.getDataSource(id).delete();
   }
 
@@ -55,10 +55,14 @@ class AssetModule extends AppModule {
     final loadedModel = assetProvider.getModelById(id)
       ..hasStartedLoading = true
       ..setLoaded(uploadedAsset);
-    _assetCache.save(id, loadedModel);
+    _getAssetCacheFromProvider(assetProvider).save(id, loadedModel);
 
     await asset.clearCachedFile();
 
     return uploadedAsset;
+  }
+
+  Cache<String, Model<Asset?>> _getAssetCacheFromProvider(AssetProvider assetProvider) {
+    return _assetCacheByProvider.putIfAbsent(assetProvider, () => Cache());
   }
 }
