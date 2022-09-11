@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../persistence/export_core.dart';
+import '../logging/default_logging_module.dart';
 import 'auth_service.dart';
 import 'login_failure.dart';
 import 'signup_failure.dart';
@@ -61,6 +62,39 @@ class LocalAuthService extends AuthService {
     userIdByLogin.removeWhere((loginToken, id) => id == loggedInUserId);
 
     await logout();
+  }
+
+  /// Emulates phone number verification by asking the user to type in the same phone number as the sms code.
+  @override
+  Future<String> loginWithPhoneNumber({
+    required String phoneNumber,
+    required Future<String?> Function(SmsCodeRequestType requestType) smsCodeGetter,
+  }) async {
+    var isSuccessful = false;
+    var smsCodeType = SmsCodeRequestType.first;
+    do {
+      final smsCode = await smsCodeGetter(smsCodeType);
+      if (phoneNumber != smsCode) {
+        throw Exception('Invalid SMS Code! Use the phone number as the SMS code.');
+      }
+
+      try {
+        // Generate a user with fake email and password and login/signup.
+        final userEmail = '$phoneNumber@phone.com';
+        final userPassword = phoneNumber;
+
+        final registeredUsers = userIdByLogin;
+        final alreadyLoggedIn = registeredUsers.entries.any((entry) => entry.key.email == userEmail);
+        if (alreadyLoggedIn) {
+          return await login(email: userEmail, password: userPassword);
+        } else {
+          return await signup(email: userEmail, password: userPassword);
+        }
+      } catch (e) {
+        logError(e);
+        smsCodeType = SmsCodeRequestType.retry;
+      }
+    } while (!isSuccessful);
   }
 }
 

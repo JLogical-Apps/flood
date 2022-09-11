@@ -262,7 +262,7 @@ class TestOnboardingPage extends HookWidget {
                 ),
                 StyledDivider(),
                 StyledCheckbox(
-                  labelText: 'Accept Terms and Conditions',
+                  labelText: 'Accept Terms and Conditions of this wonderful app so that you can enter!',
                   value: checkboxValue.value,
                   onChanged: (value) => checkboxValue.value = value,
                 ),
