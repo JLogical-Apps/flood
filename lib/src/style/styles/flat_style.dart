@@ -788,6 +788,7 @@ class FlatStyle extends Style {
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Checkbox(
               value: checkbox.value,
@@ -806,9 +807,11 @@ class FlatStyle extends Style {
               ),
             ),
             if (label != null)
-              GestureDetector(
-                child: label,
-                onTap: checkbox.onChanged != null ? () => checkbox.onChanged!(!checkbox.value) : null,
+              Flexible(
+                child: GestureDetector(
+                  child: label,
+                  onTap: checkbox.onChanged != null ? () => checkbox.onChanged!(!checkbox.value) : null,
+                ),
               ),
           ],
         ),
@@ -1027,7 +1030,7 @@ class FlatStyle extends Style {
       child: Padding(
         padding: container.padding ?? EdgeInsets.zero,
         child: ClipRRect(
-          borderRadius: container.borderRadius,
+          borderRadius: container.borderRadius ?? BorderRadius.zero,
           child: Material(
             color: backgroundColor,
             child: InkWell(
