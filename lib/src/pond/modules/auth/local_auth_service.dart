@@ -74,8 +74,13 @@ class LocalAuthService extends AuthService {
     var smsCodeType = SmsCodeRequestType.first;
     do {
       final smsCode = await smsCodeGetter(smsCodeType);
-      if (phoneNumber != smsCode) {
-        throw Exception('Invalid SMS Code! Use the phone number as the SMS code.');
+      if (smsCode == null) {
+        throw Exception('SMS Code is empty.');
+      }
+
+      if (smsCode != phoneNumber) {
+        smsCodeType = SmsCodeRequestType.retry;
+        continue;
       }
 
       try {
