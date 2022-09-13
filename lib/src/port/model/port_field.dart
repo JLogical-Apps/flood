@@ -88,6 +88,8 @@ extension StringPortFieldModelExtensions on PortField<String?> {
 
   PortField<String?> isEmail() => withSimpleValidator(Validator.isEmail());
 
+  PortField<String?> isPhoneNumber() => withSimpleValidator(Validator.isPhoneNumber());
+
   PortField<String?> isPassword() => withSimpleValidator(Validator.isPassword());
 
   PortField<String?> isConfirmPassword() => withValidator(IsConfirmPasswordValidator());
