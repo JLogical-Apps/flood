@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils/src/patterns/validation/validators/phone/is_phone_validation_exception.dart';
 
 void main() {
   test('different validation techniques.', () async {
@@ -106,6 +107,25 @@ void main() {
     expect(() => isEmailValidator.validate(empty), throwsA(isA<IsEmailValidationException>()));
     expect(() => isEmailValidator.validate(letters), throwsA(isA<IsEmailValidationException>()));
     expect(() => isEmailValidator.validate(email), returnsNormally);
+  });
+
+  test('phone', () async {
+    const empty = '';
+    const letters = 'abc';
+    const email = 'a@b.com';
+    final validPhoneNumbers = [
+      '+15405600100',
+      '(540) 560-0100',
+      '540-560-0100',
+      '+1-540-560-0100',
+    ];
+
+    final isPhoneValidator = Validator.isPhoneNumber();
+
+    expect(() => isPhoneValidator.validate(empty), throwsA(isA<IsPhoneValidationException>()));
+    expect(() => isPhoneValidator.validate(letters), throwsA(isA<IsPhoneValidationException>()));
+    expect(() => isPhoneValidator.validate(email), throwsA(isA<IsPhoneValidationException>()));
+    validPhoneNumbers.forEach((phone) => expect(() => isPhoneValidator.validate(phone), returnsNormally));
   });
 
   test('password', () async {

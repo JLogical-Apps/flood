@@ -20,6 +20,7 @@ import 'validators/parsing/is_currency_validator.dart';
 import 'validators/parsing/is_double_validator.dart';
 import 'validators/parsing/is_int_validator.dart';
 import 'validators/password/is_password_validator.dart';
+import 'validators/phone/is_phone_validator.dart';
 import 'validators/util/mapped_validator.dart';
 
 /// Validates data [V] with the [onValidate].
@@ -59,6 +60,10 @@ abstract class Validator<V> {
 
   static IsEmailValidator isEmail() {
     return IsEmailValidator();
+  }
+
+  static IsPhoneValidator isPhoneNumber() {
+    return IsPhoneValidator();
   }
 
   static IsPasswordValidator isPassword({int minLength: 6}) {

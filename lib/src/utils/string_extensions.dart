@@ -1,3 +1,5 @@
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
+
 extension StringExtensions on String {
   /// Whether the text is empty or only whitespace.
   bool get isBlank => trim().isEmpty;
@@ -9,6 +11,9 @@ extension StringExtensions on String {
           r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
       .allMatches(this)
       .isNotEmpty;
+
+  bool get isPhoneNumber => PhoneNumber.parse(this, callerCountry: IsoCode.US, destinationCountry: IsoCode.US)
+      .isValid(type: PhoneNumberType.mobile);
 
   /// Returns everything after the first instance of [pattern]. If this doesn't contain [pattern], then returns a blank string.
   String allAfter(Pattern pattern) {
