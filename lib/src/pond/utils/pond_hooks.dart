@@ -22,6 +22,15 @@ EntityController<E> useEntity<E extends Entity>(String id) {
   return useEntityOrNull(id)!;
 }
 
+List<EntityController<E>> useEntities<E extends Entity>(List<String> ids) {
+  final queryControllers = useMemoized(
+    () => ids.map((id) => EntityController<E>(entityId: id)).toList(),
+    ids,
+  );
+  useModels(queryControllers.map((queryController) => queryController.model).toList());
+  return queryControllers;
+}
+
 QueryController<R, T>? useQueryOrNull<R extends Record, T>(
   QueryRequest<R, T>? queryRequest, {
   QueryExecutorX? queryExecutorX,
