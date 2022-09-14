@@ -594,7 +594,7 @@ class FlatStyle extends Style {
         return () => focusNode.removeListener(listener);
       });
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -633,6 +633,7 @@ class FlatStyle extends Style {
                     ? styleContext.backgroundColor
                     : styleContext.backgroundColorSoft,
                 focusColor: styleContext.foregroundColor,
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 18),
                 filled: true,
                 errorText: textField.errorText,
                 border: OutlineInputBorder(
