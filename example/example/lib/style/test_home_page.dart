@@ -211,7 +211,6 @@ class TestHomePage extends HookWidget {
               icon: Icon(Icons.compare_arrows),
               body: ScrollColumn.withScrollbar(
                 children: [
-                  for (var i = 0; i < 10; i++) StyledTextField(labelText: '$i', initialText: 'Textfield $i'),
                   StyledCategory.medium(
                     headerText: 'Transactions',
                     leading: StyledIcon(Icons.compare_arrows),
