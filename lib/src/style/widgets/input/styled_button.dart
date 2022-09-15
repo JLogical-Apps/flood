@@ -29,6 +29,9 @@ class StyledButton extends StyledWidget {
   /// Action to perform when the button is tapped.
   final FutureOr<void> Function()? onTapped;
 
+  /// Whether to show a loading indicator when running an async onTapped.
+  final bool showLoadingIndicator;
+
   final Emphasis emphasis;
 
   const StyledButton({
@@ -40,6 +43,7 @@ class StyledButton extends StyledWidget {
     this.color,
     this.borderRadius,
     required this.onTapped,
+    this.showLoadingIndicator: false,
     required this.emphasis,
   }) : super(key: key);
 
@@ -52,6 +56,7 @@ class StyledButton extends StyledWidget {
     this.color,
     this.borderRadius,
     required this.onTapped,
+    this.showLoadingIndicator: false,
   })  : emphasis = Emphasis.low,
         super(key: key);
 
@@ -64,6 +69,7 @@ class StyledButton extends StyledWidget {
     this.color,
     this.borderRadius,
     required this.onTapped,
+    this.showLoadingIndicator: false,
   })  : emphasis = Emphasis.medium,
         super(key: key);
 
@@ -76,6 +82,7 @@ class StyledButton extends StyledWidget {
     this.color,
     this.borderRadius,
     required this.onTapped,
+    this.showLoadingIndicator: false,
   })  : emphasis = Emphasis.high,
         super(key: key);
 

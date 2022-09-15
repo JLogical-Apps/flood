@@ -415,7 +415,7 @@ class FlatStyle extends Style {
         if (isIconButton) {
           return IconButton(
             icon: _loadingCrossFade(
-              isLoading: isLoading.value,
+              isLoading: button.showLoadingIndicator && isLoading.value,
               child: StyledIcon(
                 button.icon!,
                 colorOverride: button.color ?? styleContext.emphasisColor,
@@ -443,7 +443,7 @@ class FlatStyle extends Style {
               child: leading == null
                   ? ElevatedButton(
                       child: _loadingCrossFade(
-                        isLoading: isLoading.value,
+                        isLoading: button.showLoadingIndicator && isLoading.value,
                         child: child ?? Container(),
                       ),
                       onPressed: onTapped,
@@ -457,7 +457,7 @@ class FlatStyle extends Style {
                   : ElevatedButton.icon(
                       onPressed: onTapped,
                       icon: _loadingCrossFade(
-                        isLoading: isLoading.value,
+                        isLoading: button.showLoadingIndicator && isLoading.value,
                         child: leading,
                       ),
                       label: child ?? Container(),
@@ -484,7 +484,7 @@ class FlatStyle extends Style {
                   ? ElevatedButton(
                       child: _loadingCrossFade(
                         loadingIndicatorColor: newStyleContext.foregroundColor,
-                        isLoading: isLoading.value,
+                        isLoading: button.showLoadingIndicator && isLoading.value,
                         child: child ?? Container(),
                       ),
                       onPressed: onTapped,
@@ -500,7 +500,7 @@ class FlatStyle extends Style {
                       onPressed: onTapped,
                       icon: _loadingCrossFade(
                         loadingIndicatorColor: newStyleContext.foregroundColor,
-                        isLoading: isLoading.value,
+                        isLoading: button.showLoadingIndicator && isLoading.value,
                         child: leading,
                       ),
                       label: child ?? Container(),
@@ -530,7 +530,7 @@ class FlatStyle extends Style {
             return leading == null
                 ? TextButton(
                     child: _loadingCrossFade(
-                      isLoading: isLoading.value,
+                      isLoading: button.showLoadingIndicator && isLoading.value,
                       child: child ?? Container(),
                     ),
                     onPressed: onTapped,
@@ -545,7 +545,7 @@ class FlatStyle extends Style {
                 : TextButton.icon(
                     onPressed: onTapped,
                     icon: _loadingCrossFade(
-                      isLoading: isLoading.value,
+                      isLoading: button.showLoadingIndicator && isLoading.value,
                       child: leading,
                     ),
                     label: child ?? Container(),
