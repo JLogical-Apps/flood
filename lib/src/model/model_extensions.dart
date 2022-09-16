@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'async_loadable.dart';
 import 'combined_latest_model.dart';
+import 'model.dart';
 import 'switch_map_model.dart';
 
 extension IterableModelExtensions<T> on Iterable<AsyncLoadable<T>> {
@@ -18,4 +21,8 @@ extension ModelExtensions<T> on AsyncLoadable<T> {
   SwitchMapModel<T, R> switchMap<R>(AsyncLoadable<R> mapper(T value)) {
     return SwitchMapModel(parent: this, mapper: mapper);
   }
+
+  /// Maps this to an asynchronous value.
+  /// While [mapper] is loading, the mapped Model itself is loading.
+  AsyncLoadable<R> asyncMap<R>(FutureOr<R> mapper(T value)) => switchMap((value) => Model(loader: () => mapper(value)));
 }
