@@ -8,7 +8,7 @@ abstract class Resolver<I, O> {
     return MapResolver(outputByInput: outputByInput);
   }
 
-  static Resolver<Type, O> byType<O>(List<O> objects) {
+  static TypeResolver<O> byType<O>(List<O> objects) {
     return TypeResolver(objects: objects);
   }
 }

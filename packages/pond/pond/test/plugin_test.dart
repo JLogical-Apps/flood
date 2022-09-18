@@ -1,10 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pond/pond.dart';
-import 'package:pond/src/pond/context/pond_plugin.dart';
 
 void main() {
   test('PondContext generates CorePondContext with correct components.', () async {
-    final markerCorePondComponent = CorePondComponent();
+    final markerCorePondComponent = TestCorePondComponent();
 
     final emptyPondContext = PondContext();
     final emptyCorePondContext = emptyPondContext.corePondContext;
@@ -15,3 +14,5 @@ void main() {
     expect(corePondContext.components, contains(markerCorePondComponent));
   });
 }
+
+class TestCorePondComponent extends CorePondComponent {}
