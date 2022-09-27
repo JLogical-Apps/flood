@@ -4,7 +4,7 @@ import '../input/action_item.dart';
 
 /// Not a widget. Used to store information for [StyledTabbedPage].
 class StyledTab {
-  final String title;
+  final String? title;
   final Widget body;
 
   final Widget? icon;
@@ -13,7 +13,7 @@ class StyledTab {
   final List<ActionItem>? actions;
 
   const StyledTab({
-    required this.title,
+    this.title,
     required this.body,
     this.icon,
     this.backgroundColor,

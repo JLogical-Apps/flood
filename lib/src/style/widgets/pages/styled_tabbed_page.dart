@@ -22,12 +22,18 @@ class StyledTabbedPage extends StyledWidget {
   /// Overrides the currently selected tab's actions.
   final List<ActionItem>? actions;
 
+  /// Whether to hide the header.
+  /// This is overridden if either the StyledTabbedPage or StyledTabs have [actions]
+  /// to be displayed.
+  final bool hideHeader;
+
   const StyledTabbedPage({
     required this.pages,
     this.title,
     this.backgroundColor,
     this.tabsColor,
     this.actions,
+    this.hideHeader: false,
   });
 
   @override

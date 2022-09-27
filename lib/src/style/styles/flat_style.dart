@@ -190,16 +190,18 @@ class FlatStyle extends Style {
 
       return Scaffold(
         backgroundColor: backgroundColor,
-        appBar: _styledAppBar(
-          context,
-          title: StyledContentHeaderText(
-            title,
-            textOverrides: StyledTextOverrides(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          actions: actions,
-        ),
+        appBar: actions.isEmpty && tabbedPage.hideHeader
+            ? null
+            : _styledAppBar(
+                context,
+                title: title.mapIfNonNull((title) => StyledContentHeaderText(
+                      title,
+                      textOverrides: StyledTextOverrides(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                actions: actions,
+              ),
         body: PageView(
           controller: pageController,
           scrollBehavior: CupertinoScrollBehavior(),
@@ -219,7 +221,7 @@ class FlatStyle extends Style {
               .map((page) => BottomNavigationBarItem(
                     icon: page.icon ?? Container(),
                     backgroundColor: tabColor,
-                    label: page.title,
+                    label: page.title ?? '',
                   ))
               .toList(),
           selectedLabelStyle: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)),
