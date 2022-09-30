@@ -13,7 +13,10 @@ import '../directory/directory_bundle.dart';
 import '../metadata/context_metadata.dart';
 
 Future<void> buildBaseAppContext(AppContext context) async {
-  context.contextMetadata = ContextMetadata(buildType: kReleaseMode ? BuildType.release : BuildType.debug);
+  context.contextMetadata = ContextMetadata(
+    buildType: kReleaseMode ? BuildType.release : BuildType.debug,
+    buildTarget: kIsWeb ? BuildTarget.web : BuildTarget.mobile,
+  );
   context.register(CoreModule());
 
   final isWeb = kIsWeb;

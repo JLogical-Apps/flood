@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart';
-import 'package:jlogical_utils/src/pond/export.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:mime/mime.dart';
 
+import '../../context/app_context.dart';
 import 'asset_metadata.dart';
 
 class Asset {
@@ -49,7 +48,7 @@ class Asset {
   }
 
   Future<File?> cacheToFile() async {
-    if (kIsWeb) {
+    if (AppContext.global.contextMetadata.isWeb) {
       return null;
     }
 
@@ -59,7 +58,7 @@ class Asset {
   }
 
   Future<File?> ensureCachedToFile() async {
-    if (kIsWeb) {
+    if (AppContext.global.contextMetadata.isWeb) {
       return null;
     }
 
@@ -72,7 +71,7 @@ class Asset {
   }
 
   Future<void> clearCachedFile() async {
-    if (kIsWeb) {
+    if (AppContext.global.contextMetadata.isWeb) {
       return;
     }
 
