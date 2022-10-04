@@ -190,16 +190,18 @@ class FlatStyle extends Style {
 
       return Scaffold(
         backgroundColor: backgroundColor,
-        appBar: _styledAppBar(
-          context,
-          title: StyledContentHeaderText(
-            title,
-            textOverrides: StyledTextOverrides(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          actions: actions,
-        ),
+        appBar: actions.isEmpty && tabbedPage.hideHeader
+            ? null
+            : _styledAppBar(
+                context,
+                title: title.mapIfNonNull((title) => StyledContentHeaderText(
+                      title,
+                      textOverrides: StyledTextOverrides(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                actions: actions,
+              ),
         body: PageView(
           controller: pageController,
           scrollBehavior: CupertinoScrollBehavior(),
@@ -219,7 +221,7 @@ class FlatStyle extends Style {
               .map((page) => BottomNavigationBarItem(
                     icon: page.icon ?? Container(),
                     backgroundColor: tabColor,
-                    label: page.title,
+                    label: page.title ?? '',
                   ))
               .toList(),
           selectedLabelStyle: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)),
@@ -415,7 +417,7 @@ class FlatStyle extends Style {
         if (isIconButton) {
           return IconButton(
             icon: _loadingCrossFade(
-              isLoading: isLoading.value,
+              isLoading: button.showLoadingIndicator && isLoading.value,
               child: StyledIcon(
                 button.icon!,
                 colorOverride: button.color ?? styleContext.emphasisColor,
@@ -443,7 +445,7 @@ class FlatStyle extends Style {
               child: leading == null
                   ? ElevatedButton(
                       child: _loadingCrossFade(
-                        isLoading: isLoading.value,
+                        isLoading: button.showLoadingIndicator && isLoading.value,
                         child: child ?? Container(),
                       ),
                       onPressed: onTapped,
@@ -457,7 +459,7 @@ class FlatStyle extends Style {
                   : ElevatedButton.icon(
                       onPressed: onTapped,
                       icon: _loadingCrossFade(
-                        isLoading: isLoading.value,
+                        isLoading: button.showLoadingIndicator && isLoading.value,
                         child: leading,
                       ),
                       label: child ?? Container(),
@@ -484,7 +486,7 @@ class FlatStyle extends Style {
                   ? ElevatedButton(
                       child: _loadingCrossFade(
                         loadingIndicatorColor: newStyleContext.foregroundColor,
-                        isLoading: isLoading.value,
+                        isLoading: button.showLoadingIndicator && isLoading.value,
                         child: child ?? Container(),
                       ),
                       onPressed: onTapped,
@@ -500,7 +502,7 @@ class FlatStyle extends Style {
                       onPressed: onTapped,
                       icon: _loadingCrossFade(
                         loadingIndicatorColor: newStyleContext.foregroundColor,
-                        isLoading: isLoading.value,
+                        isLoading: button.showLoadingIndicator && isLoading.value,
                         child: leading,
                       ),
                       label: child ?? Container(),
@@ -530,7 +532,7 @@ class FlatStyle extends Style {
             return leading == null
                 ? TextButton(
                     child: _loadingCrossFade(
-                      isLoading: isLoading.value,
+                      isLoading: button.showLoadingIndicator && isLoading.value,
                       child: child ?? Container(),
                     ),
                     onPressed: onTapped,
@@ -545,7 +547,7 @@ class FlatStyle extends Style {
                 : TextButton.icon(
                     onPressed: onTapped,
                     icon: _loadingCrossFade(
-                      isLoading: isLoading.value,
+                      isLoading: button.showLoadingIndicator && isLoading.value,
                       child: leading,
                     ),
                     label: child ?? Container(),
@@ -594,7 +596,7 @@ class FlatStyle extends Style {
         return () => focusNode.removeListener(listener);
       });
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -633,6 +635,7 @@ class FlatStyle extends Style {
                     ? styleContext.backgroundColor
                     : styleContext.backgroundColorSoft,
                 focusColor: styleContext.foregroundColor,
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 18),
                 filled: true,
                 errorText: textField.errorText,
                 border: OutlineInputBorder(

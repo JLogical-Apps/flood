@@ -5,6 +5,6 @@ import '../../modules/core_module.dart';
 import '../app_context.dart';
 
 Future<void> buildBaseAppContext(AppContext context) async {
-  context.contextMetadata = ContextMetadata(buildType: BuildType.debug);
+  context.contextMetadata = ContextMetadata(buildType: BuildType.debug, buildTarget: BuildTarget.standalone);
   context.register(CoreModule());
 }

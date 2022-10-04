@@ -44,5 +44,7 @@ export 'repository/adapting/default_abstract_adapting_repository.dart';
 export 'repository/adapting/default_adapting_repository.dart';
 export 'repository/firestore/default_abstract_firestore_repository.dart';
 export 'repository/firestore/default_firestore_repository.dart';
+export 'utils/entity_controller.dart';
 export 'utils/pond_hooks.dart';
+export 'utils/query_controller.dart';
 export 'utils/splash_page.dart';
