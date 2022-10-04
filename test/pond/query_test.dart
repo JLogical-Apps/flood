@@ -328,6 +328,14 @@ void main() {
       throwsA(isA<Exception>()),
     );
   });
+
+  test('where not equal to', () async {
+    final nonEmptyEnvelopeEntities =
+        await Query.from<EnvelopeEntity>().where(Envelope.amountField, isNotEqualTo: 0).all().get();
+    final nonEmptyEnvelopes = nonEmptyEnvelopeEntities.map((e) => e.value).toList();
+
+    expect(nonEmptyEnvelopes, envelopes.where((e) => e.amountProperty.value != 0).toList());
+  });
 }
 
 Future<List<Envelope>> _getEnvelopesFromQuery(Query<EnvelopeEntity> query) async {

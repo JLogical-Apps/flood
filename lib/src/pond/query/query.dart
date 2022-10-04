@@ -20,6 +20,7 @@ import 'predicate/greater_than_or_equal_to_query_predicate.dart';
 import 'predicate/greater_than_query_predicate.dart';
 import 'predicate/less_than_or_equal_to_query_predicate.dart';
 import 'predicate/less_than_query_predicate.dart';
+import 'predicate/not_equals_query_predicate.dart';
 
 @marker
 abstract class Query<R extends Record> extends Equatable {
@@ -53,6 +54,7 @@ abstract class Query<R extends Record> extends Equatable {
   Query<R> where(
     String stateField, {
     dynamic isEqualTo,
+    dynamic isNotEqualTo,
     dynamic contains,
     dynamic isGreaterThan,
     dynamic isGreaterThanOrEqualTo,
@@ -63,6 +65,13 @@ abstract class Query<R extends Record> extends Equatable {
     if (isEqualTo != null) {
       return WhereQuery(
         queryPredicate: EqualsQueryPredicate(stateField: stateField, isEqualTo: isEqualTo),
+        parent: this,
+      );
+    }
+
+    if (isNotEqualTo != null) {
+      return WhereQuery(
+        queryPredicate: NotEqualsQueryPredicate(stateField: stateField, isNotEqualTo: isNotEqualTo),
         parent: this,
       );
     }
