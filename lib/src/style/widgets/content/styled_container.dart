@@ -13,6 +13,7 @@ class StyledContainer extends StyledWidget {
   final Emphasis emphasis;
 
   final BorderRadius? borderRadius;
+  final BoxConstraints? constraints;
   final EdgeInsets? padding;
 
   /// Action to perform when this container is tapped.
@@ -26,6 +27,7 @@ class StyledContainer extends StyledWidget {
     this.child,
     this.emphasis: Emphasis.low,
     this.borderRadius,
+    this.constraints,
     this.padding,
     this.onTapped,
   });
@@ -38,6 +40,7 @@ class StyledContainer extends StyledWidget {
     this.child,
     this.onTapped,
     this.borderRadius,
+    this.constraints,
     this.padding,
   }) : emphasis = Emphasis.low;
 
@@ -49,6 +52,7 @@ class StyledContainer extends StyledWidget {
     this.child,
     this.onTapped,
     this.borderRadius,
+    this.constraints,
     this.padding,
   }) : emphasis = Emphasis.medium;
 
@@ -60,6 +64,7 @@ class StyledContainer extends StyledWidget {
     this.child,
     this.onTapped,
     this.borderRadius,
+    this.constraints,
     this.padding,
   }) : emphasis = Emphasis.high;
 

@@ -1050,6 +1050,7 @@ class FlatStyle extends Style {
                 width: container.width,
                 height: container.height,
                 child: container.child,
+                constraints: container.constraints,
               ),
             ),
           ),
