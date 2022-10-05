@@ -415,15 +415,22 @@ class FlatStyle extends Style {
 
         final isIconButton = button.text == null && button.icon != null;
         if (isIconButton) {
-          return IconButton(
-            icon: _loadingCrossFade(
-              isLoading: button.showLoadingIndicator && isLoading.value,
-              child: StyledIcon(
-                button.icon!,
-                colorOverride: button.color ?? styleContext.emphasisColor,
+          final foregroundColor = button.color ?? styleContext.emphasisColor;
+          return ClipOval(
+            child: Material(
+              color: Colors.transparent,
+              child: IconButton(
+                icon: _loadingCrossFade(
+                  isLoading: button.showLoadingIndicator && isLoading.value,
+                  child: StyledIcon(
+                    button.icon!,
+                    colorOverride: foregroundColor,
+                  ),
+                ),
+                splashColor: foregroundColor.withOpacity(0.4),
+                onPressed: onTapped,
               ),
             ),
-            onPressed: onTapped,
           );
         }
 

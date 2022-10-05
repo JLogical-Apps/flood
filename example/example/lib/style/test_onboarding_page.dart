@@ -120,6 +120,11 @@ class TestOnboardingPage extends HookWidget {
                   icon: Icons.exit_to_app,
                   onTapped: () {},
                 ),
+                StyledButton.low(
+                  icon: Icons.save,
+                  color: Colors.orange,
+                  onTapped: () {},
+                ),
               ],
             ),
           ),

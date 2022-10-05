@@ -6,7 +6,7 @@ PODS:
     - HLSCachingReverseProxyServer
     - PINCache
   - Cache (6.0.0)
-  - cloud_firestore (3.4.7):
+  - cloud_firestore (3.4.9):
     - Firebase/Firestore (= 9.5.0)
     - firebase_core
     - Flutter
@@ -26,18 +26,18 @@ PODS:
   - Firebase/Storage (9.5.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 9.5.0)
-  - firebase_analytics (9.3.4):
+  - firebase_analytics (9.3.6):
     - Firebase/Analytics (= 9.5.0)
     - firebase_core
     - Flutter
-  - firebase_auth (3.8.0):
+  - firebase_auth (3.10.0):
     - Firebase/Auth (= 9.5.0)
     - firebase_core
     - Flutter
-  - firebase_core (1.22.0):
+  - firebase_core (1.23.0):
     - Firebase/CoreOnly (= 9.5.0)
     - Flutter
-  - firebase_storage (10.3.8):
+  - firebase_storage (10.3.9):
     - Firebase/Storage (= 9.5.0)
     - firebase_core
     - Flutter
@@ -281,12 +281,12 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   better_player: 2406bfe8175203c7a46fa15f9d778d73b12e1646
   Cache: 4ca7e00363fca5455f26534e5607634c820ffc2d
-  cloud_firestore: 3ad8404fab1f789de8bfbb856bab238986cdfcef
+  cloud_firestore: bed9432d72bb357aa33e864fd4d5b7c2f0e098d0
   Firebase: 800f16f07af493d98d017446a315c27af0552f41
-  firebase_analytics: 350f8b25c613a64e64b90d1207f41cb7c529a62c
-  firebase_auth: 1d54a31ac7ff6585fe50fd26f679e934e1a471a1
-  firebase_core: 31872a49ffe0bf6f834e7044c7334e433536735a
-  firebase_storage: e81dc988f10c31c4ec1b1c79719ad679795b531d
+  firebase_analytics: 2ba886ecb9ded97cfe24f1765e1aa22075894709
+  firebase_auth: 29485cbf2b2c5f0710f7c5dc3fa490736d70a675
+  firebase_core: c266297725f66cacd7eac30745cd1a629d3b048b
+  firebase_storage: 70c6c4d5f239037d49fc1eb5ee4c5087a194a308
   FirebaseAnalytics: 1b60984a408320dda637306f3f733699ef8473d7
   FirebaseAppCheckInterop: d5ecda0c09f8069406643d6e0fa12c09d1b736e3
   FirebaseAuth: 741918f1fa62ed23246a509279f91d42d79a713f
