@@ -1408,11 +1408,12 @@ class FlatStyle extends Style {
 
   @override
   Widget divider(BuildContext context, StyleContext styleContext, StyledDivider divider) {
-    final color = divider.emphasis.map(
-      high: () => styleContext.emphasisColor.withOpacity(0.8),
-      medium: () => styleContext.foregroundColor.withOpacity(0.7),
-      low: () => styleContext.backgroundColorSoft.withOpacity(0.4),
-    );
+    final color = divider.colorOverride ??
+        divider.emphasis.map(
+          high: () => styleContext.emphasisColor.withOpacity(0.8),
+          medium: () => styleContext.foregroundColor.withOpacity(0.7),
+          low: () => styleContext.backgroundColorSoft.withOpacity(0.4),
+        );
     return Divider(
       color: color,
       thickness: divider.thickness,
