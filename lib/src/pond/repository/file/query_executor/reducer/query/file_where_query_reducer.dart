@@ -12,12 +12,14 @@ import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/p
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
 import '../../../../../../patterns/export_core.dart';
+import '../predicate/file_not_equals_query_predicate_reducer.dart';
 
 class FileWhereQueryReducer extends AbstractQueryReducer<WhereQuery, Iterable<State>>
     with WithWrapperResolver<AbstractQueryPredicate, AbstractQueryPredicateReducer>
     implements Resolver<AbstractQueryPredicate, AbstractQueryPredicateReducer> {
   late List<AbstractQueryPredicateReducer> wrappers = [
     FileEqualsQueryPredicateReducer(),
+    FileNotEqualsQueryPredicateReducer(),
     FileContainsQueryPredicateReducer(),
     FileGreaterThanQueryPredicateReducer(),
     FileGreaterThanOrEqualToQueryPredicateReducer(),

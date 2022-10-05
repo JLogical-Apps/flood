@@ -10,6 +10,7 @@ import 'package:jlogical_utils/src/pond/repository/firestore/query_executor/redu
 import 'package:jlogical_utils/src/pond/repository/firestore/query_executor/reducer/predicate/firestore_greater_than_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/firestore/query_executor/reducer/predicate/firestore_less_than_or_equal_to_query_predicate_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/firestore/query_executor/reducer/predicate/firestore_less_than_query_predicate_reducer.dart';
+import 'package:jlogical_utils/src/pond/repository/firestore/query_executor/reducer/predicate/firestore_not_equals_query_predicate_reducer.dart';
 
 import '../../../../../../patterns/export_core.dart';
 
@@ -18,6 +19,7 @@ class FirestoreWhereQueryReducer extends AbstractQueryReducer<WhereQuery, firest
     implements Resolver<AbstractQueryPredicate, AbstractQueryPredicateReducer<dynamic, firestore.Query>> {
   late List<AbstractQueryPredicateReducer<dynamic, firestore.Query>> wrappers = [
     FirestoreEqualsQueryPredicateReducer(),
+    FirestoreNotEqualsQueryPredicateReducer(),
     FirestoreContainsQueryPredicateReducer(),
     FirestoreGreaterThanQueryPredicateReducer(),
     FirestoreGreaterThanOrEqualToQueryPredicateReducer(),

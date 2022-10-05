@@ -12,12 +12,14 @@ import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
 import '../../../../../../patterns/export_core.dart';
+import '../predicate/local_not_equals_query_predicate_reducer.dart';
 
 class LocalWhereQueryReducer extends AbstractSyncQueryReducer<WhereQuery, Iterable<State>>
     with WithWrapperResolver<AbstractQueryPredicate, AbstractQueryPredicateReducer>
     implements Resolver<AbstractQueryPredicate, AbstractQueryPredicateReducer> {
   late List<AbstractQueryPredicateReducer> wrappers = [
     LocalEqualsQueryPredicateReducer(),
+    LocalNotEqualsQueryPredicateReducer(),
     LocalContainsQueryPredicateReducer(),
     LocalGreaterThanQueryPredicateReducer(),
     LocalGreaterThanOrEqualToQueryPredicateReducer(),
