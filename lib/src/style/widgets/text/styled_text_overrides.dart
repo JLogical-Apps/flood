@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 /// Contains overrides for [StyledText]s. If a value is null, then the value isn't overridden.
@@ -13,6 +15,7 @@ class StyledTextOverrides {
   final TextDecoration? textDecoration;
   final int? maxLines;
   final EdgeInsets? padding;
+  final List<FontFeature>? fontFeatures;
 
   const StyledTextOverrides({
     this.fontColor,
@@ -26,5 +29,6 @@ class StyledTextOverrides {
     this.textDecoration,
     this.maxLines,
     this.padding,
+    this.fontFeatures,
   });
 }

@@ -360,6 +360,7 @@ class FlatStyle extends Style {
           fontStyle: text.fontStyleOverride ?? textStyle.fontStyle,
           letterSpacing: text.letterSpacingOverride ?? textStyle.letterSpacing,
           decoration: text.decorationOverride ?? TextDecoration.none,
+          fontFeatures: text.fontFeaturesOverride,
         ),
         overflow: text.overflowOverride ?? TextOverflow.clip,
         maxLines: text.maxLinesOverride,
@@ -393,6 +394,7 @@ class FlatStyle extends Style {
       fontWeight: overrides?.fontWeight ?? styledTextStyle.fontWeight,
       fontStyle: overrides?.fontStyle ?? styledTextStyle.fontStyle,
       letterSpacing: overrides?.letterSpacing ?? styledTextStyle.letterSpacing,
+      fontFeatures: overrides?.fontFeatures ?? styledTextStyle.fontFeatures,
     );
   }
 

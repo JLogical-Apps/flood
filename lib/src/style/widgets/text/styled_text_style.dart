@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class StyledTextStyle {
@@ -9,6 +11,7 @@ class StyledTextStyle {
   final double letterSpacing;
   final TextAlign textAlign;
   final EdgeInsets padding;
+  final List<FontFeature> fontFeatures;
   final String Function(String original)? transformer;
 
   StyledTextStyle({
@@ -20,6 +23,7 @@ class StyledTextStyle {
     this.letterSpacing: 0,
     this.textAlign: TextAlign.left,
     this.padding: const EdgeInsets.all(4),
+    this.fontFeatures: const [],
     this.transformer,
   });
 
@@ -31,6 +35,7 @@ class StyledTextStyle {
     FontStyle? fontStyle,
     double? letterSpacing,
     TextAlign? textAlign,
+    List<FontFeature>? fontFeatures,
     EdgeInsets? padding,
   }) {
     return StyledTextStyle(
@@ -41,6 +46,7 @@ class StyledTextStyle {
       fontStyle: fontStyle ?? this.fontStyle,
       letterSpacing: letterSpacing ?? this.letterSpacing,
       textAlign: textAlign ?? this.textAlign,
+      fontFeatures: fontFeatures ?? this.fontFeatures,
       padding: padding ?? this.padding,
       transformer: transformer,
     );
