@@ -298,7 +298,15 @@ class BudgetCard extends HookWidget {
               description: 'Share this budget.',
               icon: Icons.ios_share,
               color: Colors.blue,
-              onPerform: () {},
+              onPerform: () async {
+                await locate<PushNotificationsModule>().sendNotification(
+                  to: 'me',
+                  notification: PushNotification(
+                    title: 'Test!',
+                    body: 'Testing',
+                  ),
+                );
+              },
             ),
             ActionItem(
               name: 'Delete',

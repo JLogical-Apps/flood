@@ -151,6 +151,9 @@ class HomePage extends StatelessWidget {
           await userEntity.save();
         },
       ))
+      ..register(PushNotificationsModule(onDeviceTokenGenerated: (token) {
+        print('token generated: $token');
+      }))
       ..register(SyncingModule(isDisabled: kIsWeb || AppContext.global.environment.index < Environment.qa.index)
         ..registerQueryDownload(() async =>
             (await _getLoggedInUserId()).mapIfNonNull((loggedInUserId) => Query.getById<UserEntity>(loggedInUserId)))

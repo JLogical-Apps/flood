@@ -28,6 +28,8 @@ export 'modules/environment/environment_module.dart';
 export 'modules/environment/simple_adapting_module.dart';
 export 'modules/firebase/firebase_module.dart';
 export 'modules/logging/default_logging_module.dart';
+export 'modules/push_notifications/push_notification.dart';
+export 'modules/push_notifications/push_notifications_module.dart';
 export 'modules/syncing/assets/asset_sync_download_action.dart';
 export 'modules/syncing/assets/publish_actions/asset_delete_sync_publish_action.dart';
 export 'modules/syncing/assets/publish_actions/asset_delete_sync_publish_action_entity.dart';
