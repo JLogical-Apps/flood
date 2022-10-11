@@ -360,6 +360,7 @@ class FlatStyle extends Style {
           fontStyle: text.fontStyleOverride ?? textStyle.fontStyle,
           letterSpacing: text.letterSpacingOverride ?? textStyle.letterSpacing,
           decoration: text.decorationOverride ?? TextDecoration.none,
+          fontFeatures: text.fontFeaturesOverride,
         ),
         overflow: text.overflowOverride ?? TextOverflow.clip,
         maxLines: text.maxLinesOverride,
@@ -393,6 +394,7 @@ class FlatStyle extends Style {
       fontWeight: overrides?.fontWeight ?? styledTextStyle.fontWeight,
       fontStyle: overrides?.fontStyle ?? styledTextStyle.fontStyle,
       letterSpacing: overrides?.letterSpacing ?? styledTextStyle.letterSpacing,
+      fontFeatures: overrides?.fontFeatures ?? styledTextStyle.fontFeatures,
     );
   }
 
@@ -415,15 +417,22 @@ class FlatStyle extends Style {
 
         final isIconButton = button.text == null && button.icon != null;
         if (isIconButton) {
-          return IconButton(
-            icon: _loadingCrossFade(
-              isLoading: button.showLoadingIndicator && isLoading.value,
-              child: StyledIcon(
-                button.icon!,
-                colorOverride: button.color ?? styleContext.emphasisColor,
+          final foregroundColor = button.color ?? styleContext.emphasisColor;
+          return ClipOval(
+            child: Material(
+              color: Colors.transparent,
+              child: IconButton(
+                icon: _loadingCrossFade(
+                  isLoading: button.showLoadingIndicator && isLoading.value,
+                  child: StyledIcon(
+                    button.icon!,
+                    colorOverride: foregroundColor,
+                  ),
+                ),
+                splashColor: foregroundColor.withOpacity(0.4),
+                onPressed: onTapped,
               ),
             ),
-            onPressed: onTapped,
           );
         }
 
@@ -1043,6 +1052,7 @@ class FlatStyle extends Style {
                 width: container.width,
                 height: container.height,
                 child: container.child,
+                constraints: container.constraints,
               ),
             ),
           ),
@@ -1401,11 +1411,12 @@ class FlatStyle extends Style {
 
   @override
   Widget divider(BuildContext context, StyleContext styleContext, StyledDivider divider) {
-    final color = divider.emphasis.map(
-      high: () => styleContext.emphasisColor.withOpacity(0.8),
-      medium: () => styleContext.foregroundColor.withOpacity(0.7),
-      low: () => styleContext.backgroundColorSoft.withOpacity(0.4),
-    );
+    final color = divider.colorOverride ??
+        divider.emphasis.map(
+          high: () => styleContext.emphasisColor.withOpacity(0.8),
+          medium: () => styleContext.foregroundColor.withOpacity(0.7),
+          low: () => styleContext.backgroundColorSoft.withOpacity(0.4),
+        );
     return Divider(
       color: color,
       thickness: divider.thickness,

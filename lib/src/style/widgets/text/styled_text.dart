@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/src/style/style_context.dart';
 import 'package:jlogical_utils/src/style/widgets/text/styled_text_overrides.dart';
@@ -45,4 +47,6 @@ abstract class StyledText extends StyledWidget {
   int? get maxLinesOverride => overrides?.maxLines;
 
   EdgeInsets? get paddingOverride => overrides?.padding;
+
+  List<FontFeature>? get fontFeaturesOverride => overrides?.fontFeatures;
 }

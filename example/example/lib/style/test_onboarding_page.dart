@@ -120,6 +120,11 @@ class TestOnboardingPage extends HookWidget {
                   icon: Icons.exit_to_app,
                   onTapped: () {},
                 ),
+                StyledButton.low(
+                  icon: Icons.save,
+                  color: Colors.orange,
+                  onTapped: () {},
+                ),
               ],
             ),
           ),
@@ -386,12 +391,9 @@ class TestOnboardingPage extends HookWidget {
                 ),
                 StyledContainer(
                   color: Colors.green,
-                  child: SizedBox(
-                    width: 200,
-                    height: 100,
-                    child: Center(
-                      child: StyledBodyText('Custom container'),
-                    ),
+                  constraints: BoxConstraints.tight(Size(200, 100)),
+                  child: Center(
+                    child: StyledBodyText('Custom container'),
                   ),
                   onTapped: () {
                     print('hey');
