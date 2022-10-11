@@ -21,6 +21,7 @@ class StyledDateField extends StyledWidget {
   final void Function(DateTime value)? onChanged;
 
   StyledDateField({
+    super.key,
     this.label,
     this.labelText,
     this.leading,

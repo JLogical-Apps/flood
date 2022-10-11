@@ -22,6 +22,7 @@ class StyledRadio<T> extends StyledWidget {
   final void Function(T value)? onChanged;
 
   StyledRadio({
+    super.key,
     this.labelText,
     this.label,
     required this.groupValue,

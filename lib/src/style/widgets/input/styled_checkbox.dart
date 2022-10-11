@@ -19,6 +19,7 @@ class StyledCheckbox extends StyledWidget {
   bool get hasError => errorText != null;
 
   StyledCheckbox({
+    super.key,
     this.labelText,
     this.label,
     required this.value,

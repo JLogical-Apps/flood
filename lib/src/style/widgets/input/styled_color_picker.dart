@@ -23,6 +23,7 @@ class StyledColorPicker extends StyledWidget {
   final void Function(Color? value)? onChanged;
 
   StyledColorPicker({
+    super.key,
     this.label,
     this.labelText,
     this.trailing,

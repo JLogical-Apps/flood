@@ -142,7 +142,8 @@ class PondBudgetPage extends HookWidget {
 
                                 () async {
                                   await Future.delayed(Duration(seconds: 2));
-                                  port.setFallback('name', 'Envelope');
+                                  // port.setFallback('name', 'Envelope');
+                                  port['name'] = 'Envelope';
                                 }();
 
                                 final data = await StyledDialog.port(

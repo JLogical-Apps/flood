@@ -29,6 +29,7 @@ class StyledDropdown<T> extends StyledWidget {
   final void Function(T? value)? onChanged;
 
   StyledDropdown({
+    super.key,
     this.labelText,
     this.label,
     this.value,

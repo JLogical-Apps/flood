@@ -604,6 +604,10 @@ class FlatStyle extends Style {
         focusNode.addListener(listener);
         return () => focusNode.removeListener(listener);
       });
+      final textController = useTextEditingController();
+      if (textController.text != textField.initialText) {
+        textController.text = textField.initialText ?? '';
+      }
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: Column(
@@ -612,8 +616,8 @@ class FlatStyle extends Style {
           children: [
             if (label != null) label,
             TextFormField(
+              controller: textController,
               focusNode: focusNode,
-              initialValue: textField.initialText,
               style: toTextStyle(styledTextStyle: bodyTextStyle(styleContext)).copyWith(
                 color: styleContext.foregroundColor,
               ),
