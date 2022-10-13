@@ -1283,7 +1283,7 @@ class FlatStyle extends Style {
   Widget icon(BuildContext context, StyleContext styleContext, StyledIcon icon) {
     final color = icon.colorOverride ??
         icon.emphasis.map(
-          high: () => styleContext.emphasisColor,
+          high: () => icon.emphasisColorOverride ?? styleContext.emphasisColor,
           medium: () => styleContext.foregroundColor,
           low: () => styleContext.backgroundColorSoft,
         );

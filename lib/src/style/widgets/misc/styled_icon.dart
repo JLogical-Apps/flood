@@ -14,6 +14,9 @@ class StyledIcon extends StyledWidget {
   /// If not null, overrides the color of the icon.
   final Color? colorOverride;
 
+  /// If not null, overrides the emphasis color of the icon.
+  final Color? emphasisColorOverride;
+
   /// If not null, overrides the padding of the icon.
   final EdgeInsets? paddingOverride;
 
@@ -24,6 +27,7 @@ class StyledIcon extends StyledWidget {
     Key? key,
     this.size,
     this.colorOverride,
+    this.emphasisColorOverride,
     this.paddingOverride,
     this.emphasis: Emphasis.medium,
   }) : super(key: key);
@@ -33,6 +37,7 @@ class StyledIcon extends StyledWidget {
     Key? key,
     this.size,
     this.colorOverride,
+    this.emphasisColorOverride,
     this.paddingOverride,
   })  : emphasis = Emphasis.low,
         super(key: key);
@@ -42,6 +47,7 @@ class StyledIcon extends StyledWidget {
     Key? key,
     this.size,
     this.colorOverride,
+    this.emphasisColorOverride,
     this.paddingOverride,
   })  : emphasis = Emphasis.medium,
         super(key: key);
@@ -51,6 +57,7 @@ class StyledIcon extends StyledWidget {
     Key? key,
     this.size,
     this.colorOverride,
+    this.emphasisColorOverride,
     this.paddingOverride,
   })  : emphasis = Emphasis.high,
         super(key: key);
