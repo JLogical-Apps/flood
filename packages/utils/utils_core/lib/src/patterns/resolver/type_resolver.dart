@@ -11,23 +11,3 @@ class TypeResolver<O> implements Resolver<Type, O> {
     return objects.firstWhereOrNull((object) => object.runtimeType == input);
   }
 }
-
-mixin WithTypedResolver<O> {
-  TypeResolver<O> get typeResolver;
-
-  O? resolveOrNullRuntime(Type type) {
-    return typeResolver.resolveOrNull(type);
-  }
-
-  O? resolveOrNull<T>() {
-    return resolveOrNullRuntime(T);
-  }
-
-  O resolveRuntime(Type type) {
-    return resolveOrNullRuntime(type) ?? (throw Exception('Cannot resolve [$type]'));
-  }
-
-  O resolve<T>() {
-    return resolveRuntime(T);
-  }
-}

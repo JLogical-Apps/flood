@@ -1,12 +1,11 @@
 import 'package:utils_core/src/patterns/resolver/resolver.dart';
 import 'package:utils_core/src/patterns/resolver/type_resolver.dart';
 
-class Locator<O> with WithTypedResolver<O> {
+class Locator<O> {
   final List<O> registeredObjects;
 
   Locator({List<O>? objects}) : registeredObjects = objects ?? [];
 
-  @override
   late TypeResolver<O> typeResolver = Resolver.byType(registeredObjects);
 
   void register(O object) {
