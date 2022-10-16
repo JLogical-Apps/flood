@@ -9,7 +9,7 @@ abstract class Resolver<I, O> {
   }
 
   static TypeResolver<O> byType<O>(List<O> objects) {
-    return TypeResolver(objects: objects);
+    return TypeResolver(resolvableObjects: objects);
   }
 }
 

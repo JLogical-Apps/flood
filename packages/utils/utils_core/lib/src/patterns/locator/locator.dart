@@ -1,34 +1,50 @@
 import 'package:utils_core/src/patterns/resolver/resolver.dart';
 import 'package:utils_core/src/patterns/resolver/type_resolver.dart';
 
-class Locator<O> {
+abstract class Locator<O> implements TypeResolver<O> {
+  factory Locator({List<O>? objects}) => _LocatorImpl(objects: objects);
+
+  void register(O object);
+}
+
+class _LocatorImpl<O> with WithTypeResolverDelegate<O> implements Locator<O> {
   final List<O> registeredObjects;
 
-  Locator({List<O>? objects}) : registeredObjects = objects ?? [];
+  _LocatorImpl({List<O>? objects}) : registeredObjects = objects ?? [];
 
-  late TypeResolver<O> typeResolver = Resolver.byType(registeredObjects);
+  @override
+  TypeResolver<O> get resolver => Resolver.byType(registeredObjects);
 
+  @override
   void register(O object) {
     registeredObjects.add(object);
   }
+}
 
+extension LocatorDefaults<O> on Locator<O> {
   O? locateOrNullRuntime(Type type) {
-    return typeResolver.resolveOrNull(type);
+    return resolveOrNull(type);
   }
 
-  O? locateOrNull<T>() {
-    return locateOrNullRuntime(T);
+  T? locateOrNull<T>() {
+    return locateOrNullRuntime(T) as T?;
   }
 
   O locateRuntime(Type type) {
     return locateOrNullRuntime(type) ?? (throw Exception('Cannot locate [$type]'));
   }
 
-  O locate<T>() {
-    return locateRuntime(T);
+  T locate<T>() {
+    return locateRuntime(T) as T;
   }
 }
 
 mixin WithLocatorDelegate<O> implements Locator<O> {
   Locator<O> get locator;
+
+  @override
+  void register(O object) => locator.register(object);
+
+  @override
+  O? resolveOrNull(Type input) => locator.resolveOrNull(input);
 }
