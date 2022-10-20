@@ -1,6 +1,7 @@
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/context/registration/app_registration.dart';
 import 'package:jlogical_utils/src/pond/modules/environment/environment_module.dart';
+import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification_repository.dart';
 import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification_service.dart';
 
 import '../../context/module/app_module.dart';
@@ -19,6 +20,7 @@ class PushNotificationsModule extends AppModule {
   @override
   void onRegister(AppRegistration registration) {
     registration.register<PushNotificationService>(service);
+    registration.register(PushNotificationRepository());
   }
 
   @override
