@@ -1,4 +1,4 @@
-import 'package:pond/src/pond/context/pond_plugin.dart';
+import 'package:pond/src/pond/plugin/pond_plugin.dart';
 import 'package:pond_core/pond_core.dart';
 
 class PondContext {
