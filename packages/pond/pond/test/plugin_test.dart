@@ -9,7 +9,8 @@ void main() {
     final emptyCorePondContext = emptyPondContext.corePondContext;
     expect(emptyCorePondContext.components, isNot(contains(markerCorePondComponent)));
 
-    final pondContext = PondContext()..register(PondPlugin()..registerCoreComponent(markerCorePondComponent));
+    final pondContext = PondContext()
+      ..register(PondPlugin(name: 'Test')..registerCoreComponent(markerCorePondComponent));
     final corePondContext = pondContext.corePondContext;
     expect(corePondContext.components, contains(markerCorePondComponent));
   });

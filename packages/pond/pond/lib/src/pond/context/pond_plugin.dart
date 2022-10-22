@@ -2,43 +2,31 @@ import 'package:pond/src/pond/context/pond_context.dart';
 import 'package:pond/src/pond/context/pond_plugin_core_registry.dart';
 import 'package:pond_core/pond_core.dart';
 
-class PondPlugin {
+abstract class PondPlugin {
+  String get name;
+
+  PondPluginCoreRegistry get coreRegistry;
+
+  factory PondPlugin({required String name, PondPluginCoreRegistry? pondPluginCoreRegistry}) =>
+      _PondPluginImpl(name: name, coreRegistry: pondPluginCoreRegistry ?? PondPluginCoreRegistry());
+}
+
+class _PondPluginImpl implements PondPlugin {
+  @override
+  final String name;
+
+  @override
   final PondPluginCoreRegistry coreRegistry;
 
-  PondPlugin() : coreRegistry = PondPluginCoreRegistry();
+  _PondPluginImpl({required this.name, required this.coreRegistry});
+}
 
+extension PondPluginExtensions on PondPlugin {
   void onRegister(PondContext pondContext) {
     coreRegistry.onRegister(pondContext);
   }
 
-  void registerCoreComponent(CorePondComponent corePondComponent) => coreRegistry.register(corePondComponent);
-}
-
-/*
-class WithDebugPondPluginWrapper extends PondPluginWrapper {
-  void onRegister() {
-    final name = PluginNameResolver().resolve(plugin);
-    print('Registering [$name] plugin');
+  void registerCoreComponent(CorePondComponent corePondComponent) {
+    coreRegistry.register(corePondComponent);
   }
 }
-
-class RuntimeTypePluginNameResolver extends PluginNameResolver {
-  shouldWrap(T value) {
-    return value.runtimeType != PondPlugin;
-  }
-
-  String getName(T value) {
-    return value.runtimeType;
-  }
-}
-
-class InterfacePluginNameResolver extends PluginNameResolver {
-  shouldWrap(T value) {
-    return value instanceof HasPluginName;
-  }
-
-  String getName(T value) {
-    return (value as HasPluginName).name;
-  }
-}
- */
