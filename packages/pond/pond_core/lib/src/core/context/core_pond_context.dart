@@ -7,5 +7,14 @@ class CorePondContext with WithLocatorDelegate<CorePondComponent> implements Loc
   CorePondContext() : components = [];
 
   @override
-  late Locator<CorePondComponent> locator = Locator(objects: components);
+  late Locator<CorePondComponent> locator = Locator(
+    objects: components,
+    onRegistered: (component) => component.registerTo(this),
+  );
+
+  Future<void> load() async {
+    for (final component in components) {
+      await component.load(this);
+    }
+  }
 }

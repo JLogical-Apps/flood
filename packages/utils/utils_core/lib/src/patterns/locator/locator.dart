@@ -2,15 +2,19 @@ import 'package:utils_core/src/patterns/resolver/resolver.dart';
 import 'package:utils_core/src/patterns/resolver/type_resolver.dart';
 
 abstract class Locator<O> implements TypeResolver<O> {
-  factory Locator({List<O>? objects}) => _LocatorImpl(objects: objects);
+  factory Locator({List<O>? objects, void Function(O object)? onRegistered}) => _LocatorImpl(
+        objects: objects,
+        onRegistered: onRegistered,
+      );
 
   void register(O object);
 }
 
 class _LocatorImpl<O> with WithTypeResolverDelegate<O> implements Locator<O> {
   final List<O> registeredObjects;
+  final void Function(O object)? onRegistered;
 
-  _LocatorImpl({List<O>? objects}) : registeredObjects = objects ?? [];
+  _LocatorImpl({List<O>? objects, this.onRegistered}) : registeredObjects = objects ?? [];
 
   @override
   TypeResolver<O> get resolver => Resolver.byType(registeredObjects);
@@ -18,6 +22,7 @@ class _LocatorImpl<O> with WithTypeResolverDelegate<O> implements Locator<O> {
   @override
   void register(O object) {
     registeredObjects.add(object);
+    onRegistered?.call(object);
   }
 }
 
