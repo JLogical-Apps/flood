@@ -1,4 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification_entity.dart';
+import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification_record.dart';
 
 import '../../context/app_context.dart';
 import 'push_notification.dart';
@@ -36,7 +38,11 @@ class FirebasePushNotificationService extends PushNotificationService {
   }
 
   @override
-  Future<void> sendNotificationTo({required String to, required PushNotification notification}) async {}
+  Future<void> sendNotificationTo({required String to, required PushNotification notification}) async {
+    final record = PushNotificationRecord.fromPushNotification(to: to, pushNotification: notification);
+    final entity = PushNotificationEntity()..value = record;
+    await entity.create();
+  }
 
   Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
 }
