@@ -13,23 +13,29 @@ class FirebaseModule extends AppModule {
 
   FirebaseModule._({required this.app});
 
-  static Future<FirebaseModule> create({required FirebaseOptions app, bool forceInitialize: false}) async {
+  static Future<FirebaseModule> create({
+    required FirebaseOptions app,
+    bool forceInitialize: false,
+    bool isEmulator: false,
+  }) async {
     final module = FirebaseModule._(app: app);
 
     if (forceInitialize || AppContext.global.environment.index >= Environment.qa.index) {
       await Firebase.initializeApp(options: app);
     }
 
+    final host = isEmulator ? '10.0.2.2' : 'localhost';
+
     if (AppContext.global.environment == Environment.qa) {
-      FirebaseFirestore.instance.settings = const Settings(
-        host: 'localhost:8080',
+      FirebaseFirestore.instance.settings = Settings(
+        host: '$host:8080',
         sslEnabled: false,
         persistenceEnabled: false,
       );
 
-      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+      await FirebaseAuth.instance.useAuthEmulator(host, 9099);
 
-      await FirebaseStorage.instance.useStorageEmulator('localhost', 9199);
+      await FirebaseStorage.instance.useStorageEmulator(host, 9199);
     }
 
     return module;
