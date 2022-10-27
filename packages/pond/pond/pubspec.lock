@@ -157,7 +157,7 @@ packages:
     source: hosted
     version: "0.4.12"
   utils_core:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../../utils/utils_core"
       relative: true

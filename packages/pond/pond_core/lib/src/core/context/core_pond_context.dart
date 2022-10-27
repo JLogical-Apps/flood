@@ -5,7 +5,7 @@ import 'package:utils_core/utils_core.dart';
 class CorePondContext with WithLocatorDelegate<CorePondComponent> {
   final List<CorePondComponent> components;
 
-  CorePondContext() : components = [];
+  CorePondContext({List<CorePondComponent>? components}) : components = components ?? [];
 
   @override
   late Locator<CorePondComponent> locator = Locator<CorePondComponent>(
