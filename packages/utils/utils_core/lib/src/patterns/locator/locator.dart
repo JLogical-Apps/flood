@@ -1,3 +1,4 @@
+import 'package:utils_core/src/patterns/locator/expand_locator.dart';
 import 'package:utils_core/src/patterns/resolver/resolver.dart';
 import 'package:utils_core/src/patterns/resolver/type_resolver.dart';
 
@@ -13,8 +14,9 @@ abstract class Locator<O> implements TypeResolver<O> {
 class _LocatorImpl<O> with WithTypeResolverDelegate<O> implements Locator<O> {
   final List<O> registeredObjects;
   final void Function(O object)? onRegistered;
+  final Type Function(O object)? typeMapper;
 
-  _LocatorImpl({List<O>? objects, this.onRegistered}) : registeredObjects = objects ?? [];
+  _LocatorImpl({List<O>? objects, this.onRegistered, this.typeMapper}) : registeredObjects = objects ?? [];
 
   @override
   TypeResolver<O> get resolver => Resolver.byType(registeredObjects);
@@ -41,6 +43,10 @@ extension LocatorDefaults<O> on Locator<O> {
 
   T locate<T>() {
     return locateRuntime(T) as T;
+  }
+
+  Locator<O> expand(List<O> Function(O object) expander) {
+    return ExpandLocator(locator: this, expander: expander);
   }
 }
 

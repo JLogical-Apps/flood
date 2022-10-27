@@ -27,6 +27,51 @@ void main() {
     expect(isRegistered, true);
     expect(isLoaded, true);
   });
+
+  test('registering and loading CorePondComponent with additional setup.', () async {
+    var isBeforeRegistered = false;
+    var isRegistered = false;
+    var isAfterRegistered = false;
+    var isBeforeLoaded = false;
+    var isLoaded = false;
+    var isAfterLoaded = false;
+
+    final testPondComponent = TestPondComponent(
+      onRegistered: (_) => isRegistered = true,
+      onLoaded: (_) => isLoaded = true,
+    );
+
+    final corePondContext = CorePondContext()
+      ..register(testPondComponent.withAdditionalSetup(
+        onBeforeRegister: (_) => isBeforeRegistered = true,
+        onAfterRegister: (_) => isAfterRegistered = true,
+        onBeforeLoad: (_) => isBeforeLoaded = true,
+        onAfterLoad: (_) => isAfterLoaded = true,
+      ));
+
+    expect(isBeforeRegistered, true);
+    expect(isRegistered, true);
+    expect(isAfterRegistered, true);
+    expect(isBeforeLoaded, false);
+    expect(isLoaded, false);
+    expect(isAfterLoaded, false);
+
+    await corePondContext.load();
+
+    expect(isBeforeRegistered, true);
+    expect(isRegistered, true);
+    expect(isAfterRegistered, true);
+    expect(isBeforeLoaded, true);
+    expect(isLoaded, true);
+    expect(isAfterLoaded, true);
+  });
+
+  test('locating CorePondComponent with additional setup.', () async {
+    final corePondComponent = TestPondComponent();
+    final corePondContext = CorePondContext()..register(corePondComponent.withAdditionalSetup());
+
+    expect(corePondContext.locate<TestPondComponent>(), corePondComponent);
+  });
 }
 
 class TestPondComponent extends CorePondComponent {
