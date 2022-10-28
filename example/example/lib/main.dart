@@ -1,3 +1,4 @@
+import 'package:example/pond.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -11,7 +12,7 @@ class ExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PondApp(
-      appContext: AppPondContext(corePondContext: CorePondContext())..register(BannerAppComponent()),
+      appContext: AppPondContext(corePondContext: corePondContext)..register(BannerAppComponent()),
     );
   }
 }

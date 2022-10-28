@@ -84,7 +84,7 @@ packages:
     source: path
     version: "0.0.1"
   jlogical_utils_core:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../../packages/jlogical_utils_core"
       relative: true
