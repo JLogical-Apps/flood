@@ -11,6 +11,8 @@ version: 0.0.1
 dependencies:
   flutter:
     sdk: flutter
+
+  collection: ^1.16.0
   pond_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
