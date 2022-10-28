@@ -5,7 +5,12 @@ Future<void> main(List<String> args) async {
   final automatePondContext = AutomatePondContext(corePondContext: corePondContext)
     ..register(HelloWorldAutomatePondComponent());
 
-  await automatePondContext.load();
+  await Automate.automate(context: automatePondContext, args: args);
 }
 
-class HelloWorldAutomatePondComponent extends AutomatePondComponent {}
+class HelloWorldAutomatePondComponent extends AutomatePondComponent {
+  @override
+  final List<AutomateCommand> commands = [
+    AutomateCommand(name: 'hello_world', runner: () => print('hello!')),
+  ];
+}

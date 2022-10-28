@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:pond_core/src/automate/command/automate_command.dart';
 import 'package:pond_core/src/automate/component/automate_pond_component_additional_setup.dart';
 import 'package:pond_core/src/automate/context/automate_pond_context.dart';
 
@@ -7,6 +8,8 @@ abstract class AutomatePondComponent {
   void onRegister(AutomatePondContext context) {}
 
   Future onLoad(AutomatePondContext context) async {}
+
+  List<AutomateCommand> get commands;
 }
 
 abstract class AutomatePondComponentWrapper implements AutomatePondComponent {
@@ -23,6 +26,9 @@ mixin WithAutomatePondComponentDelegate implements AutomatePondComponentWrapper 
   Future onLoad(AutomatePondContext context) {
     return automatePondComponent.onLoad(context);
   }
+
+  @override
+  List<AutomateCommand> get commands => automatePondComponent.commands;
 }
 
 extension AutomatePondComponentExtension on AutomatePondComponent {

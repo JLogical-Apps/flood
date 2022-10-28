@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:pond_core/src/automate/command/automate_command.dart';
 import 'package:pond_core/src/automate/component/automate_pond_component.dart';
 import 'package:pond_core/src/automate/context/automate_pond_context.dart';
 
@@ -11,6 +12,7 @@ class AutomatePondComponentAdditionalSetup extends AutomatePondComponentWrapper 
   final void Function(AutomatePondContext context)? onAfterRegister;
   final FutureOr Function(AutomatePondContext context)? onBeforeLoad;
   final FutureOr Function(AutomatePondContext context)? onAfterLoad;
+  final List<AutomateCommand> Function(List<AutomateCommand> existingCommands)? commandBuilder;
 
   AutomatePondComponentAdditionalSetup({
     required this.automatePondComponent,
@@ -18,6 +20,7 @@ class AutomatePondComponentAdditionalSetup extends AutomatePondComponentWrapper 
     this.onAfterRegister,
     this.onBeforeLoad,
     this.onAfterLoad,
+    this.commandBuilder,
   });
 
   @override
@@ -33,4 +36,8 @@ class AutomatePondComponentAdditionalSetup extends AutomatePondComponentWrapper 
     await automatePondComponent.onLoad(context);
     await onAfterLoad?.call(context);
   }
+
+  @override
+  List<AutomateCommand> get commands =>
+      commandBuilder?.call(automatePondComponent.commands) ?? automatePondComponent.commands;
 }

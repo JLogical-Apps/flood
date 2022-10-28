@@ -11,6 +11,8 @@ class AutomatePondContext with WithLocatorDelegate<AutomatePondComponent> {
   AutomatePondContext({required this.corePondContext, List<AutomatePondComponent>? appComponents})
       : automateComponents = appComponents ?? [];
 
+  List<AutomateCommand> get commands => automateComponents.expand((component) => component.commands).toList();
+
   Future<void> load() async {
     await corePondContext.load();
 
