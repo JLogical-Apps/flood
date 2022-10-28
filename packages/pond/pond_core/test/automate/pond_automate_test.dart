@@ -1,6 +1,8 @@
 import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
 
+const helloWorldCommandName = 'hello_world';
+
 void main() {
   test('automate components registering and loading', () async {
     var coreRegistered = false;
@@ -31,8 +33,33 @@ void main() {
     expect(automateRegistered, true);
     expect(automateLoaded, true);
   });
+
+  test('run is called on correct component', () async {
+    var hasRun = false;
+    final corePondContext = CorePondContext()..register(TestCoreComponent());
+    final automateContext = AutomatePondContext(corePondContext: corePondContext)
+      ..register(TestAutomateComponent(
+        runner: () => hasRun = true,
+      ));
+
+    await Automate.automate(context: automateContext, args: [helloWorldCommandName]);
+
+    expect(hasRun, true);
+  });
 }
 
 class TestCoreComponent extends CorePondComponent {}
 
-class TestAutomateComponent extends AutomatePondComponent {}
+class TestAutomateComponent extends AutomatePondComponent {
+  final void Function()? runner;
+
+  TestAutomateComponent({this.runner});
+
+  @override
+  late final List<AutomateCommand> commands = [
+    AutomateCommand(
+      name: helloWorldCommandName,
+      runner: () => runner?.call(),
+    ),
+  ];
+}
