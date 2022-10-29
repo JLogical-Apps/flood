@@ -43,6 +43,6 @@ class FirebasePushNotificationService extends PushNotificationService {
     final entity = PushNotificationEntity()..value = record;
     await entity.create();
   }
-
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
 }
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
