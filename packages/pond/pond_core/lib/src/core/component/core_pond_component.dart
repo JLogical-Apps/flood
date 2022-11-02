@@ -14,6 +14,18 @@ abstract class CorePondComponentWrapper implements CorePondComponent {
   CorePondComponent get corePondComponent;
 }
 
+abstract class MultiCorePondComponentWrapper implements CorePondComponent {
+  List<CorePondComponent> get corePondComponents;
+}
+
+mixin IsCorePondComponent implements CorePondComponent {
+  @override
+  void onRegister(CorePondContext context) {}
+
+  @override
+  Future onLoad(CorePondContext context) async {}
+}
+
 mixin WithCorePondComponentDelegate implements CorePondComponentWrapper {
   @override
   void onRegister(CorePondContext context) {
