@@ -10,14 +10,6 @@ abstract class CorePondComponent {
   Future onLoad(CorePondContext context) async {}
 }
 
-abstract class CorePondComponentWrapper implements CorePondComponent {
-  CorePondComponent get corePondComponent;
-}
-
-abstract class MultiCorePondComponentWrapper implements CorePondComponent {
-  List<CorePondComponent> get corePondComponents;
-}
-
 mixin IsCorePondComponent implements CorePondComponent {
   @override
   void onRegister(CorePondContext context) {}
@@ -26,7 +18,11 @@ mixin IsCorePondComponent implements CorePondComponent {
   Future onLoad(CorePondContext context) async {}
 }
 
-mixin WithCorePondComponentDelegate implements CorePondComponentWrapper {
+abstract class CorePondComponentWrapper implements CorePondComponent {
+  CorePondComponent get corePondComponent;
+}
+
+mixin IsCorePondComponentWrapper implements CorePondComponentWrapper {
   @override
   void onRegister(CorePondContext context) {
     corePondComponent.onRegister(context);
@@ -35,6 +31,28 @@ mixin WithCorePondComponentDelegate implements CorePondComponentWrapper {
   @override
   Future onLoad(CorePondContext context) {
     return corePondComponent.onLoad(context);
+  }
+}
+
+mixin WithCorePondComponentDelegate implements IsCorePondComponentWrapper {}
+
+abstract class MultiCorePondComponentWrapper implements CorePondComponent {
+  List<CorePondComponent> get corePondComponents;
+}
+
+mixin IsMultiCorePondComponentWrapper implements MultiCorePondComponentWrapper {
+  @override
+  void onRegister(CorePondContext context) {
+    for (final component in corePondComponents) {
+      component.onRegister(context);
+    }
+  }
+
+  @override
+  Future onLoad(CorePondContext context) async {
+    for (final component in corePondComponents) {
+      await component.onLoad(context);
+    }
   }
 }
 

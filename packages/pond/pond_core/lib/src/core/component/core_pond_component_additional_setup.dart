@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:pond_core/pond_core.dart';
 
-class CorePondComponentAdditionalSetup extends CorePondComponentWrapper {
+class CorePondComponentAdditionalSetup with IsCorePondComponentWrapper {
   @override
   final CorePondComponent corePondComponent;
 
@@ -22,14 +22,14 @@ class CorePondComponentAdditionalSetup extends CorePondComponentWrapper {
   @override
   void onRegister(CorePondContext context) {
     onBeforeRegister?.call(context);
-    corePondComponent.onRegister(context);
+    super.onRegister(context);
     onAfterRegister?.call(context);
   }
 
   @override
   Future onLoad(CorePondContext context) async {
     await onBeforeLoad?.call(context);
-    await corePondComponent.onLoad(context);
+    super.onLoad(context);
     await onAfterLoad?.call(context);
   }
 }

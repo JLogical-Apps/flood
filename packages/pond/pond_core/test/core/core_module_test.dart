@@ -23,6 +23,27 @@ void main() {
     expect(corePondContext.locate<MarkerBComponent>(), markerBComponent);
     expect(corePondContext.locate<MarkerCComponent>(), markerCComponent);
   });
+
+  test('components in a module register and load', () async {
+    final markerAComponent = MarkerAComponent();
+    var registered = false;
+    var loaded = false;
+
+    final corePondContext = CorePondContext()
+      ..register(CorePondModule(
+        corePondComponents: [
+          markerAComponent.withAdditionalSetup(
+            onAfterRegister: (_) => registered = true,
+            onAfterLoad: (_) => loaded = true,
+          ),
+        ],
+      ));
+
+    await corePondContext.load();
+
+    expect(registered, true);
+    expect(loaded, true);
+  });
 }
 
 class MarkerAComponent extends CorePondComponent {}
