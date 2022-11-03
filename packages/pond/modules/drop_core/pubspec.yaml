@@ -1,5 +1,5 @@
-name: jlogical_utils_core
-description: All core JLogical utils
+name: drop_core
+description: Core module for Drop
 
 publish_to: "none"
 
@@ -9,15 +9,17 @@ environment:
 version: 0.0.1
 
 dependencies:
+  collection: ^1.16.0
   pond_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/pond/pond_core
-  drop_core:
+  utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/modules/drop_core
+      path: packages/utils/utils_core
 dev_dependencies:
   lints: ^2.0.0
+  test: ^1.21.4
