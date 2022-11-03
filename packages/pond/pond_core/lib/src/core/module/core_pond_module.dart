@@ -1,4 +1,5 @@
 import 'package:pond_core/src/core/component/core_pond_component.dart';
+import 'package:pond_core/src/core/context/core_pond_context.dart';
 
 abstract class CorePondModule with IsMultiCorePondComponentWrapper {
   factory CorePondModule({required List<CorePondComponent> corePondComponents}) {
@@ -13,4 +14,28 @@ class _CorePondModuleImpl with IsMultiCorePondComponentWrapper, IsCorePondModule
   _CorePondModuleImpl({required this.corePondComponents});
 }
 
-mixin IsCorePondModule on IsMultiCorePondComponentWrapper implements CorePondModule {}
+mixin IsCorePondModule implements CorePondModule {
+  @override
+  Future onLoad(CorePondContext context) async {}
+
+  @override
+  void onRegister(CorePondContext context) {}
+}
+
+abstract class CorePondModuleWrapper with IsCorePondModule {
+  CorePondModule get corePondModule;
+
+  @override
+  List<CorePondComponent> get corePondComponents => corePondModule.corePondComponents;
+}
+
+mixin IsCorePondModuleWrapper implements CorePondModuleWrapper {
+  @override
+  List<CorePondComponent> get corePondComponents => corePondModule.corePondComponents;
+
+  @override
+  Future onLoad(CorePondContext context) async {}
+
+  @override
+  void onRegister(CorePondContext context) {}
+}

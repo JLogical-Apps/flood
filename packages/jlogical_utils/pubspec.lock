@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
+  drop_core:
+    dependency: "direct overridden"
+    description:
+      path: "../pond/modules/drop_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   flutter:
     dependency: transitive
     description: flutter
