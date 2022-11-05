@@ -62,6 +62,15 @@ extension MapExtensions<K, V> on Map<K, V> {
     this[key] = value;
   }
 
+  void replaceWhere(bool Function(K key, V value) predicate, V Function(K key, V value) replacer) {
+    final data = copy();
+    data.forEach((key, value) {
+      if (predicate(key, value)) {
+        this[key] = replacer(key, value);
+      }
+    });
+  }
+
   /// Maps the key-value pairs of this map into an iterable.
   Iterable<R> mapToIterable<R>(R Function(K key, V value) mapper) {
     return entries.map((entry) => mapper(entry.key, entry.value));
