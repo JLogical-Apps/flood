@@ -36,9 +36,13 @@ extension IterableExtensions<T> on Iterable<T> {
   T? get lastOrNull {
     return isEmpty ? null : last;
   }
+
+  Map<K, V> mapToMap<K, V>(MapEntry<K, V> Function(T value) mapper) {
+    return map(mapper).toMap();
+  }
 }
 
-extension NullableiterableExtensions<T> on Iterable<T?> {
+extension NullableIterableExtensions<T> on Iterable<T?> {
   Iterable<T> whereNonNull() {
     return where((item) => item != null).map((item) => item!);
   }
