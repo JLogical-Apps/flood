@@ -64,6 +64,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
+  directed_graph:
+    dependency: transitive
+    description:
+      name: directed_graph
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.7"
+  exception_templates:
+    dependency: transitive
+    description:
+      name: exception_templates
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
   file:
     dependency: transitive
     description:
@@ -85,6 +99,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  graphs:
+    dependency: transitive
+    description:
+      name: graphs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   http_multi_server:
     dependency: transitive
     description:
@@ -113,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
+  lazy_memo:
+    dependency: transitive
+    description:
+      name: lazy_memo
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   lints:
     dependency: "direct dev"
     description:
@@ -190,6 +218,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  quote_buffer:
+    dependency: transitive
+    description:
+      name: quote_buffer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.3"
   shelf:
     dependency: transitive
     description:
@@ -288,6 +323,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.16"
+  type:
+    dependency: "direct overridden"
+    description:
+      path: "../../../type"
+      relative: true
+    source: path
+    version: "0.0.1"
+  type_core:
+    dependency: "direct main"
+    description:
+      path: "../type_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   typed_data:
     dependency: transitive
     description:

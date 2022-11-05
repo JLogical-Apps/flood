@@ -19,5 +19,10 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/modules/drop_core
+  type_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/modules/type_core
 dev_dependencies:
   lints: ^2.0.0

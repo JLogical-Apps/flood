@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.17.0"
+  directed_graph:
+    dependency: transitive
+    description:
+      name: directed_graph
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.7"
   drop_core:
     dependency: "direct main"
     description:
@@ -15,6 +22,27 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  exception_templates:
+    dependency: transitive
+    description:
+      name: exception_templates
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
+  graphs:
+    dependency: transitive
+    description:
+      name: graphs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
+  lazy_memo:
+    dependency: transitive
+    description:
+      name: lazy_memo
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   lints:
     dependency: "direct dev"
     description:
@@ -26,6 +54,27 @@ packages:
     dependency: "direct main"
     description:
       path: "../pond/pond_core"
+      relative: true
+    source: path
+    version: "0.0.1"
+  quote_buffer:
+    dependency: transitive
+    description:
+      name: quote_buffer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.3"
+  type:
+    dependency: "direct overridden"
+    description:
+      path: "../type"
+      relative: true
+    source: path
+    version: "0.0.1"
+  type_core:
+    dependency: "direct main"
+    description:
+      path: "../pond/modules/type_core"
       relative: true
     source: path
     version: "0.0.1"

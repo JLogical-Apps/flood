@@ -1,1 +1,1 @@
-export 'src/drop_core_module.dart';
+export 'src/drop_core_component.dart';

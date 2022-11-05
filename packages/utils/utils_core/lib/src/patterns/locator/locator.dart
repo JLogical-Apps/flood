@@ -45,6 +45,28 @@ extension LocatorDefaults<O> on Locator<O> {
     return locateRuntime(T) as T;
   }
 
+  O locateOrRegisterRuntime(Type type, O Function() itemGetter) {
+    final registered = locateOrNullRuntime(type);
+    if (registered != null) {
+      return registered;
+    }
+
+    final newItem = itemGetter();
+    register(newItem);
+    return newItem;
+  }
+
+  T locateOrRegister<T extends O>(T Function() itemGetter) {
+    final registered = locateOrNull<T>();
+    if (registered != null) {
+      return registered;
+    }
+
+    final newItem = itemGetter();
+    register(newItem);
+    return newItem;
+  }
+
   Locator<O> expand(List<O> Function(O object) expander) {
     return ExpandLocator(locator: this, expander: expander);
   }
