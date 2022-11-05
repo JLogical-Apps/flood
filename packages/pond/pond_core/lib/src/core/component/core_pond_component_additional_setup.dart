@@ -1,6 +1,8 @@
 import 'dart:async';
 
-import 'package:pond_core/pond_core.dart';
+import 'package:pond_core/src/core/component/behavior/core_pond_component_behavior.dart';
+import 'package:pond_core/src/core/component/core_pond_component.dart';
+import 'package:pond_core/src/core/context/core_pond_context.dart';
 
 class CorePondComponentAdditionalSetup with IsCorePondComponentWrapper {
   @override
@@ -20,16 +22,15 @@ class CorePondComponentAdditionalSetup with IsCorePondComponentWrapper {
   });
 
   @override
-  void onRegister(CorePondContext context) {
-    onBeforeRegister?.call(context);
-    super.onRegister(context);
-    onAfterRegister?.call(context);
-  }
-
-  @override
-  Future onLoad(CorePondContext context) async {
-    await onBeforeLoad?.call(context);
-    super.onLoad(context);
-    await onAfterLoad?.call(context);
-  }
+  List<CorePondComponentBehavior> get behaviors => [
+        CorePondComponentBehavior(
+          onRegister: (context, component) => onBeforeRegister?.call(context),
+          onLoad: (context, component) => onBeforeLoad?.call(context),
+        ),
+        ...corePondComponent.behaviors,
+        CorePondComponentBehavior(
+          onRegister: (context, component) => onAfterRegister?.call(context),
+          onLoad: (context, component) => onAfterLoad?.call(context),
+        ),
+      ];
 }

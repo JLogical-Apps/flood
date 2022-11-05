@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:pond_core/src/core/component/core_pond_component.dart';
-import 'package:pond_core/src/core/context/locator/multi_wrapper_core_pond_component_locator_wrapper.dart';
 import 'package:pond_core/src/core/context/locator/wrapper_core_pond_component_locator_wrapper.dart';
 
 abstract class CorePondComponentLocatorWrapper {
@@ -10,7 +9,6 @@ abstract class CorePondComponentLocatorWrapper {
 
   static final List<CorePondComponentLocatorWrapper> _wrappers = [
     WrapperCorePondComponentLocatorWrapper(),
-    MultiWrapperCorePondComponentLocatorWrapper(),
   ];
 
   static CorePondComponentLocatorWrapper? getWrapperOrNull(CorePondComponent component) {

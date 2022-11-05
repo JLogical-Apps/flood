@@ -81,12 +81,10 @@ class TestPondComponent extends CorePondComponent {
   TestPondComponent({this.onRegistered, this.onLoaded});
 
   @override
-  void onRegister(CorePondContext context) {
-    onRegistered?.call(context);
-  }
-
-  @override
-  Future onLoad(CorePondContext context) async {
-    onLoaded?.call(context);
-  }
+  List<CorePondComponentBehavior> get behaviors => [
+        CorePondComponentBehavior(
+          onRegister: (context, component) => onRegistered?.call(context),
+          onLoad: (context, component) => onLoaded?.call(context),
+        )
+      ];
 }

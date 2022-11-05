@@ -1,22 +1,14 @@
 import 'dart:async';
 
-import 'package:pond_core/pond_core.dart';
+import 'package:pond_core/src/core/component/behavior/core_pond_component_behavior.dart';
 import 'package:pond_core/src/core/component/core_pond_component_additional_setup.dart';
 import 'package:pond_core/src/core/context/core_pond_context.dart';
 
 abstract class CorePondComponent {
-  void onRegister(CorePondContext context) {}
-
-  Future onLoad(CorePondContext context) async {}
+  List<CorePondComponentBehavior> get behaviors => [];
 }
 
-mixin IsCorePondComponent implements CorePondComponent {
-  @override
-  void onRegister(CorePondContext context) {}
-
-  @override
-  Future onLoad(CorePondContext context) async {}
-}
+mixin IsCorePondComponent implements CorePondComponent {}
 
 abstract class CorePondComponentWrapper implements CorePondComponent {
   CorePondComponent get corePondComponent;
@@ -24,45 +16,20 @@ abstract class CorePondComponentWrapper implements CorePondComponent {
 
 mixin IsCorePondComponentWrapper implements CorePondComponentWrapper {
   @override
-  void onRegister(CorePondContext context) {
-    corePondComponent.onRegister(context);
-  }
-
-  @override
-  Future onLoad(CorePondContext context) {
-    return corePondComponent.onLoad(context);
-  }
-}
-
-mixin WithCorePondComponentDelegate implements IsCorePondComponentWrapper {}
-
-abstract class MultiCorePondComponentWrapper implements CorePondComponent {
-  List<CorePondComponent> get corePondComponents;
-}
-
-mixin IsMultiCorePondComponentWrapper implements MultiCorePondComponentWrapper {
-  @override
-  void onRegister(CorePondContext context) {
-    for (final component in corePondComponents) {
-      component.onRegister(context);
-    }
-  }
-
-  @override
-  Future onLoad(CorePondContext context) async {
-    for (final component in corePondComponents) {
-      await component.onLoad(context);
-    }
-  }
+  List<CorePondComponentBehavior> get behaviors => corePondComponent.behaviors;
 }
 
 extension CorePondComponentExtension on CorePondComponent {
   void registerTo(CorePondContext context) {
-    onRegister(context);
+    for (final behavior in behaviors) {
+      behavior.onRegister(context, this);
+    }
   }
 
-  Future load(CorePondContext context) {
-    return onLoad(context);
+  Future load(CorePondContext context) async {
+    for (final behavior in behaviors) {
+      await behavior.onLoad(context, this);
+    }
   }
 
   CorePondComponentAdditionalSetup withAdditionalSetup({
