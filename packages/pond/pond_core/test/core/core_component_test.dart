@@ -72,6 +72,15 @@ void main() {
 
     expect(corePondContext.locate<TestPondComponent>(), corePondComponent);
   });
+
+  test('CorePondComponent with dependency on another CorePondComponent.', () {
+    expect(() => CorePondContext()..register(DependentPondComponent()), throwsA(isA<Exception>()));
+    expect(
+        () => CorePondContext()
+          ..register(TestPondComponent())
+          ..register(DependentPondComponent()),
+        returnsNormally);
+  });
 }
 
 class TestPondComponent extends CorePondComponent {
@@ -87,4 +96,9 @@ class TestPondComponent extends CorePondComponent {
           onLoad: (context, component) => onLoaded?.call(context),
         )
       ];
+}
+
+class DependentPondComponent extends CorePondComponent {
+  @override
+  List<CorePondComponentBehavior> get behaviors => [CorePondComponentBehavior.dependency<TestPondComponent>()];
 }

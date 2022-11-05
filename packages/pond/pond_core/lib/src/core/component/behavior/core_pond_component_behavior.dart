@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:pond_core/src/core/component/behavior/dependency_core_pond_component_behavior.dart';
 import 'package:pond_core/src/core/component/core_pond_component.dart';
 import 'package:pond_core/src/core/context/core_pond_context.dart';
 
@@ -16,6 +17,10 @@ abstract class CorePondComponentBehavior {
         registerHandler: onRegister,
         loadHandler: onLoad,
       );
+
+  static CorePondComponentBehavior dependency<T extends CorePondComponent>() {
+    return DependencyCorePondComponentBehavior<T>();
+  }
 }
 
 class _CorePondComponentBehaviorImpl implements CorePondComponentBehavior {
@@ -33,4 +38,12 @@ class _CorePondComponentBehaviorImpl implements CorePondComponentBehavior {
   Future onLoad(CorePondContext context, CorePondComponent component) async {
     await loadHandler?.call(context, component);
   }
+}
+
+mixin IsCorePondComponentBehavior implements CorePondComponentBehavior {
+  @override
+  void onRegister(CorePondContext context, CorePondComponent component) {}
+
+  @override
+  Future onLoad(CorePondContext context, CorePondComponent component) async {}
 }
