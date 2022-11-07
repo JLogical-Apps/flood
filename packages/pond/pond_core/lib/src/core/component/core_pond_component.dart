@@ -5,10 +5,15 @@ import 'package:pond_core/src/core/component/core_pond_component_additional_setu
 import 'package:pond_core/src/core/context/core_pond_context.dart';
 
 abstract class CorePondComponent {
+  late CorePondContext context;
+
   List<CorePondComponentBehavior> get behaviors => [];
 }
 
-mixin IsCorePondComponent implements CorePondComponent {}
+mixin IsCorePondComponent implements CorePondComponent {
+  @override
+  late CorePondContext context;
+}
 
 abstract class CorePondComponentWrapper implements CorePondComponent {
   CorePondComponent get corePondComponent;
@@ -17,10 +22,14 @@ abstract class CorePondComponentWrapper implements CorePondComponent {
 mixin IsCorePondComponentWrapper implements CorePondComponentWrapper {
   @override
   List<CorePondComponentBehavior> get behaviors => corePondComponent.behaviors;
+
+  @override
+  late CorePondContext context;
 }
 
 extension CorePondComponentExtension on CorePondComponent {
   void registerTo(CorePondContext context) {
+    this.context = context;
     for (final behavior in behaviors) {
       behavior.onRegister(context, this);
     }

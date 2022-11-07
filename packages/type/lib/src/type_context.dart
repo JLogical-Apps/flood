@@ -17,21 +17,25 @@ class _TypeContextImpl implements TypeContext {
 }
 
 extension TypeContextExtensions on TypeContext {
-  void register<T>(T Function() newInstanceGetter, {List<Type>? parents}) {
-    runtimeTypes.add(RuntimeType<T>(
+  RuntimeType<T> register<T>(T Function() newInstanceGetter, {List<Type>? parents}) {
+    final runtimeType = RuntimeType<T>(
       context: this,
       type: T,
       newInstanceGetter: newInstanceGetter,
       parents: parents?.map((type) => getRuntimeTypeRuntime(type)).toList() ?? [],
-    ));
+    );
+    runtimeTypes.add(runtimeType);
+    return runtimeType;
   }
 
-  void registerAbstract<T>({List<Type>? parents}) {
-    runtimeTypes.add(RuntimeType<T>.abstract(
+  RuntimeType<T> registerAbstract<T>({List<Type>? parents}) {
+    final runtimeType = RuntimeType<T>.abstract(
       context: this,
       type: T,
       parents: parents?.map((type) => getRuntimeTypeRuntime(type)).toList() ?? [],
-    ));
+    );
+    runtimeTypes.add(runtimeType);
+    return runtimeType;
   }
 
   RuntimeType? getRuntimeTypeOrNullRuntime(Type type) {
