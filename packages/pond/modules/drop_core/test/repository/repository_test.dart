@@ -17,6 +17,11 @@ void main() {
     expect(dropCoreComponent.getRepositoryFor<UserEntity>(), isA<UserRepository>());
     expect(dropCoreComponent.getRepositoryFor<BudgetEntity>(), isA<BudgetRepository>());
     expect(dropCoreComponent.getRepositoryForTypeOrNull<BudgetTransactionEntity>(), isNull);
+
+    corePondContext.register(BudgetTransactionRepository());
+
+    expect(dropCoreComponent.getRepositoryFor<BudgetTransactionEntity>(), isA<BudgetTransactionRepository>());
+    expect(dropCoreComponent.getRepositoryFor<EnvelopeTransactionEntity>(), isA<BudgetTransactionRepository>());
   });
 }
 
@@ -42,8 +47,14 @@ abstract class BudgetTransaction extends ValueObject {}
 
 abstract class BudgetTransactionEntity<B extends BudgetTransaction> extends Entity<B> {}
 
+class EnvelopeTransaction extends BudgetTransaction {}
+
+class EnvelopeTransactionEntity extends BudgetTransactionEntity<EnvelopeTransaction> {}
+
 class BudgetTransactionRepository with IsRepositoryWrapper {
   @override
-  Repository get repository => Repository.memory().forType<BudgetTransactionEntity, BudgetTransaction>(
-      () => throw UnimplementedError(), () => throw UnimplementedError());
+  final Repository repository = Repository.memory()
+      .forAbstractType<BudgetTransactionEntity, BudgetTransaction>()
+      .withImplementation<EnvelopeTransactionEntity, EnvelopeTransaction>(
+          EnvelopeTransactionEntity.new, EnvelopeTransaction.new);
 }

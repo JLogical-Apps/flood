@@ -1,10 +1,11 @@
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
-import 'package:drop_core/src/repository/for_type_repository.dart';
 import 'package:drop_core/src/repository/memory_repository.dart';
 import 'package:drop_core/src/repository/repository_id_generator.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
+import 'package:drop_core/src/repository/type/for_abstract_type_repository.dart';
+import 'package:drop_core/src/repository/type/for_type_repository.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:type/type.dart';
 
@@ -33,6 +34,17 @@ extension RepositoryExtension on Repository {
       repository: this,
       entityConstructor: entityConstructor,
       valueObjectConstructor: valueObjectConstructor,
+      entityParents: entityParents ?? [],
+      valueObjectParents: valueObjectParents ?? [],
+    );
+  }
+
+  ForAbstractTypeRepository forAbstractType<E extends Entity<V>, V extends ValueObject>({
+    List<Type>? entityParents,
+    List<Type>? valueObjectParents,
+  }) {
+    return ForAbstractTypeRepository<E, V>(
+      repository: this,
       entityParents: entityParents ?? [],
       valueObjectParents: valueObjectParents ?? [],
     );
