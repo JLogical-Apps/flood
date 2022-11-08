@@ -17,6 +17,7 @@ class FirebaseModule extends AppModule {
     required FirebaseOptions app,
     bool forceInitialize: false,
     bool isEmulator: false,
+    int? firestorePort,
   }) async {
     final module = FirebaseModule._(app: app);
 
@@ -28,7 +29,7 @@ class FirebaseModule extends AppModule {
 
     if (AppContext.global.environment == Environment.qa) {
       FirebaseFirestore.instance.settings = Settings(
-        host: '$host:8080',
+        host: '$host:${firestorePort ?? 8080}',
         sslEnabled: false,
         persistenceEnabled: false,
       );
