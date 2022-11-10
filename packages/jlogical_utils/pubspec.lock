@@ -97,6 +97,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  path:
+    dependency: transitive
+    description:
+      name: path
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.2"
   pond:
     dependency: "direct main"
     description:
