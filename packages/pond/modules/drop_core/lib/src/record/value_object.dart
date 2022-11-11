@@ -5,7 +5,7 @@ import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 
 abstract class ValueObject extends Record {
-  final List<ValueObjectBehavior> behaviors = [];
+  List<ValueObjectBehavior> get behaviors => [];
 
   @override
   State get state {
@@ -26,9 +26,5 @@ abstract class ValueObject extends Record {
     }
   }
 
-  FieldValueObjectProperty<T> field<T>({required String name}) {
-    final property = ValueObjectProperty.field<T>(name: name);
-    behaviors.add(property);
-    return property;
-  }
+  FieldValueObjectProperty<T> field<T>({required String name}) => ValueObjectProperty.field<T>(name: name);
 }

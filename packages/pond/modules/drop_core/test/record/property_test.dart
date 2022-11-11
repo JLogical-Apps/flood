@@ -32,8 +32,14 @@ void main() {
 
 class Data1 extends ValueObject {
   late final intProperty = field<int>(name: 'int');
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [intProperty];
 }
 
 class Data2 extends ValueObject {
   late final intProperty = field<int>(name: 'int').required();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [intProperty];
 }
