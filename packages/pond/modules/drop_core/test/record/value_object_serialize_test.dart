@@ -1,5 +1,4 @@
 import 'package:drop_core/drop_core.dart';
-import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:test/test.dart';
 
 void main() {
