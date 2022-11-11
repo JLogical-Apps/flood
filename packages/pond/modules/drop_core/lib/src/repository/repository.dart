@@ -1,3 +1,4 @@
+import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/memory_repository.dart';
@@ -6,6 +7,7 @@ import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/repository/type/for_abstract_type_repository.dart';
 import 'package:drop_core/src/repository/type/for_type_repository.dart';
+import 'package:drop_core/src/state/stateful.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:type/type.dart';
 
@@ -24,6 +26,22 @@ abstract class Repository implements CorePondComponent {
 }
 
 extension RepositoryExtension on Repository {
+  Future<State> update(Stateful stateful) async {
+    var state = stateful.state;
+
+    if (state.isNew) {
+      state = state.withId(await idGenerator.generateId());
+    }
+
+    await stateHandler.update(state);
+
+    return state;
+  }
+
+  Future<void> delete(Stateful state) {
+    return stateHandler.delete(state.state);
+  }
+
   ForTypeRepository forType<E extends Entity<V>, V extends ValueObject>(
     E Function() entityConstructor,
     V Function() valueObjectConstructor, {

@@ -1,7 +1,8 @@
+import 'package:drop_core/src/state/stateful.dart';
 import 'package:equatable/equatable.dart';
 import 'package:utils_core/utils_core.dart';
 
-class State extends Equatable {
+class State extends Equatable implements Stateful {
   static const idField = '_id';
   static const typeField = '_type';
 
@@ -12,7 +13,12 @@ class State extends Equatable {
   const State({this.id, this.type, required this.data});
 
   @override
+  State get state => this;
+
+  @override
   List<Object?> get props => [id, type, data];
+
+  bool get isNew => id == null;
 
   Map<String, dynamic> get fullData => {
         ...data,
@@ -34,6 +40,14 @@ class State extends Equatable {
       type: type ?? this.type,
       data: data ?? this.data,
     );
+  }
+
+  State withId(String? id) {
+    return copyWith(id: id, type: type);
+  }
+
+  State withData(Map<String, dynamic> data) {
+    return copyWith(id: id, type: type, data: data);
   }
 
   static State fromMap(Map<String, dynamic> fullData) {

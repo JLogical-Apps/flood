@@ -23,6 +23,33 @@ void main() {
     expect(dropCoreComponent.getRepositoryFor<BudgetTransactionEntity>(), isA<BudgetTransactionRepository>());
     expect(dropCoreComponent.getRepositoryFor<EnvelopeTransactionEntity>(), isA<BudgetTransactionRepository>());
   });
+
+  test('creating, saving, and deleting from a repository.', () async {
+    final memoryRepository = Repository.memory();
+
+    expect(memoryRepository.stateByIdX.value, {});
+
+    var state = State(
+      data: {'field': 'value'},
+    );
+
+    expect(state.isNew, true);
+
+    state = await memoryRepository.update(state);
+
+    expect(state.isNew, false);
+    expect(memoryRepository.stateByIdX.value, {state.id: state});
+
+    state = state.withData({'newField': 'newValue'});
+
+    state = await memoryRepository.update(state);
+
+    expect(memoryRepository.stateByIdX.value, {state.id: state});
+
+    await memoryRepository.delete(state);
+
+    expect(memoryRepository.stateByIdX.value, {});
+  });
 }
 
 class User extends ValueObject {}

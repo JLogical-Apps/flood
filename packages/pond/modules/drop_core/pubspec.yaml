@@ -11,6 +11,9 @@ version: 0.0.1
 dependencies:
   collection: ^1.16.0
   equatable: ^2.0.5
+  rxdart: ^0.27.5
+  uuid: ^3.0.6
+
   pond_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
