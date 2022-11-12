@@ -4,11 +4,13 @@ import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/query_executor/from_state_query_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/all_state_query_request_reducer.dart';
+import 'package:drop_core/src/repository/query_executor/request/all_states_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_reducer.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:utils_core/utils_core.dart';
 
 class StateQueryExecutor implements RepositoryQueryExecutor {
   final ValueStream<List<State>> statesX;
@@ -17,13 +19,15 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
 
   StateQueryExecutor({required this.statesX, required this.dropContext});
 
-  late List<StateQueryReducer> queryReducers = [
-    FromStateQueryReducer(),
-  ];
+  WrapperResolver<StateQueryReducer, Query> getQueryReducers<E extends Entity>() => WrapperResolver(wrappers: [
+        FromStateQueryReducer<E>(),
+      ]);
 
-  late List<StateQueryRequestReducer> queryRequestReducers = [
-    AllStateQueryRequestReducer(dropContext: dropContext),
-  ];
+  WrapperResolver<StateQueryRequestReducer, QueryRequest> getQueryRequestReducers<E extends Entity, T>() =>
+      WrapperResolver(wrappers: [
+        AllStateQueryRequestReducer<E>(dropContext: dropContext),
+        AllStatesStateQueryRequestReducer<E>(dropContext: dropContext),
+      ]);
 
   @override
   Future<T> execute<E extends Entity, T>(QueryRequest<E, T> queryRequest) {
@@ -32,15 +36,14 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
 
   Future<T> executeOnStates<E extends Entity, T>(QueryRequest<E, T> queryRequest, List<State> states) async {
     final reducedStates = reduceStates(states, queryRequest.query);
-
-    final queryRequestReducer = queryRequestReducers.firstWhere((reducer) => reducer.shouldWrap(queryRequest));
-    return queryRequestReducer.reduce(queryRequest, reducedStates);
+    return getQueryRequestReducers<E, T>().resolve(queryRequest).reduce(queryRequest, reducedStates);
   }
 
   Iterable<State> reduceStates<E extends Entity>(Iterable<State> states, Query<E> query) {
-    final queryReducer = queryReducers.firstWhere((reducer) => reducer.shouldWrap(query));
     final queryParent = query.parent;
-    return queryReducer.reduce(query, queryParent == null ? states : reduceStates(states, queryParent));
+    return getQueryReducers<E>()
+        .resolve(query)
+        .reduce(query, queryParent == null ? states : reduceStates(states, queryParent));
   }
 
   @override
