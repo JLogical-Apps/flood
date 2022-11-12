@@ -1,6 +1,7 @@
 import 'package:drop_core/src/record/value_object/fallback_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/placeholder_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -22,6 +23,12 @@ abstract class ValueObjectProperty<G, S> extends ValueObjectBehavior {
 }
 
 mixin IsValueObjectProperty<G, S> implements ValueObjectProperty<G, S> {}
+
+extension ValueObjectPropertyExtensions<G, S> on ValueObjectProperty<G, S> {
+  PlaceholderValueObjectProperty<G, S> withPlaceholder(G Function() placeholder) {
+    return PlaceholderValueObjectProperty(property: this, placeholder: placeholder);
+  }
+}
 
 extension NullableValueObjectPropertyExtensions<G, S> on ValueObjectProperty<G?, S> {
   RequiredValueObjectProperty<G, S> required() {

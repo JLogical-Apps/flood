@@ -58,6 +58,21 @@ void main() {
     data.state = State(data: {'int': 1});
     expect(data.intProperty.value, 1);
   });
+
+  test('placeholder', () {
+    final data = Data5();
+    expect(data.intProperty.value, -1);
+    expect(data.state.data, {});
+
+    data.intProperty.set(0);
+    expect(data.intProperty.value, 0);
+
+    data.state = State(data: {});
+    expect(data.intProperty.value, -1);
+
+    data.state = State(data: {'int': 1});
+    expect(data.intProperty.value, 1);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -83,6 +98,13 @@ class Data3 extends ValueObject {
 
 class Data4 extends ValueObject {
   late final intProperty = field<int>(name: 'int').withFallbackReplacement(() => -1);
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [intProperty];
+}
+
+class Data5 extends ValueObject {
+  late final intProperty = field<int>(name: 'int').withPlaceholder(() => -1);
 
   @override
   List<ValueObjectBehavior> get behaviors => [intProperty];
