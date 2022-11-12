@@ -1,18 +1,24 @@
 import 'package:collection/collection.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/repository.dart';
+import 'package:type/type.dart';
 
 abstract class DropCoreContext {
   List<Repository> get repositories;
 
-  factory DropCoreContext() => _DropCoreContextImpl();
+  TypeContext get typeContext;
+
+  factory DropCoreContext({required TypeContext typeContext}) => _DropCoreContextImpl(typeContext: typeContext);
 }
 
 class _DropCoreContextImpl implements DropCoreContext {
   @override
   final List<Repository> repositories;
 
-  _DropCoreContextImpl({List<Repository>? repositories}) : repositories = repositories ?? [];
+  @override
+  final TypeContext typeContext;
+
+  _DropCoreContextImpl({List<Repository>? repositories, required this.typeContext}) : repositories = repositories ?? [];
 }
 
 extension DropCoreContextExtension on DropCoreContext {

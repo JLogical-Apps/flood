@@ -3,8 +3,9 @@ import 'package:drop_core/src/record/value_object/field_value_object_property.da
 import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class ValueObject extends Record {
+abstract class ValueObject extends Record with EquatableMixin {
   List<ValueObjectBehavior> get behaviors => [];
 
   @override
@@ -25,6 +26,9 @@ abstract class ValueObject extends Record {
       behavior.fromState(state);
     }
   }
+
+  @override
+  List<Object> get props => [state];
 
   FieldValueObjectProperty<T> field<T>({required String name}) => ValueObjectProperty.field<T>(name: name);
 }

@@ -1,3 +1,5 @@
+import 'package:drop_core/src/drop_core_component.dart';
+import 'package:drop_core/src/repository/query_executor/state_query_executor.dart';
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
@@ -15,10 +17,21 @@ class MemoryRepository with IsRepository {
   late final RepositoryStateHandler stateHandler = MemoryRepositoryStateHandler(repository: this);
 }
 
-class MemoryRepositoryQueryExecutor implements RepositoryQueryExecutor {
+class MemoryRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
   final MemoryRepository repository;
 
   MemoryRepositoryQueryExecutor({required this.repository});
+
+  @override
+  RepositoryQueryExecutor get queryExecutor {
+    final stateByIdX = repository.stateByIdX;
+
+    return StateQueryExecutor(
+      dropContext: repository.context.locate<DropCoreComponent>(),
+      statesX:
+          stateByIdX.map((stateById) => stateById.values.toList()).publishValueSeeded(stateByIdX.value.values.toList()),
+    );
+  }
 }
 
 class MemoryRepositoryStateHandler implements RepositoryStateHandler {

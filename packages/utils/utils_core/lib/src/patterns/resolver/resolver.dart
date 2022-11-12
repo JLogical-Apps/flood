@@ -1,5 +1,6 @@
 import 'package:utils_core/src/patterns/resolver/map_resolver.dart';
 import 'package:utils_core/src/patterns/resolver/type_resolver.dart';
+import 'package:utils_core/src/patterns/resolver/wrapper_resolver.dart';
 
 abstract class Resolver<I, O> {
   O? resolveOrNull(I input);
@@ -10,6 +11,10 @@ abstract class Resolver<I, O> {
 
   static TypeResolver<O> byType<O>(List<O> objects) {
     return TypeResolver(resolvableObjects: objects);
+  }
+
+  static WrapperResolver<W, I> fromWrappers<W extends Wrapper<I>, I>(List<W> wrappers) {
+    return WrapperResolver(wrappers: wrappers);
   }
 }
 

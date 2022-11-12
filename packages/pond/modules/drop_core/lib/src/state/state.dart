@@ -46,6 +46,10 @@ class State extends Equatable implements Stateful {
     return copyWith(id: id, type: type);
   }
 
+  State withType(String type) {
+    return copyWith(id: id, type: type);
+  }
+
   State withData(Map<String, dynamic> data) {
     return copyWith(id: id, type: type, data: data);
   }

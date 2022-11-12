@@ -1,3 +1,4 @@
+import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/memory_repository.dart';
@@ -11,7 +12,7 @@ import 'package:drop_core/src/state/stateful.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:type/type.dart';
 
-abstract class Repository implements CorePondComponent {
+abstract class Repository with IsCorePondComponent {
   List<RuntimeType> get handledTypes => [];
 
   RepositoryIdGenerator get idGenerator => RepositoryIdGenerator.uuid();
@@ -26,6 +27,14 @@ abstract class Repository implements CorePondComponent {
 }
 
 extension RepositoryExtension on Repository {
+  Future<T> executeQuery<E extends Entity, T>(QueryRequest<E, T> queryRequest) {
+    return queryExecutor.execute(queryRequest);
+  }
+
+  Stream<T> executeQueryX<E extends Entity, T>(QueryRequest<E, T> queryRequest) {
+    return queryExecutor.executeX(queryRequest);
+  }
+
   Future<State> update(Stateful stateful) async {
     var state = stateful.state;
 
@@ -113,7 +122,10 @@ mixin IsRepositoryWrapper implements RepositoryWrapper {
   RepositoryQueryExecutor get queryExecutor => repository.queryExecutor;
 
   @override
-  late CorePondContext context;
+  CorePondContext get context => repository.context;
+
+  @override
+  set context(CorePondContext context) => repository.context = context;
 
   @override
   List<CorePondComponentBehavior> get behaviors => repository.behaviors;
