@@ -1,3 +1,4 @@
+import 'package:drop_core/src/record/value_object/fallback_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_value_object_property.dart';
@@ -22,13 +23,19 @@ abstract class ValueObjectProperty<G, S> extends ValueObjectBehavior {
 
 mixin IsValueObjectProperty<G, S> implements ValueObjectProperty<G, S> {}
 
-extension NullableValueObjectProperty<G, S> on ValueObjectProperty<G?, S> {
+extension NullableValueObjectPropertyExtensions<G, S> on ValueObjectProperty<G?, S> {
   RequiredValueObjectProperty<G, S> required() {
     return RequiredValueObjectProperty(property: this);
   }
 
   FallbackValueObjectProperty<G, S> withFallback(G Function() fallback) {
     return FallbackValueObjectProperty(property: this, fallback: fallback);
+  }
+}
+
+extension SameGetterSetterValueObjectPropertyExtensions<T> on ValueObjectProperty<T, T> {
+  FallbackReplacementValueObjectProperty<T> withFallbackReplacement(T Function() fallbackReplacement) {
+    return FallbackReplacementValueObjectProperty(property: this, fallbackReplacement: fallbackReplacement);
   }
 }
 

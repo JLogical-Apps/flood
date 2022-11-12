@@ -32,6 +32,22 @@ void main() {
   test('fallback', () {
     final data = Data3();
     expect(data.intProperty.value, -1);
+    expect(data.state.data, {});
+
+    data.intProperty.set(0);
+    expect(data.intProperty.value, 0);
+
+    data.state = State(data: {});
+    expect(data.intProperty.value, -1);
+
+    data.state = State(data: {'int': 1});
+    expect(data.intProperty.value, 1);
+  });
+
+  test('fallback replacement', () {
+    final data = Data4();
+    expect(data.intProperty.value, -1);
+    expect(data.state.data, {'int': -1});
 
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
@@ -60,6 +76,13 @@ class Data2 extends ValueObject {
 
 class Data3 extends ValueObject {
   late final intProperty = field<int>(name: 'int').withFallback(() => -1);
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [intProperty];
+}
+
+class Data4 extends ValueObject {
+  late final intProperty = field<int>(name: 'int').withFallbackReplacement(() => -1);
 
   @override
   List<ValueObjectBehavior> get behaviors => [intProperty];
