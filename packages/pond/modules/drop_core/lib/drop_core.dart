@@ -1,6 +1,7 @@
 export 'src/context/drop_core_context.dart';
 export 'src/drop_core_component.dart';
 export 'src/query/query.dart';
+export 'src/query/request/query_request.dart';
 export 'src/record/entity.dart';
 export 'src/record/record.dart';
 export 'src/record/value_object.dart';

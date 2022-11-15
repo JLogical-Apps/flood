@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -13,5 +15,5 @@ abstract class StateQueryRequestReducer<QR extends QueryRequest<T>, T> extends W
     return input is QR;
   }
 
-  T reduce(QR queryRequest, Iterable<State> states);
+  FutureOr<T> reduce(QR queryRequest, Iterable<State> states);
 }

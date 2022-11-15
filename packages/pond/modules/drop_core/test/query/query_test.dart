@@ -31,6 +31,37 @@ void main() {
     final allUserStates = await repository.executeQuery(Query.from<UserEntity>().allStates());
     expect(allUserStates.map((state) => state.data), users.map((user) => user.state.data).toList());
   });
+
+  test('query all map', () async {
+    final repository = Repository.memory().forType<UserEntity, User>(UserEntity.new, User.new);
+
+    final users = [
+      User()
+        ..nameProperty.value = 'Jake'
+        ..emailProperty.value = 'jake@jake.com',
+      User()
+        ..nameProperty.value = 'John'
+        ..emailProperty.value = 'john@doe.com',
+    ];
+
+    CorePondContext()
+      ..register(TypeCoreComponent())
+      ..register(DropCoreComponent())
+      ..register(repository);
+
+    for (final user in users) {
+      await repository.update(UserEntity()..value = user);
+    }
+
+    final allUserNames = await repository.executeQuery(Query.from<UserEntity>()
+        .all<UserEntity>()
+        .map((entities) => entities.map((entity) => entity.value.nameProperty.value).toList()));
+    expect(allUserNames, users.map((user) => user.nameProperty.value).toList());
+
+    final allUserEmails = await repository.executeQuery(
+        Query.from<UserEntity>().allStates().map((states) => states.map((state) => state['email']).toList()));
+    expect(allUserEmails, users.map((user) => user.emailProperty.value).toList());
+  });
 }
 
 class User extends ValueObject {
