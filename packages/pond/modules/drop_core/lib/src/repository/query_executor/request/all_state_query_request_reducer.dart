@@ -5,13 +5,16 @@ import 'package:drop_core/src/repository/query_executor/request/state_query_requ
 import 'package:drop_core/src/state/state.dart';
 import 'package:type/type.dart';
 
-class AllStateQueryRequestReducer<E extends Entity> extends StateQueryRequestReducer<AllQueryRequest<E>, E, List<E>> {
+class AllStateQueryRequestReducer extends StateQueryRequestReducer<AllQueryRequest, List<Entity>> {
   AllStateQueryRequestReducer({required super.dropContext});
 
   @override
-  List<E> reduce(AllQueryRequest<E> queryRequest, Iterable<State> states) {
-    return states.map((state) {
-      final entity = dropContext.typeContext.getRuntimeType<E>().createInstance();
+  List<Entity> reduce(AllQueryRequest<Entity> queryRequest, Iterable<State> states) {
+    final entityRuntimeType =
+        dropContext.typeContext.getRuntimeTypeRuntime(queryRequest.entityType) as RuntimeType<Entity>;
+    final entities = entityRuntimeType.createList();
+    for (final state in states) {
+      final entity = entityRuntimeType.createInstance();
       entity.id = state.id;
 
       final valueObject =
@@ -19,7 +22,8 @@ class AllStateQueryRequestReducer<E extends Entity> extends StateQueryRequestRed
       valueObject.state = state;
 
       entity.value = valueObject;
-      return entity;
-    }).toList();
+      entities.add(entity);
+    }
+    return entities;
   }
 }

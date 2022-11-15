@@ -25,7 +25,7 @@ void main() {
       await repository.update(UserEntity()..value = user);
     }
 
-    final allUserEntities = await repository.executeQuery(Query.from<UserEntity>().all());
+    final allUserEntities = await repository.executeQuery(Query.from<UserEntity>().all<UserEntity>());
     expect(allUserEntities.map((entity) => entity.value).toList(), users);
 
     final allUserStates = await repository.executeQuery(Query.from<UserEntity>().allStates());

@@ -30,6 +30,10 @@ class RuntimeType<T> {
     return createInstanceOrNull() ?? (throw Exception('Cannot create instance of [$type] because it is abstract'));
   }
 
+  List<T> createList() {
+    return <T>[];
+  }
+
   bool isA(RuntimeType type) {
     return context.isInstanceOf(this, type);
   }

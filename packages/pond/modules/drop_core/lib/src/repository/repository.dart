@@ -27,11 +27,11 @@ abstract class Repository with IsCorePondComponent {
 }
 
 extension RepositoryExtension on Repository {
-  Future<T> executeQuery<E extends Entity, T>(QueryRequest<E, T> queryRequest) {
+  Future<T> executeQuery<T>(QueryRequest<T> queryRequest) {
     return queryExecutor.execute(queryRequest);
   }
 
-  Stream<T> executeQueryX<E extends Entity, T>(QueryRequest<E, T> queryRequest) {
+  Stream<T> executeQueryX<T>(QueryRequest<T> queryRequest) {
     return queryExecutor.executeX(queryRequest);
   }
 

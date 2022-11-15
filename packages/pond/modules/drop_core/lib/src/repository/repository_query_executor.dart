@@ -1,10 +1,9 @@
 import 'package:drop_core/src/query/request/query_request.dart';
-import 'package:drop_core/src/record/entity.dart';
 
 abstract class RepositoryQueryExecutor {
-  Future<T> execute<E extends Entity, T>(QueryRequest<E, T> queryRequest);
+  Future<T> execute<T>(QueryRequest<T> queryRequest);
 
-  Stream<T> executeX<E extends Entity, T>(QueryRequest<E, T> queryRequest);
+  Stream<T> executeX<T>(QueryRequest<T> queryRequest);
 }
 
 abstract class RepositoryQueryExecutorWrapper implements RepositoryQueryExecutor {
@@ -13,8 +12,8 @@ abstract class RepositoryQueryExecutorWrapper implements RepositoryQueryExecutor
 
 mixin IsRepositoryQueryExecutorWrapper implements RepositoryQueryExecutorWrapper {
   @override
-  Future<T> execute<E extends Entity, T>(QueryRequest<E, T> queryRequest) => queryExecutor.execute(queryRequest);
+  Future<T> execute<T>(QueryRequest<T> queryRequest) => queryExecutor.execute(queryRequest);
 
   @override
-  Stream<T> executeX<E extends Entity, T>(QueryRequest<E, T> queryRequest) => queryExecutor.executeX(queryRequest);
+  Stream<T> executeX<T>(QueryRequest<T> queryRequest) => queryExecutor.executeX(queryRequest);
 }
