@@ -6,6 +6,7 @@ import 'package:jlogical_utils/src/pond/state/persistence/json_state_persister.d
 import 'package:jlogical_utils/src/pond/state/persistence/state_persister.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
+import 'package:pool/pool.dart';
 
 import '../../context/app_context.dart';
 import '../../modules/logging/default_logging_module.dart';
@@ -22,6 +23,8 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
 
   Directory get _baseDirectory => AppContext.global.supportDirectory / dataPath;
 
+  static Pool pool = Pool(20);
+
   @override
   Future<void> onLoad(AppContext appContext) async {
     await _baseDirectory.ensureCreated();
@@ -30,9 +33,9 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
 
   @override
   Future<void> saveState(State state) async {
-    final file = await _getFile(state.id!).ensureCreated();
+    final file = await pool.withResource(() => _getFile(state.id!).ensureCreated());
     final json = statePersister.persist(state);
-    await file.writeAsString(json, flush: true);
+    await pool.withResource(() => file.writeAsString(json, flush: true));
   }
 
   Future<State?> getStateOrNull(String id) async {
@@ -41,14 +44,14 @@ mixin WithFileEntityRepository on EntityRepository implements WithCacheEntityRep
       return null;
     }
 
-    final contents = await file.readAsString();
+    final contents = await pool.withResource(() => file.readAsString());
     return guard(() => statePersister.inflate(contents), onStackedError: (e, stack) => logError(e, stack: stack));
   }
 
   @override
   Future<void> deleteState(State state) async {
     final id = state.id ?? (throw Exception('Cannot delete state that has not been saved yet!'));
-    await _getFile(id).delete();
+    await pool.withResource(() => _getFile(id).delete());
   }
 
   @override
