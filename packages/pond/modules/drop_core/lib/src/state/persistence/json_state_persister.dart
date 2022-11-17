@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:drop_core/src/state/persistence/json/json_state_persister_modifier.dart';
+import 'package:drop_core/src/state/persistence/json/runtime_type_json_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/json/state_json_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -13,22 +14,17 @@ class JsonStatePersister implements StatePersister<String> {
 
   late List<JsonStatePersisterModifier> jsonStatePersisterModifiers = [
     StateJsonStatePersisterModifier(runtimeTypeGetter: runtimeTypeGetter),
+    RuntimeTypeJsonStatePersisterModifier(),
   ];
 
   @override
   String persist(State state) {
-    final data = state.data;
+    final data = state.fullData;
     final modifiedData =
         jsonStatePersisterModifiers.fold<Map<String, dynamic>>(data, (data, modifier) => modifier.persist(data));
 
-    final persistedData = {
-      if (state.id != null) State.idField: state.id,
-      if (state.type != null) State.typeField: state.type!.name,
-      ...modifiedData,
-    };
-
     final jsonEncoder = JsonEncoder.withIndent('  ');
-    return jsonEncoder.convert(persistedData);
+    return jsonEncoder.convert(modifiedData);
   }
 
   @override

@@ -23,9 +23,9 @@ class State extends Equatable implements Stateful {
   bool get isNew => id == null;
 
   Map<String, dynamic> get fullData => {
-        ...data,
         if (id != null) idField: id,
         if (type != null) typeField: type,
+        ...data,
       };
 
   operator [](String fieldName) {
