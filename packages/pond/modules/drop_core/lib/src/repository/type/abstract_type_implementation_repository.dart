@@ -16,6 +16,9 @@ class AbstractTypeImplementationRepository<E extends Entity<V>, V extends ValueO
   final E Function() entityConstructor;
   final V Function() valueObjectConstructor;
 
+  final String entityTypeName;
+  final String valueObjectTypeName;
+
   late RuntimeType<E> entityRuntimeType;
   late RuntimeType<V> valueObjectRuntimeType;
 
@@ -25,6 +28,8 @@ class AbstractTypeImplementationRepository<E extends Entity<V>, V extends ValueO
     required this.baseValueObjectType,
     required this.entityConstructor,
     required this.valueObjectConstructor,
+    required this.entityTypeName,
+    required this.valueObjectTypeName,
   });
 
   @override
@@ -34,8 +39,16 @@ class AbstractTypeImplementationRepository<E extends Entity<V>, V extends ValueO
         CorePondComponentBehavior(
           onRegister: (context, comp) {
             final typeComponent = context.locate<TypeCoreComponent>();
-            entityRuntimeType = typeComponent.register<E>(entityConstructor, parents: [baseEntityType]);
-            valueObjectRuntimeType = typeComponent.register<V>(valueObjectConstructor, parents: [baseValueObjectType]);
+            entityRuntimeType = typeComponent.register<E>(
+              entityConstructor,
+              name: entityTypeName,
+              parents: [baseEntityType],
+            );
+            valueObjectRuntimeType = typeComponent.register<V>(
+              valueObjectConstructor,
+              name: valueObjectTypeName,
+              parents: [baseValueObjectType],
+            );
           },
         )
       ];
@@ -48,6 +61,8 @@ class AbstractTypeImplementationRepository<E extends Entity<V>, V extends ValueO
       repository: this,
       baseEntityType: baseEntityType,
       baseValueObjectType: baseValueObjectType,
+      entityTypeName: entityTypeName,
+      valueObjectTypeName: valueObjectTypeName,
       entityConstructor: entityConstructor,
       valueObjectConstructor: valueObjectConstructor,
     );

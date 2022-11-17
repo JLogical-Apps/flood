@@ -1,14 +1,30 @@
 import 'package:drop_core/drop_core.dart';
+import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
+import 'package:type/type.dart';
+import 'package:type_core/type_core.dart';
+import 'package:utils_core/utils_core.dart';
 
 void main() {
+  late CorePondContext context;
+  late DropCoreContext dropContext;
+
+  setUp(() {
+    context = CorePondContext()
+      ..register(TypeCoreComponent())
+      ..register(DropCoreComponent());
+    dropContext = context.locate<DropCoreComponent>();
+  });
+
   test('serialize ValueObject', () {
     final data = Data();
 
+    dropContext.register<Data>(Data.new, name: 'Data');
+
     expect(
-        data.state,
+        data.getState(dropContext),
         State(
-          type: '$Data',
+          type: dropContext.getRuntimeType<Data>(),
           data: {},
         ));
 
@@ -17,9 +33,9 @@ void main() {
     data.stringProperty.value = 'hello world';
 
     expect(
-        data.state,
+        data.getState(dropContext),
         State(
-          type: '$Data',
+          type: dropContext.getRuntimeType<Data>(),
           data: {
             'int': 1,
             'bool': true,

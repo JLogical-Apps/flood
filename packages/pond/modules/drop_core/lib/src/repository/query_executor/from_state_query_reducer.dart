@@ -5,6 +5,6 @@ import 'package:drop_core/src/state/state.dart';
 class FromStateQueryReducer extends StateQueryReducer<FromQuery> {
   @override
   Iterable<State> reduce(FromQuery query, Iterable<State> currentStates) {
-    return currentStates.where((state) => state.type == '${query.entityType}');
+    return currentStates.where((state) => state.type?.type == query.entityType);
   }
 }

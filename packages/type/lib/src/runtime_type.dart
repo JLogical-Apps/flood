@@ -1,21 +1,25 @@
+import 'package:equatable/equatable.dart';
 import 'package:type/src/type_context.dart';
 
-class RuntimeType<T> {
+class RuntimeType<T> extends Equatable {
   final TypeContext context;
 
   final Type type;
+  final String name;
   final T Function()? newInstanceGetter;
   final List<RuntimeType> parents;
 
   const RuntimeType({
     required this.context,
     required this.type,
+    required this.name,
     required T Function() this.newInstanceGetter,
     required this.parents,
   });
 
   const RuntimeType.abstract({
     required this.context,
+    required this.name,
     required this.type,
     required this.parents,
   }) : newInstanceGetter = null;
@@ -49,4 +53,7 @@ class RuntimeType<T> {
   List<RuntimeType> getDescendants() {
     return context.getDescendantsOf(this);
   }
+
+  @override
+  List<Object?> get props => [type];
 }

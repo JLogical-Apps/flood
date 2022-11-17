@@ -1,3 +1,4 @@
+import 'package:drop_core/src/drop_core_component.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
@@ -11,6 +12,7 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:type/type.dart';
+import 'package:utils_core/utils_core.dart';
 
 abstract class Repository with IsCorePondComponent {
   List<RuntimeType> get handledTypes => [];
@@ -36,7 +38,7 @@ extension RepositoryExtension on Repository {
   }
 
   Future<State> update(Stateful stateful) async {
-    var state = stateful.state;
+    var state = stateful.getState(context.locate<DropCoreComponent>());
 
     if (state.isNew) {
       state = state.withId(await idGenerator.generateId());
@@ -48,12 +50,14 @@ extension RepositoryExtension on Repository {
   }
 
   Future<void> delete(Stateful state) {
-    return stateHandler.delete(state.state);
+    return stateHandler.delete(state.getState(context.locate<DropCoreComponent>()));
   }
 
   ForTypeRepository forType<E extends Entity<V>, V extends ValueObject>(
     E Function() entityConstructor,
     V Function() valueObjectConstructor, {
+    required String entityTypeName,
+    required String valueObjectTypeName,
     List<Type>? entityParents,
     List<Type>? valueObjectParents,
   }) {
@@ -61,17 +65,23 @@ extension RepositoryExtension on Repository {
       repository: this,
       entityConstructor: entityConstructor,
       valueObjectConstructor: valueObjectConstructor,
+      entityTypeName: entityTypeName,
+      valueObjectTypeName: valueObjectTypeName,
       entityParents: entityParents ?? [],
       valueObjectParents: valueObjectParents ?? [],
     );
   }
 
   ForAbstractTypeRepository forAbstractType<E extends Entity<V>, V extends ValueObject>({
+    required String entityTypeName,
+    required String valueObjectTypeName,
     List<Type>? entityParents,
     List<Type>? valueObjectParents,
   }) {
     return ForAbstractTypeRepository<E, V>(
       repository: this,
+      entityTypeName: entityTypeName,
+      valueObjectTypeName: valueObjectTypeName,
       entityParents: entityParents ?? [],
       valueObjectParents: valueObjectParents ?? [],
     );

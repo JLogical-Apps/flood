@@ -17,10 +17,11 @@ class _TypeContextImpl implements TypeContext {
 }
 
 extension TypeContextExtensions on TypeContext {
-  RuntimeType<T> register<T>(T Function() newInstanceGetter, {List<Type>? parents}) {
+  RuntimeType<T> register<T>(T Function() newInstanceGetter, {required String name, List<Type>? parents}) {
     final runtimeType = RuntimeType<T>(
       context: this,
       type: T,
+      name: name,
       newInstanceGetter: newInstanceGetter,
       parents: parents?.map((type) => getRuntimeTypeRuntime(type)).toList() ?? [],
     );
@@ -28,10 +29,11 @@ extension TypeContextExtensions on TypeContext {
     return runtimeType;
   }
 
-  RuntimeType<T> registerAbstract<T>({List<Type>? parents}) {
+  RuntimeType<T> registerAbstract<T>({required String name, List<Type>? parents}) {
     final runtimeType = RuntimeType<T>.abstract(
       context: this,
       type: T,
+      name: name,
       parents: parents?.map((type) => getRuntimeTypeRuntime(type)).toList() ?? [],
     );
     runtimeTypes.add(runtimeType);
@@ -52,6 +54,14 @@ extension TypeContextExtensions on TypeContext {
 
   RuntimeType<T> getRuntimeType<T>() {
     return getRuntimeTypeOrNull<T>() ?? (throw Exception('Cannot find runtime type for [$T]'));
+  }
+
+  RuntimeType? getByNameOrNull(String typeName) {
+    return runtimeTypes.firstWhereOrNull((runtimeType) => runtimeType.name == typeName);
+  }
+
+  RuntimeType getByName(String typeName) {
+    return getByNameOrNull(typeName) ?? (throw Exception('Cannot find type with name [$typeName]'));
   }
 
   dynamic constructOrNull(Type type) {
@@ -83,9 +93,11 @@ extension TypeContextExtensions on TypeContext {
   }
 }
 
-mixin WithTypeContextWrapper implements TypeContext {
+abstract class TypeContextWrapper implements TypeContext {
   TypeContext get typeContext;
+}
 
+mixin IsTypeContextWrapper implements TypeContextWrapper {
   @override
   List<RuntimeType> get runtimeTypes => typeContext.runtimeTypes;
 }

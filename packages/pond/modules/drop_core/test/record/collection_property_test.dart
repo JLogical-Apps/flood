@@ -1,14 +1,23 @@
 import 'package:drop_core/drop_core.dart';
+import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
+import 'package:type/type.dart';
+import 'package:type_core/type_core.dart';
+import 'package:utils_core/utils_core.dart';
 
 void main() {
   test('list properties', () {
+    final context = CorePondContext()
+      ..register(TypeCoreComponent())
+      ..register(DropCoreComponent());
+    final dropContext = context.locate<DropCoreComponent>()..register<ListData>(ListData.new, name: 'ListData');
+
     final listData = ListData();
-    expect(listData.state.data, {});
+    expect(listData.getState(dropContext).data, {});
 
     listData.intsProperty.value = [1, 2, 3];
     listData.stringsProperty.value = ['one', 'two', 'three'];
-    expect(listData.state.data, {
+    expect(listData.getState(dropContext).data, {
       'ints': [1, 2, 3],
       'strings': ['one', 'two', 'three'],
     });
@@ -22,12 +31,17 @@ void main() {
   });
 
   test('map properties', () {
+    final context = CorePondContext()
+      ..register(TypeCoreComponent())
+      ..register(DropCoreComponent());
+    final dropContext = context.locate<DropCoreComponent>()..register<MapData>(MapData.new, name: 'MapData');
+
     final mapData = MapData();
-    expect(mapData.state.data, {});
+    expect(mapData.getState(dropContext).data, {});
 
     mapData.intByIdProperty.value = {'one': 1, 'two': 2, 'three': 3};
     mapData.stringByIdProperty.value = {'A': 'a', 'B': 'b', 'C': 'c'};
-    expect(mapData.state.data, {
+    expect(mapData.getState(dropContext).data, {
       'intById': {'one': 1, 'two': 2, 'three': 3},
       'stringById': {'A': 'a', 'B': 'b', 'C': 'c'},
     });

@@ -27,6 +27,11 @@ void main() {
   test('creating, saving, and deleting from a repository.', () async {
     final memoryRepository = Repository.memory();
 
+    CorePondContext()
+      ..register(TypeCoreComponent())
+      ..register(DropCoreComponent())
+      ..register(memoryRepository);
+
     expect(memoryRepository.stateByIdX.value, {});
 
     var state = State(
@@ -58,7 +63,12 @@ class UserEntity extends Entity<User> {}
 
 class UserRepository with IsRepositoryWrapper {
   @override
-  final Repository repository = Repository.memory().forType<UserEntity, User>(UserEntity.new, User.new);
+  final Repository repository = Repository.memory().forType<UserEntity, User>(
+    UserEntity.new,
+    User.new,
+    entityTypeName: 'UserEntity',
+    valueObjectTypeName: 'User',
+  );
 }
 
 class Budget extends ValueObject {}
@@ -67,7 +77,12 @@ class BudgetEntity extends Entity<Budget> {}
 
 class BudgetRepository with IsRepositoryWrapper {
   @override
-  final Repository repository = Repository.memory().forType<BudgetEntity, Budget>(BudgetEntity.new, Budget.new);
+  final Repository repository = Repository.memory().forType<BudgetEntity, Budget>(
+    BudgetEntity.new,
+    Budget.new,
+    entityTypeName: 'BudgetEntity',
+    valueObjectTypeName: 'Budget',
+  );
 }
 
 abstract class BudgetTransaction extends ValueObject {}
@@ -81,7 +96,14 @@ class EnvelopeTransactionEntity extends BudgetTransactionEntity<EnvelopeTransact
 class BudgetTransactionRepository with IsRepositoryWrapper {
   @override
   final Repository repository = Repository.memory()
-      .forAbstractType<BudgetTransactionEntity, BudgetTransaction>()
+      .forAbstractType<BudgetTransactionEntity, BudgetTransaction>(
+        entityTypeName: 'BudgetTransactionEntity',
+        valueObjectTypeName: 'BudgetTransaction',
+      )
       .withImplementation<EnvelopeTransactionEntity, EnvelopeTransaction>(
-          EnvelopeTransactionEntity.new, EnvelopeTransaction.new);
+        EnvelopeTransactionEntity.new,
+        EnvelopeTransaction.new,
+        entityTypeName: 'EnvelopeTransactionEntity',
+        valueObjectTypeName: 'EnvelopeTransaction',
+      );
 }

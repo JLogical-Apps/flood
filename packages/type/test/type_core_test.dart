@@ -4,7 +4,7 @@ import 'package:type/type.dart';
 void main() {
   test('registering and creating an instance of a runtime type.', () {
     final context = TypeContext();
-    context.register<MyConcreteClass>(MyConcreteClass.new);
+    context.register<MyConcreteClass>(MyConcreteClass.new, name: 'MyConcreteClass');
 
     final myConcreteClassType = MyConcreteClass;
     expect(context.construct(myConcreteClassType), isA<MyConcreteClass>());
@@ -12,7 +12,7 @@ void main() {
 
   test('cannot construct abstract runtime type.', () {
     final context = TypeContext();
-    context.registerAbstract<MyAbstractClass>();
+    context.registerAbstract<MyAbstractClass>(name: 'MyConcreteClass');
 
     final myAbstractClassType = MyAbstractClass;
     expect(context.constructOrNull(myAbstractClassType), null);
@@ -20,8 +20,8 @@ void main() {
 
   test('concrete class is an instance of its parent.', () {
     final context = TypeContext();
-    context.registerAbstract<MyAbstractClass>();
-    context.register<MyConcreteClass>(MyConcreteClass.new, parents: [MyAbstractClass]);
+    context.registerAbstract<MyAbstractClass>(name: 'MyAbstractClass');
+    context.register<MyConcreteClass>(MyConcreteClass.new, name: 'MyConcreteClass', parents: [MyAbstractClass]);
 
     final abstractRuntimeType = context.getRuntimeType<MyAbstractClass>();
     final concreteRuntimeType = context.getRuntimeType<MyConcreteClass>();
@@ -44,9 +44,10 @@ void main() {
 
   test('grandparent classes.', () {
     final context = TypeContext();
-    context.registerAbstract<MyAbstractClass>();
-    context.register<MyConcreteClass>(MyConcreteClass.new, parents: [MyAbstractClass]);
-    context.register<MySubConcreteClass>(MySubConcreteClass.new, parents: [MyConcreteClass]);
+    context.registerAbstract<MyAbstractClass>(name: 'MyAbstractClass');
+    context.register<MyConcreteClass>(MyConcreteClass.new, name: 'MyConcreteClass', parents: [MyAbstractClass]);
+    context
+        .register<MySubConcreteClass>(MySubConcreteClass.new, name: 'MySubConcreteClass', parents: [MyConcreteClass]);
 
     final abstractRuntimeType = context.getRuntimeType<MyAbstractClass>();
     final concreteRuntimeType = context.getRuntimeType<MyConcreteClass>();

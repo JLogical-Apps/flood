@@ -11,6 +11,9 @@ class ForAbstractTypeRepository<E extends Entity<V>, V extends ValueObject> with
   @override
   final Repository repository;
 
+  final String entityTypeName;
+  final String valueObjectTypeName;
+
   final List<Type> entityParents;
   final List<Type> valueObjectParents;
 
@@ -21,6 +24,8 @@ class ForAbstractTypeRepository<E extends Entity<V>, V extends ValueObject> with
 
   ForAbstractTypeRepository({
     required this.repository,
+    required this.entityTypeName,
+    required this.valueObjectTypeName,
     required this.entityParents,
     required this.valueObjectParents,
   });
@@ -35,8 +40,11 @@ class ForAbstractTypeRepository<E extends Entity<V>, V extends ValueObject> with
         CorePondComponentBehavior(
           onRegister: (context, comp) {
             final typeComponent = context.locate<TypeCoreComponent>();
-            entityRuntimeType = typeComponent.registerAbstract<E>(parents: entityParents);
-            valueObjectRuntimeType = typeComponent.registerAbstract<V>(parents: valueObjectParents);
+            entityRuntimeType = typeComponent.registerAbstract<E>(name: entityTypeName, parents: entityParents);
+            valueObjectRuntimeType = typeComponent.registerAbstract<V>(
+              name: valueObjectTypeName,
+              parents: valueObjectParents,
+            );
             entityParentsRuntimeTypes = entityParents.map((type) => typeComponent.getRuntimeTypeRuntime(type)).toList();
             valueObjectParentsRuntimeTypes =
                 valueObjectParents.map((type) => typeComponent.getRuntimeTypeRuntime(type)).toList();
@@ -46,12 +54,16 @@ class ForAbstractTypeRepository<E extends Entity<V>, V extends ValueObject> with
 
   AbstractTypeImplementationRepository withImplementation<E2 extends Entity<V2>, V2 extends ValueObject>(
     E2 Function() entityConstructor,
-    V2 Function() valueObjectConstructor,
-  ) {
+    V2 Function() valueObjectConstructor, {
+    required String entityTypeName,
+    required String valueObjectTypeName,
+  }) {
     return AbstractTypeImplementationRepository<E2, V2>(
       repository: this,
       baseEntityType: E,
       baseValueObjectType: V,
+      entityTypeName: entityTypeName,
+      valueObjectTypeName: valueObjectTypeName,
       entityConstructor: entityConstructor,
       valueObjectConstructor: valueObjectConstructor,
     );

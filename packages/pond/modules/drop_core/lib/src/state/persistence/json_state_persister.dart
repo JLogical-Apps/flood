@@ -1,22 +1,41 @@
 import 'dart:convert';
 
+import 'package:drop_core/src/state/persistence/json/json_state_persister_modifier.dart';
+import 'package:drop_core/src/state/persistence/json/state_json_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
-import 'package:utils_core/utils_core.dart';
+import 'package:type/type.dart';
 
-class JsonStatePersister extends StatePersister<String> {
+class JsonStatePersister implements StatePersister<String> {
+  final RuntimeType Function(String typeName) runtimeTypeGetter;
+
+  JsonStatePersister({required this.runtimeTypeGetter});
+
+  late List<JsonStatePersisterModifier> jsonStatePersisterModifiers = [
+    StateJsonStatePersisterModifier(runtimeTypeGetter: runtimeTypeGetter),
+  ];
+
   @override
   String persist(State state) {
-    final fullData = state.fullData;
-    fullData.replaceWhere((key, value) => value is State, (key, value) => (value as State).fullData);
+    final data = state.data;
+    final modifiedData =
+        jsonStatePersisterModifiers.fold<Map<String, dynamic>>(data, (data, modifier) => modifier.persist(data));
+
+    final persistedData = {
+      if (state.id != null) State.idField: state.id,
+      if (state.type != null) State.typeField: state.type!.name,
+      ...modifiedData,
+    };
 
     final jsonEncoder = JsonEncoder.withIndent('  ');
-    return jsonEncoder.convert(fullData);
+    return jsonEncoder.convert(persistedData);
   }
 
   @override
   State inflate(String persisted) {
-    final fullData = json.decode(persisted) as Map<String, dynamic>;
-    return State.fromMap(fullData);
+    final persistedData = json.decode(persisted) as Map<String, dynamic>;
+    final modifiedData = jsonStatePersisterModifiers.fold<Map<String, dynamic>>(
+        persistedData, (data, modifier) => modifier.inflate(data));
+    return State.fromMap(modifiedData, runtimeTypeGetter: runtimeTypeGetter);
   }
 }

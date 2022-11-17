@@ -13,6 +13,9 @@ class ForTypeRepository<E extends Entity<V>, V extends ValueObject> with IsRepos
   final E Function() entityConstructor;
   final V Function() valueObjectConstructor;
 
+  final String entityTypeName;
+  final String valueObjectTypeName;
+
   final List<Type> entityParents;
   final List<Type> valueObjectParents;
 
@@ -25,6 +28,8 @@ class ForTypeRepository<E extends Entity<V>, V extends ValueObject> with IsRepos
     required this.repository,
     required this.entityConstructor,
     required this.valueObjectConstructor,
+    required this.entityTypeName,
+    required this.valueObjectTypeName,
     required this.entityParents,
     required this.valueObjectParents,
   });
@@ -39,8 +44,16 @@ class ForTypeRepository<E extends Entity<V>, V extends ValueObject> with IsRepos
         CorePondComponentBehavior(
           onRegister: (context, comp) {
             final typeComponent = context.locate<TypeCoreComponent>();
-            entityRuntimeType = typeComponent.register<E>(entityConstructor, parents: entityParents);
-            valueObjectRuntimeType = typeComponent.register<V>(valueObjectConstructor, parents: valueObjectParents);
+            entityRuntimeType = typeComponent.register<E>(
+              entityConstructor,
+              name: entityTypeName,
+              parents: entityParents,
+            );
+            valueObjectRuntimeType = typeComponent.register<V>(
+              valueObjectConstructor,
+              name: valueObjectTypeName,
+              parents: valueObjectParents,
+            );
             entityParentsRuntimeTypes = entityParents.map((type) => typeComponent.getRuntimeTypeRuntime(type)).toList();
             valueObjectParentsRuntimeTypes =
                 valueObjectParents.map((type) => typeComponent.getRuntimeTypeRuntime(type)).toList();

@@ -1,20 +1,24 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/record.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:equatable/equatable.dart';
+import 'package:type/type.dart';
 
 abstract class ValueObject extends Record with EquatableMixin {
   List<ValueObjectBehavior> get behaviors => [];
 
   @override
-  State get state {
+  State getState(DropCoreContext context) {
+    return scaffoldState.withType(context.getRuntimeTypeRuntime(runtimeType));
+  }
+
+  /// The state of the ValueObject without the type set.
+  State get scaffoldState {
     final state = behaviors.fold<State>(
-      State(
-        type: '$runtimeType',
-        data: {},
-      ),
+      State(data: {}),
       (state, behavior) => behavior.modifyState(state),
     );
 
@@ -28,7 +32,7 @@ abstract class ValueObject extends Record with EquatableMixin {
   }
 
   @override
-  List<Object> get props => [state];
+  List<Object> get props => [scaffoldState];
 
   FieldValueObjectProperty<T> field<T>({required String name}) => ValueObjectProperty.field<T>(name: name);
 }

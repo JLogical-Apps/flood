@@ -1,7 +1,21 @@
 import 'package:drop_core/drop_core.dart';
+import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
+import 'package:type/type.dart';
+import 'package:type_core/type_core.dart';
+import 'package:utils_core/utils_core.dart';
 
 void main() {
+  late CorePondContext context;
+  late DropCoreContext dropContext;
+
+  setUp(() {
+    context = CorePondContext()
+      ..register(TypeCoreComponent())
+      ..register(DropCoreComponent());
+    dropContext = context.locate<DropCoreComponent>();
+  });
+
   test('properties', () {
     final data = Data1();
     expect(data.intProperty.value, null);
@@ -30,9 +44,11 @@ void main() {
   });
 
   test('fallback', () {
+    dropContext.register<Data3>(Data3.new, name: 'Data3');
+
     final data = Data3();
     expect(data.intProperty.value, -1);
-    expect(data.state.data, {});
+    expect(data.getState(dropContext).data, {});
 
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
@@ -45,9 +61,11 @@ void main() {
   });
 
   test('fallback replacement', () {
+    dropContext.register<Data4>(Data4.new, name: 'Data4');
+
     final data = Data4();
     expect(data.intProperty.value, -1);
-    expect(data.state.data, {'int': -1});
+    expect(data.getState(dropContext).data, {'int': -1});
 
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
@@ -60,9 +78,11 @@ void main() {
   });
 
   test('placeholder', () {
+    dropContext.register<Data5>(Data5.new, name: 'Data5');
+
     final data = Data5();
     expect(data.intProperty.value, -1);
-    expect(data.state.data, {});
+    expect(data.getState(dropContext).data, {});
 
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);

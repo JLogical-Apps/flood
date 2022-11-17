@@ -2,10 +2,16 @@ import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
 import 'package:type_core/type_core.dart';
+import 'package:utils_core/utils_core.dart';
 
 void main() {
   test('query all', () async {
-    final repository = Repository.memory().forType<UserEntity, User>(UserEntity.new, User.new);
+    final repository = Repository.memory().forType<UserEntity, User>(
+      UserEntity.new,
+      User.new,
+      entityTypeName: 'UserEntity',
+      valueObjectTypeName: 'User',
+    );
 
     final users = [
       User()
@@ -16,7 +22,7 @@ void main() {
         ..emailProperty.value = 'john@doe.com',
     ];
 
-    CorePondContext()
+    final context = CorePondContext()
       ..register(TypeCoreComponent())
       ..register(DropCoreComponent())
       ..register(repository);
@@ -29,11 +35,17 @@ void main() {
     expect(allUserEntities.map((entity) => entity.value).toList(), users);
 
     final allUserStates = await repository.executeQuery(Query.from<UserEntity>().allStates());
-    expect(allUserStates.map((state) => state.data), users.map((user) => user.state.data).toList());
+    expect(allUserStates.map((state) => state.data),
+        users.map((user) => user.getState(context.locate<DropCoreComponent>()).data).toList());
   });
 
   test('query all map', () async {
-    final repository = Repository.memory().forType<UserEntity, User>(UserEntity.new, User.new);
+    final repository = Repository.memory().forType<UserEntity, User>(
+      UserEntity.new,
+      User.new,
+      entityTypeName: 'UserEntity',
+      valueObjectTypeName: 'User',
+    );
 
     final users = [
       User()

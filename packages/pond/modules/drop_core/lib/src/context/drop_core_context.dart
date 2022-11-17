@@ -3,15 +3,13 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:type/type.dart';
 
-abstract class DropCoreContext {
+abstract class DropCoreContext implements TypeContextWrapper {
   List<Repository> get repositories;
-
-  TypeContext get typeContext;
 
   factory DropCoreContext({required TypeContext typeContext}) => _DropCoreContextImpl(typeContext: typeContext);
 }
 
-class _DropCoreContextImpl implements DropCoreContext {
+class _DropCoreContextImpl with IsTypeContextWrapper implements DropCoreContext {
   @override
   final List<Repository> repositories;
 
@@ -42,7 +40,10 @@ extension DropCoreContextExtension on DropCoreContext {
   }
 }
 
-mixin IsDropCoreContext implements DropCoreContext {}
+mixin IsDropCoreContext implements DropCoreContext {
+  @override
+  List<RuntimeType> get runtimeTypes => typeContext.runtimeTypes;
+}
 
 abstract class DropCoreContextWrapper implements DropCoreContext {
   DropCoreContext get dropCoreContext;
@@ -54,4 +55,7 @@ abstract class DropCoreContextWrapper implements DropCoreContext {
 mixin IsDropCoreContextWrapper implements DropCoreContextWrapper {
   @override
   List<Repository> get repositories => dropCoreContext.repositories;
+
+  @override
+  List<RuntimeType> get runtimeTypes => dropCoreContext.runtimeTypes;
 }
