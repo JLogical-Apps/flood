@@ -1658,7 +1658,7 @@ class FlatStyle extends Style {
   Future<T?> navigateTo<T, P extends Widget>({
     required BuildContext context,
     required Widget Function(BuildContext context) page,
-    bool isRoot: true,
+    bool isRoot: false,
   }) {
     log('Navigating to $P');
     if (isRoot) {
