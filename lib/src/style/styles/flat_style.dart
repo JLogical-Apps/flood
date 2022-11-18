@@ -606,7 +606,7 @@ class FlatStyle extends Style {
       });
       final textController = useTextEditingController();
       if (textController.text != textField.initialText) {
-        textController.text = textField.initialText ?? '';
+        textController.value = textController.value.copyWith(text: textField.initialText ?? '');
       }
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
