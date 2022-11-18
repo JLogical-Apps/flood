@@ -6,6 +6,7 @@ export 'model/fields/bool_port_field.dart';
 export 'model/fields/currency_port_field.dart';
 export 'model/fields/date_port_field.dart';
 export 'model/fields/double_port_field.dart';
+export 'model/fields/duration_port_field.dart';
 export 'model/fields/embedded_port_field.dart';
 export 'model/fields/int_port_field.dart';
 export 'model/fields/manual_port_field.dart';
