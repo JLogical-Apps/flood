@@ -105,6 +105,12 @@ extension DatePortFieldModelExtensions on PortField<DateTime?> {
   PortField<DateTime?> isAfterNow() => withSimpleValidator(Validator.isAfterNow());
 }
 
+extension DurationPortFieldModelExtensions on PortField<Duration?> {
+  PortField<Duration?> isLongerThan(Duration duration) => withSimpleValidator(Validator.isLongerThan(duration));
+
+  PortField<Duration?> isShorterThan(Duration duration) => withSimpleValidator(Validator.isShorterThan(duration));
+}
+
 extension NumPortFieldModelExtensions<N extends num> on PortField<N?> {
   PortField<N?> isLessThan(N lessThan) => withSimpleValidator(Validator.isLessThan(lessThan));
 

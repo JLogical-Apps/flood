@@ -14,6 +14,8 @@ import 'package:jlogical_utils/src/patterns/validation/validators/string/min_len
 import 'validation_exception.dart';
 import 'validators/datetime/is_after_now_validator.dart';
 import 'validators/datetime/is_before_now_validator.dart';
+import 'validators/duration/is_longer_than_validator.dart';
+import 'validators/duration/is_shorter_than_validator.dart';
 import 'validators/email/is_email_validator.dart';
 import 'validators/list/is_one_of_validator.dart';
 import 'validators/parsing/is_currency_validator.dart';
@@ -88,6 +90,14 @@ abstract class Validator<V> {
 
   static IsBeforeNowValidator isBeforeNow() {
     return IsBeforeNowValidator();
+  }
+
+  static IsLongerThanValidator isLongerThan(Duration duration) {
+    return IsLongerThanValidator(duration: duration);
+  }
+
+  static IsShorterThanValidator isShorterThan(Duration duration) {
+    return IsShorterThanValidator(duration: duration);
   }
 
   static IsOneOfValidator<T> isOneOf<T>(List<T> options) {
