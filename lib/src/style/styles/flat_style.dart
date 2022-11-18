@@ -1658,9 +1658,17 @@ class FlatStyle extends Style {
   Future<T?> navigateTo<T, P extends Widget>({
     required BuildContext context,
     required Widget Function(BuildContext context) page,
+    bool isRoot: true,
   }) {
     log('Navigating to $P');
-    return Navigator.of(context).push(MaterialPageRoute(builder: page, settings: RouteSettings(name: '$P')));
+    if (isRoot) {
+      return Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: page, settings: RouteSettings(name: '$P')),
+        (route) => false,
+      );
+    } else {
+      return Navigator.of(context).push(MaterialPageRoute(builder: page, settings: RouteSettings(name: '$P')));
+    }
   }
 
   @override

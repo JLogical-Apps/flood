@@ -126,7 +126,8 @@ abstract class Style {
   Widget icon(BuildContext context, StyleContext styleContext, StyledIcon icon) => throw UnimplementedError();
 
   /// A calendar.
-  Widget calendar(BuildContext context, StyleContext styleContext, StyledCalendar calendar) => throw UnimplementedError();
+  Widget calendar(BuildContext context, StyleContext styleContext, StyledCalendar calendar) =>
+      throw UnimplementedError();
 
   /// A chip. This should respond to the chip having different emphases.
   Widget chip(BuildContext context, StyleContext styleContext, StyledChip chip) => throw UnimplementedError();
@@ -152,9 +153,11 @@ abstract class Style {
       throw UnimplementedError();
 
   /// Navigates to the [page] and returns the value given when [navigateBack] is called.
+  /// If [isRoot] is true, replaces all routes with the page.
   Future<T?> navigateTo<T, P extends Widget>({
     required BuildContext context,
     required P Function(BuildContext context) page,
+    bool isRoot: false,
   }) =>
       throw UnimplementedError();
 
