@@ -63,6 +63,7 @@ class LocalPushNotificationService extends PushNotificationService {
           priority: Priority.defaultPriority,
           importance: Importance.defaultImportance,
         ),
+        iOS: DarwinNotificationDetails(presentAlert: true),
       ),
     );
   }
