@@ -13,6 +13,8 @@ import 'push_notification.dart';
 class PushNotificationsModule extends AppModule {
   final void Function(String? token) onDeviceTokenGenerated;
 
+  String? lastDeviceTokenGenerated;
+
   late PushNotificationService service = _getPushNotificationService();
 
   PushNotificationsModule({required this.onDeviceTokenGenerated});
@@ -34,7 +36,12 @@ class PushNotificationsModule extends AppModule {
       case Environment.device:
         return LocalPushNotificationService();
       default:
-        return FirebasePushNotificationService(onDeviceTokenGenerated: onDeviceTokenGenerated);
+        return FirebasePushNotificationService(
+          onDeviceTokenGenerated: (token) {
+            lastDeviceTokenGenerated = token;
+            onDeviceTokenGenerated(token);
+          },
+        );
     }
   }
 
