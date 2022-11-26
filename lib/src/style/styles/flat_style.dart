@@ -611,7 +611,7 @@ class FlatStyle extends Style {
         textController.value = textController.value.copyWith(
           text: text,
           selection: TextSelection.fromPosition(
-            TextPosition(offset: max(0, min(text.length, textController.selection.baseOffset))),
+            TextPosition(offset: max(0, min(text.length + 1, textController.selection.baseOffset))),
           ),
         );
       }
