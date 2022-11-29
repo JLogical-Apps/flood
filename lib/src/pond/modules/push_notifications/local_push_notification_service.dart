@@ -8,6 +8,8 @@ import 'push_notification_service.dart';
 class LocalPushNotificationService extends PushNotificationService {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
+  bool initialized = false;
+
   @override
   Future<void> onLoad(AppContext context) async {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -47,10 +49,16 @@ class LocalPushNotificationService extends PushNotificationService {
           badge: true,
           sound: true,
         );
+
+    initialized = true;
   }
 
   @override
   Future<void> sendNotificationTo({required String to, required PushNotification notification}) async {
+    if (!initialized) {
+      return;
+    }
+
     await flutterLocalNotificationsPlugin.show(
       0,
       notification.title,
