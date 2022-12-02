@@ -43,7 +43,7 @@ class StyledButton extends StyledWidget {
     this.color,
     this.borderRadius,
     required this.onTapped,
-    this.showLoadingIndicator: false,
+    this.showLoadingIndicator: true,
     required this.emphasis,
   }) : super(key: key);
 
@@ -56,7 +56,7 @@ class StyledButton extends StyledWidget {
     this.color,
     this.borderRadius,
     required this.onTapped,
-    this.showLoadingIndicator: false,
+    this.showLoadingIndicator: true,
   })  : emphasis = Emphasis.low,
         super(key: key);
 
@@ -69,7 +69,7 @@ class StyledButton extends StyledWidget {
     this.color,
     this.borderRadius,
     required this.onTapped,
-    this.showLoadingIndicator: false,
+    this.showLoadingIndicator: true,
   })  : emphasis = Emphasis.medium,
         super(key: key);
 
@@ -82,7 +82,7 @@ class StyledButton extends StyledWidget {
     this.color,
     this.borderRadius,
     required this.onTapped,
-    this.showLoadingIndicator: false,
+    this.showLoadingIndicator: true,
   })  : emphasis = Emphasis.high,
         super(key: key);
 
