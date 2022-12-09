@@ -11,6 +11,10 @@ PODS:
     - firebase_core
     - Flutter
     - nanopb (< 2.30910.0, >= 2.30908.0)
+  - cloud_functions (4.0.5):
+    - Firebase/Functions (= 10.2.0)
+    - firebase_core
+    - Flutter
   - Firebase/Analytics (10.2.0):
     - Firebase/Core
   - Firebase/Auth (10.2.0):
@@ -24,6 +28,9 @@ PODS:
   - Firebase/Firestore (10.2.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 10.2.0)
+  - Firebase/Functions (10.2.0):
+    - Firebase/CoreOnly
+    - FirebaseFunctions (~> 10.2.0)
   - Firebase/Messaging (10.2.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 10.2.0)
@@ -90,6 +97,14 @@ PODS:
   - FirebaseFirestore/Base (10.2.0)
   - FirebaseFirestore/WithLeveldb (10.2.0):
     - FirebaseFirestore/Base
+  - FirebaseFunctions (10.2.0):
+    - FirebaseAppCheckInterop (~> 10.0)
+    - FirebaseAuthInterop (~> 10.0)
+    - FirebaseCore (~> 10.0)
+    - FirebaseCoreExtension (~> 10.0)
+    - FirebaseMessagingInterop (~> 10.0)
+    - FirebaseSharedSwift (~> 10.0)
+    - GTMSessionFetcher/Core (< 4.0, >= 2.1)
   - FirebaseInstallations (10.2.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
@@ -104,6 +119,8 @@ PODS:
     - GoogleUtilities/Reachability (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - nanopb (< 2.30910.0, >= 2.30908.0)
+  - FirebaseMessagingInterop (10.2.0)
+  - FirebaseSharedSwift (10.2.0)
   - FirebaseStorage (10.2.0):
     - FirebaseAppCheckInterop (~> 10.0)
     - FirebaseAuthInterop (~> 10.0)
@@ -203,6 +220,7 @@ PODS:
 DEPENDENCIES:
   - better_player (from `.symlinks/plugins/better_player/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
+  - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -232,8 +250,11 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreExtension
     - FirebaseCoreInternal
+    - FirebaseFunctions
     - FirebaseInstallations
     - FirebaseMessaging
+    - FirebaseMessagingInterop
+    - FirebaseSharedSwift
     - FirebaseStorage
     - FMDB
     - GCDWebServer
@@ -252,6 +273,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/better_player/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
+  cloud_functions:
+    :path: ".symlinks/plugins/cloud_functions/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_auth:
@@ -297,6 +320,7 @@ SPEC CHECKSUMS:
   better_player: 2406bfe8175203c7a46fa15f9d778d73b12e1646
   Cache: 4ca7e00363fca5455f26534e5607634c820ffc2d
   cloud_firestore: 14451f06cca99dbd56b069624621063150fef3e5
+  cloud_functions: b55a388198fc5a3135d0c5f2e36e8d168054ba06
   Firebase: a3ea7eba4382afd83808376edb99acdaff078dcf
   firebase_analytics: f58660932fa1d373ced20b098ada23fe0ed1f55b
   firebase_auth: dc7124acfe6adb5823dcc4f3063c6b5ab6f92428
@@ -311,8 +335,11 @@ SPEC CHECKSUMS:
   FirebaseCoreExtension: d08b424832917cf13612021574399afbbedffeef
   FirebaseCoreInternal: 091bde13e47bb1c5e9fe397634f3593dc390430f
   FirebaseFirestore: 8efd95c87f0210125fbd50d1a894e2693053c9c9
+  FirebaseFunctions: eaa208f64f2f179f0ab9b775fecdec07fdd74d90
   FirebaseInstallations: 004915af170935e3a583faefd5f8bc851afc220f
   FirebaseMessaging: cc9f40f5b7494680f3844d08e517e92aa4e8d9f7
+  FirebaseMessagingInterop: b46e7fcf39c0e9b16841e258645a320a154af240
+  FirebaseSharedSwift: a160b39d4ce77be922b3d6ff009099c7294e36e5
   FirebaseStorage: e7b3fdc90b579cda35e5a0e4c6b206325766e75a
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
