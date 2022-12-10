@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -605,16 +606,21 @@ class FlatStyle extends Style {
         return () => focusNode.removeListener(listener);
       });
       final textController = useTextEditingController();
-      if (textController.text != textField.initialText) {
+
+      final previousText = usePrevious(textField.initialText);
+
+      if (previousText != textField.initialText && textField.initialText != textController.text) {
         final text = textField.initialText ?? '';
-        final offset = textController.selection.baseOffset == textController.text.length
-            ? text.length
-            : textController.selection.baseOffset;
+        final isAtEnd =
+            textController.text.length + 1 == text.length && textController.selection.baseOffset + 1 == text.length;
+        final offset = isAtEnd ? text.length : min(text.length, textController.selection.baseOffset);
+
         textController.value = textController.value.copyWith(
           text: text,
           selection: TextSelection.collapsed(offset: offset),
         );
       }
+
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: Column(

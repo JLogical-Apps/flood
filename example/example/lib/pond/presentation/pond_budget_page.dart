@@ -103,6 +103,7 @@ class PondBudgetPage extends HookWidget {
                       initialText: string.value,
                       onChanged: (s) => string.value = s,
                     ),
+                    StyledBodyText(string.value),
                     for (final imageAsset in imageAssets)
                       GestureDetector(
                         onTap: imageAsset.getOrNull() == null
