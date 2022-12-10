@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -608,11 +607,12 @@ class FlatStyle extends Style {
       final textController = useTextEditingController();
       if (textController.text != textField.initialText) {
         final text = textField.initialText ?? '';
+        final offset = textController.selection.baseOffset == textController.text.length
+            ? text.length
+            : textController.selection.baseOffset;
         textController.value = textController.value.copyWith(
           text: text,
-          selection: TextSelection.fromPosition(
-            TextPosition(offset: max(0, min(text.length, textController.selection.baseOffset))),
-          ),
+          selection: TextSelection.collapsed(offset: offset),
         );
       }
       return Padding(

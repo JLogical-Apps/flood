@@ -28,6 +28,15 @@ class PondBudgetPage extends HookWidget {
 
     final isLoading = useState<bool>(false);
 
+    final string = useState<String>('');
+    useOneTimeEffect(() {
+      () async {
+        await Future.delayed(Duration(seconds: 1));
+        print('set value');
+        string.value = 'Hi!';
+      }();
+    });
+
     final budgetAmountX = useComputed(() => envelopesQueryController.model.valueX.mapWithValue(
         (maybeEnvelopeEntities) => maybeEnvelopeEntities.mapIfPresent<int>((envelopeEntities) =>
             envelopeEntities.sumBy((envelopeEntity) => envelopeEntity.value.amountProperty.value!).round())));
@@ -90,6 +99,10 @@ class PondBudgetPage extends HookWidget {
                     'Budget: ${budget.nameProperty.value}\n${maybeBudgetAmount.mapIfPresent((amount) => amount.formatCentsAsCurrency()).get(orElse: () => 'N/A')}',
                 body: ScrollColumn.withScrollbar(
                   children: [
+                    StyledTextField(
+                      initialText: string.value,
+                      onChanged: (s) => string.value = s,
+                    ),
                     for (final imageAsset in imageAssets)
                       GestureDetector(
                         onTap: imageAsset.getOrNull() == null
