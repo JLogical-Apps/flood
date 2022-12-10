@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
+import 'package:collection/collection.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/entity_inflater.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/request/with_first_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/request/first_or_null_query_request.dart';
