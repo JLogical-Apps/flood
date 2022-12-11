@@ -16,6 +16,6 @@ class MapStateQueryRequestReducer<T> extends StateQueryRequestReducer<MapQueryRe
   @override
   Future<T> reduce(MapQueryRequest<dynamic, T> queryRequest, Iterable<State> states) async {
     final sourceQueryRequestResult = await queryRequestResolver(queryRequest.sourceQueryRequest, states);
-    return await queryRequest.map(sourceQueryRequestResult);
+    return await queryRequest.doMap(dropContext, sourceQueryRequestResult);
   }
 }

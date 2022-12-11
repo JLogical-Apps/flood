@@ -67,11 +67,11 @@ void main() {
 
     final allUserNames = await repository.executeQuery(Query.from<UserEntity>()
         .all<UserEntity>()
-        .map((entities) => entities.map((entity) => entity.value.nameProperty.value).toList()));
+        .map((context, entities) => entities.map((entity) => entity.value.nameProperty.value).toList()));
     expect(allUserNames, users.map((user) => user.nameProperty.value).toList());
 
     final allUserEmails = await repository.executeQuery(
-        Query.from<UserEntity>().allStates().map((states) => states.map((state) => state['email']).toList()));
+        Query.from<UserEntity>().allStates().map((context, states) => states.map((state) => state['email']).toList()));
     expect(allUserEmails, users.map((user) => user.emailProperty.value).toList());
   });
 }

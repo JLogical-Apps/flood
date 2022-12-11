@@ -15,7 +15,7 @@ abstract class Query {
 
 extension QueryExtensions on Query {
   AllQueryRequest<E> all<E extends Entity>() {
-    return AllQueryRequest(query: this);
+    return AllQueryRequest(sourceQueryRequest: AllStatesQueryRequest(query: this));
   }
 
   AllStatesQueryRequest allStates() {

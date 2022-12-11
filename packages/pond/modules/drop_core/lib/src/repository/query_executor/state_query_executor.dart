@@ -2,7 +2,6 @@ import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/repository/query_executor/from_state_query_reducer.dart';
-import 'package:drop_core/src/repository/query_executor/request/all_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/all_states_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/map_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/state_query_request_reducer.dart';
@@ -24,7 +23,6 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
       ]);
 
   WrapperResolver<StateQueryRequestReducer, QueryRequest> getQueryRequestReducers<T>() => WrapperResolver(wrappers: [
-        AllStateQueryRequestReducer(dropContext: dropContext),
         AllStatesStateQueryRequestReducer(dropContext: dropContext),
         MapStateQueryRequestReducer(
           dropContext: dropContext,
