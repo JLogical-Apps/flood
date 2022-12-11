@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:drop_core/src/record/entity.dart';
+import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/repository.dart';
+import 'package:drop_core/src/state/state.dart';
 import 'package:type/type.dart';
 
 abstract class DropCoreContext implements TypeContextWrapper {
@@ -37,6 +39,22 @@ extension DropCoreContextExtension on DropCoreContext {
 
   Repository getRepositoryFor<E extends Entity>() {
     return getRepositoryForTypeRuntime(E);
+  }
+
+  Entity constructEntityFromStateRuntime({required Type entityType, required State state}) {
+    final entity = typeContext.getRuntimeTypeRuntime(entityType).createInstance() as Entity;
+    entity.id = state.id;
+
+    final valueObject = typeContext.getRuntimeTypeRuntime(entity.valueObjectType).createInstance() as ValueObject;
+    valueObject.state = state;
+
+    entity.value = valueObject;
+
+    return entity;
+  }
+
+  E constructEntityFromState<E extends Entity>(State state) {
+    return constructEntityFromStateRuntime(entityType: E, state: state) as E;
   }
 }
 

@@ -39,6 +39,39 @@ void main() {
         users.map((user) => user.getState(context.locate<DropCoreComponent>()).data).toList());
   });
 
+  test('query first', () async {
+    final repository = Repository.memory().forType<UserEntity, User>(
+      UserEntity.new,
+      User.new,
+      entityTypeName: 'UserEntity',
+      valueObjectTypeName: 'User',
+    );
+
+    final users = [
+      User()
+        ..nameProperty.value = 'Jake'
+        ..emailProperty.value = 'jake@jake.com',
+      User()
+        ..nameProperty.value = 'John'
+        ..emailProperty.value = 'john@doe.com',
+    ];
+
+    final context = CorePondContext()
+      ..register(TypeCoreComponent())
+      ..register(DropCoreComponent())
+      ..register(repository);
+
+    for (final user in users) {
+      await repository.update(UserEntity()..value = user);
+    }
+
+    final firstUserEntity = await repository.executeQuery(Query.from<UserEntity>().firstOrNull<UserEntity>());
+    expect(firstUserEntity?.value, users[0]);
+
+    final firstUserEntityState = await repository.executeQuery(Query.from<UserEntity>().firstOrNullState());
+    expect(firstUserEntityState?.data, users[0].getState(context.locate<DropCoreComponent>()).data);
+  });
+
   test('query all map', () async {
     final repository = Repository.memory().forType<UserEntity, User>(
       UserEntity.new,
