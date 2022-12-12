@@ -10,4 +10,20 @@ class QueryWhereBuilder {
   Query isEqualTo(dynamic value) {
     return query.whereCondition(QueryCondition.field(stateField).isEqualTo(value));
   }
+
+  Query isGreaterThan(dynamic value) {
+    return query.whereCondition(QueryCondition.field(stateField).isGreaterThan(value));
+  }
+
+  Query isGreaterThanOrEqualTo(dynamic value) {
+    return query.whereCondition(QueryCondition.field(stateField).isGreaterThanOrEqualTo(value));
+  }
+
+  Query isLessThan(dynamic value) {
+    return query.whereCondition(QueryCondition.field(stateField).isLessThan(value));
+  }
+
+  Query isLessThanOrEqualTo(dynamic value) {
+    return query.whereCondition(QueryCondition.field(stateField).isLessThanOrEqualTo(value));
+  }
 }

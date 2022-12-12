@@ -72,7 +72,7 @@ void main() {
     expect(firstUserEntityState?.data, users[0].getState(context.locate<DropCoreComponent>()).data);
   });
 
-  test('query where', () async {
+  test('query where equals', () async {
     final repository = Repository.memory().forType<UserEntity, User>(
       UserEntity.new,
       User.new,
@@ -101,6 +101,69 @@ void main() {
     final johnUserEntity = await repository
         .executeQuery(Query.from<UserEntity>().where('name').isEqualTo('John').firstOrNull<UserEntity>());
     expect(johnUserEntity?.value, users[1]);
+  });
+
+  test('query where numeric', () async {
+    final repository = Repository.memory().forType<InvoiceEntity, Invoice>(
+      InvoiceEntity.new,
+      Invoice.new,
+      entityTypeName: 'InvoiceEntity',
+      valueObjectTypeName: 'Invoice',
+    );
+
+    final invoices = [
+      Invoice()..amountProperty.set(0),
+      Invoice()..amountProperty.set(10),
+      Invoice()..amountProperty.set(20),
+      Invoice()..amountProperty.set(50),
+      Invoice()..amountProperty.set(100),
+      Invoice()..amountProperty.set(-10),
+      Invoice()..amountProperty.set(null),
+    ];
+
+    CorePondContext()
+      ..register(TypeCoreComponent())
+      ..register(DropCoreComponent())
+      ..register(repository);
+
+    for (final invoice in invoices) {
+      await repository.update(InvoiceEntity()..value = invoice);
+    }
+
+    final zeroInvoiceEntities = await repository
+        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isEqualTo(0).all<InvoiceEntity>());
+    expect(
+      zeroInvoiceEntities.map((e) => e.value).toList(),
+      invoices.where((i) => i.amountProperty.value == 0).toList(),
+    );
+
+    final positiveInvoiceEntities = await repository
+        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isGreaterThan(0).all<InvoiceEntity>());
+    expect(
+      positiveInvoiceEntities.map((e) => e.value).toList(),
+      invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! > 0).toList(),
+    );
+
+    final nonNegativeInvoiceEntities = await repository.executeQuery(
+        Query.from<InvoiceEntity>().where(Invoice.amountField).isGreaterThanOrEqualTo(0).all<InvoiceEntity>());
+    expect(
+      nonNegativeInvoiceEntities.map((e) => e.value).toList(),
+      invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! >= 0).toList(),
+    );
+
+    final negativeInvoiceEntities = await repository
+        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isLessThan(0).all<InvoiceEntity>());
+    expect(
+      negativeInvoiceEntities.map((e) => e.value).toList(),
+      invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! < 0).toList(),
+    );
+
+    final nonPositiveInvoiceEntities = await repository.executeQuery(
+        Query.from<InvoiceEntity>().where(Invoice.amountField).isLessThanOrEqualTo(0).all<InvoiceEntity>());
+    expect(
+      nonPositiveInvoiceEntities.map((e) => e.value).toList(),
+      invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! <= 0).toList(),
+    );
   });
 
   test('query all map', () async {
@@ -149,3 +212,13 @@ class User extends ValueObject {
 }
 
 class UserEntity extends Entity<User> {}
+
+class Invoice extends ValueObject {
+  static const amountField = 'amount';
+  late final amountProperty = field<double>(name: amountField);
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [amountProperty];
+}
+
+class InvoiceEntity extends Entity<Invoice> {}
