@@ -180,6 +180,58 @@ void main() {
     );
   });
 
+  test('query orderby numeric', () async {
+    final repository = Repository.memory().forType<InvoiceEntity, Invoice>(
+      InvoiceEntity.new,
+      Invoice.new,
+      entityTypeName: 'InvoiceEntity',
+      valueObjectTypeName: 'Invoice',
+    );
+
+    final invoices = [
+      Invoice()..amountProperty.set(20),
+      Invoice()..amountProperty.set(0),
+      Invoice()..amountProperty.set(100),
+      Invoice()..amountProperty.set(null),
+      Invoice()..amountProperty.set(10),
+      Invoice()..amountProperty.set(-10),
+      Invoice()..amountProperty.set(50),
+    ];
+
+    CorePondContext()
+      ..register(TypeCoreComponent())
+      ..register(DropCoreComponent())
+      ..register(repository);
+
+    for (final invoice in invoices) {
+      await repository.update(InvoiceEntity()..value = invoice);
+    }
+
+    final ascendingInvoiceEntities = await repository
+        .executeQuery(Query.from<InvoiceEntity>().orderByAscending(Invoice.amountField).all<InvoiceEntity>());
+    final ascending = [
+      ...invoices.where((i) => i.amountProperty.value != null).toList()
+        ..sort((a, b) => a.amountProperty.value!.compareTo(b.amountProperty.value!)),
+      ...invoices.where((i) => i.amountProperty.value == null),
+    ];
+    expect(
+      ascendingInvoiceEntities.map((e) => e.value).toList(),
+      ascending,
+    );
+
+    final descendingInvoiceEntities = await repository
+        .executeQuery(Query.from<InvoiceEntity>().orderByDescending(Invoice.amountField).all<InvoiceEntity>());
+    final descending = [
+      ...invoices.where((i) => i.amountProperty.value != null).toList()
+        ..sort((a, b) => b.amountProperty.value!.compareTo(a.amountProperty.value!)),
+      ...invoices.where((i) => i.amountProperty.value == null),
+    ];
+    expect(
+      descendingInvoiceEntities.map((e) => e.value).toList(),
+      descending,
+    );
+  });
+
   test('query all map', () async {
     final repository = Repository.memory().forType<UserEntity, User>(
       UserEntity.new,
