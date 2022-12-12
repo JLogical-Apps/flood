@@ -1,10 +1,13 @@
 import 'package:drop_core/drop_core.dart';
+import 'package:drop_core/src/query/condition/query_condition.dart';
 import 'package:drop_core/src/query/from_query.dart';
+import 'package:drop_core/src/query/query_where_builder.dart';
 import 'package:drop_core/src/query/request/all_query_request.dart';
 import 'package:drop_core/src/query/request/all_states_query_request.dart';
 import 'package:drop_core/src/query/request/first_or_null_query_request.dart';
 import 'package:drop_core/src/query/request/first_or_null_state_query_request.dart';
 import 'package:drop_core/src/query/request/first_query_request.dart';
+import 'package:drop_core/src/query/where_query.dart';
 
 abstract class Query {
   final Query? parent;
@@ -35,5 +38,13 @@ extension QueryExtensions on Query {
 
   FirstQueryRequest<E> first<E extends Entity>() {
     return FirstQueryRequest(sourceQueryRequest: FirstOrNullStateQueryRequest(query: this));
+  }
+
+  QueryWhereBuilder where(String stateField) {
+    return QueryWhereBuilder(query: this, stateField: stateField);
+  }
+
+  WhereQuery whereCondition(QueryCondition condition) {
+    return WhereQuery(parent: this, condition: condition);
   }
 }

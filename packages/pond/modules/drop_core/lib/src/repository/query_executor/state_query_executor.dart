@@ -7,6 +7,7 @@ import 'package:drop_core/src/repository/query_executor/request/first_or_null_st
 import 'package:drop_core/src/repository/query_executor/request/map_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_reducer.dart';
+import 'package:drop_core/src/repository/query_executor/where_state_query_reducer.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:rxdart/rxdart.dart';
@@ -19,11 +20,13 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
 
   StateQueryExecutor({required this.statesX, required this.dropContext});
 
-  WrapperResolver<StateQueryReducer, Query> getQueryReducers() => WrapperResolver(wrappers: [
+  WrapperResolver<StateQueryReducer, Query> getQueryReducerResolver() => WrapperResolver(wrappers: [
         FromStateQueryReducer(),
+        WhereStateQueryReducer(),
       ]);
 
-  WrapperResolver<StateQueryRequestReducer, QueryRequest> getQueryRequestReducers<T>() => WrapperResolver(wrappers: [
+  WrapperResolver<StateQueryRequestReducer, QueryRequest> getQueryRequestReducerResolver<T>() =>
+      WrapperResolver(wrappers: [
         AllStatesStateQueryRequestReducer(dropContext: dropContext),
         FirstOrNullStateStateQueryRequestReducer(dropContext: dropContext),
         MapStateQueryRequestReducer(
@@ -43,12 +46,12 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
   }
 
   Future<T> resolveForQueryRequest<T>(QueryRequest<T> queryRequest, Iterable<State> states) async {
-    return await getQueryRequestReducers<T>().resolve(queryRequest).reduce(queryRequest, states);
+    return await getQueryRequestReducerResolver<T>().resolve(queryRequest).reduce(queryRequest, states);
   }
 
   Iterable<State> reduceStates(Iterable<State> states, Query query) {
     final queryParent = query.parent;
-    return getQueryReducers()
+    return getQueryReducerResolver()
         .resolve(query)
         .reduce(query, queryParent == null ? states : reduceStates(states, queryParent));
   }
