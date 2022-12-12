@@ -26,4 +26,12 @@ class QueryWhereBuilder {
   Query isLessThanOrEqualTo(dynamic value) {
     return query.whereCondition(QueryCondition.field(stateField).isLessThanOrEqualTo(value));
   }
+
+  Query isNull() {
+    return query.whereCondition(QueryCondition.field(stateField).isNull());
+  }
+
+  Query isNonNull() {
+    return query.whereCondition(QueryCondition.field(stateField).isNonNull());
+  }
 }

@@ -164,6 +164,20 @@ void main() {
       nonPositiveInvoiceEntities.map((e) => e.value).toList(),
       invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! <= 0).toList(),
     );
+
+    final nullInvoiceEntities = await repository
+        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isNull().all<InvoiceEntity>());
+    expect(
+      nullInvoiceEntities.map((e) => e.value).toList(),
+      invoices.where((i) => i.amountProperty.value == null).toList(),
+    );
+
+    final nonNullInvoiceEntities = await repository
+        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isNonNull().all<InvoiceEntity>());
+    expect(
+      nonNullInvoiceEntities.map((e) => e.value).toList(),
+      invoices.where((i) => i.amountProperty.value != null).toList(),
+    );
   });
 
   test('query all map', () async {
