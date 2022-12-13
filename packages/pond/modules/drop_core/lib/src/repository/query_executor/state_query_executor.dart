@@ -6,6 +6,7 @@ import 'package:drop_core/src/repository/query_executor/order_by_state_query_exe
 import 'package:drop_core/src/repository/query_executor/request/all_states_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/first_or_null_state_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/map_state_query_request_reducer.dart';
+import 'package:drop_core/src/repository/query_executor/request/paginate_states_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/where_state_query_reducer.dart';
@@ -34,7 +35,8 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
         MapStateQueryRequestReducer(
           dropContext: dropContext,
           queryRequestResolver: <T>(qr, states) async => await resolveForQueryRequest(qr, states),
-        )
+        ),
+        PaginateStatesStateQueryRequestReducer(dropContext: dropContext),
       ]);
 
   @override

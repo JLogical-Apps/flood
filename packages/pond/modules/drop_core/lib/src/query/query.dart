@@ -8,6 +8,8 @@ import 'package:drop_core/src/query/request/all_states_query_request.dart';
 import 'package:drop_core/src/query/request/first_or_null_query_request.dart';
 import 'package:drop_core/src/query/request/first_or_null_state_query_request.dart';
 import 'package:drop_core/src/query/request/first_query_request.dart';
+import 'package:drop_core/src/query/request/paginate_query_request.dart';
+import 'package:drop_core/src/query/request/paginate_states_query_request.dart';
 import 'package:drop_core/src/query/where_query.dart';
 
 abstract class Query {
@@ -59,5 +61,13 @@ extension QueryExtensions on Query {
 
   OrderByQuery orderByAscending(String stateField) {
     return orderBy(stateField, type: OrderByType.ascending);
+  }
+
+  PaginateStatesQueryRequest paginateStates({int pageSize = 20}) {
+    return PaginateStatesQueryRequest(query: this, pageSize: pageSize);
+  }
+
+  PaginatedQueryRequest paginate<E extends Entity>({int pageSize = 20}) {
+    return PaginatedQueryRequest<E>(sourceQueryRequest: PaginateStatesQueryRequest(query: this, pageSize: pageSize));
   }
 }

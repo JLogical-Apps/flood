@@ -1,4 +1,5 @@
 import 'package:drop_core/drop_core.dart';
+import 'package:drop_core/src/query/pagination/query_result_page.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
 import 'package:type_core/type_core.dart';
@@ -230,6 +231,43 @@ void main() {
       descendingInvoiceEntities.map((e) => e.value).toList(),
       descending,
     );
+  });
+
+  test('paginate queries', () async {
+    final repository = Repository.memory().forType<InvoiceEntity, Invoice>(
+      InvoiceEntity.new,
+      Invoice.new,
+      entityTypeName: 'InvoiceEntity',
+      valueObjectTypeName: 'Invoice',
+    );
+
+    final invoices = [
+      Invoice()..amountProperty.set(0),
+      Invoice()..amountProperty.set(10),
+      Invoice()..amountProperty.set(20),
+      Invoice()..amountProperty.set(50),
+    ];
+
+    CorePondContext()
+      ..register(TypeCoreComponent())
+      ..register(DropCoreComponent())
+      ..register(repository);
+
+    for (final invoice in invoices) {
+      await repository.update(InvoiceEntity()..value = invoice);
+    }
+
+    final queryResultPage =
+        await repository.executeQuery(Query.from<InvoiceEntity>().paginate<InvoiceEntity>(pageSize: 2));
+    expect(queryResultPage.items.map((i) => i.value), invoices.take(2).toList());
+    expect(queryResultPage.hasNext, isTrue);
+
+    final nextQueryResultPage = await queryResultPage.getNextPage();
+    expect(nextQueryResultPage.items.map((i) => i.value), invoices.skip(2).take(2).toList());
+    expect(nextQueryResultPage.hasNext, isFalse);
+
+    final allItems = await queryResultPage.combineAll();
+    expect(allItems.map((i) => i.value), invoices);
   });
 
   test('query all map', () async {
