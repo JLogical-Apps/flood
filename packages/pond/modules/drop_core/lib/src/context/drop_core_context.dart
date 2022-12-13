@@ -41,8 +41,8 @@ extension DropCoreContextExtension on DropCoreContext {
     return getRepositoryForTypeRuntime(E);
   }
 
-  Entity constructEntityFromStateRuntime({required Type entityType, required State state}) {
-    final entity = typeContext.getRuntimeTypeRuntime(entityType).createInstance() as Entity;
+  E constructEntityFromState<E extends Entity>(State state) {
+    final entity = state.type!.createInstance() as Entity;
     entity.id = state.id;
 
     final valueObject = typeContext.getRuntimeTypeRuntime(entity.valueObjectType).createInstance() as ValueObject;
@@ -50,11 +50,7 @@ extension DropCoreContextExtension on DropCoreContext {
 
     entity.value = valueObject;
 
-    return entity;
-  }
-
-  E constructEntityFromState<E extends Entity>(State state) {
-    return constructEntityFromStateRuntime(entityType: E, state: state) as E;
+    return entity as E;
   }
 }
 

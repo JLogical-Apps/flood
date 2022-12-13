@@ -55,8 +55,10 @@ class AbstractTypeImplementationRepository<E extends Entity<V>, V extends ValueO
 
   AbstractTypeImplementationRepository withImplementation<E2 extends Entity<V2>, V2 extends ValueObject>(
     E2 Function() entityConstructor,
-    V2 Function() valueObjectConstructor,
-  ) {
+    V2 Function() valueObjectConstructor, {
+    required String entityTypeName,
+    required String valueObjectTypeName,
+  }) {
     return AbstractTypeImplementationRepository<E2, V2>(
       repository: this,
       baseEntityType: baseEntityType,

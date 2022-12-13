@@ -305,6 +305,42 @@ void main() {
         Query.from<UserEntity>().allStates().map((context, states) => states.map((state) => state['email']).toList()));
     expect(allUserEmails, users.map((user) => user.emailProperty.value).toList());
   });
+
+  test('query on abstract type.', () async {
+    final repository = Repository.memory()
+        .forAbstractType<TransactionEntity, Transaction>(
+          entityTypeName: 'TransactionEntity',
+          valueObjectTypeName: 'Transaction',
+        )
+        .withImplementation<EnvelopeTransactionEntity, EnvelopeTransaction>(
+          EnvelopeTransactionEntity.new,
+          EnvelopeTransaction.new,
+          entityTypeName: 'EnvelopeTransactionEntity',
+          valueObjectTypeName: 'EnvelopeTransaction',
+        )
+        .withImplementation<TransferTransactionEntity, TransferTransaction>(
+          TransferTransactionEntity.new,
+          TransferTransaction.new,
+          entityTypeName: 'TransferTransactionEntity',
+          valueObjectTypeName: 'TransferTransaction',
+        );
+
+    final transactionEntities = <TransactionEntity>[
+      EnvelopeTransactionEntity()..value = EnvelopeTransaction(),
+      TransferTransactionEntity()..value = TransferTransaction(),
+    ];
+
+    CorePondContext()
+      ..register(TypeCoreComponent())
+      ..register(DropCoreComponent())
+      ..register(repository);
+
+    await Future.wait(transactionEntities.map((e) => repository.update(e)));
+
+    final allTransactionEntities =
+        await repository.executeQuery(Query.from<TransactionEntity>().all<TransactionEntity>());
+    expect(allTransactionEntities.map((e) => e.value), transactionEntities.map((e) => e.value));
+  });
 }
 
 class User extends ValueObject {
@@ -326,3 +362,15 @@ class Invoice extends ValueObject {
 }
 
 class InvoiceEntity extends Entity<Invoice> {}
+
+abstract class Transaction extends ValueObject {}
+
+abstract class TransactionEntity<T extends Transaction> extends Entity<T> {}
+
+class EnvelopeTransaction extends Transaction {}
+
+class EnvelopeTransactionEntity extends TransactionEntity<EnvelopeTransaction> {}
+
+class TransferTransaction extends Transaction {}
+
+class TransferTransactionEntity extends TransactionEntity<TransferTransaction> {}
