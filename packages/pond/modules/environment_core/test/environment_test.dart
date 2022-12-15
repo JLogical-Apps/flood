@@ -10,7 +10,7 @@ const qaUrl = 'http://localhost/qa';
 
 void main() {
   test('basic config values', () async {
-    final config = EnvironmentConfig.memory({
+    final config = EnvironmentConfig.static.memory({
       urlKey: basicUrl,
       typesKey: typesValue,
     });
@@ -22,10 +22,10 @@ void main() {
   });
 
   test('collapsed config values', () async {
-    final qaConfig = EnvironmentConfig.memory({urlKey: qaUrl, 'qaKey': 'qaValue'});
-    final basicConfig = EnvironmentConfig.memory({urlKey: basicUrl, 'basicKey': 'basicValue'});
+    final qaConfig = EnvironmentConfig.static.memory({urlKey: qaUrl, 'qaKey': 'qaValue'});
+    final basicConfig = EnvironmentConfig.static.memory({urlKey: basicUrl, 'basicKey': 'basicValue'});
 
-    final collapsedConfig = EnvironmentConfig.collapsed([qaConfig, basicConfig]);
+    final collapsedConfig = EnvironmentConfig.static.collapsed([qaConfig, basicConfig]);
 
     expect(await collapsedConfig.get<String>(urlKey), qaUrl);
     expect(await collapsedConfig.get<String>('qaKey'), 'qaValue');

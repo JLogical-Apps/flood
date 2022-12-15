@@ -1,1 +1,3 @@
+export 'src/data_source_environment_config.dart';
+export 'src/environment_config.dart';
 export 'src/environment_config_module.dart';

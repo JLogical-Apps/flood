@@ -19,15 +19,19 @@ abstract class DataSource<T> {
 
   Future<bool> exists();
 
-  static MemoryDataSource<T> memory<T>({T? initialData}) {
+  static DataSourceStatic get static => DataSourceStatic();
+}
+
+class DataSourceStatic {
+  MemoryDataSource<T> memory<T>({T? initialData}) {
     return MemoryDataSource(initialData: initialData);
   }
 
-  static FileDataSource file(File file) {
+  FileDataSource file(File file) {
     return FileDataSource(file: file);
   }
 
-  static RawFileDataSource rawFile(File file) {
+  RawFileDataSource rawFile(File file) {
     return RawFileDataSource(file: file);
   }
 }

@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   test('yaml get', () async {
-    final stringDataSource = DataSource.memory<String>(
+    final stringDataSource = DataSource.static.memory<String>(
       initialData: ''
           'int: 3\n'
           'string: Hello World!\n'
@@ -26,7 +26,7 @@ void main() {
   });
 
   test('yaml set', () async {
-    final stringDataSource = DataSource.memory<String>(initialData: '');
+    final stringDataSource = DataSource.static.memory<String>(initialData: '');
     final yamlDataSource = stringDataSource.mapYaml();
 
     final yaml = {

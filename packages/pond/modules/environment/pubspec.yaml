@@ -1,5 +1,5 @@
-name: environment_core
-description: Core module for Environment configs
+name: environment
+description: Flutter module for Environment configs
 
 publish_to: "none"
 
@@ -11,11 +11,16 @@ version: 0.0.1
 dependencies:
   collection: ^1.16.0
 
-  persistence_core:
+  environment_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/persistence_core
+      path: packages/pond/packages/environment_core
+  persistence:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/persistence
   pond_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

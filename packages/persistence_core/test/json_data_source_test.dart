@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   test('json get', () async {
-    final stringDataSource = DataSource.memory<String>(
+    final stringDataSource = DataSource.static.memory<String>(
       initialData: '''\
 {
   "int": 3,
@@ -30,7 +30,7 @@ void main() {
   });
 
   test('json set', () async {
-    final stringDataSource = DataSource.memory<String>(initialData: '');
+    final stringDataSource = DataSource.static.memory<String>(initialData: '');
     final jsonDataSource = stringDataSource.mapJson();
 
     final json = {

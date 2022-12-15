@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:environment_core/src/collapsed_environment_config.dart';
 import 'package:environment_core/src/data_source_environment_config.dart';
-import 'package:environment_core/src/file_environment_config.dart';
-import 'package:environment_core/src/memory_environment_config.dart';
 import 'package:persistence_core/persistence_core.dart';
 
 abstract class EnvironmentConfig {
@@ -12,16 +9,17 @@ abstract class EnvironmentConfig {
 
   FutureOr<bool> containsKey(String key);
 
-  static DataSourceEnvironmentConfig fromDataSource(DataSource<Map<String, dynamic>> dataSource) =>
+  static EnvironmentConfigStatic get static => EnvironmentConfigStatic();
+}
+
+class EnvironmentConfigStatic {
+  DataSourceEnvironmentConfig fromDataSource(DataSource<Map<String, dynamic>> dataSource) =>
       DataSourceEnvironmentConfig(dataSource: dataSource);
 
-  static MemoryEnvironmentConfig memory([Map<String, dynamic> initialData = const {}]) =>
-      MemoryEnvironmentConfig(initialData: initialData);
+  CollapsedEnvironmentConfig collapsed(List<EnvironmentConfig> configs) => CollapsedEnvironmentConfig(configs: configs);
 
-  static FileEnvironmentConfig file(File file) => FileEnvironmentConfig(file: file);
-
-  static CollapsedEnvironmentConfig collapsed(List<EnvironmentConfig> configs) =>
-      CollapsedEnvironmentConfig(configs: configs);
+  DataSourceEnvironmentConfig memory([Map<String, dynamic> initialData = const {}]) =>
+      fromDataSource(DataSource.static.memory(initialData: initialData));
 }
 
 extension EnvironmentConfigExtensions on EnvironmentConfig {

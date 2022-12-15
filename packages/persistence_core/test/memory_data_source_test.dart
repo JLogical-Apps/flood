@@ -3,10 +3,10 @@ import 'package:test/test.dart';
 
 void main() {
   test('memory data source get and set', () async {
-    var memoryDataSource = DataSource.memory<int>();
+    var memoryDataSource = DataSource.static.memory<int>();
     expect(await memoryDataSource.getOrNull(), null);
 
-    memoryDataSource = DataSource.memory<int>(initialData: 0);
+    memoryDataSource = DataSource.static.memory<int>(initialData: 0);
     expect(await memoryDataSource.getOrNull(), 0);
 
     await memoryDataSource.set(3);
@@ -17,7 +17,7 @@ void main() {
   });
 
   test('mapped memory data source get and set', () async {
-    final memoryDataSource = DataSource.memory<int>();
+    final memoryDataSource = DataSource.static.memory<int>();
     final negativeDataSource = memoryDataSource.map<int>(
       getMapper: (value) => -value,
       setMapper: (value) => -value,
@@ -43,7 +43,7 @@ void main() {
   });
 
   test('memory data source getX', () async {
-    final memoryDataSource = DataSource.memory<int>();
+    final memoryDataSource = DataSource.static.memory<int>();
     expect(memoryDataSource.getXOrNull(), null);
 
     await memoryDataSource.set(1);
@@ -57,7 +57,7 @@ void main() {
   });
 
   test('mapped data source getX', () async {
-    final memoryDataSource = DataSource.memory<int>();
+    final memoryDataSource = DataSource.static.memory<int>();
     final negativeDataSource = memoryDataSource.map<int>(
       getMapper: (value) => -value,
       setMapper: (value) => -value,
