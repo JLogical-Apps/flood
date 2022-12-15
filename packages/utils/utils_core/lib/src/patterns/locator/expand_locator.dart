@@ -8,8 +8,10 @@ class ExpandLocator<T> implements Locator<T> {
   ExpandLocator({required this.locator, required this.expander});
 
   @override
-  void register(T object) {
-    expander(object).forEach(locator.register);
+  Future onRegister(T object) async {
+    for (final expanded in expander(object)) {
+      await locator.register(expanded);
+    }
   }
 
   @override

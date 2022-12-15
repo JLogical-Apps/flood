@@ -12,7 +12,11 @@ class ExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PondApp(
-      appContext: AppPondContext(corePondContext: corePondContext)..register(BannerAppComponent()),
+      appPondContextGetter: () async {
+        final corePondContext = await getCorePondContext();
+        final appPondContext = AppPondContext(corePondContext: corePondContext);
+        return appPondContext;
+      },
     );
   }
 }

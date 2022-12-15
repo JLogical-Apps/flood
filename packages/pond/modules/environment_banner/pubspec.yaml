@@ -1,0 +1,24 @@
+name: environment_banner
+description: App Component to display a banner which shows the current environment.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  pond:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/pond/pond
+
+dev_dependencies:
+  lints: ^2.0.0
+  flutter_test:
+    sdk: flutter

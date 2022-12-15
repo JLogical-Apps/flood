@@ -11,6 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  flutter_hooks: ^0.18.5+1
+
   jlogical_utils:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

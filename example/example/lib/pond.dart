@@ -1,3 +1,6 @@
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
-CorePondContext corePondContext = CorePondContext();
+Future<CorePondContext> getCorePondContext() async {
+  final corePondContext = CorePondContext();
+  return corePondContext;
+}

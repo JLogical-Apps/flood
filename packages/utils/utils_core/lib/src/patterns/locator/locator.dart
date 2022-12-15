@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:utils_core/src/patterns/locator/expand_locator.dart';
 import 'package:utils_core/src/patterns/resolver/resolver.dart';
 import 'package:utils_core/src/patterns/resolver/type_resolver.dart';
@@ -8,12 +10,12 @@ abstract class Locator<O> implements TypeResolver<O> {
         onRegistered: onRegistered,
       );
 
-  void register(O object);
+  FutureOr<void> onRegister(O object);
 }
 
 class _LocatorImpl<O> with WithTypeResolverDelegate<O> implements Locator<O> {
   final List<O> registeredObjects;
-  final void Function(O object)? onRegistered;
+  final FutureOr<void> Function(O object)? onRegistered;
   final Type Function(O object)? typeMapper;
 
   _LocatorImpl({List<O>? objects, this.onRegistered, this.typeMapper}) : registeredObjects = objects ?? [];
@@ -22,13 +24,17 @@ class _LocatorImpl<O> with WithTypeResolverDelegate<O> implements Locator<O> {
   TypeResolver<O> get resolver => Resolver.byType(registeredObjects);
 
   @override
-  void register(O object) {
+  Future onRegister(O object) async {
     registeredObjects.add(object);
-    onRegistered?.call(object);
+    await onRegistered?.call(object);
   }
 }
 
 extension LocatorDefaults<O> on Locator<O> {
+  Future<void> register(O object) async {
+    return await onRegister(object);
+  }
+
   O? locateOrNullRuntime(Type type) {
     return resolveOrNull(type);
   }
@@ -45,25 +51,25 @@ extension LocatorDefaults<O> on Locator<O> {
     return locateRuntime(T) as T;
   }
 
-  O locateOrRegisterRuntime(Type type, O Function() itemGetter) {
+  Future<O> locateOrRegisterRuntime(Type type, O Function() itemGetter) async {
     final registered = locateOrNullRuntime(type);
     if (registered != null) {
       return registered;
     }
 
     final newItem = itemGetter();
-    register(newItem);
+    await register(newItem);
     return newItem;
   }
 
-  T locateOrRegister<T extends O>(T Function() itemGetter) {
+  Future<T> locateOrRegister<T extends O>(T Function() itemGetter) async {
     final registered = locateOrNull<T>();
     if (registered != null) {
       return registered;
     }
 
     final newItem = itemGetter();
-    register(newItem);
+    await register(newItem);
     return newItem;
   }
 
@@ -76,7 +82,7 @@ mixin WithLocatorDelegate<O> implements Locator<O> {
   Locator<O> get locator;
 
   @override
-  void register(O object) => locator.register(object);
+  FutureOr<void> onRegister(O object) => locator.register(object);
 
   @override
   O? resolveOrNull(Type input) => locator.resolveOrNull(input);
