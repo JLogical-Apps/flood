@@ -3,22 +3,32 @@ import 'dart:async';
 import 'package:persistence_core/src/data_source.dart';
 import 'package:utils_core/utils_core.dart';
 
-class MapperDataSource<T, T2> extends DataSource<T2> {
-  final DataSource<T> dataSource;
+abstract class MapperDataSource<T, T2> with IsDataSource<T2> {
+  DataSource<T> get dataSource;
 
-  final FutureOr<T2> Function(T data) getMapper;
-  final FutureOr<bool> Function(T? data)? existsMapper;
-  final FutureOr<T> Function(T2 data) setMapper;
-  final FutureOr<void> Function()? deleteMapper;
+  FutureOr<T2> Function(T data) get getMapper;
 
-  MapperDataSource({
-    required this.dataSource,
-    required this.getMapper,
-    this.existsMapper,
-    required this.setMapper,
-    this.deleteMapper,
-  });
+  FutureOr<bool> Function(T? data)? get existsMapper;
 
+  FutureOr<T> Function(T2 data) get setMapper;
+
+  FutureOr<void> Function()? get deleteMapper;
+
+  factory MapperDataSource({
+    required DataSource<T> dataSource,
+    required FutureOr<T2> Function(T data) getMapper,
+    required FutureOr<bool> Function(T? data)? existsMapper,
+    required FutureOr<T> Function(T2 data) setMapper,
+    required FutureOr<void> Function()? deleteMapper,
+  }) =>
+      _MapperDataSourceImpl(
+        dataSource: dataSource,
+        getMapper: getMapper,
+        setMapper: setMapper,
+      );
+}
+
+mixin IsMapperDataSource<T, T2> implements MapperDataSource<T, T2> {
   @override
   Stream<T2>? getXOrNull() {
     return dataSource.getXOrNull()?.asyncMap((value) => getMapper(value));
@@ -37,7 +47,7 @@ class MapperDataSource<T, T2> extends DataSource<T2> {
           final data = await dataSource.getOrNull();
           return await mapper(data);
         }) ??
-        super.exists();
+        dataSource.exists();
   }
 
   @override
@@ -49,4 +59,29 @@ class MapperDataSource<T, T2> extends DataSource<T2> {
   Future<void> delete() async {
     await Future(() => deleteMapper.mapIfNonNull((mapper) => mapper()) ?? dataSource.delete());
   }
+}
+
+class _MapperDataSourceImpl<T, T2> with IsMapperDataSource<T, T2> {
+  @override
+  final DataSource<T> dataSource;
+
+  @override
+  final FutureOr<T2> Function(T data) getMapper;
+
+  @override
+  final FutureOr<bool> Function(T? data)? existsMapper;
+
+  @override
+  final FutureOr<T> Function(T2 data) setMapper;
+
+  @override
+  final FutureOr<void> Function()? deleteMapper;
+
+  _MapperDataSourceImpl({
+    required this.dataSource,
+    required this.getMapper,
+    this.existsMapper,
+    required this.setMapper,
+    this.deleteMapper,
+  });
 }

@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:persistence_core/src/file_data_source.dart';
+import 'package:persistence_core/src/json_data_source.dart';
 import 'package:persistence_core/src/mapper_data_source.dart';
 import 'package:persistence_core/src/memory_data_source.dart';
 import 'package:persistence_core/src/raw_file_data_source.dart';
+import 'package:persistence_core/src/yaml_data_source.dart';
 
 abstract class DataSource<T> {
   Stream<T>? getXOrNull();
@@ -13,14 +15,9 @@ abstract class DataSource<T> {
 
   Future<void> delete();
 
-  Future<T?> getOrNull() {
-    return getXOrNull()?.first ?? Future.value(null);
-  }
+  Future<T?> getOrNull();
 
-  Future<bool> exists() async {
-    final data = await getOrNull();
-    return data != null;
-  }
+  Future<bool> exists();
 
   static MemoryDataSource<T> memory<T>({T? initialData}) {
     return MemoryDataSource(initialData: initialData);
@@ -53,6 +50,7 @@ extension DataSourceExtension<T> on DataSource<T> {
     return MapperDataSource(
       dataSource: this,
       getMapper: getMapper,
+      existsMapper: existsMapper,
       setMapper: setMapper,
       deleteMapper: deleteMapper,
     );
@@ -71,6 +69,25 @@ extension DataSourceExtension<T> on DataSource<T> {
   }
 }
 
+extension StringDataSourceExtensions on DataSource<String> {
+  YamlDataSource mapYaml() => YamlDataSource(sourceDataSource: this);
+
+  JsonDataSource mapJson() => JsonDataSource(sourceDataSource: this);
+}
+
+mixin IsDataSource<T> implements DataSource<T> {
+  @override
+  Future<T?> getOrNull() {
+    return getXOrNull()?.first ?? Future.value(null);
+  }
+
+  @override
+  Future<bool> exists() async {
+    final data = await getOrNull();
+    return data != null;
+  }
+}
+
 abstract class DataSourceWrapper<T> implements DataSource<T> {
   DataSource<T> get dataSource;
 }
@@ -78,6 +95,11 @@ abstract class DataSourceWrapper<T> implements DataSource<T> {
 mixin IsDataSourceWrapper<T> implements DataSourceWrapper<T> {
   @override
   Future<T?> getOrNull() => dataSource.getOrNull();
+
+  @override
+  Stream<T>? getXOrNull() {
+    return dataSource.getXOrNull();
+  }
 
   @override
   Future<void> set(T data) => dataSource.set(data);

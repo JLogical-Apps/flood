@@ -1,7 +1,7 @@
 import 'package:persistence_core/src/data_source.dart';
 import 'package:rxdart/rxdart.dart';
 
-class MemoryDataSource<T> extends DataSource<T> {
+class MemoryDataSource<T> with IsDataSource<T> {
   BehaviorSubject<T?> dataX;
 
   MemoryDataSource({T? initialData}) : dataX = BehaviorSubject.seeded(initialData);
