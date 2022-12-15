@@ -1,10 +1,18 @@
+import 'dart:async';
+
+import 'package:environment_core/src/collapsed_environment_config.dart';
 import 'package:environment_core/src/memory_environment_config.dart';
 
 abstract class EnvironmentConfig {
-  Future<T> getOrDefault<T>(String key, {required T Function() fallback});
+  FutureOr<T> getOrDefault<T>(String key, {required T Function() fallback});
 
-  static MemoryEnvironmentConfig memory({Map<String, dynamic> keyValueMap = const {}}) =>
+  FutureOr<bool> containsKey(String key);
+
+  static MemoryEnvironmentConfig memory([Map<String, dynamic> keyValueMap = const {}]) =>
       MemoryEnvironmentConfig(keyValueMap: keyValueMap);
+
+  static CollapsedEnvironmentConfig collapsed(List<EnvironmentConfig> configs) =>
+      CollapsedEnvironmentConfig(configs: configs);
 }
 
 extension EnvironmentConfigExtensions on EnvironmentConfig {
@@ -17,4 +25,9 @@ extension EnvironmentConfigExtensions on EnvironmentConfig {
   }
 }
 
-mixin IsEnvironmentConfig implements EnvironmentConfig {}
+mixin IsEnvironmentConfig implements EnvironmentConfig {
+  @override
+  FutureOr<bool> containsKey(String key) async {
+    return await getOrNull(key) != null;
+  }
+}

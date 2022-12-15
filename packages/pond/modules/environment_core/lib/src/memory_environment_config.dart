@@ -6,7 +6,12 @@ class MemoryEnvironmentConfig with IsEnvironmentConfig {
   MemoryEnvironmentConfig({required this.keyValueMap});
 
   @override
-  Future<T> getOrDefault<T>(String key, {required T Function() fallback}) {
+  T getOrDefault<T>(String key, {required T Function() fallback}) {
     return keyValueMap[key] ?? fallback();
+  }
+
+  @override
+  bool containsKey(String key) {
+    return keyValueMap.containsKey(key);
   }
 }
