@@ -17,7 +17,7 @@ void main() {
 
     expect(await config.get<String>(urlKey), basicUrl);
     expect(await config.get<List<String>>(typesKey), typesValue);
-    expect(config.getOrDefault('random', fallback: () => 'myValue'), 'myValue');
+    expect(await config.getOrDefault('random', fallback: () => 'myValue'), 'myValue');
     expect(await config.getOrNull('random'), isNull);
   });
 

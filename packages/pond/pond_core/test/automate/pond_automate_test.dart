@@ -11,11 +11,11 @@ void main() {
     var automateRegistered = false;
     var automateLoaded = false;
 
-    final corePondContext = CorePondContext()
-      ..register(TestCoreComponent().withAdditionalSetup(
-        onBeforeRegister: (_) => coreRegistered = true,
-        onBeforeLoad: (_) => coreLoaded = true,
-      ));
+    final corePondContext = CorePondContext();
+    await corePondContext.register(TestCoreComponent().withAdditionalSetup(
+      onBeforeRegister: (_) => coreRegistered = true,
+      onBeforeLoad: (_) => coreLoaded = true,
+    ));
     final automateContext = AutomatePondContext(corePondContext: corePondContext)
       ..register(TestAutomateComponent().withAdditionalSetup(
         onBeforeRegister: (_) => automateRegistered = true,
@@ -37,7 +37,8 @@ void main() {
 
   test('run is called on correct component', () async {
     var hasRun = false;
-    final corePondContext = CorePondContext()..register(TestCoreComponent());
+    final corePondContext = CorePondContext();
+    await corePondContext.register(TestCoreComponent());
     final automateContext = AutomatePondContext(corePondContext: corePondContext)
       ..register(TestAutomateComponent(
         runner: () => hasRun = true,

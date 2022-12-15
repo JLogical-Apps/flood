@@ -141,6 +141,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
+  json2yaml:
+    dependency: transitive
+    description:
+      name: json2yaml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   lazy_memo:
     dependency: transitive
     description:
@@ -204,6 +211,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  persistence_core:
+    dependency: "direct main"
+    description:
+      path: "../../../persistence_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   pond_core:
     dependency: "direct main"
     description:

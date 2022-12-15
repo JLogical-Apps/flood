@@ -5,9 +5,10 @@ import 'package:test/test.dart';
 import 'package:utils_core/utils_core.dart';
 
 void main() {
-  test('registering a component allows you to locate it.', () {
+  test('registering a component allows you to locate it.', () async {
     final testPondComponent = TestPondComponent();
-    final corePondContext = CorePondContext()..register(testPondComponent);
+    final corePondContext = CorePondContext();
+    await corePondContext.register(testPondComponent);
     expect(corePondContext.locate<TestPondComponent>(), testPondComponent);
   });
 
@@ -19,7 +20,8 @@ void main() {
       onLoaded: (_) => isLoaded = true,
     );
 
-    final corePondContext = CorePondContext()..register(testPondComponent);
+    final corePondContext = CorePondContext();
+    await corePondContext.register(testPondComponent);
     expect(isRegistered, true);
     expect(isLoaded, false);
 
@@ -41,13 +43,13 @@ void main() {
       onLoaded: (_) => isLoaded = true,
     );
 
-    final corePondContext = CorePondContext()
-      ..register(testPondComponent.withAdditionalSetup(
-        onBeforeRegister: (_) => isBeforeRegistered = true,
-        onAfterRegister: (_) => isAfterRegistered = true,
-        onBeforeLoad: (_) => isBeforeLoaded = true,
-        onAfterLoad: (_) => isAfterLoaded = true,
-      ));
+    final corePondContext = CorePondContext();
+    await corePondContext.register(testPondComponent.withAdditionalSetup(
+      onBeforeRegister: (_) => isBeforeRegistered = true,
+      onAfterRegister: (_) => isAfterRegistered = true,
+      onBeforeLoad: (_) => isBeforeLoaded = true,
+      onAfterLoad: (_) => isAfterLoaded = true,
+    ));
 
     expect(isBeforeRegistered, true);
     expect(isRegistered, true);
@@ -68,13 +70,20 @@ void main() {
 
   test('locating CorePondComponent with additional setup.', () async {
     final corePondComponent = TestPondComponent();
-    final corePondContext = CorePondContext()..register(corePondComponent.withAdditionalSetup());
+    final corePondContext = CorePondContext();
+    await corePondContext.register(corePondComponent.withAdditionalSetup());
 
     expect(corePondContext.locate<TestPondComponent>(), corePondComponent);
   });
 
   test('CorePondComponent with dependency on another CorePondComponent.', () {
-    expect(() => CorePondContext()..register(DependentPondComponent()), throwsA(isA<Exception>()));
+    expect(
+      () async {
+        final corePondContext = CorePondContext();
+        await corePondContext.register(DependentPondComponent());
+      },
+      throwsA(isA<Exception>()),
+    );
     expect(
         () => CorePondContext()
           ..register(TestPondComponent())

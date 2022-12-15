@@ -25,13 +25,13 @@ void main() {
     expect(objectCount, 3);
   });
 
-  test('expand', () {
+  test('expand', () async {
     const boolValue = false;
     const intValue = 1;
     const stringValue = 'test';
-    final locator = Locator().expand((object) => [object, boolValue])
-      ..register(intValue)
-      ..register(stringValue);
+    final locator = Locator().expand((object) => [object, boolValue]);
+    await locator.register(intValue);
+    await locator.register(stringValue);
 
     expect(locator.locate<bool>(), boolValue);
     expect(locator.locate<int>(), intValue);

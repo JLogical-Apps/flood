@@ -1,17 +1,12 @@
 import 'package:environment_core/src/environment_config.dart';
+import 'package:persistence_core/persistence_core.dart';
 
-class MemoryEnvironmentConfig with IsEnvironmentConfig {
-  final Map<String, dynamic> keyValueMap;
+class MemoryEnvironmentConfig with IsEnvironmentConfigWrapper {
+  final Map<String, dynamic> initialData;
 
-  MemoryEnvironmentConfig({required this.keyValueMap});
-
-  @override
-  T getOrDefault<T>(String key, {required T Function() fallback}) {
-    return keyValueMap[key] ?? fallback();
-  }
+  MemoryEnvironmentConfig({this.initialData = const {}});
 
   @override
-  bool containsKey(String key) {
-    return keyValueMap.containsKey(key);
-  }
+  EnvironmentConfig get environmentConfig =>
+      EnvironmentConfig.fromDataSource(DataSource.memory(initialData: initialData));
 }

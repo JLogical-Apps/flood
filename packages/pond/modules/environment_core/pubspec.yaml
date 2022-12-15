@@ -14,6 +14,11 @@ dependencies:
   rxdart: ^0.27.5
   uuid: ^3.0.6
 
+  persistence_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/persistence_core
   pond_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
