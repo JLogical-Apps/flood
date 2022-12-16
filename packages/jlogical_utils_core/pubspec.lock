@@ -93,7 +93,7 @@ packages:
     source: hosted
     version: "1.8.2"
   persistence_core:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../persistence_core"
       relative: true

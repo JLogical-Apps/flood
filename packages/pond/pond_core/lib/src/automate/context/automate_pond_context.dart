@@ -25,4 +25,12 @@ class AutomatePondContext with IsLocatorWrapper<AutomatePondComponent> {
         objects: automateComponents,
         onRegistered: (component) => component.registerTo(this),
       ).expand((component) => [component] + AutomatePondComponentLocatorWrapper.getSubcomponentsOf(component));
+
+  T? findOrNull<T>() {
+    return locateOrNull<T>() ?? corePondContext.locateOrNull<T>();
+  }
+
+  T find<T>() {
+    return findOrNull<T>() ?? (throw Exception('Could not find [$T]!'));
+  }
 }
