@@ -78,7 +78,7 @@ extension LocatorDefaults<O> on Locator<O> {
   }
 }
 
-mixin WithLocatorDelegate<O> implements Locator<O> {
+mixin IsLocatorWrapper<O> implements Locator<O> {
   Locator<O> get locator;
 
   @override

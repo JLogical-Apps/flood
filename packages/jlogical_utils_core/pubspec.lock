@@ -29,6 +29,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  environment_core:
+    dependency: "direct main"
+    description:
+      path: "../pond/modules/environment_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   equatable:
     dependency: transitive
     description:
@@ -50,6 +57,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0"
+  json2yaml:
+    dependency: transitive
+    description:
+      name: json2yaml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   lazy_memo:
     dependency: transitive
     description:
@@ -78,6 +92,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  persistence_core:
+    dependency: "direct overridden"
+    description:
+      path: "../persistence_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   pond_core:
     dependency: "direct main"
     description:
@@ -99,6 +120,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.27.5"
+  source_span:
+    dependency: transitive
+    description:
+      name: source_span
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.9.1"
+  string_scanner:
+    dependency: transitive
+    description:
+      name: string_scanner
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
+  term_glyph:
+    dependency: transitive
+    description:
+      name: term_glyph
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
   type:
     dependency: "direct overridden"
     description:
@@ -134,5 +176,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.6"
+  yaml:
+    dependency: transitive
+    description:
+      name: yaml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.1"
 sdks:
-  dart: ">=2.17.0 <3.0.0"
+  dart: ">=2.18.0 <3.0.0"

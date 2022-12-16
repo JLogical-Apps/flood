@@ -19,6 +19,16 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/modules/drop_core
+  environment_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/modules/environment_core
+  persistence_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/modules/persistence_core
   type_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

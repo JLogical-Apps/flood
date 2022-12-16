@@ -14,6 +14,16 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/jlogical_utils_core
+  environment:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/modules/environment
+  persistence:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/persistence
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

@@ -3,7 +3,7 @@ import 'package:pond/src/app/context/locator/app_pond_component_locator_wrapper.
 import 'package:pond_core/pond_core.dart';
 import 'package:utils_core/utils_core.dart';
 
-class AppPondContext with WithLocatorDelegate<AppPondComponent> {
+class AppPondContext with IsLocatorWrapper<AppPondComponent> {
   final List<AppPondComponent> appComponents;
 
   final CorePondContext corePondContext;

@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:environment_core/src/collapsed_environment_config.dart';
 import 'package:environment_core/src/data_source_environment_config.dart';
+import 'package:environment_core/src/environment_type.dart';
+import 'package:environment_core/src/environmental_environment_config.dart';
 import 'package:persistence_core/persistence_core.dart';
 
 abstract class EnvironmentConfig {
@@ -20,6 +23,17 @@ class EnvironmentConfigStatic {
 
   DataSourceEnvironmentConfig memory([Map<String, dynamic> initialData = const {}]) =>
       fromDataSource(DataSource.static.memory(initialData: initialData));
+
+  DataSourceEnvironmentConfig yamlFile(File file) => fromDataSource(DataSource.static.file(file).mapYaml());
+
+  EnvironmentalEnvironmentConfig environmental({
+    required FutureOr<EnvironmentType> Function() environmentTypeGetter,
+    required FutureOr<EnvironmentConfig> Function(EnvironmentType environmentType) environmentGetter,
+  }) =>
+      EnvironmentalEnvironmentConfig(
+        environmentTypeGetter: environmentTypeGetter,
+        environmentGetter: environmentGetter,
+      );
 }
 
 extension EnvironmentConfigExtensions on EnvironmentConfig {
