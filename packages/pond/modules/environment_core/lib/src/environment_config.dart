@@ -8,6 +8,7 @@ import 'package:environment_core/src/data_source_environment_config.dart';
 import 'package:environment_core/src/environment_type.dart';
 import 'package:environment_core/src/environment_type_environment_config.dart';
 import 'package:environment_core/src/environmental_environment_config.dart';
+import 'package:environment_core/src/file_asset_environment_config.dart';
 import 'package:environment_core/src/platform.dart';
 import 'package:environment_core/src/recognized_environment_types_environment_config.dart';
 import 'package:persistence_core/persistence_core.dart';
@@ -39,6 +40,8 @@ class EnvironmentConfigStatic {
 
   EnvironmentTypeEnvironmentConfig onlyEnvironmentType(EnvironmentType environmentType) =>
       EnvironmentTypeEnvironmentConfig(environmentType: environmentType);
+
+  FileAssetEnvironmentConfig fileAssets() => FileAssetEnvironmentConfig();
 }
 
 extension EnvironmentConfigExtensions on EnvironmentConfig {
