@@ -5,7 +5,7 @@ import 'package:pond_core/src/core/component/core_pond_component.dart';
 import 'package:pond_core/src/core/context/core_pond_context.dart';
 
 abstract class CorePondComponentBehavior {
-  void onRegister(CorePondContext context, CorePondComponent component) {}
+  Future onRegister(CorePondContext context, CorePondComponent component) async {}
 
   Future onLoad(CorePondContext context, CorePondComponent component) async {}
 
@@ -24,14 +24,14 @@ abstract class CorePondComponentBehavior {
 }
 
 class _CorePondComponentBehaviorImpl implements CorePondComponentBehavior {
-  final void Function(CorePondContext context, CorePondComponent component)? registerHandler;
+  final FutureOr Function(CorePondContext context, CorePondComponent component)? registerHandler;
   final FutureOr Function(CorePondContext context, CorePondComponent component)? loadHandler;
 
   _CorePondComponentBehaviorImpl({this.registerHandler, this.loadHandler});
 
   @override
-  void onRegister(CorePondContext context, CorePondComponent component) {
-    registerHandler?.call(context, component);
+  Future onRegister(CorePondContext context, CorePondComponent component) async {
+    await registerHandler?.call(context, component);
   }
 
   @override
@@ -42,7 +42,7 @@ class _CorePondComponentBehaviorImpl implements CorePondComponentBehavior {
 
 mixin IsCorePondComponentBehavior implements CorePondComponentBehavior {
   @override
-  void onRegister(CorePondContext context, CorePondComponent component) {}
+  Future onRegister(CorePondContext context, CorePondComponent component) async {}
 
   @override
   Future onLoad(CorePondContext context, CorePondComponent component) async {}

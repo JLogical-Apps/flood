@@ -12,7 +12,7 @@ class AppPondComponentAdditionalSetup extends AppPondComponentWrapper {
   final void Function(AppPondContext context)? onAfterRegister;
   final FutureOr Function(AppPondContext context)? onBeforeLoad;
   final FutureOr Function(AppPondContext context)? onAfterLoad;
-  final Widget Function(Widget app)? appWrapper;
+  final Widget Function(AppPondContext context, Widget app)? appWrapper;
 
   AppPondComponentAdditionalSetup({
     required this.appPondComponent,
@@ -38,7 +38,7 @@ class AppPondComponentAdditionalSetup extends AppPondComponentWrapper {
   }
 
   @override
-  Widget wrapApp(Widget app) {
-    return appWrapper?.call(app) ?? app;
+  Widget wrapApp(AppPondContext context, Widget app) {
+    return appWrapper?.call(context, app) ?? app;
   }
 }

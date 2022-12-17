@@ -40,18 +40,14 @@ void main() {
     final qaConfig = EnvironmentConfig.static.memory({urlKey: qaUrl, 'qaKey': 'qaValue'});
     final basicConfig = EnvironmentConfig.static.memory({urlKey: basicUrl, 'basicKey': 'basicValue'});
 
-    EnvironmentConfig getConfigFromDevice(EnvironmentType environmentType) => EnvironmentConfig.static.environmental(
-          environmentTypeGetter: () => environmentType,
-          environmentGetter: (type) {
-            final environmentConfigs = <EnvironmentConfig>[
-              if (type is TestingEnvironmentType) testingConfig,
-              if (type is DeviceEnvironmentType) deviceConfig,
-              if (type is QaEnvironmentType) qaConfig,
+    EnvironmentConfig getConfigFromDevice(EnvironmentType environmentType) => EnvironmentConfig.static
+        .onlyEnvironmentType(environmentType)
+        .environmental((type) => EnvironmentConfig.static.collapsed([
+              if (type == EnvironmentType.static.testing) testingConfig,
+              if (type == EnvironmentType.static.device) deviceConfig,
+              if (type == EnvironmentType.static.qa) qaConfig,
               basicConfig,
-            ];
-            return EnvironmentConfig.static.collapsed(environmentConfigs);
-          },
-        );
+            ]));
 
     expect(await getConfigFromDevice(EnvironmentType.static.testing).get(urlKey), testingUrl);
     expect(await getConfigFromDevice(EnvironmentType.static.device).get(urlKey), deviceUrl);

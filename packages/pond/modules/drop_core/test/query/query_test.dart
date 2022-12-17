@@ -23,10 +23,10 @@ void main() {
         ..emailProperty.value = 'john@doe.com',
     ];
 
-    final context = CorePondContext()
-      ..register(TypeCoreComponent())
-      ..register(DropCoreComponent())
-      ..register(repository);
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
 
     for (final user in users) {
       await repository.update(UserEntity()..value = user);
@@ -57,10 +57,10 @@ void main() {
         ..emailProperty.value = 'john@doe.com',
     ];
 
-    final context = CorePondContext()
-      ..register(TypeCoreComponent())
-      ..register(DropCoreComponent())
-      ..register(repository);
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
 
     for (final user in users) {
       await repository.update(UserEntity()..value = user);
@@ -90,10 +90,10 @@ void main() {
         ..emailProperty.value = 'john@doe.com',
     ];
 
-    CorePondContext()
-      ..register(TypeCoreComponent())
-      ..register(DropCoreComponent())
-      ..register(repository);
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
 
     for (final user in users) {
       await repository.update(UserEntity()..value = user);
@@ -122,10 +122,10 @@ void main() {
       Invoice()..amountProperty.set(null),
     ];
 
-    CorePondContext()
-      ..register(TypeCoreComponent())
-      ..register(DropCoreComponent())
-      ..register(repository);
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
 
     for (final invoice in invoices) {
       await repository.update(InvoiceEntity()..value = invoice);
@@ -199,10 +199,10 @@ void main() {
       Invoice()..amountProperty.set(50),
     ];
 
-    CorePondContext()
-      ..register(TypeCoreComponent())
-      ..register(DropCoreComponent())
-      ..register(repository);
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
 
     for (final invoice in invoices) {
       await repository.update(InvoiceEntity()..value = invoice);
@@ -248,10 +248,10 @@ void main() {
       Invoice()..amountProperty.set(50),
     ];
 
-    CorePondContext()
-      ..register(TypeCoreComponent())
-      ..register(DropCoreComponent())
-      ..register(repository);
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
 
     for (final invoice in invoices) {
       await repository.update(InvoiceEntity()..value = invoice);
@@ -287,10 +287,10 @@ void main() {
         ..emailProperty.value = 'john@doe.com',
     ];
 
-    CorePondContext()
-      ..register(TypeCoreComponent())
-      ..register(DropCoreComponent())
-      ..register(repository);
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
 
     for (final user in users) {
       await repository.update(UserEntity()..value = user);
@@ -330,10 +330,10 @@ void main() {
       TransferTransactionEntity()..value = TransferTransaction(),
     ];
 
-    CorePondContext()
-      ..register(TypeCoreComponent())
-      ..register(DropCoreComponent())
-      ..register(repository);
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
 
     await Future.wait(transactionEntities.map((e) => repository.update(e)));
 

@@ -28,10 +28,10 @@ mixin IsCorePondComponentWrapper implements CorePondComponentWrapper {
 }
 
 extension CorePondComponentExtension on CorePondComponent {
-  void registerTo(CorePondContext context) {
+  Future registerTo(CorePondContext context) async {
     this.context = context;
     for (final behavior in behaviors) {
-      behavior.onRegister(context, this);
+      await behavior.onRegister(context, this);
     }
   }
 

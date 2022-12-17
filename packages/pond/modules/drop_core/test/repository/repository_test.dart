@@ -5,12 +5,12 @@ import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 void main() {
-  test('find right repository.', () {
-    final corePondContext = CorePondContext()
-      ..register(TypeCoreComponent())
-      ..register(DropCoreComponent())
-      ..register(UserRepository())
-      ..register(BudgetRepository());
+  test('find right repository.', () async {
+    final corePondContext = CorePondContext();
+    await corePondContext.register(TypeCoreComponent());
+    await corePondContext.register(DropCoreComponent());
+    await corePondContext.register(UserRepository());
+    await corePondContext.register(BudgetRepository());
 
     final dropCoreComponent = corePondContext.locate<DropCoreComponent>();
 
@@ -18,7 +18,7 @@ void main() {
     expect(dropCoreComponent.getRepositoryFor<BudgetEntity>(), isA<BudgetRepository>());
     expect(dropCoreComponent.getRepositoryForTypeOrNull<BudgetTransactionEntity>(), isNull);
 
-    corePondContext.register(BudgetTransactionRepository());
+    await corePondContext.register(BudgetTransactionRepository());
 
     expect(dropCoreComponent.getRepositoryFor<BudgetTransactionEntity>(), isA<BudgetTransactionRepository>());
     expect(dropCoreComponent.getRepositoryFor<EnvelopeTransactionEntity>(), isA<BudgetTransactionRepository>());
@@ -27,10 +27,10 @@ void main() {
   test('creating, saving, and deleting from a repository.', () async {
     final memoryRepository = Repository.memory();
 
-    CorePondContext()
-      ..register(TypeCoreComponent())
-      ..register(DropCoreComponent())
-      ..register(memoryRepository);
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(memoryRepository);
 
     expect(memoryRepository.stateByIdX.value, {});
 

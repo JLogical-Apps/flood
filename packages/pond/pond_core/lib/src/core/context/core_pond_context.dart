@@ -10,7 +10,7 @@ class CorePondContext with IsLocatorWrapper<CorePondComponent> {
   @override
   late Locator<CorePondComponent> locator = Locator<CorePondComponent>(
     objects: components,
-    onRegistered: (component) => component.registerTo(this),
+    onRegistered: (component) async => await component.registerTo(this),
   ).expand((component) => [component] + CorePondComponentLocatorWrapper.getSubcomponentsOf(component));
 
   Future<void> load() async {

@@ -1,16 +1,27 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
+import 'package:environment_core/src/build_type.dart';
 import 'package:environment_core/src/collapsed_environment_config.dart';
 import 'package:environment_core/src/data_source_environment_config.dart';
 import 'package:environment_core/src/environment_type.dart';
+import 'package:environment_core/src/environment_type_environment_config.dart';
 import 'package:environment_core/src/environmental_environment_config.dart';
+import 'package:environment_core/src/platform.dart';
+import 'package:environment_core/src/recognized_environment_types_environment_config.dart';
 import 'package:persistence_core/persistence_core.dart';
 
 abstract class EnvironmentConfig {
-  FutureOr<T> getOrDefault<T>(String key, {required T Function() fallback});
+  Future<T> getOrDefault<T>(String key, {required T Function() fallback});
 
-  FutureOr<bool> containsKey(String key);
+  Future<bool> containsKey(String key);
+
+  Future<EnvironmentType> getEnvironmentType();
+
+  Future<BuildType> getBuildType();
+
+  Future<Platform> getPlatform();
 
   static EnvironmentConfigStatic get static => EnvironmentConfigStatic();
 }
@@ -26,14 +37,8 @@ class EnvironmentConfigStatic {
 
   DataSourceEnvironmentConfig yamlFile(File file) => fromDataSource(DataSource.static.file(file).mapYaml());
 
-  EnvironmentalEnvironmentConfig environmental({
-    required FutureOr<EnvironmentType> Function() environmentTypeGetter,
-    required FutureOr<EnvironmentConfig> Function(EnvironmentType environmentType) environmentGetter,
-  }) =>
-      EnvironmentalEnvironmentConfig(
-        environmentTypeGetter: environmentTypeGetter,
-        environmentGetter: environmentGetter,
-      );
+  EnvironmentTypeEnvironmentConfig onlyEnvironmentType(EnvironmentType environmentType) =>
+      EnvironmentTypeEnvironmentConfig(environmentType: environmentType);
 }
 
 extension EnvironmentConfigExtensions on EnvironmentConfig {
@@ -44,13 +49,47 @@ extension EnvironmentConfigExtensions on EnvironmentConfig {
   Future<T?> getOrNull<T>(String key) async {
     return await getOrDefault<T?>(key, fallback: () => null);
   }
+
+  RecognizedEnvironmentTypesEnvironmentConfig withRecognizedEnvironmentTypes(List<EnvironmentType> enviromentTypes) {
+    return RecognizedEnvironmentTypesEnvironmentConfig(
+      environmentConfig: this,
+      recognizedEnvironmentTypes: enviromentTypes,
+    );
+  }
+
+  EnvironmentalEnvironmentConfig environmental(
+    FutureOr<EnvironmentConfig> Function(EnvironmentType type) environmentConfigGetter,
+  ) {
+    return EnvironmentalEnvironmentConfig(
+      environmentConfig: this,
+      environmentGetter: environmentConfigGetter,
+    );
+  }
 }
 
 mixin IsEnvironmentConfig implements EnvironmentConfig {
   @override
-  FutureOr<bool> containsKey(String key) async {
+  Future<bool> containsKey(String key) async {
     return await getOrNull(key) != null;
   }
+
+  @override
+  Future<EnvironmentType> getEnvironmentType() async {
+    final environmentValue = await getOrNull<String>('environment');
+    if (environmentValue == null) {
+      return EnvironmentType.static.production;
+    }
+
+    return EnvironmentType.static.defaultTypes
+            .firstWhereOrNull((environmentType) => environmentType.name == environmentValue) ??
+        EnvironmentType.static.production;
+  }
+
+  @override
+  Future<BuildType> getBuildType() => Future.value(BuildType.regular);
+
+  @override
+  Future<Platform> getPlatform() => Future.value(Platform.cli);
 }
 
 abstract class EnvironmentConfigWrapper implements EnvironmentConfig {
@@ -59,12 +98,18 @@ abstract class EnvironmentConfigWrapper implements EnvironmentConfig {
 
 mixin IsEnvironmentConfigWrapper implements EnvironmentConfigWrapper {
   @override
-  FutureOr<T> getOrDefault<T>(String key, {required T Function() fallback}) {
-    return environmentConfig.getOrDefault<T>(key, fallback: fallback);
-  }
+  Future<EnvironmentType> getEnvironmentType() => environmentConfig.getEnvironmentType();
 
   @override
-  FutureOr<bool> containsKey(String key) {
-    return environmentConfig.containsKey(key);
-  }
+  Future<BuildType> getBuildType() => environmentConfig.getBuildType();
+
+  @override
+  Future<Platform> getPlatform() => environmentConfig.getPlatform();
+
+  @override
+  Future<T> getOrDefault<T>(String key, {required T Function() fallback}) =>
+      environmentConfig.getOrDefault<T>(key, fallback: fallback);
+
+  @override
+  Future<bool> containsKey(String key) => environmentConfig.containsKey(key);
 }

@@ -10,7 +10,7 @@ abstract class AppPondComponent {
   Future onLoad(AppPondContext context) async {}
 
   /// Wrap [app] in other widgets.
-  Widget wrapApp(Widget app) {
+  Widget wrapApp(AppPondContext context, Widget app) {
     return app;
   }
 }
@@ -31,8 +31,8 @@ mixin WithAppPondComponentDelegate implements AppPondComponentWrapper {
   }
 
   @override
-  Widget wrapApp(Widget app) {
-    return appPondComponent.wrapApp(app);
+  Widget wrapApp(AppPondContext context, Widget app) {
+    return appPondComponent.wrapApp(context, app);
   }
 }
 
@@ -50,7 +50,7 @@ extension AppPondComponentExtension on AppPondComponent {
     void Function(AppPondContext context)? onAfterRegister,
     FutureOr Function(AppPondContext context)? onBeforeLoad,
     FutureOr Function(AppPondContext context)? onAfterLoad,
-    Widget Function(Widget app)? appWrapper,
+    Widget Function(AppPondContext context, Widget app)? appWrapper,
   }) {
     return AppPondComponentAdditionalSetup(
       appPondComponent: this,

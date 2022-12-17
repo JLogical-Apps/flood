@@ -36,6 +36,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
+  environment:
+    dependency: "direct main"
+    description:
+      path: "../environment"
+      relative: true
+    source: path
+    version: "0.0.1"
+  environment_core:
+    dependency: "direct overridden"
+    description:
+      path: "../environment_core"
+      relative: true
+    source: path
+    version: "0.0.1"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:
@@ -60,6 +81,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  json2yaml:
+    dependency: transitive
+    description:
+      name: json2yaml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   lints:
     dependency: "direct dev"
     description:
@@ -95,6 +123,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  persistence:
+    dependency: "direct overridden"
+    description:
+      path: "../../../persistence"
+      relative: true
+    source: path
+    version: "0.0.1"
+  persistence_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../../persistence_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   pond:
     dependency: "direct main"
     description:
@@ -109,6 +151,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.27.7"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -170,6 +219,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
+  yaml:
+    dependency: transitive
+    description:
+      name: yaml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.1"
 sdks:
   dart: ">=2.17.0 <3.0.0"
   flutter: ">=3.0.0"

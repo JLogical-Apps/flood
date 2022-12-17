@@ -11,17 +11,20 @@ class PondApp extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appContext = useState<AppPondContext?>(null);
     final appComponents = useState<List<AppPondComponent>?>(null);
     final doneLoading = appComponents.value != null;
 
     useMemoized(() => () async {
-          final appContext = await appPondContextGetter();
-          await appContext.load();
-          appComponents.value = appContext.appComponents;
+          final context = await appPondContextGetter();
+          await context.load();
+          appContext.value = context;
+          appComponents.value = context.appComponents;
         }());
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: _wrapByComponents(
+        appContext: appContext.value,
         appComponents: appComponents.value,
         child: Scaffold(
           body: Center(child: Text(doneLoading ? 'Done!' : 'Loading...')),
@@ -30,13 +33,17 @@ class PondApp extends HookWidget {
     );
   }
 
-  Widget _wrapByComponents({List<AppPondComponent>? appComponents, required Widget child}) {
-    if (appComponents == null) {
+  Widget _wrapByComponents({
+    AppPondContext? appContext,
+    List<AppPondComponent>? appComponents,
+    required Widget child,
+  }) {
+    if (appComponents == null || appContext == null) {
       return child;
     }
 
     for (final appComponent in appComponents) {
-      child = appComponent.wrapApp(child);
+      child = appComponent.wrapApp(appContext, child);
     }
 
     return child;

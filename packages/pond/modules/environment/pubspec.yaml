@@ -9,6 +9,9 @@ environment:
 version: 0.0.1
 
 dependencies:
+  flutter:
+    sdk: flutter
+
   collection: ^1.16.0
 
   environment_core:
@@ -21,11 +24,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/persistence
-  pond_core:
+  pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/pond/pond_core
+      path: packages/pond/pond
   utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

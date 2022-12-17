@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  collection: ^1.16.0
   flutter_hooks: ^0.18.5+1
 
   jlogical_utils:

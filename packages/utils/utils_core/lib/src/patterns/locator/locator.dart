@@ -5,7 +5,7 @@ import 'package:utils_core/src/patterns/resolver/resolver.dart';
 import 'package:utils_core/src/patterns/resolver/type_resolver.dart';
 
 abstract class Locator<O> implements TypeResolver<O> {
-  factory Locator({List<O>? objects, void Function(O object)? onRegistered}) => _LocatorImpl(
+  factory Locator({List<O>? objects, FutureOr<void> Function(O object)? onRegistered}) => _LocatorImpl(
         objects: objects,
         onRegistered: onRegistered,
       );
@@ -82,7 +82,9 @@ mixin IsLocatorWrapper<O> implements Locator<O> {
   Locator<O> get locator;
 
   @override
-  FutureOr<void> onRegister(O object) => locator.register(object);
+  FutureOr<void> onRegister(O object) async {
+    await locator.register(object);
+  }
 
   @override
   O? resolveOrNull(Type input) => locator.resolveOrNull(input);

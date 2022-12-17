@@ -43,6 +43,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  environment_banner:
+    dependency: "direct main"
+    description:
+      path: "../pond/modules/environment_banner"
+      relative: true
+    source: path
+    version: "0.0.1"
   environment_core:
     dependency: "direct overridden"
     description:

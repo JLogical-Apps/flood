@@ -19,6 +19,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/modules/environment
+  environment_banner:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/modules/environment_banner
   persistence:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
