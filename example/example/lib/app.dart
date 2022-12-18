@@ -18,6 +18,15 @@ class ExampleApp extends StatelessWidget {
         await appPondContext.register(EnvironmentBannerAppComponent());
         return appPondContext;
       },
+      onFinishedLoading: (context, appContext) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => Scaffold(
+                  appBar: AppBar(),
+                  body: StyleguideWidget(
+                    styleguide: FlatStyle().getStyleguide(),
+                  ),
+                )));
+      },
     );
   }
 }

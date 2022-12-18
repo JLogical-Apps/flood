@@ -6,28 +6,30 @@ import 'package:pond/pond.dart';
 
 class PondApp extends HookWidget {
   final FutureOr<AppPondContext> Function() appPondContextGetter;
+  final void Function(BuildContext context, AppPondContext appContext) onFinishedLoading;
 
-  const PondApp({super.key, required this.appPondContextGetter});
+  const PondApp({
+    super.key,
+    required this.appPondContextGetter,
+    required this.onFinishedLoading,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final appContext = useState<AppPondContext?>(null);
-    final appComponents = useState<List<AppPondComponent>?>(null);
-    final doneLoading = appComponents.value != null;
-
-    useMemoized(() => () async {
-          final context = await appPondContextGetter();
-          await context.load();
-          appContext.value = context;
-          appComponents.value = context.appComponents;
-        }());
+    final appContextState = useState<AppPondContext?>(null);
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       home: _wrapByComponents(
-        appContext: appContext.value,
-        appComponents: appComponents.value,
-        child: Scaffold(
-          body: Center(child: Text(doneLoading ? 'Done!' : 'Loading...')),
+        appContext: appContextState.value,
+        appComponents: appContextState.value?.appComponents,
+        child: Navigator(
+          onGenerateRoute: (settings) => MaterialPageRoute(
+              builder: (_) => PondBody(
+                    appPondContextGetter: appPondContextGetter,
+                    onFinishedLoading: (context, appContext) {
+                      appContextState.value = appContext;
+                      onFinishedLoading(context, appContext);
+                    },
+                  )),
         ),
       ),
     );
@@ -47,5 +49,31 @@ class PondApp extends HookWidget {
     }
 
     return child;
+  }
+}
+
+class PondBody extends HookWidget {
+  final FutureOr<AppPondContext> Function() appPondContextGetter;
+  final void Function(BuildContext buildContext, AppPondContext appContext) onFinishedLoading;
+
+  const PondBody({super.key, required this.appPondContextGetter, required this.onFinishedLoading});
+
+  @override
+  Widget build(BuildContext context) {
+    final appContextState = useState<AppPondContext?>(null);
+    final doneLoading = appContextState.value != null;
+
+    useMemoized(() => () async {
+          final appContext = await appPondContextGetter();
+          await appContext.load();
+          appContextState.value = appContext;
+          onFinishedLoading(context, appContext);
+        }());
+
+    return Scaffold(
+      body: Center(
+        child: doneLoading ? Text('Done!') : Text('Loading...'),
+      ),
+    );
   }
 }
