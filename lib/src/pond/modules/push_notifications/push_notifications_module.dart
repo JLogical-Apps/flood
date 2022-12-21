@@ -12,12 +12,13 @@ import 'push_notification.dart';
 
 class PushNotificationsModule extends AppModule {
   final void Function(String? token) onDeviceTokenGenerated;
+  final void Function()? onNotificationReceived;
 
   String? lastDeviceTokenGenerated;
 
   late PushNotificationService service = _getPushNotificationService();
 
-  PushNotificationsModule({required this.onDeviceTokenGenerated});
+  PushNotificationsModule({required this.onDeviceTokenGenerated, this.onNotificationReceived});
 
   @override
   void onRegister(AppRegistration registration) {
@@ -41,6 +42,7 @@ class PushNotificationsModule extends AppModule {
             lastDeviceTokenGenerated = token;
             onDeviceTokenGenerated(token);
           },
+          onNotificationReceived: onNotificationReceived,
         );
     }
   }

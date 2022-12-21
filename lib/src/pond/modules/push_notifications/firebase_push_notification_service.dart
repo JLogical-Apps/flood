@@ -8,8 +8,9 @@ import 'push_notification_service.dart';
 
 class FirebasePushNotificationService extends PushNotificationService {
   final void Function(String? token) onDeviceTokenGenerated;
+  final void Function()? onNotificationReceived;
 
-  FirebasePushNotificationService({required this.onDeviceTokenGenerated});
+  FirebasePushNotificationService({required this.onDeviceTokenGenerated, this.onNotificationReceived});
 
   @override
   Future<void> onLoad(AppContext context) async {
@@ -25,6 +26,7 @@ class FirebasePushNotificationService extends PushNotificationService {
       sound: true,
     );
 
+    FirebaseMessaging.onMessage.listen((message) => onNotificationReceived?.call());
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // Get the token each time the application loads
