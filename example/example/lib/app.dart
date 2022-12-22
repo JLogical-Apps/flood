@@ -14,19 +14,24 @@ class ExampleApp extends StatelessWidget {
     return PondApp(
       appPondContextGetter: () async {
         final corePondContext = await getCorePondContext(environmentConfig: EnvironmentConfig.static.flutterAssets());
-        final appPondContext = AppPondContext(corePondContext: corePondContext);
-        await appPondContext.register(EnvironmentBannerAppComponent());
-        return appPondContext;
+        return await getAppPondContext(corePondContext);
       },
       onFinishedLoading: (context, appContext) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (_) => Scaffold(
                   appBar: AppBar(),
                   body: StyleguideWidget(
-                    styleguide: FlatStyle().getStyleguide(),
+                    styleguide: appContext.find<StyleAppComponent>().style.getStyleguide(),
                   ),
                 )));
       },
     );
+  }
+
+  Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async {
+    final appPondContext = AppPondContext(corePondContext: corePondContext);
+    await appPondContext.register(EnvironmentBannerAppComponent());
+    await appPondContext.register(StyleAppComponent(style: FlatStyle()));
+    return appPondContext;
   }
 }

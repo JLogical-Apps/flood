@@ -3,24 +3,24 @@ import 'package:style/src/style_component.dart';
 import 'package:style/src/styleguide.dart';
 
 abstract class StyleRenderer {
-  bool shouldRender(StyleComponent component);
+  bool shouldRender(BuildContext context, StyleComponent component);
 
-  Widget render(StyleComponent component);
+  Widget render(BuildContext context, StyleComponent component);
 
   void modifyStyleguide(Styleguide styleguide);
 }
 
 mixin IsTypedStyleRenderer<S extends StyleComponent> implements StyleRenderer {
   @override
-  bool shouldRender(StyleComponent component) {
+  bool shouldRender(BuildContext context, StyleComponent component) {
     return component is S;
   }
 
-  Widget renderTyped(S component);
+  Widget renderTyped(BuildContext context, S component);
 
   @override
-  Widget render(StyleComponent component) {
-    return renderTyped(component as S);
+  Widget render(BuildContext context, StyleComponent component) {
+    return renderTyped(context, component as S);
   }
 
   @override

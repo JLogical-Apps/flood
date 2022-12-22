@@ -5,35 +5,11 @@ import 'package:pond/pond.dart';
 import 'package:pond/src/app/component/app_pond_component_additional_setup.dart';
 
 abstract class AppPondComponent {
-  void onRegister(AppPondContext context) {}
+  void onRegister(AppPondContext context);
 
-  Future onLoad(AppPondContext context) async {}
+  Future onLoad(AppPondContext context);
 
-  /// Wrap [app] in other widgets.
-  Widget wrapApp(AppPondContext context, Widget app) {
-    return app;
-  }
-}
-
-abstract class AppPondComponentWrapper implements AppPondComponent {
-  AppPondComponent get appPondComponent;
-}
-
-mixin WithAppPondComponentDelegate implements AppPondComponentWrapper {
-  @override
-  void onRegister(AppPondContext context) {
-    appPondComponent.onRegister(context);
-  }
-
-  @override
-  Future onLoad(AppPondContext context) {
-    return appPondComponent.onLoad(context);
-  }
-
-  @override
-  Widget wrapApp(AppPondContext context, Widget app) {
-    return appPondComponent.wrapApp(context, app);
-  }
+  Widget wrapApp(AppPondContext context, Widget app);
 }
 
 extension AppPondComponentExtension on AppPondComponent {
@@ -60,5 +36,39 @@ extension AppPondComponentExtension on AppPondComponent {
       onAfterLoad: onAfterLoad,
       appWrapper: appWrapper,
     );
+  }
+}
+
+mixin IsAppPondComponent implements AppPondComponent {
+  @override
+  void onRegister(AppPondContext context) {}
+
+  @override
+  Future onLoad(AppPondContext context) async {}
+
+  @override
+  Widget wrapApp(AppPondContext context, Widget app) {
+    return app;
+  }
+}
+
+abstract class AppPondComponentWrapper implements AppPondComponent {
+  AppPondComponent get appPondComponent;
+}
+
+mixin WithAppPondComponentDelegate implements AppPondComponentWrapper {
+  @override
+  void onRegister(AppPondContext context) {
+    appPondComponent.onRegister(context);
+  }
+
+  @override
+  Future onLoad(AppPondContext context) {
+    return appPondComponent.onLoad(context);
+  }
+
+  @override
+  Widget wrapApp(AppPondContext context, Widget app) {
+    return appPondComponent.wrapApp(context, app);
   }
 }

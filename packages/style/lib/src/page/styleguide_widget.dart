@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:style/src/components/layout/styled_list.dart';
+import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/styleguide.dart';
 
 class StyleguideWidget extends HookWidget {
@@ -15,7 +17,13 @@ class StyleguideWidget extends HookWidget {
         controller: pageController,
         children: styleguide.pages
             .map((page) => SingleChildScrollView(
-                child: Column(children: page.sections.map((section) => Column(children: section.widgets)).toList())))
+                child: Column(
+                    children: page.sections
+                        .map((section) => StyledList(children: [
+                              StyledText.h1(section.name),
+                              ...section.widgets,
+                            ]))
+                        .toList())))
             .toList(),
       ),
     );

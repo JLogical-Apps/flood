@@ -1,5 +1,5 @@
-name: style
-description: The style system.
+name: utils
+description: Flutter utils
 
 publish_to: "none"
 
@@ -14,7 +14,6 @@ dependencies:
 
   collection: ^1.16.0
   flutter_hooks: ^0.18.5+1
-  intersperse: ^2.0.0
   provider: ^6.0.5
 
   utils_core:
@@ -22,11 +21,6 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/utils/utils_core
-  utils:
-    git:
-      url: git@github.com:jaboyc/jlogical_utils.git
-      ref: master
-      path: packages/utils/utils
 
 dev_dependencies:
   lints: ^2.0.0
