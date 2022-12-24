@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:intersperse/intersperse.dart';
 import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/layout/styled_tabs.dart';
+import 'package:style/src/components/misc/styled_divider.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/styleguide.dart';
 
@@ -19,12 +21,13 @@ class StyleguideWidget extends HookWidget {
                 icon: page.icon,
                 child: StyledList.column.withScrollbar(
                     children: page.sections
-                        .map((section) => StyledList.column(
+                        .map<Widget>((section) => StyledList.column(
                               children: [
                                 StyledText.h1(section.name),
                                 ...section.widgets,
                               ],
                             ))
+                        .intersperse(StyledDivider.strong())
                         .toList()),
               ))
           .toList(),

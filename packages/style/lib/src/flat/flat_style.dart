@@ -6,7 +6,13 @@ import 'package:style/src/flat/layout/flat_style_list.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
 import 'package:style/src/flat/misc/flat_style_divider.dart';
 import 'package:style/src/flat/page/flat_style_page.dart';
-import 'package:style/src/flat/text/flat_style_header_text.dart';
+import 'package:style/src/flat/text/flat_style_body_text.dart';
+import 'package:style/src/flat/text/flat_style_h1.dart';
+import 'package:style/src/flat/text/flat_style_h2.dart';
+import 'package:style/src/flat/text/flat_style_h3.dart';
+import 'package:style/src/flat/text/flat_style_h4.dart';
+import 'package:style/src/flat/text/flat_style_h5.dart';
+import 'package:style/src/flat/text/flat_style_h6.dart';
 import 'package:style/src/style.dart';
 import 'package:style/src/style_component.dart';
 import 'package:style/src/style_renderer.dart';
@@ -29,6 +35,12 @@ class FlatStyle with IsStyle {
           FlatStylePageRenderer(),
           FlatStyleDividerRenderer(),
           FlatStyleH1Renderer(),
+          FlatStyleH2Renderer(),
+          FlatStyleH3Renderer(),
+          FlatStyleH4Renderer(),
+          FlatStyleH5Renderer(),
+          FlatStyleH6Renderer(),
+          FlatStyleBodyTextRenderer(),
         ];
 
   bool get isDarkMode => backgroundColor.isDark;
