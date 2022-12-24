@@ -32,4 +32,8 @@ class StyledTextBuilder<T extends StyledText> {
   T call(String text) {
     return builder(text, emphasis, textAlign);
   }
+
+  T get empty {
+    return call('');
+  }
 }

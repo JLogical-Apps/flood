@@ -23,7 +23,7 @@ class StyleguideWidget extends HookWidget {
                     children: page.sections
                         .map<Widget>((section) => StyledList.column(
                               children: [
-                                StyledText.h1(section.name),
+                                StyledText.h2(section.name),
                                 ...section.widgets,
                               ],
                             ))

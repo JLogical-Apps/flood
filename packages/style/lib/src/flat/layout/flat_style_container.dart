@@ -35,12 +35,12 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
       ..add(StyledContainer.subtle(
         child: StyledList.column(
           children: [
-            StyledText.h1.centered('Subtle Container'),
+            StyledText.h3.centered('Subtle Container'),
             StyledList.row.withScrollbar(
               children: [
-                StyledContainer.subtle(child: StyledText.h1('Subtle Container')),
-                StyledContainer(child: StyledText.h1('Regular Container')),
-                StyledContainer.strong(child: StyledText.h1('Strong Container')),
+                StyledContainer.subtle(child: StyledText.h3('Subtle Container')),
+                StyledContainer(child: StyledText.h3('Regular Container')),
+                StyledContainer.strong(child: StyledText.h3('Strong Container')),
               ],
             ),
           ],
@@ -49,12 +49,12 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
       ..add(StyledContainer(
         child: StyledList.column(
           children: [
-            StyledText.h1.centered('Regular Container'),
+            StyledText.h3.centered('Regular Container'),
             StyledList.row.withScrollbar(
               children: [
-                StyledContainer.subtle(child: StyledText.h1('Subtle Container')),
-                StyledContainer(child: StyledText.h1('Regular Container')),
-                StyledContainer.strong(child: StyledText.h1('Strong Container')),
+                StyledContainer.subtle(child: StyledText.h3('Subtle Container')),
+                StyledContainer(child: StyledText.h3('Regular Container')),
+                StyledContainer.strong(child: StyledText.h3('Strong Container')),
               ],
             ),
           ],
@@ -63,12 +63,12 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
       ..add(StyledContainer.strong(
         child: StyledList.column(
           children: [
-            StyledText.h1.centered('Strong Container'),
+            StyledText.h3.centered('Strong Container'),
             StyledList.row.withScrollbar(
               children: [
-                StyledContainer.subtle(child: StyledText.h1('Subtle Container')),
-                StyledContainer(child: StyledText.h1('Regular Container')),
-                StyledContainer.strong(child: StyledText.h1('Strong Container')),
+                StyledContainer.subtle(child: StyledText.h3('Subtle Container')),
+                StyledContainer(child: StyledText.h3('Regular Container')),
+                StyledContainer.strong(child: StyledText.h3('Strong Container')),
               ],
             ),
           ],

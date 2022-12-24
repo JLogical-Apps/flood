@@ -12,7 +12,7 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: component.title ?? component.titleText?.mapIfNonNull(StyledText.h1),
+        title: component.title ?? component.titleText?.mapIfNonNull(StyledText.h2.strong),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

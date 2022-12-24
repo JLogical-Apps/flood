@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:style/src/color_palette.dart';
+import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/flat/layout/flat_style_container.dart';
 import 'package:style/src/flat/layout/flat_style_list.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
@@ -16,6 +17,7 @@ import 'package:style/src/flat/text/flat_style_h6.dart';
 import 'package:style/src/style.dart';
 import 'package:style/src/style_component.dart';
 import 'package:style/src/style_renderer.dart';
+import 'package:style/src/styled_text_renderer.dart';
 import 'package:style/src/styleguide.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 
@@ -72,6 +74,14 @@ class FlatStyle with IsStyle {
 
   @override
   late final ColorPalette colorPalette = getColorPaletteFromBackground(backgroundColor);
+
+  @override
+  TextStyle getTextStyle(BuildContext context, StyledText text) {
+    return renderers
+        .whereType<StyledTextRenderer>()
+        .firstWhere((renderer) => renderer.shouldWrap(text))
+        .getTextStyle(context, text);
+  }
 
   ColorPalette getColorPaletteFromBackground(Color backgroundColor) {
     final isDark = backgroundColor.isDark;

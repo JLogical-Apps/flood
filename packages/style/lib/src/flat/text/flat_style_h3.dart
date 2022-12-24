@@ -1,29 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:style/src/components/text/styled_h3.dart';
 import 'package:style/src/components/text/styled_text.dart';
+import 'package:style/src/components/text/styled_text_builder.dart';
 import 'package:style/src/style_build_context_extensions.dart';
 import 'package:style/src/style_renderer.dart';
-import 'package:style/src/styleguide.dart';
 
-class FlatStyleH3Renderer with IsTypedStyleRenderer<StyledH3> {
+class FlatStyleH3Renderer with IsTextStyleRenderer<StyledH3> {
   @override
-  Widget renderTyped(BuildContext context, StyledH3 component) {
-    final colorPalette = context.colorPalette();
-    return Text(
-      component.text,
-      textAlign: component.textAlign,
-      style: TextStyle(
-        fontSize: 26,
-        color: colorPalette.foreground.getByEmphasis(component.emphasis),
-      ),
+  StyledTextBuilder<StyledH3> get baseTextBuilder => StyledText.h3;
+
+  @override
+  TextStyle getTextStyle(BuildContext context, StyledText text) {
+    return TextStyle(
+      fontSize: 26,
+      color: context.colorPalette().foreground.getByEmphasis(text.emphasis),
     );
   }
 
   @override
-  void modifyStyleguide(Styleguide styleguide) {
-    styleguide.getPageByNameOrCreate('Text', icon: Icons.text_fields).getSectionByNameOrCreate('H3')
-      ..add(StyledText.h3.subtle('Subtle H3'))
-      ..add(StyledText.h3('Regular H3'))
-      ..add(StyledText.h3.strong('Strong H3'));
-  }
+  String get textName => 'H3';
 }

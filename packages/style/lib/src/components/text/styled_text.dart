@@ -18,49 +18,49 @@ abstract class StyledText extends StyleComponent {
 
   StyledText(this.text, {this.emphasis = Emphasis.regular, this.textAlign});
 
-  static StyledTextBuilder get h1 => StyledTextBuilder(
+  static StyledTextBuilder<StyledH1> get h1 => StyledTextBuilder(
       builder: (text, emphasis, textAlign) => StyledH1(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
           ));
 
-  static StyledTextBuilder get h2 => StyledTextBuilder(
+  static StyledTextBuilder<StyledH2> get h2 => StyledTextBuilder(
       builder: (text, emphasis, textAlign) => StyledH2(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
           ));
 
-  static StyledTextBuilder get h3 => StyledTextBuilder(
+  static StyledTextBuilder<StyledH3> get h3 => StyledTextBuilder(
       builder: (text, emphasis, textAlign) => StyledH3(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
           ));
 
-  static StyledTextBuilder get h4 => StyledTextBuilder(
+  static StyledTextBuilder<StyledH4> get h4 => StyledTextBuilder(
       builder: (text, emphasis, textAlign) => StyledH4(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
           ));
 
-  static StyledTextBuilder get h5 => StyledTextBuilder(
+  static StyledTextBuilder<StyledH5> get h5 => StyledTextBuilder(
       builder: (text, emphasis, textAlign) => StyledH5(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
           ));
 
-  static StyledTextBuilder get h6 => StyledTextBuilder(
+  static StyledTextBuilder<StyledH6> get h6 => StyledTextBuilder(
       builder: (text, emphasis, textAlign) => StyledH6(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
           ));
 
-  static StyledTextBuilder get body => StyledTextBuilder(
+  static StyledTextBuilder<StyledBodyText> get body => StyledTextBuilder(
       builder: (text, emphasis, textAlign) => StyledBodyText(
             text,
             emphasis: emphasis,
