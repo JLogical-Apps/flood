@@ -1,6 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:intersperse/intersperse.dart';
 import 'package:style/src/color_palette.dart';
+import 'package:style/src/components/misc/styled_divider.dart';
+import 'package:style/src/components/text/styled_markdown.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/flat/layout/flat_style_container.dart';
 import 'package:style/src/flat/layout/flat_style_list.dart';
@@ -26,11 +29,12 @@ class FlatStyle with IsStyle {
   final Color backgroundColor;
 
   final List<StyleRenderer> renderers;
+  final List<Widget> examples;
 
   FlatStyle({
     this.primaryColor = const Color(0xffe39e43),
     this.backgroundColor = const Color(0xff141424),
-  }) : renderers = [
+  })  : renderers = [
           FlatStyleListRenderer(),
           FlatStyleContainerRenderer(),
           FlatStyleTabsRenderer(),
@@ -43,6 +47,30 @@ class FlatStyle with IsStyle {
           FlatStyleH5Renderer(),
           FlatStyleH6Renderer(),
           FlatStyleBodyTextRenderer(),
+        ],
+        examples = [
+          StyledMarkdown('''# H1 heading
+
+## H2 heading
+
+### H3 heading
+
+#### H4 heading
+
+##### H5 heading
+
+###### H6 heading
+
+This is a paragraph of regular text.
+
+This is a *italicized* word.
+
+This is a **bolded** word.
+
+This is a `code block`.
+
+[This is a link](https://www.example.com)
+''')
         ];
 
   bool get isDarkMode => backgroundColor.isDark;
@@ -68,6 +96,11 @@ class FlatStyle with IsStyle {
     for (final renderer in renderers) {
       renderer.modifyStyleguide(styleguide);
     }
+
+    examples.intersperse(StyledDivider()).forEach((widget) => styleguide
+        .getPageByNameOrCreate('Examples', icon: Icons.star)
+        .getSectionByNameOrCreate('Examples')
+        .add(widget));
 
     return styleguide;
   }
