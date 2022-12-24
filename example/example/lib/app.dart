@@ -18,8 +18,8 @@ class ExampleApp extends StatelessWidget {
       },
       onFinishedLoading: (context, appContext) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => Scaffold(
-                  appBar: AppBar(),
+            builder: (_) => StyledPage(
+                  titleText: 'Styleguide',
                   body: StyleguideWidget(
                     styleguide: appContext.find<StyleAppComponent>().style.getStyleguide(),
                   ),
@@ -31,7 +31,10 @@ class ExampleApp extends StatelessWidget {
   Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async {
     final appPondContext = AppPondContext(corePondContext: corePondContext);
     await appPondContext.register(EnvironmentBannerAppComponent());
-    await appPondContext.register(StyleAppComponent(style: FlatStyle()));
+    await appPondContext.register(StyleAppComponent(
+        style: FlatStyle(
+            // backgroundColor: Color(0xffdedede),
+            )));
     return appPondContext;
   }
 }

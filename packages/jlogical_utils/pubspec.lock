@@ -167,6 +167,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  pigment:
+    dependency: transitive
+    description:
+      name: pigment
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   pond:
     dependency: "direct main"
     description:
@@ -242,6 +249,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
+  tinycolor2:
+    dependency: transitive
+    description:
+      name: tinycolor2
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   type:
     dependency: "direct overridden"
     description:

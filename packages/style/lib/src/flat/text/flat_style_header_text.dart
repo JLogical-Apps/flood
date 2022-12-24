@@ -11,6 +11,7 @@ class FlatStyleH1Renderer with IsTypedStyleRenderer<StyledH1> {
     final colorPalette = context.colorPalette();
     return Text(
       component.text,
+      textAlign: component.textAlign,
       style: TextStyle(
         fontSize: 30,
         color: colorPalette.foreground.getByEmphasis(component.emphasis),

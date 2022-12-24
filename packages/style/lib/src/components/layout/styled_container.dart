@@ -7,11 +7,27 @@ class StyledContainer extends StyleComponent {
   final Widget? child;
   final double? width;
   final double? height;
+  final EdgeInsets padding;
 
   StyledContainer({
     this.emphasis = Emphasis.regular,
     this.child,
     this.width,
     this.height,
+    this.padding = const EdgeInsets.all(8),
   });
+
+  StyledContainer.subtle({
+    this.child,
+    this.width,
+    this.height,
+    this.padding = const EdgeInsets.all(8),
+  }) : emphasis = Emphasis.subtle;
+
+  StyledContainer.strong({
+    this.child,
+    this.width,
+    this.height,
+    this.padding = const EdgeInsets.all(8),
+  }) : emphasis = Emphasis.strong;
 }

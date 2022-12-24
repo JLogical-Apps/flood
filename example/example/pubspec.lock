@@ -223,6 +223,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
+  pigment:
+    dependency: transitive
+    description:
+      name: pigment
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   pond:
     dependency: "direct overridden"
     description:
@@ -298,6 +305,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  tinycolor2:
+    dependency: transitive
+    description:
+      name: tinycolor2
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   type:
     dependency: "direct overridden"
     description:

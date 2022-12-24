@@ -44,14 +44,20 @@ class ColorPaletteContext {
     required this.subtleColorPaletteGetter,
   });
 
+  ColorPalette get strong => strongColorPaletteGetter();
+
+  ColorPalette get regular => regularColorPaletteGetter();
+
+  ColorPalette get subtle => subtleColorPaletteGetter();
+
   ColorPalette getByEmphasis(Emphasis emphasis) {
     switch (emphasis) {
       case Emphasis.strong:
-        return strongColorPaletteGetter();
+        return strong;
       case Emphasis.regular:
-        return regularColorPaletteGetter();
+        return regular;
       case Emphasis.subtle:
-        return subtleColorPaletteGetter();
+        return subtle;
     }
   }
 }

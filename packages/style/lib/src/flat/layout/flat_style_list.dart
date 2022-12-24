@@ -6,15 +6,20 @@ import 'package:style/src/style_renderer.dart';
 class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
   @override
   Widget renderTyped(BuildContext context, StyledList component) {
-    Widget widget = Column(
-      children: component.children.intersperse(SizedBox(height: component.padding)).toList(),
-    );
+    final children =
+        component.children.intersperse(SizedBox(width: component.padding, height: component.padding)).toList();
+    Widget widget = component.axis == Axis.vertical ? Column(children: children) : Row(children: children);
 
     if (component.isScrollable) {
-      widget = SingleChildScrollView(child: widget);
+      widget = SingleChildScrollView(child: widget, scrollDirection: component.axis);
 
       if (component.hasScrollbar) {
-        widget = Scrollbar(child: widget);
+        widget = MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          removeBottom: true,
+          child: Scrollbar(child: widget),
+        );
       }
     }
 
