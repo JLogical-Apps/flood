@@ -4,6 +4,7 @@ import 'package:style/src/color_palette.dart';
 import 'package:style/src/flat/layout/flat_style_container.dart';
 import 'package:style/src/flat/layout/flat_style_list.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
+import 'package:style/src/flat/misc/flat_style_divider.dart';
 import 'package:style/src/flat/page/flat_style_page.dart';
 import 'package:style/src/flat/text/flat_style_header_text.dart';
 import 'package:style/src/style.dart';
@@ -26,6 +27,7 @@ class FlatStyle with IsStyle {
           FlatStyleContainerRenderer(),
           FlatStyleTabsRenderer(),
           FlatStylePageRenderer(),
+          FlatStyleDividerRenderer(),
           FlatStyleH1Renderer(),
         ];
 
