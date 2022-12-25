@@ -39,28 +39,28 @@ packages:
   drop_core:
     dependency: "direct overridden"
     description:
-      path: "../pond/modules/drop_core"
+      path: "../../pond/modules/drop_core"
       relative: true
     source: path
     version: "0.0.1"
   environment:
     dependency: "direct main"
     description:
-      path: "../pond/modules/environment"
+      path: "../../pond/modules/environment"
       relative: true
     source: path
     version: "0.0.1"
   environment_banner:
     dependency: "direct main"
     description:
-      path: "../pond/modules/environment_banner"
+      path: "../../pond/modules/environment_banner"
       relative: true
     source: path
     version: "0.0.1"
   environment_core:
     dependency: "direct overridden"
     description:
-      path: "../pond/modules/environment_core"
+      path: "../../pond/modules/environment_core"
       relative: true
     source: path
     version: "0.0.1"
@@ -177,14 +177,14 @@ packages:
   persistence:
     dependency: "direct main"
     description:
-      path: "../persistence"
+      path: "../../persistence/persistence"
       relative: true
     source: path
     version: "0.0.1"
   persistence_core:
     dependency: "direct overridden"
     description:
-      path: "../persistence_core"
+      path: "../../persistence/persistence_core"
       relative: true
     source: path
     version: "0.0.1"
@@ -198,14 +198,14 @@ packages:
   pond:
     dependency: "direct main"
     description:
-      path: "../pond/pond"
+      path: "../../pond/pond"
       relative: true
     source: path
     version: "0.0.1"
   pond_core:
     dependency: "direct overridden"
     description:
-      path: "../pond/pond_core"
+      path: "../../pond/pond_core"
       relative: true
     source: path
     version: "0.0.1"
@@ -252,14 +252,14 @@ packages:
   style:
     dependency: "direct main"
     description:
-      path: "../style"
+      path: "../../style"
       relative: true
     source: path
     version: "0.0.1"
   style_component:
     dependency: "direct main"
     description:
-      path: "../pond/modules/style_component"
+      path: "../../pond/modules/style_component"
       relative: true
     source: path
     version: "0.0.1"
@@ -280,14 +280,14 @@ packages:
   type:
     dependency: "direct overridden"
     description:
-      path: "../type"
+      path: "../../type"
       relative: true
     source: path
     version: "0.0.1"
   type_core:
     dependency: "direct overridden"
     description:
-      path: "../pond/modules/type_core"
+      path: "../../pond/modules/type_core"
       relative: true
     source: path
     version: "0.0.1"
@@ -301,14 +301,14 @@ packages:
   utils:
     dependency: "direct main"
     description:
-      path: "../utils/utils"
+      path: "../../utils/utils"
       relative: true
     source: path
     version: "0.0.1"
   utils_core:
     dependency: "direct overridden"
     description:
-      path: "../utils/utils_core"
+      path: "../../utils/utils_core"
       relative: true
     source: path
     version: "0.0.1"

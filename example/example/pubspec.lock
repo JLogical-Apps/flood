@@ -149,14 +149,14 @@ packages:
   jlogical_utils:
     dependency: "direct main"
     description:
-      path: "../../packages/jlogical_utils"
+      path: "../../packages/jlogical_utils/jlogical_utils"
       relative: true
     source: path
     version: "0.0.1"
   jlogical_utils_core:
     dependency: "direct main"
     description:
-      path: "../../packages/jlogical_utils_core"
+      path: "../../packages/jlogical_utils/jlogical_utils_core"
       relative: true
     source: path
     version: "0.0.1"
@@ -219,14 +219,14 @@ packages:
   persistence:
     dependency: "direct overridden"
     description:
-      path: "../../packages/persistence"
+      path: "../../packages/persistence/persistence"
       relative: true
     source: path
     version: "0.0.1"
   persistence_core:
     dependency: "direct overridden"
     description:
-      path: "../../packages/persistence_core"
+      path: "../../packages/persistence/persistence_core"
       relative: true
     source: path
     version: "0.0.1"

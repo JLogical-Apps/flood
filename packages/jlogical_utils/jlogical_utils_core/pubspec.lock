@@ -25,14 +25,14 @@ packages:
   drop_core:
     dependency: "direct main"
     description:
-      path: "../pond/modules/drop_core"
+      path: "../../pond/modules/drop_core"
       relative: true
     source: path
     version: "0.0.1"
   environment_core:
     dependency: "direct main"
     description:
-      path: "../pond/modules/environment_core"
+      path: "../../pond/modules/environment_core"
       relative: true
     source: path
     version: "0.0.1"
@@ -95,14 +95,14 @@ packages:
   persistence_core:
     dependency: "direct main"
     description:
-      path: "../persistence_core"
+      path: "../../persistence/persistence_core"
       relative: true
     source: path
     version: "0.0.1"
   pond_core:
     dependency: "direct main"
     description:
-      path: "../pond/pond_core"
+      path: "../../pond/pond_core"
       relative: true
     source: path
     version: "0.0.1"
@@ -144,14 +144,14 @@ packages:
   type:
     dependency: "direct overridden"
     description:
-      path: "../type"
+      path: "../../type"
       relative: true
     source: path
     version: "0.0.1"
   type_core:
     dependency: "direct main"
     description:
-      path: "../pond/modules/type_core"
+      path: "../../pond/modules/type_core"
       relative: true
     source: path
     version: "0.0.1"
@@ -165,7 +165,7 @@ packages:
   utils_core:
     dependency: "direct main"
     description:
-      path: "../utils/utils_core"
+      path: "../../utils/utils_core"
       relative: true
     source: path
     version: "0.0.1"

@@ -126,14 +126,14 @@ packages:
   persistence:
     dependency: "direct overridden"
     description:
-      path: "../../../persistence"
+      path: "../../../persistence/persistence"
       relative: true
     source: path
     version: "0.0.1"
   persistence_core:
     dependency: "direct overridden"
     description:
-      path: "../../../persistence_core"
+      path: "../../../persistence/persistence_core"
       relative: true
     source: path
     version: "0.0.1"
