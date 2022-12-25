@@ -216,6 +216,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  path_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/path_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   persistence:
     dependency: "direct overridden"
     description:
