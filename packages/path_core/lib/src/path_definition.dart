@@ -1,12 +1,28 @@
+import 'package:path_core/path_core.dart';
+import 'package:path_core/src/path_definition_builder.dart';
 import 'package:path_core/src/path_definition_segment.dart';
-import 'package:path_core/src/path_defintiion_builder.dart';
 import 'package:utils_core/utils_core.dart';
 
-class PathDefinition {
+abstract class PathDefinition {
+  List<PathDefinitionSegment> get segments;
+
+  factory PathDefinition({required List<PathDefinitionSegment> segments}) => _PathDefinitionImpl(segments: segments);
+
+  static PathDefinitionBuilder builder() {
+    return PathDefinitionBuilder();
+  }
+}
+
+mixin IsPathDefinition implements PathDefinition {}
+
+class _PathDefinitionImpl with IsPathDefinition {
+  @override
   final List<PathDefinitionSegment> segments;
 
-  PathDefinition({required this.segments});
+  _PathDefinitionImpl({required this.segments});
+}
 
+extension PathDefinitionExtensions on PathDefinition {
   bool matches(String path) {
     final uri = guard(() => Uri.parse(path));
     if (uri == null) {
@@ -28,8 +44,13 @@ class PathDefinition {
 
     return true;
   }
+}
 
-  static PathDefinitionBuilder builder() {
-    return PathDefinitionBuilder();
-  }
+abstract class PathDefinitionWrapper implements PathDefinition {
+  PathDefinition get pathDefinition;
+}
+
+mixin IsPathDefinitionWrapper implements PathDefinitionWrapper {
+  @override
+  List<PathDefinitionSegment> get segments => pathDefinition.segments;
 }

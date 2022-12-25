@@ -1,0 +1,38 @@
+import 'package:path_core/src/path_definition.dart';
+import 'package:path_core/src/property/field_route_property.dart';
+import 'package:path_core/src/property/route_property.dart';
+
+abstract class Route implements PathDefinitionWrapper {
+  List<RouteProperty> get queryProperties;
+}
+
+extension RouteExtensions on Route {
+  void fromPath(String path) {
+    if (!matches(path)) {
+      throw Exception('[$path] does not match!');
+    }
+
+    final uri = Uri.parse(path);
+
+    for (var i = 0; i < uri.pathSegments.length; i++) {
+      final uriSegment = uri.pathSegments[i];
+      final routeSegment = segments[i];
+
+      routeSegment.onMatch(uriSegment);
+    }
+
+    for (final queryProperty in queryProperties) {
+      uri.queryParametersAll[queryProperty.name]?.forEach((value) => queryProperty.fromValue(value));
+      queryProperty.validate();
+    }
+  }
+
+  FieldRouteProperty<T> field<T>({required String name}) {
+    return FieldRouteProperty<T>(name: name);
+  }
+}
+
+mixin IsRoute implements Route {
+  @override
+  List<RouteProperty> get queryProperties => [];
+}

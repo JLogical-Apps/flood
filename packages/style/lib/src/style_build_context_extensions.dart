@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:style/src/color_palette.dart';
-import 'package:style/style.dart';
+import 'package:style/src/style.dart';
 
 extension StyleBuildContextExtensions on BuildContext {
   Style style() {
