@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:pond/src/app/component/app_pond_component.dart';
 import 'package:pond/src/app/context/app_pond_context.dart';
+import 'package:pond/src/app/page/app_page.dart';
 
-class AppPondComponentAdditionalSetup extends AppPondComponentWrapper {
+class AppPondComponentAdditionalSetup with IsAppPondComponentWrapper {
   @override
   final AppPondComponent appPondComponent;
 
@@ -13,6 +14,7 @@ class AppPondComponentAdditionalSetup extends AppPondComponentWrapper {
   final FutureOr Function(AppPondContext context)? onBeforeLoad;
   final FutureOr Function(AppPondContext context)? onAfterLoad;
   final Widget Function(AppPondContext context, Widget app)? appWrapper;
+  final List<AppPage> additionalPages;
 
   AppPondComponentAdditionalSetup({
     required this.appPondComponent,
@@ -20,6 +22,7 @@ class AppPondComponentAdditionalSetup extends AppPondComponentWrapper {
     this.onAfterRegister,
     this.onBeforeLoad,
     this.onAfterLoad,
+    this.additionalPages = const [],
     this.appWrapper,
   });
 
@@ -41,4 +44,7 @@ class AppPondComponentAdditionalSetup extends AppPondComponentWrapper {
   Widget wrapApp(AppPondContext context, Widget app) {
     return appWrapper?.call(context, app) ?? app;
   }
+
+  @override
+  List<AppPage> get pages => appPondComponent.pages + additionalPages;
 }

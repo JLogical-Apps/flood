@@ -9,4 +9,9 @@ class StringPathDefinitionSegment with IsPathDefinitionSegment {
   bool matches(String segment) {
     return segment == this.segment;
   }
+
+  @override
+  String toSegmentPart() {
+    return segment;
+  }
 }

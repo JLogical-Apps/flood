@@ -17,7 +17,7 @@ class FlatStyleDividerRenderer with IsTypedStyleRenderer<StyledDivider> {
 
   @override
   void modifyStyleguide(Styleguide styleguide) {
-    styleguide.getPageByNameOrCreate('Misc', icon: Icons.interests).getSectionByNameOrCreate('Dividers')
+    styleguide.getTabByNameOrCreate('Misc', icon: Icons.interests).getSectionByNameOrCreate('Dividers')
       ..add(StyledDivider.subtle())
       ..add(StyledDivider())
       ..add(StyledDivider.strong())

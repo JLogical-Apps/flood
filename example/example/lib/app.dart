@@ -16,14 +16,8 @@ class ExampleApp extends StatelessWidget {
         final corePondContext = await getCorePondContext(environmentConfig: EnvironmentConfig.static.flutterAssets());
         return await getAppPondContext(corePondContext);
       },
-      onFinishedLoading: (context, appContext) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => StyledPage(
-                  titleText: 'Styleguide',
-                  body: StyleguideWidget(
-                    styleguide: appContext.find<StyleAppComponent>().style.getStyleguide(),
-                  ),
-                )));
+      initialPageGetter: (context, appContext) {
+        return StyleguidePage();
       },
     );
   }
@@ -35,6 +29,35 @@ class ExampleApp extends StatelessWidget {
         style: FlatStyle(
             // backgroundColor: Color(0xffdedede),
             )));
+    await appPondContext.register(TestAppComponent());
     return appPondContext;
+  }
+}
+
+class TestAppComponent with IsAppPondComponent {
+  @override
+  List<AppPage> get pages => [TestPage()];
+}
+
+class TestPage extends AppPage {
+  @override
+  Widget build(BuildContext context) {
+    return StyledPage(
+      titleText: 'Test',
+      body: Center(
+        child: StyledContainer(
+          width: 100,
+          height: 100,
+        ),
+      ),
+    );
+  }
+
+  @override
+  PathDefinition get pathDefinition => PathDefinition.builder().string('test').build();
+
+  @override
+  AppPage copy() {
+    return TestPage();
   }
 }

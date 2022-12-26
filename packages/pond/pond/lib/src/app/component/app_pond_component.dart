@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
-import 'package:pond/pond.dart';
+import 'package:flutter/material.dart';
 import 'package:pond/src/app/component/app_pond_component_additional_setup.dart';
+import 'package:pond/src/app/context/app_pond_context.dart';
+import 'package:pond/src/app/page/app_page.dart';
 
 abstract class AppPondComponent {
   void onRegister(AppPondContext context);
@@ -10,6 +11,8 @@ abstract class AppPondComponent {
   Future onLoad(AppPondContext context);
 
   Widget wrapApp(AppPondContext context, Widget app);
+
+  List<AppPage> get pages;
 }
 
 extension AppPondComponentExtension on AppPondComponent {
@@ -50,13 +53,16 @@ mixin IsAppPondComponent implements AppPondComponent {
   Widget wrapApp(AppPondContext context, Widget app) {
     return app;
   }
+
+  @override
+  List<AppPage> get pages => [];
 }
 
 abstract class AppPondComponentWrapper implements AppPondComponent {
   AppPondComponent get appPondComponent;
 }
 
-mixin WithAppPondComponentDelegate implements AppPondComponentWrapper {
+mixin IsAppPondComponentWrapper implements AppPondComponentWrapper {
   @override
   void onRegister(AppPondContext context) {
     appPondComponent.onRegister(context);
@@ -71,4 +77,7 @@ mixin WithAppPondComponentDelegate implements AppPondComponentWrapper {
   Widget wrapApp(AppPondContext context, Widget app) {
     return appPondComponent.wrapApp(context, app);
   }
+
+  @override
+  List<AppPage> get pages => appPondComponent.pages;
 }

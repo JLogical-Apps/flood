@@ -1,12 +1,26 @@
 import 'package:path_core/src/path_definition.dart';
 import 'package:path_core/src/property/field_route_property.dart';
 import 'package:path_core/src/property/route_property.dart';
+import 'package:utils_core/utils_core.dart';
 
 abstract class Route implements PathDefinitionWrapper {
   List<RouteProperty> get queryProperties;
 }
 
 extension RouteExtensions on Route {
+  Uri get uri {
+    final queryParameters = queryProperties
+        .mapToMap((queryProperty) => MapEntry(
+              queryProperty.name,
+              queryProperty.toQueryParameter(),
+            ))
+        .where((name, value) => value != null);
+    return Uri(
+      path: '/${segments.map((segment) => segment.toSegmentPart()).join('/')}',
+      queryParameters: queryParameters.isEmpty ? null : queryParameters,
+    );
+  }
+
   void fromPath(String path) {
     if (!matches(path)) {
       throw Exception('[$path] does not match!');

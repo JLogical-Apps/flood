@@ -223,6 +223,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  path_core:
+    dependency: "direct main"
+    description:
+      path: "../../../path_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   pigment:
     dependency: transitive
     description:

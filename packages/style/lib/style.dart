@@ -1,5 +1,6 @@
 export 'src/color_palette.dart';
 export 'src/color_palette_provider.dart';
+export 'src/components/layout/styled_container.dart';
 export 'src/components/layout/styled_list.dart';
 export 'src/components/page/styled_page.dart';
 export 'src/components/text/styled_markdown.dart';
@@ -7,4 +8,5 @@ export 'src/components/text/styled_text.dart';
 export 'src/flat/flat_style.dart';
 export 'src/page/styleguide_widget.dart';
 export 'src/style.dart';
+export 'src/style_build_context_extensions.dart';
 export 'src/styleguide.dart';

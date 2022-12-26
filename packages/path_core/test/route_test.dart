@@ -10,6 +10,7 @@ void main() {
 
     route.fromPath('/budget/asdf');
     expect(route.budgetIdProperty.value, 'asdf');
+    expect(route.uri, Uri(path: 'budget/asdf'));
 
     route = BudgetRoute();
     expect(() => route.fromPath('/budget'), throwsA(isA<Exception>()));
@@ -26,12 +27,14 @@ void main() {
     expect(route.envelopeIdProperty.value, 'envelope');
     expect(route.budgetIdProperty.value, 'budgetId');
     expect(route.trayIdProperty.value, isNull);
+    expect(route.uri, Uri(path: 'envelope/envelope', queryParameters: {'budgetId': 'budgetId'}));
 
     route = EnvelopeRoute();
     route.fromPath('/envelope/envelope?budgetId=budgetId&trayId=trayId');
     expect(route.envelopeIdProperty.value, 'envelope');
     expect(route.budgetIdProperty.value, 'budgetId');
     expect(route.trayIdProperty.value, 'trayId');
+    expect(route.uri, Uri(path: 'envelope/envelope', queryParameters: {'budgetId': 'budgetId', 'trayId': 'trayId'}));
 
     route = EnvelopeRoute();
     expect(() => route.fromPath('/envelope/asdf'), throwsA(isA<Exception>()));

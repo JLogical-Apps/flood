@@ -8,6 +8,8 @@ abstract class RouteProperty<T> {
   void fromValue(String rawValue);
 
   void validate();
+
+  String? toQueryParameter();
 }
 
 extension RoutePropertyExtensions<T> on RouteProperty<T> {
@@ -40,5 +42,10 @@ mixin IsRoutePropertyWrapper<T> implements RoutePropertyWrapper<T> {
   @override
   void validate() {
     routeProperty.validate();
+  }
+
+  @override
+  String? toQueryParameter() {
+    return routeProperty.toQueryParameter();
   }
 }

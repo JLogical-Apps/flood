@@ -91,16 +91,14 @@ This is a `code block`.
 
   @override
   Styleguide getStyleguide() {
-    final styleguide = Styleguide(pages: []);
+    final styleguide = Styleguide(tabs: []);
 
     for (final renderer in renderers) {
       renderer.modifyStyleguide(styleguide);
     }
 
-    examples.intersperse(StyledDivider()).forEach((widget) => styleguide
-        .getPageByNameOrCreate('Examples', icon: Icons.star)
-        .getSectionByNameOrCreate('Examples')
-        .add(widget));
+    examples.intersperse(StyledDivider()).forEach((widget) =>
+        styleguide.getTabByNameOrCreate('Examples', icon: Icons.star).getSectionByNameOrCreate('Examples').add(widget));
 
     return styleguide;
   }

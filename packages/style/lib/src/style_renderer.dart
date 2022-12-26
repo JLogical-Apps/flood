@@ -57,7 +57,7 @@ mixin IsTextStyleRenderer<T extends StyledText> implements StyleRenderer, Styled
 
   @override
   void modifyStyleguide(Styleguide styleguide) {
-    styleguide.getPageByNameOrCreate('Text', icon: Icons.text_fields).getSectionByNameOrCreate(textName)
+    styleguide.getTabByNameOrCreate('Text', icon: Icons.text_fields).getSectionByNameOrCreate(textName)
       ..add(baseTextBuilder.subtle('Subtle $textName'))
       ..add(baseTextBuilder('Regular $textName'))
       ..add(baseTextBuilder.strong('Strong $textName'));

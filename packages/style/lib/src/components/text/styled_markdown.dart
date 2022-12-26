@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/style_build_context_extensions.dart';
-import 'package:utils_core/utils_core.dart';
+import 'package:utils/utils.dart';
 
 class StyledMarkdown extends StatelessWidget {
   final String markdown;

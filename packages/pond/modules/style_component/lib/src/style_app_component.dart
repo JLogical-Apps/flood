@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 import 'package:provider/provider.dart';
 import 'package:style/style.dart';
+import 'package:style_component/src/styleguide_page.dart';
 
 class StyleAppComponent with IsAppPondComponent {
   final Style style;
@@ -18,4 +19,9 @@ class StyleAppComponent with IsAppPondComponent {
       create: (_) => style,
     );
   }
+
+  @override
+  List<AppPage> get pages => [
+        StyleguidePage(),
+      ];
 }

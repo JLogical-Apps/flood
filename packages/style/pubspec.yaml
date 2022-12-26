@@ -19,11 +19,6 @@ dependencies:
   provider: ^6.0.5
   tinycolor2: ^3.0.1
 
-  utils_core:
-    git:
-      url: git@github.com:jaboyc/jlogical_utils.git
-      ref: master
-      path: packages/utils/utils_core
   utils:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

@@ -2,34 +2,34 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class Styleguide {
-  final List<StyleguidePage> pages;
+  final List<StyleguideTab> tabs;
 
-  Styleguide({required this.pages});
+  Styleguide({required this.tabs});
 
-  StyleguidePage getPageByNameOrCreate(String name, {required IconData icon}) {
-    final page = pages.firstWhereOrNull((page) => page.name == name);
+  StyleguideTab getTabByNameOrCreate(String name, {required IconData icon}) {
+    final page = tabs.firstWhereOrNull((tab) => tab.name == name);
     if (page != null) {
       return page;
     }
 
-    final newPage = StyleguidePage(
+    final newPage = StyleguideTab(
       name: name,
       icon: icon,
       sections: [],
     );
 
-    pages.add(newPage);
+    tabs.add(newPage);
 
     return newPage;
   }
 }
 
-class StyleguidePage {
+class StyleguideTab {
   final String name;
   final IconData icon;
   final List<StyleguideSection> sections;
 
-  StyleguidePage({required this.name, required this.icon, required this.sections});
+  StyleguideTab({required this.name, required this.icon, required this.sections});
 
   StyleguideSection getSectionByNameOrCreate(String name) {
     final section = sections.firstWhereOrNull((section) => section.name == name);

@@ -23,4 +23,9 @@ class RequiredRouteProperty<T> with IsRouteProperty<T> {
     }
     parent.validate();
   }
+
+  @override
+  String? toQueryParameter() {
+    return parent.toQueryParameter();
+  }
 }

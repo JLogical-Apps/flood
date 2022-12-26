@@ -15,7 +15,7 @@ class StyleguideWidget extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return StyledTabs(
-      tabs: styleguide.pages
+      tabs: styleguide.tabs
           .map((page) => StyledTab(
                 titleText: page.name,
                 icon: page.icon,

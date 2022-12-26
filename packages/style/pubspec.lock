@@ -376,7 +376,7 @@ packages:
     source: path
     version: "0.0.1"
   utils_core:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       path: "../utils/utils_core"
       relative: true

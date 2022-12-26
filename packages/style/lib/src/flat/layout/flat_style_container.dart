@@ -31,7 +31,7 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
 
   @override
   void modifyStyleguide(Styleguide styleguide) {
-    styleguide.getPageByNameOrCreate('Containers', icon: Icons.layers_outlined).getSectionByNameOrCreate('Container')
+    styleguide.getTabByNameOrCreate('Containers', icon: Icons.layers_outlined).getSectionByNameOrCreate('Container')
       ..add(StyledContainer.subtle(
         child: StyledList.column(
           children: [
