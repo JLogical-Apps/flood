@@ -16,7 +16,7 @@ extension RouteExtensions on Route {
             ))
         .where((name, value) => value != null);
     return Uri(
-      path: '/${segments.map((segment) => segment.toSegmentPart()).join('/')}',
+      path: '/${segments.map((segment) => Uri.encodeComponent(segment.toSegmentPart())).join('/')}',
       queryParameters: queryParameters.isEmpty ? null : queryParameters,
     );
   }

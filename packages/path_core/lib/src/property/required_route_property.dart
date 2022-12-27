@@ -1,7 +1,7 @@
 import 'package:path_core/src/property/route_property.dart';
 
-class RequiredRouteProperty<T> with IsRouteProperty<T> {
-  final RouteProperty<T?> parent;
+class RequiredRouteProperty<G, S> with IsRouteProperty<G, S> {
+  final RouteProperty<G?, S?> parent;
 
   RequiredRouteProperty({required this.parent});
 
@@ -9,7 +9,10 @@ class RequiredRouteProperty<T> with IsRouteProperty<T> {
   String get name => parent.name;
 
   @override
-  T get value => parent.value ?? (throw Exception('Required but not found! [$name]'));
+  G get value => parent.value ?? (throw Exception('Required but not found! [$name]'));
+
+  @override
+  void set(S value) => parent.set(value);
 
   @override
   void fromValue(String rawValue) {

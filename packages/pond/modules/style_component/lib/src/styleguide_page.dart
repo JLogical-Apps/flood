@@ -5,7 +5,7 @@ import 'package:style/style.dart';
 
 class StyleguidePage extends AppPage {
   @override
-  PathDefinition get pathDefinition => PathDefinition.builder().string('_styleguide').build();
+  PathDefinition get pathDefinition => PathDefinition.string('_styleguide');
 
   @override
   AppPage copy() {

@@ -1,9 +1,11 @@
 import 'package:path_core/src/property/required_route_property.dart';
 
-abstract class RouteProperty<T> {
+abstract class RouteProperty<G, S> {
   String get name;
 
-  T get value;
+  G get value;
+
+  void set(S value);
 
   void fromValue(String rawValue);
 
@@ -12,22 +14,22 @@ abstract class RouteProperty<T> {
   String? toQueryParameter();
 }
 
-extension RoutePropertyExtensions<T> on RouteProperty<T> {
-  RequiredRouteProperty required() {
-    return RequiredRouteProperty(parent: this);
+extension NullableRoutePropertyExtensions<G, S> on RouteProperty<G?, S?> {
+  RequiredRouteProperty<G, S> required() {
+    return RequiredRouteProperty<G, S>(parent: this);
   }
 }
 
-mixin IsRouteProperty<T> implements RouteProperty<T> {
+mixin IsRouteProperty<G, S> implements RouteProperty<G, S> {
   @override
   void validate() {}
 }
 
-abstract class RoutePropertyWrapper<T> implements RouteProperty<T> {
-  RouteProperty<T> get routeProperty;
+abstract class RoutePropertyWrapper<G, S> implements RouteProperty<G, S> {
+  RouteProperty<G, S> get routeProperty;
 }
 
-mixin IsRoutePropertyWrapper<T> implements RoutePropertyWrapper<T> {
+mixin IsRoutePropertyWrapper<G, S> implements RoutePropertyWrapper<G, S> {
   @override
   String get name => routeProperty.name;
 

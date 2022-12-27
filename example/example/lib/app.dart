@@ -1,4 +1,6 @@
 import 'package:example/pond.dart';
+import 'package:example/presentation/style.dart';
+import 'package:example/presentation/valet_pages_pond_component.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -13,7 +15,7 @@ class ExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return PondApp(
       splashPage: StyleProvider(
-        style: FlatStyle(),
+        style: style,
         child: StyledPage(
           body: Center(
             child: StyledText.h1('Loading'),
@@ -33,39 +35,8 @@ class ExampleApp extends StatelessWidget {
   Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async {
     final appPondContext = AppPondContext(corePondContext: corePondContext);
     await appPondContext.register(EnvironmentBannerAppComponent());
-    await appPondContext.register(StyleAppComponent(
-        style: FlatStyle(
-            // backgroundColor: Color(0xffdedede),
-            )));
-    await appPondContext.register(TestAppComponent());
+    await appPondContext.register(StyleAppComponent(style: style));
+    await appPondContext.register(ValetPagesAppPondComponent());
     return appPondContext;
-  }
-}
-
-class TestAppComponent with IsAppPondComponent {
-  @override
-  List<AppPage> get pages => [TestPage()];
-}
-
-class TestPage extends AppPage {
-  @override
-  Widget build(BuildContext context) {
-    return StyledPage(
-      titleText: 'Test',
-      body: Center(
-        child: StyledContainer(
-          width: 100,
-          height: 100,
-        ),
-      ),
-    );
-  }
-
-  @override
-  PathDefinition get pathDefinition => PathDefinition.builder().string('test').build();
-
-  @override
-  AppPage copy() {
-    return TestPage();
   }
 }

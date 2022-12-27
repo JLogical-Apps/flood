@@ -6,6 +6,7 @@ import 'package:flutter/material.dart' as flutter;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:path_core/path_core.dart';
 import 'package:pond/pond.dart';
+import 'package:utils_core/utils_core.dart';
 
 const splashRoute = '/_splash';
 
@@ -13,8 +14,6 @@ class PondApp extends HookWidget {
   final FutureOr<AppPondContext> Function() appPondContextGetter;
   final AppPage Function(BuildContext context, AppPondContext appContext) initialPageGetter;
   final Widget splashPage;
-
-  final navigatorKey = GlobalKey<NavigatorState>();
 
   PondApp({
     super.key,
@@ -54,15 +53,19 @@ class PondApp extends HookWidget {
     required String? path,
     required ValueNotifier<AppPondContext?> appContextState,
   }) {
-    if (path == splashRoute) {
+    print(path);
+    final uri = path?.mapIfNonNull(Uri.tryParse);
+    if (uri?.path == splashRoute) {
+      print(path);
       return getRoute(
         splashRoute,
         SplashPage(
           appPondContextGetter: appPondContextGetter,
           onFinishedLoading: (context, appContext) {
             appContextState.value = appContext;
+            final redirectUri = uri?.queryParameters['redirect'];
             final initialPage = initialPageGetter(context, appContext);
-            Navigator.of(context).pushReplacementNamed(initialPage.uri.toString());
+            Navigator.of(context).pushReplacementNamed(redirectUri ?? initialPage.uri.toString());
           },
           splashPage: splashPage,
         ),
@@ -71,14 +74,16 @@ class PondApp extends HookWidget {
 
     final appContext = appContextState.value;
     if (appContext == null) {
+      print(path);
       return getRoute(
-        splashRoute,
+        Uri(path: splashRoute, queryParameters: {'redirect': path}).toString(),
         SplashPage(
           appPondContextGetter: appPondContextGetter,
           onFinishedLoading: (context, appContext) {
             appContextState.value = appContext;
+            final redirectUri = uri?.queryParameters['redirect'];
             final initialPage = initialPageGetter(context, appContext);
-            Navigator.of(context).pushReplacementNamed(initialPage.uri.toString());
+            Navigator.of(context).pushReplacementNamed(redirectUri ?? initialPage.uri.toString());
           },
           splashPage: splashPage,
         ),
@@ -126,15 +131,18 @@ class SplashPage extends HookWidget {
   final void Function(BuildContext buildContext, AppPondContext appContext) onFinishedLoading;
   final Widget splashPage;
 
-  const SplashPage(
-      {super.key, required this.appPondContextGetter, required this.onFinishedLoading, required this.splashPage});
+  const SplashPage({
+    super.key,
+    required this.appPondContextGetter,
+    required this.onFinishedLoading,
+    required this.splashPage,
+  });
 
   @override
   Widget build(BuildContext context) {
     final appContextState = useState<AppPondContext?>(null);
 
     useMemoized(() => () async {
-          await Future.delayed(Duration(seconds: 3));
           final appContext = await appPondContextGetter();
           await appContext.load();
           appContextState.value = appContext;

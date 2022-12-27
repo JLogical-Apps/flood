@@ -1,12 +1,15 @@
 import 'package:path_core/src/property/route_property.dart';
 import 'package:utils_core/utils_core.dart';
 
-class FieldRouteProperty<T> with IsRouteProperty<T?> {
+class FieldRouteProperty<T> with IsRouteProperty<T?, T?> {
   @override
   final String name;
 
   @override
   T? value;
+
+  @override
+  void set(T? value) => this.value = value;
 
   FieldRouteProperty({required this.name});
 
