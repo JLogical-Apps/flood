@@ -266,7 +266,7 @@ packages:
     source: path
     version: "0.0.1"
   provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: provider
       url: "https://pub.dartlang.org"

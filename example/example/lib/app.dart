@@ -12,6 +12,14 @@ class ExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PondApp(
+      splashPage: StyleProvider(
+        style: FlatStyle(),
+        child: StyledPage(
+          body: Center(
+            child: StyledText.h1('Loading'),
+          ),
+        ),
+      ),
       appPondContextGetter: () async {
         final corePondContext = await getCorePondContext(environmentConfig: EnvironmentConfig.static.flutterAssets());
         return await getAppPondContext(corePondContext);

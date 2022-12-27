@@ -12,6 +12,7 @@ const splashRoute = '/_splash';
 class PondApp extends HookWidget {
   final FutureOr<AppPondContext> Function() appPondContextGetter;
   final AppPage Function(BuildContext context, AppPondContext appContext) initialPageGetter;
+  final Widget splashPage;
 
   final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -19,6 +20,7 @@ class PondApp extends HookWidget {
     super.key,
     required this.appPondContextGetter,
     required this.initialPageGetter,
+    required this.splashPage,
   });
 
   @override
@@ -62,6 +64,7 @@ class PondApp extends HookWidget {
             final initialPage = initialPageGetter(context, appContext);
             Navigator.of(context).pushReplacementNamed(initialPage.uri.toString());
           },
+          splashPage: splashPage,
         ),
       );
     }
@@ -77,6 +80,7 @@ class PondApp extends HookWidget {
             final initialPage = initialPageGetter(context, appContext);
             Navigator.of(context).pushReplacementNamed(initialPage.uri.toString());
           },
+          splashPage: splashPage,
         ),
       );
     }
@@ -120,25 +124,23 @@ class PondApp extends HookWidget {
 class SplashPage extends HookWidget {
   final FutureOr<AppPondContext> Function() appPondContextGetter;
   final void Function(BuildContext buildContext, AppPondContext appContext) onFinishedLoading;
+  final Widget splashPage;
 
-  const SplashPage({super.key, required this.appPondContextGetter, required this.onFinishedLoading});
+  const SplashPage(
+      {super.key, required this.appPondContextGetter, required this.onFinishedLoading, required this.splashPage});
 
   @override
   Widget build(BuildContext context) {
     final appContextState = useState<AppPondContext?>(null);
-    final doneLoading = appContextState.value != null;
 
     useMemoized(() => () async {
+          await Future.delayed(Duration(seconds: 3));
           final appContext = await appPondContextGetter();
           await appContext.load();
           appContextState.value = appContext;
           onFinishedLoading(context, appContext);
         }());
 
-    return Scaffold(
-      body: Center(
-        child: doneLoading ? Text('Done!') : Text('Loading...'),
-      ),
-    );
+    return splashPage;
   }
 }
