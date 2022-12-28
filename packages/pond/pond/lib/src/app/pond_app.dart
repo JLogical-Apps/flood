@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +12,7 @@ const redirectParam = 'redirect';
 
 class PondApp extends HookWidget {
   final AppPondContext appPondContext;
-  final AppPage Function(BuildContext context) initialPageGetter;
+  final FutureOr<AppPage> Function(BuildContext context) initialPageGetter;
   final Widget splashPage;
 
   PondApp({
@@ -43,7 +45,7 @@ class PondApp extends HookWidget {
                 redirect: (context, state) async {
                   if (isAppContextLoaded.value) {
                     final redirect = state.queryParams[redirectParam];
-                    final initialPage = initialPageGetter(context);
+                    final initialPage = await initialPageGetter(context);
                     return redirect ?? initialPage.uri.toString();
                   }
                   return null;
@@ -56,7 +58,7 @@ class PondApp extends HookWidget {
                     onFinishedLoading: (context) async {
                       isAppContextLoaded.value = true;
                       final redirect = state.queryParams[redirectParam];
-                      final initialPage = initialPageGetter(context);
+                      final initialPage = await initialPageGetter(context);
                       context.go(redirect ?? initialPage.uri.toString());
                     },
                   );
