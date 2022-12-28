@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_core/path_core.dart';
 import 'package:pond/pond.dart';
+import 'package:pond/src/app/page/go_router_segment_wrapper.dart';
 import 'package:utils/utils.dart';
 
 const splashRoute = '/_splash';
@@ -76,8 +77,11 @@ class PondApp extends HookWidget {
 
                         return null;
                       },
-                      path: page.uri.toString(),
-                      builder: (context, state) => page,
+                      path: GoRouterSegmentWrapper.getGoRoutePath(page),
+                      builder: (context, state) {
+                        print(state.location);
+                        return page.copy()..fromPath(state.location);
+                      },
                     ),
                   ]),
             ],

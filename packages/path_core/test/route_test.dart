@@ -72,7 +72,7 @@ class BudgetRoute with IsRoute, IsPathDefinitionWrapper {
 }
 
 class EnvelopeRoute with IsRoute, IsPathDefinitionWrapper {
-  late final envelopeIdProperty = field<String>(name: ':id').required();
+  late final envelopeIdProperty = field<String>(name: 'id').required();
   late final budgetIdProperty = field<String>(name: 'budgetId').required();
   late final trayIdProperty = field<String>(name: 'trayId');
 
