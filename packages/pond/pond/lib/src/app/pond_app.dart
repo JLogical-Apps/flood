@@ -1,31 +1,29 @@
-import 'dart:async';
-
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as flutter;
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path_core/path_core.dart';
 import 'package:pond/pond.dart';
-import 'package:utils_core/utils_core.dart';
 
 const splashRoute = '/_splash';
+const redirectParam = 'redirect';
 
 class PondApp extends HookWidget {
-  final FutureOr<AppPondContext> Function() appPondContextGetter;
-  final AppPage Function(BuildContext context, AppPondContext appContext) initialPageGetter;
+  final AppPondContext appPondContext;
+  final AppPage Function(BuildContext context) initialPageGetter;
   final Widget splashPage;
 
   PondApp({
     super.key,
-    required this.appPondContextGetter,
+    required this.appPondContext,
     required this.initialPageGetter,
     required this.splashPage,
   });
 
   @override
   Widget build(BuildContext context) {
-    final appContextState = useState<AppPondContext?>(null);
-    return MaterialApp(
+    final isAppContextLoaded = useMemoized(() => [false]);
+
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       builder: (context, widget) {
         if (widget == null) {
@@ -33,92 +31,62 @@ class PondApp extends HookWidget {
         }
         return _wrapByComponents(
           child: widget,
-          appContext: appContextState.value,
-          appComponents: appContextState.value?.appComponents,
+          appContext: appPondContext,
         );
       },
-      initialRoute: splashRoute,
-      onGenerateInitialRoutes: (path) {
-        return [
-          getRouteFromPath(path: path, appContextState: appContextState)!,
-        ];
-      },
-      onGenerateRoute: (settings) {
-        return getRouteFromPath(path: settings.name, appContextState: appContextState);
-      },
+      routerConfig: useMemoized(() => GoRouter(
+            initialLocation: splashRoute,
+            routes: [
+              GoRoute(
+                path: splashRoute,
+                redirect: (context, state) async {
+                  if (isAppContextLoaded[0]) {
+                    final redirect = state.queryParams[redirectParam];
+                    final initialPage = initialPageGetter(context);
+                    return redirect ?? initialPage.uri.toString();
+                  }
+                  return null;
+                },
+                builder: (context, state) {
+                  return SplashPage(
+                    key: UniqueKey(),
+                    splashPage: splashPage,
+                    appPondContext: appPondContext,
+                    onFinishedLoading: (context) async {
+                      isAppContextLoaded[0] = true;
+                      final redirect = state.queryParams[redirectParam];
+                      final initialPage = initialPageGetter(context);
+                      context.go(redirect ?? initialPage.uri.toString());
+                    },
+                  );
+                },
+              ),
+              ...appPondContext.getPages().expand((page) => [
+                    GoRoute(
+                      redirect: (context, state) {
+                        if (!isAppContextLoaded[0]) {
+                          return Uri(
+                            path: splashRoute,
+                            queryParameters: {redirectParam: state.fullpath},
+                          ).toString();
+                        }
+
+                        return null;
+                      },
+                      path: page.uri.toString(),
+                      builder: (context, state) => page,
+                    ),
+                  ]),
+            ],
+          )),
     );
   }
 
-  flutter.Route? getRouteFromPath({
-    required String? path,
-    required ValueNotifier<AppPondContext?> appContextState,
-  }) {
-    print(path);
-    final uri = path?.mapIfNonNull(Uri.tryParse);
-    if (uri?.path == splashRoute) {
-      print(path);
-      return getRoute(
-        splashRoute,
-        SplashPage(
-          appPondContextGetter: appPondContextGetter,
-          onFinishedLoading: (context, appContext) {
-            appContextState.value = appContext;
-            final redirectUri = uri?.queryParameters['redirect'];
-            final initialPage = initialPageGetter(context, appContext);
-            Navigator.of(context).pushReplacementNamed(redirectUri ?? initialPage.uri.toString());
-          },
-          splashPage: splashPage,
-        ),
-      );
-    }
-
-    final appContext = appContextState.value;
-    if (appContext == null) {
-      print(path);
-      return getRoute(
-        Uri(path: splashRoute, queryParameters: {'redirect': path}).toString(),
-        SplashPage(
-          appPondContextGetter: appPondContextGetter,
-          onFinishedLoading: (context, appContext) {
-            appContextState.value = appContext;
-            final redirectUri = uri?.queryParameters['redirect'];
-            final initialPage = initialPageGetter(context, appContext);
-            Navigator.of(context).pushReplacementNamed(redirectUri ?? initialPage.uri.toString());
-          },
-          splashPage: splashPage,
-        ),
-      );
-    }
-
-    if (path == null) {
-      return null;
-    }
-
-    final matchingPage = appContext.getPages().firstWhereOrNull((page) => page.matches(path));
-    if (matchingPage == null) {
-      return null;
-    }
-
-    final copy = matchingPage.copy();
-    copy.fromPath(path);
-
-    return getRoute(path, copy);
-  }
-
-  MaterialPageRoute getRoute(String path, Widget widget) {
-    return MaterialPageRoute(builder: (_) => widget, settings: RouteSettings(name: path));
-  }
-
   Widget _wrapByComponents({
-    AppPondContext? appContext,
-    List<AppPondComponent>? appComponents,
+    required AppPondContext appContext,
     required Widget child,
   }) {
-    if (appComponents == null || appContext == null) {
-      return child;
-    }
-
-    for (final appComponent in appComponents) {
+    for (final appComponent in appContext.appComponents) {
       child = appComponent.wrapApp(appContext, child);
     }
 
@@ -127,26 +95,22 @@ class PondApp extends HookWidget {
 }
 
 class SplashPage extends HookWidget {
-  final FutureOr<AppPondContext> Function() appPondContextGetter;
-  final void Function(BuildContext buildContext, AppPondContext appContext) onFinishedLoading;
+  final AppPondContext appPondContext;
+  final void Function(BuildContext buildContext) onFinishedLoading;
   final Widget splashPage;
 
   const SplashPage({
     super.key,
-    required this.appPondContextGetter,
+    required this.appPondContext,
     required this.onFinishedLoading,
     required this.splashPage,
   });
 
   @override
   Widget build(BuildContext context) {
-    final appContextState = useState<AppPondContext?>(null);
-
     useMemoized(() => () async {
-          final appContext = await appPondContextGetter();
-          await appContext.load();
-          appContextState.value = appContext;
-          onFinishedLoading(context, appContext);
+          await appPondContext.load();
+          onFinishedLoading(context);
         }());
 
     return splashPage;
