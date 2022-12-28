@@ -8,13 +8,16 @@ late AppPondContext appPondContext;
 
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  appPondContext =
-      await getAppPondContext(await getCorePondContext(environmentConfig: EnvironmentConfig.static.flutterAssets()));
-  runApp(ExampleApp());
+  runApp(App(
+    appPondContext:
+        await getAppPondContext(await getCorePondContext(environmentConfig: EnvironmentConfig.static.flutterAssets())),
+  ));
 }
 
-class ExampleApp extends StatelessWidget {
-  const ExampleApp({super.key});
+class App extends StatelessWidget {
+  final AppPondContext appPondContext;
+
+  const App({super.key, required this.appPondContext});
 
   @override
   Widget build(BuildContext context) {
