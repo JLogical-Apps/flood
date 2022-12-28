@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_core/path_core.dart';
 import 'package:pond/pond.dart';
+import 'package:utils/utils.dart';
 
 const splashRoute = '/_splash';
 const redirectParam = 'redirect';
@@ -21,7 +22,7 @@ class PondApp extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isAppContextLoaded = useMemoized(() => [false]);
+    final isAppContextLoaded = useMutable(() => false);
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
@@ -40,7 +41,7 @@ class PondApp extends HookWidget {
               GoRoute(
                 path: splashRoute,
                 redirect: (context, state) async {
-                  if (isAppContextLoaded[0]) {
+                  if (isAppContextLoaded.value) {
                     final redirect = state.queryParams[redirectParam];
                     final initialPage = initialPageGetter(context);
                     return redirect ?? initialPage.uri.toString();
@@ -53,7 +54,7 @@ class PondApp extends HookWidget {
                     splashPage: splashPage,
                     appPondContext: appPondContext,
                     onFinishedLoading: (context) async {
-                      isAppContextLoaded[0] = true;
+                      isAppContextLoaded.value = true;
                       final redirect = state.queryParams[redirectParam];
                       final initialPage = initialPageGetter(context);
                       context.go(redirect ?? initialPage.uri.toString());
@@ -64,7 +65,7 @@ class PondApp extends HookWidget {
               ...appPondContext.getPages().expand((page) => [
                     GoRoute(
                       redirect: (context, state) {
-                        if (!isAppContextLoaded[0]) {
+                        if (!isAppContextLoaded.value) {
                           return Uri(
                             path: splashRoute,
                             queryParameters: {redirectParam: state.fullpath},
