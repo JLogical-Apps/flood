@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intersperse/intersperse.dart';
 import 'package:style/src/components/layout/styled_list.dart';
-import 'package:style/src/style_build_context_extensions.dart';
+import 'package:style/src/components/misc/styled_scrollbar.dart';
 import 'package:style/src/style_renderer.dart';
 
 class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
@@ -22,19 +22,9 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
       );
 
       if (component.hasScrollbar) {
-        widget = MediaQuery.removePadding(
-          context: context,
-          removeTop: true,
-          removeBottom: true,
-          child: RawScrollbar(
-            child: widget,
-            controller: scrollController,
-            thumbColor: context.colorPalette().foreground.regular.withOpacity(0.6),
-            trackColor: context.colorPalette().background.subtle,
-            // trackBorderColor: Colors.red,
-            radius: Radius.circular(12),
-            trackRadius: Radius.circular(12),
-          ),
+        widget = StyledScrollbar(
+          child: widget,
+          controller: scrollController,
         );
       }
     }

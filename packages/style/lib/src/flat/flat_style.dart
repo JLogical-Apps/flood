@@ -9,6 +9,7 @@ import 'package:style/src/flat/layout/flat_style_container.dart';
 import 'package:style/src/flat/layout/flat_style_list.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
 import 'package:style/src/flat/misc/flat_style_divider.dart';
+import 'package:style/src/flat/misc/flat_style_scrollbar.dart';
 import 'package:style/src/flat/page/flat_style_page.dart';
 import 'package:style/src/flat/text/flat_style_body_text.dart';
 import 'package:style/src/flat/text/flat_style_h1.dart';
@@ -40,6 +41,7 @@ class FlatStyle with IsStyle {
           FlatStyleTabsRenderer(),
           FlatStylePageRenderer(),
           FlatStyleDividerRenderer(),
+          FlatStyleScrollbarRenderer(),
           FlatStyleH1Renderer(),
           FlatStyleH2Renderer(),
           FlatStyleH3Renderer(),
