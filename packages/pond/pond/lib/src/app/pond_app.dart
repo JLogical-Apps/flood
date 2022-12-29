@@ -15,12 +15,14 @@ class PondApp extends HookWidget {
   final AppPondContext appPondContext;
   final FutureOr<AppPage> Function() initialPageGetter;
   final Widget splashPage;
+  final Widget notFoundPage;
 
   PondApp({
     super.key,
     required this.appPondContext,
     required this.initialPageGetter,
     required this.splashPage,
+    required this.notFoundPage,
   });
 
   @override
@@ -67,6 +69,10 @@ class PondApp extends HookWidget {
                 ],
               ),
             ),
+        VWidget.builder(
+          path: '/*',
+          builder: (context, state) => notFoundPage,
+        ),
       ],
       debugShowCheckedModeBanner: false,
       builder: (context, widget) {

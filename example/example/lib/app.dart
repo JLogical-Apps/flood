@@ -27,6 +27,11 @@ class App extends StatelessWidget {
           child: StyledText.h1('Loading...'),
         ),
       ),
+      notFoundPage: StyledPage(
+        body: Center(
+          child: StyledText.h1('Not Found!'),
+        ),
+      ),
       appPondContext: appPondContext,
       initialPageGetter: () {
         return StyleguidePage();
