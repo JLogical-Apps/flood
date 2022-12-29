@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:beamer/beamer.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:path_core/path_core.dart';
 import 'package:pond/pond.dart';
 import 'package:pond/src/app/page/go_router_segment_wrapper.dart';
@@ -25,7 +26,8 @@ class PondApp extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isAppContextLoaded = useMutable(() => false);
+    final isAppContextLoadedValue = useMutable(() => false);
+    final isAppContextLoaded = isAppContextLoadedValue.value;
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
@@ -38,53 +40,38 @@ class PondApp extends HookWidget {
           appContext: appPondContext,
         );
       },
-      routerConfig: useMemoized(() => GoRouter(
-            initialLocation: splashRoute,
-            routes: [
-              GoRoute(
-                path: splashRoute,
-                redirect: (context, state) async {
-                  if (isAppContextLoaded.value) {
-                    final redirect = state.queryParams[redirectParam];
-                    final initialPage = await initialPageGetter(context);
-                    return redirect ?? initialPage.uri.toString();
-                  }
-                  return null;
-                },
-                builder: (context, state) {
-                  return SplashPage(
+      routeInformationParser: useMemoized(() => BeamerParser()),
+      routerDelegate: useMemoized(() => BeamerDelegate(
+            initialPath: splashRoute,
+            preferUpdate: true,
+            removeDuplicateHistory: false,
+            locationBuilder: (state) {
+              final path = state.uri.toString();
+              if (path == splashRoute) {
+                return SplashPageBeamLocation(
+                  page: (state) => SplashPage(
                     key: UniqueKey(),
                     splashPage: splashPage,
                     appPondContext: appPondContext,
-                    onFinishedLoading: (context) async {
-                      isAppContextLoaded.value = true;
-                      final redirect = state.queryParams[redirectParam];
-                      final initialPage = await initialPageGetter(context);
-                      context.go(redirect ?? initialPage.uri.toString());
-                    },
-                  );
-                },
-              ),
-              ...appPondContext.getPages().expand((page) => [
-                    GoRoute(
-                      redirect: (context, state) {
-                        if (!isAppContextLoaded.value) {
-                          return Uri(
-                            path: splashRoute,
-                            queryParameters: {redirectParam: state.fullpath},
-                          ).toString();
-                        }
+                    onFinishedLoading: isAppContextLoaded
+                        ? null
+                        : (context) async {
+                            // isAppContextLoadedValue.value = true;
+                            final redirect = state.queryParameters[redirectParam];
+                            final initialPage = await initialPageGetter(context);
+                            context.beamToNamed(redirect ?? initialPage.uri.toString());
+                          },
+                  ),
+                );
+              }
 
-                        return null;
-                      },
-                      path: GoRouterSegmentWrapper.getGoRoutePath(page),
-                      builder: (context, state) {
-                        print(state.location);
-                        return page.copy()..fromPath(state.location);
-                      },
-                    ),
-                  ]),
-            ],
+              final matchingPage = appPondContext.getPages().firstWhereOrNull((page) => page.matches(path));
+              if (matchingPage == null) {
+                return NotFound();
+              }
+
+              return AppPageBeamLocation(page: matchingPage, location: state.uri.toString());
+            },
           )),
     );
   }
@@ -103,7 +90,7 @@ class PondApp extends HookWidget {
 
 class SplashPage extends HookWidget {
   final AppPondContext appPondContext;
-  final void Function(BuildContext buildContext) onFinishedLoading;
+  final void Function(BuildContext buildContext)? onFinishedLoading;
   final Widget splashPage;
 
   const SplashPage({
@@ -116,10 +103,57 @@ class SplashPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useMemoized(() => () async {
+          if (onFinishedLoading == null) {
+            return;
+          }
           await appPondContext.load();
-          onFinishedLoading(context);
+          onFinishedLoading!(context);
         }());
 
     return splashPage;
   }
+}
+
+class SplashPageBeamLocation extends BeamLocation<BeamState> {
+  final SplashPage Function(BeamState state) page;
+
+  SplashPageBeamLocation({required this.page});
+
+  @override
+  List<BeamPage> buildPages(BuildContext context, BeamState state) {
+    return [
+      BeamPage(
+        key: ValueKey(pathBlueprints[0]),
+        child: page(state),
+        title: '${page.runtimeType}',
+      ),
+    ];
+  }
+
+  @override
+  List<Pattern> get pathBlueprints => [splashRoute];
+}
+
+class AppPageBeamLocation extends BeamLocation<BeamState> {
+  final AppPage page;
+  final String location;
+
+  AppPageBeamLocation({required this.page, required this.location});
+
+  @override
+  List<BeamPage> buildPages(BuildContext context, BeamState state) {
+    // final path = state.uri.toString();
+    final path = location;
+
+    return [
+      BeamPage(
+        key: UniqueKey(),
+        child: page.copy()..fromPath(path),
+        title: '${page.runtimeType}',
+      ),
+    ];
+  }
+
+  @override
+  List<Pattern> get pathBlueprints => [GoRouterSegmentWrapper.getGoRoutePath(page)];
 }

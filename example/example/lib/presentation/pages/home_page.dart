@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class LoginPage extends AppPage {
-  const LoginPage({super.key});
+class HomePage extends AppPage {
+  @override
+  PathDefinition get pathDefinition => PathDefinition.home;
 
   @override
   Widget build(BuildContext context) {
     return StyledPage(
+      titleText: 'Home',
       body: Center(
-        child: StyledText.body('Login'),
+        child: StyledText.h1('Home'),
       ),
     );
   }
 
   @override
   AppPage copy() {
-    return LoginPage(
-      key: UniqueKey(),
-    );
+    return HomePage();
   }
-
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('login');
 }

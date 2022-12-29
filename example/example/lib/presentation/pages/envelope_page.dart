@@ -1,3 +1,4 @@
+import 'package:example/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -29,5 +30,10 @@ class EnvelopePage extends AppPage {
   @override
   AppPage copy() {
     return EnvelopePage();
+  }
+
+  @override
+  AppPage? getParent() {
+    return HomePage();
   }
 }

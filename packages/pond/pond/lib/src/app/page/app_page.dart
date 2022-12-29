@@ -5,4 +5,8 @@ abstract class AppPage extends HookWidget with IsRoute, IsPathDefinitionWrapper 
   const AppPage({super.key});
 
   AppPage copy();
+
+  AppPage? getParent() {
+    return null;
+  }
 }

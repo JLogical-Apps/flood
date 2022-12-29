@@ -6,6 +6,8 @@ import 'package:path_core/src/segment/wildcard_path_definition_segment.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class PathDefinition {
+  static PathDefinition home = PathDefinition(segments: []);
+
   List<PathDefinitionSegment> get segments;
 
   factory PathDefinition({required List<PathDefinitionSegment> segments}) => _PathDefinitionImpl(segments: segments);

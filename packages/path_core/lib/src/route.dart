@@ -23,7 +23,7 @@ extension RouteExtensions on Route {
 
   void fromPath(String path) {
     if (!matches(path)) {
-      throw Exception('[$path] does not match!');
+      throw Exception('[$path] does not match! [$this]');
     }
 
     final uri = Uri.parse(path);

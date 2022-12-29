@@ -4,12 +4,16 @@ import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
 class StyleguidePage extends AppPage {
+  StyleguidePage({super.key});
+
   @override
   PathDefinition get pathDefinition => PathDefinition.string('_styleguide');
 
   @override
   AppPage copy() {
-    return StyleguidePage();
+    return StyleguidePage(
+      key: UniqueKey(),
+    );
   }
 
   @override
