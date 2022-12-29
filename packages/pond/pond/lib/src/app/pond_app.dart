@@ -86,7 +86,6 @@ class PondApp extends HookWidget {
           return;
         }
 
-        print('before leave for $exitingUrl -> $page');
         if (!page.matches(exitingUrl)) {
           return;
         }
@@ -96,7 +95,6 @@ class PondApp extends HookWidget {
           return;
         }
 
-        // TODO
         vRedirector.to(parent.uri.toString());
       },
       stackedRoutes: [
