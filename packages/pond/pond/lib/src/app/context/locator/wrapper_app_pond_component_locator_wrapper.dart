@@ -10,6 +10,8 @@ class WrapperAppPondComponentLocatorWrapper extends AppPondComponentLocatorWrapp
   @override
   List<AppPondComponent> getSubcomponents(AppPondComponent component) {
     final wrapper = component as AppPondComponentWrapper;
-    return [wrapper.appPondComponent];
+    final wrappedComponent = wrapper.appPondComponent;
+    return AppPondComponentLocatorWrapper.getWrapperOrNull(wrappedComponent)?.getSubcomponents(wrappedComponent) ??
+        [wrappedComponent];
   }
 }

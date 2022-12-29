@@ -16,6 +16,6 @@ abstract class AppPondComponentLocatorWrapper {
   }
 
   static List<AppPondComponent> getSubcomponentsOf(AppPondComponent component) {
-    return getWrapperOrNull(component)?.getSubcomponents(component) ?? [component];
+    return getWrapperOrNull(component)?.getSubcomponents(component) ?? [];
   }
 }
