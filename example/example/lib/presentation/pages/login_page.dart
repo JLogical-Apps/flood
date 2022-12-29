@@ -15,9 +15,7 @@ class LoginPage extends AppPage {
 
   @override
   AppPage copy() {
-    return LoginPage(
-      key: UniqueKey(),
-    );
+    return LoginPage();
   }
 
   @override

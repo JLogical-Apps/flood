@@ -11,9 +11,7 @@ class StyleguidePage extends AppPage {
 
   @override
   AppPage copy() {
-    return StyleguidePage(
-      key: UniqueKey(),
-    );
+    return StyleguidePage();
   }
 
   @override

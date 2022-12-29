@@ -28,7 +28,7 @@ class App extends StatelessWidget {
         ),
       ),
       appPondContext: appPondContext,
-      initialPageGetter: (context) {
+      initialPageGetter: () {
         return StyleguidePage();
       },
     );

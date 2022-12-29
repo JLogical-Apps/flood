@@ -12,9 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  beamer: 0.14.1 # Limit to this version to avoid runtime check bug
   collection: ^1.16.0
   flutter_hooks: ^0.18.5+1
+  vrouter: ^1.2.1
 
   path_core:
     git:
