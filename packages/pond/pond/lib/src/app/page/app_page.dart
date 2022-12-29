@@ -9,4 +9,14 @@ abstract class AppPage extends HookWidget with IsRoute, IsPathDefinitionWrapper 
   AppPage? getParent() {
     return null;
   }
+
+  List<AppPage> getParentChain() {
+    final pages = <AppPage>[this];
+    AppPage current = this;
+    while (current.getParent() != null) {
+      current = current.getParent()!;
+      pages.add(current);
+    }
+    return pages;
+  }
 }

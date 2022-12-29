@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:path_core/path_core.dart';
 import 'package:pond/pond.dart';
-import 'package:pond/src/app/page/go_router_segment_wrapper.dart';
+import 'package:pond/src/app/page/vrouter_segment_wrapper.dart';
 import 'package:utils/utils.dart';
 import 'package:vrouter/vrouter.dart';
 
@@ -31,7 +31,7 @@ class PondApp extends HookWidget {
       routes: [
         VGuard(
           beforeEnter: (vRedirector) async => isAppContextLoadedValue.value
-              ? vRedirector.to(GoRouterSegmentWrapper.getGoRoutePath(await initialPageGetter()))
+              ? vRedirector.to(VRouterSegmentWrapper.getVRouterPath(await initialPageGetter()))
               : null,
           stackedRoutes: [
             VWidget.builder(
@@ -51,7 +51,7 @@ class PondApp extends HookWidget {
             ),
           ],
         ),
-        ...appPondContext.getPages().map(
+        ...appPondContext.getPages().where((page) => page.getParent() == null).map(
               (page) => VGuard(
                 beforeEnter: (vRedirector) async {
                   final uri = vRedirector.toUrl?.mapIfNonNull(Uri.tryParse);
@@ -63,10 +63,7 @@ class PondApp extends HookWidget {
                       : null;
                 },
                 stackedRoutes: [
-                  VWidget.builder(
-                    path: GoRouterSegmentWrapper.getGoRoutePath(page),
-                    builder: (context, state) => page.copy()..fromPath(state.path!),
-                  ),
+                  getVElementForPage(page),
                 ],
               ),
             ),
@@ -78,6 +75,49 @@ class PondApp extends HookWidget {
           appContext: appPondContext,
         );
       },
+    );
+  }
+
+  VRouteElement getVElementForPage(AppPage page) {
+    return VPopHandler(
+      onPop: (vRedirector) async {
+        final exitingUrl = vRedirector.previousVRouterData?.url;
+        if (exitingUrl == null) {
+          return;
+        }
+
+        print('before leave for $exitingUrl -> $page');
+        if (!page.matches(exitingUrl)) {
+          return;
+        }
+
+        final parent = page.getParent();
+        if (parent == null) {
+          return;
+        }
+
+        // TODO
+        vRedirector.to(parent.uri.toString());
+      },
+      stackedRoutes: [
+        VWidget.builder(
+          path: VRouterSegmentWrapper.getVRouterPath(page),
+          builder: (context, state) {
+            final path = state.path!;
+            if (page.matches(path)) {
+              return page.copy()..fromPath(path);
+            }
+
+            final matchingPage = appPondContext.getPages().firstWhere((page) => page.matches(path));
+            return matchingPage.getParentChain().firstWhere((parent) => parent.runtimeType == page.runtimeType);
+          },
+          stackedRoutes: appPondContext
+              .getPages()
+              .where((p) => p.getParent()?.runtimeType == page.runtimeType)
+              .map((page) => getVElementForPage(page))
+              .toList(),
+        )
+      ],
     );
   }
 
