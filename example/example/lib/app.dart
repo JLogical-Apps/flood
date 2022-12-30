@@ -44,6 +44,7 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   final appPondContext = AppPondContext(corePondContext: corePondContext);
   await appPondContext.register(NavigationAppPondComponent());
   await appPondContext.register(EnvironmentBannerAppComponent());
+  await appPondContext.register(FocusGrabberAppComponent());
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(ValetPagesAppPondComponent());
   return appPondContext;
