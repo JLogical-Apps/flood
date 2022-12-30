@@ -1,4 +1,5 @@
 import 'package:example/pond.dart';
+import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/valet_pages_pond_component.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class App extends StatelessWidget {
       ),
       appPondContext: appPondContext,
       initialPageGetter: () {
-        return StyleguidePage();
+        return HomePage();
       },
     );
   }

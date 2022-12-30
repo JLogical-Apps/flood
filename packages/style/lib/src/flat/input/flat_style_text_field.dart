@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:style/src/components/input/styled_text_field.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
@@ -8,10 +9,11 @@ import 'package:style/src/style_renderer.dart';
 import 'package:style/src/styleguide.dart';
 import 'package:utils/utils.dart';
 
-class FlatStyleTextField with IsTypedStyleRenderer<StyledTextField> {
+class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
   @override
   Widget renderTyped(BuildContext context, StyledTextField component) {
     final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body(text));
+    final textController = useTextEditingController(text: component.text);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -23,7 +25,7 @@ class FlatStyleTextField with IsTypedStyleRenderer<StyledTextField> {
             child: label,
           ),
         TextFormField(
-          controller: TextEditingController(text: component.text),
+          controller: textController,
           onChanged: (text) => component.onChanged?.call(text),
           style: context.style().getTextStyle(context, StyledText.body.empty),
           cursorColor: context.colorPalette().foreground.regular,

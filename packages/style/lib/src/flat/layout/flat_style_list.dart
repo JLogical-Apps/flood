@@ -9,6 +9,10 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
     final children = component.children.map((child) => Padding(padding: component.itemPadding, child: child)).toList();
     Widget widget = component.axis == Axis.vertical ? Column(children: children) : Row(children: children);
 
+    if (component.isCentered) {
+      widget = Center(child: widget);
+    }
+
     if (component.isScrollable) {
       final scrollController = ScrollController();
 

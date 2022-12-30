@@ -5,6 +5,7 @@ class StyledListBuilder {
   bool isScrollable = false;
   bool hasScrollbar = false;
   Axis axis;
+  bool isCentered = false;
 
   StyledListBuilder({this.axis = Axis.vertical});
 
@@ -19,12 +20,18 @@ class StyledListBuilder {
     return this;
   }
 
+  StyledListBuilder get centered {
+    isCentered = true;
+    return this;
+  }
+
   StyledList call({List<Widget> children = const []}) {
     return StyledList(
       children: children,
       axis: axis,
       hasScrollbar: hasScrollbar,
       isScrollable: isScrollable,
+      isCentered: isCentered,
     );
   }
 }

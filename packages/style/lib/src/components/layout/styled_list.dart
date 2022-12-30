@@ -9,6 +9,7 @@ class StyledList extends StyleComponent {
   final bool isScrollable;
   final bool hasScrollbar;
   final EdgeInsets itemPadding;
+  final bool isCentered;
 
   StyledList({
     required this.children,
@@ -16,6 +17,7 @@ class StyledList extends StyleComponent {
     this.isScrollable = false,
     this.hasScrollbar = false,
     this.itemPadding = const EdgeInsets.all(4),
+    this.isCentered = false,
   });
 
   static StyledListBuilder get column => StyledListBuilder(axis: Axis.vertical);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:style/src/components/text/styled_body_text.dart';
+import 'package:style/src/components/text/styled_button_text.dart';
 import 'package:style/src/components/text/styled_h1.dart';
 import 'package:style/src/components/text/styled_h2.dart';
 import 'package:style/src/components/text/styled_h3.dart';
@@ -82,6 +83,15 @@ abstract class StyledText extends StyleComponent {
 
   static StyledTextBuilder<StyledBodyText> get body => StyledTextBuilder(
       builder: (text, emphasis, textAlign, fontStyle, color) => StyledBodyText(
+            text,
+            emphasis: emphasis,
+            textAlign: textAlign,
+            fontStyle: fontStyle,
+            color: color,
+          ));
+
+  static StyledTextBuilder<StyledButtonText> get button => StyledTextBuilder(
+      builder: (text, emphasis, textAlign, fontStyle, color) => StyledButtonText(
             text,
             emphasis: emphasis,
             textAlign: textAlign,

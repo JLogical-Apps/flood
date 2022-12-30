@@ -5,6 +5,7 @@ import 'package:style/src/color_palette.dart';
 import 'package:style/src/components/misc/styled_divider.dart';
 import 'package:style/src/components/text/styled_markdown.dart';
 import 'package:style/src/components/text/styled_text.dart';
+import 'package:style/src/flat/input/flat_style_button.dart';
 import 'package:style/src/flat/input/flat_style_text_field.dart';
 import 'package:style/src/flat/layout/flat_style_container.dart';
 import 'package:style/src/flat/layout/flat_style_list.dart';
@@ -13,6 +14,7 @@ import 'package:style/src/flat/misc/flat_style_divider.dart';
 import 'package:style/src/flat/misc/flat_style_scrollbar.dart';
 import 'package:style/src/flat/page/flat_style_page.dart';
 import 'package:style/src/flat/text/flat_style_body_text.dart';
+import 'package:style/src/flat/text/flat_style_button_text.dart';
 import 'package:style/src/flat/text/flat_style_h1.dart';
 import 'package:style/src/flat/text/flat_style_h2.dart';
 import 'package:style/src/flat/text/flat_style_h3.dart';
@@ -43,7 +45,8 @@ class FlatStyle with IsStyle {
           FlatStylePageRenderer(),
           FlatStyleDividerRenderer(),
           FlatStyleScrollbarRenderer(),
-          FlatStyleTextField(),
+          FlatStyleTextFieldRenderer(),
+          FlatStyleButtonRenderer(),
           FlatStyleH1Renderer(),
           FlatStyleH2Renderer(),
           FlatStyleH3Renderer(),
@@ -51,6 +54,7 @@ class FlatStyle with IsStyle {
           FlatStyleH5Renderer(),
           FlatStyleH6Renderer(),
           FlatStyleBodyTextRenderer(),
+          FlatStyleButtonTextRenderer(),
         ],
         examples = [
           StyledMarkdown('''# H1 heading
