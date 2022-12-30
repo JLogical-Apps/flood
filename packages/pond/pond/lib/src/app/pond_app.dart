@@ -108,23 +108,49 @@ class PondApp extends HookWidget {
         vRedirector.to(parent.uri.toString());
       },
       stackedRoutes: [
-        VWidget.builder(
-          path: VRouterSegmentWrapper.getVRouterPath(page),
-          builder: (context, state) {
-            final path = state.path!;
-            if (page.matches(path)) {
-              return page.copy()..fromPath(path);
+        VGuard(
+          beforeEnter: (vRedirector) async {
+            final path = vRedirector.toUrl;
+            if (path == null) {
+              return;
             }
 
-            final matchingPage = appPondContext.getPages().firstWhere((page) => page.matches(path));
-            return matchingPage.getParentChain().firstWhere((parent) => parent.runtimeType == page.runtimeType);
+            late AppPage displayedPage;
+            if (page.matches(path)) {
+              displayedPage = page.copy()..fromPath(path);
+            } else {
+              final matchingPage = appPondContext.getPages().firstWhere((page) => page.matches(path));
+              displayedPage =
+                  matchingPage.getParentChain().firstWhere((parent) => parent.runtimeType == page.runtimeType);
+            }
+
+            final redirect = await displayedPage.redirectTo(Uri.parse(path));
+            if (redirect == null) {
+              return;
+            }
+
+            vRedirector.to(redirect.uri.toString());
           },
-          stackedRoutes: appPondContext
-              .getPages()
-              .where((p) => p.getParent()?.runtimeType == page.runtimeType)
-              .map((page) => getVElementForPage(page))
-              .toList(),
-        )
+          stackedRoutes: [
+            VWidget.builder(
+              path: VRouterSegmentWrapper.getVRouterPath(page),
+              builder: (context, state) {
+                final path = state.path!;
+                if (page.matches(path)) {
+                  return page.copy()..fromPath(path);
+                }
+
+                final matchingPage = appPondContext.getPages().firstWhere((page) => page.matches(path));
+                return matchingPage.getParentChain().firstWhere((parent) => parent.runtimeType == page.runtimeType);
+              },
+              stackedRoutes: appPondContext
+                  .getPages()
+                  .where((p) => p.getParent()?.runtimeType == page.runtimeType)
+                  .map((page) => getVElementForPage(page))
+                  .toList(),
+            ),
+          ],
+        ),
       ],
     );
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class LoginPage extends AppPage {
-  const LoginPage({super.key});
+  late final redirectPathProperty = field<String>(name: 'redirect');
 
   @override
   Widget build(BuildContext context) {
@@ -20,4 +20,7 @@ class LoginPage extends AppPage {
 
   @override
   PathDefinition get pathDefinition => PathDefinition.string('login');
+
+  @override
+  List<RouteProperty> get queryProperties => [redirectPathProperty];
 }

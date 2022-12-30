@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:example/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -18,5 +21,13 @@ class HomePage extends AppPage {
   @override
   AppPage copy() {
     return HomePage();
+  }
+
+  @override
+  FutureOr<AppPage?> redirectTo(Uri currentUri) {
+    if (currentUri.toString() == '/') {
+      return LoginPage();
+    }
+    return LoginPage()..redirectPathProperty.set(currentUri.toString());
   }
 }
