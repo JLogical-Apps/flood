@@ -13,6 +13,9 @@ abstract class CorePondComponent {
 mixin IsCorePondComponent implements CorePondComponent {
   @override
   late CorePondContext context;
+
+  @override
+  List<CorePondComponentBehavior> get behaviors => [];
 }
 
 abstract class CorePondComponentWrapper implements CorePondComponent {

@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.1"
+  auth_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/auth_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   characters:
     dependency: transitive
     description:

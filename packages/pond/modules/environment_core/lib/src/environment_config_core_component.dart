@@ -4,7 +4,7 @@ import 'package:environment_core/src/environment_type.dart';
 import 'package:environment_core/src/platform.dart';
 import 'package:pond_core/pond_core.dart';
 
-class EnvironmentConfigModule with IsCorePondComponent, IsCorePondComponentBehavior, IsEnvironmentConfigWrapper {
+class EnvironmentConfigCoreComponent with IsCorePondComponent, IsCorePondComponentBehavior, IsEnvironmentConfigWrapper {
   @override
   final EnvironmentConfig environmentConfig;
 
@@ -12,7 +12,7 @@ class EnvironmentConfigModule with IsCorePondComponent, IsCorePondComponentBehav
   late BuildType buildType;
   late Platform platform;
 
-  EnvironmentConfigModule({required this.environmentConfig});
+  EnvironmentConfigCoreComponent({required this.environmentConfig});
 
   @override
   Future onRegister(CorePondContext context, CorePondComponent component) async {

@@ -1,3 +1,4 @@
+export 'package:auth_core/auth_core.dart';
 export 'package:drop_core/drop_core.dart';
 export 'package:environment_core/environment_core.dart';
 export 'package:path_core/path_core.dart';
