@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:path_core/path_core.dart';
 import 'package:pond/pond.dart';
 import 'package:pond/src/app/page/vrouter_segment_wrapper.dart';
+import 'package:provider/provider.dart';
 import 'package:utils/utils.dart';
 import 'package:vrouter/vrouter.dart';
 
@@ -76,9 +77,12 @@ class PondApp extends HookWidget {
       ],
       debugShowCheckedModeBanner: false,
       builder: (context, widget) {
-        return _wrapByComponents(
-          child: widget,
-          appContext: appPondContext,
+        return Provider<AppPondContext>(
+          create: (_) => appPondContext,
+          child: _wrapByComponents(
+            child: widget,
+            appContext: appPondContext,
+          ),
         );
       },
     );

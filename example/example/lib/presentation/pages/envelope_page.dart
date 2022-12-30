@@ -14,6 +14,18 @@ class EnvelopePage extends AppPage {
         children: [
           StyledText.h1(idProperty.value),
           StyledText.h1(trayIdProperty.value ?? ''),
+          OutlinedButton(
+            child: Text('Last Transaction (Warp)'),
+            onPressed: () {
+              context.warpTo(HomePage());
+            },
+          ),
+          OutlinedButton(
+            child: Text('Last Transaction (Push)'),
+            onPressed: () {
+              context.push(HomePage());
+            },
+          ),
         ],
       ),
     );
