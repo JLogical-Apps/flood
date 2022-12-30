@@ -133,11 +133,7 @@ This is a `code block`.
     return ColorPalette(
       baseBackground: backgroundColor,
       strongBackgroundColorPaletteGetter: () => getColorPaletteFromBackground(
-        backgroundColor == primaryColor
-            ? isDark
-                ? Colors.white
-                : Colors.black
-            : primaryColor,
+        backgroundColor == primaryColor ? this.backgroundColor : primaryColor,
       ),
       regularBackgroundColorPaletteGetter: () => getColorPaletteFromBackground(newBackground),
       subtleBackgroundColorPaletteGetter: () => getColorPaletteFromBackground(newSubtleBackground),
