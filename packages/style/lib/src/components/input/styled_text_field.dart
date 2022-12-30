@@ -10,6 +10,8 @@ class StyledTextField extends StyleComponent {
 
   final String? errorText;
 
+  final String? hintText;
+
   final bool enabled;
 
   StyledTextField({
@@ -18,6 +20,7 @@ class StyledTextField extends StyleComponent {
     this.label,
     this.labelText,
     this.errorText,
+    this.hintText,
     this.enabled = true,
   });
 }

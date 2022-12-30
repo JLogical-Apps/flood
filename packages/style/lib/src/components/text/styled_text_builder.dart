@@ -7,10 +7,14 @@ class StyledTextBuilder<T extends StyledText> {
     String text,
     Emphasis emphasis,
     TextAlign? textAlign,
+    FontStyle? fontStyle,
+    Color? color,
   ) builder;
 
   Emphasis emphasis = Emphasis.regular;
   TextAlign? textAlign;
+  FontStyle? fontStyle;
+  Color? color;
 
   StyledTextBuilder({required this.builder});
 
@@ -29,8 +33,18 @@ class StyledTextBuilder<T extends StyledText> {
     return this;
   }
 
+  StyledTextBuilder get italics {
+    fontStyle = FontStyle.italic;
+    return this;
+  }
+
+  StyledTextBuilder withColor(Color color) {
+    this.color = color;
+    return this;
+  }
+
   T call(String text) {
-    return builder(text, emphasis, textAlign);
+    return builder(text, emphasis, textAlign, fontStyle, color);
   }
 
   T get empty {

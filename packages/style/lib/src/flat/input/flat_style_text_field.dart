@@ -34,6 +34,9 @@ class FlatStyleTextField with IsTypedStyleRenderer<StyledTextField> {
             fillColor:
                 component.enabled ? context.colorPalette().background.regular : context.colorPalette().baseBackground,
             filled: true,
+            hintText: component.hintText,
+            hintStyle: context.style().getTextStyle(
+                context, StyledText.body.italics.withColor(context.colorPalette().foreground.strong).empty),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
             ),
@@ -61,7 +64,10 @@ class FlatStyleTextField with IsTypedStyleRenderer<StyledTextField> {
   @override
   void modifyStyleguide(Styleguide styleguide) {
     styleguide.getTabByNameOrCreate('Input', icon: Icons.input).getSectionByNameOrCreate('Text Field')
-      ..add(StyledTextField(labelText: 'Text Field', text: 'Some Text here'))
+      ..add(StyledTextField(
+        labelText: 'Text Field',
+        hintText: 'Hint here',
+      ))
       ..add(StyledTextField(
         labelText: 'Text Field',
         text: 'Oopsie an error',
@@ -80,7 +86,10 @@ class FlatStyleTextField with IsTypedStyleRenderer<StyledTextField> {
       ))
       ..add(StyledContainer.strong(
         child: StyledList.column(children: [
-          StyledTextField(labelText: 'Text Field', text: 'Some Text here'),
+          StyledTextField(
+            labelText: 'Text Field',
+            hintText: 'Hint Text here',
+          ),
           StyledTextField(
             labelText: 'Text Field',
             text: 'Oopsie an error',

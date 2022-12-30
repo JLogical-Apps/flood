@@ -13,7 +13,8 @@ class FlatStyleH1Renderer with IsTextStyleRenderer<StyledH1> {
   TextStyle getTextStyle(BuildContext context, StyledText text) {
     return TextStyle(
       fontSize: 36,
-      color: context.colorPalette().foreground.getByEmphasis(text.emphasis),
+      color: text.color ?? context.colorPalette().foreground.getByEmphasis(text.emphasis),
+      fontStyle: text.fontStyle,
     );
   }
 

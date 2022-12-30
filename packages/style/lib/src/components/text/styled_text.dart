@@ -15,55 +15,77 @@ abstract class StyledText extends StyleComponent {
   final Emphasis emphasis;
 
   final TextAlign? textAlign;
+  final FontStyle? fontStyle;
+  final Color? color;
 
-  StyledText(this.text, {this.emphasis = Emphasis.regular, this.textAlign});
+  StyledText(
+    this.text, {
+    this.emphasis = Emphasis.regular,
+    this.textAlign,
+    this.fontStyle,
+    this.color,
+  });
 
   static StyledTextBuilder<StyledH1> get h1 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign) => StyledH1(
+      builder: (text, emphasis, textAlign, fontStyle, color) => StyledH1(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
+            fontStyle: fontStyle,
+            color: color,
           ));
 
   static StyledTextBuilder<StyledH2> get h2 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign) => StyledH2(
+      builder: (text, emphasis, textAlign, fontStyle, color) => StyledH2(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
+            fontStyle: fontStyle,
+            color: color,
           ));
 
   static StyledTextBuilder<StyledH3> get h3 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign) => StyledH3(
+      builder: (text, emphasis, textAlign, fontStyle, color) => StyledH3(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
+            fontStyle: fontStyle,
+            color: color,
           ));
 
   static StyledTextBuilder<StyledH4> get h4 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign) => StyledH4(
+      builder: (text, emphasis, textAlign, fontStyle, color) => StyledH4(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
+            fontStyle: fontStyle,
+            color: color,
           ));
 
   static StyledTextBuilder<StyledH5> get h5 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign) => StyledH5(
+      builder: (text, emphasis, textAlign, fontStyle, color) => StyledH5(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
+            fontStyle: fontStyle,
+            color: color,
           ));
 
   static StyledTextBuilder<StyledH6> get h6 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign) => StyledH6(
+      builder: (text, emphasis, textAlign, fontStyle, color) => StyledH6(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
+            fontStyle: fontStyle,
+            color: color,
           ));
 
   static StyledTextBuilder<StyledBodyText> get body => StyledTextBuilder(
-      builder: (text, emphasis, textAlign) => StyledBodyText(
+      builder: (text, emphasis, textAlign, fontStyle, color) => StyledBodyText(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
+            fontStyle: fontStyle,
+            color: color,
           ));
 }
