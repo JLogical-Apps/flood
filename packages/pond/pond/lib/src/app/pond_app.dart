@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:path_core/path_core.dart';
@@ -14,7 +12,7 @@ const redirectParam = 'redirect';
 
 class PondApp extends HookWidget {
   final AppPondContext appPondContext;
-  final FutureOr<AppPage> Function() initialPageGetter;
+  final AppPage Function() initialPageGetter;
   final Widget splashPage;
   final Widget notFoundPage;
 
@@ -31,10 +29,12 @@ class PondApp extends HookWidget {
     final isAppContextLoadedValue = useMutable(() => false);
 
     return VRouter(
+      initialUrl:
+          Uri(path: splashRoute, queryParameters: {redirectParam: initialPageGetter().uri.toString()}).toString(),
       routes: [
         VGuard(
           beforeEnter: (vRedirector) async => isAppContextLoadedValue.value
-              ? vRedirector.to(VRouterSegmentWrapper.getVRouterPath(await initialPageGetter()))
+              ? vRedirector.to(VRouterSegmentWrapper.getVRouterPath(initialPageGetter()))
               : null,
           stackedRoutes: [
             VWidget.builder(
@@ -47,7 +47,7 @@ class PondApp extends HookWidget {
                     : (context) async {
                         isAppContextLoadedValue.value = true;
                         final redirect = state.queryParameters[redirectParam];
-                        final initialPage = await initialPageGetter();
+                        final initialPage = initialPageGetter();
                         context.vRouter.to(redirect ?? initialPage.uri.toString());
                       },
               ),

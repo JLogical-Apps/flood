@@ -8,14 +8,14 @@ class StyledList extends StyleComponent {
 
   final bool isScrollable;
   final bool hasScrollbar;
-  final double padding;
+  final EdgeInsets itemPadding;
 
   StyledList({
     required this.children,
     this.axis = Axis.vertical,
     this.isScrollable = false,
     this.hasScrollbar = false,
-    this.padding = 8,
+    this.itemPadding = const EdgeInsets.all(4),
   });
 
   static StyledListBuilder get column => StyledListBuilder(axis: Axis.vertical);

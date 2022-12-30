@@ -5,6 +5,7 @@ import 'package:style/src/color_palette.dart';
 import 'package:style/src/components/misc/styled_divider.dart';
 import 'package:style/src/components/text/styled_markdown.dart';
 import 'package:style/src/components/text/styled_text.dart';
+import 'package:style/src/flat/input/flat_style_text_field.dart';
 import 'package:style/src/flat/layout/flat_style_container.dart';
 import 'package:style/src/flat/layout/flat_style_list.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
@@ -42,6 +43,7 @@ class FlatStyle with IsStyle {
           FlatStylePageRenderer(),
           FlatStyleDividerRenderer(),
           FlatStyleScrollbarRenderer(),
+          FlatStyleTextField(),
           FlatStyleH1Renderer(),
           FlatStyleH2Renderer(),
           FlatStyleH3Renderer(),
@@ -123,7 +125,7 @@ This is a `code block`.
         ? (isDark ? backgroundColor.lighten(10) : backgroundColor.darken(5))
         : (backgroundColor == this.backgroundColor ? Colors.white : this.backgroundColor);
     final newSubtleBackground = isDarkMode
-        ? (isDark ? backgroundColor.lighten(5) : backgroundColor.darken(3))
+        ? (isDark ? backgroundColor.darken(3) : backgroundColor.lighten(3))
         : (backgroundColor == this.backgroundColor ? Colors.white : this.backgroundColor);
     final newForeground = isDark ? Colors.white : Colors.black;
     final newSubtleForeground = isDark ? Color(0xffeeeeee) : Color(0xff111111);
@@ -144,6 +146,9 @@ This is a `code block`.
           : getColorPaletteFromBackground(primaryColor),
       regularForegroundColorPaletteGetter: () => getColorPaletteFromBackground(newForeground),
       subtleForegroundColorPaletteGetter: () => getColorPaletteFromBackground(newSubtleForeground),
+      strongErrorColorPaletteGetter: () => getColorPaletteFromBackground(Colors.red.shade700),
+      regularErrorColorPaletteGetter: () => getColorPaletteFromBackground(Colors.red),
+      subtleErrorColorPaletteGetter: () => getColorPaletteFromBackground(Colors.red.shade400),
     );
   }
 }

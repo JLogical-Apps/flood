@@ -9,6 +9,9 @@ class ColorPalette extends Color {
   final ColorPalette Function() strongBackgroundColorPaletteGetter;
   final ColorPalette Function() regularBackgroundColorPaletteGetter;
   final ColorPalette Function() subtleBackgroundColorPaletteGetter;
+  final ColorPalette Function() strongErrorColorPaletteGetter;
+  final ColorPalette Function() regularErrorColorPaletteGetter;
+  final ColorPalette Function() subtleErrorColorPaletteGetter;
 
   ColorPalette({
     required this.baseBackground,
@@ -18,6 +21,9 @@ class ColorPalette extends Color {
     required this.strongBackgroundColorPaletteGetter,
     required this.regularBackgroundColorPaletteGetter,
     required this.subtleBackgroundColorPaletteGetter,
+    required this.strongErrorColorPaletteGetter,
+    required this.regularErrorColorPaletteGetter,
+    required this.subtleErrorColorPaletteGetter,
   }) : super(baseBackground.value);
 
   ColorPaletteContext get background => ColorPaletteContext(
@@ -30,6 +36,12 @@ class ColorPalette extends Color {
         strongColorPaletteGetter: strongForegroundColorPaletteGetter,
         regularColorPaletteGetter: regularForegroundColorPaletteGetter,
         subtleColorPaletteGetter: subtleForegroundColorPaletteGetter,
+      );
+
+  ColorPaletteContext get error => ColorPaletteContext(
+        strongColorPaletteGetter: strongErrorColorPaletteGetter,
+        regularColorPaletteGetter: regularErrorColorPaletteGetter,
+        subtleColorPaletteGetter: subtleErrorColorPaletteGetter,
       );
 }
 
