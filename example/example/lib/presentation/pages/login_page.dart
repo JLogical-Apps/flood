@@ -13,10 +13,7 @@ class LoginPage extends AppPage {
     return StyledPage(
       body: StyledList.column.centered.withScrollbar(
         children: [
-          StyledContainer.strong(
-            width: 200,
-            height: 200,
-          ),
+          StyledImage.asset('assets/logo_foreground.png', width: 200, height: 200),
           StyledText.h1.strong('Welcome to Valet'),
           StyledDivider(),
           StyledTextField(

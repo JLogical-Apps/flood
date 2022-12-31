@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
 abstract class StyleComponent extends HookWidget {
+  StyleComponent({super.key});
+
   @override
   Widget build(BuildContext context) {
     final style = Provider.of<Style>(context);
