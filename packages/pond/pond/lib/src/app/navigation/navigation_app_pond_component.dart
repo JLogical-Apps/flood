@@ -6,8 +6,16 @@ import 'package:pond/src/app/page/app_page.dart';
 import 'package:vrouter/vrouter.dart';
 
 class NavigationAppPondComponent with IsAppPondComponent {
+  String getUrl(BuildContext context) {
+    return context.vRouter.url;
+  }
+
   void warpTo(BuildContext context, AppPage page) {
     context.vRouter.to(page.uri.toString(), historyState: context.vRouter.historyState);
+  }
+
+  void warpToLocation(BuildContext context, String location) {
+    context.vRouter.to(location, historyState: context.vRouter.historyState);
   }
 
   Future<T> push<T>(BuildContext context, AppPage page) async {

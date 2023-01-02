@@ -51,6 +51,7 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
     errorBuilder: (error, stack) => StyledText.body.error('$error\n$stack'),
   )));
   await appPondContext.register(StyleAppComponent(style: style));
+  await appPondContext.register(UrlBarAppComponent());
   await appPondContext.register(ValetPagesAppPondComponent());
   return appPondContext;
 }

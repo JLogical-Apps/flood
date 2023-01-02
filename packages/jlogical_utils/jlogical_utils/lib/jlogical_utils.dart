@@ -8,4 +8,5 @@ export 'package:persistence/persistence.dart';
 export 'package:pond/pond.dart';
 export 'package:style/style.dart';
 export 'package:style_component/style_component.dart';
+export 'package:url_bar/url_bar.dart';
 export 'package:utils/utils.dart';

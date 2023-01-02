@@ -1,0 +1,35 @@
+name: url_bar
+description: Flutter module for adding a url bar to navigate throughout the app.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  collection: ^1.16.0
+  flutter_hooks: ^0.18.5+1
+
+  pond:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/pond/pond
+  style:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/style
+  utils_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/utils/utils_core
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.4
