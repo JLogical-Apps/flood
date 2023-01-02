@@ -3,7 +3,7 @@ import 'package:auth_core/src/memory_auth_service.dart';
 import 'package:pond_core/pond_core.dart';
 
 abstract class AuthService with IsCorePondComponent {
-  Future<String?> getLoggedInUser();
+  Future<String?> getLoggedInUserId();
 
   Future<String> login(String email, String password);
 
@@ -28,7 +28,7 @@ abstract class AuthServiceWrapper implements AuthService {
 
 mixin IsAuthServiceWrapper implements AuthServiceWrapper {
   @override
-  Future<String?> getLoggedInUser() => authService.getLoggedInUser();
+  Future<String?> getLoggedInUserId() => authService.getLoggedInUserId();
 
   @override
   Future<String> login(String email, String password) => authService.login(email, password);

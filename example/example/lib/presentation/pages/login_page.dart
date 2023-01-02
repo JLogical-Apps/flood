@@ -69,7 +69,7 @@ class LoginPage extends AppPage {
 
   @override
   FutureOr<Uri?> redirectTo(BuildContext context, Uri currentUri) async {
-    final loggedInUser = await context.appPondContext.find<AuthCoreComponent>().getLoggedInUser();
+    final loggedInUser = await context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId();
     if (loggedInUser != null) {
       if (redirectPathProperty.value != null) {
         return Uri.parse(redirectPathProperty.value!);

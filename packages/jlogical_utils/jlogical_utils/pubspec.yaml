@@ -29,11 +29,16 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/modules/focus_grabber
+  model:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/model/model
   persistence:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/persistence
+      path: packages/persistence/persistence
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

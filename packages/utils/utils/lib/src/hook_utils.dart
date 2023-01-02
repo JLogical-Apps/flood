@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// Returns a Value that can be used to get and set values without rebuilding the widget.
@@ -18,4 +19,8 @@ class Value<T> {
   T get value => valueGetter();
 
   set value(T value) => valueSetter(value);
+}
+
+AsyncSnapshot<T> useMemoizedFuture<T>(Future<T> Function() future) {
+  return useFuture(useMemoized(future));
 }

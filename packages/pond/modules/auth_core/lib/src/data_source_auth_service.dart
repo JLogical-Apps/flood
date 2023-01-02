@@ -11,13 +11,13 @@ class DataSourceAuthService with IsAuthService, IsCorePondComponent {
   DataSourceAuthService({required this.currentUserDataSource, required this.userTokensDataSource});
 
   @override
-  Future<String?> getLoggedInUser() async {
+  Future<String?> getLoggedInUserId() async {
     return await currentUserDataSource.getOrNull();
   }
 
   @override
   Future<String> login(String email, String password) async {
-    if (await getLoggedInUser() != null) {
+    if (await getLoggedInUserId() != null) {
       throw Exception('Cannot login when already logged in!');
     }
 
@@ -33,7 +33,7 @@ class DataSourceAuthService with IsAuthService, IsCorePondComponent {
 
   @override
   Future<String> signup(String email, String password) async {
-    if (await getLoggedInUser() != null) {
+    if (await getLoggedInUserId() != null) {
       throw Exception('Cannot signup when already logged in!');
     }
 

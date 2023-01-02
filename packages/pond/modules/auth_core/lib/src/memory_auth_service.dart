@@ -8,7 +8,7 @@ class MemoryAuthService with IsAuthService, IsCorePondComponent {
   String? _currentUserId;
 
   @override
-  Future<String?> getLoggedInUser() async {
+  Future<String?> getLoggedInUserId() async {
     return _currentUserId;
   }
 

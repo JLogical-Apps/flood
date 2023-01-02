@@ -186,6 +186,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  model:
+    dependency: "direct main"
+    description:
+      path: "../../model/model"
+      relative: true
+    source: path
+    version: "0.0.1"
+  model_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../model/model_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   move_to_background:
     dependency: transitive
     description:

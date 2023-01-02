@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:example/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class HomePage extends AppPage {
@@ -11,13 +10,17 @@ class HomePage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
-    final loggedInUser =
-        useFuture(useMemoized(() => context.appPondContext.find<AuthCoreComponent>().getLoggedInUser()));
-
+    final loggedInUserIdModel =
+        useFutureModel(() => context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId());
     return StyledPage(
       titleText: 'Home',
       body: Center(
-        child: StyledText.h1('Welcome ${loggedInUser.hasData ? loggedInUser.data : '...'}'),
+        child: ModelBuilder<String?>(
+          model: loggedInUserIdModel,
+          builder: (userId) {
+            return StyledText.h1('Welcome ${userId!.substring(0, 2)}!');
+          },
+        ),
       ),
     );
   }
@@ -29,7 +32,7 @@ class HomePage extends AppPage {
 
   @override
   FutureOr<Uri?> redirectTo(BuildContext context, Uri currentUri) async {
-    final loggedInUser = await context.appPondContext.find<AuthCoreComponent>().getLoggedInUser();
+    final loggedInUser = await context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId();
     if (loggedInUser == null) {
       final redirectUri = currentUri.toString() == '/' ? null : currentUri;
       final loginPage = LoginPage()..redirectPathProperty.set(redirectUri?.toString());
