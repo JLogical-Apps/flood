@@ -25,7 +25,7 @@ class App extends StatelessWidget {
     return PondApp(
       splashPage: StyledPage(
         body: Center(
-          child: StyledText.h1('Loading...'),
+          child: StyledLoadingIndicator(),
         ),
       ),
       notFoundPage: StyledPage(

@@ -17,6 +17,7 @@ class HomePage extends AppPage {
       body: Center(
         child: ModelBuilder<String?>(
           model: loggedInUserIdModel,
+          loadingIndicator: StyledLoadingIndicator(),
           builder: (userId) {
             return StyledText.h1('Welcome ${userId!.substring(0, 2)}!');
           },

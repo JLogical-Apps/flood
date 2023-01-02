@@ -6,6 +6,7 @@ export 'src/components/layout/styled_container.dart';
 export 'src/components/layout/styled_list.dart';
 export 'src/components/media/styled_image.dart';
 export 'src/components/misc/styled_divider.dart';
+export 'src/components/misc/styled_loading_indicator.dart';
 export 'src/components/page/styled_page.dart';
 export 'src/components/text/styled_markdown.dart';
 export 'src/components/text/styled_text.dart';

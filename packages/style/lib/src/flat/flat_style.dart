@@ -12,6 +12,7 @@ import 'package:style/src/flat/layout/flat_style_list.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
 import 'package:style/src/flat/media/flat_style_image.dart';
 import 'package:style/src/flat/misc/flat_style_divider.dart';
+import 'package:style/src/flat/misc/flat_style_loading_indicator.dart';
 import 'package:style/src/flat/misc/flat_style_scrollbar.dart';
 import 'package:style/src/flat/page/flat_style_page.dart';
 import 'package:style/src/flat/text/flat_style_body_text.dart';
@@ -41,13 +42,6 @@ class FlatStyle with IsStyle {
     this.backgroundColor = const Color(0xff141424),
   })  : renderers = [
           FlatStyleListRenderer(),
-          FlatStyleContainerRenderer(),
-          FlatStyleTabsRenderer(),
-          FlatStylePageRenderer(),
-          FlatStyleDividerRenderer(),
-          FlatStyleScrollbarRenderer(),
-          FlatStyleTextFieldRenderer(),
-          FlatStyleButtonRenderer(),
           FlatStyleH1Renderer(),
           FlatStyleH2Renderer(),
           FlatStyleH3Renderer(),
@@ -56,7 +50,15 @@ class FlatStyle with IsStyle {
           FlatStyleH6Renderer(),
           FlatStyleBodyTextRenderer(),
           FlatStyleButtonTextRenderer(),
+          FlatStyleTextFieldRenderer(),
+          FlatStyleButtonRenderer(),
           FlatStyleImageRenderer(),
+          FlatStyleContainerRenderer(),
+          FlatStyleTabsRenderer(),
+          FlatStylePageRenderer(),
+          FlatStyleDividerRenderer(),
+          FlatStyleLoadingIndicatorRenderer(),
+          FlatStyleScrollbarRenderer(),
         ],
         examples = [
           StyledMarkdown('''# H1 heading
