@@ -35,8 +35,7 @@ class HomePage extends AppPage {
   FutureOr<Uri?> redirectTo(BuildContext context, Uri currentUri) async {
     final loggedInUser = await context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId();
     if (loggedInUser == null) {
-      final redirectUri = currentUri.toString() == '/' ? null : currentUri;
-      final loginPage = LoginPage()..redirectPathProperty.set(redirectUri?.toString());
+      final loginPage = LoginPage()..redirectPathProperty.set(currentUri.toString());
       return loginPage.uri;
     }
 
