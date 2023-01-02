@@ -28,67 +28,67 @@ class PondApp extends HookWidget {
   Widget build(BuildContext context) {
     final isAppContextLoadedValue = useMutable(() => false);
 
-    return VRouter(
-      initialUrl:
-          Uri(path: splashRoute, queryParameters: {redirectParam: initialPageGetter().uri.toString()}).toString(),
-      routes: [
-        VGuard(
-          beforeEnter: (vRedirector) async => isAppContextLoadedValue.value
-              ? vRedirector.to(VRouterSegmentWrapper.getVRouterPath(initialPageGetter()))
-              : null,
-          stackedRoutes: [
+    return _wrapApp(
+      appContext: appPondContext,
+      child: Builder(builder: (context) {
+        return VRouter(
+          initialUrl:
+              Uri(path: splashRoute, queryParameters: {redirectParam: initialPageGetter().uri.toString()}).toString(),
+          routes: [
+            VGuard(
+              beforeEnter: (vRedirector) async => isAppContextLoadedValue.value
+                  ? vRedirector.to(VRouterSegmentWrapper.getVRouterPath(initialPageGetter()))
+                  : null,
+              stackedRoutes: [
+                VWidget.builder(
+                  path: splashRoute,
+                  builder: (context, state) => SplashPage(
+                    splashPage: splashPage,
+                    appPondContext: appPondContext,
+                    onFinishedLoading: isAppContextLoadedValue.value
+                        ? null
+                        : (context) async {
+                            isAppContextLoadedValue.value = true;
+                            final redirect = state.queryParameters[redirectParam];
+                            final initialPage = initialPageGetter();
+                            context.vRouter.to(redirect ?? initialPage.uri.toString());
+                          },
+                  ),
+                ),
+              ],
+            ),
+            ...appPondContext.getPages().where((page) => page.getParent() == null).map(
+                  (page) => VGuard(
+                    beforeEnter: (vRedirector) async {
+                      final uri = vRedirector.toUrl?.mapIfNonNull(Uri.tryParse);
+                      !isAppContextLoadedValue.value
+                          ? vRedirector.to(Uri(
+                              path: splashRoute,
+                              queryParameters: uri?.mapIfNonNull((uri) => {redirectParam: uri.toString()}),
+                            ).toString())
+                          : null;
+                    },
+                    stackedRoutes: [
+                      getVElementForPage(context, page),
+                    ],
+                  ),
+                ),
             VWidget.builder(
-              path: splashRoute,
-              builder: (context, state) => SplashPage(
-                splashPage: splashPage,
-                appPondContext: appPondContext,
-                onFinishedLoading: isAppContextLoadedValue.value
-                    ? null
-                    : (context) async {
-                        isAppContextLoadedValue.value = true;
-                        final redirect = state.queryParameters[redirectParam];
-                        final initialPage = initialPageGetter();
-                        context.vRouter.to(redirect ?? initialPage.uri.toString());
-                      },
-              ),
+              path: '*',
+              builder: (context, state) => notFoundPage,
             ),
           ],
-        ),
-        ...appPondContext.getPages().where((page) => page.getParent() == null).map(
-              (page) => VGuard(
-                beforeEnter: (vRedirector) async {
-                  final uri = vRedirector.toUrl?.mapIfNonNull(Uri.tryParse);
-                  !isAppContextLoadedValue.value
-                      ? vRedirector.to(Uri(
-                          path: splashRoute,
-                          queryParameters: uri?.mapIfNonNull((uri) => {redirectParam: uri.toString()}),
-                        ).toString())
-                      : null;
-                },
-                stackedRoutes: [
-                  getVElementForPage(page),
-                ],
-              ),
-            ),
-        VWidget.builder(
-          path: '/*',
-          builder: (context, state) => notFoundPage,
-        ),
-      ],
-      debugShowCheckedModeBanner: false,
-      builder: (context, widget) {
-        return Provider<AppPondContext>(
-          create: (_) => appPondContext,
-          child: _wrapByComponents(
+          debugShowCheckedModeBanner: false,
+          builder: (context, widget) => _wrapPage(
             child: widget,
             appContext: appPondContext,
           ),
         );
-      },
+      }),
     );
   }
 
-  VRouteElement getVElementForPage(AppPage page) {
+  VRouteElement getVElementForPage(BuildContext context, AppPage page) {
     return VPopHandler(
       onPop: (vRedirector) async {
         final exitingUrl = vRedirector.previousVRouterData?.url;
@@ -124,12 +124,12 @@ class PondApp extends HookWidget {
                   matchingPage.getParentChain().firstWhere((parent) => parent.runtimeType == page.runtimeType);
             }
 
-            final redirect = await displayedPage.redirectTo(Uri.parse(path));
+            final redirect = await displayedPage.redirectTo(context, Uri.parse(path));
             if (redirect == null) {
               return;
             }
 
-            vRedirector.to(redirect.uri.toString());
+            vRedirector.to(redirect.toString());
           },
           stackedRoutes: [
             VWidget.builder(
@@ -146,7 +146,7 @@ class PondApp extends HookWidget {
               stackedRoutes: appPondContext
                   .getPages()
                   .where((p) => p.getParent()?.runtimeType == page.runtimeType)
-                  .map((page) => getVElementForPage(page))
+                  .map((page) => getVElementForPage(context, page))
                   .toList(),
             ),
           ],
@@ -155,12 +155,26 @@ class PondApp extends HookWidget {
     );
   }
 
-  Widget _wrapByComponents({
+  Widget _wrapApp({
     required AppPondContext appContext,
     required Widget child,
   }) {
     for (final appComponent in appContext.appComponents) {
       child = appComponent.wrapApp(appContext, child);
+    }
+
+    return Provider<AppPondContext>(
+      create: (_) => appContext,
+      child: child,
+    );
+  }
+
+  Widget _wrapPage({
+    required AppPondContext appContext,
+    required Widget child,
+  }) {
+    for (final appComponent in appContext.appComponents) {
+      child = appComponent.wrapPage(appContext, child);
     }
 
     return child;

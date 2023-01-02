@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:path_core/path_core.dart';
 
@@ -12,7 +13,7 @@ abstract class AppPage extends HookWidget with IsRoute, IsPathDefinitionWrapper 
     return null;
   }
 
-  FutureOr<AppPage?> redirectTo(Uri currentUri) {
+  FutureOr<Uri?> redirectTo(BuildContext context, Uri currentUri) {
     return null;
   }
 

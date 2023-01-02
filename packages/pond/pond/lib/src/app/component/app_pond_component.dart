@@ -12,6 +12,8 @@ abstract class AppPondComponent {
 
   Widget wrapApp(AppPondContext context, Widget app);
 
+  Widget wrapPage(AppPondContext context, Widget page);
+
   List<AppPage> get pages;
 }
 
@@ -55,6 +57,11 @@ mixin IsAppPondComponent implements AppPondComponent {
   }
 
   @override
+  Widget wrapPage(AppPondContext context, Widget page) {
+    return page;
+  }
+
+  @override
   List<AppPage> get pages => [];
 }
 
@@ -76,6 +83,11 @@ mixin IsAppPondComponentWrapper implements AppPondComponentWrapper {
   @override
   Widget wrapApp(AppPondContext context, Widget app) {
     return appPondComponent.wrapApp(context, app);
+  }
+
+  @override
+  Widget wrapPage(AppPondContext context, Widget page) {
+    return appPondComponent.wrapPage(context, page);
   }
 
   @override
