@@ -60,6 +60,7 @@ mixin IsTextStyleRenderer<T extends StyledText> implements StyleRenderer, Styled
     styleguide.getTabByNameOrCreate('Text', icon: Icons.text_fields).getSectionByNameOrCreate(textName)
       ..add(baseTextBuilder.subtle('Subtle $textName'))
       ..add(baseTextBuilder('Regular $textName'))
-      ..add(baseTextBuilder.strong('Strong $textName'));
+      ..add(baseTextBuilder.strong('Strong $textName'))
+      ..add(baseTextBuilder.error('Error $textName'));
   }
 }

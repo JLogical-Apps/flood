@@ -13,7 +13,9 @@ class FlatStyleH4Renderer with IsTextStyleRenderer<StyledH4> {
   TextStyle getTextStyle(BuildContext context, StyledText text) {
     return TextStyle(
       fontSize: 22,
-      color: text.color ?? context.colorPalette().foreground.getByEmphasis(text.emphasis),
+      color: text.isError
+          ? context.colorPalette().error.regular
+          : text.color ?? context.colorPalette().foreground.getByEmphasis(text.emphasis),
       fontStyle: text.fontStyle,
     );
   }

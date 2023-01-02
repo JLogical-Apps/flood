@@ -9,12 +9,14 @@ class StyledTextBuilder<T extends StyledText> {
     TextAlign? textAlign,
     FontStyle? fontStyle,
     Color? color,
+    bool error,
   ) builder;
 
   Emphasis emphasis = Emphasis.regular;
   TextAlign? textAlign;
   FontStyle? fontStyle;
   Color? color;
+  bool isError = false;
 
   StyledTextBuilder({required this.builder});
 
@@ -38,13 +40,18 @@ class StyledTextBuilder<T extends StyledText> {
     return this;
   }
 
+  StyledTextBuilder get error {
+    isError = true;
+    return this;
+  }
+
   StyledTextBuilder withColor(Color color) {
     this.color = color;
     return this;
   }
 
   T call(String text) {
-    return builder(text, emphasis, textAlign, fontStyle, color);
+    return builder(text, emphasis, textAlign, fontStyle, color, isError);
   }
 
   T get empty {

@@ -1,5 +1,5 @@
-name: model
-description: Model utils for Flutter.
+name: model_component
+description: App Component to configure default style of ModelBuilders.
 
 publish_to: "none"
 
@@ -12,20 +12,20 @@ dependencies:
   flutter:
     sdk: flutter
 
-  collection: ^1.16.0
-  flutter_hooks: ^0.18.5+1
   provider: ^6.0.5
 
-  model_core:
+  model:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/model/model_core
-  utils_core:
+      path: packages/model/model
+  pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/utils/utils_core
+      path: packages/pond/pond
+
 dev_dependencies:
   lints: ^2.0.0
-  test: ^1.21.4
+  flutter_test:
+    sdk: flutter

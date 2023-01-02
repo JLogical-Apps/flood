@@ -13,7 +13,9 @@ class FlatStyleBodyTextRenderer with IsTextStyleRenderer<StyledBodyText> {
   TextStyle getTextStyle(BuildContext context, StyledText text) {
     return TextStyle(
       fontSize: 13,
-      color: text.color ?? context.colorPalette().foreground.getByEmphasis(text.emphasis),
+      color: text.isError
+          ? context.colorPalette().error.regular
+          : text.color ?? context.colorPalette().foreground.getByEmphasis(text.emphasis),
       fontStyle: text.fontStyle,
     );
   }

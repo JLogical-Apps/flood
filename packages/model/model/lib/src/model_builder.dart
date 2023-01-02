@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:model/src/model_builder_config.dart';
 import 'package:model/src/model_hooks.dart';
 import 'package:model_core/model_core.dart';
+import 'package:provider/provider.dart';
 
 class ModelBuilder<T> extends HookWidget {
   final Model<T> model;
@@ -20,13 +22,17 @@ class ModelBuilder<T> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final modelBuilderConfig = Provider.of<ModelBuilderConfig?>(context, listen: false);
+
     final state = useModel(model);
     if (state.isEmpty || state.isLoading) {
-      return loadingIndicator ?? CircularProgressIndicator();
+      return loadingIndicator ?? modelBuilderConfig?.loadingIndicator ?? CircularProgressIndicator();
     }
 
     if (state is ErrorModelState<T>) {
-      return errorBuilder?.call(state.error, state.stacktrace) ?? Text('${state.error}\n${state.stacktrace}');
+      return errorBuilder?.call(state.error, state.stacktrace) ??
+          modelBuilderConfig?.errorBuilder?.call(state.error, state.stacktrace) ??
+          Text('${state.error}\n${state.stacktrace}');
     }
 
     if (state is LoadedModelState<T>) {
