@@ -326,6 +326,20 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  port:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/port/port"
+      relative: true
+    source: path
+    version: "0.0.1"
+  port_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/port/port_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   provider:
     dependency: "direct main"
     description:

@@ -49,6 +49,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/pond/pond
+  port:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/port/port
   style:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
