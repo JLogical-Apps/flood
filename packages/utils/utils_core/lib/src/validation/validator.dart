@@ -8,132 +8,134 @@ abstract class Validator<T, E> {
 
   factory Validator([FutureOr<E?> Function(T data)? validator]) => _ValidatorImpl(validator: validator);
 
-  static Validator<T, Exception> isNotNull<T>() => Validator((data) {
+  static Validator<T, E> empty<T, E>() => Validator((data) => null);
+
+  static Validator<T, String> isNotNull<T>() => Validator((data) {
         if (data == null) {
-          return Exception('Cannot be null!');
+          return 'Cannot be null!';
         }
         return null;
       });
 
-  static Validator<T?, Exception> isEqualTo<T>(T value) => Validator((data) {
+  static Validator<T?, String> isEqualTo<T>(T value) => Validator((data) {
         if (data == null) {
           return null;
         }
 
         if (value != data) {
-          return Exception('[$data] must be equal to [$value]');
+          return '[$data] must be equal to [$value]';
         }
 
         return null;
       });
 
-  static Validator<T?, Exception> isNotEqualTo<T>(T value) => Validator((data) {
+  static Validator<T?, String> isNotEqualTo<T>(T value) => Validator((data) {
         if (data == null) {
           return null;
         }
 
         if (value == data) {
-          return Exception('[$data] must not be equal to [$value]');
+          return '[$data] must not be equal to [$value]';
         }
 
         return null;
       });
 
-  static Validator<num?, Exception> isGreaterThan(num number) => Validator((data) {
+  static Validator<num?, String> isGreaterThan(num number) => Validator((data) {
         if (data == null) {
           return null;
         }
 
         if (data <= number) {
-          return Exception('[$data] must be greater than [$number]');
+          return '[$data] must be greater than [$number]';
         }
 
         return null;
       });
 
-  static Validator<num?, Exception> isLessThan(num number) => Validator((data) {
+  static Validator<num?, String> isLessThan(num number) => Validator((data) {
         if (data == null) {
           return null;
         }
 
         if (data >= number) {
-          return Exception('[$data] must be less than [$number]');
+          return '[$data] must be less than [$number]';
         }
 
         return null;
       });
 
-  static Validator<num?, Exception> isGreaterThanOrEqualTo(num number) => Validator((data) {
+  static Validator<num?, String> isGreaterThanOrEqualTo(num number) => Validator((data) {
         if (data == null) {
           return null;
         }
 
         if (data < number) {
-          return Exception('[$data] must be greater than or equal to [$number]');
+          return '[$data] must be greater than or equal to [$number]';
         }
 
         return null;
       });
 
-  static Validator<num?, Exception> isLessThanOrEqualTo(num number) => Validator((data) {
+  static Validator<num?, String> isLessThanOrEqualTo(num number) => Validator((data) {
         if (data == null) {
           return null;
         }
 
         if (data > number) {
-          return Exception('[$data] must be less than or equal to [$number]');
+          return '[$data] must be less than or equal to [$number]';
         }
 
         return null;
       });
 
-  static Validator<num?, Exception> isPositive() => isGreaterThan(0);
+  static Validator<num?, String> isPositive() => isGreaterThan(0);
 
-  static Validator<num?, Exception> isNegative() => isLessThan(0);
+  static Validator<num?, String> isNegative() => isLessThan(0);
 
-  static Validator<num?, Exception> isNonNegative() => isGreaterThanOrEqualTo(0);
+  static Validator<num?, String> isNonNegative() => isGreaterThanOrEqualTo(0);
 
-  static Validator<num?, Exception> isNonPositive() => isLessThanOrEqualTo(0);
+  static Validator<num?, String> isNonPositive() => isLessThanOrEqualTo(0);
 
-  static Validator<String?, Exception> isNotBlank() => Validator((data) {
+  static Validator<String?, String> isNotBlank() => Validator((data) {
         if (data == null || data.trim().isEmpty) {
-          return Exception('Cannot be blank!');
+          return 'Cannot be blank!';
         }
 
         return null;
       });
 
-  static Validator<String?, Exception> isEmail() => Validator((data) {
+  static Validator<String?, String> isEmail() => Validator((data) {
         if (data == null) {
           return null;
         }
 
         if (!data.isEmail) {
-          return Exception('[$data] must be an email!');
+          return '[$data] must be an email!';
         }
 
         return null;
       });
 
-  static Validator<String?, Exception> isInt() => Validator((data) {
+  static Validator<String?, String> isInt() => Validator((data) {
         if (data == null) {
           return null;
         }
 
         if (int.tryParse(data) == null) {
-          return Exception('[$data] must be an integer!');
+          return '[$data] must be an integer!';
         }
 
         return null;
       });
 
-  static Validator<String?, Exception> isDouble() => Validator((data) {
+  static Validator<String?, String> isDouble() => Validator((data) {
         if (data == null) {
           return null;
         }
 
         if (double.tryParse(data) == null) {
-          return Exception('[$data] must be a number!');
+          return '[$data] must be a number!';
         }
 
         return null;
@@ -152,6 +154,10 @@ extension ValidatorExtensions<T, E> on Validator<T, E> {
   Validator<T, E> operator +(Validator<T, E> validator) {
     return and(validator);
   }
+}
+
+extension NullableValidatorExtensions<T, E> on Validator<T?, E> {
+  Validator<T, E> asNonNullable() => Validator<T, E>(validate);
 }
 
 mixin IsValidator<T, E> implements Validator<T, E> {}
@@ -174,6 +180,6 @@ abstract class ValidatorWrapper<T, E> implements Validator<T, E> {
 mixin IsValidatorWrapper<T, E> implements ValidatorWrapper<T, E> {
   @override
   Future<E?> onValidate(T data) async {
-    return await validator.onValidate(data);
+    return await validator.validate(data);
   }
 }
