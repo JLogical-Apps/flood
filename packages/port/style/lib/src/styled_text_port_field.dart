@@ -10,11 +10,20 @@ class StyledTextFieldPortField extends HookWidget {
   final String? labelText;
   final Widget? label;
 
+  final String? hintText;
+
+  final bool enabled;
+
+  final bool obscureText;
+
   const StyledTextFieldPortField({
     super.key,
     required this.fieldName,
     this.labelText,
     this.label,
+    this.hintText,
+    this.enabled = true,
+    this.obscureText = false,
   });
 
   @override
@@ -28,6 +37,9 @@ class StyledTextFieldPortField extends HookWidget {
           labelText: labelText,
           label: label,
           errorText: error?.toString(),
+          hintText: hintText,
+          enabled: enabled,
+          obscureText: obscureText,
           onChanged: (text) => port[fieldName] = text,
         );
       },

@@ -87,8 +87,8 @@ class _PortValueImpl<T, S> with IsPortValue<T, S>, IsValidatorWrapper<T, String>
   }
 }
 
-extension StringPortValueExtensions on PortValue<String, String> {
-  PortValue<String, String> isNotBlank() => copyWithValidator(Validator.isNotBlank().asNonNullable());
+extension StringPortValueExtensions<S> on PortValue<String, S> {
+  PortValue<String, S> isNotBlank() => copyWithValidator(Validator.isNotBlank().asNonNullable());
 
-  PortValue<String, String> isEmail() => copyWithValidator(Validator.isEmail().asNonNullable());
+  PortValue<String, S> isEmail() => copyWithValidator(Validator.isEmail().asNonNullable());
 }

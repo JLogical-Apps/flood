@@ -14,6 +14,8 @@ class StyledTextField extends StyleComponent {
 
   final bool enabled;
 
+  final bool obscureText;
+
   StyledTextField({
     this.text,
     this.onChanged,
@@ -22,5 +24,6 @@ class StyledTextField extends StyleComponent {
     this.errorText,
     this.hintText,
     this.enabled = true,
+    this.obscureText = false,
   });
 }

@@ -11,8 +11,8 @@ class LoginPage extends AppPage {
   @override
   Widget build(BuildContext context) {
     final loginPort = useMemoized(() => Port.of({
-          'email': PortValue.string(),
-          'password': PortValue.string(),
+          'email': PortValue.string().isNotBlank().isEmail(),
+          'password': PortValue.string().isNotBlank(),
         }));
 
     return StyledPage(
@@ -24,8 +24,15 @@ class LoginPage extends AppPage {
               StyledImage.asset('assets/logo_foreground.png', width: 200, height: 200),
               StyledText.h1.strong('Welcome to Valet'),
               StyledDivider(),
-              StyledTextFieldPortField(fieldName: 'email', labelText: 'Email'),
-              StyledTextFieldPortField(fieldName: 'password', labelText: 'Password'),
+              StyledTextFieldPortField(
+                fieldName: 'email',
+                labelText: 'Email',
+              ),
+              StyledTextFieldPortField(
+                fieldName: 'password',
+                labelText: 'Password',
+                obscureText: true,
+              ),
               StyledList.row.centered.withScrollbar(children: [
                 StyledButton(
                   labelText: 'Login',
