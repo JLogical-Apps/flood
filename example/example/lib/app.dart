@@ -1,4 +1,5 @@
 import 'package:example/pond.dart';
+import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/valet_pages_pond_component.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class App extends StatelessWidget {
       ),
       appPondContext: appPondContext,
       initialPageGetter: () {
-        return StyleguidePage();
+        return HomePage();
       },
     );
   }
@@ -46,10 +47,11 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(EnvironmentBannerAppComponent());
   await appPondContext.register(FocusGrabberAppComponent());
   await appPondContext.register(ModelAppComponent(
-      modelBuilderConfig: ModelBuilderConfig(
-    loadingIndicator: StyledLoadingIndicator(),
-    errorBuilder: (error, stack) => StyledText.body.error('$error\n$stack'),
-  )));
+    modelBuilderConfig: ModelBuilderConfig(
+      loadingIndicator: StyledLoadingIndicator(),
+      errorBuilder: (error, stack) => StyledText.body.error('$error\n$stack'),
+    ),
+  ));
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(UrlBarAppComponent());
   await appPondContext.register(ValetPagesAppPondComponent());

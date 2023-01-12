@@ -340,6 +340,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  port_style:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/port/style"
+      relative: true
+    source: path
+    version: "0.0.1"
   provider:
     dependency: "direct main"
     description:

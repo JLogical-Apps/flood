@@ -90,6 +90,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.18.5+1"
+  flutter_markdown:
+    dependency: transitive
+    description:
+      name: flutter_markdown
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.13"
   frontend_server_client:
     dependency: transitive
     description:
@@ -118,6 +125,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
+  intersperse:
+    dependency: transitive
+    description:
+      name: intersperse
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   io:
     dependency: transitive
     description:
@@ -146,6 +160,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  markdown:
+    dependency: transitive
+    description:
+      name: markdown
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.1"
   matcher:
     dependency: transitive
     description:
@@ -202,6 +223,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  pigment:
+    dependency: transitive
+    description:
+      name: pigment
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   pool:
     dependency: transitive
     description:
@@ -209,8 +237,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.1"
-  port_core:
+  port:
     dependency: "direct main"
+    description:
+      path: "../port"
+      relative: true
+    source: path
+    version: "0.0.1"
+  port_core:
+    dependency: "direct overridden"
     description:
       path: "../port_core"
       relative: true
@@ -312,6 +347,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  style:
+    dependency: "direct main"
+    description:
+      path: "../../style"
+      relative: true
+    source: path
+    version: "0.0.1"
   term_glyph:
     dependency: transitive
     description:
@@ -340,6 +382,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.16"
+  tinycolor2:
+    dependency: transitive
+    description:
+      name: tinycolor2
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   typed_data:
     dependency: transitive
     description:

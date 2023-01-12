@@ -12,7 +12,7 @@ abstract class Port<T> {
 
   Future<PortSubmitResult<T>> submit();
 
-  static Port<Map<String, dynamic>> of(Map<String, PortValue> valueByName) => _PortImpl(valueByName);
+  static Port<Map<String, dynamic>> of(Map<String, PortValue> portValueByName) => _PortImpl(portValueByName);
 }
 
 extension PortExtensions<T> on Port<T> {
@@ -30,8 +30,6 @@ extension PortExtensions<T> on Port<T> {
   dynamic getErrorByName(String name) =>
       (portValueByName[name] ?? (throw Exception('Cannot find value [$name]'))).error;
 
-  dynamic operator [](String name) => getByName(name);
-
   void setValue({required String name, required dynamic value}) => setPortValue(
         name: name,
         portValue: getPortValueByName(name).copyWithValue(value),
@@ -41,6 +39,10 @@ extension PortExtensions<T> on Port<T> {
         name: name,
         portValue: getPortValueByName(name).copyWithError(error),
       );
+
+  dynamic operator [](String name) => getByName(name);
+
+  operator []=(String name, dynamic value) => setValue(name: name, value: value);
 }
 
 mixin IsPort<T> implements Port<T> {}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:rxdart/rxdart.dart';
 
 /// Returns a Value that can be used to get and set values without rebuilding the widget.
 Value<T> useMutable<T>(T Function() defaultValue) {
@@ -23,4 +24,9 @@ class Value<T> {
 
 AsyncSnapshot<T> useMemoizedFuture<T>(Future<T> Function() future) {
   return useFuture(useMemoized(future));
+}
+
+T useValueStream<T>(ValueStream<T> valueStream) {
+  useStream(valueStream);
+  return valueStream.value;
 }

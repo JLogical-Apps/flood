@@ -10,48 +10,63 @@ class LoginPage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
-    final emailState = useState<String>('');
-    final passwordState = useState<String>('');
+    final loginPort = useMemoized(() => Port.of({
+          'email': PortValue.string(),
+          'password': PortValue.string(),
+        }));
 
     return StyledPage(
-      body: StyledList.column.centered.withScrollbar(
-        children: [
-          StyledImage.asset('assets/logo_foreground.png', width: 200, height: 200),
-          StyledText.h1.strong('Welcome to Valet'),
-          StyledDivider(),
-          StyledTextField(
-            labelText: 'Email',
-            text: emailState.value,
-            onChanged: (text) => emailState.value = text,
-          ),
-          StyledTextField(
-            labelText: 'Password',
-            text: passwordState.value,
-            onChanged: (text) => passwordState.value = text,
-          ),
-          StyledList.row.centered.withScrollbar(children: [
-            StyledButton(
-              labelText: 'Login',
-              onPressed: () async {
-                final email = emailState.value;
-                final password = passwordState.value;
+      body: PortBuilder(
+        port: loginPort,
+        builder: (context, port) {
+          return StyledList.column.centered.withScrollbar(
+            children: [
+              StyledImage.asset('assets/logo_foreground.png', width: 200, height: 200),
+              StyledText.h1.strong('Welcome to Valet'),
+              StyledDivider(),
+              StyledTextFieldPortField(fieldName: 'email', labelText: 'Email'),
+              StyledTextFieldPortField(fieldName: 'password', labelText: 'Password'),
+              StyledList.row.centered.withScrollbar(children: [
+                StyledButton(
+                  labelText: 'Login',
+                  onPressed: () async {
+                    final result = await loginPort.submit();
+                    if (!result.isValid) {
+                      return;
+                    }
 
-                await context.appPondContext.find<AuthCoreComponent>().login(email, password);
-                context.warpTo(HomePage());
-              },
-            ),
-            StyledButton.strong(
-              labelText: 'Sign Up',
-              onPressed: () async {
-                final email = emailState.value;
-                final password = passwordState.value;
+                    final data = result.data;
 
-                await context.appPondContext.find<AuthCoreComponent>().signup(email, password);
-                context.warpTo(HomePage());
-              },
-            ),
-          ]),
-        ],
+                    try {
+                      await context.appPondContext.find<AuthCoreComponent>().login(data['email'], data['password']);
+                      context.warpTo(HomePage());
+                    } catch (e) {
+                      loginPort.setError(name: 'email', error: e.toString());
+                    }
+                  },
+                ),
+                StyledButton.strong(
+                  labelText: 'Sign Up',
+                  onPressed: () async {
+                    final result = await loginPort.submit();
+                    if (!result.isValid) {
+                      return;
+                    }
+
+                    final data = result.data;
+
+                    try {
+                      await context.appPondContext.find<AuthCoreComponent>().signup(data['email'], data['password']);
+                      context.warpTo(HomePage());
+                    } catch (e) {
+                      loginPort.setError(name: 'email', error: e.toString());
+                    }
+                  },
+                ),
+              ]),
+            ],
+          );
+        },
       ),
     );
   }
