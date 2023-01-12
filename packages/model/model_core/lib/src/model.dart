@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:model_core/model_core.dart';
+import 'package:model_core/src/model_mapper.dart';
 import 'package:model_core/src/model_state.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -30,6 +31,10 @@ extension ModelExtensions<T> on Model<T> {
   }
 
   T? getOrNull() => state.getOrNull();
+
+  Model<R> map<R>(R Function(T value) mapper) {
+    return ModelMapper(model: this, mapper: mapper);
+  }
 }
 
 mixin IsModel<T> implements Model<T> {}
