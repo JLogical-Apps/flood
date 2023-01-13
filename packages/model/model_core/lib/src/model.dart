@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:model_core/model_core.dart';
+import 'package:model_core/src/model_async_mapper.dart';
 import 'package:model_core/src/model_mapper.dart';
-import 'package:model_core/src/model_state.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:utils_core/utils_core.dart';
 
 abstract class Model<T> {
-  ValueStream<ModelState<T>> get statesX;
+  ValueStream<FutureValue<T>> get statesX;
 
   Future<void> onLoad();
 
@@ -16,10 +16,11 @@ abstract class Model<T> {
 }
 
 extension ModelExtensions<T> on Model<T> {
-  ModelState<T> get state => statesX.value;
+  FutureValue<T> get state => statesX.value;
 
-  Future<void> load() async {
+  Future<FutureValue<T>> load() async {
     await onLoad();
+    return state;
   }
 
   Future<void> loadIfNotStarted() async {
@@ -35,6 +36,10 @@ extension ModelExtensions<T> on Model<T> {
   Model<R> map<R>(R Function(T value) mapper) {
     return ModelMapper(model: this, mapper: mapper);
   }
+
+  Model<R> asyncMap<R>(Future<R> Function(T value) asyncMapper) {
+    return ModelAsyncMapper(model: this, mapper: asyncMapper);
+  }
 }
 
 mixin IsModel<T> implements Model<T> {}
@@ -45,10 +50,10 @@ class _ModelImpl<T> with IsModel<T> {
   @override
   bool hasStartedLoading = false;
 
-  final BehaviorSubject<ModelState<T>> _statesSubject = BehaviorSubject.seeded(ModelState.empty<T>());
+  final BehaviorSubject<FutureValue<T>> _statesSubject = BehaviorSubject.seeded(FutureValue.empty<T>());
 
   @override
-  ValueStream<ModelState<T>> get statesX => _statesSubject;
+  ValueStream<FutureValue<T>> get statesX => _statesSubject;
 
   _ModelImpl({required this.loader});
 
@@ -57,14 +62,14 @@ class _ModelImpl<T> with IsModel<T> {
     hasStartedLoading = true;
 
     if (state.isEmpty || state.isError) {
-      _statesSubject.value = ModelState.loading();
+      _statesSubject.value = FutureValue.loading();
     }
 
     try {
       final data = await loader();
-      _statesSubject.value = ModelState.loaded(data);
+      _statesSubject.value = FutureValue.loaded(data);
     } catch (e, stacktrace) {
-      _statesSubject.value = ModelState.error(e, stacktrace);
+      _statesSubject.value = FutureValue.error(e, stacktrace);
     }
   }
 }
@@ -75,7 +80,7 @@ abstract class ModelWrapper<T> implements Model<T> {
 
 mixin IsModelWrapper<T> implements ModelWrapper<T> {
   @override
-  ValueStream<ModelState<T>> get statesX => model.statesX;
+  ValueStream<FutureValue<T>> get statesX => model.statesX;
 
   @override
   Future<void> onLoad() => model.onLoad();

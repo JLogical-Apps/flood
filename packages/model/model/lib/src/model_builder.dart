@@ -4,6 +4,7 @@ import 'package:model/src/model_builder_config.dart';
 import 'package:model/src/model_hooks.dart';
 import 'package:model_core/model_core.dart';
 import 'package:provider/provider.dart';
+import 'package:utils_core/utils_core.dart';
 
 class ModelBuilder<T> extends HookWidget {
   final Model<T> model;
@@ -29,13 +30,13 @@ class ModelBuilder<T> extends HookWidget {
       return loadingIndicator ?? modelBuilderConfig?.loadingIndicator ?? CircularProgressIndicator();
     }
 
-    if (state is ErrorModelState<T>) {
+    if (state is ErrorFutureValue<T>) {
       return errorBuilder?.call(state.error, state.stacktrace) ??
           modelBuilderConfig?.errorBuilder?.call(state.error, state.stacktrace) ??
           Text('${state.error}\n${state.stacktrace}');
     }
 
-    if (state is LoadedModelState<T>) {
+    if (state is LoadedFutureValue<T>) {
       return builder(state.data);
     }
 

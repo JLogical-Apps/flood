@@ -1,7 +1,8 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:model_core/model_core.dart';
+import 'package:utils_core/utils_core.dart';
 
-ModelState<T> useModel<T>(Model<T> model) {
+FutureValue<T> useModel<T>(Model<T> model) {
   useStream(model.statesX);
   return model.statesX.value;
 }
