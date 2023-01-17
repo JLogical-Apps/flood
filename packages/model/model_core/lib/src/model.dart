@@ -6,17 +6,15 @@ import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class Model<T> {
-  ValueStream<FutureValue<T>> get statesX;
+  ValueStream<FutureValue<T>> get stateX;
 
   Future<void> onLoad();
-
-  bool get hasStartedLoading;
 
   factory Model({required FutureOr<T> Function() loader}) => _ModelImpl(loader: loader);
 }
 
 extension ModelExtensions<T> on Model<T> {
-  FutureValue<T> get state => statesX.value;
+  FutureValue<T> get state => stateX.value;
 
   Future<FutureValue<T>> load() async {
     await onLoad();
@@ -24,11 +22,9 @@ extension ModelExtensions<T> on Model<T> {
   }
 
   Future<void> loadIfNotStarted() async {
-    if (hasStartedLoading) {
-      return;
+    if (state.isEmpty) {
+      await load();
     }
-
-    await load();
   }
 
   T? getOrNull() => state.getOrNull();
@@ -47,20 +43,15 @@ mixin IsModel<T> implements Model<T> {}
 class _ModelImpl<T> with IsModel<T> {
   final FutureOr<T> Function() loader;
 
-  @override
-  bool hasStartedLoading = false;
-
   final BehaviorSubject<FutureValue<T>> _statesSubject = BehaviorSubject.seeded(FutureValue.empty<T>());
 
   @override
-  ValueStream<FutureValue<T>> get statesX => _statesSubject;
+  ValueStream<FutureValue<T>> get stateX => _statesSubject;
 
   _ModelImpl({required this.loader});
 
   @override
   Future<void> onLoad() async {
-    hasStartedLoading = true;
-
     if (state.isEmpty || state.isError) {
       _statesSubject.value = FutureValue.loading();
     }
@@ -80,11 +71,8 @@ abstract class ModelWrapper<T> implements Model<T> {
 
 mixin IsModelWrapper<T> implements ModelWrapper<T> {
   @override
-  ValueStream<FutureValue<T>> get statesX => model.statesX;
+  ValueStream<FutureValue<T>> get stateX => model.stateX;
 
   @override
   Future<void> onLoad() => model.onLoad();
-
-  @override
-  bool get hasStartedLoading => model.hasStartedLoading;
 }

@@ -4,6 +4,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/src/future/future_value.dart';
 import 'package:utils_core/src/stream/async_map_value_stream.dart';
 import 'package:utils_core/src/stream/map_value_stream.dart';
+import 'package:utils_core/src/stream/merge_value_stream.dart';
 
 extension ValueStreamExtensions<T> on ValueStream<T> {
   /// Maps this value stream to another value stream that contains the last mapped value.
@@ -17,6 +18,12 @@ extension ValueStreamExtensions<T> on ValueStream<T> {
       asyncMapper: asyncMapper,
       initialValue: initialValue,
     );
+  }
+}
+
+extension ListValueStreamExtension<T> on List<ValueStream<T>> {
+  MergeValueStream<T> mergeValueStream({T? initialValue}) {
+    return MergeValueStream<T>(sources: this, initialValue: initialValue);
   }
 }
 

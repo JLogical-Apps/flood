@@ -42,31 +42,55 @@ void main() {
   test('model async mapping', () async {
     var loadCount = 0;
     final modelHaltCompleter = Completer();
-    final modelFinishCompleter = Completer();
 
     final model = Model(loader: () async {
       loadCount++;
       return loadCount;
     }).asyncMap((value) async {
       await modelHaltCompleter.future;
-      modelFinishCompleter.complete();
       return value;
     });
 
     expect(loadCount, 0);
     expect(model.state.isEmpty, isTrue);
 
-    await model.load();
+    final loadFuture = model.load();
 
     expect(loadCount, 1);
     expect(model.state.isLoading, isTrue);
     expect(model.state.getOrNull(), isNull);
 
     modelHaltCompleter.complete();
-    await modelFinishCompleter.future;
+    await loadFuture;
 
     expect(loadCount, 1);
     expect(model.state.isLoaded, isTrue);
     expect(model.state.getOrNull(), 1);
+  });
+
+  test('model async mapping stream', () async {
+    var loadCount = 0;
+
+    final model = Model(loader: () async {
+      loadCount++;
+      return loadCount;
+    }).asyncMap((value) async {
+      return value;
+    });
+
+    expect(
+        model.stateX,
+        emitsInOrder(<FutureValue<int>>[
+          FutureValue.empty(),
+          FutureValue.empty(),
+          FutureValue.loading(),
+          FutureValue.loaded(1),
+        ]));
+
+    await model.load();
+
+    // expect(loadCount, 1);
+    // expect(model.state.isLoaded, isTrue);
+    // expect(model.getOrNull(), 1);
   });
 }

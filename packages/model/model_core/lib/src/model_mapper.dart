@@ -11,11 +11,8 @@ class ModelMapper<T, R> with IsModel<R> {
   ModelMapper({required this.model, required this.mapper});
 
   @override
-  bool get hasStartedLoading => model.hasStartedLoading;
-
-  @override
   Future<void> onLoad() => model.onLoad();
 
   @override
-  late final ValueStream<FutureValue<R>> statesX = model.statesX.mapWithValue((state) => state.map(mapper));
+  late final ValueStream<FutureValue<R>> stateX = model.stateX.mapWithValue((state) => state.map(mapper));
 }

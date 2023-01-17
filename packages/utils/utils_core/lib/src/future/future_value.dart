@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 abstract class FutureValue<T> {
   static EmptyFutureValue<T> empty<T>() => EmptyFutureValue();
 
@@ -6,7 +8,7 @@ abstract class FutureValue<T> {
   static LoadedFutureValue<T> loaded<T>(T data) => LoadedFutureValue(data: data);
 
   static ErrorFutureValue<T> error<T>(dynamic error, StackTrace stacktrace) =>
-      ErrorFutureValue(error: error, stacktrace: stacktrace);
+      ErrorFutureValue(error: error, stackTrace: stacktrace);
 }
 
 extension FutureValueExtensions<T> on FutureValue<T> {
@@ -37,7 +39,7 @@ extension FutureValueExtensions<T> on FutureValue<T> {
     }
     if (this is ErrorFutureValue<T>) {
       final errorState = this as ErrorFutureValue<T>;
-      return ErrorFutureValue(error: errorState.error, stacktrace: errorState.stacktrace);
+      return ErrorFutureValue(error: errorState.error, stackTrace: errorState.stackTrace);
     }
 
     throw UnimplementedError();
@@ -55,7 +57,7 @@ extension FutureValueExtensions<T> on FutureValue<T> {
     }
     if (this is ErrorFutureValue<T>) {
       final errorState = this as ErrorFutureValue<T>;
-      return ErrorFutureValue(error: errorState.error, stacktrace: errorState.stacktrace);
+      return ErrorFutureValue(error: errorState.error, stackTrace: errorState.stackTrace);
     }
 
     throw UnimplementedError();
@@ -78,7 +80,7 @@ extension FutureValueExtensions<T> on FutureValue<T> {
     }
     if (this is ErrorFutureValue<T>) {
       final errorState = this as ErrorFutureValue<T>;
-      return onError(errorState.error, errorState.stacktrace);
+      return onError(errorState.error, errorState.stackTrace);
     }
 
     throw UnimplementedError();
@@ -100,19 +102,31 @@ extension FutureValueExtensions<T> on FutureValue<T> {
   }
 }
 
-class EmptyFutureValue<T> implements FutureValue<T> {}
+class EmptyFutureValue<T> with EquatableMixin implements FutureValue<T> {
+  @override
+  List<Object?> get props => [];
+}
 
-class LoadingFutureValue<T> implements FutureValue<T> {}
+class LoadingFutureValue<T> with EquatableMixin implements FutureValue<T> {
+  @override
+  List<Object?> get props => [];
+}
 
-class LoadedFutureValue<T> implements FutureValue<T> {
+class LoadedFutureValue<T> with EquatableMixin implements FutureValue<T> {
   final T data;
 
   LoadedFutureValue({required this.data});
+
+  @override
+  List<Object?> get props => [data];
 }
 
-class ErrorFutureValue<T> implements FutureValue<T> {
+class ErrorFutureValue<T> with EquatableMixin implements FutureValue<T> {
   final dynamic error;
-  final StackTrace stacktrace;
+  final StackTrace stackTrace;
 
-  ErrorFutureValue({required this.error, required this.stacktrace});
+  ErrorFutureValue({required this.error, required this.stackTrace});
+
+  @override
+  List<Object?> get props => [error, stackTrace];
 }

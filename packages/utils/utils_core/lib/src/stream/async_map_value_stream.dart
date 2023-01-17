@@ -23,7 +23,7 @@ class AsyncMapValueStream<T, R> extends StreamView<R> implements ValueStream<R> 
     stream = AsyncMapValueStream._(
       source: source
           .asyncMap(asyncMapper)
-          .doOnData((data) async => stream.value = data)
+          .doOnData((data) => stream.value = data)
           .publishValueSeeded(initialValue)
           .autoConnect(),
       initialValue: initialValue,
