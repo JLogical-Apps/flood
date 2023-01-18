@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:model_core/src/model_async_mapper.dart';
-import 'package:model_core/src/model_mapper.dart';
+import 'package:model_core/src/async_map_model.dart';
+import 'package:model_core/src/flat_map_model.dart';
+import 'package:model_core/src/map_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -30,11 +31,15 @@ extension ModelExtensions<T> on Model<T> {
   T? getOrNull() => state.getOrNull();
 
   Model<R> map<R>(R Function(T value) mapper) {
-    return ModelMapper(model: this, mapper: mapper);
+    return MapModel(model: this, mapper: mapper);
   }
 
   Model<R> asyncMap<R>(Future<R> Function(T value) asyncMapper) {
-    return ModelAsyncMapper(model: this, mapper: asyncMapper);
+    return AsyncMapModel(model: this, mapper: asyncMapper);
+  }
+
+  Model<R> flatMap<R>(Model<R> Function(T value) mapper) {
+    return FlatMapModel(model: this, mapper: mapper);
   }
 }
 

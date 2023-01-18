@@ -4,11 +4,11 @@ import 'package:model_core/model_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
-class ModelMapper<T, R> with IsModel<R> {
+class MapModel<T, R> with IsModel<R> {
   final Model<T> model;
   final R Function(T source) mapper;
 
-  ModelMapper({required this.model, required this.mapper});
+  MapModel({required this.model, required this.mapper});
 
   @override
   Future<void> onLoad() => model.onLoad();

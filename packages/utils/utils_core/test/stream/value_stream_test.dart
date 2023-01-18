@@ -56,4 +56,22 @@ void main() {
 
     subscription.cancel();
   });
+
+  test('switchMapWithValue', () async {
+    ValueStream<int> getRangeStream(int limit) {
+      return RangeStream(0, limit).publishValueSeeded(0).autoConnect();
+    }
+
+    final intSubject = BehaviorSubject.seeded(0);
+    final rangeStream = intSubject.switchMapWithValue(getRangeStream);
+
+    expect(rangeStream.value, 0);
+
+    expectLater(rangeStream, emitsInOrder([0, 0, 0, 0, 0, 1, 0, 0, 1, 2]));
+
+    await Future.delayed(Duration(milliseconds: 1));
+    intSubject.value = 1;
+    await Future.delayed(Duration(milliseconds: 1));
+    intSubject.value = 2;
+  });
 }

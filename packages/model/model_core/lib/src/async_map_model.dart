@@ -4,14 +4,14 @@ import 'package:model_core/model_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
-class ModelAsyncMapper<T, R> with IsModel<R> {
+class AsyncMapModel<T, R> with IsModel<R> {
   final Model<T> model;
   final Future<R> Function(T source) mapper;
 
   final BehaviorSubject<FutureValue<R>> valueSubject;
   StreamSubscription? subscription;
 
-  ModelAsyncMapper({required this.model, required this.mapper})
+  AsyncMapModel({required this.model, required this.mapper})
       : valueSubject = BehaviorSubject.seeded(model.state.when(
           onEmpty: () => FutureValue.empty(),
           onLoading: () => FutureValue.loading(),

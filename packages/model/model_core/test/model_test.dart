@@ -88,9 +88,25 @@ void main() {
         ]));
 
     await model.load();
+  });
 
-    // expect(loadCount, 1);
-    // expect(model.state.isLoaded, isTrue);
-    // expect(model.getOrNull(), 1);
+  test('model flat map stream', () async {
+    var loadCount = 0;
+
+    final model = Model(loader: () async {
+      loadCount++;
+      return loadCount;
+    }).flatMap((value) => Model(loader: () => value.toString()));
+
+    expect(
+        model.stateX,
+        emitsInOrder(<FutureValue<String>>[
+          FutureValue.empty(),
+          FutureValue.loading(),
+          FutureValue.loading(),
+          FutureValue.loaded('1'),
+        ]));
+
+    await model.load();
   });
 }

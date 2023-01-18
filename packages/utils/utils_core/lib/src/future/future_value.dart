@@ -7,8 +7,8 @@ abstract class FutureValue<T> {
 
   static LoadedFutureValue<T> loaded<T>(T data) => LoadedFutureValue(data: data);
 
-  static ErrorFutureValue<T> error<T>(dynamic error, StackTrace stacktrace) =>
-      ErrorFutureValue(error: error, stackTrace: stacktrace);
+  static ErrorFutureValue<T> error<T>(dynamic error, StackTrace stackTrace) =>
+      ErrorFutureValue(error: error, stackTrace: stackTrace);
 }
 
 extension FutureValueExtensions<T> on FutureValue<T> {
