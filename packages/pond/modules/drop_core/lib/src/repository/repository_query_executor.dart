@@ -1,9 +1,11 @@
 import 'package:drop_core/src/query/request/query_request.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:utils_core/utils_core.dart';
 
 abstract class RepositoryQueryExecutor {
   Future<T> execute<T>(QueryRequest<T> queryRequest);
 
-  Stream<T> executeX<T>(QueryRequest<T> queryRequest);
+  ValueStream<FutureValue<T>> executeX<T>(QueryRequest<T> queryRequest);
 }
 
 abstract class RepositoryQueryExecutorWrapper implements RepositoryQueryExecutor {
@@ -15,5 +17,5 @@ mixin IsRepositoryQueryExecutorWrapper implements RepositoryQueryExecutorWrapper
   Future<T> execute<T>(QueryRequest<T> queryRequest) => queryExecutor.execute(queryRequest);
 
   @override
-  Stream<T> executeX<T>(QueryRequest<T> queryRequest) => queryExecutor.executeX(queryRequest);
+  ValueStream<FutureValue<T>> executeX<T>(QueryRequest<T> queryRequest) => queryExecutor.executeX(queryRequest);
 }

@@ -33,7 +33,7 @@ extension RepositoryExtension on Repository {
     return queryExecutor.execute(queryRequest);
   }
 
-  Stream<T> executeQueryX<T>(QueryRequest<T> queryRequest) {
+  Stream<FutureValue<T>> executeQueryX<T>(QueryRequest<T> queryRequest) {
     return queryExecutor.executeX(queryRequest);
   }
 

@@ -61,7 +61,10 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
   }
 
   @override
-  Stream<T> executeX<T>(QueryRequest<T> queryRequest) {
-    return statesX.asyncMap((states) => executeOnStates(queryRequest, states));
+  ValueStream<FutureValue<T>> executeX<T>(QueryRequest<T> queryRequest) {
+    return statesX.asyncMapWithValue(
+      (states) async => FutureValue.loaded(await executeOnStates(queryRequest, states)),
+      initialValue: FutureValue.empty(),
+    );
   }
 }
