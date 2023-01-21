@@ -1,3 +1,4 @@
+import 'package:example/features/budget/budget_repository.dart';
 import 'package:example/features/user/user_repository.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
@@ -8,5 +9,6 @@ Future<CorePondContext> getCorePondContext({required EnvironmentConfig environme
   await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
   await corePondContext.register(AuthCoreComponent.memory());
   await corePondContext.register(UserRepository());
+  await corePondContext.register(BudgetRepository());
   return corePondContext;
 }
