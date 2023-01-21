@@ -18,6 +18,16 @@ void main() {
     expect(toStringStream.value, '1');
   });
 
+  test('mapWithValue stream', () {
+    final intSubject = BehaviorSubject.seeded(0);
+    final toStringStream = intSubject.mapWithValue((value) => value.toString());
+
+    expectLater(toStringStream, emitsInOrder(['0', '0', '1', '2']));
+
+    intSubject.value = 1;
+    intSubject.value = 2;
+  });
+
   test('asyncMapWithValue', () async {
     var modelHaltCompleter = Completer();
     var modelFinishCompleter = Completer();

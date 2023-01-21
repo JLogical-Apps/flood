@@ -10,7 +10,7 @@ abstract class CorePondComponentBehavior {
   Future onLoad(CorePondContext context, CorePondComponent component) async {}
 
   factory CorePondComponentBehavior({
-    void Function(CorePondContext context, CorePondComponent component)? onRegister,
+    FutureOr Function(CorePondContext context, CorePondComponent component)? onRegister,
     FutureOr Function(CorePondContext context, CorePondComponent component)? onLoad,
   }) =>
       _CorePondComponentBehaviorImpl(

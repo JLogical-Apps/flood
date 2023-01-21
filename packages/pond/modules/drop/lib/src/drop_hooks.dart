@@ -4,7 +4,7 @@ import 'package:model/model.dart';
 import 'package:pond/pond.dart';
 
 DropCoreContext useDropCoreContext() {
-  return useAppPondContext().find<DropCoreContext>();
+  return useAppPondContext().find<DropCoreComponent>();
 }
 
 Model<T> useQuery<T>(QueryRequest<T> queryRequest) {

@@ -9,6 +9,8 @@ environment:
 version: 0.0.1
 
 dependencies:
+  flutter:
+      sdk: flutter
   collection: ^1.16.0
   equatable: ^2.0.5
   flutter_hooks: ^0.18.5+1

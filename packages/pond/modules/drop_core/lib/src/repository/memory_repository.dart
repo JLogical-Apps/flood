@@ -28,8 +28,7 @@ class MemoryRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
 
     return StateQueryExecutor(
       dropContext: repository.context.locate<DropCoreComponent>(),
-      statesX:
-          stateByIdX.map((stateById) => stateById.values.toList()).publishValueSeeded(stateByIdX.value.values.toList()),
+      statesX: stateByIdX.mapWithValue((stateById) => stateById.values.toList()),
     );
   }
 }
@@ -40,12 +39,12 @@ class MemoryRepositoryStateHandler implements RepositoryStateHandler {
   MemoryRepositoryStateHandler({required this.repository});
 
   @override
-  Future<void> update(State state) async {
+  Future<void> onUpdate(State state) async {
     repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, state);
   }
 
   @override
-  Future<void> delete(State state) async {
+  Future<void> onDelete(State state) async {
     repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(state.id!);
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:example/features/user/user.dart';
+import 'package:example/features/user/user_entity.dart';
 import 'package:example/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -12,15 +14,34 @@ class HomePage extends AppPage {
   Widget build(BuildContext context) {
     final loggedInUserIdModel =
         useFutureModel(() => context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId());
+    final allUsersModel = useQuery(Query.from<UserEntity>().all<UserEntity>());
     return StyledPage(
       titleText: 'Home',
       body: Center(
-        child: ModelBuilder<String?>(
-          model: loggedInUserIdModel,
-          loadingIndicator: StyledLoadingIndicator(),
-          builder: (userId) {
-            return StyledText.h1('Welcome ${userId!.substring(0, 2)}!');
-          },
+        child: Column(
+          children: [
+            ModelBuilder<String?>(
+              model: loggedInUserIdModel,
+              builder: (userId) {
+                return StyledText.h1('Welcome ${userId!.substring(0, 2)}!');
+              },
+            ),
+            ModelBuilder<List<UserEntity>>(
+              model: allUsersModel,
+              builder: (userEntities) {
+                return Column(
+                    children: userEntities.map((entity) => StyledText.h2(entity.value.nameProperty.value)).toList());
+              },
+            ),
+            StyledButton.strong(
+              labelText: 'Create +',
+              onPressed: () async {
+                final newUserEntity = UserEntity()
+                  ..value = (User()..nameProperty.set(DateTime.now().second.toString()));
+                await context.dropCoreComponent.update(newUserEntity);
+              },
+            ),
+          ],
         ),
       ),
     );

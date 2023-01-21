@@ -15,5 +15,6 @@ class DropCoreComponent extends CorePondComponent with IsDropCoreContext, IsRepo
   TypeContext get typeContext => context.locate<TypeCoreComponent>();
 
   @override
-  List<Repository> get repositories => context.components.whereType<Repository>().toList();
+  List<Repository> get repositories =>
+      context.components.whereType<Repository>().where((repository) => repository != this).toList();
 }

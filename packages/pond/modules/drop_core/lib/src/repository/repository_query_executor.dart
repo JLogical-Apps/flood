@@ -5,26 +5,26 @@ import 'package:type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class RepositoryQueryExecutor {
-  bool handles(QueryRequest queryRequest);
+  bool handlesQuery(QueryRequest queryRequest);
 
-  Future<T> onExecute<T>(QueryRequest<T> queryRequest);
+  Future<T> onExecuteQuery<T>(QueryRequest<T> queryRequest);
 
-  ValueStream<FutureValue<T>> onExecuteX<T>(QueryRequest<T> queryRequest);
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<T> queryRequest);
 }
 
 extension RepositoryQueryExecutorExtensions on RepositoryQueryExecutor {
-  Future<T> execute<T>(QueryRequest<T> queryRequest) {
-    if (!handles(queryRequest)) {
+  Future<T> executeQuery<T>(QueryRequest<T> queryRequest) {
+    if (!handlesQuery(queryRequest)) {
       throw Exception('Unable to handle [$queryRequest]');
     }
-    return onExecute(queryRequest);
+    return onExecuteQuery(queryRequest);
   }
 
-  ValueStream<FutureValue<T>> executeX<T>(QueryRequest<T> queryRequest) {
-    if (!handles(queryRequest)) {
+  ValueStream<FutureValue<T>> executeQueryX<T>(QueryRequest<T> queryRequest) {
+    if (!handlesQuery(queryRequest)) {
       throw Exception('Unable to handle [$queryRequest]');
     }
-    return onExecuteX(queryRequest);
+    return onExecuteQueryX(queryRequest);
   }
 
   RepositoryQueryExecutor withHandledType(RuntimeType runtimeType) {
@@ -48,11 +48,12 @@ abstract class RepositoryQueryExecutorWrapper implements RepositoryQueryExecutor
 
 mixin IsRepositoryQueryExecutorWrapper implements RepositoryQueryExecutorWrapper {
   @override
-  bool handles(QueryRequest queryRequest) => queryExecutor.handles(queryRequest);
+  bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
 
   @override
-  Future<T> onExecute<T>(QueryRequest<T> queryRequest) => queryExecutor.onExecute(queryRequest);
+  Future<T> onExecuteQuery<T>(QueryRequest<T> queryRequest) => queryExecutor.onExecuteQuery(queryRequest);
 
   @override
-  ValueStream<FutureValue<T>> onExecuteX<T>(QueryRequest<T> queryRequest) => queryExecutor.onExecuteX(queryRequest);
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<T> queryRequest) =>
+      queryExecutor.onExecuteQueryX(queryRequest);
 }

@@ -13,12 +13,12 @@ class WithHandledTypesRepositoryQueryExecutor with IsRepositoryQueryExecutorWrap
   WithHandledTypesRepositoryQueryExecutor({required this.queryExecutor, required this.handledTypes});
 
   @override
-  bool handles(QueryRequest queryRequest) {
+  bool handlesQuery(QueryRequest queryRequest) {
     final root = queryRequest.query.root;
     if (root is FromQuery && handledTypes.any((runtimeType) => runtimeType.type == root.entityType)) {
       return true;
     }
 
-    return queryExecutor.handles(queryRequest);
+    return queryExecutor.handlesQuery(queryRequest);
   }
 }

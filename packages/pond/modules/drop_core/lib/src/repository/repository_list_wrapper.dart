@@ -33,12 +33,29 @@ mixin IsRepositoryListWrapper implements RepositoryListWrapper {
   @override
   List<CorePondComponentBehavior> get behaviors => [
         CorePondComponentBehavior(
-          onRegister: (context, component) => repositories.forEach(context.register),
-        )
+          onRegister: (context, component) => Future.wait(repositories.map(context.register)),
+        ),
+        ...repositories.expand((repository) => repository.behaviors).toList(),
       ];
 
   @override
   late CorePondContext context;
+
+  @override
+  Future<void> onUpdate(State state) => stateHandler.onUpdate(state);
+
+  @override
+  Future<void> onDelete(State state) => stateHandler.onDelete(state);
+
+  @override
+  bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
+
+  @override
+  Future<T> onExecuteQuery<T>(QueryRequest<T> queryRequest) => queryExecutor.onExecuteQuery(queryRequest);
+
+  @override
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<T> queryRequest) =>
+      queryExecutor.onExecuteQueryX(queryRequest);
 }
 
 class _RepositoryListWrapperImpl with IsRepositoryListWrapper {
@@ -54,13 +71,13 @@ class _RepositoryListStateHandler implements RepositoryStateHandler {
   _RepositoryListStateHandler({required this.repositories});
 
   @override
-  Future<void> update(State state) {
+  Future<void> onUpdate(State state) {
     return repositories.firstWhereOrNull((repository) => repository.handledTypes.contains(state.type))?.update(state) ??
         (throw Exception('Cannot find repository to handle update for [$state]'));
   }
 
   @override
-  Future<void> delete(State state) {
+  Future<void> onDelete(State state) {
     return repositories.firstWhereOrNull((repository) => repository.handledTypes.contains(state.type))?.delete(state) ??
         (throw Exception('Cannot find repository to handle delete for [$state]'));
   }
@@ -72,12 +89,12 @@ class _RepositoryListQueryExecutor implements RepositoryQueryExecutor {
   _RepositoryListQueryExecutor({required this.repositories});
 
   @override
-  bool handles(QueryRequest queryRequest) {
+  bool handlesQuery(QueryRequest queryRequest) {
     return repositories.any((repository) => repository.handlesQuery(queryRequest));
   }
 
   @override
-  Future<T> onExecute<T>(QueryRequest<T> queryRequest) {
+  Future<T> onExecuteQuery<T>(QueryRequest<T> queryRequest) {
     return repositories
             .firstWhereOrNull((repository) => repository.handlesQuery(queryRequest))
             ?.executeQuery(queryRequest) ??
@@ -85,7 +102,7 @@ class _RepositoryListQueryExecutor implements RepositoryQueryExecutor {
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteX<T>(QueryRequest<T> queryRequest) {
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<T> queryRequest) {
     return repositories
             .firstWhereOrNull((repository) => repository.handlesQuery(queryRequest))
             ?.executeQueryX(queryRequest) ??

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:example/features/user/user.dart';
+import 'package:example/features/user/user_entity.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -47,8 +49,10 @@ class LoginPage extends AppPage {
                     try {
                       await context.appPondContext.find<AuthCoreComponent>().login(data['email'], data['password']);
                       context.warpTo(HomePage());
-                    } catch (e) {
+                    } catch (e, stackTrace) {
                       loginPort.setError(name: 'email', error: e.toString());
+                      print(e);
+                      print(stackTrace);
                     }
                   },
                 ),
@@ -63,10 +67,21 @@ class LoginPage extends AppPage {
                     final data = result.data;
 
                     try {
-                      await context.appPondContext.find<AuthCoreComponent>().signup(data['email'], data['password']);
+                      final userId = await context.appPondContext
+                          .find<AuthCoreComponent>()
+                          .signup(data['email'], data['password']);
+
+                      final user = User()..nameProperty.set('Jake');
+                      final userEntity = UserEntity()
+                        ..id = userId
+                        ..value = user;
+                      await context.dropCoreComponent.update(userEntity);
+
                       context.warpTo(HomePage());
-                    } catch (e) {
+                    } catch (e, stackTrace) {
                       loginPort.setError(name: 'email', error: e.toString());
+                      print(e);
+                      print(stackTrace);
                     }
                   },
                 ),
