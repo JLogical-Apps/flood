@@ -40,8 +40,21 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
       ]);
 
   @override
-  Future<T> execute<T>(QueryRequest<T> queryRequest) {
+  bool handles(QueryRequest queryRequest) {
+    return false;
+  }
+
+  @override
+  Future<T> onExecute<T>(QueryRequest<T> queryRequest) {
     return executeOnStates(queryRequest, statesX.value);
+  }
+
+  @override
+  ValueStream<FutureValue<T>> onExecuteX<T>(QueryRequest<T> queryRequest) {
+    return statesX.asyncMapWithValue(
+      (states) async => FutureValue.loaded(await executeOnStates(queryRequest, states)),
+      initialValue: FutureValue.empty(),
+    );
   }
 
   Future<T> executeOnStates<T>(QueryRequest<T> queryRequest, List<State> states) async {
@@ -58,13 +71,5 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
     return getQueryReducerResolver()
         .resolve(query)
         .reduce(query, queryParent == null ? states : reduceStates(states, queryParent));
-  }
-
-  @override
-  ValueStream<FutureValue<T>> executeX<T>(QueryRequest<T> queryRequest) {
-    return statesX.asyncMapWithValue(
-      (states) async => FutureValue.loaded(await executeOnStates(queryRequest, states)),
-      initialValue: FutureValue.empty(),
-    );
   }
 }

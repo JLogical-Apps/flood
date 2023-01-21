@@ -4,6 +4,7 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/memory_repository.dart';
 import 'package:drop_core/src/repository/repository_id_generator.dart';
+import 'package:drop_core/src/repository/repository_list_wrapper.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/repository/type/for_abstract_type_repository.dart';
@@ -11,6 +12,7 @@ import 'package:drop_core/src/repository/type/for_type_repository.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:pond_core/pond_core.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -26,6 +28,10 @@ abstract class Repository with IsCorePondComponent {
   static MemoryRepository memory() {
     return MemoryRepository();
   }
+
+  static Repository list(List<Repository> repositories) {
+    return RepositoryListWrapper(repositories);
+  }
 }
 
 extension RepositoryExtension on Repository {
@@ -33,8 +39,12 @@ extension RepositoryExtension on Repository {
     return queryExecutor.execute(queryRequest);
   }
 
-  Stream<FutureValue<T>> executeQueryX<T>(QueryRequest<T> queryRequest) {
+  ValueStream<FutureValue<T>> executeQueryX<T>(QueryRequest<T> queryRequest) {
     return queryExecutor.executeX(queryRequest);
+  }
+
+  bool handlesQuery(QueryRequest queryRequest) {
+    return queryExecutor.handles(queryRequest);
   }
 
   Future<State> update(Stateful stateful) async {

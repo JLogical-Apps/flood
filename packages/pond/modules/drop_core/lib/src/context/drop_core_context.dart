@@ -2,16 +2,17 @@ import 'package:collection/collection.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/repository.dart';
+import 'package:drop_core/src/repository/repository_list_wrapper.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:type/type.dart';
 
-abstract class DropCoreContext implements TypeContextWrapper {
+abstract class DropCoreContext implements TypeContextWrapper, Repository {
   List<Repository> get repositories;
 
   factory DropCoreContext({required TypeContext typeContext}) => _DropCoreContextImpl(typeContext: typeContext);
 }
 
-class _DropCoreContextImpl with IsTypeContextWrapper implements DropCoreContext {
+class _DropCoreContextImpl with IsTypeContextWrapper, IsRepositoryListWrapper implements DropCoreContext {
   @override
   final List<Repository> repositories;
 

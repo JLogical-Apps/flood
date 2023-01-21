@@ -1,6 +1,7 @@
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/repository.dart';
+import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/type/abstract_type_implementation_repository.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:type/type.dart';
@@ -68,4 +69,7 @@ class ForAbstractTypeRepository<E extends Entity<V>, V extends ValueObject> with
       valueObjectConstructor: valueObjectConstructor,
     );
   }
+
+  @override
+  RepositoryQueryExecutor get queryExecutor => repository.queryExecutor.withHandledTypes([entityRuntimeType]);
 }

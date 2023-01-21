@@ -14,6 +14,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/jlogical_utils_core
+  drop:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/pond/modules/drop
   environment:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

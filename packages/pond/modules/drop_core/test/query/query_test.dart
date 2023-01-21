@@ -341,6 +341,36 @@ void main() {
         await repository.executeQuery(Query.from<TransactionEntity>().all<TransactionEntity>());
     expect(allTransactionEntities.map((e) => e.value), transactionEntities.map((e) => e.value));
   });
+
+  test('list repository', () async {
+    final userRepository = Repository.memory().forType<UserEntity, User>(
+      UserEntity.new,
+      User.new,
+      entityTypeName: 'UserEntity',
+      valueObjectTypeName: 'User',
+    );
+    final invoiceRepository = Repository.memory().forType<InvoiceEntity, Invoice>(
+      InvoiceEntity.new,
+      Invoice.new,
+      entityTypeName: 'InvoiceEntity',
+      valueObjectTypeName: 'Invoice',
+    );
+    final listRepository = Repository.list([userRepository, invoiceRepository]);
+
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(listRepository);
+
+    await listRepository.update(UserEntity()..value = (User()..nameProperty.value = 'John Doe'));
+    await listRepository.update(InvoiceEntity()..value = (Invoice()..amountProperty.value = 35));
+
+    final userEntity = await listRepository.executeQuery(Query.from<UserEntity>().first<UserEntity>());
+    expect(userEntity.value.nameProperty.value, 'John Doe');
+
+    final invoiceEntity = await listRepository.executeQuery(Query.from<InvoiceEntity>().first<InvoiceEntity>());
+    expect(invoiceEntity.value.amountProperty.value, 35);
+  });
 }
 
 class User extends ValueObject {

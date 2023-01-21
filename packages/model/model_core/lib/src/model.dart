@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:model_core/src/async_map_model.dart';
 import 'package:model_core/src/flat_map_model.dart';
 import 'package:model_core/src/map_model.dart';
+import 'package:model_core/src/value_stream_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -12,6 +13,15 @@ abstract class Model<T> {
   Future<void> onLoad();
 
   factory Model({required FutureOr<T> Function() loader}) => _ModelImpl(loader: loader);
+
+  factory Model.fromValueStream({
+    required ValueStream<FutureValue<T>> stateX,
+    FutureOr Function()? onLoad,
+  }) =>
+      ValueStreamModel(
+        stateX: stateX,
+        loader: onLoad,
+      );
 }
 
 extension ModelExtensions<T> on Model<T> {

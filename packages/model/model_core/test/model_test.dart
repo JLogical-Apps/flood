@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:model_core/model_core.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -108,5 +109,20 @@ void main() {
         ]));
 
     await model.load();
+  });
+
+  test('value stream model', () async {
+    final intSubject = BehaviorSubject.seeded(0);
+
+    final valueStreamModel = Model.fromValueStream(
+      stateX: intSubject.mapWithValue((value) => FutureValue.loaded(value)),
+      onLoad: () => intSubject.value += 1,
+    );
+
+    expect(valueStreamModel.getOrNull(), 0);
+
+    await valueStreamModel.load();
+
+    expect(valueStreamModel.getOrNull(), 1);
   });
 }

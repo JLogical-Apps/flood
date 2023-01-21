@@ -70,4 +70,12 @@ extension QueryExtensions on Query {
   PaginatedQueryRequest paginate<E extends Entity>({int pageSize = 20}) {
     return PaginatedQueryRequest<E>(sourceQueryRequest: PaginateStatesQueryRequest(query: this, pageSize: pageSize));
   }
+
+  Query get root {
+    var root = this;
+    while (root.parent != null) {
+      root = parent!;
+    }
+    return root;
+  }
 }
