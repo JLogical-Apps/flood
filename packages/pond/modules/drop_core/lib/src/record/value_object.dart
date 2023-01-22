@@ -1,6 +1,8 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/record.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -35,4 +37,7 @@ abstract class ValueObject extends Record with EquatableMixin {
   List<Object> get props => [scaffoldState];
 
   FieldValueObjectProperty<T> field<T>({required String name}) => ValueObjectProperty.field<T>(name: name);
+
+  ReferenceValueObjectProperty<E> reference<E extends Entity>({required String name}) =>
+      ValueObjectProperty.reference<E>(name: name);
 }

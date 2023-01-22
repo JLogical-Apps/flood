@@ -33,7 +33,7 @@ class ModelBuilder<T> extends HookWidget {
     if (state is ErrorFutureValue<T>) {
       return errorBuilder?.call(state.error, state.stackTrace) ??
           modelBuilderConfig?.errorBuilder?.call(state.error, state.stackTrace) ??
-          Text('${state.error}\n${state.stackTrace}');
+          Text('${state.error}');
     }
 
     if (state is LoadedFutureValue<T>) {

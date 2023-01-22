@@ -17,6 +17,10 @@ abstract class Query {
 
   Query({required this.parent});
 
+  static QueryRequest<E?> getById<E extends Entity>(String id) {
+    return Query.from<E>().where(State.idField).isEqualTo(id).firstOrNull<E>();
+  }
+
   static FromQuery from<E extends Entity>() {
     return FromQuery(entityType: E);
   }

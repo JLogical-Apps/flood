@@ -20,13 +20,19 @@ class FlatMapModel<T, R> with IsModel<R> {
   }
 
   @override
-  late final ValueStream<FutureValue<R>> stateX = model.stateX.switchMapWithValue((state) => state.when(
-        onEmpty: () => BehaviorSubject.seeded(FutureValue.empty()),
-        onLoading: () => BehaviorSubject.seeded(FutureValue.loading()),
-        onLoaded: (value) {
+  late final ValueStream<FutureValue<R>> stateX = model.stateX.switchMapWithValue((state) {
+    return state.when(
+      onEmpty: () => BehaviorSubject.seeded(FutureValue.empty()),
+      onLoading: () => BehaviorSubject.seeded(FutureValue.loading()),
+      onLoaded: (value) {
+        try {
           final mappedModel = mapper(value)..loadIfNotStarted();
           return mappedModel.stateX;
-        },
-        onError: (error, stackTrace) => BehaviorSubject.seeded(FutureValue.error(error, stackTrace)),
-      ));
+        } catch (e, stackTrace) {
+          return BehaviorSubject.seeded(FutureValue.error(e, stackTrace));
+        }
+      },
+      onError: (error, stackTrace) => BehaviorSubject.seeded(FutureValue.error(error, stackTrace)),
+    );
+  });
 }

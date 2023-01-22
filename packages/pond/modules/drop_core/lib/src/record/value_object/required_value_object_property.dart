@@ -1,8 +1,9 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 
-class RequiredValueObjectProperty<T, S> implements ValueObjectProperty<T, S> {
-  final ValueObjectProperty<T?, S> property;
+class RequiredValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L> {
+  final ValueObjectProperty<T?, S, L> property;
 
   RequiredValueObjectProperty({required this.property});
 
@@ -29,4 +30,7 @@ class RequiredValueObjectProperty<T, S> implements ValueObjectProperty<T, S> {
 
   @override
   void set(S value) => property.set(value ?? (throw Exception('Required property [$property]!')));
+
+  @override
+  Future<L> load(DropCoreContext context) => property.load(context);
 }

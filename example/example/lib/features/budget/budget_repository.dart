@@ -4,10 +4,10 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class BudgetRepository with IsRepositoryWrapper {
   @override
-  Repository get repository => Repository.memory().forType<BudgetEntity, Budget>(
-        BudgetEntity.new,
-        Budget.new,
-        entityTypeName: 'BudgetEntity',
-        valueObjectTypeName: 'Budget',
-      );
+  late Repository repository = Repository.memory().forType<BudgetEntity, Budget>(
+    BudgetEntity.new,
+    Budget.new,
+    entityTypeName: 'BudgetEntity',
+    valueObjectTypeName: 'Budget',
+  );
 }

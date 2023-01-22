@@ -14,6 +14,11 @@ dependencies:
   rxdart: ^0.27.5
   uuid: ^3.0.6
 
+  model_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/model/model_core
   pond_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 extension ObjectExtensions<T> on T {
   /// Casts the object to type [R] if possible. Returns null if not possible.
   R? as<R>() {
@@ -13,5 +15,10 @@ extension NullableObjectExtensions<T> on T? {
   R? mapIfNonNull<R>(R? Function(T value) mapper) {
     final value = this;
     return value == null ? null : mapper(value);
+  }
+
+  Future<R?> mapIfNonNullAsync<R>(FutureOr<R?> Function(T value) mapper) async {
+    final value = this;
+    return await (value == null ? Future.value(null) : mapper(value));
   }
 }

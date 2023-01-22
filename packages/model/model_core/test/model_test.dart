@@ -115,7 +115,7 @@ void main() {
     final intSubject = BehaviorSubject.seeded(0);
 
     final valueStreamModel = Model.fromValueStream(
-      stateX: intSubject.mapWithValue((value) => FutureValue.loaded(value)),
+      intSubject.mapWithValue((value) => FutureValue.loaded(value)),
       onLoad: () => intSubject.value += 1,
     );
 

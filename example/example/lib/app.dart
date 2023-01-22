@@ -49,7 +49,10 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(ModelAppComponent(
     modelBuilderConfig: ModelBuilderConfig(
       loadingIndicator: StyledLoadingIndicator(),
-      errorBuilder: (error, stack) => StyledText.body.error('$error\n$stack'),
+      errorBuilder: (error, stack) {
+        print('$error\n$stack');
+        return StyledText.body.error('$error');
+      },
     ),
   ));
   await appPondContext.register(StyleAppComponent(style: style));
