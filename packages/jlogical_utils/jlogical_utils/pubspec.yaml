@@ -14,6 +14,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/jlogical_utils_core
+  debug_dialog:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/modules/debug_dialog
   drop:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

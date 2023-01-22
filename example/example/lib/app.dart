@@ -44,7 +44,7 @@ class App extends StatelessWidget {
 Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async {
   final appPondContext = AppPondContext(corePondContext: corePondContext);
   await appPondContext.register(NavigationAppPondComponent());
-  await appPondContext.register(EnvironmentBannerAppComponent());
+  await appPondContext.register(DebugDialogAppComponent());
   await appPondContext.register(FocusGrabberAppComponent());
   await appPondContext.register(ModelAppComponent(
     modelBuilderConfig: ModelBuilderConfig(
@@ -57,6 +57,7 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   ));
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(UrlBarAppComponent());
+  await appPondContext.register(DebugDialogAppComponent());
   await appPondContext.register(ValetPagesAppPondComponent());
   return appPondContext;
 }

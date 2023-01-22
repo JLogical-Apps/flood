@@ -10,6 +10,10 @@ extension NavigationBuildContextExtensions on BuildContext {
     return _navigationComponent.getUrl(this);
   }
 
+  Uri get uri {
+    return _navigationComponent.getUri(this);
+  }
+
   void warpTo(AppPage page) {
     _navigationComponent.warpTo(this, page);
   }

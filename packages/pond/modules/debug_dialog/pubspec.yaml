@@ -1,0 +1,32 @@
+name: debug_dialog
+description: App Component to display a dialog with debug stats when '_debug=true' is in the uri.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_hooks: ^0.18.5+1
+  provider: ^6.0.5
+
+  pond:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/pond/pond
+  utils:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/utils/utils
+
+dev_dependencies:
+  lints: ^2.0.0
+  flutter_test:
+    sdk: flutter

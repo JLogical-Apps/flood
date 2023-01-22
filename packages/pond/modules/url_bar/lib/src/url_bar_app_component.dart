@@ -5,7 +5,7 @@ import 'package:style/style.dart';
 
 class UrlBarAppComponent with IsAppPondComponent {
   @override
-  Widget wrapPage(AppPondContext context, Widget page) {
+  Widget wrapPage(AppPondContext context, Widget page, AppPondPageContext pageContext) {
     return HookBuilder(builder: (context) {
       final isExpandedState = useState<bool>(false);
       final isExpanded = isExpandedState.value;

@@ -10,6 +10,10 @@ class NavigationAppPondComponent with IsAppPondComponent {
     return context.vRouter.url;
   }
 
+  Uri getUri(BuildContext context) {
+    return Uri.parse(getUrl(context));
+  }
+
   void warpTo(BuildContext context, AppPage page) {
     context.vRouter.to(page.uri.toString(), historyState: context.vRouter.historyState);
   }

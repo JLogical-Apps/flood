@@ -100,6 +100,16 @@ extension FutureValueExtensions<T> on FutureValue<T> {
       onError: (error, stackTrace) => onError != null ? onError(error, stackTrace) : orElse(),
     );
   }
+
+  R? ifPresent<R>(
+    R Function(T value) onLoaded, {
+    R Function()? orElse,
+  }) {
+    return maybeWhen(
+      onLoaded: onLoaded,
+      orElse: orElse ?? () => null,
+    );
+  }
 }
 
 class EmptyFutureValue<T> with EquatableMixin implements FutureValue<T> {

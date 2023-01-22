@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pond/src/app/component/app_pond_component_additional_setup.dart';
+import 'package:pond/src/app/component/app_pond_page_context.dart';
 import 'package:pond/src/app/context/app_pond_context.dart';
 import 'package:pond/src/app/page/app_page.dart';
 
@@ -12,7 +13,11 @@ abstract class AppPondComponent {
 
   Widget wrapApp(AppPondContext context, Widget app);
 
-  Widget wrapPage(AppPondContext context, Widget page);
+  Widget wrapPage(
+    AppPondContext context,
+    Widget page,
+    AppPondPageContext pageContext,
+  );
 
   List<AppPage> get pages;
 }
@@ -57,7 +62,11 @@ mixin IsAppPondComponent implements AppPondComponent {
   }
 
   @override
-  Widget wrapPage(AppPondContext context, Widget page) {
+  Widget wrapPage(
+    AppPondContext context,
+    Widget page,
+    AppPondPageContext pageContext,
+  ) {
     return page;
   }
 
@@ -86,8 +95,12 @@ mixin IsAppPondComponentWrapper implements AppPondComponentWrapper {
   }
 
   @override
-  Widget wrapPage(AppPondContext context, Widget page) {
-    return appPondComponent.wrapPage(context, page);
+  Widget wrapPage(
+    AppPondContext context,
+    Widget page,
+    AppPondPageContext pageContext,
+  ) {
+    return appPondComponent.wrapPage(context, page, pageContext);
   }
 
   @override

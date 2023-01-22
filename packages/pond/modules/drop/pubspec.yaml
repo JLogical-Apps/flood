@@ -10,7 +10,7 @@ version: 0.0.1
 
 dependencies:
   flutter:
-      sdk: flutter
+    sdk: flutter
   collection: ^1.16.0
   equatable: ^2.0.5
   flutter_hooks: ^0.18.5+1
@@ -18,6 +18,11 @@ dependencies:
   rxdart: ^0.27.5
   uuid: ^3.0.6
 
+  debug_dialog:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/pond/packages/debug_dialog
   drop_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

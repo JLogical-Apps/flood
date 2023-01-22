@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:path_core/path_core.dart';
 import 'package:pond/pond.dart';
+import 'package:pond/src/app/component/app_pond_page_context.dart';
 import 'package:pond/src/app/page/vrouter_segment_wrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:utils/utils.dart';
@@ -82,6 +83,7 @@ class PondApp extends HookWidget {
           builder: (context, widget) => _wrapPage(
             child: widget,
             appContext: appPondContext,
+            uri: context.uri,
           ),
         );
       }),
@@ -172,9 +174,10 @@ class PondApp extends HookWidget {
   Widget _wrapPage({
     required AppPondContext appContext,
     required Widget child,
+    required Uri uri,
   }) {
     for (final appComponent in appContext.appComponents) {
-      child = appComponent.wrapPage(appContext, child);
+      child = appComponent.wrapPage(appContext, child, AppPondPageContext(uri: uri));
     }
 
     return child;

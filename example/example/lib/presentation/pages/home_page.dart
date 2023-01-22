@@ -15,11 +15,8 @@ class HomePage extends AppPage {
   Widget build(BuildContext context) {
     final loggedInUserIdModel =
         useFutureModel(() => context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId());
-    final budgetsModel = useMemoized(() => loggedInUserIdModel.flatMap((loggedInUserId) => Query.from<BudgetEntity>()
-        .where(Budget.ownerField)
-        .isEqualTo(loggedInUserId)
-        .all<BudgetEntity>()
-        .toModel(context.dropCoreComponent)));
+    final budgetsModel = useQueryModel(useMemoized(() => loggedInUserIdModel.map((loggedInUserId) =>
+        Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all<BudgetEntity>())));
     return StyledPage(
       titleText: 'Home',
       body: Center(

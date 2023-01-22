@@ -4,7 +4,7 @@ import 'package:pond/pond.dart';
 
 class EnvironmentBannerAppComponent with IsAppPondComponent {
   @override
-  Widget wrapPage(AppPondContext context, Widget page) {
+  Widget wrapPage(AppPondContext context, Widget page, AppPondPageContext pageContext) {
     return Banner(
       message: context.environment.name.toUpperCase(),
       location: BannerLocation.topEnd,
