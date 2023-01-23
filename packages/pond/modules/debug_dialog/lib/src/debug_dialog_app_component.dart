@@ -13,13 +13,10 @@ class DebugDialogAppComponent with IsAppPondComponent {
     }
 
     return Provider<DebugDialogContext>(
+      key: UniqueKey(),
       create: (_) => DebugDialogContext(),
       child: HookBuilder(builder: (context) {
-        final rebuilt = useState<bool>(false);
-        useEffect(() {
-          WidgetsBinding.instance.addPostFrameCallback((_) => rebuilt.value = true);
-          return;
-        });
+        final data = useValueStream(Provider.of<DebugDialogContext>(context, listen: false).dataX);
         return Stack(
           children: [
             page,
@@ -27,21 +24,16 @@ class DebugDialogAppComponent with IsAppPondComponent {
               child: IgnorePointer(
                 child: Material(
                     color: Colors.green.withOpacity(0.2),
-                    child: Builder(
-                      builder: (context) {
-                        final debugDialogContext = Provider.of<DebugDialogContext>(context, listen: false);
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ...debugDialogContext.data.mapToIterable((key, value) => Text(
-                                    '$key: $value',
-                                    style: TextStyle(color: Colors.white),
-                                  )),
-                            ],
-                          ),
-                        );
-                      },
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ...data.mapToIterable((key, value) => Text(
+                                '$key: $value',
+                                style: TextStyle(color: Colors.white),
+                              )),
+                        ],
+                      ),
                     )),
               ),
             ),

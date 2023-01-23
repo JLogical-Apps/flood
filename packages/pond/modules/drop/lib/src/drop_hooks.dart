@@ -37,8 +37,10 @@ Model<T?> useNullableQueryModel<T>(Model<QueryRequest<T>?> queryRequestModel) {
       }
 
       queryRequestModel.state.ifPresent((queryRequest) {
-        final queriesRun = debugDialogContext.data.putIfAbsent('queriesRun', () => <String>[]) as List<String>;
+        final newDebugData = debugDialogContext.data.copy();
+        final queriesRun = newDebugData.putIfAbsent('queriesRun', () => <String>[]) as List<String>;
         queriesRun.add(queryRequest.toString());
+        debugDialogContext.data = newDebugData;
       });
 
       return null;
