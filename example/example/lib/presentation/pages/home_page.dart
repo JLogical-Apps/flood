@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:example/features/budget/budget.dart';
 import 'package:example/features/budget/budget_entity.dart';
+import 'package:example/features/user/user_entity.dart';
 import 'package:example/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -15,6 +16,8 @@ class HomePage extends AppPage {
   Widget build(BuildContext context) {
     final loggedInUserIdModel =
         useFutureModel(() => context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId());
+    final loggedInUserModel = useNullableQueryModel(useMemoized(() => loggedInUserIdModel.map((loggedInUserId) =>
+        loggedInUserId?.mapIfNonNull((loggedInUserId) => Query.getById<UserEntity>(loggedInUserId)))));
     final budgetsModel = useQueryModel(useMemoized(() => loggedInUserIdModel.map((loggedInUserId) =>
         Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all<BudgetEntity>())));
     return StyledPage(
@@ -22,10 +25,10 @@ class HomePage extends AppPage {
       body: Center(
         child: Column(
           children: [
-            ModelBuilder<String?>(
-              model: loggedInUserIdModel,
-              builder: (userId) {
-                return StyledText.h1('Welcome ${userId!.substring(0, 2)}!');
+            ModelBuilder<UserEntity?>(
+              model: loggedInUserModel,
+              builder: (userEntity) {
+                return StyledText.h1('Welcome ${userEntity?.value.nameProperty.value ?? 'N/A'}');
               },
             ),
             ModelBuilder<List<BudgetEntity>>(

@@ -25,6 +25,35 @@ Model<T> useQuery<T>(QueryRequest<T> queryRequest) {
   return useQueryOrNull(queryRequest)!;
 }
 
+Model<T?> useNullableQueryModel<T>(Model<QueryRequest<T>?> queryRequestModel) {
+  final context = useContext();
+  final dropCoreContext = useDropCoreContext();
+
+  useEffect(
+    () {
+      final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
+      if (debugDialogContext == null) {
+        return;
+      }
+
+      queryRequestModel.state.ifPresent((queryRequest) {
+        final queriesRun = debugDialogContext.data.putIfAbsent('queriesRun', () => <String>[]) as List<String>;
+        queriesRun.add(queryRequest.toString());
+      });
+
+      return null;
+    },
+    [queryRequestModel.state],
+  );
+
+  final resultModel = useMemoized(
+    () => queryRequestModel.flatMap((queryRequest) => queryRequest?.toModel(dropCoreContext) ?? Model.value(null)),
+    [queryRequestModel],
+  );
+  useModel(resultModel);
+  return resultModel;
+}
+
 Model<T> useQueryModel<T>(Model<QueryRequest<T>> queryRequestModel) {
   final context = useContext();
   final dropCoreContext = useDropCoreContext();

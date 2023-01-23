@@ -14,6 +14,8 @@ abstract class Model<T> {
 
   factory Model({required FutureOr<T> Function() loader}) => _ModelImpl(loader: loader);
 
+  factory Model.value(T value) => _ModelImpl(loader: () => value);
+
   factory Model.fromValueStream(
     ValueStream<FutureValue<T>> stateX, {
     FutureOr Function()? onLoad,

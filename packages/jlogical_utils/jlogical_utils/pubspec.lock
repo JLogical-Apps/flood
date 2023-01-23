@@ -373,6 +373,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
+  testing_setup:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/testing_setup"
+      relative: true
+    source: path
+    version: "0.0.1"
   tinycolor2:
     dependency: transitive
     description:
