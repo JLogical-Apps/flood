@@ -12,7 +12,18 @@ DropCoreContext useDropCoreContext() {
 }
 
 Model<T>? useQueryOrNull<T>(QueryRequest<T>? queryRequest) {
+  final context = useContext();
+  final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
   final dropCoreContext = useDropCoreContext();
+
+  useEffect(
+    () {
+      _debugQueryRequest(debugDialogContext: debugDialogContext, queryRequest: queryRequest);
+      return null;
+    },
+    [queryRequest, debugDialogContext],
+  );
+
   final queryModel = useMemoized(
     () => queryRequest
         ?.mapIfNonNull((queryRequest) => Model.fromValueStream(dropCoreContext.executeQueryX(queryRequest))),
@@ -33,7 +44,7 @@ Model<T?> useNullableQueryModel<T>(Model<QueryRequest<T>?> queryRequestModel) {
 
   useEffect(
     () {
-      _debugQueryRequest(debugDialogContext: debugDialogContext, queryRequestModel: queryRequestModel);
+      _debugQueryRequest(debugDialogContext: debugDialogContext, queryRequest: queryRequestModel.getOrNull());
       return null;
     },
     [queryRequestModel.state, debugDialogContext],
@@ -54,7 +65,7 @@ Model<T> useQueryModel<T>(Model<QueryRequest<T>> queryRequestModel) {
 
   useEffect(
     () {
-      _debugQueryRequest(debugDialogContext: debugDialogContext, queryRequestModel: queryRequestModel);
+      _debugQueryRequest(debugDialogContext: debugDialogContext, queryRequest: queryRequestModel.getOrNull());
       return null;
     },
     [queryRequestModel.state, debugDialogContext],
@@ -70,21 +81,15 @@ Model<T> useQueryModel<T>(Model<QueryRequest<T>> queryRequestModel) {
 
 void _debugQueryRequest<T>({
   required DebugDialogContext? debugDialogContext,
-  required Model<QueryRequest<T>?> queryRequestModel,
+  required QueryRequest<T>? queryRequest,
 }) {
-  if (debugDialogContext == null) {
+  if (debugDialogContext == null || queryRequest == null) {
     return;
   }
 
-  queryRequestModel.state.ifPresent((queryRequest) {
-    if (queryRequest == null) {
-      return;
-    }
-
-    final newDebugData = debugDialogContext.data.copy();
-    final queriesRun =
-        newDebugData.putIfAbsent(DropAppComponent.queriesRunField, () => <QueryRequest>[]) as List<QueryRequest>;
-    queriesRun.add(queryRequest);
-    debugDialogContext.data = newDebugData;
-  });
+  final newDebugData = debugDialogContext.data.copy();
+  final queriesRun =
+      newDebugData.putIfAbsent(DropAppComponent.queriesRunField, () => <QueryRequest>[]) as List<QueryRequest>;
+  queriesRun.add(queryRequest);
+  debugDialogContext.data = newDebugData;
 }

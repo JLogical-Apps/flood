@@ -9,24 +9,22 @@ class DropAppComponent with IsAppPondComponent, IsDebugDialogComponent {
   @override
   Widget render(BuildContext context, DebugDialogContext debugContext) {
     final queriesRun = (debugContext.data[queriesRunField] ?? <QueryRequest>[]) as List<QueryRequest>;
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Text(
-            'Queries Run: ',
-            style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white),
-          ),
-          ...queriesRun
-              .map((queryRequest) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      queryRequest.toString(),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ))
-              .toList(),
-        ],
-      ),
+    return Column(
+      children: [
+        Text(
+          'Queries Run: ',
+          style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white),
+        ),
+        ...queriesRun
+            .map((queryRequest) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    queryRequest.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ))
+            .toList(),
+      ],
     );
   }
 }

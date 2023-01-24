@@ -46,6 +46,7 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(NavigationAppPondComponent());
   await appPondContext.register(DebugDialogAppComponent());
   await appPondContext.register(FocusGrabberAppComponent());
+  await appPondContext.register(AuthAppComponent());
   await appPondContext.register(DropAppComponent());
   await appPondContext.register(ModelAppComponent(
     modelBuilderConfig: ModelBuilderConfig(

@@ -1,3 +1,4 @@
+export 'package:auth/auth.dart';
 export 'package:debug_dialog/debug_dialog.dart';
 export 'package:drop/drop.dart';
 export 'package:environment/environment.dart';
