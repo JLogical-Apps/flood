@@ -6,8 +6,10 @@ import 'package:drop_core/src/query/request/map_query_request.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:equatable/equatable.dart';
 
-class PaginatedQueryRequest<E extends Entity> with IsMapQueryRequest<QueryResultPage<State>, QueryResultPage<E>> {
+class PaginatedQueryRequest<E extends Entity>
+    with IsMapQueryRequest<QueryResultPage<State>, QueryResultPage<E>>, EquatableMixin {
   @override
   final QueryRequest<QueryResultPage<State>> sourceQueryRequest;
 
@@ -22,4 +24,7 @@ class PaginatedQueryRequest<E extends Entity> with IsMapQueryRequest<QueryResult
   String toString() {
     return '$query | paginate';
   }
+
+  @override
+  List<Object?> get props => [sourceQueryRequest];
 }

@@ -9,4 +9,7 @@ class FromQuery extends Query {
   String toString() {
     return 'from $entityType';
   }
+
+  @override
+  List<Object?> get props => [entityType];
 }

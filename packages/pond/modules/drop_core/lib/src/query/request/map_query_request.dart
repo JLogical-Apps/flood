@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class MapQueryRequest<S, T> implements QueryRequest<T> {
   QueryRequest<S> get sourceQueryRequest;
@@ -24,7 +25,7 @@ mixin IsMapQueryRequest<S, T> implements MapQueryRequest<S, T> {
   Query get query => sourceQueryRequest.query;
 }
 
-class _MapQueryRequestImpl<S, T> with IsMapQueryRequest<S, T> {
+class _MapQueryRequestImpl<S, T> with IsMapQueryRequest<S, T>, EquatableMixin {
   @override
   final QueryRequest<S> sourceQueryRequest;
 
@@ -36,4 +37,7 @@ class _MapQueryRequestImpl<S, T> with IsMapQueryRequest<S, T> {
   Future<T> doMap(DropCoreContext context, S source) async {
     return await mapper(context, source);
   }
+
+  @override
+  List<Object?> get props => [sourceQueryRequest, mapper];
 }

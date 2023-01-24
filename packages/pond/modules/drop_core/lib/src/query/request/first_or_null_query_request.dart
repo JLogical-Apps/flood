@@ -5,9 +5,10 @@ import 'package:drop_core/src/query/request/map_query_request.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:equatable/equatable.dart';
 import 'package:utils_core/utils_core.dart';
 
-class FirstOrNullQueryRequest<E extends Entity> with IsMapQueryRequest<State?, E?> {
+class FirstOrNullQueryRequest<E extends Entity> with IsMapQueryRequest<State?, E?>, EquatableMixin {
   @override
   final QueryRequest<State?> sourceQueryRequest;
 
@@ -22,4 +23,7 @@ class FirstOrNullQueryRequest<E extends Entity> with IsMapQueryRequest<State?, E
   String toString() {
     return '$query | first?';
   }
+
+  @override
+  List<Object?> get props => [sourceQueryRequest];
 }

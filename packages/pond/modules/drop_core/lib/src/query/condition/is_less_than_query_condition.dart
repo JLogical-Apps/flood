@@ -9,4 +9,7 @@ class IsLessThanQueryCondition extends QueryCondition {
   String toString() {
     return '$stateField < $value';
   }
+
+  @override
+  List<Object?> get props => [value];
 }

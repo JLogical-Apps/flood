@@ -46,6 +46,7 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(NavigationAppPondComponent());
   await appPondContext.register(DebugDialogAppComponent());
   await appPondContext.register(FocusGrabberAppComponent());
+  await appPondContext.register(DropAppComponent());
   await appPondContext.register(ModelAppComponent(
     modelBuilderConfig: ModelBuilderConfig(
       loadingIndicator: StyledLoadingIndicator(),
@@ -57,7 +58,6 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   ));
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(UrlBarAppComponent());
-  await appPondContext.register(DebugDialogAppComponent());
   await appPondContext.register(ValetPagesAppPondComponent());
   return appPondContext;
 }

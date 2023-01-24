@@ -5,8 +5,9 @@ import 'package:drop_core/src/query/request/map_query_request.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:equatable/equatable.dart';
 
-class AllQueryRequest<E extends Entity> with IsMapQueryRequest<List<State>, List<E>> {
+class AllQueryRequest<E extends Entity> with IsMapQueryRequest<List<State>, List<E>>, EquatableMixin {
   @override
   final QueryRequest<List<State>> sourceQueryRequest;
 
@@ -21,4 +22,7 @@ class AllQueryRequest<E extends Entity> with IsMapQueryRequest<List<State>, List
   String toString() {
     return '$query | all';
   }
+
+  @override
+  List<Object?> get props => [sourceQueryRequest];
 }

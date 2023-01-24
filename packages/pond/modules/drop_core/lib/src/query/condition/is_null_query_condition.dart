@@ -7,4 +7,7 @@ class IsNullQueryCondition extends QueryCondition {
   String toString() {
     return '$stateField is null';
   }
+
+  @override
+  List<Object?> get props => [];
 }

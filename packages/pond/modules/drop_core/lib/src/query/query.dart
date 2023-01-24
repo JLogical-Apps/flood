@@ -11,8 +11,9 @@ import 'package:drop_core/src/query/request/first_query_request.dart';
 import 'package:drop_core/src/query/request/paginate_query_request.dart';
 import 'package:drop_core/src/query/request/paginate_states_query_request.dart';
 import 'package:drop_core/src/query/where_query.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class Query {
+abstract class Query with EquatableMixin {
   final Query? parent;
 
   Query({required this.parent});

@@ -10,6 +10,9 @@ class OrderByQuery extends Query {
   String toString() {
     return '$parent | order $stateField $type';
   }
+
+  @override
+  List<Object?> get props => [stateField, type];
 }
 
 enum OrderByType {

@@ -370,6 +370,14 @@ void main() {
     final invoiceEntity = await listRepository.executeQuery(Query.from<InvoiceEntity>().first<InvoiceEntity>());
     expect(invoiceEntity.value.amountProperty.value, 35);
   });
+
+  test('query equality', () {
+    expect(Query.from<UserEntity>().all<UserEntity>(), Query.from<UserEntity>().all<UserEntity>());
+    expect(Query.from<UserEntity>().all<UserEntity>(), isNot(Query.from<UserEntity>().allStates()));
+    expect(Query.from<UserEntity>().allStates(), Query.from<UserEntity>().allStates());
+    expect(Query.from<UserEntity>().where('a').isEqualTo('b').all<UserEntity>(),
+        Query.from<UserEntity>().where('a').isEqualTo('b').all<UserEntity>());
+  });
 }
 
 class User extends ValueObject {

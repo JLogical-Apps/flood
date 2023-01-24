@@ -10,4 +10,7 @@ class WhereQuery extends Query {
   String toString() {
     return '$parent | where $condition';
   }
+
+  @override
+  List<Object?> get props => [condition];
 }

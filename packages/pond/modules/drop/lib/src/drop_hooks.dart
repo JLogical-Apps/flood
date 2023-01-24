@@ -1,4 +1,5 @@
 import 'package:debug_dialog/debug_dialog.dart';
+import 'package:drop/src/drop_app_component.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:model/model.dart';
@@ -28,24 +29,14 @@ Model<T> useQuery<T>(QueryRequest<T> queryRequest) {
 Model<T?> useNullableQueryModel<T>(Model<QueryRequest<T>?> queryRequestModel) {
   final context = useContext();
   final dropCoreContext = useDropCoreContext();
+  final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
 
   useEffect(
     () {
-      final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
-      if (debugDialogContext == null) {
-        return;
-      }
-
-      queryRequestModel.state.ifPresent((queryRequest) {
-        final newDebugData = debugDialogContext.data.copy();
-        final queriesRun = newDebugData.putIfAbsent('queriesRun', () => <String>[]) as List<String>;
-        queriesRun.add(queryRequest.toString());
-        debugDialogContext.data = newDebugData;
-      });
-
+      _debugQueryRequest(debugDialogContext: debugDialogContext, queryRequestModel: queryRequestModel);
       return null;
     },
-    [queryRequestModel.state],
+    [queryRequestModel.state, debugDialogContext],
   );
 
   final resultModel = useMemoized(
@@ -59,22 +50,14 @@ Model<T?> useNullableQueryModel<T>(Model<QueryRequest<T>?> queryRequestModel) {
 Model<T> useQueryModel<T>(Model<QueryRequest<T>> queryRequestModel) {
   final context = useContext();
   final dropCoreContext = useDropCoreContext();
+  final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
 
   useEffect(
     () {
-      final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
-      if (debugDialogContext == null) {
-        return;
-      }
-
-      queryRequestModel.state.ifPresent((queryRequest) {
-        final queriesRun = debugDialogContext.data.putIfAbsent('queriesRun', () => <String>[]) as List<String>;
-        queriesRun.add(queryRequest.toString());
-      });
-
+      _debugQueryRequest(debugDialogContext: debugDialogContext, queryRequestModel: queryRequestModel);
       return null;
     },
-    [queryRequestModel.state],
+    [queryRequestModel.state, debugDialogContext],
   );
 
   final resultModel = useMemoized(
@@ -83,4 +66,25 @@ Model<T> useQueryModel<T>(Model<QueryRequest<T>> queryRequestModel) {
   );
   useModel(resultModel);
   return resultModel;
+}
+
+void _debugQueryRequest<T>({
+  required DebugDialogContext? debugDialogContext,
+  required Model<QueryRequest<T>?> queryRequestModel,
+}) {
+  if (debugDialogContext == null) {
+    return;
+  }
+
+  queryRequestModel.state.ifPresent((queryRequest) {
+    if (queryRequest == null) {
+      return;
+    }
+
+    final newDebugData = debugDialogContext.data.copy();
+    final queriesRun =
+        newDebugData.putIfAbsent(DropAppComponent.queriesRunField, () => <QueryRequest>[]) as List<QueryRequest>;
+    queriesRun.add(queryRequest);
+    debugDialogContext.data = newDebugData;
+  });
 }

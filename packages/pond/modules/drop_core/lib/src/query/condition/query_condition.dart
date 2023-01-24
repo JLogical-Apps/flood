@@ -1,6 +1,7 @@
 import 'package:drop_core/src/query/condition/query_condition_builder.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class QueryCondition {
+abstract class QueryCondition with EquatableMixin {
   final String stateField;
 
   QueryCondition({required this.stateField});
