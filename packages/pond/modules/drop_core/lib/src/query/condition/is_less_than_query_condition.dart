@@ -4,4 +4,9 @@ class IsLessThanQueryCondition extends QueryCondition {
   final dynamic value;
 
   IsLessThanQueryCondition({required super.stateField, required this.value});
+
+  @override
+  String toString() {
+    return '$stateField < $value';
+  }
 }

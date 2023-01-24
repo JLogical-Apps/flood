@@ -17,4 +17,9 @@ class FirstOrNullQueryRequest<E extends Entity> with IsMapQueryRequest<State?, E
   FutureOr<E?> doMap(DropCoreContext context, State? source) {
     return source?.mapIfNonNull((state) => context.constructEntityFromState<E>(state));
   }
+
+  @override
+  String toString() {
+    return '$query | first?';
+  }
 }

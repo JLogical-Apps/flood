@@ -7,4 +7,9 @@ class FirstOrNullStateQueryRequest with IsQueryRequest<State?> {
   final Query query;
 
   FirstOrNullStateQueryRequest({required this.query});
+
+  @override
+  String toString() {
+    return '$query | first?';
+  }
 }

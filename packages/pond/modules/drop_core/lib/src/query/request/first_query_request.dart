@@ -16,4 +16,9 @@ class FirstQueryRequest<E extends Entity> with IsMapQueryRequest<State?, E> {
   FutureOr<E> doMap(DropCoreContext context, State? source) {
     return context.constructEntityFromState<E>(source ?? (throw Exception('Could not find state!')));
   }
+
+  @override
+  String toString() {
+    return '$query | first';
+  }
 }

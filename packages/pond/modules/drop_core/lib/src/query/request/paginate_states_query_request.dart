@@ -10,4 +10,9 @@ class PaginateStatesQueryRequest with IsQueryRequest<QueryResultPage<State>> {
   final int pageSize;
 
   PaginateStatesQueryRequest({required this.query, this.pageSize = 20});
+
+  @override
+  String toString() {
+    return '$query | paginate';
+  }
 }

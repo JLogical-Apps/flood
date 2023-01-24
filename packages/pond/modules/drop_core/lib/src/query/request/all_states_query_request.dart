@@ -7,4 +7,9 @@ class AllStatesQueryRequest with IsQueryRequest<List<State>> {
   final Query query;
 
   AllStatesQueryRequest({required this.query});
+
+  @override
+  String toString() {
+    return '$query | all';
+  }
 }

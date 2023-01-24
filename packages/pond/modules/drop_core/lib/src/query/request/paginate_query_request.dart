@@ -17,4 +17,9 @@ class PaginatedQueryRequest<E extends Entity> with IsMapQueryRequest<QueryResult
   FutureOr<QueryResultPage<E>> doMap(DropCoreContext context, QueryResultPage<State> statesPage) {
     return statesPage.map((state) => context.constructEntityFromState<E>(state));
   }
+
+  @override
+  String toString() {
+    return '$query | paginate';
+  }
 }

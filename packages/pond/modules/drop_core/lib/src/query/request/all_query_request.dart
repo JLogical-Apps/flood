@@ -16,4 +16,9 @@ class AllQueryRequest<E extends Entity> with IsMapQueryRequest<List<State>, List
   FutureOr<List<E>> doMap(DropCoreContext context, List<State> states) {
     return states.map((state) => context.constructEntityFromState<E>(state)).toList();
   }
+
+  @override
+  String toString() {
+    return '$query | all';
+  }
 }

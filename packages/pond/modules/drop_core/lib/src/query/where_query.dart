@@ -5,4 +5,9 @@ class WhereQuery extends Query {
   final QueryCondition condition;
 
   WhereQuery({required Query parent, required this.condition}) : super(parent: parent);
+
+  @override
+  String toString() {
+    return '$parent | where $condition';
+  }
 }
