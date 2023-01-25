@@ -5,6 +5,7 @@ import 'package:style/src/style_component.dart';
 class StyledContainer extends StyleComponent {
   final Emphasis emphasis;
   final Widget? child;
+  final Color? color;
   final double? width;
   final double? height;
   final EdgeInsets padding;
@@ -12,6 +13,7 @@ class StyledContainer extends StyleComponent {
   StyledContainer({
     this.emphasis = Emphasis.regular,
     this.child,
+    this.color,
     this.width,
     this.height,
     this.padding = const EdgeInsets.all(8),
@@ -19,6 +21,7 @@ class StyledContainer extends StyleComponent {
 
   StyledContainer.subtle({
     this.child,
+    this.color,
     this.width,
     this.height,
     this.padding = const EdgeInsets.all(8),
@@ -26,6 +29,7 @@ class StyledContainer extends StyleComponent {
 
   StyledContainer.strong({
     this.child,
+    this.color,
     this.width,
     this.height,
     this.padding = const EdgeInsets.all(8),

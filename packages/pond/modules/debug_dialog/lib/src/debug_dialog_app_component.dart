@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pond/pond.dart';
 import 'package:provider/provider.dart';
+import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
 class DebugDialogAppComponent with IsAppPondComponent {
@@ -36,16 +37,13 @@ class DebugDialogAppComponent with IsAppPondComponent {
               page,
               Positioned.fill(
                 child: IgnorePointer(
-                  child: Material(
+                  child: StyledContainer(
                     color: Colors.green.withOpacity(0.2),
                     child: Center(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: debugDialogComponents
-                              .map((component) => component.render(context, debugDialogContext))
-                              .toList(),
-                        ),
+                      child: StyledList.column.withScrollbar.centered(
+                        children: debugDialogComponents
+                            .map((component) => component.render(context, debugDialogContext))
+                            .toList(),
                       ),
                     ),
                   ),
