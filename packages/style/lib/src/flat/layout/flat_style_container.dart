@@ -18,12 +18,12 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
     return ColorPaletteProvider(
       colorPalette: backgroundColorPalette,
       child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
+        color: backgroundColorPalette.baseBackground,
+        borderRadius: component.shape == null ? BorderRadius.circular(12) : null,
+        shape: component.shape,
         child: Container(
           width: component.width,
           height: component.height,
-          color: backgroundColorPalette.baseBackground,
           child: component.child?.mapIfNonNull((child) => Padding(
                 padding: component.padding,
                 child: child,

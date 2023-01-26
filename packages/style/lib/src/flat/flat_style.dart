@@ -1,10 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as flutter;
 import 'package:intersperse/intersperse.dart';
 import 'package:style/src/color_palette.dart';
+import 'package:style/src/components/dialog/styled_dialog.dart';
 import 'package:style/src/components/misc/styled_divider.dart';
 import 'package:style/src/components/text/styled_markdown.dart';
 import 'package:style/src/components/text/styled_text.dart';
+import 'package:style/src/flat/dialog/flat_style_dialog.dart';
 import 'package:style/src/flat/input/flat_style_button.dart';
 import 'package:style/src/flat/input/flat_style_text_field.dart';
 import 'package:style/src/flat/layout/flat_style_container.dart';
@@ -58,6 +61,7 @@ class FlatStyle with IsStyle {
           FlatStylePageRenderer(),
           FlatStyleDividerRenderer(),
           FlatStyleLoadingIndicatorRenderer(),
+          FlatStyleDialogRenderer(),
           FlatStyleScrollbarRenderer(),
         ],
         examples = [
@@ -124,6 +128,26 @@ This is a `code block`.
         .whereType<StyledTextRenderer>()
         .firstWhere((renderer) => renderer.shouldWrap(text))
         .getTextStyle(context, text);
+  }
+
+  @override
+  Future<T> showDialog<T>(BuildContext context, StyledDialog<T> dialog) async {
+    return await flutter.showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      constraints: BoxConstraints.loose(Size(
+        MediaQuery.of(context).size.width,
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top,
+      )),
+      enableDrag: false,
+      backgroundColor: Colors.transparent,
+      builder: (_) {
+        return dialog;
+      },
+    );
   }
 
   ColorPalette getColorPaletteFromBackground(Color backgroundColor) {

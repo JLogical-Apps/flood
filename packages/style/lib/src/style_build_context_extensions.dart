@@ -5,10 +5,10 @@ import 'package:style/src/style.dart';
 
 extension StyleBuildContextExtensions on BuildContext {
   Style style() {
-    return Provider.of<Style>(this);
+    return Provider.of<Style>(this, listen: false);
   }
 
   ColorPalette colorPalette() {
-    return Provider.of<ColorPalette>(this);
+    return Provider.of<ColorPalette>(this, listen: false);
   }
 }

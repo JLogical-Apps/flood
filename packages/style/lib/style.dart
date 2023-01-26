@@ -1,5 +1,6 @@
 export 'src/color_palette.dart';
 export 'src/color_palette_provider.dart';
+export 'src/components/dialog/styled_dialog.dart';
 export 'src/components/input/styled_button.dart';
 export 'src/components/input/styled_text_field.dart';
 export 'src/components/layout/styled_container.dart';
@@ -14,4 +15,5 @@ export 'src/flat/flat_style.dart';
 export 'src/page/styleguide_widget.dart';
 export 'src/style.dart';
 export 'src/style_build_context_extensions.dart';
+export 'src/style_provider.dart';
 export 'src/styleguide.dart';

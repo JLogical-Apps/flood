@@ -9,6 +9,7 @@ class StyledContainer extends StyleComponent {
   final double? width;
   final double? height;
   final EdgeInsets padding;
+  final ShapeBorder? shape;
 
   StyledContainer({
     this.emphasis = Emphasis.regular,
@@ -17,6 +18,7 @@ class StyledContainer extends StyleComponent {
     this.width,
     this.height,
     this.padding = const EdgeInsets.all(8),
+    this.shape,
   });
 
   StyledContainer.subtle({
@@ -25,6 +27,7 @@ class StyledContainer extends StyleComponent {
     this.width,
     this.height,
     this.padding = const EdgeInsets.all(8),
+    this.shape,
   }) : emphasis = Emphasis.subtle;
 
   StyledContainer.strong({
@@ -33,5 +36,6 @@ class StyledContainer extends StyleComponent {
     this.width,
     this.height,
     this.padding = const EdgeInsets.all(8),
+    this.shape,
   }) : emphasis = Emphasis.strong;
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:style/src/color_palette.dart';
+import 'package:style/src/components/dialog/styled_dialog.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/style_component.dart';
 import 'package:style/src/styleguide.dart';
@@ -12,6 +13,8 @@ abstract class Style {
   ColorPalette get colorPalette;
 
   TextStyle getTextStyle(BuildContext context, StyledText text);
+
+  Future<T> showDialog<T>(BuildContext context, StyledDialog<T> dialog);
 }
 
 mixin IsStyle implements Style {}
