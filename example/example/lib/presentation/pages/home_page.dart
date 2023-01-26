@@ -39,9 +39,27 @@ class HomePage extends AppPage {
                   StyledButton.strong(
                     labelText: 'Create +',
                     onPressed: () async {
+                      final result = await context.style().showDialog(
+                          context,
+                          StyledPortDialog(
+                            titleText: 'Create New Budget',
+                            port: Port.of({
+                              'name': PortValue.string().isNotBlank(),
+                            }),
+                            children: [
+                              StyledTextFieldPortField(
+                                fieldName: 'name',
+                                labelText: 'Name',
+                              ),
+                            ],
+                          ));
+                      if (result == null) {
+                        return;
+                      }
+
                       final newBudgetEntity = BudgetEntity()
                         ..value = (Budget()
-                          ..nameProperty.set(DateTime.now().second.toString())
+                          ..nameProperty.set(result['name'])
                           ..ownerProperty.set(loggedInUserIdModel.getOrNull()!));
                       await context.dropCoreComponent.update(newBudgetEntity);
                     },

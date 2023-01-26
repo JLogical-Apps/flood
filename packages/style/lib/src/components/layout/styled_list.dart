@@ -12,6 +12,7 @@ class StyledList extends StyleComponent {
   final bool isCentered;
 
   StyledList({
+    super.key,
     required this.children,
     this.axis = Axis.vertical,
     this.isScrollable = false,

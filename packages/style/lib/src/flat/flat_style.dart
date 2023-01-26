@@ -131,7 +131,7 @@ This is a `code block`.
   }
 
   @override
-  Future<T> showDialog<T>(BuildContext context, StyledDialog<T> dialog) async {
+  Future<T?> showDialog<T>(BuildContext context, StyledDialog<T> dialog) async {
     return await flutter.showModalBottomSheet(
       context: context,
       isScrollControlled: true,

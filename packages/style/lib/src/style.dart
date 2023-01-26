@@ -14,7 +14,7 @@ abstract class Style {
 
   TextStyle getTextStyle(BuildContext context, StyledText text);
 
-  Future<T> showDialog<T>(BuildContext context, StyledDialog<T> dialog);
+  Future<T?> showDialog<T>(BuildContext context, StyledDialog<T> dialog);
 }
 
 mixin IsStyle implements Style {}

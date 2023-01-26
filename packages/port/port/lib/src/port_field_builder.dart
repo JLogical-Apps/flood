@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:port_core/port_core.dart';
 import 'package:provider/provider.dart';
+import 'package:utils/utils.dart';
 
 class PortFieldBuilder<T> extends HookWidget {
   final String fieldName;
@@ -12,6 +13,7 @@ class PortFieldBuilder<T> extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final port = Provider.of<Port>(context, listen: false);
+    useValueStream(port.getPortX());
     return builder(context, port[fieldName], port.getErrorByName(fieldName));
   }
 }

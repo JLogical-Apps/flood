@@ -17,6 +17,7 @@ class StyledTextField extends StyleComponent {
   final bool obscureText;
 
   StyledTextField({
+    super.key,
     this.text,
     this.onChanged,
     this.label,

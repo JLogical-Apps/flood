@@ -25,8 +25,9 @@ class StyledListBuilder {
     return this;
   }
 
-  StyledList call({List<Widget> children = const []}) {
+  StyledList call({Key? key, List<Widget> children = const []}) {
     return StyledList(
+      key: key,
       children: children,
       axis: axis,
       hasScrollbar: hasScrollbar,

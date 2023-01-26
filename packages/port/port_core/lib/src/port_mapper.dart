@@ -16,9 +16,6 @@ class PortMapper<T, R> with IsPort<R> {
   }
 
   @override
-  Map<String, PortValue> get portValueByName => port.portValueByName;
-
-  @override
   void setPortValue({required String name, required PortValue portValue}) =>
       port.setPortValue(name: name, portValue: portValue);
 

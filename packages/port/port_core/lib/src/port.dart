@@ -9,8 +9,6 @@ import 'package:utils_core/utils_core.dart';
 abstract class Port<T> {
   ValueStream<Map<String, PortValue>> getPortX();
 
-  Map<String, PortValue> get portValueByName;
-
   void setPortValue({required String name, required PortValue portValue});
 
   Future<PortSubmitResult<T>> submit();
@@ -19,6 +17,8 @@ abstract class Port<T> {
 }
 
 extension PortExtensions<T> on Port<T> {
+  Map<String, PortValue> get portValueByName => getPortX().value;
+
   PortValue? getPortValueByNameOrNull(String name) => portValueByName[name];
 
   PortValue getPortValueByName(String name) =>
@@ -56,17 +56,12 @@ mixin IsPort<T> implements Port<T> {}
 
 class _PortImpl with IsPort<Map<String, dynamic>> {
   final BehaviorSubject<Map<String, PortValue>> _portValueByNameX;
-  Map<String, PortValue> _portValueByName;
 
-  _PortImpl(Map<String, PortValue> valueByName)
-      : _portValueByName = valueByName,
-        _portValueByNameX = BehaviorSubject.seeded(valueByName);
+  _PortImpl(Map<String, PortValue> valueByName) : _portValueByNameX = BehaviorSubject.seeded(valueByName);
 
-  @override
-  Map<String, PortValue> get portValueByName => _portValueByName;
+  Map<String, PortValue> get portValueByName => _portValueByNameX.value;
 
   set portValueByName(Map<String, PortValue> value) {
-    _portValueByName = value;
     _portValueByNameX.value = value;
   }
 
@@ -110,9 +105,6 @@ abstract class PortWrapper<T> implements Port<T> {
 mixin IsPortWrapper<T> implements PortWrapper<T> {
   @override
   ValueStream<Map<String, PortValue>> getPortX() => port.getPortX();
-
-  @override
-  Map<String, PortValue> get portValueByName => port.portValueByName;
 
   @override
   void setPortValue({required String name, required PortValue portValue}) =>
