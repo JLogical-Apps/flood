@@ -19,11 +19,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/pond/modules/auth
-  debug_dialog:
+  debug:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/modules/debug_dialog
+      path: packages/modules/debug
   drop:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

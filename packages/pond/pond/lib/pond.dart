@@ -1,3 +1,4 @@
+export 'package:path_core/path_core.dart';
 export 'package:pond_core/pond_core.dart';
 
 export 'src/app/component/app_pond_component.dart';

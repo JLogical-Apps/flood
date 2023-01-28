@@ -1,5 +1,7 @@
-import 'package:debug_dialog/src/debug_dialog_component.dart';
-import 'package:debug_dialog/src/debug_dialog_context.dart';
+import 'package:debug/src/dialog/debug_dialog_component.dart';
+import 'package:debug/src/dialog/debug_dialog_context.dart';
+import 'package:debug/src/page/debug_page.dart';
+import 'package:debug/src/page/debug_page_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pond/pond.dart';
@@ -7,17 +9,24 @@ import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
-class DebugDialogAppComponent with IsAppPondComponent {
+class DebugAppComponent with IsAppPondComponent {
   final List<DebugDialogComponent> debugDialogComponents;
+  final List<DebugPageComponent> debugPageComponents;
 
-  DebugDialogAppComponent({List<DebugDialogComponent>? debugDialogComponents})
-      : debugDialogComponents = debugDialogComponents ?? [];
+  DebugAppComponent({
+    List<DebugDialogComponent>? debugDialogComponents,
+    List<DebugPageComponent>? debugPageComponents,
+  })  : debugDialogComponents = debugDialogComponents ?? [],
+        debugPageComponents = debugPageComponents ?? [];
 
   @override
   Future onLoad(AppPondContext context) async {
     debugDialogComponents.addAll(context.appComponents.whereType<DebugDialogComponent>());
-    debugDialogComponents.addAll(context.corePondContext.components.whereType<DebugDialogComponent>());
+    debugPageComponents.addAll(context.appComponents.whereType<DebugPageComponent>());
   }
+
+  @override
+  List<AppPage> get pages => [DebugPage()];
 
   @override
   Widget wrapPage(AppPondContext context, Widget page, AppPondPageContext pageContext) {

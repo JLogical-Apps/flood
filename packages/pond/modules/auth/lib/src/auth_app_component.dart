@@ -1,5 +1,5 @@
 import 'package:auth_core/auth_core.dart';
-import 'package:debug_dialog/debug_dialog.dart';
+import 'package:debug/debug.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:model/model.dart';

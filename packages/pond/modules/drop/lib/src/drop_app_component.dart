@@ -1,4 +1,4 @@
-import 'package:debug_dialog/debug_dialog.dart';
+import 'package:debug/debug.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';

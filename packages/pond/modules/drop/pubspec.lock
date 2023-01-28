@@ -50,10 +50,10 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
-  debug_dialog:
+  debug:
     dependency: "direct main"
     description:
-      path: "../debug_dialog"
+      path: "../debug"
       relative: true
     source: path
     version: "0.0.1"

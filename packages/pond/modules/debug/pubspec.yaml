@@ -1,5 +1,5 @@
-name: debug_dialog
-description: App Component to display a dialog with debug stats when '_debug=true' is in the uri.
+name: debug
+description: App Component to display debug info.
 
 publish_to: "none"
 

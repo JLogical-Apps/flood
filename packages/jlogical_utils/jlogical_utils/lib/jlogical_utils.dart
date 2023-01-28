@@ -1,5 +1,5 @@
 export 'package:auth/auth.dart';
-export 'package:debug_dialog/debug_dialog.dart';
+export 'package:debug/debug.dart';
 export 'package:drop/drop.dart';
 export 'package:environment/environment.dart';
 export 'package:environment_banner/environment_banner.dart';

@@ -1,4 +1,4 @@
-import 'package:debug_dialog/src/debug_dialog_context.dart';
+import 'package:debug/src/dialog/debug_dialog_context.dart';
 import 'package:flutter/material.dart';
 
 abstract class DebugDialogComponent {

@@ -1,4 +1,4 @@
-import 'package:debug_dialog/debug_dialog.dart';
+import 'package:debug/debug.dart';
 import 'package:drop/src/drop_app_component.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
