@@ -3,8 +3,12 @@ import 'package:actions_core/src/action_context.dart';
 import 'package:pond_core/pond_core.dart';
 
 class ActionCoreComponent with IsCorePondComponent, IsActionContext {
-  @override
-  final List<Action> actions;
+  final Action<P, R> Function<P, R>(Action<P, R> action)? actionWrapper;
 
-  ActionCoreComponent({required this.actions});
+  ActionCoreComponent({this.actionWrapper});
+
+  @override
+  Action<P, R> wrapAction<P, R>(Action<P, R> action) {
+    return actionWrapper?.call(action) ?? action;
+  }
 }

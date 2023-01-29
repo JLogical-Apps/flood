@@ -1,21 +1,21 @@
-import 'package:actions_core/src/action.dart';
-import 'package:collection/collection.dart';
+import 'package:actions_core/actions_core.dart';
 
 abstract class ActionContext {
-  List<Action> get actions;
+  Action<P, R> wrapAction<P, R>(Action<P, R> action);
 }
 
 extension ActionContextExtensions on ActionContext {
-  Action<P, R>? findActionOrNull<P, R>() {
-    return actions.whereType<Action<P, R>>().firstOrNull;
-  }
-
-  Action<P, R> findAction<A extends Action<P, R>, P, R>() {
-    return findActionOrNull<P, R>() ?? (throw Exception('Cannot find action of [$P, $R]'));
+  Future<R> run<P, R>(Action<P, R> action, P parameters) async {
+    return wrapAction(action).run(parameters);
   }
 }
 
-mixin IsActionContext implements ActionContext {}
+mixin IsActionContext implements ActionContext {
+  @override
+  Action<P, R> wrapAction<P, R>(Action<P, R> action) {
+    return action;
+  }
+}
 
 abstract class ActionContextWrapper implements ActionContext {
   ActionContext get actionContext;
@@ -23,5 +23,5 @@ abstract class ActionContextWrapper implements ActionContext {
 
 mixin IsActionContextWrapper implements ActionContextWrapper {
   @override
-  List<Action> get actions => actionContext.actions;
+  Action<P, R> wrapAction<P, R>(Action<P, R> action) => actionContext.wrapAction(action);
 }
