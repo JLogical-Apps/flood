@@ -1,6 +1,4 @@
 import 'package:actions_core/actions_core.dart';
-import 'package:actions_core/src/action_context.dart';
-import 'package:actions_core/src/action_runner.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
 import 'package:utils_core/utils_core.dart';
@@ -14,7 +12,7 @@ void main() {
 
     final actionCoreComponent = ActionCoreComponent(
       actions: [
-        EchoAction().withAdditionalSetup(
+        echoAction.withAdditionalSetup(
           onCall: (parameters) => startCount++,
           onCalled: (parameters, output) {
             finishCount++;
@@ -28,7 +26,7 @@ void main() {
     final corePondContext = CorePondContext();
     await corePondContext.register(actionCoreComponent);
 
-    final output = await actionCoreComponent.findAction<EchoAction, String?, String>().run('Hello World');
+    final output = await echoAction.run('Hello World');
     expect(output, 'Hello World');
     expect(startCount, 1);
     expect(finishCount, 1);
@@ -36,11 +34,5 @@ void main() {
   });
 }
 
-class EchoAction with IsAction<String?, String> {
-  @override
-  String get name => 'Echo';
-
-  @override
-  ActionRunner<String?, String> get actionRunner =>
-      ActionRunner(runner: (String? input) => input ?? (throw Exception('Input cannot be null!')));
-}
+final echoAction = Action<String?, String>.fromRunner(
+    name: 'echo', runner: (input) => input ?? (throw Exception('Input cannot be null!')));

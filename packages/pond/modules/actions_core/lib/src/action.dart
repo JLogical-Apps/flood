@@ -5,19 +5,31 @@ import 'package:actions_core/src/action_runner_setup.dart';
 
 abstract class Action<P, R> implements IsActionRunnerWrapper<P, R> {
   String get name;
+
+  factory Action({required String name, required ActionRunner<P, R> actionRunner}) =>
+      _ActionImpl(name: name, actionRunner: actionRunner);
+
+  factory Action.fromRunner({required String name, required FutureOr<R> Function(P parameters) runner}) =>
+      _ActionImpl(name: name, actionRunner: ActionRunner(runner: runner));
 }
 
 extension ActionExtensions<P, R> on Action<P, R> {
   Future<R> call(P parameters) => run(parameters);
+
+  Action<P, R> copyWith({String? name, ActionRunner<P, R>? actionRunner}) {
+    return Action(
+      name: name ?? this.name,
+      actionRunner: actionRunner ?? this.actionRunner,
+    );
+  }
 
   Action<P, R> withAdditionalSetup({
     FutureOr Function(P parameters)? onCall,
     FutureOr Function(P parameters, R output)? onCalled,
     FutureOr Function(P parameters, dynamic exception, StackTrace stackTrace)? onFailed,
   }) {
-    return ActionWrapper(
-      action: this,
-      overrideActionRunner: ActionRunnerSetup(
+    return copyWith(
+      actionRunner: ActionRunnerSetup(
         actionRunner: actionRunner,
         onCall: onCall,
         onCalled: onCalled,
@@ -32,17 +44,18 @@ mixin IsAction<P, R> implements Action<P, R> {
   Future<R> run(P parameters) => actionRunner.run(parameters);
 }
 
+class _ActionImpl<P, R> with IsAction<P, R> {
+  @override
+  final String name;
+
+  @override
+  final ActionRunner<P, R> actionRunner;
+
+  _ActionImpl({required this.name, required this.actionRunner});
+}
+
 abstract class ActionWrapper<P, R> implements Action<P, R> {
   Action<P, R> get action;
-
-  factory ActionWrapper({
-    required Action<P, R> action,
-    ActionRunner<P, R>? overrideActionRunner,
-  }) =>
-      _ActionWrapperImpl(
-        action: action,
-        overrideActionRunner: overrideActionRunner,
-      );
 }
 
 mixin IsActionWrapper<P, R> implements ActionWrapper<P, R> {
@@ -54,21 +67,4 @@ mixin IsActionWrapper<P, R> implements ActionWrapper<P, R> {
 
   @override
   ActionRunner<P, R> get actionRunner => action.actionRunner;
-}
-
-class _ActionWrapperImpl<P, R> with IsActionWrapper<P, R> {
-  @override
-  final Action<P, R> action;
-
-  final ActionRunner<P, R>? overrideActionRunner;
-
-  _ActionWrapperImpl({required this.action, this.overrideActionRunner});
-
-  @override
-  ActionRunner<P, R> get actionRunner => overrideActionRunner ?? super.actionRunner;
-
-  @override
-  Future<R> run(P parameters) {
-    return actionRunner.run(parameters);
-  }
 }
