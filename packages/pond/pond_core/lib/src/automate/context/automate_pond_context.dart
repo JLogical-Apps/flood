@@ -7,8 +7,7 @@ class AutomatePondContext with IsLocatorWrapper<AutomatePondComponent> {
 
   final CorePondContext corePondContext;
 
-  AutomatePondContext({required this.corePondContext, List<AutomatePondComponent>? appComponents})
-      : automateComponents = appComponents ?? [];
+  AutomatePondContext({required this.corePondContext}) : automateComponents = [];
 
   List<AutomateCommand> get commands => automateComponents.expand((component) => component.commands).toList();
 
@@ -21,10 +20,12 @@ class AutomatePondContext with IsLocatorWrapper<AutomatePondComponent> {
   }
 
   @override
-  Locator<AutomatePondComponent> get locator => Locator<AutomatePondComponent>(
-        objects: automateComponents,
-        onRegistered: (component) => component.registerTo(this),
-      ).expand((component) => [component] + AutomatePondComponentLocatorWrapper.getSubcomponentsOf(component));
+  late final Locator<AutomatePondComponent> locator = Locator<AutomatePondComponent>(
+    onRegistered: (component) async {
+      automateComponents.add(component);
+      component.registerTo(this);
+    },
+  ).expand((component) => [component] + AutomatePondComponentLocatorWrapper.getSubcomponentsOf(component));
 
   T? findOrNull<T>() {
     return locateOrNull<T>() ?? corePondContext.locateOrNull<T>();

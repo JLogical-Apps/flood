@@ -56,4 +56,7 @@ class RuntimeType<T> extends Equatable {
 
   @override
   List<Object?> get props => [type];
+
+  @override
+  String toString() => name;
 }

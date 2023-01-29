@@ -5,13 +5,13 @@ import 'package:utils_core/utils_core.dart';
 class CorePondContext with IsLocatorWrapper<CorePondComponent> {
   final List<CorePondComponent> components;
 
-  CorePondContext({List<CorePondComponent>? components}) : components = components ?? [];
+  CorePondContext() : components = [];
 
   @override
-  late Locator<CorePondComponent> locator = Locator<CorePondComponent>(
-    objects: components,
-    onRegistered: (component) async => await component.registerTo(this),
-  ).expand((component) => [component] + CorePondComponentLocatorWrapper.getSubcomponentsOf(component));
+  late Locator<CorePondComponent> locator = Locator<CorePondComponent>(onRegistered: (component) async {
+    components.add(component);
+    await component.registerTo(this);
+  }).expand((component) => [component] + CorePondComponentLocatorWrapper.getSubcomponentsOf(component));
 
   Future<void> load() async {
     for (final component in components) {

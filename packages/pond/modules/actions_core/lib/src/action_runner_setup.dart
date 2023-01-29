@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:actions_core/src/action_runner.dart';
 
-class ActionRunnerSetup<R, P> with IsActionRunnerWrapper<R, P> {
+class ActionRunnerSetup<P, R> with IsActionRunnerWrapper<P, R> {
   @override
-  final ActionRunner<R, P> actionRunner;
+  final ActionRunner<P, R> actionRunner;
 
   FutureOr Function(P parameters)? onCall;
   FutureOr Function(P parameters, R output)? onCalled;

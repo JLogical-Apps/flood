@@ -26,6 +26,7 @@ extension TypeContextExtensions on TypeContext {
       parents: parents?.map((type) => getRuntimeTypeRuntime(type)).toList() ?? [],
     );
     runtimeTypes.add(runtimeType);
+    print(runtimeTypes);
     return runtimeType;
   }
 

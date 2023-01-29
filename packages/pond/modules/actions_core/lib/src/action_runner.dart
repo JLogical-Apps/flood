@@ -1,14 +1,14 @@
 import 'dart:async';
 
-abstract class ActionRunner<R, P> {
+abstract class ActionRunner<P, R> {
   Future<R> run(P parameters);
 
   factory ActionRunner({required FutureOr<R> Function(P parameters) runner}) => _ActionRunnerImpl(runner: runner);
 }
 
-mixin IsActionRunner<R, P> implements ActionRunner<R, P> {}
+mixin IsActionRunner<P, R> implements ActionRunner<P, R> {}
 
-class _ActionRunnerImpl<R, P> with IsActionRunner<R, P> {
+class _ActionRunnerImpl<P, R> with IsActionRunner<P, R> {
   final FutureOr<R> Function(P parameters) runner;
 
   _ActionRunnerImpl({required this.runner});
@@ -19,11 +19,11 @@ class _ActionRunnerImpl<R, P> with IsActionRunner<R, P> {
   }
 }
 
-abstract class ActionRunnerWrapper<R, P> implements ActionRunner<R, P> {
-  ActionRunner<R, P> get actionRunner;
+abstract class ActionRunnerWrapper<P, R> implements ActionRunner<P, R> {
+  ActionRunner<P, R> get actionRunner;
 }
 
-mixin IsActionRunnerWrapper<R, P> implements ActionRunnerWrapper<R, P> {
+mixin IsActionRunnerWrapper<P, R> implements ActionRunnerWrapper<P, R> {
   @override
   Future<R> run(P parameters) => actionRunner.run(parameters);
 }

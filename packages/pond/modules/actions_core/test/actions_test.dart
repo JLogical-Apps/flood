@@ -1,11 +1,12 @@
 import 'package:actions_core/src/action.dart';
+import 'package:actions_core/src/action_runner.dart';
 import 'package:test/test.dart';
 
 void main() {
   test('actions', () async {
-    final action = Action.fromRunner(name: 'Echo', runner: (input) => input);
-    final output = await action(3);
-    expect(output, 3);
+    final action = EchoAction();
+    final output = await action('3');
+    expect(output, '3');
   });
 
   test('actions with listeners', () async {
@@ -13,9 +14,7 @@ void main() {
     var finishCount = 0;
     var errorCount = 0;
     String? lastOutput;
-    final action =
-        Action.fromRunner(name: 'Echo', runner: (String? input) => input ?? (throw Exception('Input cannot be null!')))
-            .withAdditionalSetup(
+    final action = EchoAction().withAdditionalSetup(
       onCall: (parameters) => startCount++,
       onCalled: (parameters, output) {
         finishCount++;
@@ -35,4 +34,13 @@ void main() {
     expect(finishCount, 1);
     expect(lastOutput, 'Hello World');
   });
+}
+
+class EchoAction with IsAction<String?, String> {
+  @override
+  String get name => 'Echo';
+
+  @override
+  ActionRunner<String?, String> get actionRunner =>
+      ActionRunner(runner: (String? input) => input ?? (throw Exception('Input cannot be null!')));
 }

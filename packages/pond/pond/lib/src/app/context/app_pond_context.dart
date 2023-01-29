@@ -9,8 +9,7 @@ class AppPondContext with IsLocatorWrapper<AppPondComponent> {
 
   final CorePondContext corePondContext;
 
-  AppPondContext({required this.corePondContext, List<AppPondComponent>? appComponents})
-      : appComponents = appComponents ?? [];
+  AppPondContext({required this.corePondContext}) : appComponents = [];
 
   Future<void> load() async {
     await corePondContext.load();
@@ -26,8 +25,10 @@ class AppPondContext with IsLocatorWrapper<AppPondComponent> {
 
   @override
   Locator<AppPondComponent> get locator => Locator<AppPondComponent>(
-        objects: appComponents,
-        onRegistered: (component) => component.registerTo(this),
+        onRegistered: (component) async {
+          appComponents.add(component);
+          component.registerTo(this);
+        },
       ).expand((component) => [component] + AppPondComponentLocatorWrapper.getSubcomponentsOf(component));
 
   T? findOrNull<T>() {
