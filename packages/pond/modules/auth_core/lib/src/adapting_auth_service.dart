@@ -1,5 +1,5 @@
 import 'package:auth_core/src/auth_service.dart';
-import 'package:environment/environment.dart';
+import 'package:environment_core/environment_core.dart';
 import 'package:pond_core/pond_core.dart';
 
 class AdaptingAuthService with IsCorePondComponentWrapper, IsAuthServiceWrapper {

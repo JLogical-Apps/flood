@@ -93,13 +93,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  environment:
-    dependency: "direct overridden"
-    description:
-      path: "../environment"
-      relative: true
-    source: path
-    version: "0.0.1"
   environment_core:
     dependency: "direct overridden"
     description:
@@ -284,13 +277,6 @@ packages:
     dependency: "direct overridden"
     description:
       path: "../../../path_core"
-      relative: true
-    source: path
-    version: "0.0.1"
-  persistence:
-    dependency: "direct overridden"
-    description:
-      path: "../../../persistence/persistence"
       relative: true
     source: path
     version: "0.0.1"
