@@ -38,13 +38,13 @@ extension RepositoryExtension on Repository {
       state = state.withId(await idGenerator.generateId());
     }
 
-    await stateHandler.update(state);
+    await onUpdate(state);
 
     return state;
   }
 
   Future<void> delete(Stateful state) {
-    return stateHandler.delete(state.getState(context.locate<DropCoreComponent>()));
+    return onDelete(state.getState(context.locate<DropCoreComponent>()));
   }
 
   ForTypeRepository forType<E extends Entity<V>, V extends ValueObject>(
