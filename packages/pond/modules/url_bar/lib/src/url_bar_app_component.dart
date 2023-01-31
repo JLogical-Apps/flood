@@ -55,12 +55,15 @@ class UrlBarAppComponent with IsAppPondComponent {
                                 ),
                               ],
                             )
-                          : StyledButton(
-                              labelText: '/',
-                              onPressed: () async {
-                                locationValue.value = context.url;
-                                isExpandedState.value = true;
-                              },
+                          : SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: GestureDetector(
+                                onLongPress: () {
+                                  locationValue.value = context.url;
+                                  isExpandedState.value = true;
+                                },
+                              ),
                             );
                     },
                   ),
