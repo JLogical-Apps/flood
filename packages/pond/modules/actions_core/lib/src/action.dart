@@ -1,15 +1,16 @@
 import 'dart:async';
 
+import 'package:actions_core/src/action/log_action.dart';
 import 'package:actions_core/src/action_runner.dart';
 import 'package:actions_core/src/action_runner_setup.dart';
 
 abstract class Action<P, R> implements IsActionRunnerWrapper<P, R> {
   String get name;
 
-  factory Action({required String name, required ActionRunner<P, R> actionRunner}) =>
+  factory Action.fromActionRunner({required String name, required ActionRunner<P, R> actionRunner}) =>
       _ActionImpl(name: name, actionRunner: actionRunner);
 
-  factory Action.fromRunner({required String name, required FutureOr<R> Function(P parameters) runner}) =>
+  factory Action({required String name, required FutureOr<R> Function(P parameters) runner}) =>
       _ActionImpl(name: name, actionRunner: ActionRunner(runner: runner));
 }
 
@@ -17,7 +18,7 @@ extension ActionExtensions<P, R> on Action<P, R> {
   Future<R> call(P parameters) => run(parameters);
 
   Action<P, R> copyWith({String? name, ActionRunner<P, R>? actionRunner}) {
-    return Action(
+    return Action.fromActionRunner(
       name: name ?? this.name,
       actionRunner: actionRunner ?? this.actionRunner,
     );
@@ -36,6 +37,10 @@ extension ActionExtensions<P, R> on Action<P, R> {
         onFailed: onFailed,
       ),
     );
+  }
+
+  Action<P, R> log() {
+    return LogAction(source: this);
   }
 }
 

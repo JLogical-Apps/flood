@@ -14,6 +14,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/jlogical_utils_core
+  actions:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/pond/modules/actions
   auth:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

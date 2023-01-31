@@ -5,7 +5,7 @@ abstract class ActionContext {
 }
 
 extension ActionContextExtensions on ActionContext {
-  Future<R> run<P, R>(Action<P, R> action, P parameters) async {
+  Future<R> run<A extends Action<P, R>, P, R>(A action, P parameters) async {
     return wrapAction(action).run(parameters);
   }
 }

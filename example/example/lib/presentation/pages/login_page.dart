@@ -47,7 +47,10 @@ class LoginPage extends AppPage {
                     final data = result.data;
 
                     try {
-                      await context.appPondContext.find<AuthCoreComponent>().login(data['email'], data['password']);
+                      await context.run(
+                        context.find<AuthCoreComponent>().loginAction,
+                        LoginParameters(email: data['email'], password: data['password']),
+                      );
                       context.warpTo(HomePage());
                     } catch (e, stackTrace) {
                       loginPort.setError(name: 'email', error: e.toString());
@@ -67,9 +70,10 @@ class LoginPage extends AppPage {
                     final data = result.data;
 
                     try {
-                      final userId = await context.appPondContext
-                          .find<AuthCoreComponent>()
-                          .signup(data['email'], data['password']);
+                      final userId = await context.run(
+                        context.find<AuthCoreComponent>().signupAction,
+                        SignupParameters(email: data['email'], password: data['password']),
+                      );
 
                       final user = User()..nameProperty.set('Jake');
                       final userEntity = UserEntity()

@@ -10,7 +10,7 @@ Future<CorePondContext> getCorePondContext({required EnvironmentConfig environme
   final corePondContext = CorePondContext();
   await corePondContext.register(TypeCoreComponent());
   await corePondContext.register(DropCoreComponent());
-  await corePondContext.register(ActionCoreComponent());
+  await corePondContext.register(ActionCoreComponent(actionWrapper: <P, R>(Action<P, R> action) => action.log()));
   await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
   await corePondContext.register(AuthCoreComponent.memory());
   await corePondContext.register(UserRepository());
@@ -20,7 +20,10 @@ Future<CorePondContext> getCorePondContext({required EnvironmentConfig environme
       final authComponent = corePondContext.locate<AuthCoreComponent>();
       final dropComponent = corePondContext.locate<DropCoreComponent>();
 
-      final userId = await authComponent.signup('test@test.com', 'password');
+      final userId = await corePondContext.run(
+        authComponent.signupAction,
+        SignupParameters(email: 'test@test.com', password: 'password'),
+      );
 
       final user = User()..nameProperty.set('John Doe');
       final userEntity = UserEntity()

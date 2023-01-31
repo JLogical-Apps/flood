@@ -24,7 +24,7 @@ void main() {
     final corePondContext = CorePondContext();
     await corePondContext.register(actionCoreComponent);
 
-    final output = await corePondContext.locate<ActionCoreComponent>().run(echoAction, 'Hello World');
+    final output = await corePondContext.run<Action<String?, String>, String?, String>(echoAction, 'Hello World');
     expect(output, 'Hello World');
     expect(startCount, 1);
     expect(finishCount, 1);
@@ -32,5 +32,4 @@ void main() {
   });
 }
 
-final echoAction = Action<String?, String>.fromRunner(
-    name: 'echo', runner: (input) => input ?? (throw Exception('Input cannot be null!')));
+final echoAction = Action(name: 'echo', runner: (String? input) => input ?? (throw Exception('Input cannot be null!')));

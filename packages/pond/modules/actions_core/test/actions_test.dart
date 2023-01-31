@@ -34,5 +34,5 @@ void main() {
   });
 }
 
-final echoAction = Action<String?, String>.fromRunner(
-    name: 'echo', runner: (input) => input ?? (throw Exception('Input cannot be null!')));
+final echoAction =
+    Action<String?, String>(name: 'echo', runner: (input) => input ?? (throw Exception('Input cannot be null!')));
