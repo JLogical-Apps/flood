@@ -1,0 +1,108 @@
+import 'package:flutter/material.dart';
+import 'package:style/src/color_palette.dart';
+import 'package:style/src/color_palette_provider.dart';
+import 'package:style/src/components/input/styled_button.dart';
+import 'package:style/src/components/layout/styled_card.dart';
+import 'package:style/src/components/layout/styled_list.dart';
+import 'package:style/src/components/misc/styled_divider.dart';
+import 'package:style/src/components/text/styled_text.dart';
+import 'package:style/src/flat/flat_style.dart';
+import 'package:style/src/style_build_context_extensions.dart';
+import 'package:style/src/style_renderer.dart';
+import 'package:style/src/styleguide.dart';
+import 'package:tinycolor2/tinycolor2.dart';
+import 'package:utils/utils.dart';
+
+class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
+  @override
+  Widget renderTyped(BuildContext context, StyledCard component) {
+    final backgroundColorPalette = getBackgroundColor(context, card: component);
+    final title = component.titleText?.mapIfNonNull((text) => StyledText.h6(text)) ?? component.title;
+    final body = component.bodyText?.mapIfNonNull((text) => StyledText.body(text)) ?? component.body;
+    return ColorPaletteProvider(
+      colorPalette: backgroundColorPalette,
+      child: Material(
+        color: backgroundColorPalette.baseBackground,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: component.width,
+          height: component.height,
+          child: StyledList.column(
+            children: [
+              StyledList.row(
+                children: [
+                  if (component.leading != null) component.leading!,
+                  Expanded(
+                    child: StyledList.column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (title != null) title,
+                        if (body != null) body,
+                      ],
+                    ),
+                  ),
+                  if (component.trailing != null) component.trailing!,
+                ],
+              ),
+              if (component.children.isNotEmpty) StyledDivider.subtle(),
+              ...component.children,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  ColorPalette getBackgroundColor(BuildContext context, {required StyledCard card}) {
+    final flatStyle = context.style() as FlatStyle;
+
+    final color = card.color;
+    if (color != null) {
+      if (color.opacity < 1) {
+        final mixedColor = context.colorPalette().baseBackground.mix(color, (color.opacity * 100).round());
+        return flatStyle.getColorPaletteFromBackground(mixedColor);
+      }
+      return flatStyle.getColorPaletteFromBackground(color);
+    }
+
+    return context.colorPalette().background.getByEmphasis(card.emphasis);
+  }
+
+  @override
+  void modifyStyleguide(Styleguide styleguide) {
+    styleguide.getTabByNameOrCreate('Containers', icon: Icons.layers_outlined).getSectionByNameOrCreate('Cards')
+      ..add(StyledCard.subtle(
+        titleText: 'Card Title',
+        bodyText: 'Card Body',
+        leading: Icon(Icons.abc),
+        children: [
+          StyledButton(
+            labelText: 'CTA',
+            onPressed: () {},
+          ),
+        ],
+      ))
+      ..add(StyledCard(
+        titleText: 'Card Title',
+        bodyText: 'Card Body',
+        leading: Icon(Icons.abc),
+        children: [
+          StyledButton(
+            labelText: 'CTA',
+            onPressed: () {},
+          ),
+        ],
+      ))
+      ..add(StyledCard.strong(
+        titleText: 'Card Title',
+        bodyText: 'Card Body',
+        leading: Icon(Icons.abc),
+        children: [
+          StyledButton(
+            labelText: 'CTA',
+            onPressed: () {},
+          ),
+        ],
+      ));
+  }
+}

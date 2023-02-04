@@ -10,6 +10,7 @@ import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/flat/dialog/flat_style_dialog.dart';
 import 'package:style/src/flat/input/flat_style_button.dart';
 import 'package:style/src/flat/input/flat_style_text_field.dart';
+import 'package:style/src/flat/layout/flat_style_card.dart';
 import 'package:style/src/flat/layout/flat_style_container.dart';
 import 'package:style/src/flat/layout/flat_style_list.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
@@ -44,6 +45,7 @@ class FlatStyle with IsStyle {
     this.primaryColor = const Color(0xffe39e43),
     this.backgroundColor = const Color(0xff141424),
   })  : renderers = [
+          FlatStyleCardRenderer(),
           FlatStyleListRenderer(),
           FlatStyleH1Renderer(),
           FlatStyleH2Renderer(),

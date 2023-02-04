@@ -3,6 +3,7 @@ export 'src/color_palette_provider.dart';
 export 'src/components/dialog/styled_dialog.dart';
 export 'src/components/input/styled_button.dart';
 export 'src/components/input/styled_text_field.dart';
+export 'src/components/layout/styled_card.dart';
 export 'src/components/layout/styled_container.dart';
 export 'src/components/layout/styled_list.dart';
 export 'src/components/media/styled_image.dart';

@@ -5,6 +5,7 @@ import 'package:style/src/style_component.dart';
 class StyledList extends StyleComponent {
   final List<Widget> children;
   final Axis axis;
+  final CrossAxisAlignment crossAxisAlignment;
 
   final bool isScrollable;
   final bool hasScrollbar;
@@ -15,6 +16,7 @@ class StyledList extends StyleComponent {
     super.key,
     required this.children,
     this.axis = Axis.vertical,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
     this.isScrollable = false,
     this.hasScrollbar = false,
     this.itemPadding = const EdgeInsets.all(4),

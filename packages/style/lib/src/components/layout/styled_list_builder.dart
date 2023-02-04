@@ -25,11 +25,16 @@ class StyledListBuilder {
     return this;
   }
 
-  StyledList call({Key? key, List<Widget> children = const []}) {
+  StyledList call({
+    Key? key,
+    List<Widget> children = const [],
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
+  }) {
     return StyledList(
       key: key,
       children: children,
       axis: axis,
+      crossAxisAlignment: crossAxisAlignment,
       hasScrollbar: hasScrollbar,
       isScrollable: isScrollable,
       isCentered: isCentered,

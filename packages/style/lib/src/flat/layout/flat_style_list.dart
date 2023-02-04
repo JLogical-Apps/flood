@@ -13,7 +13,15 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
           height: component.itemPadding.vertical,
         ))
         .toList();
-    Widget widget = component.axis == Axis.vertical ? Column(children: children) : Row(children: children);
+    Widget widget = component.axis == Axis.vertical
+        ? Column(
+            children: children,
+            crossAxisAlignment: component.crossAxisAlignment,
+          )
+        : Row(
+            children: children,
+            crossAxisAlignment: component.crossAxisAlignment,
+          );
 
     if (component.isCentered) {
       widget = Center(child: widget);
