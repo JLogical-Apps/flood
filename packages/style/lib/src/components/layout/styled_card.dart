@@ -10,7 +10,9 @@ class StyledCard extends StyleComponent {
   final String? bodyText;
   final List<Widget> children;
   final Widget? leading;
+  final IconData? leadingIcon;
   final Widget? trailing;
+  final IconData? trailingIcon;
   final Color? color;
   final double? width;
   final double? height;
@@ -24,7 +26,9 @@ class StyledCard extends StyleComponent {
     this.bodyText,
     this.children = const [],
     this.leading,
+    this.leadingIcon,
     this.trailing,
+    this.trailingIcon,
     this.color,
     this.width,
     this.height,
@@ -38,7 +42,9 @@ class StyledCard extends StyleComponent {
     this.bodyText,
     this.children = const [],
     this.leading,
+    this.leadingIcon,
     this.trailing,
+    this.trailingIcon,
     this.color,
     this.width,
     this.height,
@@ -52,7 +58,9 @@ class StyledCard extends StyleComponent {
     this.bodyText,
     this.children = const [],
     this.leading,
+    this.leadingIcon,
     this.trailing,
+    this.trailingIcon,
     this.color,
     this.width,
     this.height,

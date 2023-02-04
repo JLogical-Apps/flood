@@ -16,6 +16,7 @@ import 'package:style/src/flat/layout/flat_style_list.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
 import 'package:style/src/flat/media/flat_style_image.dart';
 import 'package:style/src/flat/misc/flat_style_divider.dart';
+import 'package:style/src/flat/misc/flat_style_icon.dart';
 import 'package:style/src/flat/misc/flat_style_loading_indicator.dart';
 import 'package:style/src/flat/misc/flat_style_scrollbar.dart';
 import 'package:style/src/flat/page/flat_style_page.dart';
@@ -62,6 +63,7 @@ class FlatStyle with IsStyle {
           FlatStyleTabsRenderer(),
           FlatStylePageRenderer(),
           FlatStyleDividerRenderer(),
+          FlatStyleIconRenderer(),
           FlatStyleLoadingIndicatorRenderer(),
           FlatStyleDialogRenderer(),
           FlatStyleScrollbarRenderer(),

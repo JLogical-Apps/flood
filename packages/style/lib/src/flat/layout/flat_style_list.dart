@@ -17,10 +17,12 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
         ? Column(
             children: children,
             crossAxisAlignment: component.crossAxisAlignment,
+            mainAxisAlignment: component.isCentered ? MainAxisAlignment.center : MainAxisAlignment.start,
           )
         : Row(
             children: children,
             crossAxisAlignment: component.crossAxisAlignment,
+            mainAxisAlignment: component.isCentered ? MainAxisAlignment.center : MainAxisAlignment.start,
           );
 
     if (component.isCentered) {
