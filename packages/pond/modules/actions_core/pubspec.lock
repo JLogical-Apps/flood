@@ -137,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
+  json2yaml:
+    dependency: transitive
+    description:
+      name: json2yaml
+      sha256: "1bd23a492025254aa14a760db94c8d52142c774ab3f2ab935e31742796bf505d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   lints:
     dependency: "direct dev"
     description:
@@ -145,6 +153,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  log_core:
+    dependency: "direct main"
+    description:
+      path: "../log_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   logging:
     dependency: transitive
     description:
@@ -201,6 +216,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
+  persistence_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../../persistence/persistence_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   pond_core:
     dependency: "direct main"
     description:

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:actions_core/src/action/log_action.dart';
 import 'package:actions_core/src/action_runner.dart';
 import 'package:actions_core/src/action_runner_setup.dart';
+import 'package:pond_core/pond_core.dart';
 
 abstract class Action<P, R> implements IsActionRunnerWrapper<P, R> {
   String get name;
@@ -39,8 +40,8 @@ extension ActionExtensions<P, R> on Action<P, R> {
     );
   }
 
-  Action<P, R> log() {
-    return LogAction(source: this);
+  Action<P, R> log({required CorePondContext context}) {
+    return LogAction(source: this, context: context);
   }
 }
 

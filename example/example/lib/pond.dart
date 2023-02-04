@@ -10,7 +10,9 @@ Future<CorePondContext> getCorePondContext({required EnvironmentConfig environme
   final corePondContext = CorePondContext();
   await corePondContext.register(TypeCoreComponent());
   await corePondContext.register(DropCoreComponent());
-  await corePondContext.register(ActionCoreComponent(actionWrapper: <P, R>(Action<P, R> action) => action.log()));
+  await corePondContext.register(LogCoreComponent.console());
+  await corePondContext.register(
+      ActionCoreComponent(actionWrapper: <P, R>(Action<P, R> action) => action.log(context: corePondContext)));
   await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
   await corePondContext.register(AuthCoreComponent.memory());
   await corePondContext.register(UserRepository());

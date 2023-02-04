@@ -167,6 +167,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  log_core:
+    dependency: "direct overridden"
+    description:
+      path: "../log_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   logging:
     dependency: transitive
     description:

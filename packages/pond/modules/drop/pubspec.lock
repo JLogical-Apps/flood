@@ -165,6 +165,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.5"
+  json2yaml:
+    dependency: transitive
+    description:
+      name: json2yaml
+      sha256: "1bd23a492025254aa14a760db94c8d52142c774ab3f2ab935e31742796bf505d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   lazy_memo:
     dependency: transitive
     description:
@@ -181,6 +189,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  log_core:
+    dependency: "direct overridden"
+    description:
+      path: "../log_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   markdown:
     dependency: transitive
     description:
@@ -255,6 +270,13 @@ packages:
     dependency: "direct overridden"
     description:
       path: "../../../path_core"
+      relative: true
+    source: path
+    version: "0.0.1"
+  persistence_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../../persistence/persistence_core"
       relative: true
     source: path
     version: "0.0.1"
@@ -512,6 +534,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  yaml:
+    dependency: transitive
+    description:
+      name: yaml
+      sha256: "23812a9b125b48d4007117254bca50abb6c712352927eece9e155207b1db2370"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
 sdks:
   dart: ">=2.18.0 <4.0.0"
   flutter: ">=3.0.0"
