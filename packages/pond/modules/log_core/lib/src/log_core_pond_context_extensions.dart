@@ -11,5 +11,5 @@ extension LogCorePondContextExtensions on CorePondContext {
 
   Future<void> logError(error, StackTrace stackTrace) => logger.logError(error, stackTrace);
 
-  Future<String> getLogs() => logger.getLogs();
+  Future<List<String>> getLogs() => logger.getLogs();
 }

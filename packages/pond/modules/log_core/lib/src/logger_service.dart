@@ -7,7 +7,7 @@ abstract class LoggerService {
 
   Future<void> logError(dynamic error, StackTrace stackTrace);
 
-  Future<String> getLogs();
+  Future<List<String>> getLogs();
 
   factory LoggerService({
     required FutureOr<String> Function(dynamic message) onLog,
@@ -33,8 +33,8 @@ class _LoggerServiceImpl with IsLoggerService {
   }) : logs = [];
 
   @override
-  Future<String> getLogs() async {
-    return logs.join('\n');
+  Future<List<String>> getLogs() async {
+    return logs;
   }
 
   @override
@@ -71,5 +71,5 @@ mixin IsLoggerServiceWrapper implements LoggerServiceWrapper {
   Future<void> logError(error, StackTrace stackTrace) => loggerService.logError(error, stackTrace);
 
   @override
-  Future<String> getLogs() => loggerService.getLogs();
+  Future<List<String>> getLogs() => loggerService.getLogs();
 }

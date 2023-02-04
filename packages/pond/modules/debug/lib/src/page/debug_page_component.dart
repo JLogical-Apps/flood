@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:pond/pond.dart';
 
 abstract class DebugPageComponent {
   String get name;
 
-  Widget render(BuildContext context);
+  AppPage get appPage;
 }
 
 mixin IsDebugPageComponent implements DebugPageComponent {}
@@ -17,5 +17,5 @@ mixin IsDebugPageComponentWrapper implements DebugPageComponentWrapper {
   String get name => debugPageComponent.name;
 
   @override
-  Widget render(BuildContext context) => debugPageComponent.render(context);
+  AppPage get appPage => debugPageComponent.appPage;
 }

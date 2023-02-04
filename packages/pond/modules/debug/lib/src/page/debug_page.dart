@@ -9,8 +9,13 @@ class DebugPage extends AppPage {
     final debugPageComponents = context.appPondContext.appComponents.whereType<DebugPageComponent>().toList();
     return StyledPage(
       titleText: 'Debug',
-      body: StyledList.column.withScrollbar(
-          children: debugPageComponents.map((debugPageComponent) => StyledText.body(debugPageComponent.name)).toList()),
+      body: StyledList.column.centered.withScrollbar(
+          children: debugPageComponents
+              .map((debugPageComponent) => StyledButton(
+                    onPressed: () => context.warpTo(debugPageComponent.appPage),
+                    labelText: debugPageComponent.name,
+                  ))
+              .toList()),
     );
   }
 
