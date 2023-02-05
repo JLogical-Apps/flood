@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:style/src/color_palette.dart';
+import 'package:style/src/action/action_item.dart';
 import 'package:style/src/components/input/styled_button.dart';
+import 'package:style/src/components/input/styled_menu_button.dart';
 import 'package:style/src/components/layout/styled_card.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/misc/styled_divider.dart';
 import 'package:style/src/components/misc/styled_icon.dart';
 import 'package:style/src/components/text/styled_text.dart';
-import 'package:style/src/flat/flat_style.dart';
-import 'package:style/src/style_build_context_extensions.dart';
 import 'package:style/src/style_renderer.dart';
 import 'package:style/src/styleguide.dart';
-import 'package:tinycolor2/tinycolor2.dart';
 import 'package:utils/utils.dart';
 
 class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
@@ -52,6 +50,7 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
                   padding: EdgeInsets.all(6),
                   child: trailing,
                 ),
+              if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
             ],
           ),
           if (component.children.isNotEmpty) StyledDivider.subtle(),
@@ -59,21 +58,6 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
         ],
       ),
     );
-  }
-
-  ColorPalette getBackgroundColor(BuildContext context, {required StyledCard card}) {
-    final flatStyle = context.style() as FlatStyle;
-
-    final color = card.color;
-    if (color != null) {
-      if (color.opacity < 1) {
-        final mixedColor = context.colorPalette().baseBackground.mix(color, (color.opacity * 100).round());
-        return flatStyle.getColorPaletteFromBackground(mixedColor);
-      }
-      return flatStyle.getColorPaletteFromBackground(color);
-    }
-
-    return context.colorPalette().background.getByEmphasis(card.emphasis);
   }
 
   @override
@@ -86,6 +70,16 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
         onPressed: () {
           print('Hello World!');
         },
+        actions: [
+          ActionItem(
+            titleText: 'Debug',
+            descriptionText: 'Print a Debug statement',
+            iconData: Icons.bug_report,
+            onPerform: () {
+              print('Hello World!');
+            },
+          ),
+        ],
         children: [
           StyledButton(
             labelText: 'CTA',

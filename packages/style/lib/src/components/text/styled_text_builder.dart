@@ -45,7 +45,7 @@ class StyledTextBuilder<T extends StyledText> {
     return this;
   }
 
-  StyledTextBuilder withColor(Color color) {
+  StyledTextBuilder withColor(Color? color) {
     this.color = color;
     return this;
   }

@@ -9,6 +9,7 @@ import 'package:style/src/components/text/styled_markdown.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/flat/dialog/flat_style_dialog.dart';
 import 'package:style/src/flat/input/flat_style_button.dart';
+import 'package:style/src/flat/input/flat_style_menu_button.dart';
 import 'package:style/src/flat/input/flat_style_text_field.dart';
 import 'package:style/src/flat/layout/flat_style_card.dart';
 import 'package:style/src/flat/layout/flat_style_container.dart';
@@ -58,6 +59,7 @@ class FlatStyle with IsStyle {
           FlatStyleButtonTextRenderer(),
           FlatStyleTextFieldRenderer(),
           FlatStyleButtonRenderer(),
+          FlatStyleMenuButtonRenderer(),
           FlatStyleImageRenderer(),
           FlatStyleContainerRenderer(),
           FlatStyleTabsRenderer(),
