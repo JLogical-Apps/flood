@@ -11,6 +11,7 @@ class StyledList extends StyleComponent {
   final bool hasScrollbar;
   final EdgeInsets itemPadding;
   final bool isCentered;
+  final double? childMinSize;
 
   StyledList({
     super.key,
@@ -21,6 +22,7 @@ class StyledList extends StyleComponent {
     this.hasScrollbar = false,
     this.itemPadding = const EdgeInsets.all(4),
     this.isCentered = false,
+    this.childMinSize,
   });
 
   static StyledListBuilder get column => StyledListBuilder(axis: Axis.vertical);

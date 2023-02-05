@@ -35,7 +35,10 @@ class HomePage extends AppPage {
               model: budgetsModel,
               builder: (budgetEntities) {
                 return Column(children: [
-                  ...budgetEntities.map((entity) => StyledText.h2(entity.value.nameProperty.value)),
+                  ...budgetEntities.map((budgetEntity) => StyledCard(
+                        titleText: budgetEntity.value.nameProperty.value,
+                        onPressed: () {},
+                      )),
                   StyledButton.strong(
                     labelText: 'Create +',
                     onPressed: () async {

@@ -1,29 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intersperse/intersperse.dart';
+import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/misc/styled_scrollbar.dart';
+import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/style_renderer.dart';
+import 'package:style/src/styleguide.dart';
 
 class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
   @override
   Widget renderTyped(BuildContext context, StyledList component) {
-    final children = component.children
-        .intersperse(SizedBox(
-          width: component.itemPadding.horizontal,
-          height: component.itemPadding.vertical,
-        ))
-        .toList();
-    Widget widget = component.axis == Axis.vertical
-        ? Column(
-            children: children,
-            crossAxisAlignment: component.crossAxisAlignment,
-            mainAxisAlignment: component.isCentered ? MainAxisAlignment.center : MainAxisAlignment.start,
-          )
-        : Row(
-            children: children,
-            crossAxisAlignment: component.crossAxisAlignment,
-            mainAxisAlignment: component.isCentered ? MainAxisAlignment.center : MainAxisAlignment.start,
-          );
+    Widget widget = getBase(context, list: component, children: component.children);
 
     if (component.isCentered) {
       widget = Center(child: widget);
@@ -53,5 +41,67 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
     );
 
     return widget;
+  }
+
+  Widget getBase(BuildContext context, {required StyledList list, required List<Widget> children}) {
+    if (list.childMinSize == null) {
+      children = children
+          .intersperse(SizedBox(
+            width: list.itemPadding.horizontal,
+            height: list.itemPadding.vertical,
+          ))
+          .toList();
+      return list.axis == Axis.vertical
+          ? Column(
+              children: children,
+              crossAxisAlignment: list.crossAxisAlignment,
+              mainAxisAlignment: list.isCentered ? MainAxisAlignment.center : MainAxisAlignment.start,
+            )
+          : Row(
+              children: children,
+              crossAxisAlignment: list.crossAxisAlignment,
+              mainAxisAlignment: list.isCentered ? MainAxisAlignment.center : MainAxisAlignment.start,
+            );
+    }
+
+    return MasonryGridView.count(
+      shrinkWrap: true,
+      crossAxisCount: MediaQuery.of(context).size.width ~/ list.childMinSize!,
+      mainAxisSpacing: list.itemPadding.vertical,
+      crossAxisSpacing: list.itemPadding.horizontal,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: children.length,
+      itemBuilder: (context, i) => children[i],
+    );
+  }
+
+  @override
+  void modifyStyleguide(Styleguide styleguide) {
+    styleguide
+        .getTabByNameOrCreate('Containers', icon: Icons.layers_outlined)
+        .getSectionByNameOrCreate('Staggered List')
+        .add(StyledList.column.withMinChildSize(150)(
+          children: [
+            StyledContainer.subtle(
+              child: StyledText.h5.centered('1'),
+              width: double.infinity,
+              height: 60,
+            ),
+            StyledContainer(
+              child: StyledText.h5.centered('2'),
+              width: double.infinity,
+            ),
+            StyledContainer.strong(
+              child: StyledText.h5.centered('3'),
+              width: double.infinity,
+              height: 60,
+            ),
+            StyledContainer(
+              color: Colors.blue,
+              child: StyledText.h5.centered('4'),
+              width: double.infinity,
+            ),
+          ],
+        ));
   }
 }
