@@ -21,13 +21,18 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
         color: backgroundColorPalette.baseBackground,
         borderRadius: component.shape == null ? BorderRadius.circular(12) : null,
         shape: component.shape,
-        child: Container(
-          width: component.width,
-          height: component.height,
-          child: component.child?.mapIfNonNull((child) => Padding(
-                padding: component.padding,
-                child: child,
-              )),
+        child: InkWell(
+          onTap: component.onPressed,
+          borderRadius: component.shape == null ? BorderRadius.circular(12) : null,
+          customBorder: component.shape,
+          child: Container(
+            width: component.width,
+            height: component.height,
+            child: component.child?.mapIfNonNull((child) => Padding(
+                  padding: component.padding,
+                  child: child,
+                )),
+          ),
         ),
       ),
     );
@@ -52,6 +57,9 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
   void modifyStyleguide(Styleguide styleguide) {
     styleguide.getTabByNameOrCreate('Containers', icon: Icons.layers_outlined).getSectionByNameOrCreate('Container')
       ..add(StyledContainer.subtle(
+        onPressed: () {
+          print('Hello World!');
+        },
         child: StyledList.column(
           children: [
             StyledText.h3.centered('Subtle Container'),

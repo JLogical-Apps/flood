@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:style/src/color_palette.dart';
-import 'package:style/src/color_palette_provider.dart';
 import 'package:style/src/components/input/styled_button.dart';
 import 'package:style/src/components/layout/styled_card.dart';
+import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/misc/styled_divider.dart';
 import 'package:style/src/components/misc/styled_icon.dart';
@@ -17,50 +17,46 @@ import 'package:utils/utils.dart';
 class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
   @override
   Widget renderTyped(BuildContext context, StyledCard component) {
-    final backgroundColorPalette = getBackgroundColor(context, card: component);
     final title = component.titleText?.mapIfNonNull((text) => StyledText.h6(text)) ?? component.title;
     final body = component.bodyText?.mapIfNonNull((text) => StyledText.body(text)) ?? component.body;
     final leading = component.leadingIcon?.mapIfNonNull((icon) => StyledIcon(icon)) ?? component.leading;
     final trailing = component.trailingIcon?.mapIfNonNull((icon) => StyledIcon(icon)) ?? component.trailing;
 
-    return ColorPaletteProvider(
-      colorPalette: backgroundColorPalette,
-      child: Material(
-        color: backgroundColorPalette.baseBackground,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          width: component.width,
-          height: component.height,
-          child: StyledList.column(
+    return StyledContainer(
+      color: component.color,
+      width: component.width,
+      height: component.height,
+      onPressed: component.onPressed,
+      padding: component.padding,
+      emphasis: component.emphasis,
+      child: StyledList.column(
+        children: [
+          StyledList.row(
             children: [
-              StyledList.row(
-                children: [
-                  if (leading != null)
-                    Padding(
-                      padding: EdgeInsets.all(6),
-                      child: leading,
-                    ),
-                  Expanded(
-                    child: StyledList.column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (title != null) title,
-                        if (body != null) body,
-                      ],
-                    ),
-                  ),
-                  if (trailing != null)
-                    Padding(
-                      padding: EdgeInsets.all(6),
-                      child: trailing,
-                    ),
-                ],
+              if (leading != null)
+                Padding(
+                  padding: EdgeInsets.all(6),
+                  child: leading,
+                ),
+              Expanded(
+                child: StyledList.column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (title != null) title,
+                    if (body != null) body,
+                  ],
+                ),
               ),
-              if (component.children.isNotEmpty) StyledDivider.subtle(),
-              ...component.children,
+              if (trailing != null)
+                Padding(
+                  padding: EdgeInsets.all(6),
+                  child: trailing,
+                ),
             ],
           ),
-        ),
+          if (component.children.isNotEmpty) StyledDivider.subtle(),
+          ...component.children,
+        ],
       ),
     );
   }
@@ -87,6 +83,9 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
         titleText: 'Card Title',
         bodyText: 'Card Body',
         leadingIcon: Icons.abc,
+        onPressed: () {
+          print('Hello World!');
+        },
         children: [
           StyledButton(
             labelText: 'CTA',

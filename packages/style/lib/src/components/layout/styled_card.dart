@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:style/src/emphasis.dart';
 import 'package:style/src/style_component.dart';
@@ -13,6 +15,7 @@ class StyledCard extends StyleComponent {
   final IconData? leadingIcon;
   final Widget? trailing;
   final IconData? trailingIcon;
+  final FutureOr Function()? onPressed;
   final Color? color;
   final double? width;
   final double? height;
@@ -29,6 +32,7 @@ class StyledCard extends StyleComponent {
     this.leadingIcon,
     this.trailing,
     this.trailingIcon,
+    this.onPressed,
     this.color,
     this.width,
     this.height,
@@ -45,6 +49,7 @@ class StyledCard extends StyleComponent {
     this.leadingIcon,
     this.trailing,
     this.trailingIcon,
+    this.onPressed,
     this.color,
     this.width,
     this.height,
@@ -61,6 +66,7 @@ class StyledCard extends StyleComponent {
     this.leadingIcon,
     this.trailing,
     this.trailingIcon,
+    this.onPressed,
     this.color,
     this.width,
     this.height,

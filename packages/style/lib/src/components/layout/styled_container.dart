@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:style/src/emphasis.dart';
 import 'package:style/src/style_component.dart';
@@ -5,6 +7,7 @@ import 'package:style/src/style_component.dart';
 class StyledContainer extends StyleComponent {
   final Emphasis emphasis;
   final Widget? child;
+  final FutureOr Function()? onPressed;
   final Color? color;
   final double? width;
   final double? height;
@@ -14,6 +17,7 @@ class StyledContainer extends StyleComponent {
   StyledContainer({
     this.emphasis = Emphasis.regular,
     this.child,
+    this.onPressed,
     this.color,
     this.width,
     this.height,
@@ -23,6 +27,7 @@ class StyledContainer extends StyleComponent {
 
   StyledContainer.subtle({
     this.child,
+    this.onPressed,
     this.color,
     this.width,
     this.height,
@@ -32,6 +37,7 @@ class StyledContainer extends StyleComponent {
 
   StyledContainer.strong({
     this.child,
+    this.onPressed,
     this.color,
     this.width,
     this.height,
