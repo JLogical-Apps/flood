@@ -18,8 +18,12 @@ abstract class Query with EquatableMixin {
 
   Query({required this.parent});
 
-  static QueryRequest<E?> getById<E extends Entity>(String id) {
+  static QueryRequest<E?> getByIdOrNull<E extends Entity>(String id) {
     return Query.from<E>().where(State.idField).isEqualTo(id).firstOrNull<E>();
+  }
+
+  static QueryRequest<E> getById<E extends Entity>(String id) {
+    return Query.from<E>().where(State.idField).isEqualTo(id).first<E>();
   }
 
   static FromQuery from<E extends Entity>() {
@@ -72,7 +76,7 @@ extension QueryExtensions on Query {
     return PaginateStatesQueryRequest(query: this, pageSize: pageSize);
   }
 
-  PaginatedQueryRequest paginate<E extends Entity>({int pageSize = 20}) {
+  PaginatedQueryRequest<E> paginate<E extends Entity>({int pageSize = 20}) {
     return PaginatedQueryRequest<E>(sourceQueryRequest: PaginateStatesQueryRequest(query: this, pageSize: pageSize));
   }
 
