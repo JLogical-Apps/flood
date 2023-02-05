@@ -35,10 +35,12 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
       }
     }
 
-    widget = Padding(
-      padding: component.itemPadding,
-      child: widget,
-    );
+    if (component.children.isNotEmpty) {
+      widget = Padding(
+        padding: component.itemPadding,
+        child: widget,
+      );
+    }
 
     return widget;
   }
@@ -65,6 +67,7 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
     }
 
     return MasonryGridView.count(
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       crossAxisCount: MediaQuery.of(context).size.width ~/ list.childMinSize!,
       mainAxisSpacing: list.itemPadding.vertical,

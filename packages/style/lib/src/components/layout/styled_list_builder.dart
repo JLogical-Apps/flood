@@ -6,7 +6,6 @@ class StyledListBuilder {
   bool hasScrollbar = false;
   Axis axis;
   bool isCentered = false;
-  EdgeInsets? itemPadding;
   double? childMinSize;
 
   StyledListBuilder({this.axis = Axis.vertical});
@@ -27,11 +26,6 @@ class StyledListBuilder {
     return this;
   }
 
-  StyledListBuilder withPadding(EdgeInsets? padding) {
-    this.itemPadding = padding;
-    return this;
-  }
-
   StyledListBuilder withMinChildSize(double? childMinSize) {
     this.childMinSize = childMinSize;
     return this;
@@ -40,6 +34,7 @@ class StyledListBuilder {
   StyledList call({
     Key? key,
     List<Widget> children = const [],
+    EdgeInsets? itemPadding,
     CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
   }) {
     return StyledList(
