@@ -15,9 +15,7 @@ class EnvelopePage extends AppPage {
         return StyledPage(
           titleText: envelopeEntity.value.nameProperty.value,
           body: StyledList.column.scrollable(
-            children: [
-              StyledText.body('Hey!'),
-            ],
+            children: [],
           ),
         );
       },

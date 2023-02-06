@@ -11,7 +11,7 @@ class HomePage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return BudgetsPage();
   }
 
   @override
@@ -27,10 +27,6 @@ class HomePage extends AppPage {
       return loginPage.uri;
     }
 
-    if (!matches(currentUri.toString())) {
-      return null;
-    }
-
-    return BudgetsPage().uri;
+    return null;
   }
 }
