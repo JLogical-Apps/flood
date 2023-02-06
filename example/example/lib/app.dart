@@ -49,15 +49,6 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(FocusGrabberAppComponent());
   await appPondContext.register(AuthAppComponent());
   await appPondContext.register(DropAppComponent());
-  await appPondContext.register(ModelAppComponent(
-    modelBuilderConfig: ModelBuilderConfig(
-      loadingIndicator: StyledLoadingIndicator(),
-      errorBuilder: (error, stack) {
-        print('$error\n$stack');
-        return StyledText.body.error('$error');
-      },
-    ),
-  ));
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(UrlBarAppComponent());
   await appPondContext.register(ValetPagesAppPondComponent());

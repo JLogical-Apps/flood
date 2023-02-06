@@ -9,18 +9,19 @@ class EnvelopePage extends AppPage {
   @override
   Widget build(BuildContext context) {
     final envelopeModel = useQuery(Query.getById<EnvelopeEntity>(idProperty.value));
-    return ModelBuilder(
-        model: envelopeModel,
-        builder: (EnvelopeEntity envelopeEntity) {
-          return StyledPage(
-            titleText: envelopeEntity.value.nameProperty.value,
-            body: StyledList.column.scrollable(
-              children: [
-                StyledText.body('Hey!'),
-              ],
-            ),
-          );
-        });
+    return ModelBuilder.page(
+      model: envelopeModel,
+      builder: (EnvelopeEntity envelopeEntity) {
+        return StyledPage(
+          titleText: envelopeEntity.value.nameProperty.value,
+          body: StyledList.column.scrollable(
+            children: [
+              StyledText.body('Hey!'),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override

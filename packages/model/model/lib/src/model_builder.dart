@@ -4,6 +4,7 @@ import 'package:model/src/model_builder_config.dart';
 import 'package:model/src/model_hooks.dart';
 import 'package:model_core/model_core.dart';
 import 'package:provider/provider.dart';
+import 'package:style/style.dart';
 import 'package:utils_core/utils_core.dart';
 
 class ModelBuilder<T> extends HookWidget {
@@ -21,19 +22,27 @@ class ModelBuilder<T> extends HookWidget {
     this.errorBuilder,
   });
 
+  ModelBuilder.page({
+    super.key,
+    required this.model,
+    required this.builder,
+  })  : loadingIndicator = StyledLoadingPage(),
+        errorBuilder = _styledErrorPage;
+
   @override
   Widget build(BuildContext context) {
     final modelBuilderConfig = Provider.of<ModelBuilderConfig?>(context, listen: false);
 
     final state = useModel(model);
     if (state.isEmpty || state.isLoading) {
-      return loadingIndicator ?? modelBuilderConfig?.loadingIndicator ?? CircularProgressIndicator();
+      return loadingIndicator ?? modelBuilderConfig?.loadingIndicator ?? StyledLoadingIndicator();
     }
 
     if (state is ErrorFutureValue<T>) {
+      print('${state.error}\n${state.stackTrace}');
       return errorBuilder?.call(state.error, state.stackTrace) ??
           modelBuilderConfig?.errorBuilder?.call(state.error, state.stackTrace) ??
-          Text('${state.error}');
+          StyledText.body.error('${state.error}');
     }
 
     if (state is LoadedFutureValue<T>) {
@@ -41,5 +50,13 @@ class ModelBuilder<T> extends HookWidget {
     }
 
     throw Exception('Invalid Model State!');
+  }
+
+  static Widget _styledErrorPage(dynamic error, StackTrace stackTrace) {
+    return StyledPage(
+      body: Center(
+        child: StyledText.body.error('$error\n$stackTrace'),
+      ),
+    );
   }
 }

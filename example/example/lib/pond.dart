@@ -1,4 +1,8 @@
+import 'package:example/features/budget/budget.dart';
+import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/budget/budget_repository.dart';
+import 'package:example/features/envelope/envelope.dart';
+import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/envelope/envelope_repository.dart';
 import 'package:example/features/user/user.dart';
 import 'package:example/features/user/user_entity.dart';
@@ -24,16 +28,25 @@ Future<CorePondContext> getCorePondContext({required EnvironmentConfig environme
       final authComponent = corePondContext.locate<AuthCoreComponent>();
       final dropComponent = corePondContext.locate<DropCoreComponent>();
 
-      final userId = await corePondContext.run(
-        authComponent.signupAction,
-        SignupParameters(email: 'test@test.com', password: 'password'),
-      );
+      final userId = await authComponent.signup('test@test.com', 'password');
 
       final user = User()..nameProperty.set('John Doe');
       final userEntity = UserEntity()
         ..id = userId
         ..value = user;
       await dropComponent.update(userEntity);
+
+      final budget = Budget()
+        ..nameProperty.set('Budget')
+        ..ownerProperty.set(userEntity.id!);
+      final budgetEntity = BudgetEntity()..value = budget;
+      final updatedBudgetState = await dropComponent.update(budgetEntity);
+
+      final envelope = Envelope()
+        ..nameProperty.set('Envelope')
+        ..budgetProperty.set(updatedBudgetState.id);
+      final envelopeEntity = EnvelopeEntity()..value = envelope;
+      await dropComponent.update(envelopeEntity);
     }
   }));
   return corePondContext;

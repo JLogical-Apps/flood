@@ -1,6 +1,8 @@
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
+import 'package:example/presentation/pages/envelope_page.dart';
+import 'package:example/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -15,7 +17,7 @@ class BudgetPage extends AppPage {
         .isEqualTo(budgetIdProperty.value)
         .paginate<EnvelopeEntity>());
 
-    return ModelBuilder(
+    return ModelBuilder.page(
       model: budgetModel,
       builder: (BudgetEntity budgetEntity) {
         final budget = budgetEntity.value;
@@ -30,6 +32,9 @@ class BudgetPage extends AppPage {
                     children: page.items
                         .map((envelopeEntity) => StyledCard(
                               titleText: envelopeEntity.value.nameProperty.value,
+                              onPressed: () async {
+                                context.warpTo(EnvelopePage()..idProperty.set(envelopeEntity.id!));
+                              },
                             ))
                         .toList(),
                   );
@@ -76,4 +81,9 @@ class BudgetPage extends AppPage {
 
   @override
   PathDefinition get pathDefinition => PathDefinition.string('budget').property(budgetIdProperty);
+
+  @override
+  AppPage? getParent() {
+    return HomePage();
+  }
 }

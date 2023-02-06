@@ -52,7 +52,13 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<T> queryRequest) {
     return statesX.asyncMapWithValue(
-      (states) async => FutureValue.loaded(await executeOnStates(queryRequest, states)),
+      (states) async {
+        try {
+          return FutureValue.loaded(await executeOnStates(queryRequest, states));
+        } catch (e, stackTrace) {
+          return FutureValue.error(e, stackTrace);
+        }
+      },
       initialValue: FutureValue.empty(),
     );
   }

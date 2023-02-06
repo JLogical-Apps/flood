@@ -23,16 +23,38 @@ class AuthCoreComponent with IsCorePondComponent, IsAuthServiceWrapper {
   late final loginAction = Action(
     name: 'Login',
     runner: (LoginParameters parameters) async {
-      return await login(parameters.email, parameters.password);
+      return await authService.login(parameters.email, parameters.password);
     },
   );
 
   late final signupAction = Action(
     name: 'Signup',
     runner: (SignupParameters parameters) async {
-      return await signup(parameters.email, parameters.password);
+      return await authService.signup(parameters.email, parameters.password);
     },
   );
+
+  late final logoutAction = Action(
+    name: 'Logout',
+    runner: (_) async {
+      await authService.logout();
+    },
+  );
+
+  @override
+  Future<String> login(String email, String password) async {
+    return await context.run(loginAction, LoginParameters(email: email, password: password));
+  }
+
+  @override
+  Future<String> signup(String email, String password) async {
+    return await context.run(signupAction, SignupParameters(email: email, password: password));
+  }
+
+  @override
+  Future<void> logout() async {
+    await context.run(logoutAction, null as dynamic);
+  }
 }
 
 class LoginParameters {

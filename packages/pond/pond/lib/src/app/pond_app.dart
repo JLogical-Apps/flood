@@ -33,62 +33,64 @@ class PondApp extends HookWidget {
 
     return _wrapApp(
       appContext: appPondContext,
-      child: Builder(builder: (context) {
-        return VRouter(
-          initialUrl:
-              Uri(path: splashRoute, queryParameters: {redirectParam: initialPageGetter().uri.toString()}).toString(),
-          routes: [
-            VGuard(
-              beforeEnter: (vRedirector) async => isAppContextLoadedValue.value
-                  ? vRedirector.to(VRouterSegmentWrapper.getVRouterPath(initialPageGetter()))
-                  : null,
-              stackedRoutes: [
-                VWidget.builder(
-                  path: splashRoute,
-                  builder: (context, state) => SplashPage(
-                    splashPage: splashPage,
-                    appPondContext: appPondContext,
-                    onFinishedLoading: isAppContextLoadedValue.value
-                        ? null
-                        : (context) async {
-                            isAppContextLoadedValue.value = true;
-                            final redirect = state.queryParameters[redirectParam];
-                            final initialPage = initialPageGetter();
-                            context.vRouter.to(redirect ?? initialPage.uri.toString());
-                          },
+      child: Builder(
+        builder: (context) {
+          return VRouter(
+            initialUrl:
+                Uri(path: splashRoute, queryParameters: {redirectParam: initialPageGetter().uri.toString()}).toString(),
+            routes: [
+              VGuard(
+                beforeEnter: (vRedirector) async => isAppContextLoadedValue.value
+                    ? vRedirector.to(VRouterSegmentWrapper.getVRouterPath(initialPageGetter()))
+                    : null,
+                stackedRoutes: [
+                  VWidget.builder(
+                    path: splashRoute,
+                    builder: (context, state) => SplashPage(
+                      splashPage: splashPage,
+                      appPondContext: appPondContext,
+                      onFinishedLoading: isAppContextLoadedValue.value
+                          ? null
+                          : (context) async {
+                              isAppContextLoadedValue.value = true;
+                              final redirect = state.queryParameters[redirectParam];
+                              final initialPage = initialPageGetter();
+                              context.vRouter.to(redirect ?? initialPage.uri.toString());
+                            },
+                    ),
                   ),
-                ),
-              ],
-            ),
-            ...appPondContext.getPages().where((page) => page.getParent() == null).map(
-                  (page) => VGuard(
-                    beforeEnter: (vRedirector) async {
-                      final uri = vRedirector.toUrl?.mapIfNonNull(Uri.tryParse);
-                      !isAppContextLoadedValue.value
-                          ? vRedirector.to(Uri(
-                              path: splashRoute,
-                              queryParameters: uri?.mapIfNonNull((uri) => {redirectParam: uri.toString()}),
-                            ).toString())
-                          : null;
-                    },
-                    stackedRoutes: [
-                      getVElementForPage(context, page),
-                    ],
+                ],
+              ),
+              ...appPondContext.getPages().where((page) => page.getParent() == null).map(
+                    (page) => VGuard(
+                      beforeEnter: (vRedirector) async {
+                        final uri = vRedirector.toUrl?.mapIfNonNull(Uri.tryParse);
+                        !isAppContextLoadedValue.value
+                            ? vRedirector.to(Uri(
+                                path: splashRoute,
+                                queryParameters: uri?.mapIfNonNull((uri) => {redirectParam: uri.toString()}),
+                              ).toString())
+                            : null;
+                      },
+                      stackedRoutes: [
+                        getVElementForPage(context, page),
+                      ],
+                    ),
                   ),
-                ),
-            VWidget.builder(
-              path: '*',
-              builder: (context, state) => notFoundPage,
+              VWidget.builder(
+                path: '*',
+                builder: (context, state) => notFoundPage,
+              ),
+            ],
+            debugShowCheckedModeBanner: false,
+            builder: (context, widget) => _wrapPage(
+              child: widget,
+              appContext: appPondContext,
+              uri: context.uri,
             ),
-          ],
-          debugShowCheckedModeBanner: false,
-          builder: (context, widget) => _wrapPage(
-            child: widget,
-            appContext: appPondContext,
-            uri: context.uri,
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 

@@ -27,6 +27,10 @@ class HomePage extends AppPage {
       return loginPage.uri;
     }
 
+    if (!matches(currentUri.toString())) {
+      return null;
+    }
+
     return BudgetsPage().uri;
   }
 }
