@@ -42,11 +42,13 @@ Future<CorePondContext> getCorePondContext({required EnvironmentConfig environme
       final budgetEntity = BudgetEntity()..value = budget;
       final updatedBudgetState = await dropComponent.update(budgetEntity);
 
-      final envelope = Envelope()
-        ..nameProperty.set('Envelope')
-        ..budgetProperty.set(updatedBudgetState.id);
-      final envelopeEntity = EnvelopeEntity()..value = envelope;
-      await dropComponent.update(envelopeEntity);
+      await Future.wait(List.generate(
+              100,
+              (i) => Envelope()
+                ..nameProperty.set('Envelope $i')
+                ..budgetProperty.set(updatedBudgetState.id))
+          .map((envelope) => EnvelopeEntity()..value = envelope)
+          .map((entity) => dropComponent.update(entity)));
     }
   }));
   return corePondContext;

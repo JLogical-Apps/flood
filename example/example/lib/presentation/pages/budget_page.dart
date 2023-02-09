@@ -29,14 +29,23 @@ class BudgetPage extends AppPage {
                 model: envelopesModel,
                 builder: (QueryResultPage<EnvelopeEntity> page) {
                   return StyledList.column.withMinChildSize(150)(
-                    children: page.items
-                        .map((envelopeEntity) => StyledCard(
-                              titleText: envelopeEntity.value.nameProperty.value,
-                              onPressed: () async {
-                                context.warpTo(EnvelopePage()..idProperty.set(envelopeEntity.id!));
-                              },
-                            ))
-                        .toList(),
+                    children: [
+                      ...page.items
+                          .map((envelopeEntity) => StyledCard(
+                                titleText: envelopeEntity.value.nameProperty.value,
+                                onPressed: () async {
+                                  context.warpTo(EnvelopePage()..idProperty.set(envelopeEntity.id!));
+                                },
+                              ))
+                          .toList(),
+                      if (page.hasNext)
+                        StyledButton(
+                          labelText: 'Load More',
+                          onPressed: () async {
+                            print(await page.getNextPage());
+                          },
+                        )
+                    ],
                   );
                 },
               ),

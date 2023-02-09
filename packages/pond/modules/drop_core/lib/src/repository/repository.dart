@@ -9,6 +9,8 @@ import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/repository/type/for_abstract_type_repository.dart';
 import 'package:drop_core/src/repository/type/for_type_repository.dart';
+import 'package:drop_core/src/repository/type/with_embedded_abstract_type_repository.dart';
+import 'package:drop_core/src/repository/type/with_embedded_type_repository.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:pond_core/pond_core.dart';
@@ -77,6 +79,30 @@ extension RepositoryExtension on Repository {
       entityTypeName: entityTypeName,
       valueObjectTypeName: valueObjectTypeName,
       entityParents: entityParents ?? [],
+      valueObjectParents: valueObjectParents ?? [],
+    );
+  }
+
+  WithEmbeddedTypeRepository withEmbeddedType<V extends ValueObject>(
+    V Function() valueObjectConstructor, {
+    required String valueObjectTypeName,
+    List<Type>? valueObjectParents,
+  }) {
+    return WithEmbeddedTypeRepository(
+      repository: this,
+      valueObjectConstructor: valueObjectConstructor,
+      valueObjectTypeName: valueObjectTypeName,
+      valueObjectParents: valueObjectParents ?? [],
+    );
+  }
+
+  WithEmbeddedAbstractTypeRepository withEmbeddedAbstractType<V extends ValueObject>({
+    required String valueObjectTypeName,
+    List<Type>? valueObjectParents,
+  }) {
+    return WithEmbeddedAbstractTypeRepository(
+      repository: this,
+      valueObjectTypeName: valueObjectTypeName,
       valueObjectParents: valueObjectParents ?? [],
     );
   }
