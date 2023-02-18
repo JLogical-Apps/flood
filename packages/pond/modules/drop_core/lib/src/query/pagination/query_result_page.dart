@@ -35,6 +35,13 @@ extension QueryResultPageDefaults<T> on QueryResultPage<T> {
     return MapperQueryResultPage(sourceQueryResultPage: this, mapper: mapper);
   }
 
+  QueryResultPage<T> operator +(QueryResultPage<T> nextPage) {
+    return QueryResultPage(
+      items: items + nextPage.items,
+      nextPageGetter: nextPage.nextPageGetter,
+    );
+  }
+
   Future<List<T>> combineAll() async {
     final items = <T>[];
 

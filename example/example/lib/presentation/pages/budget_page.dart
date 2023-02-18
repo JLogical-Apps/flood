@@ -25,12 +25,12 @@ class BudgetPage extends AppPage {
           titleText: budget.nameProperty.value,
           body: StyledList.column.scrollable(
             children: [
-              ModelBuilder(
-                model: envelopesModel,
-                builder: (QueryResultPage<EnvelopeEntity> page) {
+              PaginatedQueryModelBuilder(
+                paginatedQueryModel: envelopesModel,
+                builder: (List<EnvelopeEntity> envelopeEntities, Future Function()? loadNext) {
                   return StyledList.column.withMinChildSize(150)(
                     children: [
-                      ...page.items
+                      ...envelopeEntities
                           .map((envelopeEntity) => StyledCard(
                                 titleText: envelopeEntity.value.nameProperty.value,
                                 onPressed: () async {
@@ -38,11 +38,11 @@ class BudgetPage extends AppPage {
                                 },
                               ))
                           .toList(),
-                      if (page.hasNext)
+                      if (loadNext != null)
                         StyledButton(
                           labelText: 'Load More',
                           onPressed: () async {
-                            print(await page.getNextPage());
+                            await loadNext();
                           },
                         )
                     ],

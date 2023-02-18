@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:drop_core/src/context/drop_core_context.dart';
-import 'package:drop_core/src/query/pagination/query_result_page.dart';
+import 'package:drop_core/src/query/pagination/paginated_query_result.dart';
 import 'package:drop_core/src/query/request/map_query_request.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
@@ -9,14 +9,14 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:equatable/equatable.dart';
 
 class PaginatedQueryRequest<E extends Entity>
-    with IsMapQueryRequest<QueryResultPage<State>, QueryResultPage<E>>, EquatableMixin {
+    with IsMapQueryRequest<PaginatedQueryResult<State>, PaginatedQueryResult<E>>, EquatableMixin {
   @override
-  final QueryRequest<QueryResultPage<State>> sourceQueryRequest;
+  final QueryRequest<PaginatedQueryResult<State>> sourceQueryRequest;
 
   PaginatedQueryRequest({required this.sourceQueryRequest});
 
   @override
-  FutureOr<QueryResultPage<E>> doMap(DropCoreContext context, QueryResultPage<State> statesPage) {
+  FutureOr<PaginatedQueryResult<E>> doMap(DropCoreContext context, PaginatedQueryResult<State> statesPage) {
     return statesPage.map((state) => context.constructEntityFromState<E>(state));
   }
 

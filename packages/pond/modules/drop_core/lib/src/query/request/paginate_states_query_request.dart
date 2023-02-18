@@ -1,9 +1,9 @@
-import 'package:drop_core/src/query/pagination/query_result_page.dart';
+import 'package:drop_core/src/query/pagination/paginated_query_result.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/state/state.dart';
 
-class PaginateStatesQueryRequest extends QueryRequest<QueryResultPage<State>> {
+class PaginateStatesQueryRequest extends QueryRequest<PaginatedQueryResult<State>> {
   @override
   final Query query;
 

@@ -1,5 +1,6 @@
 export 'src/context/drop_core_context.dart';
 export 'src/drop_core_component.dart';
+export 'src/query/pagination/paginated_query_result.dart';
 export 'src/query/pagination/query_result_page.dart';
 export 'src/query/query.dart';
 export 'src/query/request/query_request.dart';
