@@ -75,7 +75,7 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
             titleText: 'Debug',
             descriptionText: 'Print a Debug statement',
             iconData: Icons.bug_report,
-            onPerform: () {
+            onPerform: (context) {
               print('Hello World!');
             },
           ),

@@ -14,7 +14,7 @@ class ActionItem {
 
   final Color? color;
 
-  final FutureOr Function()? onPerform;
+  final FutureOr Function(BuildContext context)? onPerform;
 
   ActionItem({
     this.title,

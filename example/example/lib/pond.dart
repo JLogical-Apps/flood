@@ -43,9 +43,9 @@ Future<CorePondContext> getCorePondContext({required EnvironmentConfig environme
       final updatedBudgetState = await dropComponent.update(budgetEntity);
 
       await Future.wait(List.generate(
-              100,
+              5,
               (i) => Envelope()
-                ..nameProperty.set('Envelope $i')
+                ..nameProperty.set('Envelope ${i + 1}')
                 ..budgetProperty.set(updatedBudgetState.id))
           .map((envelope) => EnvelopeEntity()..value = envelope)
           .map((entity) => dropComponent.update(entity)));

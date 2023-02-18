@@ -33,8 +33,8 @@ class FlatStyleMenuButtonRenderer with IsTypedStyleRenderer<StyledMenuButton> {
                                         color: action.color,
                                       )) ??
                                   action.icon,
-                              onTap: action.onPerform?.mapIfNonNull((onPerform) => () {
-                                    onPerform();
+                              onTap: action.onPerform?.mapIfNonNull((onPerform) => () async {
+                                    await onPerform(context);
                                     Navigator.of(context).pop();
                                   }),
                             ))
@@ -55,7 +55,7 @@ class FlatStyleMenuButtonRenderer with IsTypedStyleRenderer<StyledMenuButton> {
               titleText: 'Debug',
               descriptionText: 'Print a Debug statement',
               iconData: Icons.bug_report,
-              onPerform: () {
+              onPerform: (context) {
                 print('Hello World!');
               }),
         ]));

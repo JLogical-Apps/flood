@@ -23,57 +23,68 @@ class BudgetPage extends AppPage {
         final budget = budgetEntity.value;
         return StyledPage(
           titleText: budget.nameProperty.value,
+          actions: [
+            ActionItem(
+              titleText: 'Create',
+              descriptionText: 'Create a new budget.',
+              iconData: Icons.add,
+              color: Colors.green,
+              onPerform: (context) async {
+                final result = await context.style().showDialog(
+                      context,
+                      StyledPortDialog(
+                        titleText: 'Create Envelope',
+                        port: Port.of({
+                          'name': PortValue.string().isNotBlank(),
+                        }),
+                        children: [
+                          StyledTextFieldPortField(
+                            fieldName: 'name',
+                            labelText: 'Name',
+                          ),
+                        ],
+                      ),
+                    );
+                if (result == null) {
+                  return;
+                }
+
+                final envelope = Envelope()
+                  ..nameProperty.set(result['name'])
+                  ..budgetProperty.set(budgetIdProperty.value);
+                final envelopeEntity = EnvelopeEntity()..value = envelope;
+                await context.dropCoreComponent.update(envelopeEntity);
+              },
+            ),
+          ],
           body: StyledList.column.scrollable(
             children: [
               PaginatedQueryModelBuilder(
                 paginatedQueryModel: envelopesModel,
                 builder: (List<EnvelopeEntity> envelopeEntities, Future Function()? loadNext) {
-                  return StyledList.column.withMinChildSize(150)(
+                  return StyledList.column(
                     children: [
-                      ...envelopeEntities
-                          .map((envelopeEntity) => StyledCard(
-                                titleText: envelopeEntity.value.nameProperty.value,
-                                onPressed: () async {
-                                  context.warpTo(EnvelopePage()..idProperty.set(envelopeEntity.id!));
-                                },
-                              ))
-                          .toList(),
+                      StyledList.column.withMinChildSize(150)(
+                        children: [
+                          ...envelopeEntities
+                              .map((envelopeEntity) => StyledCard(
+                                    titleText: envelopeEntity.value.nameProperty.value,
+                                    onPressed: () async {
+                                      context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!));
+                                    },
+                                  ))
+                              .toList(),
+                        ],
+                      ),
                       if (loadNext != null)
                         StyledButton(
                           labelText: 'Load More',
                           onPressed: () async {
                             await loadNext();
                           },
-                        )
+                        ),
                     ],
                   );
-                },
-              ),
-              StyledButton.strong(
-                labelText: 'Create +',
-                onPressed: () async {
-                  final result = await context.style().showDialog(
-                      context,
-                      StyledPortDialog(
-                          titleText: 'Create Envelope',
-                          port: Port.of({
-                            'name': PortValue.string().isNotBlank(),
-                          }),
-                          children: [
-                            StyledTextFieldPortField(
-                              fieldName: 'name',
-                              labelText: 'Name',
-                            ),
-                          ]));
-                  if (result == null) {
-                    return;
-                  }
-
-                  final envelope = Envelope()
-                    ..nameProperty.set(result['name'])
-                    ..budgetProperty.set(budgetIdProperty.value);
-                  final envelopeEntity = EnvelopeEntity()..value = envelope;
-                  await context.dropCoreComponent.update(envelopeEntity);
                 },
               ),
             ],
