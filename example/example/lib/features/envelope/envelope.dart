@@ -14,5 +14,6 @@ class Envelope extends ValueObject {
   List<ValueObjectBehavior> get behaviors => [
         nameProperty,
         budgetProperty,
+        ruleProperty,
       ];
 }

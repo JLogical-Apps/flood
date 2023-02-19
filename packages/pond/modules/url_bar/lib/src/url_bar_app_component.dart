@@ -41,7 +41,7 @@ class UrlBarAppComponent with IsAppPondComponent {
                                     StyledButton.strong(
                                       labelText: 'Go',
                                       onPressed: () async {
-                                        context.warpToLocation(locationValue.value);
+                                        context.pushLocation(locationValue.value);
                                         isExpandedState.value = false;
                                       },
                                     ),

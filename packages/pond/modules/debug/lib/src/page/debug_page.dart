@@ -12,7 +12,7 @@ class DebugPage extends AppPage {
       body: StyledList.column.centered.withScrollbar(
           children: debugPageComponents
               .map((debugPageComponent) => StyledButton(
-                    onPressed: () => context.warpTo(debugPageComponent.appPage),
+                    onPressed: () => context.push(debugPageComponent.appPage),
                     labelText: debugPageComponent.name,
                   ))
               .toList()),

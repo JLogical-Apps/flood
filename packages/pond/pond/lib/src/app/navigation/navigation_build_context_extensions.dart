@@ -22,8 +22,12 @@ extension NavigationBuildContextExtensions on BuildContext {
     _navigationComponent.warpToLocation(this, location);
   }
 
-  Future<T> push<T>(AppPage page) {
+  Future<T?> push<T>(AppPage page) {
     return _navigationComponent.push<T>(this, page);
+  }
+
+  Future<T?> pushLocation<T>(String location) {
+    return _navigationComponent.pushLocation(this, location);
   }
 
   Future<T> pushReplacement<T>(AppPage page) {

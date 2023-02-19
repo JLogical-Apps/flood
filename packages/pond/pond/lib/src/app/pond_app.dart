@@ -14,6 +14,8 @@ const splashRoute = '/_splash';
 const redirectParam = 'redirect';
 
 class PondApp extends HookWidget {
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
   final AppPondContext appPondContext;
   final AppPage Function() initialPageGetter;
   final Widget splashPage;
@@ -36,6 +38,7 @@ class PondApp extends HookWidget {
       child: Builder(
         builder: (context) {
           return VRouter(
+            navigatorKey: navigatorKey,
             initialUrl:
                 Uri(path: splashRoute, queryParameters: {redirectParam: initialPageGetter().uri.toString()}).toString(),
             routes: [
