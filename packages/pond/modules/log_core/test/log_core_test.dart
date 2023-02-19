@@ -8,6 +8,10 @@ void main() {
     await logCoreComponent.logWarning('Hello World');
     await logCoreComponent.logError('Hello World', StackTrace.current);
 
-    expect(await logCoreComponent.getLogs(), startsWith('Hello World\n[WARNING] Hello World\n[ERROR] Hello World'));
+    expect(await logCoreComponent.getLogs(), [
+      'Hello World',
+      '[WARNING] Hello World',
+      startsWith('[ERROR] Hello World'),
+    ]);
   });
 }
