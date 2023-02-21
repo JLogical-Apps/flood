@@ -6,6 +6,7 @@ import 'package:drop_core/src/record/value_object/reference_value_object_propert
 import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:drop_core/src/state/stateful.dart';
 import 'package:equatable/equatable.dart';
 import 'package:type/type.dart';
 
@@ -31,6 +32,10 @@ abstract class ValueObject extends Record with EquatableMixin {
     for (final behavior in behaviors) {
       behavior.fromState(state);
     }
+  }
+
+  void copyFrom(DropCoreContext context, Stateful stateful) {
+    state = stateful.getState(context);
   }
 
   @override

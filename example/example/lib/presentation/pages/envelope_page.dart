@@ -1,3 +1,4 @@
+import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,36 @@ class EnvelopePage extends AppPage {
       builder: (EnvelopeEntity envelopeEntity) {
         return StyledPage(
           titleText: envelopeEntity.value.nameProperty.value,
+          actions: [
+            ActionItem(
+                titleText: 'Edit',
+                descriptionText: 'Edit the Envelope',
+                color: Colors.orange,
+                iconData: Icons.edit,
+                onPerform: (context) async {
+                  final result = await context.style().showDialog(
+                      context,
+                      StyledPortDialog(
+                        port: Port.of({'name': PortValue.string()}),
+                        titleText: 'Edit',
+                        children: [
+                          StyledTextFieldPortField(
+                            fieldName: 'name',
+                            labelText: 'Name',
+                          ),
+                        ],
+                      ));
+
+                  if (result == null) {
+                    return;
+                  }
+
+                  envelopeEntity.value = Envelope()
+                    ..copyFrom(context.dropCoreComponent, envelopeEntity.value)
+                    ..nameProperty.set(result['name']);
+                  await context.dropCoreComponent.update(envelopeEntity);
+                }),
+          ],
           body: StyledList.column.scrollable(
             children: [],
           ),
