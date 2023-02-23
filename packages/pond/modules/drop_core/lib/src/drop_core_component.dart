@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:actions_core/actions_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
@@ -27,6 +29,21 @@ class DropCoreComponent extends CorePondComponent with IsDropCoreContext, IsRepo
   @override
   Future<void> onDelete(State state) {
     return context.run(deleteAction, state);
+  }
+
+  Future<E> updateEntity<E extends Entity<V>, V extends ValueObject>(
+    E entity,
+    FutureOr Function(V newValueObject) updater,
+  ) async {
+    final newValueObject = typeContext.constructGeneric<V>();
+    if (entity.hasValue) {
+      newValueObject.state = entity.value.getState(this);
+    }
+
+    await updater(newValueObject);
+    entity.value = newValueObject;
+    final newState = await update(entity);
+    return constructEntityFromState(newState);
   }
 
   late final updateAction = Action(

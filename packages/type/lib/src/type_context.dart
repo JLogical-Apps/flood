@@ -72,6 +72,14 @@ extension TypeContextExtensions on TypeContext {
     return constructOrNull(type) ?? (throw Exception('Cannot find runtime type for [$type]'));
   }
 
+  T? constructGenericOrNull<T>() {
+    return getRuntimeTypeOrNull<T>()?.createInstanceOrNull();
+  }
+
+  T constructGeneric<T>() {
+    return getRuntimeType<T>().createInstance();
+  }
+
   List<RuntimeType> getAncestorsOf(RuntimeType runtimeType) {
     return DirectedGraph<RuntimeType>(runtimeTypes.mapToMap((type) => MapEntry(type, type.parents.toSet())))
         .reachableVertices(runtimeType)

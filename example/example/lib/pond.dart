@@ -30,25 +30,25 @@ Future<CorePondContext> getCorePondContext({required EnvironmentConfig environme
 
       final userId = await authComponent.signup('test@test.com', 'password');
 
-      final user = User()..nameProperty.set('John Doe');
-      final userEntity = UserEntity()
-        ..id = userId
-        ..value = user;
-      await dropComponent.update(userEntity);
+      final userEntity = await dropComponent.updateEntity(
+        UserEntity()..id = userId,
+        (User user) => user.nameProperty.set('John Doe'),
+      );
 
-      final budget = Budget()
-        ..nameProperty.set('Budget')
-        ..ownerProperty.set(userEntity.id!);
-      final budgetEntity = BudgetEntity()..value = budget;
-      final updatedBudgetState = await dropComponent.update(budgetEntity);
+      final budgetEntity = await dropComponent.updateEntity(
+        BudgetEntity(),
+        (Budget budget) => budget
+          ..nameProperty.set('Budget')
+          ..ownerProperty.set(userEntity.id!),
+      );
 
       await Future.wait(List.generate(
-              5,
-              (i) => Envelope()
+          5,
+          (i) => dropComponent.updateEntity(
+              EnvelopeEntity(),
+              (Envelope envelope) => envelope
                 ..nameProperty.set('Envelope ${i + 1}')
-                ..budgetProperty.set(updatedBudgetState.id))
-          .map((envelope) => EnvelopeEntity()..value = envelope)
-          .map((entity) => dropComponent.update(entity)));
+                ..budgetProperty.set(budgetEntity.id!))));
     }
   }));
   return corePondContext;

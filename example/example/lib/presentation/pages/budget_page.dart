@@ -49,11 +49,12 @@ class BudgetPage extends AppPage {
                   return;
                 }
 
-                final envelope = Envelope()
-                  ..nameProperty.set(result['name'])
-                  ..budgetProperty.set(budgetIdProperty.value);
-                final envelopeEntity = EnvelopeEntity()..value = envelope;
-                await context.dropCoreComponent.update(envelopeEntity);
+                await context.dropCoreComponent.updateEntity(
+                  EnvelopeEntity(),
+                  (Envelope envelope) => envelope
+                    ..nameProperty.set(result['name'])
+                    ..budgetProperty.set(budgetIdProperty.value),
+                );
               },
             ),
           ],

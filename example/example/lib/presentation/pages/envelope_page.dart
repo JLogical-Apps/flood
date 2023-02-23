@@ -39,10 +39,10 @@ class EnvelopePage extends AppPage {
                     return;
                   }
 
-                  envelopeEntity.value = Envelope()
-                    ..copyFrom(context.dropCoreComponent, envelopeEntity.value)
-                    ..nameProperty.set(result['name']);
-                  await context.dropCoreComponent.update(envelopeEntity);
+                  await context.dropCoreComponent.updateEntity(
+                    envelopeEntity,
+                    (Envelope envelope) => envelope.nameProperty.set(result['name']),
+                  );
                 }),
           ],
           body: StyledList.column.scrollable(

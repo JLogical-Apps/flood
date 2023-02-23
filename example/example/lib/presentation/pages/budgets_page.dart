@@ -69,11 +69,12 @@ class BudgetsPage extends AppPage {
                           return;
                         }
 
-                        final newBudgetEntity = BudgetEntity()
-                          ..value = (Budget()
+                        await context.dropCoreComponent.updateEntity(
+                          BudgetEntity(),
+                          (Budget budget) => budget
                             ..nameProperty.set(result['name'])
-                            ..ownerProperty.set(loggedInUserIdModel.getOrNull()!));
-                        await context.dropCoreComponent.update(newBudgetEntity);
+                            ..ownerProperty.set(loggedInUserIdModel.getOrNull()!),
+                        );
                       },
                     ),
                   ],

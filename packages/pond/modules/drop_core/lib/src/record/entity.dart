@@ -13,6 +13,8 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
 
   Type get valueObjectType => V;
 
+  bool get hasValue => _valueObjectX.hasValue;
+
   V get value => _valueObjectX.value;
 
   set value(V valueObject) => _valueObjectX.value = valueObject;
