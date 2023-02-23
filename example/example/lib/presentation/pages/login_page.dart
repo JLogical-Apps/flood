@@ -35,54 +35,56 @@ class LoginPage extends AppPage {
                 labelText: 'Password',
                 obscureText: true,
               ),
-              StyledList.row.centered.withScrollbar(children: [
-                StyledButton(
-                  labelText: 'Login',
-                  onPressed: () async {
-                    final result = await loginPort.submit();
-                    if (!result.isValid) {
-                      return;
-                    }
+              StyledList.row.centered.withScrollbar(
+                children: [
+                  StyledButton(
+                    labelText: 'Login',
+                    onPressed: () async {
+                      final result = await loginPort.submit();
+                      if (!result.isValid) {
+                        return;
+                      }
 
-                    final data = result.data;
+                      final data = result.data;
 
-                    try {
-                      await context.find<AuthCoreComponent>().login(data['email'], data['password']);
-                      context.warpTo(HomePage());
-                    } catch (e, stackTrace) {
-                      loginPort.setError(name: 'email', error: e.toString());
-                      print(e);
-                      print(stackTrace);
-                    }
-                  },
-                ),
-                StyledButton.strong(
-                  labelText: 'Sign Up',
-                  onPressed: () async {
-                    final result = await loginPort.submit();
-                    if (!result.isValid) {
-                      return;
-                    }
+                      try {
+                        await context.find<AuthCoreComponent>().login(data['email'], data['password']);
+                        context.warpTo(HomePage());
+                      } catch (e, stackTrace) {
+                        loginPort.setError(name: 'email', error: e.toString());
+                        print(e);
+                        print(stackTrace);
+                      }
+                    },
+                  ),
+                  StyledButton.strong(
+                    labelText: 'Sign Up',
+                    onPressed: () async {
+                      final result = await loginPort.submit();
+                      if (!result.isValid) {
+                        return;
+                      }
 
-                    final data = result.data;
+                      final data = result.data;
 
-                    try {
-                      final userId = await context.find<AuthCoreComponent>().signup(data['email'], data['password']);
+                      try {
+                        final userId = await context.find<AuthCoreComponent>().signup(data['email'], data['password']);
 
-                      await context.dropCoreComponent.updateEntity(
-                        UserEntity()..id = userId,
-                        (User user) => user..nameProperty.set('Jake'),
-                      );
+                        await context.dropCoreComponent.updateEntity(
+                          UserEntity()..id = userId,
+                          (User user) => user..nameProperty.set('Jake'),
+                        );
 
-                      context.warpTo(HomePage());
-                    } catch (e, stackTrace) {
-                      loginPort.setError(name: 'email', error: e.toString());
-                      print(e);
-                      print(stackTrace);
-                    }
-                  },
-                ),
-              ]),
+                        context.warpTo(HomePage());
+                      } catch (e, stackTrace) {
+                        loginPort.setError(name: 'email', error: e.toString());
+                        print(e);
+                        print(stackTrace);
+                      }
+                    },
+                  ),
+                ],
+              ),
             ],
           );
         },
