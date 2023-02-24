@@ -21,16 +21,27 @@ class NavigationAppPondComponent with IsAppPondComponent {
   }
 
   Future<T?> push<T>(BuildContext context, AppPage page) async {
-    SystemNavigator.routeInformationUpdated(location: page.uri.toString());
-    return PondApp.navigatorKey.currentState!.push(MaterialPageRoute(
-      builder: (_) => page,
-      settings: RouteSettings(name: page.uri.toString()),
-    ));
+    return pushLocation(context, page.uri.toString());
+  }
+
+  Future<T?> pushUri<T>(BuildContext context, Uri uri) async {
+    return pushLocation<T>(context, uri.toString());
   }
 
   Future<T?> pushLocation<T>(BuildContext context, String location) async {
     final page = context.appPondContext.getPages().firstWhere((page) => page.matches(location));
-    return push(context, page);
+    final newPage = page.copy();
+    newPage.fromPath(location);
+
+    SystemNavigator.routeInformationUpdated(location: location);
+    return PondApp.navigatorKey.currentState!.push(MaterialPageRoute(
+      builder: (_) => PondApp.wrapPage(
+        appContext: context.appPondContext,
+        child: newPage,
+        uri: Uri.parse(location),
+      ),
+      settings: RouteSettings(name: location),
+    ));
   }
 
   Future<T> pushReplacement<T>(BuildContext context, AppPage page) async {

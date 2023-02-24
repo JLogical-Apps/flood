@@ -33,7 +33,7 @@ class PondApp extends HookWidget {
   Widget build(BuildContext context) {
     final isAppContextLoadedValue = useMutable(() => false);
 
-    return _wrapApp(
+    return wrapApp(
       appContext: appPondContext,
       child: Builder(
         builder: (context) {
@@ -76,7 +76,7 @@ class PondApp extends HookWidget {
                             : null;
                       },
                       stackedRoutes: [
-                        getVElementForPage(context, page),
+                        _getVElementForPage(context, page),
                       ],
                     ),
                   ),
@@ -86,7 +86,7 @@ class PondApp extends HookWidget {
               ),
             ],
             debugShowCheckedModeBanner: false,
-            builder: (context, widget) => _wrapPage(
+            builder: (context, widget) => wrapPage(
               child: widget,
               appContext: appPondContext,
               uri: context.uri,
@@ -97,7 +97,7 @@ class PondApp extends HookWidget {
     );
   }
 
-  VRouteElement getVElementForPage(BuildContext context, AppPage page) {
+  VRouteElement _getVElementForPage(BuildContext context, AppPage page) {
     return VPopHandler(
       onPop: (vRedirector) async {
         final exitingUrl = vRedirector.previousVRouterData?.url;
@@ -155,7 +155,7 @@ class PondApp extends HookWidget {
               stackedRoutes: appPondContext
                   .getPages()
                   .where((p) => p.getParent()?.runtimeType == page.runtimeType)
-                  .map((page) => getVElementForPage(context, page))
+                  .map((page) => _getVElementForPage(context, page))
                   .toList(),
             ),
           ],
@@ -164,7 +164,7 @@ class PondApp extends HookWidget {
     );
   }
 
-  Widget _wrapApp({
+  static Widget wrapApp({
     required AppPondContext appContext,
     required Widget child,
   }) {
@@ -178,7 +178,7 @@ class PondApp extends HookWidget {
     );
   }
 
-  Widget _wrapPage({
+  static Widget wrapPage({
     required AppPondContext appContext,
     required Widget child,
     required Uri uri,
