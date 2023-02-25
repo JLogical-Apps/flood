@@ -371,6 +371,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  port_drop_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/port_drop_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   port_style:
     dependency: "direct main"
     description:

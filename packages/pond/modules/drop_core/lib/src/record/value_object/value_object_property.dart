@@ -30,6 +30,11 @@ mixin IsValueObjectProperty<G, S, L> implements ValueObjectProperty<G, S, L> {
   Future<L> load(DropCoreContext context) {
     throw Exception('Load not supported!');
   }
+
+  @override
+  State modifyStateUnsafe(State state) {
+    return modifyState(state);
+  }
 }
 
 extension ValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G, S, L> {
@@ -70,4 +75,7 @@ mixin IsValueObjectPropertyWrapper<G, S, L> implements ValueObjectPropertyWrappe
 
   @override
   State modifyState(State state) => property.modifyState(state);
+
+  @override
+  State modifyStateUnsafe(State state) => property.modifyStateUnsafe(state);
 }

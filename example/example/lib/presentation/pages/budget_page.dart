@@ -26,35 +26,27 @@ class BudgetPage extends AppPage {
           actions: [
             ActionItem(
               titleText: 'Create',
-              descriptionText: 'Create a new budget.',
+              descriptionText: 'Create a new envelope.',
               iconData: Icons.add,
               color: Colors.green,
               onPerform: (context) async {
                 final result = await context.style().showDialog(
-                      context,
-                      StyledPortDialog(
-                        titleText: 'Create Envelope',
-                        port: Port.of({
-                          'name': PortValue.string().isNotBlank(),
-                        }),
-                        children: [
-                          StyledTextFieldPortField(
-                            fieldName: 'name',
-                            labelText: 'Name',
-                          ),
-                        ],
-                      ),
-                    );
+                    context,
+                    StyledPortDialog(
+                      titleText: 'Create New Envelope',
+                      port: (Envelope()..budgetProperty.set(budgetEntity.id)).asPort(context.corePondContext),
+                      children: [
+                        StyledTextFieldPortField(
+                          fieldName: Envelope.nameField,
+                          labelText: 'Name',
+                        ),
+                      ],
+                    ));
                 if (result == null) {
                   return;
                 }
 
-                await context.dropCoreComponent.updateEntity(
-                  EnvelopeEntity(),
-                  (Envelope envelope) => envelope
-                    ..nameProperty.set(result['name'])
-                    ..budgetProperty.set(budgetIdProperty.value),
-                );
+                await context.dropCoreComponent.update(EnvelopeEntity()..value = result);
               },
             ),
           ],

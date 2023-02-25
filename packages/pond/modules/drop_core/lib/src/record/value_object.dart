@@ -18,6 +18,12 @@ abstract class ValueObject extends Record with EquatableMixin {
     return scaffoldState.withType(context.getRuntimeTypeRuntime(runtimeType));
   }
 
+  set state(State state) {
+    for (final behavior in behaviors) {
+      behavior.fromState(state);
+    }
+  }
+
   /// The state of the ValueObject without the type set.
   State get scaffoldState {
     final state = behaviors.fold<State>(
@@ -28,14 +34,26 @@ abstract class ValueObject extends Record with EquatableMixin {
     return state;
   }
 
-  set state(State state) {
-    for (final behavior in behaviors) {
-      behavior.fromState(state);
-    }
+  @override
+  State getStateUnsafe(DropCoreContext context) {
+    return scaffoldStateUnsafe.withType(context.getRuntimeTypeRuntime(runtimeType));
+  }
+
+  State get scaffoldStateUnsafe {
+    final state = behaviors.fold<State>(
+      State(data: {}),
+      (state, behavior) => behavior.modifyStateUnsafe(state),
+    );
+
+    return state;
   }
 
   void copyFrom(DropCoreContext context, Stateful stateful) {
     state = stateful.getState(context);
+  }
+
+  void copyFromUnsafe(DropCoreContext context, Stateful stateful) {
+    state = stateful.getStateUnsafe(context);
   }
 
   @override

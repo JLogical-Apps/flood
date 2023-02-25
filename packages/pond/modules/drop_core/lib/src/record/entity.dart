@@ -24,5 +24,9 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
       value.getState(context).withId(id).withType(context.getRuntimeTypeRuntime(runtimeType));
 
   @override
+  State getStateUnsafe(DropCoreContext context) =>
+      value.getStateUnsafe(context).withId(id).withType(context.getRuntimeTypeRuntime(runtimeType));
+
+  @override
   List<Object?> get props => [id];
 }

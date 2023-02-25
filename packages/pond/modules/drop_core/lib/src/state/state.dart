@@ -18,6 +18,9 @@ class State extends Equatable implements Stateful {
   State getState(DropCoreContext context) => this;
 
   @override
+  State getStateUnsafe(DropCoreContext context) => this;
+
+  @override
   List<Object?> get props => [id, type, data];
 
   bool get isNew => id == null;
@@ -54,6 +57,10 @@ class State extends Equatable implements Stateful {
 
   State withData(Map<String, dynamic> data) {
     return copyWith(id: id, type: type, data: data);
+  }
+
+  State mergeWith(State state) {
+    return withData({...data, ...state.data});
   }
 
   static State fromMap(

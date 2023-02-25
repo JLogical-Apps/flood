@@ -55,12 +55,11 @@ class BudgetsPage extends AppPage {
                             context,
                             StyledPortDialog(
                               titleText: 'Create New Budget',
-                              port: Port.of({
-                                'name': PortValue.string().isNotBlank(),
-                              }),
+                              port: (Budget()..ownerProperty.set(loggedInUserIdModel.getOrNull()!))
+                                  .asPort(context.corePondContext),
                               children: [
                                 StyledTextFieldPortField(
-                                  fieldName: 'name',
+                                  fieldName: Budget.nameField,
                                   labelText: 'Name',
                                 ),
                               ],
@@ -69,12 +68,7 @@ class BudgetsPage extends AppPage {
                           return;
                         }
 
-                        await context.dropCoreComponent.updateEntity(
-                          BudgetEntity(),
-                          (Budget budget) => budget
-                            ..nameProperty.set(result['name'])
-                            ..ownerProperty.set(loggedInUserIdModel.getOrNull()!),
-                        );
+                        await context.dropCoreComponent.update(BudgetEntity()..value = result);
                       },
                     ),
                   ],

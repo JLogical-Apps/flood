@@ -17,33 +17,30 @@ class EnvelopePage extends AppPage {
           titleText: envelopeEntity.value.nameProperty.value,
           actions: [
             ActionItem(
-                titleText: 'Edit',
-                descriptionText: 'Edit the Envelope',
-                color: Colors.orange,
-                iconData: Icons.edit,
-                onPerform: (context) async {
-                  final result = await context.style().showDialog(
-                      context,
-                      StyledPortDialog(
-                        port: Port.of({'name': PortValue.string()}),
-                        titleText: 'Edit',
-                        children: [
-                          StyledTextFieldPortField(
-                            fieldName: 'name',
-                            labelText: 'Name',
-                          ),
-                        ],
-                      ));
+              titleText: 'Edit',
+              descriptionText: 'Edit the Envelope',
+              color: Colors.orange,
+              iconData: Icons.edit,
+              onPerform: (context) async {
+                final result = await context.style().showDialog(
+                    context,
+                    StyledPortDialog(
+                      titleText: 'Create New Envelope',
+                      port: envelopeEntity.value.asPort(context.corePondContext),
+                      children: [
+                        StyledTextFieldPortField(
+                          fieldName: Envelope.nameField,
+                          labelText: 'Name',
+                        ),
+                      ],
+                    ));
+                if (result == null) {
+                  return;
+                }
 
-                  if (result == null) {
-                    return;
-                  }
-
-                  await context.dropCoreComponent.updateEntity(
-                    envelopeEntity,
-                    (Envelope envelope) => envelope.nameProperty.set(result['name']),
-                  );
-                }),
+                await context.dropCoreComponent.update(envelopeEntity..value = result);
+              },
+            ),
           ],
           body: StyledList.column.scrollable(
             children: [],

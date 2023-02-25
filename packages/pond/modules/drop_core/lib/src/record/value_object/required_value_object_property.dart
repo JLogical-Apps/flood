@@ -17,6 +17,11 @@ class RequiredValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L> {
   }
 
   @override
+  State modifyStateUnsafe(State state) {
+    return property.modifyState(state);
+  }
+
+  @override
   void fromState(State state) {
     property.fromState(state);
 

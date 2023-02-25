@@ -7,6 +7,8 @@ export 'src/query/request/query_request.dart';
 export 'src/record/entity.dart';
 export 'src/record/record.dart';
 export 'src/record/value_object.dart';
+export 'src/record/value_object/field_value_object_property.dart';
+export 'src/record/value_object/required_value_object_property.dart';
 export 'src/record/value_object/value_object_behavior.dart';
 export 'src/record/value_object/value_object_property.dart';
 export 'src/repository/repository.dart';

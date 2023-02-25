@@ -6,4 +6,8 @@ abstract class ValueObjectBehavior {
   State modifyState(State state) {
     return state;
   }
+
+  State modifyStateUnsafe(State state) {
+    return modifyState(state);
+  }
 }
