@@ -41,12 +41,17 @@ class BudgetsPage extends AppPage {
                       children: budgetEntities
                           .map((budgetEntity) => StyledCard(
                                 titleText: budgetEntity.value.nameProperty.value,
-                                bodyText: 'Budget',
                                 onPressed: () {
                                   context.warpTo(BudgetPage()..budgetIdProperty.set(budgetEntity.id!));
                                 },
                               ))
                           .toList(),
+                      ifEmpty: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: StyledText.body(
+                          'You have no budgets! Click the Create button below to create your first one.',
+                        ),
+                      ),
                     ),
                     StyledButton.strong(
                       labelText: 'Create +',

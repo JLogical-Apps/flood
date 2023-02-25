@@ -36,6 +36,8 @@ class StyledListBuilder {
     List<Widget> children = const [],
     EdgeInsets? itemPadding,
     CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
+    Widget? ifEmpty,
+    String? ifEmptyText,
   }) {
     return StyledList(
       key: key,
@@ -47,6 +49,8 @@ class StyledListBuilder {
       isCentered: isCentered,
       itemPadding: itemPadding ?? EdgeInsets.all(4),
       childMinSize: childMinSize,
+      ifEmpty: ifEmpty,
+      ifEmptyText: ifEmptyText,
     );
   }
 }

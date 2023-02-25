@@ -178,8 +178,12 @@ This is a `code block`.
       strongForegroundColorPaletteGetter: () => backgroundColor == primaryColor
           ? getColorPaletteFromBackground(isDark ? Colors.white : Colors.black)
           : getColorPaletteFromBackground(primaryColor),
-      regularForegroundColorPaletteGetter: () => getColorPaletteFromBackground(newForeground),
-      subtleForegroundColorPaletteGetter: () => getColorPaletteFromBackground(newSubtleForeground),
+      regularForegroundColorPaletteGetter: () => backgroundColor == primaryColor
+          ? getColorPaletteFromBackground(isDark ? Colors.white : Colors.black)
+          : getColorPaletteFromBackground(newForeground),
+      subtleForegroundColorPaletteGetter: () => backgroundColor == primaryColor
+          ? getColorPaletteFromBackground(isDark ? Colors.white : Colors.black)
+          : getColorPaletteFromBackground(newSubtleForeground),
       strongErrorColorPaletteGetter: () => getColorPaletteFromBackground(Colors.red.shade700),
       regularErrorColorPaletteGetter: () => getColorPaletteFromBackground(Colors.red),
       subtleErrorColorPaletteGetter: () => getColorPaletteFromBackground(Colors.red.shade400),

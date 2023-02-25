@@ -7,11 +7,21 @@ import 'package:style/src/components/misc/styled_scrollbar.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/style_renderer.dart';
 import 'package:style/src/styleguide.dart';
+import 'package:utils/utils.dart';
 
 class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
   @override
   Widget renderTyped(BuildContext context, StyledList component) {
-    Widget widget = getBase(context, list: component, children: component.children);
+    var children = component.children;
+    final ifEmpty = component.ifEmptyText?.mapIfNonNull((text) => StyledText.body(text)) ?? component.ifEmpty;
+    var usingEmpty = false;
+
+    if (children.isEmpty && ifEmpty != null) {
+      children = [ifEmpty];
+      usingEmpty = true;
+    }
+
+    Widget widget = getBase(context, list: component, children: children, usingEmpty: usingEmpty);
 
     if (component.isCentered) {
       widget = Center(child: widget);
@@ -45,8 +55,13 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
     return widget;
   }
 
-  Widget getBase(BuildContext context, {required StyledList list, required List<Widget> children}) {
-    if (list.childMinSize == null) {
+  Widget getBase(
+    BuildContext context, {
+    required StyledList list,
+    required List<Widget> children,
+    required bool usingEmpty,
+  }) {
+    if (list.childMinSize == null || usingEmpty) {
       children = children
           .intersperse(SizedBox(
             width: list.itemPadding.horizontal,

@@ -12,6 +12,8 @@ class StyledList extends StyleComponent {
   final EdgeInsets itemPadding;
   final bool isCentered;
   final double? childMinSize;
+  final Widget? ifEmpty;
+  final String? ifEmptyText;
 
   StyledList({
     super.key,
@@ -23,6 +25,8 @@ class StyledList extends StyleComponent {
     this.itemPadding = const EdgeInsets.all(4),
     this.isCentered = false,
     this.childMinSize,
+    this.ifEmpty,
+    this.ifEmptyText,
   });
 
   static StyledListBuilder get column => StyledListBuilder(axis: Axis.vertical);

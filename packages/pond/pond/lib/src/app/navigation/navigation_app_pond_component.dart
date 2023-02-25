@@ -46,9 +46,13 @@ class NavigationAppPondComponent with IsAppPondComponent {
 
   Future<T> pushReplacement<T>(BuildContext context, AppPage page) async {
     SystemNavigator.routeInformationUpdated(location: page.uri.toString());
-    return await Navigator.of(context).pushReplacement(MaterialPageRoute(
+    return await PondApp.navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
       builder: (_) => page,
       settings: RouteSettings(name: page.uri.toString()),
     ));
+  }
+
+  void pop<T>([T? result]) {
+    PondApp.navigatorKey.currentState!.pop(result);
   }
 }

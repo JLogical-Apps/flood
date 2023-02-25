@@ -33,4 +33,8 @@ extension NavigationBuildContextExtensions on BuildContext {
   Future<T> pushReplacement<T>(AppPage page) {
     return _navigationComponent.pushReplacement<T>(this, page);
   }
+
+  void pop<T>([T? result]) {
+    return _navigationComponent.pop(result);
+  }
 }
