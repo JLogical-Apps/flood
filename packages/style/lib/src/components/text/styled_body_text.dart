@@ -8,5 +8,6 @@ class StyledBodyText extends StyledText {
     super.fontStyle,
     super.color,
     super.isError,
+    super.padding,
   });
 }

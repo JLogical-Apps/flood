@@ -125,6 +125,8 @@ class BudgetPage extends AppPage {
                                       ))
                                   .toList(),
                             ],
+                            ifEmptyText:
+                                'There are no envelopes in this budget! Create one by pressing the triple-dot menu above!',
                           ),
                           if (loadNext != null)
                             StyledButton(

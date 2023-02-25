@@ -10,6 +10,7 @@ class StyledTextBuilder<T extends StyledText> {
     FontStyle? fontStyle,
     Color? color,
     bool error,
+    EdgeInsets? padding,
   ) builder;
 
   Emphasis emphasis = Emphasis.regular;
@@ -50,8 +51,8 @@ class StyledTextBuilder<T extends StyledText> {
     return this;
   }
 
-  T call(String text) {
-    return builder(text, emphasis, textAlign, fontStyle, color, isError);
+  T call(String text, {EdgeInsets? padding}) {
+    return builder(text, emphasis, textAlign, fontStyle, color, isError, padding);
   }
 
   T get empty {

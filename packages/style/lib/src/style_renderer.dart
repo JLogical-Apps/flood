@@ -48,10 +48,13 @@ mixin IsTextStyleRenderer<T extends StyledText> implements StyleRenderer, Styled
   @override
   Widget render(BuildContext context, StyleComponent component) {
     final text = component as T;
-    return Text(
-      text.text,
-      textAlign: component.textAlign,
-      style: getTextStyle(context, text),
+    return Padding(
+      padding: text.padding ?? EdgeInsets.zero,
+      child: Text(
+        text.text,
+        textAlign: component.textAlign,
+        style: getTextStyle(context, text),
+      ),
     );
   }
 

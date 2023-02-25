@@ -8,5 +8,6 @@ class StyledH3 extends StyledText {
     super.fontStyle,
     super.color,
     super.isError,
+    super.padding,
   });
 }

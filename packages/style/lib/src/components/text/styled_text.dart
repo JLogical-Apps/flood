@@ -19,6 +19,7 @@ abstract class StyledText extends StyleComponent {
   final FontStyle? fontStyle;
   final Color? color;
   final bool isError;
+  final EdgeInsets? padding;
 
   StyledText(
     this.text, {
@@ -27,85 +28,94 @@ abstract class StyledText extends StyleComponent {
     this.fontStyle,
     this.color,
     this.isError = false,
+    this.padding,
   });
 
   static StyledTextBuilder<StyledH1> get h1 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign, fontStyle, color, isError) => StyledH1(
+      builder: (text, emphasis, textAlign, fontStyle, color, isError, padding) => StyledH1(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
             fontStyle: fontStyle,
             color: color,
             isError: isError,
+            padding: padding,
           ));
 
   static StyledTextBuilder<StyledH2> get h2 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign, fontStyle, color, isError) => StyledH2(
+      builder: (text, emphasis, textAlign, fontStyle, color, isError, padding) => StyledH2(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
             fontStyle: fontStyle,
             color: color,
             isError: isError,
+            padding: padding,
           ));
 
   static StyledTextBuilder<StyledH3> get h3 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign, fontStyle, color, isError) => StyledH3(
+      builder: (text, emphasis, textAlign, fontStyle, color, isError, padding) => StyledH3(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
             fontStyle: fontStyle,
             color: color,
             isError: isError,
+            padding: padding,
           ));
 
   static StyledTextBuilder<StyledH4> get h4 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign, fontStyle, color, isError) => StyledH4(
+      builder: (text, emphasis, textAlign, fontStyle, color, isError, padding) => StyledH4(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
             fontStyle: fontStyle,
             color: color,
             isError: isError,
+            padding: padding,
           ));
 
   static StyledTextBuilder<StyledH5> get h5 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign, fontStyle, color, isError) => StyledH5(
+      builder: (text, emphasis, textAlign, fontStyle, color, isError, padding) => StyledH5(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
             fontStyle: fontStyle,
             color: color,
             isError: isError,
+            padding: padding,
           ));
 
   static StyledTextBuilder<StyledH6> get h6 => StyledTextBuilder(
-      builder: (text, emphasis, textAlign, fontStyle, color, isError) => StyledH6(
+      builder: (text, emphasis, textAlign, fontStyle, color, isError, padding) => StyledH6(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
             fontStyle: fontStyle,
             color: color,
             isError: isError,
+            padding: padding,
           ));
 
   static StyledTextBuilder<StyledBodyText> get body => StyledTextBuilder(
-      builder: (text, emphasis, textAlign, fontStyle, color, isError) => StyledBodyText(
+      builder: (text, emphasis, textAlign, fontStyle, color, isError, padding) => StyledBodyText(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
             fontStyle: fontStyle,
             color: color,
             isError: isError,
+            padding: padding,
           ));
 
   static StyledTextBuilder<StyledButtonText> get button => StyledTextBuilder(
-      builder: (text, emphasis, textAlign, fontStyle, color, isError) => StyledButtonText(
+      builder: (text, emphasis, textAlign, fontStyle, color, isError, padding) => StyledButtonText(
             text,
             emphasis: emphasis,
             textAlign: textAlign,
             fontStyle: fontStyle,
             color: color,
             isError: isError,
+            padding: padding,
           ));
 }

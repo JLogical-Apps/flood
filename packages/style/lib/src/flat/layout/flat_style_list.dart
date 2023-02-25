@@ -13,7 +13,11 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
   @override
   Widget renderTyped(BuildContext context, StyledList component) {
     var children = component.children;
-    final ifEmpty = component.ifEmptyText?.mapIfNonNull((text) => StyledText.body(text)) ?? component.ifEmpty;
+    final ifEmpty = component.ifEmptyText?.mapIfNonNull((text) => StyledText.body(
+              text,
+              padding: EdgeInsets.all(8),
+            )) ??
+        component.ifEmpty;
     var usingEmpty = false;
 
     if (children.isEmpty && ifEmpty != null) {

@@ -46,12 +46,7 @@ class BudgetsPage extends AppPage {
                                 },
                               ))
                           .toList(),
-                      ifEmpty: Padding(
-                        padding: EdgeInsets.all(8),
-                        child: StyledText.body(
-                          'You have no budgets! Click the Create button below to create your first one.',
-                        ),
-                      ),
+                      ifEmptyText: 'You have no budgets! Click the Create button below to create your first one.',
                     ),
                     StyledButton.strong(
                       labelText: 'Create +',
