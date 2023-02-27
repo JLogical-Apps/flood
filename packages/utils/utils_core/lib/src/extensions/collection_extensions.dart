@@ -8,6 +8,14 @@ extension IterableExtensions<T> on Iterable<T> {
     return sum;
   }
 
+  int sumByInt(int Function(T element) f) {
+    int sum = 0;
+    for (var item in this) {
+      sum += f(item);
+    }
+    return sum;
+  }
+
   /// Returns a copy of the iterable.
   /// Can provide an optional copier to copy the items in a specific way.
   List<T> copy([T Function(T value)? copier]) {

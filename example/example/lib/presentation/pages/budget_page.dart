@@ -5,6 +5,7 @@ import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/presentation/pages/envelope_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class BudgetPage extends AppPage {
@@ -16,7 +17,10 @@ class BudgetPage extends AppPage {
     final envelopesModel = useQuery(Query.from<EnvelopeEntity>()
         .where(Envelope.budgetField)
         .isEqualTo(budgetIdProperty.value)
-        .paginate<EnvelopeEntity>());
+        .all<EnvelopeEntity>());
+
+    final totalCentsModel = useMemoized(() => envelopesModel
+        .map((envelopeEntities) => envelopeEntities.sumByInt((entity) => entity.value.amountCentsProperty.value)));
 
     return ModelBuilder.page(
       model: budgetModel,
@@ -78,6 +82,12 @@ class BudgetPage extends AppPage {
           ],
           body: StyledList.column.scrollable(
             children: [
+              ModelBuilder(
+                model: totalCentsModel,
+                builder: (int cents) {
+                  return StyledText.h6(cents.formatCentsAsCurrency());
+                },
+              ),
               StyledCard(
                 titleText: 'Envelopes',
                 leadingIcon: Icons.mail,
@@ -109,31 +119,23 @@ class BudgetPage extends AppPage {
                   ),
                 ],
                 children: [
-                  PaginatedQueryModelBuilder(
-                    paginatedQueryModel: envelopesModel,
-                    builder: (List<EnvelopeEntity> envelopeEntities, Future Function()? loadNext) {
-                      return StyledList.column(
+                  ModelBuilder(
+                    model: envelopesModel,
+                    builder: (List<EnvelopeEntity> envelopeEntities) {
+                      return StyledList.column.withMinChildSize(150)(
                         children: [
-                          StyledList.column.withMinChildSize(150)(
-                            children: [
-                              ...envelopeEntities
-                                  .map((envelopeEntity) => StyledCard(
-                                        titleText: envelopeEntity.value.nameProperty.value,
-                                        onPressed: () async {
-                                          context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!));
-                                        },
-                                      ))
-                                  .toList(),
-                            ],
-                            ifEmptyText:
-                                'There are no envelopes in this budget! Create one by pressing the triple-dot menu above!',
-                          ),
-                          if (loadNext != null)
-                            StyledButton(
-                              labelText: 'Load More',
-                              onPressed: loadNext,
-                            ),
+                          ...envelopeEntities
+                              .map((envelopeEntity) => StyledCard(
+                                    titleText: envelopeEntity.value.nameProperty.value,
+                                    bodyText: envelopeEntity.value.amountCentsProperty.value.formatCentsAsCurrency(),
+                                    onPressed: () async {
+                                      context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!));
+                                    },
+                                  ))
+                              .toList(),
                         ],
+                        ifEmptyText:
+                            'There are no envelopes in this budget! Create one by pressing the triple-dot menu above!',
                       );
                     },
                   ),
