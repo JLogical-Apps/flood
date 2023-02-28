@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:style/src/color_palette.dart';
+import 'package:style/src/components/dialog/styled_dialog.dart';
 import 'package:style/src/style.dart';
 
 extension StyleBuildContextExtensions on BuildContext {
@@ -10,5 +11,9 @@ extension StyleBuildContextExtensions on BuildContext {
 
   ColorPalette colorPalette() {
     return Provider.of<ColorPalette>(this, listen: false);
+  }
+
+  Future<T?> showStyledDialog<T>(StyledDialog<T> dialog) async {
+    return await style().showDialog(this, dialog);
   }
 }

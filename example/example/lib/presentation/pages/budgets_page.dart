@@ -51,19 +51,17 @@ class BudgetsPage extends AppPage {
                     StyledButton.strong(
                       labelText: 'Create +',
                       onPressed: () async {
-                        final result = await context.style().showDialog(
-                            context,
-                            StyledPortDialog(
-                              titleText: 'Create New Budget',
-                              port: (Budget()..ownerProperty.set(loggedInUserIdModel.getOrNull()!))
-                                  .asPort(context.corePondContext),
-                              children: [
-                                StyledTextFieldPortField(
-                                  fieldName: Budget.nameField,
-                                  labelText: 'Name',
-                                ),
-                              ],
-                            ));
+                        final result = await context.showStyledDialog(StyledPortDialog(
+                          titleText: 'Create New Budget',
+                          port: (Budget()..ownerProperty.set(loggedInUserIdModel.getOrNull()!))
+                              .asPort(context.corePondContext),
+                          children: [
+                            StyledTextFieldPortField(
+                              fieldName: Budget.nameField,
+                              labelText: 'Name',
+                            ),
+                          ],
+                        ));
                         if (result == null) {
                           return;
                         }

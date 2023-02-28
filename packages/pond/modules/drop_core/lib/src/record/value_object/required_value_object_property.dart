@@ -3,7 +3,7 @@ import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 
 class RequiredValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L> {
-  final ValueObjectProperty<T?, S, L> property;
+  final ValueObjectProperty<T?, S?, L> property;
 
   RequiredValueObjectProperty({required this.property});
 

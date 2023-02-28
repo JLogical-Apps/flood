@@ -93,6 +93,21 @@ void main() {
     data.state = State(data: {'int': 1});
     expect(data.intProperty.value, 1);
   });
+
+  test('not blank', () {
+    dropContext.register<Data6>(Data6.new, name: 'Data6');
+
+    final data = Data6();
+    expect(() => data.nameProperty.value, throwsA(isA<Exception>()));
+
+    data.nameProperty.set('John Doe');
+    expect(data.nameProperty.value, 'John Doe');
+
+    expect(() => data.state = State(data: {}), throwsA(isA<Exception>()));
+
+    data.state = State(data: {'name': 'John Doe'});
+    expect(data.nameProperty.value, 'John Doe');
+  });
 }
 
 class Data1 extends ValueObject {
@@ -128,4 +143,11 @@ class Data5 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [intProperty];
+}
+
+class Data6 extends ValueObject {
+  late final nameProperty = field<String>(name: 'name').isNotBlank();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [nameProperty];
 }

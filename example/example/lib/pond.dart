@@ -4,6 +4,7 @@ import 'package:example/features/budget/budget_repository.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/envelope/envelope_repository.dart';
+import 'package:example/features/transaction/budget_transaction_repository.dart';
 import 'package:example/features/user/user.dart';
 import 'package:example/features/user/user_entity.dart';
 import 'package:example/features/user/user_repository.dart';
@@ -24,6 +25,7 @@ Future<CorePondContext> getCorePondContext({required EnvironmentConfig environme
   await corePondContext.register(UserRepository());
   await corePondContext.register(BudgetRepository());
   await corePondContext.register(EnvelopeRepository());
+  await corePondContext.register(BudgetTransactionRepository());
   await corePondContext.register(TestingSetupCoreComponent(onSetup: () async {
     if (testingLoggedIn) {
       final authComponent = corePondContext.locate<AuthCoreComponent>();

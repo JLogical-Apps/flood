@@ -3,6 +3,7 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object/fallback_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/is_not_blank_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/placeholder_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_value_object_property.dart';
@@ -50,6 +51,12 @@ extension NullableValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<
 
   FallbackValueObjectProperty<G, S, L> withFallback(G Function() fallback) {
     return FallbackValueObjectProperty(property: this, fallback: fallback);
+  }
+}
+
+extension NullableStringValueObjectPropertyExtensions<L> on ValueObjectProperty<String?, String?, L> {
+  IsNotBlankValueObjectProperty<L> isNotBlank() {
+    return IsNotBlankValueObjectProperty(property: this);
   }
 }
 

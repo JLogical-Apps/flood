@@ -39,18 +39,16 @@ class BudgetPage extends AppPage {
               iconData: Icons.edit,
               color: Colors.orange,
               onPerform: (context) async {
-                final result = await context.style().showDialog(
-                    context,
-                    StyledPortDialog(
-                      titleText: 'Edit Budget',
-                      port: budget.asPort(context.corePondContext),
-                      children: [
-                        StyledTextFieldPortField(
-                          fieldName: Budget.nameField,
-                          labelText: 'Name',
-                        ),
-                      ],
-                    ));
+                final result = await context.showStyledDialog(StyledPortDialog(
+                  titleText: 'Edit Budget',
+                  port: budget.asPort(context.corePondContext),
+                  children: [
+                    StyledTextFieldPortField(
+                      fieldName: Budget.nameField,
+                      labelText: 'Name',
+                    ),
+                  ],
+                ));
                 if (result == null) {
                   return;
                 }
@@ -64,13 +62,10 @@ class BudgetPage extends AppPage {
               iconData: Icons.delete,
               color: Colors.red,
               onPerform: (context) async {
-                final result = await context.style().showDialog(
-                      context,
-                      StyledDialog.yesNo(
-                        titleText: 'Confirm Delete Budget',
-                        bodyText: 'Are you sure you want to delete the budget? You cannot undo this.',
-                      ),
-                    );
+                final result = await context.showStyledDialog(StyledDialog.yesNo(
+                  titleText: 'Confirm Delete Budget',
+                  bodyText: 'Are you sure you want to delete the budget? You cannot undo this.',
+                ));
                 if (result == null) {
                   return;
                 }
@@ -98,18 +93,16 @@ class BudgetPage extends AppPage {
                     iconData: Icons.add,
                     color: Colors.green,
                     onPerform: (context) async {
-                      final result = await context.style().showDialog(
-                          context,
-                          StyledPortDialog(
-                            titleText: 'Create New Envelope',
-                            port: (Envelope()..budgetProperty.set(budgetEntity.id)).asPort(context.corePondContext),
-                            children: [
-                              StyledTextFieldPortField(
-                                fieldName: Envelope.nameField,
-                                labelText: 'Name',
-                              ),
-                            ],
-                          ));
+                      final result = await context.showStyledDialog(StyledPortDialog(
+                        titleText: 'Create New Envelope',
+                        port: (Envelope()..budgetProperty.set(budgetEntity.id)).asPort(context.corePondContext),
+                        children: [
+                          StyledTextFieldPortField(
+                            fieldName: Envelope.nameField,
+                            labelText: 'Name',
+                          ),
+                        ],
+                      ));
                       if (result == null) {
                         return;
                       }

@@ -5,17 +5,17 @@ import 'package:intl/intl.dart';
 extension NumberFormatUtil on num {
   /// Formats as an int if possible, otherwise as a double.
   String formatIntOrDouble() {
-    final format = this.toInt() == this ? NumberFormat('#,##0', 'en_US') : NumberFormat.decimalPattern('en_US');
-    return format.format(this.toDouble());
+    final format = toInt() == this ? NumberFormat('#,##0', 'en_US') : NumberFormat.decimalPattern('en_US');
+    return format.format(toDouble());
   }
 
   /// Formats as a currency.
   String formatCurrency() {
     final format = NumberFormat('#,##0.00', 'en_US');
     if (this < 0) {
-      return '-\$${format.format(this.toDouble().abs())}';
+      return '-\$${format.format(toDouble().abs())}';
     } else {
-      return '\$${format.format(this.toDouble())}';
+      return '\$${format.format(toDouble())}';
     }
   }
 }

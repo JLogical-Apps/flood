@@ -98,7 +98,7 @@ abstract class Validator<T, E> {
   static Validator<num?, String> isNonPositive() => isLessThanOrEqualTo(0);
 
   static Validator<String?, String> isNotBlank() => Validator((data) {
-        if (data == null || data.trim().isEmpty) {
+        if (data == null || data.isBlank) {
           return 'Cannot be blank!';
         }
 

@@ -1,10 +1,12 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:port_core/port_core.dart';
+import 'package:port_drop_core/src/behavior_wrappers/fallback_property_behavior_wrapper.dart';
+import 'package:port_drop_core/src/behavior_wrappers/fallback_replacement_property_behavior_wrapper.dart';
 import 'package:port_drop_core/src/behavior_wrappers/field_behavior_wrapper.dart';
-import 'package:port_drop_core/src/behavior_wrappers/required__property_behavior_wrapper.dart';
+import 'package:port_drop_core/src/behavior_wrappers/is_not_blank_property_behavior_wrapper.dart';
+import 'package:port_drop_core/src/behavior_wrappers/required_property_behavior_wrapper.dart';
 import 'package:port_drop_core/src/behavior_wrappers/string_field_behavior_wrapper.dart';
-import 'package:port_drop_core/src/behavior_wrappers/string_required__property_behavior_wrapper.dart';
 import 'package:port_drop_core/src/port_generator_behavior_wrapper.dart';
 import 'package:type/type.dart';
 import 'package:type_core/type_core.dart';
@@ -16,8 +18,10 @@ class PortDropCoreComponent with IsCorePondComponent {
     [
       StringFieldBehaviorWrapper(),
       FieldBehaviorWrapper(),
-      StringRequiredPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
       RequiredPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
+      IsNotBlankPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
+      FallbackPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
+      FallbackReplacementPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
     ],
   );
 

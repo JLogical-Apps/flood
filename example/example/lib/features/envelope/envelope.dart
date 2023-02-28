@@ -3,7 +3,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class Envelope extends ValueObject {
   static const nameField = 'name';
-  late final nameProperty = field<String>(name: nameField).required();
+  late final nameProperty = field<String>(name: nameField).isNotBlank();
 
   static const budgetField = 'budget';
   late final budgetProperty = reference<BudgetEntity>(name: budgetField).required();
