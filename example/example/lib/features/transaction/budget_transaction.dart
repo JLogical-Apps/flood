@@ -4,8 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 abstract class BudgetTransaction extends ValueObject {
-  late final envelopeProperty = reference<EnvelopeEntity>(name: 'envelope').required();
-  late final budgetProperty = reference<BudgetEntity>(name: 'budget').required();
+  static const envelopeField = 'envelope';
+  late final envelopeProperty = reference<EnvelopeEntity>(name: envelopeField).required();
+
+  static const budgetField = 'budget';
+  late final budgetProperty = reference<BudgetEntity>(name: budgetField).required();
 
   @override
   @mustCallSuper

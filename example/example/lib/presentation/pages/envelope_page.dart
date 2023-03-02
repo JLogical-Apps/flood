@@ -2,6 +2,7 @@ import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/amount_transaction.dart';
 import 'package:example/features/transaction/amount_transaction_entity.dart';
+import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -12,6 +13,11 @@ class EnvelopePage extends AppPage {
   @override
   Widget build(BuildContext context) {
     final envelopeModel = useQuery(Query.getById<EnvelopeEntity>(idProperty.value));
+    final envelopeTransactionsModel = useQuery(Query.from<AmountTransactionEntity>()
+        .where(BudgetTransaction.envelopeField)
+        .isEqualTo(idProperty.value)
+        .paginate<AmountTransactionEntity>());
+
     return ModelBuilder.page(
       model: envelopeModel,
       builder: (EnvelopeEntity envelopeEntity) {
@@ -72,8 +78,23 @@ class EnvelopePage extends AppPage {
               },
             ),
           ],
-          body: StyledList.column.scrollable(
-            children: [],
+          body: StyledList.column.centered.scrollable(
+            children: [
+              StyledText.h4(envelopeEntity.value.amountCentsProperty.value.formatCentsAsCurrency()),
+              PaginatedQueryModelBuilder(
+                paginatedQueryModel: envelopeTransactionsModel,
+                builder: (List<AmountTransactionEntity> amountTransactionEntities, Future Function()? loadNext) {
+                  return StyledList.column.withMinChildSize(150)(
+                    children: amountTransactionEntities
+                        .map((entity) => StyledCard(
+                              titleText: entity.value.amountCentsProperty.value.formatCentsAsCurrency(),
+                              bodyText: entity.value.nameProperty.value,
+                            ))
+                        .toList(),
+                  );
+                },
+              ),
+            ],
           ),
         );
       },
