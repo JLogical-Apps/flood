@@ -37,12 +37,12 @@ void main() {
     expect(result.data.nameProperty.value, 'John Doe');
   });
 
-  test('Port for required fields.', () async {
+  test('Port for non-blank fields.', () async {
     corePondContext.locate<TypeCoreComponent>().register(Data2.new, name: 'Data2');
 
     final user = Data2();
     var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getPortValueByName(Data2.nameField), isA<PortValue<String, String>>());
+    expect(userPort.getPortValueByName(Data2.nameField), isA<PortValue>());
 
     final invalidResult = await userPort.submit();
     expect(invalidResult.isValid, false);
@@ -69,7 +69,7 @@ class Data1 extends ValueObject {
 
 class Data2 extends ValueObject {
   static const nameField = 'name';
-  late final nameProperty = field<String>(name: nameField).required();
+  late final nameProperty = field<String>(name: nameField).isNotBlank();
 
   @override
   List<ValueObjectBehavior> get behaviors => [nameProperty];

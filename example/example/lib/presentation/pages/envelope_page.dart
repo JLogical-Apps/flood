@@ -57,9 +57,9 @@ class EnvelopePage extends AppPage {
                       fieldName: AmountTransaction.nameField,
                       labelText: 'Name',
                     ),
-                    StyledTextFieldPortField(
+                    StyledCurrencyFieldPortField(
                       fieldName: AmountTransaction.amountCentsField,
-                      labelText: 'Amount',
+                      labelText: 'Amount (\$)',
                     ),
                   ],
                 ));

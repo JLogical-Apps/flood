@@ -54,6 +54,9 @@ class AbstractTypeImplementationRepository<E extends Entity<V>, V extends ValueO
         )
       ];
 
+  @override
+  List<RuntimeType> get handledTypes => super.handledTypes + [entityRuntimeType];
+
   AbstractTypeImplementationRepository withImplementation<E2 extends Entity<V2>, V2 extends ValueObject>(
     E2 Function() entityConstructor,
     V2 Function() valueObjectConstructor, {

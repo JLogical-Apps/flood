@@ -43,6 +43,8 @@ extension PortExtensions<T> on Port<T> {
         portValue: getPortValueByName(name).copyWithError(error),
       );
 
+  void clearError({required String name}) => setError(name: name, error: null);
+
   dynamic operator [](String name) => getByName(name);
 
   operator []=(String name, dynamic value) => setValue(name: name, value: value);
