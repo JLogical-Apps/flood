@@ -11,7 +11,7 @@ DropCoreContext useDropCoreContext() {
   return useMemoized(() => useAppPondContext().find<DropCoreComponent>());
 }
 
-Model<T>? useQueryOrNull<T>(QueryRequest<T>? queryRequest) {
+Model<T>? useQueryOrNull<T>(QueryRequest<dynamic, T>? queryRequest) {
   final context = useContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
   final dropCoreContext = useDropCoreContext();
@@ -33,11 +33,11 @@ Model<T>? useQueryOrNull<T>(QueryRequest<T>? queryRequest) {
   return queryModel;
 }
 
-Model<T> useQuery<T>(QueryRequest<T> queryRequest) {
+Model<T> useQuery<T>(QueryRequest<dynamic, T> queryRequest) {
   return useQueryOrNull(queryRequest)!;
 }
 
-Model<T?> useNullableQueryModel<T>(Model<QueryRequest<T>?> queryRequestModel) {
+Model<T?> useNullableQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>?> queryRequestModel) {
   final context = useContext();
   final dropCoreContext = useDropCoreContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
@@ -58,7 +58,7 @@ Model<T?> useNullableQueryModel<T>(Model<QueryRequest<T>?> queryRequestModel) {
   return resultModel;
 }
 
-Model<T> useQueryModel<T>(Model<QueryRequest<T>> queryRequestModel) {
+Model<T> useQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>> queryRequestModel) {
   final context = useContext();
   final dropCoreContext = useDropCoreContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
@@ -81,7 +81,7 @@ Model<T> useQueryModel<T>(Model<QueryRequest<T>> queryRequestModel) {
 
 void _debugQueryRequest<T>({
   required DebugDialogContext? debugDialogContext,
-  required QueryRequest<T>? queryRequest,
+  required QueryRequest<dynamic, T>? queryRequest,
 }) {
   if (debugDialogContext == null || queryRequest == null) {
     return;

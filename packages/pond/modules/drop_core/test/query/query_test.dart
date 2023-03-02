@@ -31,7 +31,7 @@ void main() {
       await repository.update(UserEntity()..value = user);
     }
 
-    final allUserEntities = await repository.executeQuery(Query.from<UserEntity>().all<UserEntity>());
+    final allUserEntities = await repository.executeQuery(Query.from<UserEntity>().all());
     expect(allUserEntities.map((entity) => entity.value).toList(), users);
 
     final allUserStates = await repository.executeQuery(Query.from<UserEntity>().allStates());
@@ -65,7 +65,7 @@ void main() {
       await repository.update(UserEntity()..value = user);
     }
 
-    final firstUserEntity = await repository.executeQuery(Query.from<UserEntity>().firstOrNull<UserEntity>());
+    final firstUserEntity = await repository.executeQuery(Query.from<UserEntity>().firstOrNull());
     expect(firstUserEntity?.value, users[0]);
 
     final firstUserEntityState = await repository.executeQuery(Query.from<UserEntity>().firstOrNullState());
@@ -98,8 +98,8 @@ void main() {
       await repository.update(UserEntity()..value = user);
     }
 
-    final johnUserEntity = await repository
-        .executeQuery(Query.from<UserEntity>().where('name').isEqualTo('John').firstOrNull<UserEntity>());
+    final johnUserEntity =
+        await repository.executeQuery(Query.from<UserEntity>().where('name').isEqualTo('John').firstOrNull());
     expect(johnUserEntity?.value, users[1]);
   });
 
@@ -130,50 +130,50 @@ void main() {
       await repository.update(InvoiceEntity()..value = invoice);
     }
 
-    final zeroInvoiceEntities = await repository
-        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isEqualTo(0).all<InvoiceEntity>());
+    final zeroInvoiceEntities =
+        await repository.executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isEqualTo(0).all());
     expect(
       zeroInvoiceEntities.map((e) => e.value).toList(),
       invoices.where((i) => i.amountProperty.value == 0).toList(),
     );
 
-    final positiveInvoiceEntities = await repository
-        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isGreaterThan(0).all<InvoiceEntity>());
+    final positiveInvoiceEntities =
+        await repository.executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isGreaterThan(0).all());
     expect(
       positiveInvoiceEntities.map((e) => e.value).toList(),
       invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! > 0).toList(),
     );
 
-    final nonNegativeInvoiceEntities = await repository.executeQuery(
-        Query.from<InvoiceEntity>().where(Invoice.amountField).isGreaterThanOrEqualTo(0).all<InvoiceEntity>());
+    final nonNegativeInvoiceEntities = await repository
+        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isGreaterThanOrEqualTo(0).all());
     expect(
       nonNegativeInvoiceEntities.map((e) => e.value).toList(),
       invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! >= 0).toList(),
     );
 
-    final negativeInvoiceEntities = await repository
-        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isLessThan(0).all<InvoiceEntity>());
+    final negativeInvoiceEntities =
+        await repository.executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isLessThan(0).all());
     expect(
       negativeInvoiceEntities.map((e) => e.value).toList(),
       invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! < 0).toList(),
     );
 
-    final nonPositiveInvoiceEntities = await repository.executeQuery(
-        Query.from<InvoiceEntity>().where(Invoice.amountField).isLessThanOrEqualTo(0).all<InvoiceEntity>());
+    final nonPositiveInvoiceEntities = await repository
+        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isLessThanOrEqualTo(0).all());
     expect(
       nonPositiveInvoiceEntities.map((e) => e.value).toList(),
       invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! <= 0).toList(),
     );
 
-    final nullInvoiceEntities = await repository
-        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isNull().all<InvoiceEntity>());
+    final nullInvoiceEntities =
+        await repository.executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isNull().all());
     expect(
       nullInvoiceEntities.map((e) => e.value).toList(),
       invoices.where((i) => i.amountProperty.value == null).toList(),
     );
 
-    final nonNullInvoiceEntities = await repository
-        .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isNonNull().all<InvoiceEntity>());
+    final nonNullInvoiceEntities =
+        await repository.executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isNonNull().all());
     expect(
       nonNullInvoiceEntities.map((e) => e.value).toList(),
       invoices.where((i) => i.amountProperty.value != null).toList(),
@@ -207,8 +207,8 @@ void main() {
       await repository.update(InvoiceEntity()..value = invoice);
     }
 
-    final ascendingInvoiceEntities = await repository
-        .executeQuery(Query.from<InvoiceEntity>().orderByAscending(Invoice.amountField).all<InvoiceEntity>());
+    final ascendingInvoiceEntities =
+        await repository.executeQuery(Query.from<InvoiceEntity>().orderByAscending(Invoice.amountField).all());
     final ascending = [
       ...invoices.where((i) => i.amountProperty.value != null).toList()
         ..sort((a, b) => a.amountProperty.value!.compareTo(b.amountProperty.value!)),
@@ -219,8 +219,8 @@ void main() {
       ascending,
     );
 
-    final descendingInvoiceEntities = await repository
-        .executeQuery(Query.from<InvoiceEntity>().orderByDescending(Invoice.amountField).all<InvoiceEntity>());
+    final descendingInvoiceEntities =
+        await repository.executeQuery(Query.from<InvoiceEntity>().orderByDescending(Invoice.amountField).all());
     final descending = [
       ...invoices.where((i) => i.amountProperty.value != null).toList()
         ..sort((a, b) => b.amountProperty.value!.compareTo(a.amountProperty.value!)),
@@ -256,8 +256,7 @@ void main() {
       await repository.update(InvoiceEntity()..value = invoice);
     }
 
-    final queryResultPage =
-        await repository.executeQuery(Query.from<InvoiceEntity>().paginate<InvoiceEntity>(pageSize: 2));
+    final queryResultPage = await repository.executeQuery(Query.from<InvoiceEntity>().paginate(pageSize: 2));
     expect(queryResultPage.items.map((i) => i.value), invoices.take(2).toList());
     expect(queryResultPage.hasNext, isTrue);
 
@@ -296,7 +295,7 @@ void main() {
     }
 
     final allUserNames = await repository.executeQuery(Query.from<UserEntity>()
-        .all<UserEntity>()
+        .all()
         .map((context, entities) => entities.map((entity) => entity.value.nameProperty.value).toList()));
     expect(allUserNames, users.map((user) => user.nameProperty.value).toList());
 
@@ -336,8 +335,7 @@ void main() {
 
     await Future.wait(transactionEntities.map((e) => repository.update(e)));
 
-    final allTransactionEntities =
-        await repository.executeQuery(Query.from<TransactionEntity>().all<TransactionEntity>());
+    final allTransactionEntities = await repository.executeQuery(Query.from<TransactionEntity>().all());
     expect(allTransactionEntities.map((e) => e.value), transactionEntities.map((e) => e.value));
   });
 
@@ -364,19 +362,19 @@ void main() {
     await listRepository.update(UserEntity()..value = (User()..nameProperty.value = 'John Doe'));
     await listRepository.update(InvoiceEntity()..value = (Invoice()..amountProperty.value = 35));
 
-    final userEntity = await listRepository.executeQuery(Query.from<UserEntity>().first<UserEntity>());
+    final userEntity = await listRepository.executeQuery(Query.from<UserEntity>().first());
     expect(userEntity.value.nameProperty.value, 'John Doe');
 
-    final invoiceEntity = await listRepository.executeQuery(Query.from<InvoiceEntity>().first<InvoiceEntity>());
+    final invoiceEntity = await listRepository.executeQuery(Query.from<InvoiceEntity>().first());
     expect(invoiceEntity.value.amountProperty.value, 35);
   });
 
   test('query equality', () {
-    expect(Query.from<UserEntity>().all<UserEntity>(), Query.from<UserEntity>().all<UserEntity>());
-    expect(Query.from<UserEntity>().all<UserEntity>(), isNot(Query.from<UserEntity>().allStates()));
+    expect(Query.from<UserEntity>().all(), Query.from<UserEntity>().all());
+    expect(Query.from<UserEntity>().all(), isNot(Query.from<UserEntity>().allStates()));
     expect(Query.from<UserEntity>().allStates(), Query.from<UserEntity>().allStates());
-    expect(Query.from<UserEntity>().where('a').isEqualTo('b').all<UserEntity>(),
-        Query.from<UserEntity>().where('a').isEqualTo('b').all<UserEntity>());
+    expect(Query.from<UserEntity>().where('a').isEqualTo('b').all(),
+        Query.from<UserEntity>().where('a').isEqualTo('b').all());
   });
 }
 

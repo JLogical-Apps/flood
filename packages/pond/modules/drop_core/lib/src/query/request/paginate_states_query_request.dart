@@ -1,11 +1,12 @@
 import 'package:drop_core/src/query/pagination/paginated_query_result.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
+import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/state/state.dart';
 
-class PaginateStatesQueryRequest extends QueryRequest<PaginatedQueryResult<State>> {
+class PaginateStatesQueryRequest<E extends Entity> extends QueryRequest<E, PaginatedQueryResult<State>> {
   @override
-  final Query query;
+  final Query<E> query;
 
   final int pageSize;
 

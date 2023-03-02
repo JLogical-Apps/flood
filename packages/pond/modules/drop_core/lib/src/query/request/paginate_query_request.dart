@@ -9,9 +9,9 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:equatable/equatable.dart';
 
 class PaginatedQueryRequest<E extends Entity>
-    with IsMapQueryRequest<PaginatedQueryResult<State>, PaginatedQueryResult<E>>, EquatableMixin {
+    with IsMapQueryRequest<E, PaginatedQueryResult<State>, PaginatedQueryResult<E>>, EquatableMixin {
   @override
-  final QueryRequest<PaginatedQueryResult<State>> sourceQueryRequest;
+  final QueryRequest<E, PaginatedQueryResult<State>> sourceQueryRequest;
 
   PaginatedQueryRequest({required this.sourceQueryRequest});
 

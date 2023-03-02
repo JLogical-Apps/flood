@@ -14,10 +14,8 @@ class BudgetPage extends AppPage {
   @override
   Widget build(BuildContext context) {
     final budgetModel = useQuery(Query.getByIdOrNull<BudgetEntity>(budgetIdProperty.value));
-    final envelopesModel = useQuery(Query.from<EnvelopeEntity>()
-        .where(Envelope.budgetField)
-        .isEqualTo(budgetIdProperty.value)
-        .all<EnvelopeEntity>());
+    final envelopesModel =
+        useQuery(Query.from<EnvelopeEntity>().where(Envelope.budgetField).isEqualTo(budgetIdProperty.value).all());
 
     final totalCentsModel = useMemoized(() => envelopesModel
         .map((envelopeEntities) => envelopeEntities.sumByInt((entity) => entity.value.amountCentsProperty.value)));

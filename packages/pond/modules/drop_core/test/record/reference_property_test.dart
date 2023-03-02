@@ -34,8 +34,7 @@ void main() {
     final contentEntity = ContentEntity()..value = (Content()..ownerProperty.set(newState.id));
     await contentRepository.update(contentEntity);
 
-    final queriedContentEntity =
-        await contentRepository.executeQuery(Query.from<ContentEntity>().first<ContentEntity>());
+    final queriedContentEntity = await contentRepository.executeQuery(Query.from<ContentEntity>().first());
     final queriedContent = queriedContentEntity.value;
     expect(queriedContent.ownerProperty.value, newState.id);
 

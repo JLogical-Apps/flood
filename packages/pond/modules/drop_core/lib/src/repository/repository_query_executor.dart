@@ -7,20 +7,20 @@ import 'package:utils_core/utils_core.dart';
 abstract class RepositoryQueryExecutor {
   bool handlesQuery(QueryRequest queryRequest);
 
-  Future<T> onExecuteQuery<T>(QueryRequest<T> queryRequest);
+  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest);
 
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<T> queryRequest);
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest);
 }
 
 extension RepositoryQueryExecutorExtensions on RepositoryQueryExecutor {
-  Future<T> executeQuery<T>(QueryRequest<T> queryRequest) {
+  Future<T> executeQuery<T>(QueryRequest<dynamic, T> queryRequest) {
     if (!handlesQuery(queryRequest)) {
       throw Exception('Unable to handle [$queryRequest]');
     }
     return onExecuteQuery(queryRequest);
   }
 
-  ValueStream<FutureValue<T>> executeQueryX<T>(QueryRequest<T> queryRequest) {
+  ValueStream<FutureValue<T>> executeQueryX<T>(QueryRequest<dynamic, T> queryRequest) {
     if (!handlesQuery(queryRequest)) {
       throw Exception('Unable to handle [$queryRequest]');
     }
@@ -51,9 +51,9 @@ mixin IsRepositoryQueryExecutorWrapper implements RepositoryQueryExecutorWrapper
   bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<T> queryRequest) => queryExecutor.onExecuteQuery(queryRequest);
+  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) => queryExecutor.onExecuteQuery(queryRequest);
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<T> queryRequest) =>
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest) =>
       queryExecutor.onExecuteQueryX(queryRequest);
 }

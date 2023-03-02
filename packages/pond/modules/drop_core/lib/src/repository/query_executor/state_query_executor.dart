@@ -45,12 +45,12 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
   }
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<T> queryRequest) {
+  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) {
     return executeOnStates(queryRequest, statesX.value);
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<T> queryRequest) {
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest) {
     return statesX.asyncMapWithValue(
       (states) async {
         try {
@@ -63,12 +63,12 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
     );
   }
 
-  Future<T> executeOnStates<T>(QueryRequest<T> queryRequest, List<State> states) async {
+  Future<T> executeOnStates<T>(QueryRequest<dynamic, T> queryRequest, List<State> states) async {
     final reducedStates = reduceStates(states, queryRequest.query);
     return await resolveForQueryRequest<T>(queryRequest, reducedStates);
   }
 
-  Future<T> resolveForQueryRequest<T>(QueryRequest<T> queryRequest, Iterable<State> states) async {
+  Future<T> resolveForQueryRequest<T>(QueryRequest<dynamic, T> queryRequest, Iterable<State> states) async {
     return await getQueryRequestReducerResolver<T>().resolve(queryRequest).reduce(queryRequest, states);
   }
 

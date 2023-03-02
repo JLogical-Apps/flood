@@ -7,9 +7,9 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:equatable/equatable.dart';
 
-class AllQueryRequest<E extends Entity> with IsMapQueryRequest<List<State>, List<E>>, EquatableMixin {
+class AllQueryRequest<E extends Entity> with IsMapQueryRequest<E, List<State>, List<E>>, EquatableMixin {
   @override
-  final QueryRequest<List<State>> sourceQueryRequest;
+  final QueryRequest<E, List<State>> sourceQueryRequest;
 
   AllQueryRequest({required this.sourceQueryRequest});
 

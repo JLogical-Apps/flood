@@ -1,6 +1,7 @@
 import 'package:drop_core/src/query/query.dart';
+import 'package:drop_core/src/record/entity.dart';
 
-class FromQuery extends Query {
+class FromQuery<E extends Entity> extends Query<E> {
   final Type entityType;
 
   FromQuery({required this.entityType}) : super(parent: null);

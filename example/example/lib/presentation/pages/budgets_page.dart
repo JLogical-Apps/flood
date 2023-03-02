@@ -19,8 +19,8 @@ class BudgetsPage extends AppPage {
         useFutureModel(() => context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId());
     final loggedInUserModel = useNullableQueryModel(useMemoized(() => loggedInUserIdModel.map((loggedInUserId) =>
         loggedInUserId?.mapIfNonNull((loggedInUserId) => Query.getByIdOrNull<UserEntity>(loggedInUserId)))));
-    final budgetsModel = useQueryModel(useMemoized(() => loggedInUserIdModel.map((loggedInUserId) =>
-        Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all<BudgetEntity>())));
+    final budgetsModel = useQueryModel(useMemoized(() => loggedInUserIdModel
+        .map((loggedInUserId) => Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all())));
     return StyledPage(
       titleText: 'Home',
       body: Center(

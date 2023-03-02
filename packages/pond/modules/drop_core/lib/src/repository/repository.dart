@@ -131,10 +131,10 @@ mixin IsRepository implements Repository, IsRepositoryStateHandlerWrapper, IsRep
   bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<T> queryRequest) => queryExecutor.onExecuteQuery(queryRequest);
+  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) => queryExecutor.onExecuteQuery(queryRequest);
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<T> queryRequest) =>
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest) =>
       queryExecutor.onExecuteQueryX(queryRequest);
 }
 
@@ -186,9 +186,9 @@ mixin IsRepositoryWrapper implements RepositoryWrapper, RepositoryStateHandlerWr
   bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<T> queryRequest) => queryExecutor.onExecuteQuery(queryRequest);
+  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) => queryExecutor.onExecuteQuery(queryRequest);
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<T> queryRequest) =>
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest) =>
       queryExecutor.onExecuteQueryX(queryRequest);
 }

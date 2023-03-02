@@ -13,50 +13,50 @@ import 'package:drop_core/src/query/request/paginate_states_query_request.dart';
 import 'package:drop_core/src/query/where_query.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class Query with EquatableMixin {
+abstract class Query<E extends Entity> with EquatableMixin {
   final Query? parent;
 
   Query({required this.parent});
 
-  static QueryRequest<E?> getByIdOrNull<E extends Entity>(String id) {
-    return Query.from<E>().where(State.idField).isEqualTo(id).firstOrNull<E>();
+  static QueryRequest<E, E?> getByIdOrNull<E extends Entity>(String id) {
+    return Query.from<E>().where(State.idField).isEqualTo(id).firstOrNull();
   }
 
-  static QueryRequest<E> getById<E extends Entity>(String id) {
-    return Query.from<E>().where(State.idField).isEqualTo(id).first<E>();
+  static QueryRequest<E, E> getById<E extends Entity>(String id) {
+    return Query.from<E>().where(State.idField).isEqualTo(id).first();
   }
 
-  static FromQuery from<E extends Entity>() {
-    return FromQuery(entityType: E);
+  static FromQuery<E> from<E extends Entity>() {
+    return FromQuery<E>(entityType: E);
   }
 }
 
-extension QueryExtensions on Query {
+extension QueryExtensions<E extends Entity> on Query<E> {
   AllStatesQueryRequest allStates() {
     return AllStatesQueryRequest(query: this);
   }
 
-  AllQueryRequest<E> all<E extends Entity>() {
+  AllQueryRequest<E> all() {
     return AllQueryRequest(sourceQueryRequest: AllStatesQueryRequest(query: this));
   }
 
-  FirstOrNullStateQueryRequest firstOrNullState() {
+  FirstOrNullStateQueryRequest<E> firstOrNullState() {
     return FirstOrNullStateQueryRequest(query: this);
   }
 
-  FirstOrNullQueryRequest<E> firstOrNull<E extends Entity>() {
+  FirstOrNullQueryRequest<E> firstOrNull() {
     return FirstOrNullQueryRequest(sourceQueryRequest: FirstOrNullStateQueryRequest(query: this));
   }
 
-  FirstQueryRequest<E> first<E extends Entity>() {
+  FirstQueryRequest<E> first() {
     return FirstQueryRequest(sourceQueryRequest: FirstOrNullStateQueryRequest(query: this));
   }
 
-  QueryWhereBuilder where(String stateField) {
+  QueryWhereBuilder<E> where(String stateField) {
     return QueryWhereBuilder(query: this, stateField: stateField);
   }
 
-  WhereQuery whereCondition(QueryCondition condition) {
+  WhereQuery<E> whereCondition(QueryCondition condition) {
     return WhereQuery(parent: this, condition: condition);
   }
 
@@ -76,12 +76,12 @@ extension QueryExtensions on Query {
     return PaginateStatesQueryRequest(query: this, pageSize: pageSize);
   }
 
-  PaginatedQueryRequest<E> paginate<E extends Entity>({int pageSize = 20}) {
+  PaginatedQueryRequest<E> paginate({int pageSize = 20}) {
     return PaginatedQueryRequest<E>(sourceQueryRequest: PaginateStatesQueryRequest(query: this, pageSize: pageSize));
   }
 
   Query get root {
-    var root = this;
+    Query root = this;
     while (root.parent != null) {
       root = parent!;
     }

@@ -16,7 +16,7 @@ class EnvelopePage extends AppPage {
     final envelopeTransactionsModel = useQuery(Query.from<AmountTransactionEntity>()
         .where(BudgetTransaction.envelopeField)
         .isEqualTo(idProperty.value)
-        .paginate<AmountTransactionEntity>());
+        .paginate());
 
     return ModelBuilder.page(
       model: envelopeModel,
