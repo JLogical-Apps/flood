@@ -4,8 +4,10 @@ import 'package:pond/pond.dart';
 import 'package:vrouter/vrouter.dart';
 
 class NavigationAppPondComponent with IsAppPondComponent {
+  String? lastUrl;
+
   String getUrl(BuildContext context) {
-    return context.vRouter.url;
+    return lastUrl ?? context.vRouter.url;
   }
 
   Uri getUri(BuildContext context) {
@@ -13,10 +15,12 @@ class NavigationAppPondComponent with IsAppPondComponent {
   }
 
   void warpTo(BuildContext context, AppPage page) {
+    lastUrl = null;
     context.vRouter.to(page.uri.toString(), historyState: context.vRouter.historyState);
   }
 
   void warpToLocation(BuildContext context, String location) {
+    lastUrl = null;
     context.vRouter.to(location, historyState: context.vRouter.historyState);
   }
 
@@ -34,6 +38,8 @@ class NavigationAppPondComponent with IsAppPondComponent {
     newPage.fromPath(location);
 
     SystemNavigator.routeInformationUpdated(location: location);
+    lastUrl = location;
+
     return PondApp.navigatorKey.currentState!.push(MaterialPageRoute(
       builder: (_) => PondApp.wrapPage(
         appContext: context.appPondContext,
@@ -45,10 +51,13 @@ class NavigationAppPondComponent with IsAppPondComponent {
   }
 
   Future<T> pushReplacement<T>(BuildContext context, AppPage page) async {
-    SystemNavigator.routeInformationUpdated(location: page.uri.toString());
+    final location = page.uri.toString();
+    lastUrl = location;
+    SystemNavigator.routeInformationUpdated(location: location);
+
     return await PondApp.navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
       builder: (_) => page,
-      settings: RouteSettings(name: page.uri.toString()),
+      settings: RouteSettings(name: location),
     ));
   }
 
