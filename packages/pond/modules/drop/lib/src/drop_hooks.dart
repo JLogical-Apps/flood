@@ -16,20 +16,26 @@ Model<T>? useQueryOrNull<T>(QueryRequest<dynamic, T>? queryRequest) {
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
   final dropCoreContext = useDropCoreContext();
 
-  useEffect(
-    () {
-      _debugQueryRequest(debugDialogContext: debugDialogContext, queryRequest: queryRequest);
-      return null;
-    },
-    [queryRequest, debugDialogContext],
-  );
-
   final queryModel = useMemoized(
     () => queryRequest
         ?.mapIfNonNull((queryRequest) => Model.fromValueStream(dropCoreContext.executeQueryX(queryRequest))),
     [queryRequest],
   );
-  useModelOrNull(queryModel);
+
+  final result = useModelOrNull(queryModel);
+
+  useEffect(
+    () {
+      _debugQueryRequest(
+        debugDialogContext: debugDialogContext,
+        queryRequest: queryRequest,
+        value: result,
+      );
+      return null;
+    },
+    [queryRequest, debugDialogContext, result],
+  );
+
   return queryModel;
 }
 
@@ -42,19 +48,24 @@ Model<T?> useNullableQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>?> 
   final dropCoreContext = useDropCoreContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
 
-  useEffect(
-    () {
-      _debugQueryRequest(debugDialogContext: debugDialogContext, queryRequest: queryRequestModel.getOrNull());
-      return null;
-    },
-    [queryRequestModel.state, debugDialogContext],
-  );
-
   final resultModel = useMemoized(
     () => queryRequestModel.flatMap((queryRequest) => queryRequest?.toModel(dropCoreContext) ?? Model.value(null)),
     [queryRequestModel],
   );
-  useModel(resultModel);
+  final result = useModel(resultModel);
+
+  useEffect(
+    () {
+      _debugQueryRequest(
+        debugDialogContext: debugDialogContext,
+        queryRequest: queryRequestModel.getOrNull(),
+        value: result,
+      );
+      return null;
+    },
+    [queryRequestModel.state, debugDialogContext, result],
+  );
+
   return resultModel;
 }
 
@@ -63,33 +74,39 @@ Model<T> useQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>> queryReque
   final dropCoreContext = useDropCoreContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
 
-  useEffect(
-    () {
-      _debugQueryRequest(debugDialogContext: debugDialogContext, queryRequest: queryRequestModel.getOrNull());
-      return null;
-    },
-    [queryRequestModel.state, debugDialogContext],
-  );
-
   final resultModel = useMemoized(
     () => queryRequestModel.flatMap((queryRequest) => queryRequest.toModel(dropCoreContext)),
     [queryRequestModel],
   );
-  useModel(resultModel);
+  final result = useModel(resultModel);
+
+  useEffect(
+    () {
+      _debugQueryRequest(
+        debugDialogContext: debugDialogContext,
+        queryRequest: queryRequestModel.getOrNull(),
+        value: result,
+      );
+      return null;
+    },
+    [queryRequestModel.state, debugDialogContext, result],
+  );
+
   return resultModel;
 }
 
-void _debugQueryRequest<T>({
+void _debugQueryRequest({
   required DebugDialogContext? debugDialogContext,
-  required QueryRequest<dynamic, T>? queryRequest,
+  required QueryRequest? queryRequest,
+  required FutureValue? value,
 }) {
-  if (debugDialogContext == null || queryRequest == null) {
+  if (debugDialogContext == null || queryRequest == null || value == null) {
     return;
   }
 
   final newDebugData = debugDialogContext.data.copy();
-  final queriesRun =
-      newDebugData.putIfAbsent(DropAppComponent.queriesRunField, () => <QueryRequest>[]) as List<QueryRequest>;
-  queriesRun.add(queryRequest);
+  final queryResultToValue = newDebugData.putIfAbsent(
+      DropAppComponent.queriesRunField, () => <QueryRequest, FutureValue>{}) as Map<QueryRequest, FutureValue>;
+  queryResultToValue[queryRequest] = value;
   debugDialogContext.data = newDebugData;
 }

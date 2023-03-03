@@ -29,4 +29,9 @@ class PaginatedQueryResult<T> with IsQueryResultPage<T> {
   PaginatedQueryResult<R> map<R>(R Function(T item) mapper) {
     return PaginatedQueryResult(page: page.map(mapper));
   }
+
+  @override
+  String toString() {
+    return items.toString();
+  }
 }

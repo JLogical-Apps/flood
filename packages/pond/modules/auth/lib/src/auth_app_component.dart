@@ -10,23 +10,19 @@ class AuthAppComponent with IsAppPondComponent, IsDebugDialogComponent {
   static const queriesRunField = 'auth';
 
   @override
-  Widget render(BuildContext context, DebugDialogContext debugContext) {
-    return Column(
-      children: [
-        StyledText.h6('Auth: '),
-        HookBuilder(
-          builder: (context) {
-            final loggedInUserIdModel =
-                useFutureModel(() => context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId());
-            return ModelBuilder<String?>(
-              model: loggedInUserIdModel,
-              builder: (loggedInUserId) {
-                return StyledText.body('ID: ${loggedInUserId ?? 'N/A'}');
-              },
-            );
-          },
-        ),
-      ],
-    );
+  Widget renderDebug(BuildContext context, DebugDialogContext debugContext) {
+    return HookBuilder(builder: (context) {
+      final loggedInUserIdModel =
+          useFutureModel(() => context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId());
+      return ModelBuilder<String?>(
+        model: loggedInUserIdModel,
+        builder: (loggedInUserId) {
+          return StyledCard(
+            titleText: 'Auth',
+            bodyText: 'ID: ${loggedInUserId ?? 'N/A'}',
+          );
+        },
+      );
+    });
   }
 }

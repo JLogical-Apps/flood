@@ -41,20 +41,38 @@ class DebugAppComponent with IsAppPondComponent {
         builder: (context) {
           final debugDialogContext = Provider.of<DebugDialogContext>(context, listen: false);
           useValueStream(debugDialogContext.dataX);
+
+          final showDebug = useState<bool>(false);
+
           return Stack(
             children: [
               page,
-              Positioned.fill(
-                child: IgnorePointer(
+              if (showDebug.value)
+                Positioned.fill(
                   child: StyledContainer(
-                    color: Colors.green.withOpacity(0.2),
-                    child: Center(
+                    color: Colors.green.withOpacity(0.3),
+                    child: SafeArea(
                       child: StyledList.column.withScrollbar.centered(
-                        children: debugDialogComponents
-                            .map((component) => component.render(context, debugDialogContext))
-                            .toList(),
+                        children: [
+                          SizedBox(
+                            height: 40,
+                          ),
+                          ...debugDialogComponents
+                              .map((component) => component.renderDebug(context, debugDialogContext)),
+                        ],
                       ),
                     ),
+                  ),
+                ),
+              Positioned(
+                top: 5,
+                right: 5,
+                child: SafeArea(
+                  child: StyledButton.strong(
+                    label: StyledIcon(showDebug.value ? Icons.visibility_off : Icons.visibility),
+                    onPressed: () {
+                      showDebug.value = !showDebug.value;
+                    },
                   ),
                 ),
               ),

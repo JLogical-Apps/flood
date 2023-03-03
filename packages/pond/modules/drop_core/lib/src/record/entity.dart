@@ -29,4 +29,9 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
 
   @override
   List<Object?> get props => [id];
+
+  @override
+  String toString() {
+    return '$runtimeType{id: $id, value: ${value.scaffoldStateUnsafe}';
+  }
 }
