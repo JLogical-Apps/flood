@@ -55,4 +55,13 @@ extension DirectoryExtensions on Directory {
   }
 
   String get relativePath => relative(path).replaceAll('\\', '/');
+
+  /// Returns a chain of directories starting with this one up each parent.
+  Iterable<Directory> getChain() sync* {
+    var directory = this;
+    while (directory.path != '/') {
+      yield directory;
+      directory = directory.parent;
+    }
+  }
 }
