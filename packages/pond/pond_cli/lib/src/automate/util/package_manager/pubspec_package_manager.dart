@@ -1,7 +1,7 @@
 import 'package:persistence_core/persistence_core.dart';
-import 'package:pond_core/src/automate/util/file_system/automate_file_system.dart';
-import 'package:pond_core/src/automate/util/package_manager/package_manager.dart';
-import 'package:pond_core/src/automate/util/terminal/terminal.dart';
+import 'package:pond_cli/src/automate/util/file_system/automate_file_system.dart';
+import 'package:pond_cli/src/automate/util/package_manager/package_manager.dart';
+import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 import 'package:utils_core/utils_core.dart';
 
 class PubspecPackageManager with IsPackageManager {

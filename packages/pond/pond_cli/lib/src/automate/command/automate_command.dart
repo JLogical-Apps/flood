@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:pond_core/src/automate/command/automate_command_context.dart';
+import 'package:pond_cli/src/automate/command/automate_command_context.dart';
 
 abstract class AutomateCommand {
   String get name;

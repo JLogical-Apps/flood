@@ -15,13 +15,3 @@ extension EnvironmentCoreContextExtensions on CorePondContext {
 
   EnvironmentType get environment => locate<EnvironmentConfigCoreComponent>().environment;
 }
-
-extension EnvironmentAutomateContextExtensions on AutomatePondContext {
-  EnvironmentConfig get environmentConfig => find<EnvironmentConfigCoreComponent>().environmentConfig;
-
-  BuildType get buildType => find<EnvironmentConfigCoreComponent>().buildType;
-
-  Platform get platform => find<EnvironmentConfigCoreComponent>().platform;
-
-  EnvironmentType get environment => find<EnvironmentConfigCoreComponent>().environment;
-}

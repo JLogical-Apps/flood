@@ -8,7 +8,7 @@ import 'package:dcli/dcli.dart';
 import 'package:interact/interact.dart';
 import 'package:interact/interact.dart' as interact;
 import 'package:lumberdash/lumberdash.dart' as lumberdash;
-import 'package:pond_core/src/automate/util/terminal/terminal.dart';
+import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 import 'package:utils_core/utils_core.dart';
 
 class ShellTerminal with IsTerminal {

@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:pond_core/src/automate/context/automate_pond_context.dart';
-import 'package:pond_core/src/automate/util/file_system/automate_file_system.dart';
-import 'package:pond_core/src/automate/util/package_manager/package_manager.dart';
-import 'package:pond_core/src/automate/util/package_manager/pubspec_package_manager.dart';
-import 'package:pond_core/src/automate/util/terminal/shell_terminal.dart';
-import 'package:pond_core/src/automate/util/terminal/terminal.dart';
+import 'package:pond_cli/src/automate/context/automate_pond_context.dart';
+import 'package:pond_cli/src/automate/util/file_system/automate_file_system.dart';
+import 'package:pond_cli/src/automate/util/package_manager/package_manager.dart';
+import 'package:pond_cli/src/automate/util/package_manager/pubspec_package_manager.dart';
+import 'package:pond_cli/src/automate/util/terminal/shell_terminal.dart';
+import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 
 class AutomateCommandContext with IsTerminalWrapper, IsPackageManagerWrapper, IsAutomateFileSystemWrapper {
   final AutomatePondContext automateContext;

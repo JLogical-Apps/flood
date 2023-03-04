@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:pond_core/pond_core.dart';
-import 'package:pond_core/src/automate/command/automate_command_context.dart';
+import 'package:pond_cli/pond_cli.dart';
 
 class Automate {
   static Future<void> automate({required AutomatePondContext context, required List<String> args}) async {
