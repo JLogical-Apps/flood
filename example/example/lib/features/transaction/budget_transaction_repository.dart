@@ -2,7 +2,7 @@ import 'package:example/features/transaction/amount_transaction.dart';
 import 'package:example/features/transaction/amount_transaction_entity.dart';
 import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class BudgetTransactionRepository with IsRepositoryWrapper {
   @override

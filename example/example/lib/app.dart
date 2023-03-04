@@ -1,3 +1,9 @@
+import 'package:example/features/budget/budget.dart';
+import 'package:example/features/budget/budget_entity.dart';
+import 'package:example/features/envelope/envelope.dart';
+import 'package:example/features/envelope/envelope_entity.dart';
+import 'package:example/features/user/user.dart';
+import 'package:example/features/user/user_entity.dart';
 import 'package:example/pond.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/style.dart';
@@ -52,5 +58,33 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(UrlBarAppComponent());
   await appPondContext.register(ValetPagesAppPondComponent());
+  await appPondContext.register(TestingSetupAppComponent(onSetup: () async {
+    if (testingLoggedIn) {
+      final authComponent = corePondContext.locate<AuthCoreComponent>();
+      final dropComponent = corePondContext.locate<DropCoreComponent>();
+
+      final userId = await authComponent.signup('test@test.com', 'password');
+
+      final userEntity = await dropComponent.updateEntity(
+        UserEntity()..id = userId,
+        (User user) => user.nameProperty.set('John Doe'),
+      );
+
+      final budgetEntity = await dropComponent.updateEntity(
+        BudgetEntity(),
+        (Budget budget) => budget
+          ..nameProperty.set('Budget')
+          ..ownerProperty.set(userEntity.id!),
+      );
+
+      await Future.wait(List.generate(
+          5,
+          (i) => dropComponent.updateEntity(
+              EnvelopeEntity(),
+              (Envelope envelope) => envelope
+                ..nameProperty.set('Envelope ${i + 1}')
+                ..budgetProperty.set(budgetEntity.id!))));
+    }
+  }));
   return appPondContext;
 }

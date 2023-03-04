@@ -1,7 +1,7 @@
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils_core/jlogical_utils_core.dart';
+import 'package:meta/meta.dart';
 
 abstract class BudgetTransaction extends ValueObject {
   static const envelopeField = 'envelope';

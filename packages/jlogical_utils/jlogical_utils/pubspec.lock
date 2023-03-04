@@ -15,6 +15,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  app_icon:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/app_icon"
+      relative: true
+    source: path
+    version: "0.0.1"
   args:
     dependency: transitive
     description:
@@ -477,7 +484,7 @@ packages:
     source: hosted
     version: "1.2.1"
   testing_setup:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../../pond/modules/testing_setup"
       relative: true

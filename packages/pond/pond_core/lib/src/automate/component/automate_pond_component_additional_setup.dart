@@ -4,12 +4,12 @@ import 'package:pond_core/src/automate/command/automate_command.dart';
 import 'package:pond_core/src/automate/component/automate_pond_component.dart';
 import 'package:pond_core/src/automate/context/automate_pond_context.dart';
 
-class AutomatePondComponentAdditionalSetup extends AutomatePondComponentWrapper {
+class AutomatePondComponentAdditionalSetup with IsAutomatePondComponentWrapper {
   @override
   final AutomatePondComponent automatePondComponent;
 
-  final void Function(AutomatePondContext context)? onBeforeRegister;
-  final void Function(AutomatePondContext context)? onAfterRegister;
+  final FutureOr Function(AutomatePondContext context)? onBeforeRegister;
+  final FutureOr Function(AutomatePondContext context)? onAfterRegister;
   final FutureOr Function(AutomatePondContext context)? onBeforeLoad;
   final FutureOr Function(AutomatePondContext context)? onAfterLoad;
   final List<AutomateCommand> Function(List<AutomateCommand> existingCommands)? commandBuilder;
@@ -24,10 +24,10 @@ class AutomatePondComponentAdditionalSetup extends AutomatePondComponentWrapper 
   });
 
   @override
-  void onRegister(AutomatePondContext context) {
-    onBeforeRegister?.call(context);
-    automatePondComponent.onRegister(context);
-    onAfterRegister?.call(context);
+  Future onRegister(AutomatePondContext context) async {
+    await onBeforeRegister?.call(context);
+    await automatePondComponent.onRegister(context);
+    await onAfterRegister?.call(context);
   }
 
   @override

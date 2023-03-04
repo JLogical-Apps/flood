@@ -15,5 +15,6 @@ export 'package:port/port.dart';
 export 'package:port_style/port_style.dart';
 export 'package:style/style.dart';
 export 'package:style_component/style_component.dart';
+export 'package:testing_setup/testing_setup.dart';
 export 'package:url_bar/url_bar.dart';
 export 'package:utils/utils.dart';

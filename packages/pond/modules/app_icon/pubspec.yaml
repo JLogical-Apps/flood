@@ -1,5 +1,5 @@
-name: testing_setup
-description: Module for setting up the testing environment.
+name: app_icon
+description: Automate package to set the app icon.
 
 publish_to: "none"
 
@@ -9,20 +9,13 @@ environment:
 version: 0.0.1
 
 dependencies:
-  flutter:
-    sdk: flutter
-
   collection: ^1.16.0
-  environment:
+
+  pond_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/pond/packages/environment
-  pond:
-    git:
-      url: git@github.com:jaboyc/jlogical_utils.git
-      ref: master
-      path: packages/pond/pond
+      path: packages/pond/pond_core
   utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

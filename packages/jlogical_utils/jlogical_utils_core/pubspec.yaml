@@ -14,6 +14,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/modules/actions_core
+  app_icon:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/modules/app_icon
   auth_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
@@ -64,11 +69,6 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/pond/packages/port_drop_core
-  testing_setup:
-    git:
-      url: git@github.com:jaboyc/jlogical_utils.git
-      ref: master
-      path: packages/modules/testing_setup
   type_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

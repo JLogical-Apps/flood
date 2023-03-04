@@ -2,16 +2,10 @@ import 'package:example/pond.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 Future<void> main(List<String> args) async {
-  final automatePondContext = AutomatePondContext(
-      corePondContext: await getCorePondContext(environmentConfig: EnvironmentConfig.static.fileAssets()))
-    ..register(HelloWorldAutomatePondComponent());
+  final corePondContext = await getCorePondContext(environmentConfig: EnvironmentConfig.static.fileAssets());
+  final automatePondContext = AutomatePondContext(corePondContext: corePondContext);
+
+  await automatePondContext.register(AppIconAutomateComponent());
 
   await Automate.automate(context: automatePondContext, args: args);
-}
-
-class HelloWorldAutomatePondComponent extends AutomatePondComponent {
-  @override
-  final List<AutomateCommand> commands = [
-    AutomateCommand(name: 'hello_world', runner: () => print('hello!')),
-  ];
 }

@@ -52,7 +52,7 @@ void main() {
 
 class TestCoreComponent extends CorePondComponent {}
 
-class TestAutomateComponent extends AutomatePondComponent {
+class TestAutomateComponent with IsAutomatePondComponent {
   final void Function()? runner;
 
   TestAutomateComponent({this.runner});
@@ -61,7 +61,7 @@ class TestAutomateComponent extends AutomatePondComponent {
   late final List<AutomateCommand> commands = [
     AutomateCommand(
       name: helloWorldCommandName,
-      runner: () => runner?.call(),
+      runner: (context) => runner?.call(),
     ),
   ];
 }

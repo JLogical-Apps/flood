@@ -5,10 +5,21 @@ import 'package:pond_core/src/automate/component/automate_pond_component_additio
 import 'package:pond_core/src/automate/context/automate_pond_context.dart';
 
 abstract class AutomatePondComponent {
-  void onRegister(AutomatePondContext context) {}
+  Future onRegister(AutomatePondContext context);
 
+  Future onLoad(AutomatePondContext context);
+
+  List<AutomateCommand> get commands;
+}
+
+mixin IsAutomatePondComponent implements AutomatePondComponent {
+  @override
+  Future onRegister(AutomatePondContext context) async {}
+
+  @override
   Future onLoad(AutomatePondContext context) async {}
 
+  @override
   List<AutomateCommand> get commands;
 }
 
@@ -16,10 +27,10 @@ abstract class AutomatePondComponentWrapper implements AutomatePondComponent {
   AutomatePondComponent get automatePondComponent;
 }
 
-mixin WithAutomatePondComponentDelegate implements AutomatePondComponentWrapper {
+mixin IsAutomatePondComponentWrapper implements AutomatePondComponentWrapper {
   @override
-  void onRegister(AutomatePondContext context) {
-    automatePondComponent.onRegister(context);
+  Future onRegister(AutomatePondContext context) {
+    return automatePondComponent.onRegister(context);
   }
 
   @override

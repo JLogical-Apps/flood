@@ -8,6 +8,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  app_icon:
+    dependency: "direct main"
+    description:
+      path: "../../pond/modules/app_icon"
+      relative: true
+    source: path
+    version: "0.0.1"
   auth_core:
     dependency: "direct main"
     description:
@@ -230,13 +237,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
-  testing_setup:
-    dependency: "direct main"
-    description:
-      path: "../../pond/modules/testing_setup"
-      relative: true
-    source: path
-    version: "0.0.1"
   type:
     dependency: "direct overridden"
     description:

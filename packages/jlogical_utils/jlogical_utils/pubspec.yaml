@@ -94,6 +94,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/pond/style_component
+  testing_setup:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/modules/testing_setup
   url_bar:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
