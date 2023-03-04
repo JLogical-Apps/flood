@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:pond_core/src/automate/context/automate_pond_context.dart';
 import 'package:pond_core/src/automate/util/file_system/automate_file_system.dart';
 import 'package:pond_core/src/automate/util/package_manager/package_manager.dart';
@@ -10,6 +12,8 @@ class AutomateCommandContext with IsTerminalWrapper, IsPackageManagerWrapper, Is
 
   AutomateCommandContext({required this.automateContext});
 
+  List<File> tempFiles = [];
+
   @override
   late final PackageManager packageManager = PubspecPackageManager(terminal: this, fileSystem: this);
 
@@ -18,6 +22,19 @@ class AutomateCommandContext with IsTerminalWrapper, IsPackageManagerWrapper, Is
 
   @override
   late final AutomateFileSystem fileSystem = AutomateFileSystem();
+
+  @override
+  Future<File> createTempFile(String name) async {
+    final file = await super.createTempFile(name);
+    tempFiles.add(file);
+    return file;
+  }
+
+  Future cleanup() async {
+    for (final file in tempFiles) {
+      file.deleteSync();
+    }
+  }
 
   Future<void> ensurePackageInstalled(String packageName, {bool isDevDependency = false}) async {
     if (await isPackageRegistered(packageName, isDevDependency: isDevDependency)) {

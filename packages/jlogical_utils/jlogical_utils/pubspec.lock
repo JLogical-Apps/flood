@@ -431,6 +431,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      sha256: "8e9d133755c3e84c73288363e6343157c383a0c6c56fc51afcc5d4d7180306d6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.0"
   ini:
     dependency: transitive
     description:
@@ -670,6 +678,14 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      sha256: "49392a45ced973e8d94a85fdb21293fbb40ba805fc49f2965101ae748a3683b4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
   pigment:
     dependency: transitive
     description:
@@ -1205,6 +1221,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      sha256: "979ee37d622dec6365e2efa4d906c37470995871fe9ae080d967e192d88286b5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.2"
   yaml:
     dependency: transitive
     description:

@@ -15,5 +15,6 @@ class Automate {
 
     final commandContext = AutomateCommandContext(automateContext: context);
     await automateCommand?.run(commandContext);
+    await commandContext.cleanup();
   }
 }
