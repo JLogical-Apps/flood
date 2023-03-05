@@ -11,8 +11,6 @@ import 'package:example/presentation/valet_pages_pond_component.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-late AppPondContext appPondContext;
-
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(App(

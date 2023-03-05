@@ -20,6 +20,7 @@ class AppIconAutomateComponent with IsAutomatePondComponent {
   List<AutomateCommand> get commands => [
         AutomateCommand(
           name: 'app_icon',
+          description: 'Sets the app icon of the app.',
           runner: (context) async {
             await context.ensurePackageInstalled('flutter_launcher_icons', isDevDependency: true);
 

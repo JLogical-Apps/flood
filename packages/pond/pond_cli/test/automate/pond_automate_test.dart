@@ -62,6 +62,7 @@ class TestAutomateComponent with IsAutomatePondComponent {
   late final List<AutomateCommand> commands = [
     AutomateCommand(
       name: helloWorldCommandName,
+      description: 'Prints Hello World',
       runner: (context) => runner?.call(),
     ),
   ];

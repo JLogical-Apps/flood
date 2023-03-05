@@ -16,6 +16,6 @@ abstract class AutomatePondComponentLocatorWrapper {
   }
 
   static List<AutomatePondComponent> getSubcomponentsOf(AutomatePondComponent component) {
-    return getWrapperOrNull(component)?.getSubcomponents(component) ?? [component];
+    return getWrapperOrNull(component)?.getSubcomponents(component) ?? [];
   }
 }
