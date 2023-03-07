@@ -75,4 +75,9 @@ class LocalPushNotificationService extends PushNotificationService {
       ),
     );
   }
+
+  @override
+  Stream<String?> getDeviceTokenX() {
+    return Stream.empty();
+  }
 }

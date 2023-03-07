@@ -2,6 +2,7 @@ import 'package:jlogical_utils/jlogical_utils_core.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification.dart';
 import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification_service.dart';
+import 'package:rxdart/rxdart.dart';
 
 class PushNotificationFilterWrapperService extends PushNotificationService {
   final List<PushNotificationService> pushNotificationServices;
@@ -31,5 +32,10 @@ class PushNotificationFilterWrapperService extends PushNotificationService {
   Future<void> sendNotificationTo({required String to, required PushNotification notification}) {
     final service = pushNotificationServiceGetter(to, notification);
     return service.sendNotificationTo(to: to, notification: notification);
+  }
+
+  @override
+  Stream<String?> getDeviceTokenX() {
+    return Rx.merge(pushNotificationServices.map((service) => service.getDeviceTokenX()));
   }
 }

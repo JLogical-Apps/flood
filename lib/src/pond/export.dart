@@ -31,6 +31,7 @@ export 'modules/logging/default_logging_module.dart';
 export 'modules/push_notifications/firebase_push_notification_service.dart';
 export 'modules/push_notifications/local_push_notification_service.dart';
 export 'modules/push_notifications/push_notification.dart';
+export 'modules/push_notifications/push_notification_service.dart';
 export 'modules/push_notifications/push_notifications_module.dart';
 export 'modules/syncing/assets/asset_sync_download_action.dart';
 export 'modules/syncing/assets/publish_actions/asset_delete_sync_publish_action.dart';
