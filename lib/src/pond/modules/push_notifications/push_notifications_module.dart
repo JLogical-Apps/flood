@@ -11,18 +11,18 @@ import 'local_push_notification_service.dart';
 import 'push_notification.dart';
 
 class PushNotificationsModule extends AppModule {
-  final void Function(String? token) onDeviceTokenGenerated;
-  final void Function()? onNotificationReceived;
+  final void Function(String? token)? onDeviceTokenGenerated;
 
   String? lastDeviceTokenGenerated;
 
-  late PushNotificationService service;
+  final PushNotificationService service;
 
-  PushNotificationsModule({
-    required this.onDeviceTokenGenerated,
-    this.onNotificationReceived,
-    PushNotificationService? service,
-  }) : service = service ?? _getPushNotificationService(onNotificationReceived: onNotificationReceived);
+  PushNotificationsModule.environmental({
+    this.onDeviceTokenGenerated,
+    void Function()? onNotificationReceived,
+  }) : service = _getPushNotificationService(onNotificationReceived: onNotificationReceived);
+
+  PushNotificationsModule({required this.service}) : this.onDeviceTokenGenerated = null;
 
   @override
   void onRegister(AppRegistration registration) {
@@ -34,7 +34,7 @@ class PushNotificationsModule extends AppModule {
   Future<void> onLoad(AppContext context) async {
     service.getDeviceTokenX().listen((token) {
       lastDeviceTokenGenerated = token;
-      onDeviceTokenGenerated(token);
+      onDeviceTokenGenerated?.call(token);
     });
     service.onLoad(context);
   }
