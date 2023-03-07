@@ -65,8 +65,8 @@ class LocalPushNotificationService extends PushNotificationService {
       notification.body,
       NotificationDetails(
         android: AndroidNotificationDetails(
-          'example',
-          'example',
+          notification.title,
+          notification.title,
           icon: "@mipmap/ic_launcher",
           priority: Priority.defaultPriority,
           importance: Importance.defaultImportance,
