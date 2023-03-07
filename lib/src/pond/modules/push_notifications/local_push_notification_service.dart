@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification.dart';
@@ -87,7 +89,7 @@ class LocalPushNotificationService extends PushNotificationService {
       throw Exception('Not initialized yet!');
     }
 
-    final id = DateTime.now().millisecondsSinceEpoch;
+    final id = DateTime.now().millisecondsSinceEpoch % (pow(2, 32).round()) - 1;
     await flutterLocalNotificationsPlugin.schedule(
       id,
       notification.title,
