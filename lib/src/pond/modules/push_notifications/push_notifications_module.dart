@@ -22,7 +22,7 @@ class PushNotificationsModule extends AppModule {
     void Function()? onNotificationReceived,
   }) : service = _getPushNotificationService(onNotificationReceived: onNotificationReceived);
 
-  PushNotificationsModule({required this.service}) : this.onDeviceTokenGenerated = null;
+  PushNotificationsModule({required this.service, this.onDeviceTokenGenerated});
 
   @override
   void onRegister(AppRegistration registration) {
