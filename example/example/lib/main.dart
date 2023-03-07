@@ -151,7 +151,7 @@ class HomePage extends StatelessWidget {
           await userEntity.save();
         },
       ))
-      ..register(PushNotificationsModule(onDeviceTokenGenerated: (token) {
+      ..register(PushNotificationsModule.environmental(onDeviceTokenGenerated: (token) {
         print('token generated: $token');
       }))
       ..register(SyncingModule(isDisabled: kIsWeb || AppContext.global.environment.index < Environment.qa.index)
