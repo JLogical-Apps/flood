@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification_entity.dart';
 import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification_record.dart';
+import 'package:jlogical_utils/src/pond/modules/push_notifications/scheduled_notification.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../context/app_context.dart';
@@ -54,7 +55,7 @@ class FirebasePushNotificationService extends PushNotificationService {
   }
 
   @override
-  Future<void> scheduleNotification({
+  Future<ScheduledNotification> scheduleNotification({
     required String to,
     required PushNotification notification,
     required DateTime date,

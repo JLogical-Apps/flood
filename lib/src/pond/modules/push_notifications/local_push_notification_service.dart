@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification.dart';
+import 'package:jlogical_utils/src/pond/modules/push_notifications/scheduled_notification.dart';
 
 import '../../context/app_context.dart';
 import 'push_notification_service.dart';
@@ -77,17 +78,18 @@ class LocalPushNotificationService extends PushNotificationService {
   }
 
   @override
-  Future<void> scheduleNotification({
+  Future<ScheduledNotification> scheduleNotification({
     required String to,
     required PushNotification notification,
     required DateTime date,
   }) async {
     if (!initialized) {
-      return;
+      throw Exception('Not initialized yet!');
     }
 
+    final id = DateTime.now().millisecondsSinceEpoch;
     await flutterLocalNotificationsPlugin.schedule(
-      0,
+      id,
       notification.title,
       notification.body,
       date,
@@ -103,6 +105,8 @@ class LocalPushNotificationService extends PushNotificationService {
       ),
       androidAllowWhileIdle: true,
     );
+
+    return ScheduledNotification(onCancel: () => flutterLocalNotificationsPlugin.cancel(id));
   }
 
   @override

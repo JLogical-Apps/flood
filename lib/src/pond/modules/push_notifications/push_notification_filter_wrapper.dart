@@ -2,6 +2,7 @@ import 'package:jlogical_utils/jlogical_utils_core.dart';
 import 'package:jlogical_utils/src/pond/context/app_context.dart';
 import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification.dart';
 import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification_service.dart';
+import 'package:jlogical_utils/src/pond/modules/push_notifications/scheduled_notification.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PushNotificationFilterWrapperService extends PushNotificationService {
@@ -35,7 +36,7 @@ class PushNotificationFilterWrapperService extends PushNotificationService {
   }
 
   @override
-  Future<void> scheduleNotification({
+  Future<ScheduledNotification> scheduleNotification({
     required String to,
     required PushNotification notification,
     required DateTime date,

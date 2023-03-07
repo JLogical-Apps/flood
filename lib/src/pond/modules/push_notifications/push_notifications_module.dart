@@ -3,6 +3,7 @@ import 'package:jlogical_utils/src/pond/context/registration/app_registration.da
 import 'package:jlogical_utils/src/pond/modules/environment/environment_module.dart';
 import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification_repository.dart';
 import 'package:jlogical_utils/src/pond/modules/push_notifications/push_notification_service.dart';
+import 'package:jlogical_utils/src/pond/modules/push_notifications/scheduled_notification.dart';
 
 import '../../context/module/app_module.dart';
 import '../../modules/environment/environment.dart';
@@ -53,7 +54,7 @@ class PushNotificationsModule extends AppModule {
     return service.sendNotificationTo(to: to, notification: notification);
   }
 
-  Future<void> scheduleNotification({
+  Future<ScheduledNotification> scheduleNotification({
     required String to,
     required PushNotification notification,
     required DateTime date,
