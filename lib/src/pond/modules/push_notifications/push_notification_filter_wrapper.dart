@@ -35,6 +35,16 @@ class PushNotificationFilterWrapperService extends PushNotificationService {
   }
 
   @override
+  Future<void> scheduleNotification({
+    required String to,
+    required PushNotification notification,
+    required DateTime date,
+  }) {
+    final service = pushNotificationServiceGetter(to, notification);
+    return service.scheduleNotification(to: to, notification: notification, date: date);
+  }
+
+  @override
   Stream<String?> getDeviceTokenX() {
     return Rx.merge(pushNotificationServices.map((service) => service.getDeviceTokenX()));
   }

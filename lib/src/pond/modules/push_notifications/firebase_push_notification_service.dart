@@ -52,6 +52,15 @@ class FirebasePushNotificationService extends PushNotificationService {
   Stream<String?> getDeviceTokenX() {
     return _tokenSubject;
   }
+
+  @override
+  Future<void> scheduleNotification({
+    required String to,
+    required PushNotification notification,
+    required DateTime date,
+  }) {
+    throw Exception('You cannot schedule notifications with Firebase!');
+  }
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}

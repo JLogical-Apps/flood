@@ -52,4 +52,12 @@ class PushNotificationsModule extends AppModule {
   Future<void> sendNotification({required String to, required PushNotification notification}) {
     return service.sendNotificationTo(to: to, notification: notification);
   }
+
+  Future<void> scheduleNotification({
+    required String to,
+    required PushNotification notification,
+    required DateTime date,
+  }) {
+    return service.scheduleNotification(to: to, notification: notification, date: date);
+  }
 }

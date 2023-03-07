@@ -6,6 +6,9 @@ import 'push_notification.dart';
 abstract class PushNotificationService extends AppModule {
   Future<void> sendNotificationTo({required String to, required PushNotification notification});
 
+  Future<void> scheduleNotification(
+      {required String to, required PushNotification notification, required DateTime date});
+
   Stream<String?> getDeviceTokenX();
 
   static PushNotificationService filter({

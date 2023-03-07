@@ -77,6 +77,35 @@ class LocalPushNotificationService extends PushNotificationService {
   }
 
   @override
+  Future<void> scheduleNotification({
+    required String to,
+    required PushNotification notification,
+    required DateTime date,
+  }) async {
+    if (!initialized) {
+      return;
+    }
+
+    await flutterLocalNotificationsPlugin.schedule(
+      0,
+      notification.title,
+      notification.body,
+      date,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          notification.title,
+          notification.title,
+          icon: "@mipmap/ic_launcher",
+          priority: Priority.defaultPriority,
+          importance: Importance.defaultImportance,
+        ),
+        iOS: DarwinNotificationDetails(presentAlert: true),
+      ),
+      androidAllowWhileIdle: true,
+    );
+  }
+
+  @override
   Stream<String?> getDeviceTokenX() {
     return Stream.empty();
   }
