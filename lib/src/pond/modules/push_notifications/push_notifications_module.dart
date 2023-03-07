@@ -16,9 +16,21 @@ class PushNotificationsModule extends AppModule {
 
   String? lastDeviceTokenGenerated;
 
-  late PushNotificationService service = _getPushNotificationService();
+  late PushNotificationService service;
 
-  PushNotificationsModule({required this.onDeviceTokenGenerated, this.onNotificationReceived});
+  PushNotificationsModule({
+    required this.onDeviceTokenGenerated,
+    this.onNotificationReceived,
+    PushNotificationService? service,
+  }) {
+    this.service = service ??
+        _getPushNotificationService(
+          onDeviceTokenGenerated: (token) {
+            lastDeviceTokenGenerated = token;
+            onDeviceTokenGenerated(token);
+          },
+        );
+  }
 
   @override
   void onRegister(AppRegistration registration) {
@@ -31,17 +43,17 @@ class PushNotificationsModule extends AppModule {
     return service.onLoad(context);
   }
 
-  PushNotificationService _getPushNotificationService() {
+  static PushNotificationService _getPushNotificationService({
+    required void Function(String? token) onDeviceTokenGenerated,
+    void Function()? onNotificationReceived,
+  }) {
     switch (AppContext.global.environment) {
       case Environment.testing:
       case Environment.device:
         return LocalPushNotificationService();
       default:
         return FirebasePushNotificationService(
-          onDeviceTokenGenerated: (token) {
-            lastDeviceTokenGenerated = token;
-            onDeviceTokenGenerated(token);
-          },
+          onDeviceTokenGenerated: onDeviceTokenGenerated,
           onNotificationReceived: onNotificationReceived,
         );
     }
