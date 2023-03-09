@@ -1,0 +1,37 @@
+name: task_core
+description: Core module for running and scheduling tasks.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+version: 0.0.1
+
+dependencies:
+  collection: ^1.16.0
+  cron: ^0.5.1
+
+  actions_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/pond/actions_core
+  path_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/path/path_core
+  pond_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/pond/pond_core
+  utils_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/utils/utils_core
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.4
