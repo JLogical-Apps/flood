@@ -89,7 +89,7 @@ class LocalPushNotificationService extends PushNotificationService {
       throw Exception('Not initialized yet!');
     }
 
-    final id = DateTime.now().millisecondsSinceEpoch % (pow(2, 32).round()) - 1;
+    final id = DateTime.now().millisecondsSinceEpoch % (pow(2, 31).round()) - 1;
     await flutterLocalNotificationsPlugin.schedule(
       id,
       notification.title,
