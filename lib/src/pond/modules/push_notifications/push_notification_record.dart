@@ -4,6 +4,7 @@ class PushNotificationRecord extends ValueObject {
   late final toProperty = FieldProperty<String>(name: 'to').required();
   late final titleProperty = FieldProperty<String>(name: 'title');
   late final bodyProperty = FieldProperty<String>(name: 'body');
+  late final soundProperty = FieldProperty<String>(name: 'sound').withFallback(() => 'default');
 
   PushNotificationRecord();
 
@@ -20,5 +21,6 @@ class PushNotificationRecord extends ValueObject {
         toProperty,
         titleProperty,
         bodyProperty,
+        soundProperty,
       ];
 }
