@@ -18,24 +18,56 @@ class AppIconAutomateComponent with IsAutomatePondComponent {
 
   @override
   List<AutomateCommand> get commands => [
-        AutomateCommand(
-          name: 'app_icon',
-          description: 'Sets the app icon of the app.',
-          runner: (context) async {
-            await context.ensurePackageInstalled('flutter_launcher_icons', isDevDependency: true);
-
-            // Sometimes the AppIcon.appiconset folder isn't created causing flutter_launcher_icons to crash.
-            final iosAssetsFolder =
-                context.getRootDirectory() / 'ios' / 'Runner' / 'Assets.xcassets' / 'AppIcon.appiconset';
-            iosAssetsFolder.ensureCreated();
-
-            final configurationFile = await context.createTempFile('flutter_launcher_icons.yaml');
-            await DataSource.static.file(configurationFile).mapYaml().set(await _constructConfig(context));
-
-            context.run('flutter pub run flutter_launcher_icons:main -f "${configurationFile.relativePath}"');
-          },
-        ),
+        AppIconCommand(
+          appIconForegroundFileGetter: appIconForegroundFileGetter,
+          backgroundColor: backgroundColor,
+          padding: padding,
+        )
       ];
+}
+
+class AppIconCommand extends AutomateCommand<AppIconCommand> {
+  final File Function(Directory rootDirectory) appIconForegroundFileGetter;
+  final int backgroundColor;
+  final int padding;
+
+  AppIconCommand({
+    required this.appIconForegroundFileGetter,
+    required this.backgroundColor,
+    required this.padding,
+  });
+
+  @override
+  String get name => 'app_icon';
+
+  @override
+  String get description => 'Sets the app icon of the app.';
+
+  @override
+  AppIconCommand copy() {
+    return AppIconCommand(
+      appIconForegroundFileGetter: appIconForegroundFileGetter,
+      backgroundColor: backgroundColor,
+      padding: padding,
+    );
+  }
+
+  @override
+  Future<void> onRun(AutomateCommandContext context) async {
+    await context.ensurePackageInstalled('flutter_launcher_icons', isDevDependency: true);
+
+    // Sometimes the AppIcon.appiconset folder isn't created causing flutter_launcher_icons to crash.
+    final iosAssetsFolder = context.getRootDirectory() / 'ios' / 'Runner' / 'Assets.xcassets' / 'AppIcon.appiconset';
+    iosAssetsFolder.ensureCreated();
+
+    final configurationFile = await context.createTempFile('flutter_launcher_icons.yaml');
+    await DataSource.static.file(configurationFile).mapYaml().set(await _constructConfig(context));
+
+    context.run('flutter pub run flutter_launcher_icons:main -f "${configurationFile.relativePath}"');
+  }
+
+  @override
+  AutomatePathDefinition get pathDefinition => AutomatePathDefinition.empty;
 
   Future<Map<String, dynamic>> _constructConfig(AutomateCommandContext context) async {
     final appIconForegroundFile = appIconForegroundFileGetter(context.getRootDirectory());

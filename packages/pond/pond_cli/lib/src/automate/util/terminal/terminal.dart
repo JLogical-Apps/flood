@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:pond_cli/src/automate/util/terminal/capture_terminal.dart';
+import 'package:pond_cli/src/automate/util/terminal/shell_terminal.dart';
+
 abstract class Terminal {
   void print(dynamic obj);
 
@@ -25,6 +28,14 @@ abstract class Terminal {
   });
 
   Future<void> run(String command, {Directory? workingDirectory});
+
+  static TerminalStatic get static => TerminalStatic();
+}
+
+class TerminalStatic {
+  Terminal get shell => ShellTerminal();
+
+  CaptureTerminal get capture => CaptureTerminal();
 }
 
 mixin IsTerminal implements Terminal {}

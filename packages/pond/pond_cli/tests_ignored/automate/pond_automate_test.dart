@@ -5,6 +5,8 @@ import 'package:utils_core/utils_core.dart';
 
 const helloWorldCommandName = 'hello_world';
 
+const echoCommandName = 'echo';
+
 void main() {
   test('automate components registering and loading', () async {
     var coreRegistered = false;
@@ -38,9 +40,7 @@ void main() {
 
   test('run is called on correct component', () async {
     var hasRun = false;
-    final corePondContext = CorePondContext();
-    await corePondContext.register(TestCoreComponent());
-    final automateContext = AutomatePondContext(corePondContext: corePondContext)
+    final automateContext = AutomatePondContext(corePondContext: CorePondContext())
       ..register(TestAutomateComponent(
         runner: () => hasRun = true,
       ));
@@ -48,6 +48,26 @@ void main() {
     await Automate.automate(context: automateContext, args: [helloWorldCommandName]);
 
     expect(hasRun, true);
+  });
+
+  test('automate command properties.', () async {
+    final automateContext = AutomatePondContext(corePondContext: CorePondContext())..register(EchoAutomateComponent());
+
+    var captureTerminal = Terminal.static.capture;
+    await Automate.automate(
+      context: automateContext,
+      args: [echoCommandName, '"Hello World!"'],
+      terminal: captureTerminal,
+    );
+
+    captureTerminal = Terminal.static.capture;
+    await Automate.automate(
+      context: automateContext,
+      args: [echoCommandName, '"Hello World!"', 'repeat:3'],
+      terminal: captureTerminal,
+    );
+
+    expect(captureTerminal.output, ['print: Hello World!'].repeat(3));
   });
 }
 
@@ -60,10 +80,48 @@ class TestAutomateComponent with IsAutomatePondComponent {
 
   @override
   late final List<AutomateCommand> commands = [
-    AutomateCommand(
+    AutomateCommand.simple(
       name: helloWorldCommandName,
       description: 'Prints Hello World',
       runner: (context) => runner?.call(),
+      pathDefinition: AutomatePathDefinition.empty,
     ),
   ];
+}
+
+class EchoAutomateComponent with IsAutomatePondComponent {
+  @override
+  late final List<AutomateCommand> commands = [
+    EchoAutomateCommand(),
+  ];
+}
+
+class EchoAutomateCommand extends AutomateCommand<EchoAutomateCommand> {
+  @override
+  String get name => 'echo';
+
+  @override
+  String get description => 'Echoes the input.';
+
+  late final echoField = field<String>(name: 'echo');
+
+  late final repeatField = field<int>(name: 'repeat').withFallback(() => 1);
+
+  @override
+  AutomatePathDefinition get pathDefinition => AutomatePathDefinition.property(echoField);
+
+  @override
+  List<AutomateCommandProperty> get parameters => [repeatField];
+
+  @override
+  EchoAutomateCommand copy() {
+    return EchoAutomateCommand();
+  }
+
+  @override
+  Future<void> onRun(AutomateCommandContext context) async {
+    for (var i = 0; i < repeatField.value; i++) {
+      context.print(echoField.value);
+    }
+  }
 }

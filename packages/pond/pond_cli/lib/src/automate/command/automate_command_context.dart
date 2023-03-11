@@ -10,15 +10,15 @@ import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 class AutomateCommandContext with IsTerminalWrapper, IsPackageManagerWrapper, IsAutomateFileSystemWrapper {
   final AutomatePondContext automateContext;
 
-  AutomateCommandContext({required this.automateContext});
+  AutomateCommandContext({required this.automateContext, Terminal? terminal}) : terminal = terminal ?? ShellTerminal();
 
   List<File> tempFiles = [];
 
   @override
-  late final PackageManager packageManager = PubspecPackageManager(terminal: this, fileSystem: this);
+  final Terminal terminal;
 
   @override
-  late final Terminal terminal = ShellTerminal();
+  late final PackageManager packageManager = PubspecPackageManager(terminal: this, fileSystem: this);
 
   @override
   late final AutomateFileSystem fileSystem = AutomateFileSystem();

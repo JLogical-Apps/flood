@@ -48,6 +48,10 @@ extension IterableExtensions<T> on Iterable<T> {
   Map<K, V> mapToMap<K, V>(MapEntry<K, V> Function(T value) mapper) {
     return map(mapper).toMap();
   }
+
+  Iterable<T> repeat(int amount) {
+    return List.filled(amount, this).expand((i) => i);
+  }
 }
 
 extension NullableIterableExtensions<T> on Iterable<T?> {

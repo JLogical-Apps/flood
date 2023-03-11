@@ -1,8 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:pond_cli/pond_cli.dart';
+import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 
 class Automate {
-  static Future<void> automate({required AutomatePondContext context, required List<String> args}) async {
+  static Future<void> automate({
+    required AutomatePondContext context,
+    required List<String> args,
+    Terminal? terminal,
+  }) async {
     if (args.isEmpty) {
       _printUsage(context: context);
       return;
@@ -17,8 +22,12 @@ class Automate {
       return;
     }
 
-    final commandContext = AutomateCommandContext(automateContext: context);
-    await automateCommand.run(commandContext);
+    automateCommand as AutomateCommand<AutomateCommand>;
+
+    final instanceCommand = automateCommand.fromPath(args.skip(1).join(' '));
+
+    final commandContext = AutomateCommandContext(automateContext: context, terminal: terminal);
+    await instanceCommand.onRun(commandContext);
     await commandContext.cleanup();
   }
 

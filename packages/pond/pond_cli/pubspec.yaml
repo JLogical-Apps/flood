@@ -12,6 +12,7 @@ dependencies:
   collection: ^1.16.0
   colorize_lumberdash: ^3.0.0
   dcli: ^2.0.1
+  equatable: ^2.0.5
   interact: ^2.2.0
   lumberdash: ^3.0.0
   process_run: ^0.12.5+2
