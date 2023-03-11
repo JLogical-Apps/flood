@@ -6,13 +6,18 @@ import 'package:test/test.dart';
 void main() {
   test('local task runner', () async {
     final taskRunner = TaskRunner.static.local;
-    final echoTask = EchoTask();
     expect(
-      await echoTask.executeOn(
-        taskRunner: taskRunner,
-        input: TaskRequest(path: Uri(pathSegments: ['echo', 'Hello World!']).toString()),
-      ),
+      await taskRunner.run(
+          EchoTask(),
+          TaskRequest(
+            path: Uri(pathSegments: ['echo', 'Hello World!']).toString(),
+          )),
       'Hello World!',
+    );
+
+    expect(
+      await (EchoTask()..echoField.set('Hey!')).executeOn(taskRunner: taskRunner),
+      'Hey!',
     );
   });
 }
