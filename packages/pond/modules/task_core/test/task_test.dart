@@ -1,43 +1,38 @@
-import 'dart:async';
-
-import 'package:actions_core/actions_core.dart';
-import 'package:cron/cron.dart' as cron;
 import 'package:path_core/path_core.dart';
-import 'package:task_core/src/task_schedule.dart';
+import 'package:task_core/src/task_request.dart';
 import 'package:task_core/task_core.dart';
 import 'package:test/test.dart';
 
 void main() {
   test('local task runner', () async {
     final taskRunner = TaskRunner.static.local;
-    final echoTask = Task(
-      action: Action(
-        name: 'echo',
-        runner: (value) => value,
+    final echoTask = EchoTask();
+    expect(
+      await echoTask.executeOn(
+        taskRunner: taskRunner,
+        input: TaskRequest(path: Uri(pathSegments: ['echo', 'Hello World!']).toString()),
       ),
-      pathDefinition: PathDefinition.string('echo'),
+      'Hello World!',
     );
-    expect(await echoTask.executeOn(taskRunner: taskRunner, input: 'Hello World!'), 'Hello World!');
   });
+}
 
-  test('local task runner cron', () async {
-    final taskRunner = TaskRunner.static.local;
-    final completer = Completer();
-    final incrementTask = Task(
-      action: Action(
-        name: 'increment',
-        runner: (_) => completer.complete(),
-      ),
-      pathDefinition: PathDefinition.string('increment'),
-    ).withSchedule(TaskSchedule(
-      inputGetter: () => null,
-      schedule: cron.Schedule.parse('* * * * * *'),
-    ));
+class EchoTask with IsTask<EchoTask, String>, IsRoute<EchoTask>, IsPathDefinitionWrapper {
+  late final echoField = field<String>(name: 'input').required();
 
-    taskRunner.schedule(incrementTask);
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('echo').property(echoField);
 
-    await completer.future;
+  @override
+  EchoTask copy() {
+    return EchoTask();
+  }
 
-    taskRunner.remove();
-  });
+  @override
+  String get name => 'echo';
+
+  @override
+  Future<String> onRun() async {
+    return echoField.value;
+  }
 }

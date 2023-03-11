@@ -3,11 +3,13 @@ import 'package:path_core/src/property/field_route_property.dart';
 import 'package:path_core/src/property/route_property.dart';
 import 'package:utils_core/utils_core.dart';
 
-abstract class Route implements PathDefinitionWrapper {
+abstract class Route<R extends Route<dynamic>> implements PathDefinitionWrapper {
   List<RouteProperty> get queryProperties;
+
+  R copy();
 }
 
-extension RouteExtensions on Route {
+extension RouteExtensions<R extends Route<dynamic>> on Route<R> {
   Uri get uri {
     final queryParameters = queryProperties
         .mapToMap((queryProperty) => MapEntry(
@@ -21,24 +23,28 @@ extension RouteExtensions on Route {
     );
   }
 
-  void fromPath(String path) {
+  R fromPath(String path) {
     if (!matches(path)) {
       throw Exception('[$path] does not match! [$this]');
     }
 
     final uri = Uri.parse(path);
 
+    final newRoute = copy();
+
     for (var i = 0; i < uri.pathSegments.length; i++) {
       final uriSegment = uri.pathSegments[i];
-      final routeSegment = segments[i];
+      final routeSegment = newRoute.segments[i];
 
       routeSegment.onMatch(uriSegment);
     }
 
-    for (final queryProperty in queryProperties) {
+    for (final queryProperty in newRoute.queryProperties) {
       uri.queryParametersAll[queryProperty.name]?.forEach((value) => queryProperty.fromValue(value));
       queryProperty.validate();
     }
+
+    return newRoute;
   }
 
   FieldRouteProperty<T> field<T>({required String name}) {
@@ -46,7 +52,7 @@ extension RouteExtensions on Route {
   }
 }
 
-mixin IsRoute implements Route {
+mixin IsRoute<R extends Route<dynamic>> implements Route<R> {
   @override
   List<RouteProperty> get queryProperties => [];
 }

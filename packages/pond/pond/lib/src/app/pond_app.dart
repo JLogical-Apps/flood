@@ -97,7 +97,7 @@ class PondApp extends HookWidget {
     );
   }
 
-  VRouteElement _getVElementForPage(BuildContext context, AppPage page) {
+  VRouteElement _getVElementForPage<A extends AppPage>(BuildContext context, A page) {
     return VPopHandler(
       onPop: (vRedirector) async {
         final exitingUrl = vRedirector.previousVRouterData?.url;
@@ -126,7 +126,7 @@ class PondApp extends HookWidget {
 
             late AppPage displayedPage;
             if (page.matches(path)) {
-              displayedPage = page.copy()..fromPath(path);
+              displayedPage = page.fromPath(path) as AppPage;
             } else {
               final matchingPage = appPondContext.getPages().firstWhere((page) => page.matches(path));
               displayedPage =
@@ -146,7 +146,7 @@ class PondApp extends HookWidget {
               builder: (context, state) {
                 final path = state.path!;
                 if (page.matches(path)) {
-                  return page.copy()..fromPath(path);
+                  return page.fromPath(path);
                 }
 
                 final matchingPage = appPondContext.getPages().firstWhere((page) => page.matches(path));

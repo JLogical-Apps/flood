@@ -31,8 +31,7 @@ class NavigationAppPondComponent with IsAppPondComponent {
 
   Future<T?> pushLocation<T>(BuildContext context, String location) async {
     final page = context.appPondContext.getPages().firstWhere((page) => page.matches(location));
-    final newPage = page.copy();
-    newPage.fromPath(location);
+    final newPage = page.fromPath(location);
 
     SystemNavigator.routeInformationUpdated(location: location);
 
