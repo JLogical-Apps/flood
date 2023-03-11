@@ -1,5 +1,4 @@
 import 'package:path_core/path_core.dart';
-import 'package:task_core/src/task_request.dart';
 import 'package:task_core/task_core.dart';
 import 'package:test/test.dart';
 

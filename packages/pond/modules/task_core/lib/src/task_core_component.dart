@@ -1,6 +1,6 @@
 import 'package:pond_core/pond_core.dart';
-import 'package:task_core/src/task.dart';
-import 'package:task_core/src/task_runner.dart';
+import 'package:task_core/src/task/task.dart';
+import 'package:task_core/src/task/task_runner.dart';
 
 class TaskCoreComponent with IsCorePondComponent, IsTaskRunnerWrapper {
   final List<Task> tasks;

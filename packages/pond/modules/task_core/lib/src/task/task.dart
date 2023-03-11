@@ -1,5 +1,5 @@
 import 'package:path_core/path_core.dart';
-import 'package:task_core/src/task_runner.dart';
+import 'package:task_core/src/task/task_runner.dart';
 
 abstract class Task<T extends Task<dynamic, O>, O> with IsRoute<T>, IsPathDefinitionWrapper {
   String get name;
