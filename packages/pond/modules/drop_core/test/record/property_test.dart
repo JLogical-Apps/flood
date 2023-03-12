@@ -108,6 +108,24 @@ void main() {
     data.state = State(data: {'name': 'John Doe'});
     expect(data.nameProperty.value, 'John Doe');
   });
+
+  test('list', () {
+    dropContext.register<Data7>(Data7.new, name: 'Data7');
+
+    final data = Data7();
+    expect(data.itemsProperty.value, []);
+
+    data.itemsProperty.set(['one', 'two', 'three']);
+    expect(data.itemsProperty.value, ['one', 'two', 'three']);
+
+    data.state = State(data: {});
+    expect(data.itemsProperty.value, []);
+
+    data.state = State(data: {
+      'items': ['hello', 'world'],
+    });
+    expect(data.itemsProperty.value, ['hello', 'world']);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -150,4 +168,11 @@ class Data6 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [nameProperty];
+}
+
+class Data7 extends ValueObject {
+  late final itemsProperty = field<String>(name: 'items').list();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [itemsProperty];
 }

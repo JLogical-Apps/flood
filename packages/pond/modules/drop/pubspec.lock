@@ -86,6 +86,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  environment_core:
+    dependency: "direct overridden"
+    description:
+      path: "../environment_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   equatable:
     dependency: "direct main"
     description:

@@ -4,6 +4,7 @@ import 'package:drop_core/src/record/value_object/fallback_replacement_value_obj
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/is_not_blank_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/list_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/placeholder_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_value_object_property.dart';
@@ -17,7 +18,7 @@ abstract class ValueObjectProperty<G, S, L> extends ValueObjectBehavior {
 
   Future<L> load(DropCoreContext context);
 
-  static FieldValueObjectProperty<T> field<T>({required String name}) {
+  static FieldValueObjectProperty<T, dynamic> field<T>({required String name}) {
     return FieldValueObjectProperty(name: name);
   }
 
@@ -63,6 +64,12 @@ extension NullableStringValueObjectPropertyExtensions<L> on ValueObjectProperty<
 extension SameGetterSetterValueObjectPropertyExtensions<T, L> on ValueObjectProperty<T, T, L> {
   FallbackReplacementValueObjectProperty<T, L> withFallbackReplacement(T Function() fallbackReplacement) {
     return FallbackReplacementValueObjectProperty(property: this, fallbackReplacement: fallbackReplacement);
+  }
+}
+
+extension FieldValueObjectPropertyExtensions<T, L> on FieldValueObjectProperty<T, L> {
+  ListValueObjectProperty<T, L> list() {
+    return ListValueObjectProperty(property: this);
   }
 }
 
