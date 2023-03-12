@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:pond_cli/pond_cli.dart';
+import 'package:pond_cli/src/automate/command/automate_command.dart';
+import 'package:pond_cli/src/automate/command/automate_command_context.dart';
+import 'package:pond_cli/src/automate/context/automate_pond_context.dart';
 import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 
 class Automate {
