@@ -2,6 +2,7 @@ import 'package:drop_core/src/drop_core_component.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
+import 'package:drop_core/src/repository/adapting_repository.dart';
 import 'package:drop_core/src/repository/memory_repository.dart';
 import 'package:drop_core/src/repository/repository_id_generator.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
@@ -13,6 +14,7 @@ import 'package:drop_core/src/repository/type/with_embedded_abstract_type_reposi
 import 'package:drop_core/src/repository/type/with_embedded_type_repository.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
+import 'package:environment_core/environment_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:type/type.dart';
@@ -29,6 +31,10 @@ abstract class Repository implements CorePondComponent, RepositoryStateHandlerWr
 
   static Repository list(List<Repository> repositories) {
     return RepositoryListWrapper(repositories);
+  }
+
+  static Repository adapting(Repository Function(EnvironmentConfigCoreComponent environment) repositoryGetter) {
+    return AdaptingRepository(repositoryGetter);
   }
 }
 
