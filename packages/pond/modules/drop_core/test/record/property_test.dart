@@ -126,6 +126,21 @@ void main() {
     });
     expect(data.itemsProperty.value, ['hello', 'world']);
   });
+
+  test('computed', () {
+    dropContext.register<Data8>(Data8.new, name: 'Data8');
+
+    final data = Data8()
+      ..firstNameProperty.set('John')
+      ..lastNameProperty.set('Doe');
+
+    expect(data.nameProperty.value, 'John Doe');
+    expect(data.getState(dropContext).data, {
+      'firstName': 'John',
+      'lastName': 'Doe',
+      'name': 'John Doe',
+    });
+  });
 }
 
 class Data1 extends ValueObject {
@@ -175,4 +190,16 @@ class Data7 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [itemsProperty];
+}
+
+class Data8 extends ValueObject {
+  late final firstNameProperty = field<String>(name: 'firstName').isNotBlank();
+  late final lastNameProperty = field<String>(name: 'lastName').isNotBlank();
+  late final nameProperty = computed<String>(
+    name: 'name',
+    computation: () => '${firstNameProperty.value} ${lastNameProperty.value}',
+  );
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [firstNameProperty, lastNameProperty, nameProperty];
 }

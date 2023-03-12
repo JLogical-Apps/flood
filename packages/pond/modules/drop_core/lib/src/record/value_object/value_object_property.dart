@@ -1,5 +1,6 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/entity.dart';
+import 'package:drop_core/src/record/value_object/computed_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
@@ -24,6 +25,13 @@ abstract class ValueObjectProperty<G, S, L> extends ValueObjectBehavior {
 
   static ReferenceValueObjectProperty<E> reference<E extends Entity>({required String name}) {
     return ReferenceValueObjectProperty(name: name);
+  }
+
+  static ComputedValueObjectProperty<T, dynamic> computed<T>({
+    required String name,
+    required T Function() computation,
+  }) {
+    return ComputedValueObjectProperty(name: name, computation: computation);
   }
 }
 
