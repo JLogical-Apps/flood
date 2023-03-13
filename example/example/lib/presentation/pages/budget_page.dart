@@ -2,6 +2,9 @@ import 'package:example/features/budget/budget.dart';
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
+import 'package:example/features/transaction/budget_transaction.dart';
+import 'package:example/features/transaction/budget_transaction_entity.dart';
+import 'package:example/presentation/pages/add_income_page.dart';
 import 'package:example/presentation/pages/envelope_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +19,11 @@ class BudgetPage extends AppPage {
     final budgetModel = useQuery(Query.getByIdOrNull<BudgetEntity>(budgetIdProperty.value));
     final envelopesModel =
         useQuery(Query.from<EnvelopeEntity>().where(Envelope.budgetField).isEqualTo(budgetIdProperty.value).all());
+
+    final transactionsModel = useQuery(Query.from<BudgetTransactionEntity>()
+        .where(BudgetTransaction.budgetField)
+        .isEqualTo(budgetIdProperty.value)
+        .paginate());
 
     final totalCentsModel = useMemoized(() => envelopesModel
         .map((envelopeEntities) => envelopeEntities.sumByInt((entity) => entity.value.amountCentsProperty.value)));
@@ -78,7 +86,16 @@ class BudgetPage extends AppPage {
               ModelBuilder(
                 model: totalCentsModel,
                 builder: (int cents) {
-                  return StyledText.h6(cents.formatCentsAsCurrency());
+                  return StyledList.row.centered(children: [
+                    StyledText.h3('Total:'),
+                    StyledText.h3.strong(cents.formatCentsAsCurrency()),
+                  ]);
+                },
+              ),
+              StyledButton.strong(
+                labelText: 'Add Income',
+                onPressed: () async {
+                  await context.push(AddIncomePage());
                 },
               ),
               StyledCard(
@@ -127,6 +144,29 @@ class BudgetPage extends AppPage {
                         ],
                         ifEmptyText:
                             'There are no envelopes in this budget! Create one by pressing the triple-dot menu above!',
+                      );
+                    },
+                  ),
+                ],
+              ),
+              StyledCard(
+                titleText: 'Transactions',
+                leadingIcon: Icons.swap_horiz,
+                children: [
+                  PaginatedQueryModelBuilder(
+                    paginatedQueryModel: transactionsModel,
+                    builder: (List<BudgetTransactionEntity> transactionEntities, loadMore) {
+                      return StyledList.column(
+                        children: [
+                          ...transactionEntities
+                              .map((entity) => StyledCard(titleText: entity.value.affectedEnvelopesProperty.name))
+                              .toList(),
+                          if (loadMore != null)
+                            StyledButton.strong(
+                              labelText: 'Load More',
+                              onPressed: loadMore,
+                            ),
+                        ],
                       );
                     },
                   ),

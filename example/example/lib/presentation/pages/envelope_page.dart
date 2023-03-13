@@ -53,10 +53,12 @@ class EnvelopePage extends AppPage {
               iconData: Icons.swap_horiz,
               color: Colors.green,
               onPerform: (context) async {
+                final envelope = envelopeEntity.value;
+
                 final result = await context.showStyledDialog(StyledPortDialog(
                   port: (AmountTransaction()
                         ..envelopeProperty.set(envelopeEntity.id)
-                        ..budgetProperty.set(envelopeEntity.value.budgetProperty.value))
+                        ..budgetProperty.set(envelope.budgetProperty.value))
                       .asPort(context.corePondContext),
                   children: [
                     StyledTextFieldPortField(
@@ -74,6 +76,11 @@ class EnvelopePage extends AppPage {
                   return;
                 }
 
+                final newEnvelope = Envelope()
+                  ..copyFrom(context.dropCoreComponent, envelope)
+                  ..amountCentsProperty.set(envelope.amountCentsProperty.value + result.amountCentsProperty.value);
+
+                await context.dropCoreComponent.update(envelopeEntity..value = newEnvelope);
                 await context.dropCoreComponent.update(AmountTransactionEntity()..value = result);
               },
             ),

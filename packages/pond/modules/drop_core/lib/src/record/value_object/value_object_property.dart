@@ -6,6 +6,7 @@ import 'package:drop_core/src/record/value_object/fallback_value_object_property
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/is_not_blank_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/list_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/map_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/placeholder_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_value_object_property.dart';
@@ -78,6 +79,10 @@ extension SameGetterSetterValueObjectPropertyExtensions<T, L> on ValueObjectProp
 extension FieldValueObjectPropertyExtensions<T, L> on FieldValueObjectProperty<T, L> {
   ListValueObjectProperty<T, L> list() {
     return ListValueObjectProperty(property: this);
+  }
+
+  MapValueObjectProperty<T, V, L> mapTo<V>() {
+    return MapValueObjectProperty(property: this);
   }
 }
 

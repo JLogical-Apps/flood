@@ -141,6 +141,24 @@ void main() {
       'name': 'John Doe',
     });
   });
+
+  test('map', () {
+    dropContext.register<Data9>(Data9.new, name: 'Data9');
+
+    final data = Data9();
+    expect(data.studentToScoreProperty.value, {});
+
+    data.studentToScoreProperty.set({'Jack': 82, 'Jill': 93});
+    expect(data.studentToScoreProperty.value, {'Jack': 82, 'Jill': 93});
+
+    data.state = State(data: {});
+    expect(data.studentToScoreProperty.value, {});
+
+    data.state = State(data: {
+      'studentToScore': {'Jack': 82, 'Jill': 93},
+    });
+    expect(data.studentToScoreProperty.value, {'Jack': 82, 'Jill': 93});
+  });
 }
 
 class Data1 extends ValueObject {
@@ -202,4 +220,11 @@ class Data8 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [firstNameProperty, lastNameProperty, nameProperty];
+}
+
+class Data9 extends ValueObject {
+  late final studentToScoreProperty = field<String>(name: 'studentToScore').mapTo<int>();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [studentToScoreProperty];
 }

@@ -1,3 +1,4 @@
+import 'package:example/presentation/pages/add_income_page.dart';
 import 'package:example/presentation/pages/budget_page.dart';
 import 'package:example/presentation/pages/budgets_page.dart';
 import 'package:example/presentation/pages/envelope_page.dart';
@@ -9,10 +10,11 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 class ValetPagesAppPondComponent with IsAppPondComponent {
   @override
   List<AppPage> get pages => [
-        HomePage(),
-        BudgetPage(),
-        BudgetsPage(),
         LoginPage(),
+        HomePage(),
+        BudgetsPage(),
+        BudgetPage(),
+        AddIncomePage(),
         EnvelopePage(),
         TransactionPage(),
       ];
