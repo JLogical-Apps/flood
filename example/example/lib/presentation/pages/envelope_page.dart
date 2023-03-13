@@ -14,8 +14,8 @@ class EnvelopePage extends AppPage {
   Widget build(BuildContext context) {
     final envelopeModel = useQuery(Query.getById<EnvelopeEntity>(idProperty.value));
     final envelopeTransactionsModel = useQuery(Query.from<AmountTransactionEntity>()
-        .where(BudgetTransaction.envelopeField)
-        .isEqualTo(idProperty.value)
+        .where(BudgetTransaction.affectedEnvelopesField)
+        .contains(idProperty.value)
         .paginate());
 
     return ModelBuilder.page(

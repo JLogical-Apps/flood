@@ -103,6 +103,47 @@ void main() {
     expect(johnUserEntity?.value, users[1]);
   });
 
+  test('query where equals', () async {
+    final repository = Repository.memory().forType<UserEntity, User>(
+      UserEntity.new,
+      User.new,
+      entityTypeName: 'UserEntity',
+      valueObjectTypeName: 'User',
+    );
+
+    final users = [
+      User()
+        ..nameProperty.value = 'Jake'
+        ..emailProperty.value = 'jake@jake.com'
+        ..itemsProperty.value = ['a', 'b'],
+      User()
+        ..nameProperty.value = 'John'
+        ..emailProperty.value = 'john@doe.com'
+        ..itemsProperty.value = ['b', 'c'],
+    ];
+
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
+
+    for (final user in users) {
+      await repository.update(UserEntity()..value = user);
+    }
+
+    final containsA = await repository.executeQuery(Query.from<UserEntity>().where('items').contains('a').all());
+    expect(containsA.map((user) => user.value.nameProperty.value), ['Jake']);
+
+    final containsB = await repository.executeQuery(Query.from<UserEntity>().where('items').contains('b').all());
+    expect(containsB.map((user) => user.value.nameProperty.value), ['Jake', 'John']);
+
+    final containsC = await repository.executeQuery(Query.from<UserEntity>().where('items').contains('c').all());
+    expect(containsC.map((user) => user.value.nameProperty.value), ['John']);
+
+    final containsD = await repository.executeQuery(Query.from<UserEntity>().where('items').contains('d').all());
+    expect(containsD, []);
+  });
+
   test('query where numeric', () async {
     final repository = Repository.memory().forType<InvoiceEntity, Invoice>(
       InvoiceEntity.new,
@@ -381,9 +422,10 @@ void main() {
 class User extends ValueObject {
   late final nameProperty = field<String>(name: 'name');
   late final emailProperty = field<String>(name: 'email');
+  late final itemsProperty = field<String>(name: 'items').list();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [nameProperty, emailProperty];
+  List<ValueObjectBehavior> get behaviors => [nameProperty, emailProperty, itemsProperty];
 }
 
 class UserEntity extends Entity<User> {}

@@ -34,4 +34,8 @@ class QueryWhereBuilder<E extends Entity> {
   Query<E> isNonNull() {
     return query.whereCondition(QueryCondition.field(stateField).isNonNull());
   }
+
+  Query<E> contains(dynamic value) {
+    return query.whereCondition(QueryCondition.field(stateField).contains(value));
+  }
 }
