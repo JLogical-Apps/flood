@@ -7,6 +7,7 @@ class StyledListBuilder {
   Axis axis;
   bool isCentered = false;
   double? childMinSize;
+  MainAxisSize mainAxisSize = MainAxisSize.max;
 
   StyledListBuilder({this.axis = Axis.vertical});
 
@@ -23,6 +24,11 @@ class StyledListBuilder {
 
   StyledListBuilder get centered {
     isCentered = true;
+    return this;
+  }
+
+  StyledListBuilder get shrink {
+    mainAxisSize = MainAxisSize.min;
     return this;
   }
 
@@ -43,6 +49,7 @@ class StyledListBuilder {
       key: key,
       children: children,
       axis: axis,
+      mainAxisSize: mainAxisSize,
       crossAxisAlignment: crossAxisAlignment,
       hasScrollbar: hasScrollbar,
       isScrollable: isScrollable,

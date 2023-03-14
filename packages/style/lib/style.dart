@@ -4,6 +4,8 @@ export 'src/color_palette_provider.dart';
 export 'src/components/dialog/styled_dialog.dart';
 export 'src/components/input/styled_button.dart';
 export 'src/components/input/styled_menu_button.dart';
+export 'src/components/input/styled_option_field.dart';
+export 'src/components/input/styled_radio_field.dart';
 export 'src/components/input/styled_text_field.dart';
 export 'src/components/layout/styled_card.dart';
 export 'src/components/layout/styled_container.dart';

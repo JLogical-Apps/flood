@@ -10,6 +10,8 @@ import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/flat/dialog/flat_style_dialog.dart';
 import 'package:style/src/flat/input/flat_style_button.dart';
 import 'package:style/src/flat/input/flat_style_menu_button.dart';
+import 'package:style/src/flat/input/flat_style_option_field.dart';
+import 'package:style/src/flat/input/flat_style_radio_field.dart';
 import 'package:style/src/flat/input/flat_style_text_field.dart';
 import 'package:style/src/flat/layout/flat_style_card.dart';
 import 'package:style/src/flat/layout/flat_style_container.dart';
@@ -59,6 +61,8 @@ class FlatStyle with IsStyle {
           FlatStyleButtonTextRenderer(),
           FlatStyleTextFieldRenderer(),
           FlatStyleButtonRenderer(),
+          FlatStyleOptionFieldRenderer(),
+          FlatStyleRadioFieldRenderer(),
           FlatStyleMenuButtonRenderer(),
           FlatStyleImageRenderer(),
           FlatStyleContainerRenderer(),
@@ -157,13 +161,10 @@ This is a `code block`.
   }
 
   ColorPalette getColorPaletteFromBackground(Color backgroundColor) {
-    final isDark = backgroundColor.isDark;
+    final isDark = backgroundColor.computeLuminance() < 0.3;
 
     final newBackground = isDarkMode
         ? (isDark ? backgroundColor.lighten(10) : backgroundColor.darken(5))
-        : (backgroundColor == this.backgroundColor ? Colors.white : this.backgroundColor);
-    final newSubtleBackground = isDarkMode
-        ? (isDark ? backgroundColor.darken(3) : backgroundColor.lighten(3))
         : (backgroundColor == this.backgroundColor ? Colors.white : this.backgroundColor);
     final newForeground = isDark ? Colors.white : Colors.black;
     final newSubtleForeground = isDark ? Color(0xffeeeeee) : Color(0xff111111);
@@ -174,7 +175,7 @@ This is a `code block`.
         backgroundColor == primaryColor ? this.backgroundColor : primaryColor,
       ),
       regularBackgroundColorPaletteGetter: () => getColorPaletteFromBackground(newBackground),
-      subtleBackgroundColorPaletteGetter: () => getColorPaletteFromBackground(newSubtleBackground),
+      subtleBackgroundColorPaletteGetter: () => getColorPaletteFromBackground(backgroundColor),
       strongForegroundColorPaletteGetter: () => backgroundColor == primaryColor
           ? getColorPaletteFromBackground(isDark ? Colors.white : Colors.black)
           : getColorPaletteFromBackground(primaryColor),

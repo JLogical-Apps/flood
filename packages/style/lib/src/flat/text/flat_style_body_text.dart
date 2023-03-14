@@ -17,6 +17,7 @@ class FlatStyleBodyTextRenderer with IsTextStyleRenderer<StyledBodyText> {
           ? context.colorPalette().error.regular
           : text.color ?? context.colorPalette().foreground.getByEmphasis(text.emphasis),
       fontStyle: text.fontStyle,
+      fontWeight: text.fontWeight,
     );
   }
 

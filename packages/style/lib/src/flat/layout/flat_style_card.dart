@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:style/src/action/action_item.dart';
-import 'package:style/src/components/input/styled_button.dart';
-import 'package:style/src/components/input/styled_menu_button.dart';
-import 'package:style/src/components/layout/styled_card.dart';
-import 'package:style/src/components/layout/styled_container.dart';
-import 'package:style/src/components/layout/styled_list.dart';
-import 'package:style/src/components/misc/styled_divider.dart';
-import 'package:style/src/components/misc/styled_icon.dart';
-import 'package:style/src/components/text/styled_text.dart';
+import 'package:style/src/emphasis.dart';
 import 'package:style/src/style_renderer.dart';
-import 'package:style/src/styleguide.dart';
+import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
 class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
@@ -27,6 +19,15 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
       onPressed: component.onPressed,
       padding: component.padding,
       emphasis: component.emphasis,
+      shape: component.emphasis != Emphasis.subtle
+          ? null
+          : RoundedRectangleBorder(
+              side: BorderSide(
+                color: context.colorPalette().background.regular,
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
       child: StyledList.column(
         children: [
           StyledList.row(

@@ -49,7 +49,8 @@ class BudgetsPage extends AppPage {
                       ifEmptyText: 'You have no budgets! Click the Create button below to create your first one.',
                     ),
                     StyledButton.strong(
-                      labelText: 'Create +',
+                      labelText: 'Create',
+                      iconData: Icons.add,
                       onPressed: () async {
                         final result = await context.showStyledDialog(StyledPortDialog(
                           titleText: 'Create New Budget',

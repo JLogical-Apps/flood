@@ -53,4 +53,27 @@ void main() {
     expect(result.data['name'], name);
     expect(result.data['email'], email);
   });
+
+  test('embedded port', () async {
+    final contactPort = Port.of({
+      'phone': PortValue.string(),
+      'email': PortValue.string().isNotBlank().isEmail(),
+    });
+    final port = Port.of({
+      'contact': PortValue.port(port: contactPort),
+    });
+
+    expect(port['contact'] as Port, contactPort);
+
+    var result = await port.submit();
+    expect(result.isValid, false);
+
+    contactPort['email'] = 'test@test.com';
+
+    result = await port.submit();
+    final contactResult = result.data['contact'] as Map<String, dynamic>;
+
+    expect(contactResult['phone'], '');
+    expect(contactResult['email'], 'test@test.com');
+  });
 }

@@ -47,47 +47,46 @@ class EnvelopePage extends AppPage {
                 await context.dropCoreComponent.update(envelopeEntity..value = result);
               },
             ),
-            ActionItem(
-              titleText: 'Create Transaction',
-              descriptionText: 'Create a transaction to the envelope.',
-              iconData: Icons.swap_horiz,
-              color: Colors.green,
-              onPerform: (context) async {
-                final envelope = envelopeEntity.value;
-
-                final result = await context.showStyledDialog(StyledPortDialog(
-                  port: (AmountTransaction()
-                        ..envelopeProperty.set(envelopeEntity.id)
-                        ..budgetProperty.set(envelope.budgetProperty.value))
-                      .asPort(context.corePondContext),
-                  children: [
-                    StyledTextFieldPortField(
-                      fieldName: AmountTransaction.nameField,
-                      labelText: 'Name',
-                    ),
-                    StyledCurrencyFieldPortField(
-                      fieldName: AmountTransaction.amountCentsField,
-                      labelText: 'Amount (\$)',
-                    ),
-                  ],
-                ));
-
-                if (result == null) {
-                  return;
-                }
-
-                final newEnvelope = Envelope()
-                  ..copyFrom(context.dropCoreComponent, envelope)
-                  ..amountCentsProperty.set(envelope.amountCentsProperty.value + result.amountCentsProperty.value);
-
-                await context.dropCoreComponent.update(envelopeEntity..value = newEnvelope);
-                await context.dropCoreComponent.update(AmountTransactionEntity()..value = result);
-              },
-            ),
           ],
           body: StyledList.column.centered.scrollable(
             children: [
               StyledText.h4(envelopeEntity.value.amountCentsProperty.value.formatCentsAsCurrency()),
+              StyledDivider(),
+              StyledButton.strong(
+                labelText: 'Create Transaction',
+                iconData: Icons.add,
+                onPressed: () async {
+                  final envelope = envelopeEntity.value;
+
+                  final result = await context.showStyledDialog(StyledPortDialog(
+                    port: (AmountTransaction()
+                          ..envelopeProperty.set(envelopeEntity.id)
+                          ..budgetProperty.set(envelope.budgetProperty.value))
+                        .asPort(context.corePondContext),
+                    children: [
+                      StyledTextFieldPortField(
+                        fieldName: AmountTransaction.nameField,
+                        labelText: 'Name',
+                      ),
+                      StyledCurrencyFieldPortField(
+                        fieldName: AmountTransaction.amountCentsField,
+                        labelText: 'Amount (\$)',
+                      ),
+                    ],
+                  ));
+
+                  if (result == null) {
+                    return;
+                  }
+
+                  final newEnvelope = Envelope()
+                    ..copyFrom(context.dropCoreComponent, envelope)
+                    ..amountCentsProperty.set(envelope.amountCentsProperty.value + result.amountCentsProperty.value);
+
+                  await context.dropCoreComponent.update(envelopeEntity..value = newEnvelope);
+                  await context.dropCoreComponent.update(AmountTransactionEntity()..value = result);
+                },
+              ),
               PaginatedQueryModelBuilder(
                 paginatedQueryModel: envelopeTransactionsModel,
                 builder: (List<AmountTransactionEntity> amountTransactionEntities, Future Function()? loadNext) {
@@ -98,6 +97,7 @@ class EnvelopePage extends AppPage {
                               bodyText: entity.value.nameProperty.value,
                             ))
                         .toList(),
+                    ifEmptyText: 'There are no transactions in this envelope!',
                   );
                 },
               ),

@@ -12,7 +12,7 @@ class FlatStyleIconRenderer with IsTypedStyleRenderer<StyledIcon> {
     return Icon(
       component.iconData,
       color: component.color ?? context.colorPalette().foreground.getByEmphasis(component.emphasis),
-      size: component.size,
+      size: component.size ?? 21,
     );
   }
 

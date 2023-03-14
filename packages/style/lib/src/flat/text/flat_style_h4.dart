@@ -17,6 +17,7 @@ class FlatStyleH4Renderer with IsTextStyleRenderer<StyledH4> {
           ? context.colorPalette().error.regular
           : text.color ?? context.colorPalette().foreground.getByEmphasis(text.emphasis),
       fontStyle: text.fontStyle,
+      fontWeight: text.fontWeight,
     );
   }
 

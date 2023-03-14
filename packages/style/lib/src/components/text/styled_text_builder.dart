@@ -7,6 +7,7 @@ class StyledTextBuilder<T extends StyledText> {
     String text,
     Emphasis emphasis,
     TextAlign? textAlign,
+    FontWeight? fontWeight,
     FontStyle? fontStyle,
     Color? color,
     bool error,
@@ -15,6 +16,7 @@ class StyledTextBuilder<T extends StyledText> {
 
   Emphasis emphasis = Emphasis.regular;
   TextAlign? textAlign;
+  FontWeight? fontWeight;
   FontStyle? fontStyle;
   Color? color;
   bool isError = false;
@@ -28,6 +30,11 @@ class StyledTextBuilder<T extends StyledText> {
 
   StyledTextBuilder get strong {
     emphasis = Emphasis.strong;
+    return this;
+  }
+
+  StyledTextBuilder get bold {
+    fontWeight = FontWeight.w600;
     return this;
   }
 
@@ -52,7 +59,7 @@ class StyledTextBuilder<T extends StyledText> {
   }
 
   T call(String text, {EdgeInsets? padding}) {
-    return builder(text, emphasis, textAlign, fontStyle, color, isError, padding);
+    return builder(text, emphasis, textAlign, fontWeight, fontStyle, color, isError, padding);
   }
 
   T get empty {

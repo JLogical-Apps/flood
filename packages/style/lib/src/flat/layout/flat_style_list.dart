@@ -75,11 +75,13 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
       return list.axis == Axis.vertical
           ? Column(
               children: children,
+              mainAxisSize: list.mainAxisSize,
               crossAxisAlignment: list.crossAxisAlignment,
               mainAxisAlignment: list.isCentered ? MainAxisAlignment.center : MainAxisAlignment.start,
             )
           : Row(
               children: children,
+              mainAxisSize: list.mainAxisSize,
               crossAxisAlignment: list.crossAxisAlignment,
               mainAxisAlignment: list.isCentered ? MainAxisAlignment.center : MainAxisAlignment.start,
             );

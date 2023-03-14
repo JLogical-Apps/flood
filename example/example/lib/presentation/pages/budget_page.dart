@@ -94,6 +94,7 @@ class BudgetPage extends AppPage {
               ),
               StyledButton.strong(
                 labelText: 'Add Income',
+                iconData: Icons.attach_money,
                 onPressed: () async {
                   await context.push(AddIncomePage());
                 },
@@ -157,6 +158,7 @@ class BudgetPage extends AppPage {
                     paginatedQueryModel: transactionsModel,
                     builder: (List<BudgetTransactionEntity> transactionEntities, loadMore) {
                       return StyledList.column(
+                        ifEmptyText: 'There are no transactions in this budget!',
                         children: [
                           ...transactionEntities
                               .map((entity) => StyledCard(titleText: entity.value.affectedEnvelopesProperty.name))

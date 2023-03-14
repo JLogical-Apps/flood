@@ -17,6 +17,7 @@ class FlatStyleH1Renderer with IsTextStyleRenderer<StyledH1> {
           ? context.colorPalette().error.regular
           : text.color ?? context.colorPalette().foreground.getByEmphasis(text.emphasis),
       fontStyle: text.fontStyle,
+      fontWeight: text.fontWeight,
     );
   }
 

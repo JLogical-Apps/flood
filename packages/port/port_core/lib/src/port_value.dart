@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:port_core/src/port.dart';
 import 'package:utils_core/utils_core.dart';
 
 typedef SimplePortValue<T> = PortValue<T, T>;
 
-abstract class PortValue<T, S> implements ValidatorWrapper<T, String> {
+abstract class PortValue<T, S> with IsValidatorWrapper<T, String> {
   T get value;
 
   dynamic get error;
@@ -26,6 +27,27 @@ abstract class PortValue<T, S> implements ValidatorWrapper<T, String> {
 
   static SimplePortValue<String> string({String? initialValue}) {
     return PortValue(value: initialValue ?? '', validator: Validator.empty());
+  }
+
+  static SimplePortValue<T?> option<T>({required List<T> options, T? initialValue}) {
+    return PortValue(
+      value: initialValue,
+      validator: Validator((item) => options.contains(item) ? null : '[$item] is not a valid choice!'),
+    );
+  }
+
+  static PortValue<Port<T>, T> port<T>({required Port<T> port}) {
+    return PortValue(
+      value: port,
+      validator: Validator((port) async {
+        final result = await port.submit();
+        if (!result.isValid) {
+          return 'Embedded port [$port] is not valid!';
+        }
+        return null;
+      }),
+      submitMapper: (port) async => (await port.submit()).data,
+    );
   }
 }
 
