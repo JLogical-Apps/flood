@@ -2,7 +2,7 @@ import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
-class AmountTransaction extends BudgetTransaction {
+class EnvelopeTransaction extends BudgetTransaction {
   static const nameField = 'name';
   late final nameProperty = field<String>(name: nameField).isNotBlank();
 

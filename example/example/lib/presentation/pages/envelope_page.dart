@@ -1,8 +1,8 @@
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
-import 'package:example/features/transaction/amount_transaction.dart';
-import 'package:example/features/transaction/amount_transaction_entity.dart';
 import 'package:example/features/transaction/budget_transaction.dart';
+import 'package:example/features/transaction/envelope_transaction.dart';
+import 'package:example/features/transaction/envelope_transaction_entity.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -13,7 +13,7 @@ class EnvelopePage extends AppPage {
   @override
   Widget build(BuildContext context) {
     final envelopeModel = useQuery(Query.getById<EnvelopeEntity>(idProperty.value));
-    final envelopeTransactionsModel = useQuery(Query.from<AmountTransactionEntity>()
+    final envelopeTransactionsModel = useQuery(Query.from<EnvelopeTransactionEntity>()
         .where(BudgetTransaction.affectedEnvelopesField)
         .contains(idProperty.value)
         .paginate());
@@ -58,7 +58,7 @@ class EnvelopePage extends AppPage {
                 onPressed: () async {
                   final envelope = envelopeEntity.value;
 
-                  final transactionPort = (AmountTransaction()
+                  final transactionPort = (EnvelopeTransaction()
                         ..envelopeProperty.set(envelopeEntity.id)
                         ..budgetProperty.set(envelope.budgetProperty.value))
                       .asPort(context.corePondContext);
@@ -78,11 +78,11 @@ class EnvelopePage extends AppPage {
                           return StyledList.column(
                             children: [
                               StyledTextFieldPortField(
-                                fieldName: AmountTransaction.nameField,
+                                fieldName: EnvelopeTransaction.nameField,
                                 labelText: 'Name',
                               ),
                               StyledCurrencyFieldPortField(
-                                fieldName: AmountTransaction.amountCentsField,
+                                fieldName: EnvelopeTransaction.amountCentsField,
                                 labelText: 'Amount (\$)',
                               ),
                             ],
@@ -101,7 +101,7 @@ class EnvelopePage extends AppPage {
                     return;
                   }
 
-                  final transactionResult = result['transaction'] as AmountTransaction;
+                  final transactionResult = result['transaction'] as EnvelopeTransaction;
                   final transactionType = result['transactionType'] as EnvelopeTransactionType;
                   transactionType.modifyTransaction(transactionResult);
 
@@ -111,14 +111,14 @@ class EnvelopePage extends AppPage {
                         .set(envelope.amountCentsProperty.value + transactionResult.amountCentsProperty.value);
 
                   await context.dropCoreComponent.update(envelopeEntity..value = newEnvelope);
-                  await context.dropCoreComponent.update(AmountTransactionEntity()..value = transactionResult);
+                  await context.dropCoreComponent.update(EnvelopeTransactionEntity()..value = transactionResult);
                 },
               ),
               PaginatedQueryModelBuilder(
                 paginatedQueryModel: envelopeTransactionsModel,
-                builder: (List<AmountTransactionEntity> amountTransactionEntities, Future Function()? loadNext) {
+                builder: (List<EnvelopeTransactionEntity> envelopeTransactionEntities, Future Function()? loadNext) {
                   return StyledList.column.withMinChildSize(150)(
-                    children: amountTransactionEntities
+                    children: envelopeTransactionEntities
                         .map((entity) => StyledCard(
                               titleText: entity.value.amountCentsProperty.value.formatCentsAsCurrency(),
                               bodyText: entity.value.nameProperty.value,
@@ -163,7 +163,7 @@ enum EnvelopeTransactionType {
 
   final String name;
   final String note;
-  final void Function(AmountTransaction transaction)? transactionModifier;
+  final void Function(EnvelopeTransaction transaction)? transactionModifier;
 
   const EnvelopeTransactionType({
     required this.name,
@@ -171,11 +171,11 @@ enum EnvelopeTransactionType {
     required this.transactionModifier,
   });
 
-  void modifyTransaction(AmountTransaction transaction) {
+  void modifyTransaction(EnvelopeTransaction transaction) {
     transactionModifier?.call(transaction);
   }
 }
 
-void _refundPayment(AmountTransaction transaction) {
+void _refundPayment(EnvelopeTransaction transaction) {
   transaction.amountCentsProperty.set(-transaction.amountCentsProperty.value);
 }
