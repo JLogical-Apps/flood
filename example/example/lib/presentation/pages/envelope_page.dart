@@ -58,19 +58,41 @@ class EnvelopePage extends AppPage {
                 onPressed: () async {
                   final envelope = envelopeEntity.value;
 
+                  final transactionPort = (AmountTransaction()
+                        ..envelopeProperty.set(envelopeEntity.id)
+                        ..budgetProperty.set(envelope.budgetProperty.value))
+                      .asPort(context.corePondContext);
+                  final port = Port.of({
+                    'transaction': PortValue.port(port: transactionPort),
+                    'transactionType': PortValue.option(
+                      options: EnvelopeTransactionType.values,
+                      initialValue: EnvelopeTransactionType.payment,
+                    ),
+                  });
                   final result = await context.showStyledDialog(StyledPortDialog(
-                    port: (AmountTransaction()
-                          ..envelopeProperty.set(envelopeEntity.id)
-                          ..budgetProperty.set(envelope.budgetProperty.value))
-                        .asPort(context.corePondContext),
+                    port: port,
                     children: [
-                      StyledTextFieldPortField(
-                        fieldName: AmountTransaction.nameField,
-                        labelText: 'Name',
+                      PortBuilder(
+                        port: transactionPort,
+                        builder: (context, port) {
+                          return StyledList.column(
+                            children: [
+                              StyledTextFieldPortField(
+                                fieldName: AmountTransaction.nameField,
+                                labelText: 'Name',
+                              ),
+                              StyledCurrencyFieldPortField(
+                                fieldName: AmountTransaction.amountCentsField,
+                                labelText: 'Amount (\$)',
+                              ),
+                            ],
+                          );
+                        },
                       ),
-                      StyledCurrencyFieldPortField(
-                        fieldName: AmountTransaction.amountCentsField,
-                        labelText: 'Amount (\$)',
+                      StyledRadioPortField<EnvelopeTransactionType>(
+                        fieldName: 'transactionType',
+                        options: EnvelopeTransactionType.values,
+                        stringMapper: (EnvelopeTransactionType value) => value.name,
                       ),
                     ],
                   ));
@@ -79,12 +101,17 @@ class EnvelopePage extends AppPage {
                     return;
                   }
 
+                  final transactionResult = result['transaction'] as AmountTransaction;
+                  final transactionType = result['transactionType'] as EnvelopeTransactionType;
+                  transactionType.modifyTransaction(transactionResult);
+
                   final newEnvelope = Envelope()
                     ..copyFrom(context.dropCoreComponent, envelope)
-                    ..amountCentsProperty.set(envelope.amountCentsProperty.value + result.amountCentsProperty.value);
+                    ..amountCentsProperty
+                        .set(envelope.amountCentsProperty.value + transactionResult.amountCentsProperty.value);
 
                   await context.dropCoreComponent.update(envelopeEntity..value = newEnvelope);
-                  await context.dropCoreComponent.update(AmountTransactionEntity()..value = result);
+                  await context.dropCoreComponent.update(AmountTransactionEntity()..value = transactionResult);
                 },
               ),
               PaginatedQueryModelBuilder(
@@ -120,4 +147,35 @@ class EnvelopePage extends AppPage {
   AppPage? getParent() {
     return HomePage();
   }
+}
+
+enum EnvelopeTransactionType {
+  payment(
+    name: 'Payment',
+    note: 'Payment from this envelope.',
+    transactionModifier: _refundPayment,
+  ),
+  refund(
+    name: 'Refund',
+    note: 'Refund to this envelope.',
+    transactionModifier: null,
+  );
+
+  final String name;
+  final String note;
+  final void Function(AmountTransaction transaction)? transactionModifier;
+
+  const EnvelopeTransactionType({
+    required this.name,
+    required this.note,
+    required this.transactionModifier,
+  });
+
+  void modifyTransaction(AmountTransaction transaction) {
+    transactionModifier?.call(transaction);
+  }
+}
+
+void _refundPayment(AmountTransaction transaction) {
+  transaction.amountCentsProperty.set(-transaction.amountCentsProperty.value);
 }

@@ -29,7 +29,7 @@ abstract class PortValue<T, S> with IsValidatorWrapper<T, String> {
     return PortValue(value: initialValue ?? '', validator: Validator.empty());
   }
 
-  static SimplePortValue<T?> option<T>({required List<T> options, T? initialValue}) {
+  static SimplePortValue<T> option<T>({required List<T> options, required T initialValue}) {
     return PortValue(
       value: initialValue,
       validator: Validator((item) => options.contains(item) ? null : '[$item] is not a valid choice!'),

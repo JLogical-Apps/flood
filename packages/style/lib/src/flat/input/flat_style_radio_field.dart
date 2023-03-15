@@ -26,7 +26,7 @@ class FlatStyleRadioFieldRenderer with IsTypedStyleRenderer<StyledRadioField> {
         StyledList.row.centered.withScrollbar(
           children: component.options
               .map((option) => GestureDetector(
-                    onTap: () => component.enabled ? (value) => component.onChanged?.call(value) : null,
+                    onTap: component.enabled ? () => component.changeValue(option) : null,
                     child: StyledList.row.shrink(
                       itemPadding: EdgeInsets.zero,
                       children: [
