@@ -57,5 +57,20 @@ class NavigationAppPondComponent with IsAppPondComponent {
 
   void pop<T>([T? result]) {
     PondApp.navigatorKey.currentState!.pop(result);
+    final path = PondApp.navigatorKey.currentState!.currentPath!;
+    SystemNavigator.routeInformationUpdated(location: path);
+  }
+
+  @override
+  Widget wrapPage(AppPondContext context, Widget page, AppPondPageContext pageContext) {
+    return WillPopScope(
+      child: page,
+      onWillPop: () async {
+        PondApp.navigatorKey.currentState!.pop();
+        final path = PondApp.navigatorKey.currentState!.currentPath!;
+        SystemNavigator.routeInformationUpdated(location: path);
+        return false;
+      },
+    );
   }
 }
