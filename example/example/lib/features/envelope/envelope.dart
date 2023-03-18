@@ -1,4 +1,5 @@
 import 'package:example/features/budget/budget_entity.dart';
+import 'package:example/features/envelope_rule/envelope_rule.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class Envelope extends ValueObject {
@@ -11,10 +12,14 @@ class Envelope extends ValueObject {
   static const amountCentsField = 'amount';
   late final amountCentsProperty = field<int>(name: amountCentsField).withFallback(() => 0);
 
+  static const ruleField = 'rule';
+  late final ruleProperty = field<EnvelopeRule>(name: ruleField);
+
   @override
   List<ValueObjectBehavior> get behaviors => [
         nameProperty,
         budgetProperty,
         amountCentsProperty,
+        ruleProperty,
       ];
 }

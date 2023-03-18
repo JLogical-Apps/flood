@@ -38,6 +38,8 @@ flutter:
   assets:
     - assets/
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   flutter_launcher_icons: ^0.11.0
   flutter_lints: ^2.0.1
 dependency_overrides: # Needed because of [dcli] and [interact]

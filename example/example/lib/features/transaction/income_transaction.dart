@@ -2,7 +2,7 @@ import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class IncomeTransaction extends BudgetTransaction {
-  static const centsByEnvelopeField = 'centsByField';
+  static const centsByEnvelopeField = 'centsByEnvelope';
   late final centsByFieldProperty = field<String>(name: centsByEnvelopeField).mapTo<int>();
 
   @override
