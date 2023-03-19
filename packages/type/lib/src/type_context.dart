@@ -41,8 +41,6 @@ extension TypeContextExtensions on TypeContext {
   }
 
   RuntimeType? getRuntimeTypeOrNullRuntime(Type type) {
-    print(runtimeTypes);
-    print(type);
     return runtimeTypes.firstWhereOrNull((runtimeType) => runtimeType.type == type);
   }
 

@@ -2,6 +2,7 @@ import 'package:example/features/budget/budget.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope_rule/daily_time_rule.dart';
 import 'package:example/features/envelope_rule/firstfruit_envelope_rule.dart';
+import 'package:example/features/envelope_rule/monthly_time_rule.dart';
 import 'package:example/features/envelope_rule/repeating_goal_envelope_rule.dart';
 import 'package:example/features/envelope_rule/surplus_envelope_rule.dart';
 import 'package:example/features/envelope_rule/target_goal_envelope_rule.dart';
@@ -78,6 +79,152 @@ void main() {
       ],
       incomeCents: totalIncome,
       expectedCentsByEnvelopeName: {'Surplus': totalIncome},
+    );
+  });
+
+  test('only one rule type gets evenly distributed', () {
+    const totalIncome = 100 * 100;
+    const budgetId = '';
+
+    expectBudgetChange(
+      context: pondContext,
+      envelopes: [
+        Envelope()
+          ..nameProperty.set('Firstfruit A')
+          ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Firstfruit B')
+          ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10))
+          ..budgetProperty.set(budgetId),
+      ],
+      incomeCents: totalIncome,
+      expectedCentsByEnvelopeName: {
+        'Firstfruit A': totalIncome ~/ 2,
+        'Firstfruit B': totalIncome ~/ 2,
+      },
+    );
+
+    expectBudgetChange(
+      context: pondContext,
+      envelopes: [
+        Envelope()
+          ..nameProperty.set('Firstfruit A')
+          ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Firstfruit B')
+          ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(30))
+          ..budgetProperty.set(budgetId),
+      ],
+      incomeCents: totalIncome,
+      expectedCentsByEnvelopeName: {
+        'Firstfruit A': totalIncome ~/ 4,
+        'Firstfruit B': totalIncome ~/ 4 * 3,
+      },
+    );
+
+    expectBudgetChange(
+      context: pondContext,
+      envelopes: [
+        Envelope()
+          ..nameProperty.set('Repeating A')
+          ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+            ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))
+            ..goalCentsProperty.set(totalIncome))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Repeating B')
+          ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+            ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))
+            ..goalCentsProperty.set(totalIncome))
+          ..budgetProperty.set(budgetId),
+      ],
+      incomeCents: totalIncome,
+      expectedCentsByEnvelopeName: {
+        'Repeating A': totalIncome ~/ 2,
+        'Repeating B': totalIncome ~/ 2,
+      },
+    );
+
+    expectBudgetChange(
+      context: pondContext,
+      envelopes: [
+        Envelope()
+          ..nameProperty.set('Target A')
+          ..ruleProperty.set(TargetGoalEnvelopeRule()
+            ..percentProperty.set(10)
+            ..maximumCentsProperty.set(totalIncome))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Target B')
+          ..ruleProperty.set(TargetGoalEnvelopeRule()
+            ..percentProperty.set(10)
+            ..maximumCentsProperty.set(totalIncome))
+          ..budgetProperty.set(budgetId),
+      ],
+      incomeCents: totalIncome,
+      expectedCentsByEnvelopeName: {
+        'Target A': totalIncome ~/ 2,
+        'Target B': totalIncome ~/ 2,
+      },
+    );
+
+    expectBudgetChange(
+      context: pondContext,
+      envelopes: [
+        Envelope()
+          ..nameProperty.set('Surplus A')
+          ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(10))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Surplus B')
+          ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(10))
+          ..budgetProperty.set(budgetId),
+      ],
+      incomeCents: totalIncome,
+      expectedCentsByEnvelopeName: {
+        'Surplus A': totalIncome ~/ 2,
+        'Surplus B': totalIncome ~/ 2,
+      },
+    );
+  });
+
+  test('simple budget example', () {
+    const totalIncome = 100 * 100;
+    const budgetId = '';
+
+    expectBudgetChange(
+      context: pondContext,
+      envelopes: [
+        Envelope()
+          ..nameProperty.set('Firstfruit')
+          ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Repeating')
+          ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+            ..goalCentsProperty.set(10 * 100)
+            ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(3)))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Target')
+          ..ruleProperty.set(TargetGoalEnvelopeRule()
+            ..percentProperty.set(50)
+            ..maximumCentsProperty.set(100 * 100))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Surplus')
+          ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(10))
+          ..budgetProperty.set(budgetId),
+      ],
+      incomeCents: totalIncome,
+      expectedCentsByEnvelopeName: {
+        'Firstfruit': totalIncome ~/ 10,
+        'Repeating': 10 * 100,
+        'Target': (100 * 100 - totalIncome ~/ 10 - 10 * 100) ~/ 2,
+        'Surplus': (100 * 100 - totalIncome ~/ 10 - 10 * 100) ~/ 2,
+      },
     );
   });
 }

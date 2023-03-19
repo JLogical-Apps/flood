@@ -26,4 +26,9 @@ class FieldValueObjectProperty<T, L> with IsValueObjectProperty<T?, T?, L> {
 
     return state.withData(state.data.copy()..set(name, value));
   }
+
+  @override
+  String toString() {
+    return 'field<$T>(name: $name)';
+  }
 }
