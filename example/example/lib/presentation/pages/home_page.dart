@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:example/presentation/pages/budgets_page.dart';
-import 'package:example/presentation/pages/login_page.dart';
+import 'package:example/presentation/pages/auth/login_page.dart';
+import 'package:example/presentation/pages/budget/budgets_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 

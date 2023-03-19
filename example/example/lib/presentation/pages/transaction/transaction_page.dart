@@ -1,4 +1,4 @@
-import 'package:example/presentation/pages/envelope_page.dart';
+import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
