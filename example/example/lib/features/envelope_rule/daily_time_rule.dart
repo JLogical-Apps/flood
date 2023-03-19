@@ -5,11 +5,13 @@ class DailyTimeRule extends TimeRule {
   static const daysField = 'days';
   late final daysProperty = field<int>(name: daysField).required();
 
-  static const centsRemainingField = 'centsRemaining';
-  late final centsRemainingProperty = field<int>(name: centsRemainingField).required();
+  @override
+  List<ValueObjectBehavior> get behaviors => [daysProperty];
 
   @override
-  int getCentsRemaining({required DateTime now}) {
-    throw Exception();
+  int getPeriodsBetween(DateTime date1, DateTime date2) {
+    final duration = date1.difference(date2).abs();
+
+    return (duration.inDays / daysProperty.value).floor();
   }
 }

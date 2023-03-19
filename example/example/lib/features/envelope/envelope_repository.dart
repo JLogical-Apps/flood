@@ -23,26 +23,32 @@ class EnvelopeRepository with IsRepositoryWrapper {
       .withEmbeddedType<FirstfruitEnvelopeRule>(
         FirstfruitEnvelopeRule.new,
         valueObjectTypeName: 'FirstfruitEnvelopeRule',
+        valueObjectParents: [EnvelopeRule],
       )
       .withEmbeddedType<RepeatingGoalEnvelopeRule>(
         RepeatingGoalEnvelopeRule.new,
         valueObjectTypeName: 'RepeatingGoalEnvelopeRule',
+        valueObjectParents: [EnvelopeRule],
       )
       .withEmbeddedType<TargetGoalEnvelopeRule>(
         TargetGoalEnvelopeRule.new,
         valueObjectTypeName: 'TargetGoalEnvelopeRule',
+        valueObjectParents: [EnvelopeRule],
       )
       .withEmbeddedType<SurplusEnvelopeRule>(
         SurplusEnvelopeRule.new,
         valueObjectTypeName: 'SurplusEnvelopeRule',
+        valueObjectParents: [EnvelopeRule],
       )
       .withEmbeddedAbstractType<TimeRule>(valueObjectTypeName: 'TimeRule')
       .withEmbeddedType<DailyTimeRule>(
         DailyTimeRule.new,
         valueObjectTypeName: 'DailyTimeRule',
+        valueObjectParents: [TimeRule],
       )
       .withEmbeddedType<MonthlyTimeRule>(
         MonthlyTimeRule.new,
         valueObjectTypeName: 'MonthlyTimeRule',
+        valueObjectParents: [TimeRule],
       );
 }

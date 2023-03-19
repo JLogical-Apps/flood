@@ -15,11 +15,33 @@ class Envelope extends ValueObject {
   static const ruleField = 'rule';
   late final ruleProperty = field<EnvelopeRule>(name: ruleField);
 
+  static const lockedField = 'locked';
+  late final lockedProperty = field<bool>(name: lockedField).withFallback(() => false);
+
   @override
   List<ValueObjectBehavior> get behaviors => [
         nameProperty,
         budgetProperty,
         amountCentsProperty,
         ruleProperty,
+        lockedProperty,
       ];
+
+  /// Returns a copy of the envelope with the [incomeCents] gained and a possibly modified envelope rule.
+  /// If [incomeCents] is negative, then an income transaction has been deleted from the envelope.
+  Envelope withIncomeAdded({required DropCoreContext context, required int incomeCents}) {
+    final envelopeChange = ruleProperty.value?.onAddIncome(
+      context: context,
+      envelope: this,
+      incomeCents: incomeCents,
+    );
+
+    final newCents = amountCentsProperty.value + incomeCents;
+    final newEnvelopeRule = envelopeChange?.ruleChange ?? ruleProperty.value;
+
+    return Envelope()
+      ..copyFrom(context, this)
+      ..amountCentsProperty.set(newCents)
+      ..ruleProperty.set(newEnvelopeRule);
+  }
 }

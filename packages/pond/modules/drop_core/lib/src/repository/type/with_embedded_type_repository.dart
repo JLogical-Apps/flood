@@ -34,7 +34,6 @@ class WithEmbeddedTypeRepository<V extends ValueObject> with IsRepositoryWrapper
               name: valueObjectTypeName,
               parents: valueObjectParents,
             );
-            valueObjectParents.map((type) => typeComponent.getRuntimeTypeRuntime(type)).toList();
           },
         )
       ];

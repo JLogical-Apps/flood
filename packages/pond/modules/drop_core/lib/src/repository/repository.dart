@@ -55,7 +55,7 @@ extension RepositoryExtension on Repository {
     return onDelete(state.getState(context.locate<DropCoreComponent>()));
   }
 
-  ForTypeRepository forType<E extends Entity<V>, V extends ValueObject>(
+  ForTypeRepository<E, V> forType<E extends Entity<V>, V extends ValueObject>(
     E Function() entityConstructor,
     V Function() valueObjectConstructor, {
     required String entityTypeName,
@@ -74,7 +74,7 @@ extension RepositoryExtension on Repository {
     );
   }
 
-  ForAbstractTypeRepository forAbstractType<E extends Entity<V>, V extends ValueObject>({
+  ForAbstractTypeRepository<E, V> forAbstractType<E extends Entity<V>, V extends ValueObject>({
     required String entityTypeName,
     required String valueObjectTypeName,
     List<Type>? entityParents,
@@ -89,12 +89,12 @@ extension RepositoryExtension on Repository {
     );
   }
 
-  WithEmbeddedTypeRepository withEmbeddedType<V extends ValueObject>(
+  WithEmbeddedTypeRepository<V> withEmbeddedType<V extends ValueObject>(
     V Function() valueObjectConstructor, {
     required String valueObjectTypeName,
     List<Type>? valueObjectParents,
   }) {
-    return WithEmbeddedTypeRepository(
+    return WithEmbeddedTypeRepository<V>(
       repository: this,
       valueObjectConstructor: valueObjectConstructor,
       valueObjectTypeName: valueObjectTypeName,
@@ -102,11 +102,11 @@ extension RepositoryExtension on Repository {
     );
   }
 
-  WithEmbeddedAbstractTypeRepository withEmbeddedAbstractType<V extends ValueObject>({
+  WithEmbeddedAbstractTypeRepository<V> withEmbeddedAbstractType<V extends ValueObject>({
     required String valueObjectTypeName,
     List<Type>? valueObjectParents,
   }) {
-    return WithEmbeddedAbstractTypeRepository(
+    return WithEmbeddedAbstractTypeRepository<V>(
       repository: this,
       valueObjectTypeName: valueObjectTypeName,
       valueObjectParents: valueObjectParents ?? [],

@@ -6,7 +6,9 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 const bool testingLoggedIn = true;
 
-Future<CorePondContext> getCorePondContext({required EnvironmentConfig environmentConfig}) async {
+Future<CorePondContext> getCorePondContext({EnvironmentConfig? environmentConfig}) async {
+  environmentConfig ??= EnvironmentConfig.static.memory();
+
   final corePondContext = CorePondContext();
   await corePondContext.register(TypeCoreComponent());
   await corePondContext.register(DropCoreComponent());

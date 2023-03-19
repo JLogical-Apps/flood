@@ -70,7 +70,7 @@ extension NullableStringValueObjectPropertyExtensions<L> on ValueObjectProperty<
   }
 }
 
-extension SameGetterSetterValueObjectPropertyExtensions<T, L> on ValueObjectProperty<T, T, L> {
+extension SameGetterSetterValueObjectPropertyExtensions<T, L> on ValueObjectProperty<T?, T?, L> {
   FallbackReplacementValueObjectProperty<T, L> withFallbackReplacement(T Function() fallbackReplacement) {
     return FallbackReplacementValueObjectProperty(property: this, fallbackReplacement: fallbackReplacement);
   }
