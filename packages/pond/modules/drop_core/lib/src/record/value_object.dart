@@ -25,11 +25,11 @@ abstract class ValueObject extends Record with EquatableMixin {
     }
   }
 
-  /// The state of the ValueObject without the type set.
+  /// An unsafe state of the ValueObject without the type set.
   State get scaffoldState {
     final state = behaviors.fold<State>(
       State(data: {}),
-      (state, behavior) => behavior.modifyState(state),
+      (state, behavior) => behavior.modifyStateUnsafe(state),
     );
 
     return state;

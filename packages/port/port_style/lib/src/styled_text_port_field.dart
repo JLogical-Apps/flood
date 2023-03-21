@@ -16,6 +16,8 @@ class StyledTextFieldPortField extends HookWidget {
 
   final bool obscureText;
 
+  final int? maxLines;
+
   const StyledTextFieldPortField({
     super.key,
     required this.fieldName,
@@ -24,6 +26,7 @@ class StyledTextFieldPortField extends HookWidget {
     this.hintText,
     this.enabled = true,
     this.obscureText = false,
+    this.maxLines = 1,
   });
 
   @override
@@ -41,6 +44,7 @@ class StyledTextFieldPortField extends HookWidget {
           enabled: enabled,
           obscureText: obscureText,
           onChanged: (text) => port[fieldName] = text,
+          maxLines: maxLines,
         );
       },
     );

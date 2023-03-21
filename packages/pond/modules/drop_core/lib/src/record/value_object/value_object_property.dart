@@ -54,11 +54,13 @@ extension ValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G, S, L>
   }
 }
 
-extension NullableValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G?, S, L> {
+extension GetterSetterNullabeValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G?, S?, L> {
   RequiredValueObjectProperty<G, S, L> required() {
     return RequiredValueObjectProperty(property: this);
   }
+}
 
+extension GetterNullableValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G?, S, L> {
   FallbackValueObjectProperty<G, S, L> withFallback(G Function() fallback) {
     return FallbackValueObjectProperty(property: this, fallback: fallback);
   }

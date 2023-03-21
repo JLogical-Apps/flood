@@ -8,7 +8,6 @@ packages:
 command:
   bootstrap:
     usePubspecOverrides: true
-    runPubGetOffline: true
 
 scripts:
   test:

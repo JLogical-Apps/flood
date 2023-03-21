@@ -16,6 +16,8 @@ class StyledTextField extends StyleComponent {
 
   final bool obscureText;
 
+  final int? maxLines;
+
   StyledTextField({
     super.key,
     this.text,
@@ -26,5 +28,6 @@ class StyledTextField extends StyleComponent {
     this.hintText,
     this.enabled = true,
     this.obscureText = false,
+    this.maxLines = 1,
   });
 }

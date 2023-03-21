@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/style_component.dart';
 
 class StyledOptionField<T> extends StyleComponent {
@@ -13,7 +14,7 @@ class StyledOptionField<T> extends StyleComponent {
   final bool enabled;
 
   final List<T> options;
-  final String Function(T value) stringMapper;
+  final Widget Function(T value) widgetMapper;
 
   StyledOptionField({
     super.key,
@@ -24,14 +25,18 @@ class StyledOptionField<T> extends StyleComponent {
     this.errorText,
     this.enabled = true,
     required this.options,
-    String Function(T value)? stringMapper,
-  }) : stringMapper = stringMapper ?? _defaultMapper;
+    Widget Function(T value)? widgetMapper,
+  }) : widgetMapper = widgetMapper ?? _defaultMapper;
 
-  String getOptionText(T value) {
-    return stringMapper(value);
+  Widget getOptionChild(T value) {
+    return widgetMapper(value);
+  }
+
+  void change(T value) {
+    onChanged?.call(value);
   }
 }
 
-String _defaultMapper<T>(T value) {
-  return value.toString();
+Widget _defaultMapper<T>(T value) {
+  return StyledText.button(value.toString());
 }

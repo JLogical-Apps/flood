@@ -14,6 +14,8 @@ abstract class Port<T> {
   Future<PortSubmitResult<T>> submit();
 
   static Port<Map<String, dynamic>> of(Map<String, PortValue> portValueByName) => _PortImpl(portValueByName);
+
+  static Port<T?> empty<T>() => _PortImpl({}).map((port, values) => null);
 }
 
 extension PortExtensions<T> on Port<T> {

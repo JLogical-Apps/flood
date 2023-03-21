@@ -31,6 +31,7 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
           cursorColor: context.colorPalette().foreground.regular,
           readOnly: !component.enabled,
           obscureText: component.obscureText,
+          maxLines: component.maxLines,
           decoration: InputDecoration(
             hoverColor: context.colorPalette().background.regular,
             focusColor: context.colorPalette().background.regular.background.regular,

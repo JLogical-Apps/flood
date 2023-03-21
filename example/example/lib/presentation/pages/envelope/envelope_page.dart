@@ -1,9 +1,15 @@
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
+import 'package:example/features/envelope_rule/envelope_rule.dart';
+import 'package:example/features/envelope_rule/firstfruit_envelope_rule.dart';
+import 'package:example/features/envelope_rule/repeating_goal_envelope_rule.dart';
+import 'package:example/features/envelope_rule/surplus_envelope_rule.dart';
+import 'package:example/features/envelope_rule/target_goal_envelope_rule.dart';
 import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:example/features/transaction/envelope_transaction_entity.dart';
 import 'package:example/presentation/pages/home_page.dart';
+import 'package:example/presentation/widget/envelope_rule/envelope_card_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -21,8 +27,11 @@ class EnvelopePage extends AppPage {
     return ModelBuilder.page(
       model: envelopeModel,
       builder: (EnvelopeEntity envelopeEntity) {
+        final envelope = envelopeEntity.value;
+        final envelopeRule = envelope.ruleProperty.value;
+        final envelopeRuleCardWrapper = EnvelopeRuleCardWrapper.getWrapper(envelope.ruleProperty.value);
         return StyledPage(
-          titleText: envelopeEntity.value.nameProperty.value,
+          titleText: envelope.nameProperty.value,
           actions: [
             ActionItem(
               titleText: 'Edit',
@@ -32,11 +41,37 @@ class EnvelopePage extends AppPage {
               onPerform: (context) async {
                 final result = await context.showStyledDialog(StyledPortDialog(
                   titleText: 'Create New Envelope',
-                  port: envelopeEntity.value.asPort(context.corePondContext),
+                  port: envelope.asPort(context.corePondContext),
                   children: [
                     StyledTextFieldPortField(
                       fieldName: Envelope.nameField,
                       labelText: 'Name',
+                    ),
+                    StyledTextFieldPortField(
+                      fieldName: Envelope.descriptionField,
+                      labelText: 'Description',
+                      maxLines: 3,
+                    ),
+                    StyledDivider.subtle(),
+                    StyledOptionPortField<EnvelopeRule?>(
+                      fieldName: Envelope.ruleField,
+                      labelText: 'Rule',
+                      options: [
+                        null,
+                        envelopeRule?.as<FirstfruitEnvelopeRule>() ?? FirstfruitEnvelopeRule(),
+                        envelopeRule?.as<RepeatingGoalEnvelopeRule>() ?? RepeatingGoalEnvelopeRule(),
+                        envelopeRule?.as<TargetGoalEnvelopeRule>() ?? TargetGoalEnvelopeRule(),
+                        envelopeRule?.as<SurplusEnvelopeRule>() ?? SurplusEnvelopeRule(),
+                      ],
+                      widgetMapper: (rule) {
+                        final envelopeRuleWrapper = EnvelopeRuleCardWrapper.getWrapper(rule);
+                        return StyledList.row(
+                          children: [
+                            envelopeRuleWrapper.getIcon(rule),
+                            StyledText.button(envelopeRuleWrapper.getName(rule)),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ));
@@ -50,16 +85,21 @@ class EnvelopePage extends AppPage {
           ],
           body: StyledList.column.centered.scrollable(
             children: [
-              StyledText.h4(envelopeEntity.value.amountCentsProperty.value.formatCentsAsCurrency()),
+              StyledText.h4(envelope.amountCentsProperty.value.formatCentsAsCurrency()),
+              StyledCard.subtle(
+                titleText: envelopeRuleCardWrapper.getName(envelopeRule),
+                leading: envelopeRuleCardWrapper.getIcon(envelopeRule),
+                body: envelopeRuleCardWrapper.getDescription(envelopeRule),
+              ),
+              if (envelope.descriptionProperty.value?.isNotBlank == true)
+                StyledText.body.italics(envelope.descriptionProperty.value!),
               StyledDivider(),
               StyledButton.strong(
                 labelText: 'Create Transaction',
                 iconData: Icons.add,
                 onPressed: () async {
-                  final envelope = envelopeEntity.value;
-
                   final transactionPort = (EnvelopeTransaction()
-                        ..envelopeProperty.set(envelopeEntity.id)
+                        ..envelopeProperty.set(envelopeEntity.id!)
                         ..budgetProperty.set(envelope.budgetProperty.value))
                       .asPort(context.corePondContext);
                   final port = Port.of({

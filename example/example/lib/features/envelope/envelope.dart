@@ -6,6 +6,9 @@ class Envelope extends ValueObject {
   static const nameField = 'name';
   late final nameProperty = field<String>(name: nameField).isNotBlank();
 
+  static const descriptionField = 'description';
+  late final descriptionProperty = field<String>(name: descriptionField);
+
   static const budgetField = 'budget';
   late final budgetProperty = reference<BudgetEntity>(name: budgetField).required();
 
@@ -21,6 +24,7 @@ class Envelope extends ValueObject {
   @override
   List<ValueObjectBehavior> get behaviors => [
         nameProperty,
+        descriptionProperty,
         budgetProperty,
         amountCentsProperty,
         ruleProperty,

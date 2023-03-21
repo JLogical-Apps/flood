@@ -7,6 +7,7 @@ import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/pages/transaction/add_income_page.dart';
+import 'package:example/presentation/widget/envelope_rule/envelope_card_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -37,7 +38,7 @@ class BudgetPage extends AppPage {
 
         final budget = budgetEntity.value;
         return StyledPage(
-          titleText: budget.nameProperty.value,
+          titleText: '${budget.nameProperty.value}: ${totalCentsModel.getOrNull()?.formatCentsAsCurrency() ?? '...'}',
           actions: [
             ActionItem(
               titleText: 'Edit',
@@ -83,15 +84,6 @@ class BudgetPage extends AppPage {
           ],
           body: StyledList.column.scrollable(
             children: [
-              ModelBuilder(
-                model: totalCentsModel,
-                builder: (int cents) {
-                  return StyledList.row.centered(children: [
-                    StyledText.h3('Total:'),
-                    StyledText.h3.strong(cents.formatCentsAsCurrency()),
-                  ]);
-                },
-              ),
               StyledButton.strong(
                 labelText: 'Add Income',
                 iconData: Icons.attach_money,
@@ -111,7 +103,7 @@ class BudgetPage extends AppPage {
                     onPerform: (context) async {
                       final result = await context.showStyledDialog(StyledPortDialog(
                         titleText: 'Create New Envelope',
-                        port: (Envelope()..budgetProperty.set(budgetEntity.id)).asPort(context.corePondContext),
+                        port: (Envelope()..budgetProperty.set(budgetEntity.id!)).asPort(context.corePondContext),
                         children: [
                           StyledTextFieldPortField(
                             fieldName: Envelope.nameField,
@@ -133,15 +125,18 @@ class BudgetPage extends AppPage {
                     builder: (List<EnvelopeEntity> envelopeEntities) {
                       return StyledList.column.withMinChildSize(150)(
                         children: [
-                          ...envelopeEntities
-                              .map((envelopeEntity) => StyledCard(
-                                    titleText: envelopeEntity.value.nameProperty.value,
-                                    bodyText: envelopeEntity.value.amountCentsProperty.value.formatCentsAsCurrency(),
-                                    onPressed: () async {
-                                      context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!));
-                                    },
-                                  ))
-                              .toList(),
+                          ...envelopeEntities.map((envelopeEntity) {
+                            final envelopeRuleCardWrapper =
+                                EnvelopeRuleCardWrapper.getWrapper(envelopeEntity.value.ruleProperty.value);
+                            return StyledCard(
+                              leading: envelopeRuleCardWrapper.getIcon(envelopeEntity.value.ruleProperty.value),
+                              titleText: envelopeEntity.value.nameProperty.value,
+                              bodyText: envelopeEntity.value.amountCentsProperty.value.formatCentsAsCurrency(),
+                              onPressed: () async {
+                                context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!));
+                              },
+                            );
+                          }).toList(),
                         ],
                         ifEmptyText:
                             'There are no envelopes in this budget! Create one by pressing the triple-dot menu above!',

@@ -14,6 +14,9 @@ dependencies:
 
   collection: ^1.16.0
   flutter_hooks: ^0.18.5+1
+  font_awesome_flutter: ^10.4.0
+
+  intl: ^0.17.0
   meta: ^1.8.0
   provider: ^6.0.5
 

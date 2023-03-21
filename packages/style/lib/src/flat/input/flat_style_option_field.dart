@@ -29,19 +29,21 @@ class FlatStyleOptionFieldRenderer with IsTypedStyleRenderer<StyledOptionField> 
           value: component.value,
           dropdownColor: context.colorPalette().background.regular,
           hint: StyledText.body.italics.strong('Select an option'),
-          onChanged: component.enabled ? (value) => component.onChanged?.call(value) : null,
+          onChanged: component.enabled ? (value) => component.change(value) : null,
           icon: StyledIcon(Icons.arrow_drop_down),
           style: context.style().getTextStyle(context, StyledText.body.empty),
+          isDense: false,
           items: component.options
               .map((value) => DropdownMenuItem(
                     value: value,
                     child: ColorPaletteProvider(
                       colorPalette: context.colorPalette().background.regular,
-                      child: StyledText.button(component.getOptionText(value)),
+                      child: component.getOptionChild(value),
                     ),
                   ))
               .toList(),
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.all(8),
             hoverColor: context.colorPalette().background.regular,
             focusColor: context.colorPalette().background.regular.background.regular,
             fillColor:

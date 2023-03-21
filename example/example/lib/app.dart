@@ -2,6 +2,11 @@ import 'package:example/features/budget/budget.dart';
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
+import 'package:example/features/envelope_rule/firstfruit_envelope_rule.dart';
+import 'package:example/features/envelope_rule/monthly_time_rule.dart';
+import 'package:example/features/envelope_rule/repeating_goal_envelope_rule.dart';
+import 'package:example/features/envelope_rule/surplus_envelope_rule.dart';
+import 'package:example/features/envelope_rule/target_goal_envelope_rule.dart';
 import 'package:example/features/user/user.dart';
 import 'package:example/features/user/user_entity.dart';
 import 'package:example/pond.dart';
@@ -75,13 +80,31 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
           ..ownerProperty.set(userEntity.id!),
       );
 
-      await Future.wait(List.generate(
-          5,
-          (i) => dropComponent.updateEntity(
-              EnvelopeEntity(),
-              (Envelope envelope) => envelope
-                ..nameProperty.set('Envelope ${i + 1}')
-                ..budgetProperty.set(budgetEntity.id!))));
+      final envelopes = [
+        Envelope()
+          ..budgetProperty.set(budgetEntity.id!)
+          ..nameProperty.set('Firstfruit')
+          ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10)),
+        Envelope()
+          ..budgetProperty.set(budgetEntity.id!)
+          ..nameProperty.set('Repeating')
+          ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+            ..goalCentsProperty.set(100 * 100)
+            ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))),
+        Envelope()
+          ..budgetProperty.set(budgetEntity.id!)
+          ..nameProperty.set('Target')
+          ..ruleProperty.set(TargetGoalEnvelopeRule()
+            ..percentProperty.set(20)
+            ..maximumCentsProperty.set(1000 * 100)),
+        Envelope()
+          ..budgetProperty.set(budgetEntity.id!)
+          ..nameProperty.set('Surplus')
+          ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(100)),
+      ];
+
+      await Future.wait(
+          envelopes.map((envelope) => EnvelopeEntity()..set(envelope)).map((entity) => dropComponent.update(entity)));
     }
   }));
   return appPondContext;

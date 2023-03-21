@@ -13,7 +13,7 @@ class StyledOptionPortField<T> extends HookWidget {
   final bool enabled;
 
   final List<T> options;
-  final String Function(T value) stringMapper;
+  final Widget Function(T value) widgetMapper;
 
   const StyledOptionPortField({
     super.key,
@@ -22,8 +22,8 @@ class StyledOptionPortField<T> extends HookWidget {
     this.label,
     this.enabled = true,
     required this.options,
-    String Function(T value)? stringMapper,
-  }) : stringMapper = stringMapper ?? _defaultMapper;
+    Widget Function(T value)? widgetMapper,
+  }) : widgetMapper = widgetMapper ?? _defaultMapper;
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +39,13 @@ class StyledOptionPortField<T> extends HookWidget {
           enabled: enabled,
           onChanged: (value) => port[fieldName] = value,
           options: options,
-          stringMapper: stringMapper,
+          widgetMapper: widgetMapper,
         );
       },
     );
   }
 }
 
-String _defaultMapper<T>(T value) {
-  return value.toString();
+Widget _defaultMapper<T>(T value) {
+  return StyledText.button(value.toString());
 }
