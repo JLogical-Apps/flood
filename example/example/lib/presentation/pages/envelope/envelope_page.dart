@@ -103,8 +103,8 @@ class EnvelopePage extends AppPage {
                         ..budgetProperty.set(envelope.budgetProperty.value))
                       .asPort(context.corePondContext);
                   final port = Port.of({
-                    'transaction': PortValue.port(port: transactionPort),
-                    'transactionType': PortValue.option(
+                    'transaction': PortField.port(port: transactionPort),
+                    'transactionType': PortField.option(
                       options: EnvelopeTransactionType.values,
                       initialValue: EnvelopeTransactionType.payment,
                     ),

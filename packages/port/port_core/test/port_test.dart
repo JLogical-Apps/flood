@@ -6,7 +6,7 @@ void main() {
     const name = 'John Doe';
 
     final port = Port.of({
-      'name': PortValue.string(),
+      'name': PortField.string(),
     });
 
     expect(port['name'], '');
@@ -26,8 +26,8 @@ void main() {
     const email = 'doe@mail.com';
 
     final port = Port.of({
-      'name': PortValue.string().isNotBlank(),
-      'email': PortValue.string().isNotBlank().isEmail(),
+      'name': PortField.string().isNotBlank(),
+      'email': PortField.string().isNotBlank().isEmail(),
     });
 
     expect(port['name'], '');
@@ -56,11 +56,11 @@ void main() {
 
   test('embedded port', () async {
     final contactPort = Port.of({
-      'phone': PortValue.string(),
-      'email': PortValue.string().isNotBlank().isEmail(),
+      'phone': PortField.string(),
+      'email': PortField.string().isNotBlank().isEmail(),
     });
     final port = Port.of({
-      'contact': PortValue.port(port: contactPort),
+      'contact': PortField.port(port: contactPort),
     });
 
     expect(port['contact'] as Port, contactPort);

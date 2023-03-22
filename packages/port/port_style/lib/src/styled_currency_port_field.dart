@@ -26,7 +26,7 @@ class StyledCurrencyFieldPortField extends HookWidget {
     final port = Provider.of<Port>(context, listen: false);
     return PortFieldBuilder<int?>(
       fieldName: fieldName,
-      builder: (context, amountCents, error) {
+      builder: (context, field, amountCents, error) {
         return StyledTextField(
           text: amountCents?.formatCentsAsCurrency() ?? '',
           labelText: labelText,

@@ -7,42 +7,42 @@ import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class Port<T> {
-  ValueStream<Map<String, PortValue>> getPortX();
+  ValueStream<Map<String, PortField>> getPortX();
 
-  void setPortValue({required String name, required PortValue portValue});
+  void setPortField({required String name, required PortField portField});
 
   Future<PortSubmitResult<T>> submit();
 
-  static Port<Map<String, dynamic>> of(Map<String, PortValue> portValueByName) => _PortImpl(portValueByName);
+  static Port<Map<String, dynamic>> of(Map<String, PortField> portFieldByName) => _PortImpl(portFieldByName);
 
   static Port<T?> empty<T>() => _PortImpl({}).map((port, values) => null);
 }
 
 extension PortExtensions<T> on Port<T> {
-  Map<String, PortValue> get portValueByName => getPortX().value;
+  Map<String, PortField> get portFieldByName => getPortX().value;
 
-  PortValue? getPortValueByNameOrNull(String name) => portValueByName[name];
+  PortField? getFieldByNameOrNull(String name) => portFieldByName[name];
 
-  PortValue getPortValueByName(String name) =>
-      getPortValueByNameOrNull(name) ?? (throw Exception('Cannot find port value with name [$name]'));
+  PortField getFieldByName(String name) =>
+      getFieldByNameOrNull(name) ?? (throw Exception('Cannot find port field with name [$name]'));
 
-  F? getByNameOrNull<F>(String name) => portValueByName[name]?.getOrNull();
+  F? getByNameOrNull<F>(String name) => portFieldByName[name]?.getOrNull();
 
-  F getByName<F>(String name) => (portValueByName[name] ?? (throw Exception('Cannot find value [$name]'))).getOrNull();
+  F getByName<F>(String name) => (portFieldByName[name] ?? (throw Exception('Cannot find value [$name]'))).getOrNull();
 
-  dynamic getErrorByNameOrNull(String name) => portValueByName[name]?.error;
+  dynamic getErrorByNameOrNull(String name) => portFieldByName[name]?.error;
 
   dynamic getErrorByName(String name) =>
-      (portValueByName[name] ?? (throw Exception('Cannot find value [$name]'))).error;
+      (portFieldByName[name] ?? (throw Exception('Cannot find value [$name]'))).error;
 
-  void setValue({required String name, required dynamic value}) => setPortValue(
+  void setValue({required String name, required dynamic value}) => setPortField(
         name: name,
-        portValue: getPortValueByName(name).copyWithValue(value),
+        portField: getFieldByName(name).copyWithValue(value),
       );
 
-  void setError({required String name, required dynamic error}) => setPortValue(
+  void setError({required String name, required dynamic error}) => setPortField(
         name: name,
-        portValue: getPortValueByName(name).copyWithError(error),
+        portField: getFieldByName(name).copyWithError(error),
       );
 
   void clearError({required String name}) => setError(name: name, error: null);
@@ -59,33 +59,33 @@ extension PortExtensions<T> on Port<T> {
 mixin IsPort<T> implements Port<T> {}
 
 class _PortImpl with IsPort<Map<String, dynamic>> {
-  final BehaviorSubject<Map<String, PortValue>> _portValueByNameX;
+  final BehaviorSubject<Map<String, PortField>> _portFieldByNameX;
 
-  _PortImpl(Map<String, PortValue> valueByName) : _portValueByNameX = BehaviorSubject.seeded(valueByName);
+  _PortImpl(Map<String, PortField> valueByName) : _portFieldByNameX = BehaviorSubject.seeded(valueByName);
 
-  Map<String, PortValue> get portValueByName => _portValueByNameX.value;
+  Map<String, PortField> get portFieldByName => _portFieldByNameX.value;
 
-  set portValueByName(Map<String, PortValue> value) {
-    _portValueByNameX.value = value;
+  set portFieldByName(Map<String, PortField> value) {
+    _portFieldByNameX.value = value;
   }
 
   @override
-  ValueStream<Map<String, PortValue>> getPortX() => _portValueByNameX;
+  ValueStream<Map<String, PortField>> getPortX() => _portFieldByNameX;
 
   @override
-  void setPortValue({required String name, required PortValue portValue}) {
-    portValueByName = portValueByName.copy()..set(name, portValue);
+  void setPortField({required String name, required PortField portField}) {
+    portFieldByName = portFieldByName.copy()..set(name, portField);
   }
 
   @override
   Future<PortSubmitResult<Map<String, dynamic>>> submit() async {
     var hasError = false;
-    for (final portValueByNameEntry in portValueByName.entries) {
-      final name = portValueByNameEntry.key;
-      final portValue = portValueByNameEntry.value;
+    for (final portFieldByNameEntry in portFieldByName.entries) {
+      final name = portFieldByNameEntry.key;
+      final portField = portFieldByNameEntry.value;
 
-      final error = await portValue.validate(portValue.value);
-      setPortValue(name: name, portValue: portValue.copyWithError(error));
+      final error = await portField.validate(portField.value);
+      setPortField(name: name, portField: portField.copyWithError(error));
 
       if (error != null) {
         hasError = true;
@@ -96,8 +96,8 @@ class _PortImpl with IsPort<Map<String, dynamic>> {
       return PortSubmitResult(data: null);
     }
 
-    final submitValueByNameEntries = await Future.wait(portValueByName
-        .mapToIterable((name, portValue) async => MapEntry(name, await portValue.submit(portValue.getOrNull()))));
+    final submitValueByNameEntries = await Future.wait(portFieldByName
+        .mapToIterable((name, portField) async => MapEntry(name, await portField.submit(portField.getOrNull()))));
     return PortSubmitResult(data: submitValueByNameEntries.toMap());
   }
 }
@@ -108,11 +108,11 @@ abstract class PortWrapper<T> implements Port<T> {
 
 mixin IsPortWrapper<T> implements PortWrapper<T> {
   @override
-  ValueStream<Map<String, PortValue>> getPortX() => port.getPortX();
+  ValueStream<Map<String, PortField>> getPortX() => port.getPortX();
 
   @override
-  void setPortValue({required String name, required PortValue portValue}) =>
-      port.setPortValue(name: name, portValue: portValue);
+  void setPortField({required String name, required PortField portField}) =>
+      port.setPortField(name: name, portField: portField);
 
   @override
   Future<PortSubmitResult<T>> submit() => port.submit();

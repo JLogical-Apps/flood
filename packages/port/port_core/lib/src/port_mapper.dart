@@ -11,13 +11,13 @@ class PortMapper<T, R> with IsPort<R> {
   PortMapper({required this.port, required this.mapper});
 
   @override
-  ValueStream<Map<String, PortValue>> getPortX() {
+  ValueStream<Map<String, PortField>> getPortX() {
     return port.getPortX();
   }
 
   @override
-  void setPortValue({required String name, required PortValue portValue}) =>
-      port.setPortValue(name: name, portValue: portValue);
+  void setPortField({required String name, required PortField portField}) =>
+      port.setPortField(name: name, portField: portField);
 
   @override
   Future<PortSubmitResult<R>> submit() async {

@@ -30,7 +30,7 @@ class StyledOptionPortField<T> extends HookWidget {
     final port = Provider.of<Port>(context, listen: false);
     return PortFieldBuilder<T>(
       fieldName: fieldName,
-      builder: (context, value, error) {
+      builder: (context, field, value, error) {
         return StyledOptionField<T>(
           value: value,
           labelText: labelText,

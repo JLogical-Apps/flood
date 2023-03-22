@@ -4,8 +4,8 @@ import 'package:port_drop_core/src/port_generator_behavior_wrapper.dart';
 
 class StringFieldBehaviorWrapper extends PortGeneratorBehaviorWrapper<FieldValueObjectProperty<String, dynamic>> {
   @override
-  Map<String, PortValue> getPortValueByName(ValueObjectBehavior behavior) {
+  Map<String, PortField> getPortFieldByName(ValueObjectBehavior behavior) {
     behavior as FieldValueObjectProperty<String, dynamic>;
-    return {behavior.name: PortValue.string(initialValue: behavior.value)};
+    return {behavior.name: PortField.string(initialValue: behavior.value)};
   }
 }

@@ -3,41 +3,41 @@ import 'dart:async';
 import 'package:port_core/src/port.dart';
 import 'package:utils_core/utils_core.dart';
 
-typedef SimplePortValue<T> = PortValue<T, T>;
+typedef SimplePortField<T> = PortField<T, T>;
 
-abstract class PortValue<T, S> with IsValidatorWrapper<T, String> {
+abstract class PortField<T, S> with IsValidatorWrapper<T, String> {
   T get value;
 
   dynamic get error;
 
   FutureOr<S> submit(T value);
 
-  factory PortValue({
+  factory PortField({
     required T value,
     dynamic error,
     Validator<T, String>? validator,
     FutureOr<S> Function(T value)? submitMapper,
   }) =>
-      _PortValueImpl(
+      _PortFieldImpl(
         value: value,
         error: error,
         validator: validator ?? Validator.empty(),
         submitMapper: submitMapper,
       );
 
-  static SimplePortValue<String> string({String? initialValue}) {
-    return PortValue(value: initialValue ?? '', validator: Validator.empty());
+  static SimplePortField<String> string({String? initialValue}) {
+    return PortField(value: initialValue ?? '', validator: Validator.empty());
   }
 
-  static SimplePortValue<T> option<T>({required List<T> options, required T initialValue}) {
-    return PortValue(
+  static SimplePortField<T> option<T>({required List<T> options, required T initialValue}) {
+    return PortField(
       value: initialValue,
       validator: Validator((item) => options.contains(item) ? null : '[$item] is not a valid choice!'),
     );
   }
 
-  static PortValue<Port<T>, T> port<T>({required Port<T> port}) {
-    return PortValue(
+  static PortField<Port<T>, T> port<T>({required Port<T> port}) {
+    return PortField(
       value: port,
       validator: Validator((port) async {
         final result = await port.submit();
@@ -51,36 +51,36 @@ abstract class PortValue<T, S> with IsValidatorWrapper<T, String> {
   }
 }
 
-extension PortValueExtensions<T, S> on PortValue<T, S> {
+extension PortFieldExtensions<T, S> on PortField<T, S> {
   T? getOrNull() => error == null ? value : null;
 
-  PortValue<T, S> copyWith({
+  PortField<T, S> copyWith({
     T? value,
     required dynamic error,
     Validator<T, String>? validator,
   }) =>
-      PortValue(
+      PortField(
         value: value ?? this.value,
         error: error,
         validator: validator ?? this.validator,
         submitMapper: submit,
       );
 
-  PortValue<T, S> copyWithValue(T value) => copyWith(value: value, error: error);
+  PortField<T, S> copyWithValue(T value) => copyWith(value: value, error: error);
 
-  PortValue<T, S> copyWithError(dynamic error) => copyWith(error: error);
+  PortField<T, S> copyWithError(dynamic error) => copyWith(error: error);
 
-  PortValue<T, S> copyWithValidator(Validator<T, String> validator) => copyWith(
+  PortField<T, S> copyWithValidator(Validator<T, String> validator) => copyWith(
         error: error,
         validator: this.validator + validator,
       );
 
-  PortValue<T, S> isNotNull() => copyWithValidator(this + Validator.isNotNull());
+  PortField<T, S> isNotNull() => copyWithValidator(this + Validator.isNotNull());
 }
 
-mixin IsPortValue<T, S> implements PortValue<T, S> {}
+mixin IsPortField<T, S> implements PortField<T, S> {}
 
-class _PortValueImpl<T, S> with IsPortValue<T, S>, IsValidatorWrapper<T, String> {
+class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<T, String> {
   @override
   final T value;
 
@@ -92,7 +92,7 @@ class _PortValueImpl<T, S> with IsPortValue<T, S>, IsValidatorWrapper<T, String>
 
   final FutureOr<S> Function(T value)? submitMapper;
 
-  _PortValueImpl({
+  _PortFieldImpl({
     required this.value,
     this.error,
     required this.validator,
@@ -109,8 +109,8 @@ class _PortValueImpl<T, S> with IsPortValue<T, S>, IsValidatorWrapper<T, String>
   }
 }
 
-extension StringPortValueExtensions<S> on PortValue<String, S> {
-  PortValue<String, S> isNotBlank() => copyWithValidator(Validator.isNotBlank().asNonNullable());
+extension StringPortFieldExtensions<S> on PortField<String, S> {
+  PortField<String, S> isNotBlank() => copyWithValidator(Validator.isNotBlank().asNonNullable());
 
-  PortValue<String, S> isEmail() => copyWithValidator(Validator.isEmail().asNonNullable());
+  PortField<String, S> isEmail() => copyWithValidator(Validator.isEmail().asNonNullable());
 }

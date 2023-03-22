@@ -34,7 +34,7 @@ class StyledTextFieldPortField extends HookWidget {
     final port = Provider.of<Port>(context, listen: false);
     return PortFieldBuilder<String?>(
       fieldName: fieldName,
-      builder: (context, text, error) {
+      builder: (context, field, text, error) {
         return StyledTextField(
           text: text ?? '',
           labelText: labelText,

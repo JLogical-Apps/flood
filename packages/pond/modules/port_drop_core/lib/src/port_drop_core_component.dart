@@ -36,7 +36,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       ];
 
   Port<V> generatePort<V extends ValueObject>(V valueObject) {
-    var portValueByName = <String, PortValue>{};
+    var portFieldByName = <String, PortField>{};
 
     for (final behavior in valueObject.behaviors) {
       final wrapper = behaviorWrapperResolver.resolveOrNull(behavior);
@@ -44,11 +44,11 @@ class PortDropCoreComponent with IsCorePondComponent {
         continue;
       }
 
-      final behaviorPortFieldByName = wrapper.getPortValueByName(behavior);
-      portValueByName = {...portValueByName, ...behaviorPortFieldByName};
+      final behaviorPortFieldByName = wrapper.getPortFieldByName(behavior);
+      portFieldByName = {...portFieldByName, ...behaviorPortFieldByName};
     }
 
-    return Port.of(portValueByName).map((sourceData, port) {
+    return Port.of(portFieldByName).map((sourceData, port) {
       final typeContext = context.locate<TypeCoreComponent>();
       final dropCoreContext = context.locate<DropCoreComponent>();
 

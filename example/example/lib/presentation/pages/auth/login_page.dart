@@ -13,8 +13,8 @@ class LoginPage extends AppPage {
   @override
   Widget build(BuildContext context) {
     final loginPort = useMemoized(() => Port.of({
-          'email': PortValue.string().isNotBlank().isEmail(),
-          'password': PortValue.string().isNotBlank(),
+          'email': PortField.string().isNotBlank().isEmail(),
+          'password': PortField.string().isNotBlank(),
         }));
 
     return StyledPage(

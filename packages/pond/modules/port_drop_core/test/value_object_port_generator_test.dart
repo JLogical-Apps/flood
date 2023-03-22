@@ -21,7 +21,7 @@ void main() {
 
     final user = Data1();
     var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getPortValueByName(Data1.nameField), isA<PortValue<String, String>>());
+    expect(userPort.getFieldByName(Data1.nameField), isA<PortField<String, String>>());
 
     var result = await userPort.submit();
     expect(result.data.nameProperty.value, '');
@@ -42,7 +42,7 @@ void main() {
 
     final user = Data2();
     var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getPortValueByName(Data2.nameField), isA<PortValue>());
+    expect(userPort.getFieldByName(Data2.nameField), isA<PortField>());
 
     final invalidResult = await userPort.submit();
     expect(invalidResult.isValid, false);
