@@ -86,6 +86,7 @@ class EnvelopePage extends AppPage {
                   });
                   final result = await context.showStyledDialog(StyledPortDialog(
                     port: port,
+                    titleText: 'Create Transaction',
                     children: [
                       PortBuilder(
                         port: transactionPort,
@@ -104,9 +105,16 @@ class EnvelopePage extends AppPage {
                           );
                         },
                       ),
+                      StyledDivider.subtle(),
                       StyledRadioPortField<EnvelopeTransactionType>(
                         fieldName: 'transactionType',
                         stringMapper: (EnvelopeTransactionType value) => value.name,
+                      ),
+                      PortFieldBuilder<EnvelopeTransactionType>(
+                        fieldName: 'transactionType',
+                        builder: (context, field, value, error) {
+                          return StyledText.body(value.note);
+                        },
                       ),
                     ],
                   ));
