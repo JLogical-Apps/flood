@@ -6,4 +6,9 @@ class BasePortFieldWrapper extends PortFieldNodeWrapper<PortField> {
   List<R>? getOptionsOrNull<R>(PortField portField) {
     return null;
   }
+
+  @override
+  String? getDisplayNameOrNull(PortField portField) {
+    return null;
+  }
 }

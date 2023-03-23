@@ -1,6 +1,7 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object/computed_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/display_name_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
@@ -56,6 +57,10 @@ mixin IsValueObjectProperty<G, S, L> implements ValueObjectProperty<G, S, L> {
 extension ValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G, S, L> {
   PlaceholderValueObjectProperty<G, S, L> withPlaceholder(G Function() placeholder) {
     return PlaceholderValueObjectProperty(property: this, placeholder: placeholder);
+  }
+
+  DisplayNameValueObjectProperty<G, S, L> withDisplayName(String displayName) {
+    return DisplayNameValueObjectProperty(property: this, displayName: displayName);
   }
 }
 
@@ -115,4 +120,7 @@ mixin IsValueObjectPropertyWrapper<G, S, L> implements ValueObjectPropertyWrappe
 
   @override
   State modifyStateUnsafe(State state) => property.modifyStateUnsafe(state);
+
+  @override
+  Future<L> load(DropCoreContext context) => property.load(context);
 }

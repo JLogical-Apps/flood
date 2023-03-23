@@ -12,7 +12,7 @@ class IsNotBlankPropertyBehaviorWrapper extends WrapperPortGeneratorBehaviorWrap
   }
 
   @override
-  PortField getPortField(PortField sourcePortField) {
+  PortField getPortField(IsNotBlankValueObjectProperty behavior, PortField sourcePortField) {
     return sourcePortField.as<SimplePortField<String>>()?.isNotBlank() ?? sourcePortField;
   }
 }

@@ -76,4 +76,28 @@ void main() {
     expect(contactResult['phone'], '');
     expect(contactResult['email'], 'test@test.com');
   });
+
+  test('options of field', () {
+    final contactPort = Port.of({
+      'phone': PortField.string().withDisplayName('Phone'),
+      'email': PortField.string().withDisplayName('Email').isNotBlank().isEmail(),
+      'gender': PortField.option(initialValue: 'M', options: ['M', 'F']).withDisplayName('Gender'),
+    });
+
+    expect(contactPort.getFieldByName('phone').findOptionsOrNull(), null);
+    expect(contactPort.getFieldByName('email').findOptionsOrNull(), null);
+    expect(contactPort.getFieldByName('gender').findOptionsOrNull(), ['M', 'F']);
+  });
+
+  test('display name of field', () {
+    final contactPort = Port.of({
+      'phone': PortField.string().withDisplayName('Phone'),
+      'email': PortField.string().withDisplayName('Email').isNotBlank().isEmail(),
+      'gender': PortField.option(initialValue: 'M', options: ['M', 'F']).withDisplayName('Gender'),
+    });
+
+    expect(contactPort.getFieldByName('phone').findDisplayNameOrNull(), 'Phone');
+    expect(contactPort.getFieldByName('email').findDisplayNameOrNull(), 'Email');
+    expect(contactPort.getFieldByName('gender').findDisplayNameOrNull(), 'Gender');
+  });
 }

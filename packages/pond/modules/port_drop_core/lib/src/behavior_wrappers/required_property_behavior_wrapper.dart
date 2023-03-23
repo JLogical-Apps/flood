@@ -11,7 +11,7 @@ class RequiredPropertyBehaviorWrapper extends WrapperPortGeneratorBehaviorWrappe
   }
 
   @override
-  PortField getPortField(PortField sourcePortField) {
+  PortField getPortField(RequiredValueObjectProperty behavior, PortField sourcePortField) {
     return sourcePortField.isNotNull();
   }
 }

@@ -1,5 +1,4 @@
 import 'package:port_core/src/port_field.dart';
-import 'package:port_core/src/wrapper/port_field_node_wrapper.dart';
 import 'package:utils_core/utils_core.dart';
 
 class OptionsPortField<T, S> with IsPortFieldWrapper<T, S> {
@@ -21,10 +20,4 @@ class OptionsPortField<T, S> with IsPortFieldWrapper<T, S> {
   @override
   Validator<T, String> get validator =>
       portField.validator + Validator((item) => options.contains(item) ? null : '[$item] is not a valid choice!');
-}
-
-extension OptionsPortFieldExtensions<T, S> on PortField<T, S> {
-  List<T>? findOptionsOrNull() {
-    return PortFieldNodeWrapper.getWrapperOrNull(this)?.getOptionsOrNull(this);
-  }
 }

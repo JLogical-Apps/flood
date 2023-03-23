@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:port_core/port_core.dart';
+import 'package:port_core/src/display_name_port_field.dart';
 import 'package:port_core/src/validator_port_field.dart';
+import 'package:port_core/src/wrapper/port_field_node_wrapper.dart';
 import 'package:utils_core/utils_core.dart';
 
 typedef SimplePortField<T> = PortField<T, T>;
@@ -62,6 +64,17 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
         portField: this,
         additionalValidator: validator,
       );
+
+  List<T>? findOptionsOrNull() {
+    return PortFieldNodeWrapper.getWrapperOrNull(this)?.getOptionsOrNull(this);
+  }
+
+  PortField<T, S> withDisplayName(String displayName) =>
+      DisplayNamePortField(portField: this, displayName: displayName);
+
+  String? findDisplayNameOrNull() {
+    return PortFieldNodeWrapper.getWrapperOrNull(this)?.getDisplayNameOrNull(this);
+  }
 
   PortField<T, S> isNotNull() => withValidator(this + Validator.isNotNull());
 }

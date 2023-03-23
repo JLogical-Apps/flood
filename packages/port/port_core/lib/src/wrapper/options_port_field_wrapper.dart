@@ -6,4 +6,9 @@ class OptionsPortFieldNodeWrapper extends PortFieldNodeWrapper<OptionsPortField>
   List<R>? getOptionsOrNull<R>(OptionsPortField portField) {
     return portField.options.cast<R>();
   }
+
+  @override
+  String? getDisplayNameOrNull(OptionsPortField portField) {
+    return null;
+  }
 }

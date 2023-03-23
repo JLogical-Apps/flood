@@ -57,6 +57,14 @@ void main() {
     expect(result.isValid, true);
     expect(result.data.nameProperty.value, 'John Doe');
   });
+
+  test('Port for display name fields.', () async {
+    corePondContext.locate<TypeCoreComponent>().register(Data3.new, name: 'Data3');
+
+    final user = Data3();
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+    expect(userPort.getFieldByName(Data3.nameField).findDisplayNameOrNull(), 'Name');
+  });
 }
 
 class Data1 extends ValueObject {
@@ -70,6 +78,14 @@ class Data1 extends ValueObject {
 class Data2 extends ValueObject {
   static const nameField = 'name';
   late final nameProperty = field<String>(name: nameField).isNotBlank();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [nameProperty];
+}
+
+class Data3 extends ValueObject {
+  static const nameField = 'name';
+  late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank();
 
   @override
   List<ValueObjectBehavior> get behaviors => [nameProperty];
