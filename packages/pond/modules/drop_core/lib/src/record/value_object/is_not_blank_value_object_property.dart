@@ -32,6 +32,11 @@ class IsNotBlankValueObjectProperty<L> with IsValueObjectProperty<String, String
   }
 
   @override
+  void fromStateUnsafe(State state) {
+    property.fromStateUnsafe(state);
+  }
+
+  @override
   String get value => property.value == null || property.value!.isBlank
       ? (throw Exception('Cannot be blank! [$property]'))
       : property.value!;

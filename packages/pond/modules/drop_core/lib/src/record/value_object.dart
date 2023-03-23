@@ -25,6 +25,12 @@ abstract class ValueObject extends Record with EquatableMixin {
     }
   }
 
+  void setStateUnsafe(State state) {
+    for (final behavior in behaviors) {
+      behavior.fromStateUnsafe(state);
+    }
+  }
+
   /// An unsafe state of the ValueObject without the type set.
   State get scaffoldState {
     final state = behaviors.fold<State>(
@@ -54,7 +60,7 @@ abstract class ValueObject extends Record with EquatableMixin {
   }
 
   void copyFromUnsafe(DropCoreContext context, Stateful stateful) {
-    state = stateful.getStateUnsafe(context);
+    setStateUnsafe(stateful.getStateUnsafe(context));
   }
 
   @override

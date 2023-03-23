@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:port_core/src/port_field.dart';
 import 'package:port_core/src/port_mapper.dart';
 import 'package:port_core/src/port_submit_result.dart';
-import 'package:port_core/src/port_value.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -51,7 +51,7 @@ extension PortExtensions<T> on Port<T> {
 
   operator []=(String name, dynamic value) => setValue(name: name, value: value);
 
-  PortMapper<T, R> map<R>(FutureOr<R> Function(T sourceData, Port<T> port) mapper) {
+  PortMapper<T, R> map<R>(FutureOr<R?> Function(T sourceData, Port<T> port) mapper) {
     return PortMapper(port: this, mapper: mapper);
   }
 }

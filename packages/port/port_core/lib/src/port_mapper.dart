@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:port_core/port_core.dart';
 import 'package:port_core/src/port_submit_result.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:utils_core/utils_core.dart';
 
 class PortMapper<T, R> with IsPort<R> {
   final Port<T> port;
-  final FutureOr<R> Function(T source, Port<T> port) mapper;
+  final FutureOr<R?> Function(T source, Port<T> port) mapper;
 
   PortMapper({required this.port, required this.mapper});
 
@@ -23,8 +24,9 @@ class PortMapper<T, R> with IsPort<R> {
   Future<PortSubmitResult<R>> submit() async {
     final sourceResult = await port.submit();
     final sourceData = sourceResult.dataOrNull;
-    if (sourceData != null) {
-      return PortSubmitResult(data: await mapper(sourceData, port));
+    final mappedData = await sourceData?.mapIfNonNullAsync((data) => mapper(data, port));
+    if (mappedData != null) {
+      return PortSubmitResult(data: mappedData);
     } else {
       return PortSubmitResult(data: null);
     }

@@ -6,7 +6,7 @@ import 'package:utils/utils.dart';
 
 class PortFieldBuilder<T> extends HookWidget {
   final String fieldName;
-  final Widget Function(BuildContext context, PortField<T, dynamic> portField, T value, dynamic error) builder;
+  final Widget Function(BuildContext context, PortField portField, T value, dynamic error) builder;
 
   const PortFieldBuilder({super.key, required this.fieldName, required this.builder});
 
@@ -16,7 +16,7 @@ class PortFieldBuilder<T> extends HookWidget {
     useValueStream(port.getPortX());
     return builder(
       context,
-      port.getFieldByName(fieldName) as PortField<T, dynamic>,
+      port.getFieldByName(fieldName),
       port[fieldName],
       port.getErrorByName(fieldName),
     );

@@ -46,6 +46,11 @@ mixin IsValueObjectProperty<G, S, L> implements ValueObjectProperty<G, S, L> {
   State modifyStateUnsafe(State state) {
     return modifyState(state);
   }
+
+  @override
+  void fromStateUnsafe(State state) {
+    fromState(state);
+  }
 }
 
 extension ValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G, S, L> {
@@ -101,6 +106,9 @@ mixin IsValueObjectPropertyWrapper<G, S, L> implements ValueObjectPropertyWrappe
 
   @override
   void fromState(State state) => property.fromState(state);
+
+  @override
+  void fromStateUnsafe(State state) => property.fromStateUnsafe(state);
 
   @override
   State modifyState(State state) => property.modifyState(state);

@@ -1,10 +1,5 @@
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
-import 'package:example/features/envelope_rule/envelope_rule.dart';
-import 'package:example/features/envelope_rule/firstfruit_envelope_rule.dart';
-import 'package:example/features/envelope_rule/repeating_goal_envelope_rule.dart';
-import 'package:example/features/envelope_rule/surplus_envelope_rule.dart';
-import 'package:example/features/envelope_rule/target_goal_envelope_rule.dart';
 import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:example/features/transaction/envelope_transaction_entity.dart';
@@ -53,26 +48,6 @@ class EnvelopePage extends AppPage {
                       maxLines: 3,
                     ),
                     StyledDivider.subtle(),
-                    StyledOptionPortField<EnvelopeRule?>(
-                      fieldName: Envelope.ruleField,
-                      labelText: 'Rule',
-                      options: [
-                        null,
-                        envelopeRule?.as<FirstfruitEnvelopeRule>() ?? FirstfruitEnvelopeRule(),
-                        envelopeRule?.as<RepeatingGoalEnvelopeRule>() ?? RepeatingGoalEnvelopeRule(),
-                        envelopeRule?.as<TargetGoalEnvelopeRule>() ?? TargetGoalEnvelopeRule(),
-                        envelopeRule?.as<SurplusEnvelopeRule>() ?? SurplusEnvelopeRule(),
-                      ],
-                      widgetMapper: (rule) {
-                        final envelopeRuleWrapper = EnvelopeRuleCardWrapper.getWrapper(rule);
-                        return StyledList.row(
-                          children: [
-                            envelopeRuleWrapper.getIcon(rule),
-                            StyledText.button(envelopeRuleWrapper.getName(rule)),
-                          ],
-                        );
-                      },
-                    ),
                   ],
                 ));
                 if (result == null) {
@@ -131,7 +106,6 @@ class EnvelopePage extends AppPage {
                       ),
                       StyledRadioPortField<EnvelopeTransactionType>(
                         fieldName: 'transactionType',
-                        options: EnvelopeTransactionType.values,
                         stringMapper: (EnvelopeTransactionType value) => value.name,
                       ),
                     ],

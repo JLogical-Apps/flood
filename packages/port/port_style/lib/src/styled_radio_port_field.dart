@@ -12,7 +12,6 @@ class StyledRadioPortField<T> extends HookWidget {
 
   final bool enabled;
 
-  final List<T> options;
   final String Function(T value) stringMapper;
 
   const StyledRadioPortField({
@@ -21,7 +20,6 @@ class StyledRadioPortField<T> extends HookWidget {
     this.labelText,
     this.label,
     this.enabled = true,
-    required this.options,
     String Function(T value)? stringMapper,
   }) : stringMapper = stringMapper ?? _defaultMapper;
 
@@ -31,6 +29,8 @@ class StyledRadioPortField<T> extends HookWidget {
     return PortFieldBuilder<T>(
       fieldName: fieldName,
       builder: (context, field, value, error) {
+        final options =
+            field.findOptionsOrNull() ?? (throw Exception('Could not find options for port field [$field]'));
         return StyledRadioField<T>(
           value: value,
           labelText: labelText,
@@ -38,7 +38,7 @@ class StyledRadioPortField<T> extends HookWidget {
           errorText: error?.toString(),
           enabled: enabled,
           onChanged: (value) => port[fieldName] = value,
-          options: options,
+          options: options.cast<T>(),
           stringMapper: stringMapper,
         );
       },

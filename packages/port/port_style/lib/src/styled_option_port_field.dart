@@ -12,7 +12,6 @@ class StyledOptionPortField<T> extends HookWidget {
 
   final bool enabled;
 
-  final List<T> options;
   final Widget Function(T value) widgetMapper;
 
   const StyledOptionPortField({
@@ -21,7 +20,6 @@ class StyledOptionPortField<T> extends HookWidget {
     this.labelText,
     this.label,
     this.enabled = true,
-    required this.options,
     Widget Function(T value)? widgetMapper,
   }) : widgetMapper = widgetMapper ?? _defaultMapper;
 
@@ -31,6 +29,8 @@ class StyledOptionPortField<T> extends HookWidget {
     return PortFieldBuilder<T>(
       fieldName: fieldName,
       builder: (context, field, value, error) {
+        final options =
+            field.findOptionsOrNull() ?? (throw Exception('Could not find options for port field [$field]'));
         return StyledOptionField<T>(
           value: value,
           labelText: labelText,
@@ -38,7 +38,7 @@ class StyledOptionPortField<T> extends HookWidget {
           errorText: error?.toString(),
           enabled: enabled,
           onChanged: (value) => port[fieldName] = value,
-          options: options,
+          options: options.cast<T>(),
           widgetMapper: widgetMapper,
         );
       },
