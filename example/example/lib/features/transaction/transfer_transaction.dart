@@ -4,7 +4,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class TransferTransaction extends BudgetTransaction {
   static const nameField = 'name';
-  late final nameProperty = field<String>(name: nameField).isNotBlank();
+  late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank();
 
   static const fromEnvelopeField = 'from';
   late final fromEnvelopeProperty = reference<EnvelopeEntity>(name: fromEnvelopeField).required();
@@ -13,7 +13,8 @@ class TransferTransaction extends BudgetTransaction {
   late final toEnvelopeProperty = reference<EnvelopeEntity>(name: toEnvelopeField).required();
 
   static const amountCentsField = 'amount';
-  late final amountCentsProperty = field<int>(name: amountCentsField).withFallback(() => 0);
+  late final amountCentsProperty =
+      field<int>(name: amountCentsField).withDisplayName('Amount (\$)').withFallback(() => 0);
 
   @override
   List<String> get affectedEnvelopeIds => [fromEnvelopeProperty.value, toEnvelopeProperty.value];

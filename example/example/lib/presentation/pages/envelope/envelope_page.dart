@@ -38,13 +38,9 @@ class EnvelopePage extends AppPage {
                   titleText: 'Create New Envelope',
                   port: envelope.asPort(context.corePondContext),
                   children: [
-                    StyledTextFieldPortField(
-                      fieldName: Envelope.nameField,
-                      labelText: 'Name',
-                    ),
+                    StyledTextFieldPortField(fieldName: Envelope.nameField),
                     StyledTextFieldPortField(
                       fieldName: Envelope.descriptionField,
-                      labelText: 'Description',
                       maxLines: 3,
                     ),
                     StyledDivider.subtle(),
@@ -93,14 +89,8 @@ class EnvelopePage extends AppPage {
                         builder: (context, port) {
                           return StyledList.column(
                             children: [
-                              StyledTextFieldPortField(
-                                fieldName: EnvelopeTransaction.nameField,
-                                labelText: 'Name',
-                              ),
-                              StyledCurrencyFieldPortField(
-                                fieldName: EnvelopeTransaction.amountCentsField,
-                                labelText: 'Amount (\$)',
-                              ),
+                              StyledTextFieldPortField(fieldName: EnvelopeTransaction.nameField),
+                              StyledCurrencyFieldPortField(fieldName: EnvelopeTransaction.amountCentsField),
                             ],
                           );
                         },

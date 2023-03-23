@@ -4,12 +4,12 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 abstract class PercentRule extends EnvelopeRule {
   static const percentField = 'percent';
-  late final percentProperty = field<double>(name: percentField).required();
+  late final percentProperty = field<double>(name: percentField).withDisplayName('Percent').required();
 
   /// The maximum number of cents before requesting stops.
   /// If [null], then doesn't stop requesting cents.
   static const maximumCentsField = 'maximumCents';
-  late final maximumCentsProperty = field<int>(name: maximumCentsField);
+  late final maximumCentsProperty = field<int>(name: maximumCentsField).withDisplayName('Target (\$)');
 
   @override
   int requestIncome({

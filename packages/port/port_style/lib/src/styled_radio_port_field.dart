@@ -33,7 +33,7 @@ class StyledRadioPortField<T> extends HookWidget {
             field.findOptionsOrNull() ?? (throw Exception('Could not find options for port field [$field]'));
         return StyledRadioField<T>(
           value: value,
-          labelText: labelText,
+          labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
           errorText: error?.toString(),
           enabled: enabled,

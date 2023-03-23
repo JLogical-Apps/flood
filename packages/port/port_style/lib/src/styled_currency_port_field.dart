@@ -29,7 +29,7 @@ class StyledCurrencyFieldPortField extends HookWidget {
       builder: (context, field, amountCents, error) {
         return StyledTextField(
           text: amountCents?.formatCentsAsCurrency() ?? '',
-          labelText: labelText,
+          labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
           errorText: error?.toString(),
           enabled: enabled,

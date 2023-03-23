@@ -50,10 +50,7 @@ class BudgetPage extends AppPage {
                   titleText: 'Edit Budget',
                   port: budget.asPort(context.corePondContext),
                   children: [
-                    StyledTextFieldPortField(
-                      fieldName: Budget.nameField,
-                      labelText: 'Name',
-                    ),
+                    StyledTextFieldPortField(fieldName: Budget.nameField),
                   ],
                 ));
                 if (result == null) {
@@ -105,9 +102,10 @@ class BudgetPage extends AppPage {
                         titleText: 'Create New Envelope',
                         port: (Envelope()..budgetProperty.set(budgetEntity.id!)).asPort(context.corePondContext),
                         children: [
+                          StyledTextFieldPortField(fieldName: Envelope.nameField),
                           StyledTextFieldPortField(
-                            fieldName: Envelope.nameField,
-                            labelText: 'Name',
+                            fieldName: Envelope.descriptionField,
+                            maxLines: 3,
                           ),
                         ],
                       ));

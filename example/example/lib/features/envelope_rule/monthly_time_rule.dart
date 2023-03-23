@@ -3,7 +3,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class MonthlyTimeRule extends TimeRule {
   static const dayOfMonthField = 'dayOfMonth';
-  late final dayOfMonthProperty = field<int>(name: dayOfMonthField).required();
+  late final dayOfMonthProperty = field<int>(name: dayOfMonthField).withDisplayName('Day of Month').required();
 
   @override
   List<ValueObjectBehavior> get behaviors => [dayOfMonthProperty];

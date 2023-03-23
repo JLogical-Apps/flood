@@ -4,10 +4,10 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class Envelope extends ValueObject {
   static const nameField = 'name';
-  late final nameProperty = field<String>(name: nameField).isNotBlank();
+  late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank();
 
   static const descriptionField = 'description';
-  late final descriptionProperty = field<String>(name: descriptionField);
+  late final descriptionProperty = field<String>(name: descriptionField).withDisplayName('Description');
 
   static const budgetField = 'budget';
   late final budgetProperty = reference<BudgetEntity>(name: budgetField).required();
@@ -16,10 +16,10 @@ class Envelope extends ValueObject {
   late final amountCentsProperty = field<int>(name: amountCentsField).withFallback(() => 0);
 
   static const ruleField = 'rule';
-  late final ruleProperty = field<EnvelopeRule>(name: ruleField);
+  late final ruleProperty = field<EnvelopeRule>(name: ruleField).withDisplayName('Rule');
 
   static const lockedField = 'locked';
-  late final lockedProperty = field<bool>(name: lockedField).withFallback(() => false);
+  late final lockedProperty = field<bool>(name: lockedField).withDisplayName('Locked?').withFallback(() => false);
 
   @override
   List<ValueObjectBehavior> get behaviors => [

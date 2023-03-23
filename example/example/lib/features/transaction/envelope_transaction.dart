@@ -4,13 +4,13 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class EnvelopeTransaction extends BudgetTransaction {
   static const nameField = 'name';
-  late final nameProperty = field<String>(name: nameField).isNotBlank();
+  late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank();
 
   static const envelopeField = 'envelope';
   late final envelopeProperty = reference<EnvelopeEntity>(name: envelopeField).required();
 
   static const amountCentsField = 'amount';
-  late final amountCentsProperty = field<int>(name: amountCentsField).withFallback(() => 0);
+  late final amountCentsProperty = field<int>(name: amountCentsField).withDisplayName('Amount').withFallback(() => 0);
 
   @override
   List<String> get affectedEnvelopeIds => [envelopeProperty.value];

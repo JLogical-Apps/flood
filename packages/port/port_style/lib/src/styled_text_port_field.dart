@@ -37,7 +37,7 @@ class StyledTextFieldPortField extends HookWidget {
       builder: (context, field, text, error) {
         return StyledTextField(
           text: text ?? '',
-          labelText: labelText,
+          labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
           errorText: error?.toString(),
           hintText: hintText,
