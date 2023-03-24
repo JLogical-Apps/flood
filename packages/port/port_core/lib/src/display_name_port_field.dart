@@ -10,7 +10,7 @@ class DisplayNamePortField<T, S> with IsPortFieldWrapper<T, S> {
 
   @override
   PortField<T, S> copyWith({required T value, required error}) {
-    return DisplayNamePortField(
+    return DisplayNamePortField<T, S>(
       portField: portField.copyWith(value: value, error: error),
       displayName: displayName,
     );

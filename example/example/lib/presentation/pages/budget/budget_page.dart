@@ -1,4 +1,3 @@
-import 'package:example/features/budget/budget.dart';
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
@@ -49,9 +48,6 @@ class BudgetPage extends AppPage {
                 final result = await context.showStyledDialog(StyledPortDialog(
                   titleText: 'Edit Budget',
                   port: budget.asPort(context.corePondContext),
-                  children: [
-                    StyledTextFieldPortField(fieldName: Budget.nameField),
-                  ],
                 ));
                 if (result == null) {
                   return;

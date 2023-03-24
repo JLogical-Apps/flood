@@ -17,6 +17,10 @@ abstract class PortField<T, S> with IsValidatorWrapper<T, String> {
 
   PortField<T, S> copyWith({required T value, required dynamic error});
 
+  Type get dataType;
+
+  Type get submitType;
+
   factory PortField({
     required T value,
     dynamic error,
@@ -70,7 +74,7 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   }
 
   PortField<T, S> withDisplayName(String displayName) =>
-      DisplayNamePortField(portField: this, displayName: displayName);
+      DisplayNamePortField<T, S>(portField: this, displayName: displayName);
 
   String? findDisplayNameOrNull() {
     return PortFieldNodeWrapper.getWrapperOrNull(this)?.getDisplayNameOrNull(this);
@@ -79,7 +83,13 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   PortField<T, S> isNotNull() => withValidator(this + Validator.isNotNull());
 }
 
-mixin IsPortField<T, S> implements PortField<T, S> {}
+mixin IsPortField<T, S> implements PortField<T, S> {
+  @override
+  Type get dataType => T;
+
+  @override
+  Type get submitType => S;
+}
 
 class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<T, String> {
   @override
@@ -147,4 +157,10 @@ mixin IsPortFieldWrapper<T, S> implements PortFieldWrapper<T, S> {
   Future<String?> onValidate(data) {
     return validator.validate(data);
   }
+
+  @override
+  Type get dataType => portField.dataType;
+
+  @override
+  Type get submitType => portField.submitType;
 }
