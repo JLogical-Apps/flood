@@ -7,7 +7,7 @@ class Envelope extends ValueObject {
   late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank();
 
   static const descriptionField = 'description';
-  late final descriptionProperty = field<String>(name: descriptionField).withDisplayName('Description');
+  late final descriptionProperty = field<String>(name: descriptionField).withDisplayName('Description').multiline();
 
   static const budgetField = 'budget';
   late final budgetProperty = reference<BudgetEntity>(name: budgetField).required();

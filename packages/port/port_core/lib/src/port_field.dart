@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:port_core/port_core.dart';
 import 'package:port_core/src/display_name_port_field.dart';
+import 'package:port_core/src/map_port_field.dart';
+import 'package:port_core/src/multiline_port_field.dart';
 import 'package:port_core/src/validator_port_field.dart';
 import 'package:port_core/src/wrapper/port_field_node_wrapper.dart';
 import 'package:utils_core/utils_core.dart';
@@ -69,18 +71,43 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
         additionalValidator: validator,
       );
 
+  PortField<T2, S2> map<T2, S2>({
+    required T Function(T2 value) newToSourceMapper,
+    required T2 Function(T value) sourceToNewMapper,
+    required S2 Function(S value) submitMapper,
+  }) =>
+      MapPortField(
+        portField: this,
+        newToSourceMapper: newToSourceMapper,
+        sourceToNewMapper: sourceToNewMapper,
+        submitMapper: submitMapper,
+      );
+
+  PortField<T2, S2> cast<T2, S2>() => map<T2, S2>(
+        sourceToNewMapper: (data) => data as T2,
+        newToSourceMapper: (data) => data as T,
+        submitMapper: (submit) => submit as S2,
+      );
+
+  PortField<T, S> isNotNull() => withValidator(this + Validator.isNotNull());
+
   List<T>? findOptionsOrNull() {
     return PortFieldNodeWrapper.getWrapperOrNull(this)?.getOptionsOrNull(this);
   }
 
   PortField<T, S> withDisplayName(String displayName) =>
-      DisplayNamePortField<T, S>(portField: this, displayName: displayName);
+      DisplayNamePortField<T, S>(portField: this, displayNameGetter: () => displayName);
+
+  PortField<T, S> withDynamicDisplayName(String? Function() displayNameGetter) =>
+      DisplayNamePortField<T, S>(portField: this, displayNameGetter: displayNameGetter);
 
   String? findDisplayNameOrNull() {
     return PortFieldNodeWrapper.getWrapperOrNull(this)?.getDisplayNameOrNull(this);
   }
 
-  PortField<T, S> isNotNull() => withValidator(this + Validator.isNotNull());
+  bool findIsMultiline() {
+    return PortFieldNodeWrapper.getWrapperOrNull(this)?.isMultiline(this) ?? false;
+  }
 }
 
 mixin IsPortField<T, S> implements PortField<T, S> {
@@ -134,6 +161,9 @@ extension StringPortFieldExtensions<S> on PortField<String, S> {
   PortField<String, S> isNotBlank() => withValidator(Validator.isNotBlank().asNonNullable());
 
   PortField<String, S> isEmail() => withValidator(Validator.isEmail().asNonNullable());
+
+  PortField<String, S> multiline([bool isMultiline = true]) =>
+      MultilinePortField(portField: this, isMultiline: isMultiline);
 }
 
 abstract class PortFieldWrapper<T, S> implements PortField<T, S> {

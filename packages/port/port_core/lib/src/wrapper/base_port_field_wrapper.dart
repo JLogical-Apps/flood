@@ -11,4 +11,9 @@ class BasePortFieldWrapper extends PortFieldNodeWrapper<PortField> {
   String? getDisplayNameOrNull(PortField portField) {
     return null;
   }
+
+  @override
+  bool isMultiline(PortField portField) {
+    return false;
+  }
 }

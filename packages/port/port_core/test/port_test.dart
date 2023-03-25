@@ -100,4 +100,14 @@ void main() {
     expect(contactPort.getFieldByName('email').findDisplayNameOrNull(), 'Email');
     expect(contactPort.getFieldByName('gender').findDisplayNameOrNull(), 'Gender');
   });
+
+  test('multiline fields', () {
+    final contactPort = Port.of({
+      'name': PortField.string().withDisplayName('Name').isNotBlank(),
+      'notes': PortField.string().withDisplayName('Description').multiline(),
+    });
+
+    expect(contactPort.getFieldByName('name').findIsMultiline(), false);
+    expect(contactPort.getFieldByName('notes').findIsMultiline(), true);
+  });
 }

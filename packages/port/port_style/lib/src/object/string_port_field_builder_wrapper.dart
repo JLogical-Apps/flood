@@ -9,6 +9,7 @@ class StringPortFieldBuilderWrapper extends PortFieldBuilderWrapper {
     return StyledTextFieldPortField(
       fieldName: fieldName,
       labelText: portField.findDisplayNameOrNull(),
+      maxLines: portField.findIsMultiline() ? 3 : null,
     );
   }
 

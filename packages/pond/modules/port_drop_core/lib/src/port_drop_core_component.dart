@@ -6,6 +6,7 @@ import 'package:port_drop_core/src/behavior_wrappers/fallback_property_behavior_
 import 'package:port_drop_core/src/behavior_wrappers/fallback_replacement_property_behavior_wrapper.dart';
 import 'package:port_drop_core/src/behavior_wrappers/field_behavior_wrapper.dart';
 import 'package:port_drop_core/src/behavior_wrappers/is_not_blank_property_behavior_wrapper.dart';
+import 'package:port_drop_core/src/behavior_wrappers/multiline_property_behavior_wrapper.dart';
 import 'package:port_drop_core/src/behavior_wrappers/required_property_behavior_wrapper.dart';
 import 'package:port_drop_core/src/behavior_wrappers/string_field_behavior_wrapper.dart';
 import 'package:port_drop_core/src/port_generator_behavior_wrapper.dart';
@@ -24,6 +25,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       FallbackPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
       FallbackReplacementPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
       DisplayNamePropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
+      MultilinePropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
     ],
   );
 

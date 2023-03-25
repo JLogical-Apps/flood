@@ -11,4 +11,9 @@ class OptionsPortFieldNodeWrapper extends PortFieldNodeWrapper<OptionsPortField>
   String? getDisplayNameOrNull(OptionsPortField portField) {
     return null;
   }
+
+  @override
+  bool isMultiline(OptionsPortField portField) {
+    return false;
+  }
 }

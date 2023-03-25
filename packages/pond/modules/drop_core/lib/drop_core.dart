@@ -12,6 +12,7 @@ export 'src/record/value_object/fallback_replacement_value_object_property.dart'
 export 'src/record/value_object/fallback_value_object_property.dart';
 export 'src/record/value_object/field_value_object_property.dart';
 export 'src/record/value_object/is_not_blank_value_object_property.dart';
+export 'src/record/value_object/multiline_value_object_property.dart';
 export 'src/record/value_object/required_value_object_property.dart';
 export 'src/record/value_object/value_object_behavior.dart';
 export 'src/record/value_object/value_object_property.dart';

@@ -44,7 +44,7 @@ class StyledTextFieldPortField extends HookWidget {
           enabled: enabled,
           obscureText: obscureText,
           onChanged: (text) => port[fieldName] = text,
-          maxLines: maxLines,
+          maxLines: maxLines ?? (field.findIsMultiline() ? 3 : null),
         );
       },
     );

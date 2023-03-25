@@ -65,6 +65,15 @@ void main() {
     final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(userPort.getFieldByName(Data3.nameField).findDisplayNameOrNull(), 'Name');
   });
+
+  test('Port for multiline fields.', () async {
+    corePondContext.locate<TypeCoreComponent>().register(Data4.new, name: 'Data4');
+
+    final user = Data4();
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+    expect(userPort.getFieldByName(Data4.nameField).findIsMultiline(), false);
+    expect(userPort.getFieldByName(Data4.descriptionField).findIsMultiline(), true);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -89,4 +98,15 @@ class Data3 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [nameProperty];
+}
+
+class Data4 extends ValueObject {
+  static const nameField = 'name';
+  late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank();
+
+  static const descriptionField = 'description';
+  late final descriptionProperty = field<String>(name: descriptionField).withDisplayName('Description').multiline();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [nameProperty, descriptionProperty];
 }

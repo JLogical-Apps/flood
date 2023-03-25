@@ -4,7 +4,7 @@ class DisplayNameValueObjectProperty<G, S, L> with IsValueObjectPropertyWrapper<
   @override
   final ValueObjectProperty<G, S, L> property;
 
-  final String displayName;
+  final String? Function() displayNameGetter;
 
-  DisplayNameValueObjectProperty({required this.property, required this.displayName});
+  DisplayNameValueObjectProperty({required this.property, required this.displayNameGetter});
 }

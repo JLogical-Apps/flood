@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:utils_core/src/extensions/string_extensions.dart';
 import 'package:utils_core/src/validation/compound_validator.dart';
+import 'package:utils_core/src/validation/map_value_validator.dart';
 
 abstract class Validator<T, E> {
   FutureOr<E?> onValidate(T data);
@@ -153,6 +154,10 @@ extension ValidatorExtensions<T, E> on Validator<T, E> {
 
   Validator<T, E> operator +(Validator<T, E> validator) {
     return and(validator);
+  }
+
+  Validator<T2, E> map<T2>(T Function(T2 data) mapper) {
+    return MapValueValidator(validator: this, mapper: mapper);
   }
 }
 

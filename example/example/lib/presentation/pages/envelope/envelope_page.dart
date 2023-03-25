@@ -35,16 +35,8 @@ class EnvelopePage extends AppPage {
               iconData: Icons.edit,
               onPerform: (context) async {
                 final result = await context.showStyledDialog(StyledPortDialog(
-                  titleText: 'Create New Envelope',
+                  titleText: 'Edit Envelope',
                   port: envelope.asPort(context.corePondContext),
-                  children: [
-                    StyledTextFieldPortField(fieldName: Envelope.nameField),
-                    StyledTextFieldPortField(
-                      fieldName: Envelope.descriptionField,
-                      maxLines: 3,
-                    ),
-                    StyledDivider.subtle(),
-                  ],
                 ));
                 if (result == null) {
                   return;

@@ -12,6 +12,6 @@ class DisplayNamePropertyBehaviorWrapper extends WrapperPortGeneratorBehaviorWra
 
   @override
   PortField getPortField(DisplayNameValueObjectProperty behavior, PortField sourcePortField) {
-    return sourcePortField.withDisplayName(behavior.displayName);
+    return sourcePortField.withDynamicDisplayName(behavior.displayNameGetter);
   }
 }

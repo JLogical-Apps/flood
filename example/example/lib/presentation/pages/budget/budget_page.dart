@@ -66,7 +66,7 @@ class BudgetPage extends AppPage {
                   titleText: 'Confirm Delete Budget',
                   bodyText: 'Are you sure you want to delete the budget? You cannot undo this.',
                 ));
-                if (result == null) {
+                if (result != true) {
                   return;
                 }
 
@@ -97,13 +97,6 @@ class BudgetPage extends AppPage {
                       final result = await context.showStyledDialog(StyledPortDialog(
                         titleText: 'Create New Envelope',
                         port: (Envelope()..budgetProperty.set(budgetEntity.id!)).asPort(context.corePondContext),
-                        children: [
-                          StyledTextFieldPortField(fieldName: Envelope.nameField),
-                          StyledTextFieldPortField(
-                            fieldName: Envelope.descriptionField,
-                            maxLines: 3,
-                          ),
-                        ],
                       ));
                       if (result == null) {
                         return;

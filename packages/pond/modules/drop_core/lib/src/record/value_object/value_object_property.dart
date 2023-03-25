@@ -8,6 +8,7 @@ import 'package:drop_core/src/record/value_object/field_value_object_property.da
 import 'package:drop_core/src/record/value_object/is_not_blank_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/list_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/map_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/multiline_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/placeholder_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_value_object_property.dart';
@@ -59,8 +60,12 @@ extension ValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G, S, L>
     return PlaceholderValueObjectProperty(property: this, placeholder: placeholder);
   }
 
-  DisplayNameValueObjectProperty<G, S, L> withDisplayName(String displayName) {
-    return DisplayNameValueObjectProperty(property: this, displayName: displayName);
+  DisplayNameValueObjectProperty<G, S, L> withDisplayName(String? displayName) {
+    return DisplayNameValueObjectProperty(property: this, displayNameGetter: () => displayName);
+  }
+
+  DisplayNameValueObjectProperty<G, S, L> withDynamicDisplayName(String? Function() displayNameGetter) {
+    return DisplayNameValueObjectProperty(property: this, displayNameGetter: displayNameGetter);
   }
 }
 
@@ -76,9 +81,14 @@ extension GetterNullableValueObjectPropertyExtensions<G, S, L> on ValueObjectPro
   }
 }
 
-extension NullableStringValueObjectPropertyExtensions<L> on ValueObjectProperty<String?, String?, L> {
+extension NullableStringValueObjectPropertyExtensions<G extends String?, S extends String?, L>
+    on ValueObjectProperty<G, S, L> {
   IsNotBlankValueObjectProperty<L> isNotBlank() {
     return IsNotBlankValueObjectProperty(property: this);
+  }
+
+  MultilineValueObjectProperty<G, S, L> multiline([bool isMultiline = true]) {
+    return MultilineValueObjectProperty<G, S, L>(property: this, isMultiline: isMultiline);
   }
 }
 
