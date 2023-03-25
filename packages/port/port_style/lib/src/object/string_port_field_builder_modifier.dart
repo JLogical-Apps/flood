@@ -15,6 +15,6 @@ class StringPortFieldBuilderModifier extends PortFieldBuilderModifier {
 
   @override
   bool shouldModify(PortField input) {
-    return input.dataType == String;
+    return input is PortField<String?, String?>;
   }
 }
