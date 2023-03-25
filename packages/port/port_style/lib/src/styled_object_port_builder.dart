@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:port/port.dart';
-import 'package:port_style/src/object/port_field_builder_wrapper.dart';
+import 'package:port_style/src/object/port_field_builder_modifier.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
@@ -18,8 +18,8 @@ class StyledObjectPortBuilder extends HookWidget {
         final portFieldByName = port.portFieldByName;
         return StyledList.column(
           children: portFieldByName
-              .mapToIterable((name, portField) =>
-                  PortFieldBuilderWrapper.getPortFieldBuilderWrapper(portField)?.getWidgetOrNull(port, name, portField))
+              .mapToIterable((name, portField) => PortFieldBuilderModifier.getPortFieldBuilderModifier(portField)
+                  ?.getWidgetOrNull(port, name, portField))
               .whereNonNull()
               .toList(),
         );

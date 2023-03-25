@@ -3,7 +3,7 @@ import 'package:utils_core/utils_core.dart';
 
 void main() {
   test('wrapper resolver', () {
-    final wrapperResolver = Resolver.fromWrappers<AbstractTypeWrapper, dynamic>([
+    final wrapperResolver = Resolver.fromModifiers<AbstractTypeWrapper, dynamic>([
       IntTypeWrapper(),
       StringTypeWrapper(),
       BoolTypeWrapper(),
@@ -15,9 +15,9 @@ void main() {
   });
 }
 
-abstract class AbstractTypeWrapper<I> extends Wrapper<dynamic> {
+abstract class AbstractTypeWrapper<I> extends Modifier<dynamic> {
   @override
-  bool shouldWrap(input) {
+  bool shouldModify(input) {
     return input is I;
   }
 

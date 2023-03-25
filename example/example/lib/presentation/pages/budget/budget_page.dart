@@ -6,7 +6,7 @@ import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/pages/transaction/add_income_page.dart';
-import 'package:example/presentation/widget/envelope_rule/envelope_card_wrapper.dart';
+import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -114,7 +114,7 @@ class BudgetPage extends AppPage {
                         children: [
                           ...envelopeEntities.map((envelopeEntity) {
                             final envelopeRuleCardWrapper =
-                                EnvelopeRuleCardWrapper.getWrapper(envelopeEntity.value.ruleProperty.value);
+                                EnvelopeRuleCardModifier.getModifier(envelopeEntity.value.ruleProperty.value);
                             return StyledCard(
                               leading: envelopeRuleCardWrapper.getIcon(envelopeEntity.value.ruleProperty.value),
                               titleText: envelopeEntity.value.nameProperty.value,

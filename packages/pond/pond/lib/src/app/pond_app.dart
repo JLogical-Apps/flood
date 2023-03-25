@@ -5,7 +5,7 @@ import 'package:pond/src/app/component/app_pond_page_context.dart';
 import 'package:pond/src/app/context/app_pond_context.dart';
 import 'package:pond/src/app/navigation/navigation_build_context_extensions.dart';
 import 'package:pond/src/app/page/app_page.dart';
-import 'package:pond/src/app/page/vrouter_segment_wrapper.dart';
+import 'package:pond/src/app/page/vrouter_segment_modifier.dart';
 import 'package:provider/provider.dart';
 import 'package:utils/utils.dart';
 import 'package:vrouter/vrouter.dart';
@@ -44,7 +44,7 @@ class PondApp extends HookWidget {
             routes: [
               VGuard(
                 beforeEnter: (vRedirector) async => isAppContextLoadedValue.value
-                    ? vRedirector.to(VRouterSegmentWrapper.getVRouterPath(initialPageGetter()))
+                    ? vRedirector.to(VRouterSegmentModifier.getVRouterPath(initialPageGetter()))
                     : null,
                 stackedRoutes: [
                   VWidget.builder(
@@ -142,7 +142,7 @@ class PondApp extends HookWidget {
           },
           stackedRoutes: [
             VWidget.builder(
-              path: VRouterSegmentWrapper.getVRouterPath(page),
+              path: VRouterSegmentModifier.getVRouterPath(page),
               builder: (context, state) {
                 final path = state.path!;
                 if (page.matches(path)) {

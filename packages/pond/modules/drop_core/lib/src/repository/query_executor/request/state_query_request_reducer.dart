@@ -5,13 +5,13 @@ import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-abstract class StateQueryRequestReducer<QR extends QueryRequest<dynamic, T>, T> extends Wrapper<QueryRequest> {
+abstract class StateQueryRequestReducer<QR extends QueryRequest<dynamic, T>, T> extends Modifier<QueryRequest> {
   final DropCoreContext dropContext;
 
   StateQueryRequestReducer({required this.dropContext});
 
   @override
-  bool shouldWrap(QueryRequest input) {
+  bool shouldModify(QueryRequest input) {
     return input is QR;
   }
 

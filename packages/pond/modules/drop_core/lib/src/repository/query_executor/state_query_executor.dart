@@ -22,14 +22,14 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
 
   StateQueryExecutor({required this.statesX, required this.dropContext});
 
-  WrapperResolver<StateQueryReducer, Query> getQueryReducerResolver() => WrapperResolver(wrappers: [
+  ModifierResolver<StateQueryReducer, Query> getQueryReducerResolver() => ModifierResolver(modifiers: [
         FromStateQueryReducer(dropContext: dropContext),
         WhereStateQueryReducer(),
         OrderByStateQueryReducer(),
       ]);
 
-  WrapperResolver<StateQueryRequestReducer, QueryRequest> getQueryRequestReducerResolver<T>() =>
-      WrapperResolver(wrappers: [
+  ModifierResolver<StateQueryRequestReducer, QueryRequest> getQueryRequestReducerResolver<T>() =>
+      ModifierResolver(modifiers: [
         AllStatesStateQueryRequestReducer(dropContext: dropContext),
         FirstOrNullStateStateQueryRequestReducer(dropContext: dropContext),
         MapStateQueryRequestReducer(

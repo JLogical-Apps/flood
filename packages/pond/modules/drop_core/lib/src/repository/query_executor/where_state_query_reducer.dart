@@ -14,7 +14,8 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
 class WhereStateQueryReducer extends StateQueryReducer<WhereQuery> {
-  WrapperResolver<StateQueryConditionReducer, QueryCondition> getQueryReducerResolver() => WrapperResolver(wrappers: [
+  ModifierResolver<StateQueryConditionReducer, QueryCondition> getQueryReducerResolver() =>
+      ModifierResolver(modifiers: [
         ContainsStateQueryConditionReducer(),
         EqualsStateQueryConditionReducer(),
         IsGreaterThanStateQueryConditionReducer(),

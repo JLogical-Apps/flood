@@ -4,7 +4,7 @@ import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:example/features/transaction/envelope_transaction_entity.dart';
 import 'package:example/presentation/pages/home_page.dart';
-import 'package:example/presentation/widget/envelope_rule/envelope_card_wrapper.dart';
+import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -24,7 +24,7 @@ class EnvelopePage extends AppPage {
       builder: (EnvelopeEntity envelopeEntity) {
         final envelope = envelopeEntity.value;
         final envelopeRule = envelope.ruleProperty.value;
-        final envelopeRuleCardWrapper = EnvelopeRuleCardWrapper.getWrapper(envelope.ruleProperty.value);
+        final envelopeRuleCardWrapper = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
         return StyledPage(
           titleText: envelope.nameProperty.value,
           actions: [

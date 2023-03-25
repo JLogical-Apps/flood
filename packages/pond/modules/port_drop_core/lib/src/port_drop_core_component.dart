@@ -1,38 +1,38 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:port_core/port_core.dart';
-import 'package:port_drop_core/src/behavior_wrappers/currency_property_behavior_wrapper.dart';
-import 'package:port_drop_core/src/behavior_wrappers/display_name_property_behavior_wrapper.dart';
-import 'package:port_drop_core/src/behavior_wrappers/fallback_property_behavior_wrapper.dart';
-import 'package:port_drop_core/src/behavior_wrappers/fallback_replacement_property_behavior_wrapper.dart';
-import 'package:port_drop_core/src/behavior_wrappers/field_behavior_wrapper.dart';
-import 'package:port_drop_core/src/behavior_wrappers/is_not_blank_property_behavior_wrapper.dart';
-import 'package:port_drop_core/src/behavior_wrappers/multiline_property_behavior_wrapper.dart';
-import 'package:port_drop_core/src/behavior_wrappers/required_property_behavior_wrapper.dart';
-import 'package:port_drop_core/src/behavior_wrappers/string_field_behavior_wrapper.dart';
-import 'package:port_drop_core/src/port_generator_behavior_wrapper.dart';
+import 'package:port_drop_core/src/behavior_modifiers/currency_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/display_name_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/fallback_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/fallback_replacement_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/field_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/is_not_blank_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/string_field_behavior_modifier.dart';
+import 'package:port_drop_core/src/port_generator_behavior_modifier.dart';
 import 'package:type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class PortDropCoreComponent with IsCorePondComponent {
-  late final WrapperResolver<PortGeneratorBehaviorWrapper, ValueObjectBehavior> behaviorWrapperResolver =
-      Resolver.fromWrappers(
+  late final ModifierResolver<PortGeneratorBehaviorModifier, ValueObjectBehavior> behaviorModifierResolver =
+      Resolver.fromModifiers(
     [
-      StringFieldBehaviorWrapper(),
-      FieldBehaviorWrapper(),
-      RequiredPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
-      IsNotBlankPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
-      FallbackPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
-      FallbackReplacementPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
-      DisplayNamePropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
-      MultilinePropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
-      CurrencyPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
+      StringFieldBehaviorModifier(),
+      FieldBehavioModifier(),
+      RequiredPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      IsNotBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      FallbackPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      FallbackReplacementPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      DisplayNamePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      MultilinePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      CurrencyPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
     ],
   );
 
-  PortGeneratorBehaviorWrapper? getBehaviorWrapperOrNull(ValueObjectBehavior behavior) {
-    return behaviorWrapperResolver.resolveOrNull(behavior);
+  PortGeneratorBehaviorModifier? getBehaviorModifierOrNull(ValueObjectBehavior behavior) {
+    return behaviorModifierResolver.resolveOrNull(behavior);
   }
 
   @override
@@ -45,12 +45,12 @@ class PortDropCoreComponent with IsCorePondComponent {
     var portFieldByName = <String, PortField>{};
 
     for (final behavior in valueObject.behaviors) {
-      final wrapper = behaviorWrapperResolver.resolveOrNull(behavior);
-      if (wrapper == null) {
+      final modifier = behaviorModifierResolver.resolveOrNull(behavior);
+      if (modifier == null) {
         continue;
       }
 
-      final behaviorPortFieldByName = wrapper.getPortFieldByName(behavior);
+      final behaviorPortFieldByName = modifier.getPortFieldByName(behavior);
       portFieldByName = {...portFieldByName, ...behaviorPortFieldByName};
     }
 

@@ -6,7 +6,7 @@ import 'package:port_core/src/display_name_port_field.dart';
 import 'package:port_core/src/map_port_field.dart';
 import 'package:port_core/src/multiline_port_field.dart';
 import 'package:port_core/src/validator_port_field.dart';
-import 'package:port_core/src/wrapper/port_field_node_wrapper.dart';
+import 'package:port_core/src/wrapper/port_field_node_modifier.dart';
 import 'package:utils_core/utils_core.dart';
 
 typedef SimplePortField<T> = PortField<T, T>;
@@ -93,7 +93,7 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   PortField<T, S> isNotNull() => withValidator(this + Validator.isNotNull());
 
   List<T>? findOptionsOrNull() {
-    return PortFieldNodeWrapper.getWrapperOrNull(this)?.getOptionsOrNull(this);
+    return PortFieldNodeModifier.getModifierOrNull(this)?.getOptionsOrNull(this);
   }
 
   PortField<T, S> withDisplayName(String displayName) =>
@@ -103,15 +103,15 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
       DisplayNamePortField<T, S>(portField: this, displayNameGetter: displayNameGetter);
 
   String? findDisplayNameOrNull() {
-    return PortFieldNodeWrapper.getWrapperOrNull(this)?.getDisplayNameOrNull(this);
+    return PortFieldNodeModifier.getModifierOrNull(this)?.getDisplayNameOrNull(this);
   }
 
   bool findIsMultiline() {
-    return PortFieldNodeWrapper.getWrapperOrNull(this)?.isMultiline(this) ?? false;
+    return PortFieldNodeModifier.getModifierOrNull(this)?.isMultiline(this) ?? false;
   }
 
   bool findIsCurrency() {
-    return PortFieldNodeWrapper.getWrapperOrNull(this)?.isCurrency(this) ?? false;
+    return PortFieldNodeModifier.getModifierOrNull(this)?.isCurrency(this) ?? false;
   }
 }
 

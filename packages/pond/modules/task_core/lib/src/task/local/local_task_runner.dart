@@ -1,5 +1,5 @@
 import 'package:path_core/path_core.dart';
-import 'package:task_core/src/task/local/local_trigger_wrapper.dart';
+import 'package:task_core/src/task/local/local_trigger_modifier.dart';
 import 'package:task_core/src/task/task.dart';
 import 'package:task_core/src/task/task_request.dart';
 import 'package:task_core/src/task/task_runner.dart';
@@ -15,6 +15,6 @@ class LocalTaskRunner with IsTaskRunner {
 
   @override
   Future onRegisterTrigger(Trigger trigger) async {
-    LocalTriggerWrapper.triggerWrapperResolver.resolveOrNull(trigger)?.onRegister(trigger);
+    LocalTriggerModifier.triggerWrapperResolver.resolveOrNull(trigger)?.onRegister(trigger);
   }
 }
