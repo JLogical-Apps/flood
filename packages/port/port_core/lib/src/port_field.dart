@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:port_core/port_core.dart';
+import 'package:port_core/src/currency_port_field.dart';
 import 'package:port_core/src/display_name_port_field.dart';
 import 'package:port_core/src/map_port_field.dart';
 import 'package:port_core/src/multiline_port_field.dart';
@@ -108,6 +109,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   bool findIsMultiline() {
     return PortFieldNodeWrapper.getWrapperOrNull(this)?.isMultiline(this) ?? false;
   }
+
+  bool findIsCurrency() {
+    return PortFieldNodeWrapper.getWrapperOrNull(this)?.isCurrency(this) ?? false;
+  }
 }
 
 mixin IsPortField<T, S> implements PortField<T, S> {
@@ -164,6 +169,11 @@ extension StringPortFieldExtensions<S> on PortField<String, S> {
 
   PortField<String, S> multiline([bool isMultiline = true]) =>
       MultilinePortField(portField: this, isMultiline: isMultiline);
+}
+
+extension IntPortFieldExtensions<T extends int?, S> on PortField<T, S> {
+  PortField<T, S> currency([bool isCurrency = true]) =>
+      CurrencyPortField<T, S>(portField: this, isCurrency: isCurrency);
 }
 
 abstract class PortFieldWrapper<T, S> implements PortField<T, S> {

@@ -76,17 +76,7 @@ class EnvelopePage extends AppPage {
                     port: port,
                     titleText: 'Create Transaction',
                     children: [
-                      PortBuilder(
-                        port: transactionPort,
-                        builder: (context, port) {
-                          return StyledList.column(
-                            children: [
-                              StyledTextFieldPortField(fieldName: EnvelopeTransaction.nameField),
-                              StyledCurrencyFieldPortField(fieldName: EnvelopeTransaction.amountCentsField),
-                            ],
-                          );
-                        },
-                      ),
+                      StyledObjectPortBuilder(port: transactionPort),
                       StyledDivider.subtle(),
                       StyledRadioPortField<EnvelopeTransactionType>(
                         fieldName: 'transactionType',

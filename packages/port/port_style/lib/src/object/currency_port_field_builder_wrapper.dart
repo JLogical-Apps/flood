@@ -3,18 +3,17 @@ import 'package:port/port.dart';
 import 'package:port_style/port_style.dart';
 import 'package:port_style/src/object/port_field_builder_wrapper.dart';
 
-class StringPortFieldBuilderWrapper extends PortFieldBuilderWrapper {
+class CurrencyPortFieldBuilderWrapper extends PortFieldBuilderWrapper {
   @override
   Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
-    return StyledTextFieldPortField(
+    return StyledCurrencyFieldPortField(
       fieldName: fieldName,
       labelText: portField.findDisplayNameOrNull(),
-      maxLines: portField.findIsMultiline() ? 3 : 1,
     );
   }
 
   @override
   bool shouldWrap(PortField input) {
-    return input.dataType == String;
+    return input.findIsCurrency();
   }
 }

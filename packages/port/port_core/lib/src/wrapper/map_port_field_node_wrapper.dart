@@ -21,4 +21,9 @@ class MapPortFieldNodeWrapper extends PortFieldNodeWrapper<MapPortField> {
   bool isMultiline(MapPortField portField) {
     return wrapperGetter(portField.portField)?.isMultiline(portField.portField) ?? false;
   }
+
+  @override
+  bool isCurrency(MapPortField portField) {
+    return wrapperGetter(portField.portField)?.isCurrency(portField.portField) ?? false;
+  }
 }

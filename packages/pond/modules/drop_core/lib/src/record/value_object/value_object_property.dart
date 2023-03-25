@@ -1,6 +1,7 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object/computed_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/currency_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/display_name_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
@@ -89,6 +90,12 @@ extension NullableStringValueObjectPropertyExtensions<G extends String?, S exten
 
   MultilineValueObjectProperty<G, S, L> multiline([bool isMultiline = true]) {
     return MultilineValueObjectProperty<G, S, L>(property: this, isMultiline: isMultiline);
+  }
+}
+
+extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int?, L> on ValueObjectProperty<G, S, L> {
+  CurrencyValueObjectProperty<G, S, L> currency([bool isCurrency = true]) {
+    return CurrencyValueObjectProperty<G, S, L>(property: this, isCurrency: isCurrency);
   }
 }
 

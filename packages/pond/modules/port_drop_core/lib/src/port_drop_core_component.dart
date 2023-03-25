@@ -1,6 +1,7 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:port_core/port_core.dart';
+import 'package:port_drop_core/src/behavior_wrappers/currency_property_behavior_wrapper.dart';
 import 'package:port_drop_core/src/behavior_wrappers/display_name_property_behavior_wrapper.dart';
 import 'package:port_drop_core/src/behavior_wrappers/fallback_property_behavior_wrapper.dart';
 import 'package:port_drop_core/src/behavior_wrappers/fallback_replacement_property_behavior_wrapper.dart';
@@ -26,6 +27,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       FallbackReplacementPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
       DisplayNamePropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
       MultilinePropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
+      CurrencyPropertyBehaviorWrapper(wrapperGetter: getBehaviorWrapperOrNull),
     ],
   );
 

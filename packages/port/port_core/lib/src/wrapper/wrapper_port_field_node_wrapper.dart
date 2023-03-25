@@ -20,4 +20,9 @@ class WrapperPortFieldNodeWrapper<T extends PortFieldWrapper> extends PortFieldN
   bool isMultiline(T portField) {
     return wrapperGetter(portField.portField)?.isMultiline(portField.portField) ?? false;
   }
+
+  @override
+  bool isCurrency(T portField) {
+    return wrapperGetter(portField.portField)?.isCurrency(portField.portField) ?? false;
+  }
 }
