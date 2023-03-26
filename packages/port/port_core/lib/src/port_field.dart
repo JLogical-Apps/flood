@@ -4,9 +4,10 @@ import 'package:port_core/port_core.dart';
 import 'package:port_core/src/currency_port_field.dart';
 import 'package:port_core/src/display_name_port_field.dart';
 import 'package:port_core/src/map_port_field.dart';
+import 'package:port_core/src/modifier/port_field_node_modifier.dart';
 import 'package:port_core/src/multiline_port_field.dart';
 import 'package:port_core/src/validator_port_field.dart';
-import 'package:port_core/src/wrapper/port_field_node_modifier.dart';
+import 'package:type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 typedef SimplePortField<T> = PortField<T, T>;
@@ -43,6 +44,22 @@ abstract class PortField<T, S> with IsValidatorWrapper<T, String> {
 
   static SimplePortField<T> option<T>({required List<T> options, required T initialValue}) {
     return OptionsPortField(portField: PortField(value: initialValue), options: options);
+  }
+
+  static SimplePortField<T> interface<T>({required T initialValue, required TypeContext typeContext}) {
+    return InterfacePortField(portField: PortField(value: initialValue), typeContext: typeContext);
+  }
+
+  static SimplePortField interfaceRuntime({
+    required Type baseType,
+    required dynamic initialValue,
+    required TypeContext typeContext,
+  }) {
+    return InterfacePortField(
+      portField: PortField(value: initialValue),
+      baseType: baseType,
+      typeContext: typeContext,
+    );
   }
 
   static PortField<Port<T>, T> port<T>({required Port<T> port}) {
@@ -92,15 +109,19 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
 
   PortField<T, S> isNotNull() => withValidator(this + Validator.isNotNull());
 
-  List<T>? findOptionsOrNull() {
-    return PortFieldNodeModifier.getModifierOrNull(this)?.getOptionsOrNull(this);
-  }
-
   PortField<T, S> withDisplayName(String displayName) =>
       DisplayNamePortField<T, S>(portField: this, displayNameGetter: () => displayName);
 
   PortField<T, S> withDynamicDisplayName(String? Function() displayNameGetter) =>
       DisplayNamePortField<T, S>(portField: this, displayNameGetter: displayNameGetter);
+
+  InterfacePortField? findInterfaceFieldOrNull() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.findInterfacePortFieldOrNull(this);
+  }
+
+  List<T>? findOptionsOrNull() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.getOptionsOrNull(this);
+  }
 
   String? findDisplayNameOrNull() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.getDisplayNameOrNull(this);

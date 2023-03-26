@@ -64,7 +64,7 @@ abstract class ValueObject extends Record with EquatableMixin {
   }
 
   @override
-  List<Object> get props => [scaffoldState];
+  List<Object> get props => [scaffoldStateUnsafe];
 
   FieldValueObjectProperty<T, dynamic> field<T>({required String name}) => ValueObjectProperty.field<T>(name: name);
 

@@ -1,5 +1,6 @@
+import 'package:port_core/src/interface_port_field.dart';
+import 'package:port_core/src/modifier/port_field_node_modifier.dart';
 import 'package:port_core/src/port_field.dart';
-import 'package:port_core/src/wrapper/port_field_node_modifier.dart';
 
 class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortFieldNodeModifier<T> {
   final PortFieldNodeModifier? Function(PortField portField) modifierGetter;
@@ -24,5 +25,10 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   @override
   bool isCurrency(T portField) {
     return modifierGetter(portField.portField)?.isCurrency(portField.portField) ?? false;
+  }
+
+  @override
+  InterfacePortField? findInterfacePortFieldOrNull(T portField) {
+    return modifierGetter(portField.portField)?.findInterfacePortFieldOrNull(portField.portField);
   }
 }

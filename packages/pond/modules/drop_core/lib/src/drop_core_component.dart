@@ -12,6 +12,9 @@ class DropCoreComponent extends CorePondComponent with IsDropCoreContext, IsRepo
   @override
   List<CorePondComponentBehavior> get behaviors => [
         CorePondComponentBehavior.dependency<TypeCoreComponent>(),
+        CorePondComponentBehavior(onLoad: (context, component) {
+          context.locate<TypeCoreComponent>().registerAbstract<ValueObject>(name: 'ValueObject');
+        })
       ];
 
   @override

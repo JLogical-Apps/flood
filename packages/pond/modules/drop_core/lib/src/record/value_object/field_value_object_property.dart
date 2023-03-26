@@ -8,7 +8,9 @@ class FieldValueObjectProperty<T, L> with IsValueObjectProperty<T?, T?, L> {
   @override
   T? value;
 
-  FieldValueObjectProperty({required this.name, this.value});
+  final Type fieldType;
+
+  FieldValueObjectProperty({required this.name, this.value}) : fieldType = T;
 
   @override
   set(T? value) => this.value = value;

@@ -20,7 +20,6 @@ extension TypeContextExtensions on TypeContext {
   RuntimeType<T> register<T>(T Function() newInstanceGetter, {required String name, List<Type>? parents}) {
     final runtimeType = RuntimeType<T>(
       context: this,
-      type: T,
       name: name,
       newInstanceGetter: newInstanceGetter,
       parents: parents?.map((type) => getRuntimeTypeRuntime(type)).toList() ?? [],
@@ -32,7 +31,6 @@ extension TypeContextExtensions on TypeContext {
   RuntimeType<T> registerAbstract<T>({required String name, List<Type>? parents}) {
     final runtimeType = RuntimeType<T>.abstract(
       context: this,
-      type: T,
       name: name,
       parents: parents?.map((type) => getRuntimeTypeRuntime(type)).toList() ?? [],
     );
@@ -41,7 +39,7 @@ extension TypeContextExtensions on TypeContext {
   }
 
   RuntimeType? getRuntimeTypeOrNullRuntime(Type type) {
-    return runtimeTypes.firstWhereOrNull((runtimeType) => runtimeType.type == type);
+    return runtimeTypes.firstWhereOrNull((runtimeType) => runtimeType.type == type || runtimeType.nullableType == type);
   }
 
   RuntimeType getRuntimeTypeRuntime(Type type) {

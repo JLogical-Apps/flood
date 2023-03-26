@@ -1,5 +1,6 @@
 import 'package:port_core/port_core.dart';
 import 'package:test/test.dart';
+import 'package:type/type.dart';
 
 void main() {
   test('basic port', () async {
@@ -110,4 +111,27 @@ void main() {
     expect(contactPort.getFieldByName('name').findIsMultiline(), false);
     expect(contactPort.getFieldByName('notes').findIsMultiline(), true);
   });
+
+  test('interface fields', () async {
+    final typeContext = TypeContext()
+      ..registerAbstract<Person>(name: 'Person')
+      ..register<Teacher>(Teacher.new, name: 'Teacher', parents: [Person]);
+    final personPort = Port.of({
+      'person': PortField.interface<Person?>(initialValue: null, typeContext: typeContext).isNotNull(),
+    });
+
+    var result = await personPort.submit();
+    expect(result.isValid, false);
+
+    personPort['person'] = Teacher();
+    result = await personPort.submit();
+    expect(result.data['person'], isA<Teacher>());
+
+    final personField = personPort.getFieldByName('person');
+    expect(personField.findInterfaceFieldOrNull(), isA<InterfacePortField>());
+  });
 }
+
+abstract class Person {}
+
+class Teacher implements Person {}

@@ -1,11 +1,12 @@
-import 'package:port_core/src/port_field.dart';
-import 'package:port_core/src/wrapper/base_port_field_modifier.dart';
-import 'package:port_core/src/wrapper/currency_port_field_modifier.dart';
-import 'package:port_core/src/wrapper/display_name_port_field_modifier.dart';
-import 'package:port_core/src/wrapper/map_port_field_node_modifier.dart';
-import 'package:port_core/src/wrapper/multiline_port_field_modifier.dart';
-import 'package:port_core/src/wrapper/options_port_field_modifier.dart';
-import 'package:port_core/src/wrapper/wrapper_port_field_node_modifier.dart';
+import 'package:port_core/port_core.dart';
+import 'package:port_core/src/modifier/base_port_field_modifier.dart';
+import 'package:port_core/src/modifier/currency_port_field_modifier.dart';
+import 'package:port_core/src/modifier/display_name_port_field_modifier.dart';
+import 'package:port_core/src/modifier/interface_port_field_modifier.dart';
+import 'package:port_core/src/modifier/map_port_field_node_modifier.dart';
+import 'package:port_core/src/modifier/multiline_port_field_modifier.dart';
+import 'package:port_core/src/modifier/options_port_field_modifier.dart';
+import 'package:port_core/src/modifier/wrapper_port_field_node_modifier.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
@@ -26,8 +27,13 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return false;
   }
 
+  InterfacePortField? findInterfacePortFieldOrNull(T portField) {
+    return null;
+  }
+
   static final nodeModifierResolver = ModifierResolver<PortFieldNodeModifier, PortField>(modifiers: [
     OptionsPortFieldNodeModifier(),
+    InterfacePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     DisplayNamePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     MultilinePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     CurrencyPortFieldNodeModifier(modifierGetter: getModifierOrNull),

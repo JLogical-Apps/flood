@@ -57,6 +57,12 @@ mixin IsValueObjectProperty<G, S, L> implements ValueObjectProperty<G, S, L> {
 }
 
 extension ValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G, S, L> {
+  Type get getterType => G;
+
+  Type get setterType => S;
+
+  Type get loadType => L;
+
   PlaceholderValueObjectProperty<G, S, L> withPlaceholder(G Function() placeholder) {
     return PlaceholderValueObjectProperty(property: this, placeholder: placeholder);
   }

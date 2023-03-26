@@ -4,7 +4,7 @@ import 'package:utils_core/utils_core.dart';
 
 abstract class PortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
     with IsTypedModifier<T, ValueObjectBehavior> {
-  Map<String, PortField> getPortFieldByName(ValueObjectBehavior behavior);
+  Map<String, PortField> getPortFieldByName(T behavior);
 }
 
 abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
