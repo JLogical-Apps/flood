@@ -27,13 +27,13 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return false;
   }
 
-  InterfacePortField? findInterfacePortFieldOrNull(T portField) {
+  StagePortField? findStagePortFieldOrNull(T portField) {
     return null;
   }
 
   static final nodeModifierResolver = ModifierResolver<PortFieldNodeModifier, PortField>(modifiers: [
     OptionsPortFieldNodeModifier(),
-    InterfacePortFieldNodeModifier(modifierGetter: getModifierOrNull),
+    StagePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     DisplayNamePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     MultilinePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     CurrencyPortFieldNodeModifier(modifierGetter: getModifierOrNull),

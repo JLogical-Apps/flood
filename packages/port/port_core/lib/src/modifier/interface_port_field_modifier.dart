@@ -1,20 +1,16 @@
-import 'package:port_core/src/interface_port_field.dart';
+import 'package:port_core/port_core.dart';
 import 'package:port_core/src/modifier/wrapper_port_field_node_modifier.dart';
-import 'package:type/type.dart';
 
-class InterfacePortFieldNodeModifier extends WrapperPortFieldNodeModifier<InterfacePortField> {
-  InterfacePortFieldNodeModifier({required super.modifierGetter});
+class StagePortFieldNodeModifier extends WrapperPortFieldNodeModifier<StagePortField> {
+  StagePortFieldNodeModifier({required super.modifierGetter});
 
   @override
-  List<R>? getOptionsOrNull<R>(InterfacePortField portField) {
-    final baseRuntimeType = portField.typeContext.getRuntimeTypeRuntime(portField.baseType);
-    final descendants = portField.typeContext.getDescendantsOf(baseRuntimeType);
-
-    return descendants.map((type) => type.createInstance()).cast<R>().toList();
+  List<R>? getOptionsOrNull<R>(StagePortField portField) {
+    return portField.options.cast<R>();
   }
 
   @override
-  InterfacePortField? findInterfacePortFieldOrNull(InterfacePortField portField) {
+  StagePortField? findStagePortFieldOrNull(StagePortField portField) {
     return portField;
   }
 }

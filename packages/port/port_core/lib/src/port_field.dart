@@ -7,7 +7,6 @@ import 'package:port_core/src/map_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
 import 'package:port_core/src/multiline_port_field.dart';
 import 'package:port_core/src/validator_port_field.dart';
-import 'package:type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 typedef SimplePortField<T> = PortField<T, T>;
@@ -46,20 +45,12 @@ abstract class PortField<T, S> with IsValidatorWrapper<T, String> {
     return OptionsPortField(portField: PortField(value: initialValue), options: options);
   }
 
-  static SimplePortField<T> interface<T>({required T initialValue, required TypeContext typeContext}) {
-    return InterfacePortField(portField: PortField(value: initialValue), typeContext: typeContext);
-  }
-
-  static SimplePortField interfaceRuntime({
-    required Type baseType,
-    required dynamic initialValue,
-    required TypeContext typeContext,
+  static StagePortField<E, T> stage<E, T>({
+    required E initialValue,
+    required List<E> options,
+    required Port<T> Function(E option) portMapper,
   }) {
-    return InterfacePortField(
-      portField: PortField(value: initialValue),
-      baseType: baseType,
-      typeContext: typeContext,
-    );
+    return StagePortField<E, T>(initialValue: initialValue, options: options, portMapper: portMapper);
   }
 
   static PortField<Port<T>, T> port<T>({required Port<T> port}) {
@@ -115,8 +106,8 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   PortField<T, S> withDynamicDisplayName(String? Function() displayNameGetter) =>
       DisplayNamePortField<T, S>(portField: this, displayNameGetter: displayNameGetter);
 
-  InterfacePortField? findInterfaceFieldOrNull() {
-    return PortFieldNodeModifier.getModifierOrNull(this)?.findInterfacePortFieldOrNull(this);
+  StagePortField? findStageFieldOrNull() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.findStagePortFieldOrNull(this);
   }
 
   List<T>? findOptionsOrNull() {

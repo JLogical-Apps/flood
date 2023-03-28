@@ -74,6 +74,42 @@ void main() {
     expect(userPort.getFieldByName(Data4.nameField).findIsMultiline(), false);
     expect(userPort.getFieldByName(Data4.descriptionField).findIsMultiline(), true);
   });
+
+  test('ValueObject field.', () async {
+    corePondContext.locate<TypeCoreComponent>()
+      ..register(Data5.new, name: 'Data5')
+      ..registerAbstract<Person>(name: 'Person')
+      ..register<Student>(Student.new, name: 'Student', parents: [Person])
+      ..register<Teacher>(Teacher.new, name: 'Teacher', parents: [Person]);
+
+    final user = Data5();
+    var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+    expect(userPort.getFieldByName(Data5.personField).findStageFieldOrNull(), isNotNull);
+    expect((userPort[Data5.personField] as StageValue).value, isNull);
+
+    user.personProperty.set(Teacher());
+    userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+    expect(
+      (userPort[Data5.personField] as StageValue).value,
+      corePondContext.locate<TypeCoreComponent>().getRuntimeType<Teacher>(),
+    );
+    var result = await userPort.submit();
+    expect(result.data.personProperty.value, isA<Teacher>());
+
+    user.personProperty.set(Student());
+    userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+    expect(
+      (userPort[Data5.personField] as StageValue).value,
+      corePondContext.locate<TypeCoreComponent>().getRuntimeType<Student>(),
+    );
+    result = await userPort.submit();
+    expect(result.isValid, false);
+
+    (userPort[Data5.personField] as StageValue).port![Student.nameField] = 'John Doe';
+
+    result = await userPort.submit();
+    expect((result.data.personProperty.value as Student).nameProperty.value, 'John Doe');
+  });
 }
 
 class Data1 extends ValueObject {
@@ -110,3 +146,23 @@ class Data4 extends ValueObject {
   @override
   List<ValueObjectBehavior> get behaviors => [nameProperty, descriptionProperty];
 }
+
+class Data5 extends ValueObject {
+  static const personField = 'person';
+  late final personProperty = field<Person>(name: personField).withDisplayName('Person');
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [personProperty];
+}
+
+abstract class Person extends ValueObject {}
+
+class Student extends Person {
+  static const nameField = 'name';
+  late final nameProperty = field<String>(name: nameField).isNotBlank();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [nameProperty];
+}
+
+class Teacher extends Person {}

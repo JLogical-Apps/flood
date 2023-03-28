@@ -27,6 +27,8 @@ class RuntimeType<T> extends Equatable {
 
   bool get isAbstract => newInstanceGetter == null;
 
+  bool get isConcrete => !isAbstract;
+
   T? createInstanceOrNull() {
     return newInstanceGetter?.call();
   }
@@ -51,8 +53,16 @@ class RuntimeType<T> extends Equatable {
     return context.getChildrenOf(this);
   }
 
+  List<RuntimeType> getConcreteChildren() {
+    return getChildren().where((type) => type.isConcrete).toList();
+  }
+
   List<RuntimeType> getDescendants() {
     return context.getDescendantsOf(this);
+  }
+
+  List<RuntimeType> getConcreteDescendants() {
+    return getDescendants().where((type) => type.isConcrete).toList();
   }
 
   @override

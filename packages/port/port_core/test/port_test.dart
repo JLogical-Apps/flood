@@ -1,6 +1,5 @@
 import 'package:port_core/port_core.dart';
 import 'package:test/test.dart';
-import 'package:type/type.dart';
 
 void main() {
   test('basic port', () async {
@@ -113,25 +112,44 @@ void main() {
   });
 
   test('interface fields', () async {
-    final typeContext = TypeContext()
-      ..registerAbstract<Person>(name: 'Person')
-      ..register<Teacher>(Teacher.new, name: 'Teacher', parents: [Person]);
+    final portByType = <Type, Port<Person>>{
+      Student: Port.of({'name': PortField.string().isNotBlank()}).map((value, port) => Student(name: value['name'])),
+      Teacher: Port.of({'name': PortField.string().isNotBlank()}).map((value, port) => Teacher(name: value['name'])),
+    };
+
     final personPort = Port.of({
-      'person': PortField.interface<Person?>(initialValue: null, typeContext: typeContext).isNotNull(),
+      'person': PortField.stage<Type, Person>(
+        initialValue: Student,
+        portMapper: (value) => portByType[value]!,
+        options: [Student, Teacher],
+      ),
     });
 
     var result = await personPort.submit();
     expect(result.isValid, false);
 
-    personPort['person'] = Teacher();
-    result = await personPort.submit();
-    expect(result.data['person'], isA<Teacher>());
+    final personField = personPort.getFieldByName('person') as StagePortField<Type, Person>;
+    expect(personField.findStageFieldOrNull(), isA<StagePortField<Type, Person>>());
 
-    final personField = personPort.getFieldByName('person');
-    expect(personField.findInterfaceFieldOrNull(), isA<InterfacePortField>());
+    final stageValue = personField.value;
+    stageValue.port!['name'] = 'John Doe';
+    result = await personPort.submit();
+    expect((result.data['person'] as Student).name, 'John Doe');
+
+    personPort['person'] = personField.getStageValue(Teacher);
   });
 }
 
-abstract class Person {}
+abstract class Person {
+  final String name;
 
-class Teacher implements Person {}
+  Person({required this.name});
+}
+
+class Teacher extends Person {
+  Teacher({required super.name});
+}
+
+class Student extends Person {
+  Student({required super.name});
+}

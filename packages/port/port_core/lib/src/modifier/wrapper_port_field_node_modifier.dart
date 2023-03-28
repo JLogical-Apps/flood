@@ -1,6 +1,6 @@
-import 'package:port_core/src/interface_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
 import 'package:port_core/src/port_field.dart';
+import 'package:port_core/src/stage_port_field.dart';
 
 class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortFieldNodeModifier<T> {
   final PortFieldNodeModifier? Function(PortField portField) modifierGetter;
@@ -28,7 +28,7 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   }
 
   @override
-  InterfacePortField? findInterfacePortFieldOrNull(T portField) {
-    return modifierGetter(portField.portField)?.findInterfacePortFieldOrNull(portField.portField);
+  StagePortField? findStagePortFieldOrNull(T portField) {
+    return modifierGetter(portField.portField)?.findStagePortFieldOrNull(portField.portField);
   }
 }
