@@ -13,7 +13,7 @@ abstract class Validator<T, E> {
 
   static Validator<T, String> isNotNull<T>() => Validator((data) {
         if (data == null) {
-          return 'Cannot be null!';
+          return 'Cannot be empty!';
         }
         return null;
       });

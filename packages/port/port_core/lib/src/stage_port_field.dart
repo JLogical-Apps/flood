@@ -25,7 +25,7 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
 
             final result = await port.submit();
             if (!result.isValid) {
-              return 'Error when submitting stage port!';
+              return '';
             }
 
             return null;
