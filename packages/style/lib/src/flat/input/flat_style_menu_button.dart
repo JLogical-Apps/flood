@@ -16,31 +16,30 @@ class FlatStyleMenuButtonRenderer with IsTypedStyleRenderer<StyledMenuButton> {
     return IconButton(
       icon: StyledIcon(Icons.more_vert),
       onPressed: () {
-        context.style().showDialog(
-              context,
-              StyledDialog(
-                body: StyledList.column(
-                    children: component.actions
-                        .map((action) => ListTile(
-                              title: action.titleText
-                                      ?.mapIfNonNull((title) => StyledText.h6.withColor(action.color)(title)) ??
+        context.showStyledDialog(
+          StyledDialog(
+            body: StyledList.column(
+                children: component.actions
+                    .map((action) => ListTile(
+                          title:
+                              action.titleText?.mapIfNonNull((title) => StyledText.h6.withColor(action.color)(title)) ??
                                   action.title,
-                              subtitle: action.descriptionText?.mapIfNonNull(
-                                      (description) => StyledText.body.withColor(action.color)(description)) ??
-                                  action.description,
-                              leading: action.iconData?.mapIfNonNull((icon) => StyledIcon(
-                                        icon,
-                                        color: action.color,
-                                      )) ??
-                                  action.icon,
-                              onTap: action.onPerform?.mapIfNonNull((onPerform) => () async {
-                                    await onPerform(context);
-                                    Navigator.of(context).pop();
-                                  }),
-                            ))
-                        .toList()),
-              ),
-            );
+                          subtitle: action.descriptionText?.mapIfNonNull(
+                                  (description) => StyledText.body.withColor(action.color)(description)) ??
+                              action.description,
+                          leading: action.iconData?.mapIfNonNull((icon) => StyledIcon(
+                                    icon,
+                                    color: action.color,
+                                  )) ??
+                              action.icon,
+                          onTap: action.onPerform?.mapIfNonNull((onPerform) => () async {
+                                await onPerform(context);
+                                Navigator.of(context).pop();
+                              }),
+                        ))
+                    .toList()),
+          ),
+        );
       },
     );
   }

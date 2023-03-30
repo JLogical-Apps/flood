@@ -142,6 +142,7 @@ This is a `code block`.
 
   @override
   Future<T?> showDialog<T>(BuildContext context, StyledDialog<T> dialog) async {
+    final pageMediaQuery = MediaQuery.of(ScaffoldMessenger.maybeOf(context)?.context ?? context);
     return await flutter.showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -149,8 +150,8 @@ This is a `code block`.
         borderRadius: BorderRadius.circular(8),
       ),
       constraints: BoxConstraints.loose(Size(
-        MediaQuery.of(context).size.width,
-        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top,
+        pageMediaQuery.size.width,
+        pageMediaQuery.size.height - pageMediaQuery.padding.top,
       )),
       enableDrag: false,
       backgroundColor: Colors.transparent,

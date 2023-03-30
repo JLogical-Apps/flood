@@ -23,6 +23,7 @@ class FlatStyleDialogRenderer with IsTypedStyleRenderer<StyledDialog> {
           topRight: Radius.circular(12),
         ),
       ),
+      padding: EdgeInsets.only(left: 8, top: 8, right: 8),
       child: StyledList.column.scrollable(
         children: [
           AppBar(
