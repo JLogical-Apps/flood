@@ -6,6 +6,7 @@ import 'package:drop_core/src/record/value_object/display_name_value_object_prop
 import 'package:drop_core/src/record/value_object/fallback_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/hidden_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/is_not_blank_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/list_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/map_value_object_property.dart';
@@ -73,6 +74,10 @@ extension ValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G, S, L>
 
   DisplayNameValueObjectProperty<G, S, L> withDynamicDisplayName(String? Function() displayNameGetter) {
     return DisplayNameValueObjectProperty(property: this, displayNameGetter: displayNameGetter);
+  }
+
+  HiddenValueObjectProperty<G, S, L> hidden([bool Function()? isHiddenGetter]) {
+    return HiddenValueObjectProperty(property: this, isHiddenGetter: isHiddenGetter);
   }
 }
 

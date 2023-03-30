@@ -24,7 +24,7 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
 
   static const lastAppliedDateField = 'lastApplied';
   late final lastAppliedDateProperty =
-      field<DateTime>(name: lastAppliedDateField).withFallbackReplacement(() => DateTime.now());
+      field<DateTime>(name: lastAppliedDateField).withFallbackReplacement(() => DateTime.now()).hidden();
 
   @override
   List<ValueObjectBehavior> get behaviors => [

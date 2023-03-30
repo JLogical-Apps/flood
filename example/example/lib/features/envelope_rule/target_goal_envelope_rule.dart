@@ -6,4 +6,7 @@ class TargetGoalEnvelopeRule extends PercentRule {
 
   @override
   int get priority => rulePriority;
+
+  @override
+  bool get isMaximumCentsHidden => false;
 }

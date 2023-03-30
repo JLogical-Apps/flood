@@ -9,7 +9,10 @@ abstract class PercentRule extends EnvelopeRule {
   /// The maximum number of cents before requesting stops.
   /// If [null], then doesn't stop requesting cents.
   static const maximumCentsField = 'maximumCents';
-  late final maximumCentsProperty = field<int>(name: maximumCentsField).withDisplayName('Target (\$)').currency();
+  late final maximumCentsProperty =
+      field<int>(name: maximumCentsField).withDisplayName('Target (\$)').currency().hidden(() => isMaximumCentsHidden);
+
+  bool get isMaximumCentsHidden => true;
 
   @override
   int requestIncome({

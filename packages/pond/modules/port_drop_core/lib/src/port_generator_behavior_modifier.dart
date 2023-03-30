@@ -15,7 +15,7 @@ abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavio
 
   ValueObjectBehavior unwrapBehavior(T behavior);
 
-  PortField getPortField(T behavior, PortField sourcePortField) {
+  PortField? getPortField(T behavior, PortField sourcePortField) {
     return sourcePortField;
   }
 
@@ -28,6 +28,9 @@ abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavio
     }
 
     final subPortFieldByName = subModifier.getPortFieldByName(unwrappedBehavior);
-    return subPortFieldByName.mapValues((name, portField) => getPortField(behavior, portField));
+    return subPortFieldByName
+        .mapValues((name, portField) => getPortField(behavior, portField))
+        .where((name, portField) => portField != null)
+        .mapValues((name, portField) => portField!);
   }
 }
