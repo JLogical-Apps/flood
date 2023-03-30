@@ -8,7 +8,7 @@ class PortBuilder<T> extends HookWidget {
   final Port<T> port;
   final Widget Function(BuildContext context, Port<T> port) builder;
 
-  PortBuilder({required this.port, required this.builder});
+  PortBuilder({super.key, required this.port, required this.builder});
 
   @override
   Widget build(BuildContext context) {

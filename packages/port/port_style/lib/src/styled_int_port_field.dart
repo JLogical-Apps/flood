@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
-class StyledCurrencyFieldPortField extends HookWidget {
+class StyledIntFieldPortField extends HookWidget {
   final String fieldName;
 
   final String? labelText;
@@ -13,7 +13,7 @@ class StyledCurrencyFieldPortField extends HookWidget {
 
   final bool enabled;
 
-  const StyledCurrencyFieldPortField({
+  const StyledIntFieldPortField({
     super.key,
     required this.fieldName,
     this.labelText,
@@ -26,9 +26,9 @@ class StyledCurrencyFieldPortField extends HookWidget {
     final port = Provider.of<Port>(context, listen: false);
     return PortFieldBuilder<int?>(
       fieldName: fieldName,
-      builder: (context, field, amountCents, error) {
+      builder: (context, field, amount, error) {
         return StyledTextField(
-          text: amountCents?.formatCentsAsCurrency() ?? '',
+          text: amount?.formatIntOrDouble() ?? '',
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
           errorText: error?.toString(),
@@ -40,14 +40,14 @@ class StyledCurrencyFieldPortField extends HookWidget {
               return;
             }
 
-            final cents = amountRaw.tryParseDoubleAfterClean()?.mapIfNonNull((amount) => (amount * 100).round());
-            if (cents == null) {
-              port.setError(name: fieldName, error: 'Must be a currency!');
+            final amount = amountRaw.tryParseIntAfterClean(cleanCurrency: false);
+            if (amount == null) {
+              port.setError(name: fieldName, error: 'Must be an integer!');
               return;
             }
 
             port.clearError(name: fieldName);
-            port[fieldName] = cents;
+            port[fieldName] = amount;
           },
         );
       },

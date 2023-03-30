@@ -3,9 +3,11 @@ import 'package:pond_core/pond_core.dart';
 import 'package:port_core/port_core.dart';
 import 'package:port_drop_core/src/behavior_modifiers/currency_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/display_name_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/double_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/fallback_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/fallback_replacement_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/field_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/int_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/is_not_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior_modifier.dart';
@@ -21,6 +23,8 @@ class PortDropCoreComponent with IsCorePondComponent {
       Resolver.fromModifiers(
     [
       StringFieldBehaviorModifier(),
+      DoubleFieldBehaviorModifier(),
+      IntFieldBehaviorModifier(),
       StageFieldBehaviorModifier(
         typeContext: context.locate<TypeCoreComponent>(),
         portCreator: (valueObject) => generatePortRuntime(valueObject: valueObject),

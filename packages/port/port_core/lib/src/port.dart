@@ -26,9 +26,9 @@ extension PortExtensions<T> on Port<T> {
   PortField getFieldByName(String name) =>
       getFieldByNameOrNull(name) ?? (throw Exception('Cannot find port field with name [$name]'));
 
-  F? getByNameOrNull<F>(String name) => portFieldByName[name]?.getOrNull();
+  F? getByNameOrNull<F>(String name) => portFieldByName[name]?.value;
 
-  F getByName<F>(String name) => (portFieldByName[name] ?? (throw Exception('Cannot find value [$name]'))).getOrNull();
+  F getByName<F>(String name) => (portFieldByName[name] ?? (throw Exception('Cannot find value [$name]'))).value;
 
   dynamic getErrorByNameOrNull(String name) => portFieldByName[name]?.error;
 
@@ -85,7 +85,8 @@ class _PortImpl with IsPort<Map<String, dynamic>> {
       final portField = portFieldByNameEntry.value;
 
       final error = await portField.validate(portField.value);
-      setPortField(name: name, portField: portField.copyWithError(error));
+      final newField = portField.copyWithError(error);
+      setPortField(name: name, portField: newField);
 
       if (error != null) {
         hasError = true;

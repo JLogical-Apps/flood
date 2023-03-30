@@ -30,7 +30,7 @@ abstract class PortField<T, S> with IsValidatorWrapper<T, String> {
     Validator<T, String>? validator,
     FutureOr<S> Function(T value)? submitMapper,
   }) =>
-      _PortFieldImpl(
+      _PortFieldImpl<T, S>(
         value: value,
         error: error,
         validator: validator ?? Validator.empty(),

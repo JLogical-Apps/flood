@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:port/port.dart';
 import 'package:port_style/src/object/currency_port_field_builder_modifier.dart';
+import 'package:port_style/src/object/double_port_field_builder_modifier.dart';
+import 'package:port_style/src/object/int_port_field_builder_modifier.dart';
+import 'package:port_style/src/object/stage_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/string_port_field_builder_modifier.dart';
 import 'package:utils/utils.dart';
 
@@ -10,6 +13,9 @@ abstract class PortFieldBuilderModifier with IsModifier<PortField> {
   static final portFieldBuilderModifierResolver = ModifierResolver<PortFieldBuilderModifier, PortField>(modifiers: [
     StringPortFieldBuilderModifier(),
     CurrencyPortFieldBuilderModifier(),
+    DoublePortFieldBuilderModifier(),
+    IntPortFieldBuilderModifier(),
+    StagePortFieldBuilderModifier(),
   ]);
 
   static PortFieldBuilderModifier? getPortFieldBuilderModifier(PortField portField) {

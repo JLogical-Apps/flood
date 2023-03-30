@@ -13,6 +13,7 @@ class StyledObjectPortBuilder extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return PortBuilder(
+      key: ObjectKey(port),
       port: port,
       builder: (context, port) {
         final portFieldByName = port.portFieldByName;

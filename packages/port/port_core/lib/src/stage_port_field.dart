@@ -13,8 +13,10 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
     required this.options,
     required this.portMapper,
     Port<T>? portValue,
+    dynamic error,
   }) : portField = PortField(
-          value: StageValue(value: initialValue, port: portValue ?? portMapper(initialValue)),
+          value: StageValue<E, T>(value: initialValue, port: portValue ?? portMapper(initialValue)),
+          error: error,
           validator: Validator((stageValue) async {
             final port = stageValue.port;
             if (port == null) {
@@ -35,17 +37,22 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
         );
 
   @override
-  PortField<StageValue<E, T>, T?> copyWith({required StageValue<E, T> value, required error}) {
-    return StagePortField(
+  StagePortField<E, T> copyWith({required StageValue<E, T> value, required error}) {
+    return StagePortField<E, T>(
       initialValue: value.value,
       options: options,
       portMapper: portMapper,
       portValue: value.port,
+      error: error,
     );
   }
 
   StageValue<E, T> getStageValue(E newValue) {
-    return StageValue(value: newValue, port: portMapper(newValue));
+    return StageValue(value: newValue, port: getMappedPort(newValue));
+  }
+
+  Port<T>? getMappedPort(E value) {
+    return portMapper(value);
   }
 }
 

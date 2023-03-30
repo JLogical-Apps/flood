@@ -14,14 +14,23 @@ class StageFieldBehaviorModifier
   @override
   Map<String, PortField> getPortFieldByName(FieldValueObjectProperty<ValueObject?, dynamic> behavior) {
     final baseType = behavior.fieldType;
-    final runtimeBaseType = typeContext.getRuntimeTypeRuntime(baseType);
+    final baseRuntimeType = typeContext.getRuntimeTypeRuntime(baseType);
+
+    final intialRuntimeType =
+        behavior.value?.mapIfNonNull((value) => typeContext.getRuntimeTypeRuntime(value.runtimeType));
+    final initialValueObject = behavior.value;
+
     return {
       behavior.name: PortField.stage<RuntimeType?, dynamic>(
-        initialValue: behavior.value?.mapIfNonNull((value) => typeContext.getRuntimeTypeRuntime(value.runtimeType)),
-        options: [null, ...runtimeBaseType.getConcreteChildren()],
+        initialValue: intialRuntimeType,
+        options: [null, ...baseRuntimeType.getConcreteChildren()],
         portMapper: (type) {
           if (type == null) {
             return Port.empty();
+          }
+
+          if (type == intialRuntimeType && initialValueObject != null) {
+            return portCreator(initialValueObject);
           }
 
           final valueObject = type.createInstance();

@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:port/port.dart';
-import 'package:port_style/port_style.dart';
 import 'package:port_style/src/object/port_field_builder_modifier.dart';
+import 'package:port_style/src/styled_double_port_field.dart';
 import 'package:utils/utils.dart';
 
-class StringPortFieldBuilderModifier extends PortFieldBuilderModifier {
+class DoublePortFieldBuilderModifier extends PortFieldBuilderModifier {
   @override
   Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
-    return StyledTextFieldPortField(
+    return StyledDoubleFieldPortField(
       fieldName: fieldName,
       labelText: portField.findDisplayNameOrNull(),
-      maxLines: portField.findIsMultiline() ? 3 : 1,
     );
   }
 
   @override
   bool shouldModify(PortField input) {
-    return input.dataType == String || input.dataType == typeOf<String?>();
+    return input.dataType == double || input.dataType == typeOf<double?>();
   }
 }

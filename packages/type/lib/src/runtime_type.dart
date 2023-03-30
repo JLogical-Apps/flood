@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:type/src/type_context.dart';
+import 'package:utils_core/utils_core.dart';
 
 class RuntimeType<T> extends Equatable {
   final TypeContext context;
@@ -23,7 +24,7 @@ class RuntimeType<T> extends Equatable {
 
   Type get type => T;
 
-  Type get nullableType => _getType<T?>();
+  Type get nullableType => typeOf<T?>();
 
   bool get isAbstract => newInstanceGetter == null;
 
@@ -70,6 +71,4 @@ class RuntimeType<T> extends Equatable {
 
   @override
   String toString() => name;
-
-  static Type _getType<T>() => T;
 }
