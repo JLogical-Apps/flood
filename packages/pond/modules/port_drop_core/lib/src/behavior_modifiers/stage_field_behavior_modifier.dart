@@ -26,7 +26,7 @@ class StageFieldBehaviorModifier
         options: [null, ...baseRuntimeType.getConcreteChildren()],
         portMapper: (type) {
           if (type == null) {
-            return Port.empty();
+            return null;
           }
 
           if (type == intialRuntimeType && initialValueObject != null) {

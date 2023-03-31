@@ -62,7 +62,11 @@ class FlatStyleOptionFieldRenderer with IsTypedStyleRenderer<StyledOptionField> 
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: context.colorPalette().background.strong),
+              borderSide: BorderSide(
+                color: component.errorText != null
+                    ? context.colorPalette().error.strong
+                    : context.colorPalette().background.strong,
+              ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
