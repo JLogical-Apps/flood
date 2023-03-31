@@ -8,6 +8,7 @@ export 'src/record/entity.dart';
 export 'src/record/record.dart';
 export 'src/record/value_object.dart';
 export 'src/record/value_object/currency_value_object_property.dart';
+export 'src/record/value_object/display_name_value_object_behavior.dart';
 export 'src/record/value_object/display_name_value_object_property.dart';
 export 'src/record/value_object/fallback_replacement_value_object_property.dart';
 export 'src/record/value_object/fallback_value_object_property.dart';

@@ -13,7 +13,7 @@ class StyledStagePortField<E, T> extends HookWidget {
 
   final bool enabled;
 
-  final Widget Function(E value) valueWidgetMapper;
+  final Widget Function(StagePortField<E, T> stagePortField, E value) valueWidgetMapper;
   final Widget Function(Port<T> value) portWidgetMapper;
 
   const StyledStagePortField({
@@ -22,7 +22,7 @@ class StyledStagePortField<E, T> extends HookWidget {
     this.labelText,
     this.label,
     this.enabled = true,
-    Widget Function(E value)? valueWidgetMapper,
+    Widget Function(StagePortField<E, T> stagePortField, E value)? valueWidgetMapper,
     Widget Function(Port<T> port)? portWidgetMapper,
   })  : valueWidgetMapper = valueWidgetMapper ?? _defaultValueMapper,
         portWidgetMapper = portWidgetMapper ?? _defaultPortMapper;
@@ -47,7 +47,7 @@ class StyledStagePortField<E, T> extends HookWidget {
               enabled: enabled,
               onChanged: (value) => port[fieldName] = stageField.getStageValue(value),
               options: stageField.options,
-              widgetMapper: valueWidgetMapper,
+              widgetMapper: (option) => valueWidgetMapper(stageField, option),
             ),
             if (valuePort != null && valuePort.portFieldByName.isNotEmpty)
               StyledContainer(
@@ -60,8 +60,8 @@ class StyledStagePortField<E, T> extends HookWidget {
   }
 }
 
-Widget _defaultValueMapper<E>(E value) {
-  return StyledText.button(value == null ? 'None' : value.toString());
+Widget _defaultValueMapper<E, T>(StagePortField<E, T> stagePortField, E value) {
+  return StyledText.button(value == null ? 'None' : stagePortField.getDisplayName(value) ?? 'None');
 }
 
 Widget _defaultPortMapper<T>(Port<T> port) {

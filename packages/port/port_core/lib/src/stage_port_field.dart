@@ -7,11 +7,13 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
 
   final List<E> options;
   final Port<T>? Function(E option) portMapper;
+  final String? Function(E option)? displayNameMapper;
 
   StagePortField({
     required E initialValue,
     required this.options,
     required this.portMapper,
+    this.displayNameMapper,
     Port<T>? portValue,
     dynamic error,
   }) : portField = PortField(
@@ -43,6 +45,7 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
       options: options,
       portMapper: portMapper,
       portValue: value.port,
+      displayNameMapper: displayNameMapper,
       error: error,
     );
   }
@@ -53,6 +56,10 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
 
   Port<T>? getMappedPort(E value) {
     return portMapper(value);
+  }
+
+  String? getDisplayName(E value) {
+    return displayNameMapper?.call(value);
   }
 }
 

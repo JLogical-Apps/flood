@@ -6,7 +6,10 @@ class DailyTimeRule extends TimeRule {
   late final daysProperty = field<int>(name: daysField).withDisplayName('Period (Days)').required();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [daysProperty];
+  List<ValueObjectBehavior> get behaviors => [
+        ValueObjectBehavior.displayName('Periodic'),
+        daysProperty,
+      ];
 
   @override
   int getPeriodsBetween(DateTime date1, DateTime date2) {

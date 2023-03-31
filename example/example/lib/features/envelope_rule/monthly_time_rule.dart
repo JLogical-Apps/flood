@@ -6,7 +6,10 @@ class MonthlyTimeRule extends TimeRule {
   late final dayOfMonthProperty = field<int>(name: dayOfMonthField).withDisplayName('Day of Month').required();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [dayOfMonthProperty];
+  List<ValueObjectBehavior> get behaviors => [
+        ValueObjectBehavior.displayName('Monthly'),
+        dayOfMonthProperty,
+      ];
 
   /// Returns the difference of months from the two dates.
   /// If [date1] is the last day of the month and [date2] is the first day of the next month, it returns 1.

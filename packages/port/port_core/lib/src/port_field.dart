@@ -49,8 +49,14 @@ abstract class PortField<T, S> with IsValidatorWrapper<T, String> {
     required E initialValue,
     required List<E> options,
     required Port<T>? Function(E option) portMapper,
+    String? Function(E option)? displayNameMapper,
   }) {
-    return StagePortField<E, T>(initialValue: initialValue, options: options, portMapper: portMapper);
+    return StagePortField<E, T>(
+      initialValue: initialValue,
+      options: options,
+      portMapper: portMapper,
+      displayNameMapper: displayNameMapper,
+    );
   }
 
   static PortField<Port<T>, T> port<T>({required Port<T> port}) {

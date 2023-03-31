@@ -22,21 +22,28 @@ class StageFieldBehaviorModifier
 
     return {
       behavior.name: PortField.stage<RuntimeType?, dynamic>(
-        initialValue: intialRuntimeType,
-        options: [null, ...baseRuntimeType.getConcreteChildren()],
-        portMapper: (type) {
-          if (type == null) {
-            return null;
-          }
+          initialValue: intialRuntimeType,
+          options: [null, ...baseRuntimeType.getConcreteChildren()],
+          portMapper: (type) {
+            if (type == null) {
+              return null;
+            }
 
-          if (type == intialRuntimeType && initialValueObject != null) {
-            return portCreator(initialValueObject);
-          }
+            if (type == intialRuntimeType && initialValueObject != null) {
+              return portCreator(initialValueObject);
+            }
 
-          final valueObject = type.createInstance();
-          return portCreator(valueObject);
-        },
-      ),
+            final valueObject = type.createInstance();
+            return portCreator(valueObject);
+          },
+          displayNameMapper: (type) {
+            if (type == null) {
+              return null;
+            }
+
+            final valueObject = type.createInstance() as ValueObject;
+            return valueObject.getDisplayName() ?? valueObject.runtimeType.toString();
+          }),
     };
   }
 }

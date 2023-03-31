@@ -28,6 +28,7 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
 
   @override
   List<ValueObjectBehavior> get behaviors => [
+        ValueObjectBehavior.displayName('Repeating Goal'),
         goalCentsProperty,
         remainingGoalCentsProperty,
         timeRuleProperty,
