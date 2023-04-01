@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/entity.dart';
+import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/computed_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/currency_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/display_name_value_object_property.dart';
@@ -16,9 +19,12 @@ import 'package:drop_core/src/record/value_object/reference_value_object_propert
 import 'package:drop_core/src/record/value_object/required_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:utils_core/utils_core.dart';
 
-abstract class ValueObjectProperty<G, S, L> extends ValueObjectBehavior {
+abstract class ValueObjectProperty<G, S, L> implements ValueObjectBehavior {
   G get value;
+
+  G? get valueOrNull;
 
   void set(S value);
 
@@ -42,18 +48,24 @@ abstract class ValueObjectProperty<G, S, L> extends ValueObjectBehavior {
 
 mixin IsValueObjectProperty<G, S, L> implements ValueObjectProperty<G, S, L> {
   @override
+  G? get valueOrNull => value;
+
+  @override
+  void fromState(State state) {}
+
+  @override
+  State modifyState(State state) {
+    return state;
+  }
+
+  @override
   Future<L> load(DropCoreContext context) {
     throw Exception('Load not supported!');
   }
 
   @override
-  State modifyStateUnsafe(State state) {
-    return modifyState(state);
-  }
-
-  @override
-  void fromStateUnsafe(State state) {
-    fromState(state);
+  FutureOr<String?> onValidate(ValueObject data) async {
+    return null;
   }
 }
 
@@ -135,20 +147,20 @@ mixin IsValueObjectPropertyWrapper<G, S, L> implements ValueObjectPropertyWrappe
   G get value => property.value;
 
   @override
+  G? get valueOrNull => property.valueOrNull;
+
+  @override
   void set(S value) => property.set(value);
 
   @override
   void fromState(State state) => property.fromState(state);
 
   @override
-  void fromStateUnsafe(State state) => property.fromStateUnsafe(state);
-
-  @override
   State modifyState(State state) => property.modifyState(state);
 
   @override
-  State modifyStateUnsafe(State state) => property.modifyStateUnsafe(state);
+  Future<L> load(DropCoreContext context) => property.load(context);
 
   @override
-  Future<L> load(DropCoreContext context) => property.load(context);
+  FutureOr<String?> onValidate(ValueObject data) => property.validate(data);
 }

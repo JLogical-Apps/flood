@@ -9,11 +9,6 @@ class ComputedValueObjectProperty<T, L> with IsValueObjectProperty<T, void, L> {
   ComputedValueObjectProperty({required this.name, required this.computation});
 
   @override
-  void fromState(State state) {
-    // Do nothing.
-  }
-
-  @override
   State modifyState(State state) {
     return state.withData(state.data.copy()..set(name, value));
   }

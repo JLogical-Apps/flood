@@ -5,8 +5,9 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:type/type.dart';
+import 'package:utils_core/utils_core.dart';
 
-abstract class Entity<V extends ValueObject> extends Record with EquatableMixin {
+abstract class Entity<V extends ValueObject> extends Record with EquatableMixin, IsValidatorWrapper<void, String?> {
   String? id;
 
   final BehaviorSubject<V> _valueObjectX = BehaviorSubject();
@@ -26,14 +27,13 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin 
       value.getState(context).withId(id).withType(context.getRuntimeTypeRuntime(runtimeType));
 
   @override
-  State getStateUnsafe(DropCoreContext context) =>
-      value.getStateUnsafe(context).withId(id).withType(context.getRuntimeTypeRuntime(runtimeType));
-
-  @override
   List<Object?> get props => [id];
 
   @override
   String toString() {
-    return '$runtimeType{id: $id, value: ${value.scaffoldStateUnsafe}';
+    return '$runtimeType{id: [$id], value: [${value.scaffoldState}]';
   }
+
+  @override
+  Validator<void, String?> get validator => value;
 }

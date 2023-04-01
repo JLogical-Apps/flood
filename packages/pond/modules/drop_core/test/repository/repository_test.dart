@@ -1,6 +1,7 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
+import 'package:type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -55,9 +56,38 @@ void main() {
 
     expect(memoryRepository.stateByIdX.value, {});
   });
+
+  test('throw on invalid state in repository', () async {
+    final memoryRepository = UserRepository();
+
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(memoryRepository);
+
+    var userState = State(
+      type: context.locate<TypeCoreComponent>().getRuntimeType<UserEntity>(),
+      data: {},
+    );
+    userState = await memoryRepository.update(userState);
+
+    expect(() => memoryRepository.executeQuery(Query.from<UserEntity>().firstOrNull()), throwsA(isA<String>()));
+
+    userState = userState.withData({'name': 'John Doe'});
+    await memoryRepository.update(userState);
+
+    final queriedEntity = await memoryRepository.executeQuery(Query.from<UserEntity>().firstOrNull());
+
+    expect(queriedEntity?.getState(context.locate<DropCoreComponent>()), userState);
+  });
 }
 
-class User extends ValueObject {}
+class User extends ValueObject {
+  late final nameProperty = field<String>(name: 'name').required();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [nameProperty];
+}
 
 class UserEntity extends Entity<User> {}
 

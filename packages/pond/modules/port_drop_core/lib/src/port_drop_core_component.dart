@@ -73,10 +73,10 @@ class PortDropCoreComponent with IsCorePondComponent {
         sourceData,
         runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
       );
-      final mergedState = valueObject.getStateUnsafe(dropCoreContext).mergeWith(state);
+      final mergedState = valueObject.getState(dropCoreContext).mergeWith(state);
 
       final newValueObject = typeContext.constructGeneric<V>();
-      newValueObject.copyFromUnsafe(dropCoreContext, mergedState);
+      newValueObject.copyFrom(dropCoreContext, mergedState);
       return newValueObject;
     });
   }
@@ -102,10 +102,10 @@ class PortDropCoreComponent with IsCorePondComponent {
         sourceData,
         runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
       );
-      final mergedState = valueObject.getStateUnsafe(dropCoreContext).mergeWith(state);
+      final mergedState = valueObject.getState(dropCoreContext).mergeWith(state);
 
       final newValueObject = typeContext.construct(valueObject.runtimeType) as ValueObject;
-      newValueObject.copyFromUnsafe(dropCoreContext, mergedState);
+      newValueObject.copyFrom(dropCoreContext, mergedState);
       return newValueObject;
     });
   }

@@ -30,14 +30,15 @@ void main() {
     expect(data.intProperty.value, 1);
   });
 
-  test('required', () {
+  test('required', () async {
     final data = Data2();
     expect(() => data.intProperty.value, throwsA(isA<Exception>()));
 
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
 
-    expect(() => data.state = State(data: {}), throwsA(isA<Exception>()));
+    data.state = State(data: {});
+    expect(await data.validate(null), isNotNull);
 
     data.state = State(data: {'int': 1});
     expect(data.intProperty.value, 1);
@@ -94,7 +95,7 @@ void main() {
     expect(data.intProperty.value, 1);
   });
 
-  test('not blank', () {
+  test('not blank', () async {
     dropContext.register<Data6>(Data6.new, name: 'Data6');
 
     final data = Data6();
@@ -103,7 +104,8 @@ void main() {
     data.nameProperty.set('John Doe');
     expect(data.nameProperty.value, 'John Doe');
 
-    expect(() => data.state = State(data: {}), throwsA(isA<Exception>()));
+    data.state = State(data: {});
+    expect(await data.validate(null), isNotNull);
 
     data.state = State(data: {'name': 'John Doe'});
     expect(data.nameProperty.value, 'John Doe');

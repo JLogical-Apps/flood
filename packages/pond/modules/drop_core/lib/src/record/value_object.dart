@@ -10,8 +10,9 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:equatable/equatable.dart';
 import 'package:type/type.dart';
+import 'package:utils_core/utils_core.dart';
 
-abstract class ValueObject extends Record with EquatableMixin {
+abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrapper<void, String> {
   List<ValueObjectBehavior> get behaviors => [];
 
   @override
@@ -25,31 +26,11 @@ abstract class ValueObject extends Record with EquatableMixin {
     }
   }
 
-  void setStateUnsafe(State state) {
-    for (final behavior in behaviors) {
-      behavior.fromStateUnsafe(state);
-    }
-  }
-
   /// An unsafe state of the ValueObject without the type set.
   State get scaffoldState {
     final state = behaviors.fold<State>(
       State(data: {}),
-      (state, behavior) => behavior.modifyStateUnsafe(state),
-    );
-
-    return state;
-  }
-
-  @override
-  State getStateUnsafe(DropCoreContext context) {
-    return scaffoldStateUnsafe.withType(context.getRuntimeTypeRuntime(runtimeType));
-  }
-
-  State get scaffoldStateUnsafe {
-    final state = behaviors.fold<State>(
-      State(data: {}),
-      (state, behavior) => behavior.modifyStateUnsafe(state),
+      (state, behavior) => behavior.modifyState(state),
     );
 
     return state;
@@ -59,12 +40,20 @@ abstract class ValueObject extends Record with EquatableMixin {
     state = stateful.getState(context);
   }
 
-  void copyFromUnsafe(DropCoreContext context, Stateful stateful) {
-    setStateUnsafe(stateful.getStateUnsafe(context));
-  }
+  @override
+  Validator<void, String> get validator => Validator((_) async {
+        for (final behavior in behaviors) {
+          final error = await behavior.validate(this);
+          if (error != null) {
+            return error;
+          }
+        }
+
+        return null;
+      });
 
   @override
-  List<Object> get props => [scaffoldStateUnsafe];
+  List<Object> get props => [scaffoldState];
 
   FieldValueObjectProperty<T, dynamic> field<T>({required String name}) => ValueObjectProperty.field<T>(name: name);
 

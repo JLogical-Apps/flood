@@ -148,6 +148,13 @@ extension ValidatorExtensions<T, E> on Validator<T, E> {
     return await onValidate(data);
   }
 
+  Future<void> throwIfInvalid(T data) async {
+    final error = await validate(data);
+    if (error != null) {
+      throw error;
+    }
+  }
+
   CompoundValidator<T, E> and(Validator<T, E> validator) {
     return CompoundValidator(validators: [this, validator]);
   }
