@@ -1,3 +1,4 @@
+import 'package:actions_core/actions_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
@@ -57,6 +58,26 @@ void main() {
     expect(memoryRepository.stateByIdX.value, {});
   });
 
+  test('throw on saving invalid ValueObject', () async {
+    final memoryRepository = UserRepository();
+
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(ActionCoreComponent());
+    await context.register(memoryRepository);
+
+    final userEntity = UserEntity()..set(User());
+
+    expect(() => context.locate<DropCoreComponent>().updateEntity(userEntity), throwsA(isA<String>()));
+    expect(
+      () => context
+          .locate<DropCoreComponent>()
+          .updateEntity(userEntity, (User user) => user..nameProperty.set('John Doe')),
+      returnsNormally,
+    );
+  });
+
   test('throw on invalid state in repository', () async {
     final memoryRepository = UserRepository();
 
@@ -72,6 +93,12 @@ void main() {
     userState = await memoryRepository.update(userState);
 
     expect(() => memoryRepository.executeQuery(Query.from<UserEntity>().firstOrNull()), throwsA(isA<String>()));
+    expect(() => memoryRepository.executeQuery(Query.from<UserEntity>().first()), throwsA(isA<String>()));
+    expect(() async {
+      final page = await memoryRepository.executeQuery(Query.from<UserEntity>().paginate());
+      await page.getItems();
+    }, throwsA(isA<String>()));
+    expect(() => memoryRepository.executeQuery(Query.from<UserEntity>().all()), throwsA(isA<String>()));
 
     userState = userState.withData({'name': 'John Doe'});
     await memoryRepository.update(userState);

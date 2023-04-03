@@ -11,13 +11,13 @@ class PaginatedQueryResult<T> with IsQueryResultPage<T> {
   PaginatedQueryResult({required QueryResultPage<T> page}) : pageX = BehaviorSubject.seeded(page);
 
   @override
-  List<T> get items => page.items;
+  Future<List<T>> getItems() async => await page.getItems();
 
   @override
   FutureOr<QueryResultPage<T>> Function()? get nextPageGetter => page.hasNext
       ? () async {
           final nextPage = await page.getNextPage();
-          pageX.value = page + nextPage;
+          pageX.value = await page.append(nextPage);
           return nextPage;
         }
       : null;
@@ -26,12 +26,7 @@ class PaginatedQueryResult<T> with IsQueryResultPage<T> {
     await getNextPage();
   }
 
-  PaginatedQueryResult<R> map<R>(R Function(T item) mapper) {
+  PaginatedQueryResult<R> map<R>(FutureOr<R> Function(T item) mapper) {
     return PaginatedQueryResult(page: page.map(mapper));
-  }
-
-  @override
-  String toString() {
-    return items.toString();
   }
 }

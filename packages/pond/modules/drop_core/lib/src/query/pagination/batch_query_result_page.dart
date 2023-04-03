@@ -10,7 +10,7 @@ class BatchQueryResultPage<T> with IsQueryResultPage<T> {
   BatchQueryResultPage({required this.allItems, required this.batchSize});
 
   @override
-  List<T> get items => allItems.take(batchSize).toList();
+  List<T> getItems() => allItems.take(batchSize).toList();
 
   @override
   FutureOr<QueryResultPage<T>> Function()? get nextPageGetter =>

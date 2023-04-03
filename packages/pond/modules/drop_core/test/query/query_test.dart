@@ -298,11 +298,11 @@ void main() {
     }
 
     final queryResultPage = await repository.executeQuery(Query.from<InvoiceEntity>().paginate(pageSize: 2));
-    expect(queryResultPage.items.map((i) => i.value), invoices.take(2).toList());
+    expect((await queryResultPage.getItems()).map((i) => i.value), invoices.take(2).toList());
     expect(queryResultPage.hasNext, isTrue);
 
     final nextQueryResultPage = await queryResultPage.getNextPage();
-    expect(nextQueryResultPage.items.map((i) => i.value), invoices.skip(2).take(2).toList());
+    expect((await nextQueryResultPage.getItems()).map((i) => i.value), invoices.skip(2).take(2).toList());
     expect(nextQueryResultPage.hasNext, isFalse);
 
     final allItems = await queryResultPage.combineAll();

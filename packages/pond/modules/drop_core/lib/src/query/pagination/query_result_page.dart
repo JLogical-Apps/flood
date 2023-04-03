@@ -4,7 +4,7 @@ import 'package:drop_core/src/query/pagination/batch_query_result_page.dart';
 import 'package:drop_core/src/query/pagination/mapper_query_result_page.dart';
 
 abstract class QueryResultPage<T> {
-  List<T> get items;
+  FutureOr<List<T>> getItems();
 
   FutureOr<QueryResultPage<T>> Function()? get nextPageGetter;
 
@@ -31,13 +31,13 @@ extension QueryResultPageDefaults<T> on QueryResultPage<T> {
     return nextPageGetter!.call();
   }
 
-  MapperQueryResultPage<T, R> map<R>(R Function(T source) mapper) {
+  MapperQueryResultPage<T, R> map<R>(FutureOr<R> Function(T source) mapper) {
     return MapperQueryResultPage(sourceQueryResultPage: this, mapper: mapper);
   }
 
-  QueryResultPage<T> operator +(QueryResultPage<T> nextPage) {
+  Future<QueryResultPage<T>> append(QueryResultPage<T> nextPage) async {
     return QueryResultPage(
-      items: items + nextPage.items,
+      items: (await getItems()) + (await nextPage.getItems()),
       nextPageGetter: nextPage.nextPageGetter,
     );
   }
@@ -47,7 +47,7 @@ extension QueryResultPageDefaults<T> on QueryResultPage<T> {
 
     QueryResultPage<T>? nextPage = this;
     do {
-      items.addAll(nextPage!.items);
+      items.addAll(await nextPage!.getItems());
       nextPage = await nextPage.getNextPageOrNull();
     } while (nextPage != null);
 
@@ -58,11 +58,13 @@ extension QueryResultPageDefaults<T> on QueryResultPage<T> {
 mixin IsQueryResultPage<T> implements QueryResultPage<T> {}
 
 class _QueryResultPageImpl<T> with IsQueryResultPage<T> {
-  @override
-  final List<T> items;
+  final List<T> _items;
 
   @override
   FutureOr<QueryResultPage<T>> Function()? nextPageGetter;
 
-  _QueryResultPageImpl({required this.items, this.nextPageGetter});
+  _QueryResultPageImpl({required List<T> items, this.nextPageGetter}) : _items = items;
+
+  @override
+  FutureOr<List<T>> getItems() => _items;
 }

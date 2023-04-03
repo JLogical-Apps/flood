@@ -1,6 +1,7 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:model/model.dart';
 import 'package:utils/utils.dart';
 
 class PaginatedQueryResultBuilder<T> extends HookWidget {
@@ -12,9 +13,15 @@ class PaginatedQueryResultBuilder<T> extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final page = useValueStream(queryResult.pageX);
-    return builder(
-      page.items,
-      queryResult.hasNext ? () => queryResult.loadNextPage() : null,
+    final itemsModel = useFutureModel(() async => await page.getItems());
+    return ModelBuilder(
+      model: itemsModel,
+      builder: (List<T> items) {
+        return builder(
+          items,
+          queryResult.hasNext ? () => queryResult.loadNextPage() : null,
+        );
+      },
     );
   }
 }

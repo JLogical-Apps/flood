@@ -6,6 +6,7 @@ import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:equatable/equatable.dart';
+import 'package:utils_core/utils_core.dart';
 
 class FirstQueryRequest<E extends Entity> with IsMapQueryRequest<E, State?, E>, EquatableMixin {
   @override
@@ -14,8 +15,10 @@ class FirstQueryRequest<E extends Entity> with IsMapQueryRequest<E, State?, E>, 
   FirstQueryRequest({required this.sourceQueryRequest});
 
   @override
-  FutureOr<E> doMap(DropCoreContext context, State? source) {
-    return context.constructEntityFromState<E>(source ?? (throw Exception('Could not find state!')));
+  FutureOr<E> doMap(DropCoreContext context, State? source) async {
+    final entity = context.constructEntityFromState<E>(source ?? (throw Exception('Could not find state!')));
+    await entity.throwIfInvalid(null);
+    return entity;
   }
 
   @override

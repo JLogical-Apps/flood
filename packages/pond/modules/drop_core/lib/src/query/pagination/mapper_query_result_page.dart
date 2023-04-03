@@ -5,7 +5,7 @@ import 'package:utils_core/utils_core.dart';
 
 class MapperQueryResultPage<T, R> with IsQueryResultPage<R> {
   final QueryResultPage<T> sourceQueryResultPage;
-  final R Function(T source) mapper;
+  final FutureOr<R> Function(T source) mapper;
 
   MapperQueryResultPage({required this.sourceQueryResultPage, required this.mapper});
 
@@ -17,12 +17,18 @@ class MapperQueryResultPage<T, R> with IsQueryResultPage<R> {
     final sourceNextPage = await nextPageGetter();
 
     return QueryResultPage(
-      items: sourceNextPage.items.map(mapper).toList(),
+      items: await mapItems(await sourceNextPage.getItems()),
       nextPageGetter:
           sourceNextPage.nextPageGetter?.mapIfNonNull((nextPageGetter) => () => nextPageMapper(nextPageGetter)),
     );
   }
 
   @override
-  List<R> get items => sourceQueryResultPage.items.map(mapper).toList();
+  Future<List<R>> getItems() async {
+    return mapItems(await sourceQueryResultPage.getItems());
+  }
+
+  Future<List<R>> mapItems(List<T> sourceItems) async {
+    return (await Future.wait(sourceItems.map((item) async => await mapper(item)))).toList();
+  }
 }

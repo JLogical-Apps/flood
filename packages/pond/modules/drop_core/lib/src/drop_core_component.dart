@@ -35,16 +35,19 @@ class DropCoreComponent extends CorePondComponent with IsDropCoreContext, IsRepo
   }
 
   Future<E> updateEntity<E extends Entity<V>, V extends ValueObject>(
-    E entity,
-    FutureOr Function(V newValueObject) updater,
-  ) async {
-    final newValueObject = typeContext.constructGeneric<V>();
+    E entity, [
+    FutureOr Function(V newValueObject)? updater,
+  ]) async {
+    final valueObjectType = V == ValueObject ? entity.valueObjectType : V;
+    final newValueObject = typeContext.construct(valueObjectType);
+
     if (entity.hasValue) {
       newValueObject.state = entity.value.getState(this);
     }
 
-    await updater(newValueObject);
+    await updater?.call(newValueObject);
     entity.value = newValueObject;
+    await entity.throwIfInvalid(null);
     final newState = await update(entity);
     return constructEntityFromState(newState);
   }
