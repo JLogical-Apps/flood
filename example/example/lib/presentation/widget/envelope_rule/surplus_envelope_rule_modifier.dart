@@ -21,14 +21,4 @@ class SurplusEnvelopeCardModifier extends EnvelopeRuleCardModifier<SurplusEnvelo
       'Valet will add `${rule.percentProperty.value.formatIntOrDouble()}`% of any remaining income after your goals are complete to this envelope.',
     );
   }
-
-  @override
-  Port<SurplusEnvelopeRule> getPort({required CorePondContext context, SurplusEnvelopeRule? initialRule}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Widget getPortBuilder(Port<SurplusEnvelopeRule> port) {
-    throw UnimplementedError();
-  }
 }

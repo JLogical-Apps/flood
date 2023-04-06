@@ -19,14 +19,4 @@ class NoneEnvelopeCardModifier extends EnvelopeRuleCardModifier<EnvelopeRule?> {
     return StyledMarkdown(
         'Valet will never add income to this envelope automatically, giving you total control over the money in this envelope. Use transactions or transfers to control the money in this envelope.');
   }
-
-  @override
-  Port<EnvelopeRule?> getPort({required CorePondContext context, EnvelopeRule? initialRule}) {
-    return Port.empty();
-  }
-
-  @override
-  Widget getPortBuilder(Port<EnvelopeRule?> port) {
-    return Container();
-  }
 }

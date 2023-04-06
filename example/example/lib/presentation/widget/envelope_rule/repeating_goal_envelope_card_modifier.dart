@@ -23,14 +23,4 @@ class RepeatingGoalEnvelopeCardModifier extends EnvelopeRuleCardModifier<Repeati
   }
 
   String _getCurrentMonthName() => DateFormat('MMMM').format(DateTime.now());
-
-  @override
-  Port<RepeatingGoalEnvelopeRule> getPort({required CorePondContext context, RepeatingGoalEnvelopeRule? initialRule}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Widget getPortBuilder(Port<RepeatingGoalEnvelopeRule> port) {
-    throw UnimplementedError();
-  }
 }

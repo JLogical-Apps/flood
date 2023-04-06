@@ -14,10 +14,6 @@ abstract class EnvelopeRuleCardModifier<R extends EnvelopeRule?> with IsTypedMod
 
   Widget getDescription(R rule);
 
-  Port<R> getPort({required CorePondContext context, R? initialRule});
-
-  Widget getPortBuilder(Port<R> port);
-
   static final envelopeRuleCardModifierResolver = ModifierResolver<EnvelopeRuleCardModifier, EnvelopeRule?>(modifiers: [
     FirstfruitEnvelopeCardModifier(),
     RepeatingGoalEnvelopeCardModifier(),

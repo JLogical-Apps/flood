@@ -21,14 +21,4 @@ class TargetGoalEnvelopeCardModifier extends EnvelopeRuleCardModifier<TargetGoal
       'Valet wil collect `${rule.percentProperty.value.formatIntOrDouble()}`% of any additional income after your goals are completed until you have reached `${rule.maximumCentsProperty.value!.formatCentsAsCurrency()}` in this envelope.',
     );
   }
-
-  @override
-  Port<TargetGoalEnvelopeRule> getPort({required CorePondContext context, TargetGoalEnvelopeRule? initialRule}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Widget getPortBuilder(Port<TargetGoalEnvelopeRule> port) {
-    throw UnimplementedError();
-  }
 }

@@ -56,9 +56,6 @@ class BudgetsPage extends AppPage {
                           titleText: 'Create New Budget',
                           port: (Budget()..ownerProperty.set(loggedInUserIdModel.getOrNull()!))
                               .asPort(context.corePondContext),
-                          children: [
-                            StyledTextFieldPortField(fieldName: Budget.nameField),
-                          ],
                         ));
                         if (result == null) {
                           return;
