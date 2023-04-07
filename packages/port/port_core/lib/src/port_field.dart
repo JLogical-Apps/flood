@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:port_core/port_core.dart';
 import 'package:port_core/src/currency_port_field.dart';
 import 'package:port_core/src/display_name_port_field.dart';
+import 'package:port_core/src/hint_port_field.dart';
 import 'package:port_core/src/map_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
 import 'package:port_core/src/multiline_port_field.dart';
@@ -112,6 +113,11 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   PortField<T, S> withDynamicDisplayName(String? Function() displayNameGetter) =>
       DisplayNamePortField<T, S>(portField: this, displayNameGetter: displayNameGetter);
 
+  PortField<T, S> withHint(String hint) => HintPortField<T, S>(portField: this, hintGetter: () => hint);
+
+  PortField<T, S> withDynamicHint(String? Function() hintGetter) =>
+      HintPortField<T, S>(portField: this, hintGetter: hintGetter);
+
   StagePortField? findStageFieldOrNull() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.findStagePortFieldOrNull(this);
   }
@@ -122,6 +128,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
 
   String? findDisplayNameOrNull() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.getDisplayNameOrNull(this);
+  }
+
+  String? findHint() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.getHintOrNull(this);
   }
 
   bool findIsMultiline() {

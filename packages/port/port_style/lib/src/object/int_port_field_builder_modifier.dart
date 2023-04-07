@@ -10,6 +10,7 @@ class IntPortFieldBuilderModifier extends PortFieldBuilderModifier {
     return StyledIntFieldPortField(
       fieldName: fieldName,
       labelText: portField.findDisplayNameOrNull(),
+      hintText: portField.findHint(),
     );
   }
 

@@ -11,6 +11,8 @@ class StyledIntFieldPortField extends HookWidget {
   final String? labelText;
   final Widget? label;
 
+  final String? hintText;
+
   final bool enabled;
 
   const StyledIntFieldPortField({
@@ -18,6 +20,7 @@ class StyledIntFieldPortField extends HookWidget {
     required this.fieldName,
     this.labelText,
     this.label,
+    this.hintText,
     this.enabled = true,
   });
 
@@ -31,6 +34,7 @@ class StyledIntFieldPortField extends HookWidget {
           text: amount?.formatIntOrDouble() ?? '',
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
+          hintText: hintText,
           errorText: error?.toString(),
           enabled: enabled,
           onChanged: (amountRaw) {

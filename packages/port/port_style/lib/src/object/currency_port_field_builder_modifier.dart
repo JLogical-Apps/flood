@@ -9,6 +9,7 @@ class CurrencyPortFieldBuilderModifier extends PortFieldBuilderModifier {
     return StyledCurrencyFieldPortField(
       fieldName: fieldName,
       labelText: portField.findDisplayNameOrNull(),
+      hintText: portField.findHint(),
     );
   }
 

@@ -11,6 +11,7 @@ import 'package:port_drop_core/src/behavior_modifiers/hidden_property_behavior_m
 import 'package:port_drop_core/src/behavior_modifiers/int_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/is_not_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/placeholder_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/stage_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/string_field_behavior_modifier.dart';
@@ -36,6 +37,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       IsNotBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       FallbackPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       FallbackReplacementPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      PlaceholderPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       DisplayNamePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       MultilinePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       CurrencyPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),

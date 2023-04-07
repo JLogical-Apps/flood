@@ -18,6 +18,11 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   }
 
   @override
+  String? getHintOrNull(T portField) {
+    return modifierGetter(portField.portField)?.getHintOrNull(portField.portField);
+  }
+
+  @override
   bool isMultiline(T portField) {
     return modifierGetter(portField.portField)?.isMultiline(portField.portField) ?? false;
   }

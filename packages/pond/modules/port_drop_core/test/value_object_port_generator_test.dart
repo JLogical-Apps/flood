@@ -110,6 +110,17 @@ void main() {
     result = await userPort.submit();
     expect((result.data.personProperty.value as Student).nameProperty.value, 'John Doe');
   });
+
+  test('Port for hint fields.', () async {
+    corePondContext.locate<TypeCoreComponent>().register(Data6.new, name: 'Data6');
+
+    final user = Data6();
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+    expect(userPort.getFieldByName(Data6.firstNameField).findHint(), 'John');
+    expect(userPort.getFieldByName(Data6.lastNameField).findHint(), 'Doe');
+    expect(userPort.getFieldByName(Data6.nameField).findHint(), 'John Doe');
+    expect(userPort.getFieldByName(Data6.errorField).findHint(), isNull);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -166,3 +177,21 @@ class Student extends Person {
 }
 
 class Teacher extends Person {}
+
+class Data6 extends ValueObject {
+  static const firstNameField = 'firstName';
+  late final firstNameProperty = field<String>(name: firstNameField).withPlaceholder(() => 'John');
+
+  static const lastNameField = 'lastName';
+  late final lastNameProperty = field<String>(name: lastNameField).withFallbackReplacement(() => 'Doe');
+
+  static const nameField = 'name';
+  late final nameProperty =
+      field<String>(name: nameField).withFallback(() => '${firstNameProperty.value} ${lastNameProperty.value}');
+
+  static const errorField = 'error';
+  late final errorProperty = field<String>(name: errorField).withFallback(() => throw Exception('Error!'));
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [firstNameProperty, lastNameProperty, nameProperty, errorProperty];
+}

@@ -11,6 +11,8 @@ class StyledCurrencyFieldPortField extends HookWidget {
   final String? labelText;
   final Widget? label;
 
+  final String? hintText;
+
   final bool enabled;
 
   const StyledCurrencyFieldPortField({
@@ -18,6 +20,7 @@ class StyledCurrencyFieldPortField extends HookWidget {
     required this.fieldName,
     this.labelText,
     this.label,
+    this.hintText,
     this.enabled = true,
   });
 
@@ -31,6 +34,7 @@ class StyledCurrencyFieldPortField extends HookWidget {
           text: amountCents?.formatCentsAsCurrency() ?? '',
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
+          hintText: hintText,
           errorText: error?.toString(),
           enabled: enabled,
           onChanged: (amountRaw) {
