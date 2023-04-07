@@ -13,6 +13,6 @@ class PlaceholderPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorMo
 
   @override
   PortField getPortField(PlaceholderValueObjectProperty behavior, PortField sourcePortField) {
-    return sourcePortField.withDynamicHint(() => guard<String?>(() => behavior.placeholder()?.toString()));
+    return sourcePortField.withDynamicHint(() => guard(() => behavior.placeholder()));
   }
 }

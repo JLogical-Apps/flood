@@ -4,11 +4,11 @@ class HintPortField<T, S> with IsPortFieldWrapper<T, S> {
   @override
   final PortField<T, S> portField;
 
-  final String? Function() hintGetter;
+  final T? Function() hintGetter;
 
   HintPortField({required this.portField, required this.hintGetter});
 
-  String? getHint() {
+  T? getHint() {
     return hintGetter();
   }
 

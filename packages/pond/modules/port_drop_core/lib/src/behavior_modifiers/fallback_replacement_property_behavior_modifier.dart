@@ -14,6 +14,6 @@ class FallbackReplacementPropertyBehaviorModifier
 
   @override
   PortField getPortField(FallbackReplacementValueObjectProperty behavior, PortField sourcePortField) {
-    return sourcePortField.withDynamicHint(() => guard<String?>(() => behavior.fallbackReplacement()?.toString()));
+    return sourcePortField.withDynamicHint(() => guard(() => behavior.fallbackReplacement()));
   }
 }

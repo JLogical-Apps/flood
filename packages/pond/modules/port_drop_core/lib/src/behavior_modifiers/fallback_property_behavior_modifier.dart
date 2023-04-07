@@ -13,6 +13,6 @@ class FallbackPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModif
 
   @override
   PortField getPortField(FallbackValueObjectProperty behavior, PortField sourcePortField) {
-    return sourcePortField.withDynamicHint(() => guard<String?>(() => behavior.fallback()?.toString()));
+    return sourcePortField.withDynamicHint(() => guard(() => behavior.fallback()));
   }
 }

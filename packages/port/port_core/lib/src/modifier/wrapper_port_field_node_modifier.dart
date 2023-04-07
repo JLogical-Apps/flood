@@ -18,7 +18,7 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   }
 
   @override
-  String? getHintOrNull(T portField) {
+  dynamic getHintOrNull(T portField) {
     return modifierGetter(portField.portField)?.getHintOrNull(portField.portField);
   }
 

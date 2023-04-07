@@ -113,9 +113,9 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   PortField<T, S> withDynamicDisplayName(String? Function() displayNameGetter) =>
       DisplayNamePortField<T, S>(portField: this, displayNameGetter: displayNameGetter);
 
-  PortField<T, S> withHint(String hint) => HintPortField<T, S>(portField: this, hintGetter: () => hint);
+  PortField<T, S> withHint(T? hint) => HintPortField<T, S>(portField: this, hintGetter: () => hint);
 
-  PortField<T, S> withDynamicHint(String? Function() hintGetter) =>
+  PortField<T, S> withDynamicHint(T? Function() hintGetter) =>
       HintPortField<T, S>(portField: this, hintGetter: hintGetter);
 
   StagePortField? findStageFieldOrNull() {
@@ -130,7 +130,7 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
     return PortFieldNodeModifier.getModifierOrNull(this)?.getDisplayNameOrNull(this);
   }
 
-  String? findHint() {
+  T? findHintOrNull() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.getHintOrNull(this);
   }
 
