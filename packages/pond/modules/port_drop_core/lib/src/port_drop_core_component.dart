@@ -16,6 +16,7 @@ import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior
 import 'package:port_drop_core/src/behavior_modifiers/stage_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/string_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier.dart';
+import 'package:port_drop_core/src/port_generator_behavior_modifier_context.dart';
 import 'package:type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
@@ -30,7 +31,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       IntFieldBehaviorModifier(),
       StageFieldBehaviorModifier(
         typeContext: context.locate<TypeCoreComponent>(),
-        portCreator: (valueObject) => generatePortRuntime(valueObject: valueObject),
+        portCreator: (valueObject) => generatePort(valueObject),
       ),
       FieldBehaviorModifier(),
       RequiredPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
@@ -57,17 +58,20 @@ class PortDropCoreComponent with IsCorePondComponent {
   Port<V> generatePort<V extends ValueObject>(V valueObject) {
     var portFieldByName = <String, PortField>{};
 
+    late Port<V> port;
+
+    final portBehaviorContext = PortGeneratorBehaviorModifierContext(portGetter: () => port);
     for (final behavior in valueObject.behaviors) {
       final modifier = behaviorModifierResolver.resolveOrNull(behavior);
       if (modifier == null) {
         continue;
       }
 
-      final behaviorPortFieldByName = modifier.getPortFieldByName(behavior);
+      final behaviorPortFieldByName = modifier.getPortFieldByName(behavior, portBehaviorContext);
       portFieldByName = {...portFieldByName, ...behaviorPortFieldByName};
     }
 
-    return Port.of(portFieldByName).map((sourceData, port) {
+    port = Port.of(portFieldByName).map((sourceData, port) {
       final typeContext = context.locate<TypeCoreComponent>();
       final dropCoreContext = context.locate<DropCoreComponent>();
 
@@ -77,38 +81,10 @@ class PortDropCoreComponent with IsCorePondComponent {
       );
       final mergedState = valueObject.getState(dropCoreContext).mergeWith(state);
 
-      final newValueObject = typeContext.constructGeneric<V>();
+      final newValueObject = typeContext.construct(valueObject.runtimeType) as V;
       newValueObject.copyFrom(dropCoreContext, mergedState);
       return newValueObject;
     });
-  }
-
-  Port<ValueObject> generatePortRuntime({required ValueObject valueObject}) {
-    var portFieldByName = <String, PortField>{};
-
-    for (final behavior in valueObject.behaviors) {
-      final modifier = behaviorModifierResolver.resolveOrNull(behavior);
-      if (modifier == null) {
-        continue;
-      }
-
-      final behaviorPortFieldByName = modifier.getPortFieldByName(behavior);
-      portFieldByName = {...portFieldByName, ...behaviorPortFieldByName};
-    }
-
-    return Port.of(portFieldByName).map((sourceData, port) {
-      final typeContext = context.locate<TypeCoreComponent>();
-      final dropCoreContext = context.locate<DropCoreComponent>();
-
-      final state = State.fromMap(
-        sourceData,
-        runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
-      );
-      final mergedState = valueObject.getState(dropCoreContext).mergeWith(state);
-
-      final newValueObject = typeContext.construct(valueObject.runtimeType) as ValueObject;
-      newValueObject.copyFrom(dropCoreContext, mergedState);
-      return newValueObject;
-    });
+    return port;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:port_core/port_core.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier.dart';
+import 'package:port_drop_core/src/port_generator_behavior_modifier_context.dart';
 import 'package:type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -12,7 +13,10 @@ class StageFieldBehaviorModifier
   StageFieldBehaviorModifier({required this.typeContext, required this.portCreator});
 
   @override
-  Map<String, PortField> getPortFieldByName(FieldValueObjectProperty<ValueObject?, dynamic> behavior) {
+  Map<String, PortField> getPortFieldByName(
+    FieldValueObjectProperty<ValueObject?, dynamic> behavior,
+    PortGeneratorBehaviorModifierContext context,
+  ) {
     final baseType = behavior.fieldType;
     final baseRuntimeType = typeContext.getRuntimeTypeRuntime(baseType);
 
