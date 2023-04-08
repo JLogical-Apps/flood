@@ -1,7 +1,7 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:utils_core/utils_core.dart';
 
-class ComputedValueObjectProperty<T, L> with IsValueObjectProperty<T, void, L> {
+class ComputedValueObjectProperty<T, L> with IsValueObjectProperty<T, void, L, ComputedValueObjectProperty<T, L>> {
   final String name;
 
   final T Function() computation;
@@ -20,4 +20,9 @@ class ComputedValueObjectProperty<T, L> with IsValueObjectProperty<T, void, L> {
 
   @override
   T get value => computation();
+
+  @override
+  ComputedValueObjectProperty<T, L> copy() {
+    return ComputedValueObjectProperty<T, L>(name: name, computation: computation);
+  }
 }

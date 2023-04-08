@@ -6,8 +6,8 @@ import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-class IsNotBlankValueObjectProperty<L> with IsValueObjectProperty<String, String, L> {
-  final ValueObjectProperty<String?, String?, L> property;
+class IsNotBlankValueObjectProperty<L> with IsValueObjectProperty<String, String, L, IsNotBlankValueObjectProperty<L>> {
+  final ValueObjectProperty<String?, String?, L, dynamic> property;
 
   IsNotBlankValueObjectProperty({required this.property});
 
@@ -43,4 +43,9 @@ class IsNotBlankValueObjectProperty<L> with IsValueObjectProperty<String, String
 
   @override
   Future<L> load(DropCoreContext context) => property.load(context);
+
+  @override
+  IsNotBlankValueObjectProperty<L> copy() {
+    return IsNotBlankValueObjectProperty<L>(property: property.copy());
+  }
 }

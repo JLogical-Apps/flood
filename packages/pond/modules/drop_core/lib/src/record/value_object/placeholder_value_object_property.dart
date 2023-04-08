@@ -2,9 +2,10 @@ import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 
-class PlaceholderValueObjectProperty<G, S, L> with IsValueObjectPropertyWrapper<G, S, L> {
+class PlaceholderValueObjectProperty<G, S, L>
+    with IsValueObjectPropertyWrapper<G, S, L, PlaceholderValueObjectProperty<G, S, L>> {
   @override
-  final ValueObjectProperty<G, S, L> property;
+  final ValueObjectProperty<G, S, L, dynamic> property;
 
   final G Function() placeholder;
 
@@ -28,4 +29,9 @@ class PlaceholderValueObjectProperty<G, S, L> with IsValueObjectPropertyWrapper<
 
   @override
   Future<L> load(DropCoreContext context) => property.load(context);
+
+  @override
+  PlaceholderValueObjectProperty<G, S, L> copy() {
+    return PlaceholderValueObjectProperty<G, S, L>(property: property.copy(), placeholder: placeholder);
+  }
 }

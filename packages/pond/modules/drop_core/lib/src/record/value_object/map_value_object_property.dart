@@ -4,13 +4,14 @@ import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-class MapValueObjectProperty<K, V, L> with IsValueObjectProperty<Map<K, V>, Map<K, V>, L> {
+class MapValueObjectProperty<K, V, L>
+    with IsValueObjectProperty<Map<K, V>, Map<K, V>, L, MapValueObjectProperty<K, V, L>> {
   final FieldValueObjectProperty<K, L> property;
 
   @override
   Map<K, V> value;
 
-  MapValueObjectProperty({required this.property}) : value = {};
+  MapValueObjectProperty({required this.property, Map<K, V>? value}) : value = value ?? {};
 
   String get name => property.name;
 
@@ -29,4 +30,9 @@ class MapValueObjectProperty<K, V, L> with IsValueObjectProperty<Map<K, V>, Map<
 
   @override
   Future<L> load(DropCoreContext context) => property.load(context);
+
+  @override
+  MapValueObjectProperty<K, V, L> copy() {
+    return MapValueObjectProperty<K, V, L>(property: property.copy());
+  }
 }

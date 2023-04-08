@@ -6,7 +6,8 @@ import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-class ReferenceValueObjectProperty<E extends Entity> with IsValueObjectProperty<String?, String?, E?> {
+class ReferenceValueObjectProperty<E extends Entity>
+    with IsValueObjectProperty<String?, String?, E?, ReferenceValueObjectProperty<E>> {
   final String name;
 
   @override
@@ -34,5 +35,10 @@ class ReferenceValueObjectProperty<E extends Entity> with IsValueObjectProperty<
   @override
   Future<E?> load(DropCoreContext context) async {
     return await value?.mapIfNonNullAsync((value) => context.executeQuery(Query.getById<E>(value)));
+  }
+
+  @override
+  ReferenceValueObjectProperty<E> copy() {
+    return ReferenceValueObjectProperty<E>(name: name, value: value);
   }
 }

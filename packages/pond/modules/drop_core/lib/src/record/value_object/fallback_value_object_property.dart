@@ -2,8 +2,8 @@ import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 
-class FallbackValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L> {
-  final ValueObjectProperty<T?, S, L> property;
+class FallbackValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L, FallbackValueObjectProperty<T, S, L>> {
+  final ValueObjectProperty<T?, S, L, dynamic> property;
 
   final T Function() fallback;
 
@@ -27,4 +27,9 @@ class FallbackValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L> {
 
   @override
   Future<L> load(DropCoreContext context) => property.load(context);
+
+  @override
+  FallbackValueObjectProperty<T, S, L> copy() {
+    return FallbackValueObjectProperty<T, S, L>(property: property.copy(), fallback: fallback);
+  }
 }

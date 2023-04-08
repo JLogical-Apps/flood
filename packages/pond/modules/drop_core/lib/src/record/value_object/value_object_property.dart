@@ -21,7 +21,8 @@ import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-abstract class ValueObjectProperty<G, S, L> implements ValueObjectBehavior {
+abstract class ValueObjectProperty<G, S, L, V extends ValueObjectProperty<dynamic, dynamic, dynamic, dynamic>>
+    implements ValueObjectBehavior {
   G get value;
 
   G? get valueOrNull;
@@ -29,6 +30,8 @@ abstract class ValueObjectProperty<G, S, L> implements ValueObjectBehavior {
   void set(S value);
 
   Future<L> load(DropCoreContext context);
+
+  V copy();
 
   static FieldValueObjectProperty<T, dynamic> field<T>({required String name}) {
     return FieldValueObjectProperty(name: name);
@@ -46,7 +49,7 @@ abstract class ValueObjectProperty<G, S, L> implements ValueObjectBehavior {
   }
 }
 
-mixin IsValueObjectProperty<G, S, L> implements ValueObjectProperty<G, S, L> {
+mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements ValueObjectProperty<G, S, L, V> {
   @override
   G? get valueOrNull => value;
 
@@ -69,7 +72,7 @@ mixin IsValueObjectProperty<G, S, L> implements ValueObjectProperty<G, S, L> {
   }
 }
 
-extension ValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G, S, L> {
+extension ValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
   Type get getterType => G;
 
   Type get setterType => S;
@@ -93,22 +96,24 @@ extension ValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G, S, L>
   }
 }
 
-extension GetterSetterNullabeValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G?, S?, L> {
+extension GetterSetterNullabeValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty>
+    on ValueObjectProperty<G?, S?, L, V> {
   RequiredValueObjectProperty<G, S, L> required() {
     return RequiredValueObjectProperty(property: this);
   }
 }
 
-extension GetterNullableValueObjectPropertyExtensions<G, S, L> on ValueObjectProperty<G?, S, L> {
+extension GetterNullableValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty>
+    on ValueObjectProperty<G?, S, L, V> {
   FallbackValueObjectProperty<G, S, L> withFallback(G Function() fallback) {
     return FallbackValueObjectProperty(property: this, fallback: fallback);
   }
 }
 
-extension NullableStringValueObjectPropertyExtensions<G extends String?, S extends String?, L>
-    on ValueObjectProperty<G, S, L> {
+extension NullableStringValueObjectPropertyExtensions<G extends String?, S extends String?, L,
+    V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
   IsNotBlankValueObjectProperty<L> isNotBlank() {
-    return IsNotBlankValueObjectProperty(property: this);
+    return IsNotBlankValueObjectProperty<L>(property: this);
   }
 
   MultilineValueObjectProperty<G, S, L> multiline([bool isMultiline = true]) {
@@ -116,13 +121,15 @@ extension NullableStringValueObjectPropertyExtensions<G extends String?, S exten
   }
 }
 
-extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int?, L> on ValueObjectProperty<G, S, L> {
+extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int?, L, V extends ValueObjectProperty>
+    on ValueObjectProperty<G, S, L, V> {
   CurrencyValueObjectProperty<G, S, L> currency([bool isCurrency = true]) {
     return CurrencyValueObjectProperty<G, S, L>(property: this, isCurrency: isCurrency);
   }
 }
 
-extension SameGetterSetterValueObjectPropertyExtensions<T, L> on ValueObjectProperty<T?, T?, L> {
+extension SameGetterSetterValueObjectPropertyExtensions<T, L, V extends ValueObjectProperty>
+    on ValueObjectProperty<T?, T?, L, V> {
   FallbackReplacementValueObjectProperty<T, L> withFallbackReplacement(T Function() fallbackReplacement) {
     return FallbackReplacementValueObjectProperty(property: this, fallbackReplacement: fallbackReplacement);
   }
@@ -138,11 +145,13 @@ extension FieldValueObjectPropertyExtensions<T, L> on FieldValueObjectProperty<T
   }
 }
 
-abstract class ValueObjectPropertyWrapper<G, S, L> implements ValueObjectProperty<G, S, L> {
-  ValueObjectProperty<G, S, L> get property;
+abstract class ValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty>
+    implements ValueObjectProperty<G, S, L, V> {
+  ValueObjectProperty<G, S, L, dynamic> get property;
 }
 
-mixin IsValueObjectPropertyWrapper<G, S, L> implements ValueObjectPropertyWrapper<G, S, L> {
+mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, L, V>>
+    implements ValueObjectPropertyWrapper<G, S, L, V> {
   @override
   G get value => property.value;
 
