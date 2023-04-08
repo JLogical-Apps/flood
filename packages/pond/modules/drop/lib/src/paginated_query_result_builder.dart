@@ -13,7 +13,7 @@ class PaginatedQueryResultBuilder<T> extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final page = useValueStream(queryResult.pageX);
-    final itemsModel = useFutureModel(() async => await page.getItems());
+    final itemsModel = useFutureModel(() async => await page.getItems(), [page]);
     return ModelBuilder(
       model: itemsModel,
       builder: (List<T> items) {

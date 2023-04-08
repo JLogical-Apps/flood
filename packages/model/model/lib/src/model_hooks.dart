@@ -11,8 +11,11 @@ FutureValue<T> useModel<T>(Model<T> model) {
   return useModelOrNull(model)!;
 }
 
-Model<T> useFutureModel<T>(Future<T> Function() futureGetter) {
-  final model = useMemoized(() => Model(loader: futureGetter)..load());
+Model<T> useFutureModel<T>(
+  Future<T> Function() futureGetter, [
+  List<Object?> keys = const <Object>[],
+]) {
+  final model = useMemoized(() => Model(loader: futureGetter)..load(), keys);
   useModel(model);
   return model;
 }
