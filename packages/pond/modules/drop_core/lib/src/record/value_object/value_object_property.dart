@@ -14,6 +14,7 @@ import 'package:drop_core/src/record/value_object/is_not_blank_value_object_prop
 import 'package:drop_core/src/record/value_object/list_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/map_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/multiline_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/null_if_blank_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/placeholder_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_value_object_property.dart';
@@ -23,6 +24,8 @@ import 'package:utils_core/utils_core.dart';
 
 abstract class ValueObjectProperty<G, S, L, V extends ValueObjectProperty<dynamic, dynamic, dynamic, dynamic>>
     implements ValueObjectBehavior {
+  String get name;
+
   G get value;
 
   G? get valueOrNull;
@@ -119,6 +122,10 @@ extension NullableStringValueObjectPropertyExtensions<G extends String?, S exten
   MultilineValueObjectProperty<G, S, L> multiline([bool isMultiline = true]) {
     return MultilineValueObjectProperty<G, S, L>(property: this, isMultiline: isMultiline);
   }
+
+  NullIfBlankValueObjectProperty<G, S, L> nullIfBlank() {
+    return NullIfBlankValueObjectProperty<G, S, L>(property: this);
+  }
 }
 
 extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int?, L, V extends ValueObjectProperty>
@@ -152,6 +159,9 @@ abstract class ValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty
 
 mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, L, V>>
     implements ValueObjectPropertyWrapper<G, S, L, V> {
+  @override
+  String get name => property.name;
+
   @override
   G get value => property.value;
 

@@ -2,6 +2,7 @@ import 'package:drop_core/drop_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class ComputedValueObjectProperty<T, L> with IsValueObjectProperty<T, void, L, ComputedValueObjectProperty<T, L>> {
+  @override
   final String name;
 
   final T Function() computation;

@@ -13,11 +13,27 @@ class FallbackPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModif
   }
 
   @override
+  dynamic getHintOrNull(FallbackValueObjectProperty behavior) {
+    return behavior.fallback();
+  }
+
+  @override
   PortField getPortField(
     FallbackValueObjectProperty behavior,
     PortField sourcePortField,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    return sourcePortField.withDynamicHint(() => guard(() => behavior.fallback()));
+    return sourcePortField.withDynamicHint(() => guard(() {
+          final constructedValueObject = context.portDropCoreComponent.getValueObjectFromPort(
+            port: context.port,
+            originalValueObject: context.originalValueObject,
+          );
+          final copiedBehavior = constructedValueObject.behaviors
+              .whereType<ValueObjectProperty>()
+              .where((property) => property.name == behavior.name)
+              .first;
+
+          return modifierGetter(copiedBehavior)?.getHintOrNull(copiedBehavior);
+        }));
   }
 }

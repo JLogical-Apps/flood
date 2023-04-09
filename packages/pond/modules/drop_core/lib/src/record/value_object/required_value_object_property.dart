@@ -45,4 +45,7 @@ class RequiredValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L, R
   RequiredValueObjectProperty<T, S, L> copy() {
     return RequiredValueObjectProperty<T, S, L>(property: property.copy());
   }
+
+  @override
+  String get name => property.name;
 }

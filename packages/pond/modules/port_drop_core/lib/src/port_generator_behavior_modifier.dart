@@ -6,6 +6,10 @@ import 'package:utils_core/utils_core.dart';
 abstract class PortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
     with IsTypedModifier<T, ValueObjectBehavior> {
   Map<String, PortField> getPortFieldByName(T behavior, PortGeneratorBehaviorModifierContext context);
+
+  dynamic getHintOrNull(T behavior) {
+    return null;
+  }
 }
 
 abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
@@ -40,5 +44,11 @@ abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavio
         .mapValues((name, portField) => getPortField(behavior, portField, context))
         .where((name, portField) => portField != null)
         .mapValues((name, portField) => portField!);
+  }
+
+  @override
+  dynamic getHintOrNull(T behavior) {
+    final unwrappedBehavior = unwrapBehavior(behavior);
+    return modifierGetter(unwrappedBehavior)?.getHintOrNull(unwrappedBehavior);
   }
 }

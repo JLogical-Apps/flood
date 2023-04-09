@@ -13,11 +13,27 @@ class PlaceholderPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorMo
   }
 
   @override
+  dynamic getHintOrNull(PlaceholderValueObjectProperty behavior) {
+    return behavior.placeholder();
+  }
+
+  @override
   PortField getPortField(
     PlaceholderValueObjectProperty behavior,
     PortField sourcePortField,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    return sourcePortField.withDynamicHint(() => guard(() => behavior.placeholder()));
+    return sourcePortField.withDynamicHint(() => guard(() {
+          final constructedValueObject = context.portDropCoreComponent.getValueObjectFromPort(
+            port: context.port,
+            originalValueObject: context.originalValueObject,
+          );
+          final copiedBehavior = constructedValueObject.behaviors
+              .whereType<ValueObjectProperty>()
+              .where((property) => property.name == behavior.name)
+              .first;
+
+          return modifierGetter(copiedBehavior)?.getHintOrNull(copiedBehavior);
+        }));
   }
 }

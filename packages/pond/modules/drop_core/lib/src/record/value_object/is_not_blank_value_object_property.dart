@@ -48,4 +48,7 @@ class IsNotBlankValueObjectProperty<L> with IsValueObjectProperty<String, String
   IsNotBlankValueObjectProperty<L> copy() {
     return IsNotBlankValueObjectProperty<L>(property: property.copy());
   }
+
+  @override
+  String get name => property.name;
 }

@@ -32,4 +32,7 @@ class FallbackValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L, F
   FallbackValueObjectProperty<T, S, L> copy() {
     return FallbackValueObjectProperty<T, S, L>(property: property.copy(), fallback: fallback);
   }
+
+  @override
+  String get name => property.name;
 }

@@ -11,6 +11,7 @@ import 'package:port_drop_core/src/behavior_modifiers/hidden_property_behavior_m
 import 'package:port_drop_core/src/behavior_modifiers/int_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/is_not_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/null_if_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/placeholder_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/stage_field_behavior_modifier.dart';
@@ -41,6 +42,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       PlaceholderPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       DisplayNamePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       MultilinePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      NullIfBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       CurrencyPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
     ],
   );
@@ -60,7 +62,11 @@ class PortDropCoreComponent with IsCorePondComponent {
 
     late Port<V> port;
 
-    final portBehaviorContext = PortGeneratorBehaviorModifierContext(portGetter: () => port);
+    final portBehaviorContext = PortGeneratorBehaviorModifierContext(
+      originalValueObject: valueObject,
+      portDropCoreComponent: this,
+      portGetter: () => port,
+    );
     for (final behavior in valueObject.behaviors) {
       final modifier = behaviorModifierResolver.resolveOrNull(behavior);
       if (modifier == null) {
@@ -86,5 +92,20 @@ class PortDropCoreComponent with IsCorePondComponent {
       return newValueObject;
     });
     return port;
+  }
+
+  V getValueObjectFromPort<V extends ValueObject>({required Port port, required ValueObject originalValueObject}) {
+    final typeContext = context.locate<TypeCoreComponent>();
+    final dropCoreContext = context.locate<DropCoreComponent>();
+
+    final state = State.fromMap(
+      port.portFieldByName.map((name, portField) => MapEntry(name, portField.value)),
+      runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
+    );
+    final mergedState = originalValueObject.getState(dropCoreContext).mergeWith(state);
+
+    final newValueObject = typeContext.construct(originalValueObject.runtimeType) as V;
+    newValueObject.copyFromUnsafe(dropCoreContext, mergedState);
+    return newValueObject;
   }
 }

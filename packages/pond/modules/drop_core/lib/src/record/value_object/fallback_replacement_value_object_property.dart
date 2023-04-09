@@ -40,4 +40,7 @@ class FallbackReplacementValueObjectProperty<T, L>
       fallbackReplacement: fallbackReplacement,
     );
   }
+
+  @override
+  String get name => property.name;
 }

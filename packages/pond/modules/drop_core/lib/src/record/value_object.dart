@@ -26,6 +26,12 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
     }
   }
 
+  void setStateUnsafe(State state) {
+    for (final behavior in behaviors) {
+      guard(() => behavior.fromState(state));
+    }
+  }
+
   /// An unsafe state of the ValueObject without the type set.
   State get scaffoldState {
     final state = behaviors.fold<State>(
@@ -38,6 +44,10 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
 
   void copyFrom(DropCoreContext context, Stateful stateful) {
     state = stateful.getState(context);
+  }
+
+  void copyFromUnsafe(DropCoreContext context, Stateful stateful) {
+    setStateUnsafe(stateful.getState(context));
   }
 
   @override

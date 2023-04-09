@@ -12,6 +12,7 @@ class ListValueObjectProperty<T, L> with IsValueObjectProperty<List<T>, List<T>,
 
   ListValueObjectProperty({required this.property, List<T>? value}) : value = value ?? [];
 
+  @override
   String get name => property.name;
 
   @override

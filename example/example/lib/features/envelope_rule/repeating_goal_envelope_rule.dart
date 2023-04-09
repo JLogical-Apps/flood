@@ -17,7 +17,9 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
   late final remainingGoalCentsProperty = field<int>(name: remainingGoalCentsField)
       .withDisplayName('Remaining (\$)')
       .currency()
-      .withFallbackReplacement(() => goalCentsProperty.value);
+      .withFallbackReplacement(() {
+    return goalCentsProperty.value;
+  });
 
   static const timeRuleField = 'timeRule';
   late final timeRuleProperty = field<TimeRule>(name: timeRuleField).withDisplayName('Timing').required();

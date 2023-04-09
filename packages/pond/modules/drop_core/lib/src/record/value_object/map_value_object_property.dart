@@ -13,6 +13,7 @@ class MapValueObjectProperty<K, V, L>
 
   MapValueObjectProperty({required this.property, Map<K, V>? value}) : value = value ?? {};
 
+  @override
   String get name => property.name;
 
   @override

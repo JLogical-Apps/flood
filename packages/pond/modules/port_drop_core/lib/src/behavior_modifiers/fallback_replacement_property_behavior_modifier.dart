@@ -14,11 +14,27 @@ class FallbackReplacementPropertyBehaviorModifier
   }
 
   @override
+  dynamic getHintOrNull(FallbackReplacementValueObjectProperty behavior) {
+    return behavior.fallbackReplacement();
+  }
+
+  @override
   PortField getPortField(
     FallbackReplacementValueObjectProperty behavior,
     PortField sourcePortField,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    return sourcePortField.withDynamicHint(() => guard(() => behavior.fallbackReplacement()));
+    return sourcePortField.withDynamicHint(() => guard(() {
+          final constructedValueObject = context.portDropCoreComponent.getValueObjectFromPort(
+            port: context.port,
+            originalValueObject: context.originalValueObject,
+          );
+          final copiedBehavior = constructedValueObject.behaviors
+              .whereType<ValueObjectProperty>()
+              .where((property) => property.name == behavior.name)
+              .first;
+
+          return modifierGetter(copiedBehavior)?.getHintOrNull(copiedBehavior);
+        }));
   }
 }

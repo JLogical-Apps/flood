@@ -3,6 +3,7 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
 class FieldValueObjectProperty<T, L> with IsValueObjectProperty<T?, T?, L, FieldValueObjectProperty<T, L>> {
+  @override
   final String name;
 
   @override

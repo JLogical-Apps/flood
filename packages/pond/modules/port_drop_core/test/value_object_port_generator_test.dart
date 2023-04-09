@@ -120,6 +120,10 @@ void main() {
     expect(userPort.getFieldByName(Data6.lastNameField).findHintOrNull(), 'Doe');
     expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(), 'John Doe');
     expect(userPort.getFieldByName(Data6.errorField).findHintOrNull(), isNull);
+
+    userPort[Data6.firstNameField] = 'Jill';
+    expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(), 'John');
+    expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(), 'Jill Doe');
   });
 }
 
@@ -180,14 +184,15 @@ class Teacher extends Person {}
 
 class Data6 extends ValueObject {
   static const firstNameField = 'firstName';
-  late final firstNameProperty = field<String>(name: firstNameField).withPlaceholder(() => 'John');
+  late final firstNameProperty = field<String>(name: firstNameField).nullIfBlank().withPlaceholder(() => 'John');
 
   static const lastNameField = 'lastName';
-  late final lastNameProperty = field<String>(name: lastNameField).withFallbackReplacement(() => 'Doe');
+  late final lastNameProperty = field<String>(name: lastNameField).nullIfBlank().withFallbackReplacement(() => 'Doe');
 
   static const nameField = 'name';
-  late final nameProperty =
-      field<String>(name: nameField).withFallback(() => '${firstNameProperty.value} ${lastNameProperty.value}');
+  late final nameProperty = field<String>(name: nameField)
+      .nullIfBlank()
+      .withFallback(() => '${firstNameProperty.value} ${lastNameProperty.value}');
 
   static const errorField = 'error';
   late final errorProperty = field<String>(name: errorField).withFallback(() => throw Exception('Error!'));

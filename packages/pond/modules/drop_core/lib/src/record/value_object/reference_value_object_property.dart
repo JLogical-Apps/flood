@@ -8,6 +8,7 @@ import 'package:utils_core/utils_core.dart';
 
 class ReferenceValueObjectProperty<E extends Entity>
     with IsValueObjectProperty<String?, String?, E?, ReferenceValueObjectProperty<E>> {
+  @override
   final String name;
 
   @override
