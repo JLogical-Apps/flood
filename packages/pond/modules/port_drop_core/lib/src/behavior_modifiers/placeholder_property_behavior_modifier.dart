@@ -14,7 +14,7 @@ class PlaceholderPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorMo
 
   @override
   dynamic getHintOrNull(PlaceholderValueObjectProperty behavior) {
-    return behavior.placeholder();
+    return guard(() => behavior.placeholder());
   }
 
   @override

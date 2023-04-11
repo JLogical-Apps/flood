@@ -20,6 +20,11 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
     return scaffoldState.withType(context.getRuntimeTypeRuntime(runtimeType));
   }
 
+  @override
+  State getStateUnsafe(DropCoreContext context) {
+    return scaffoldStateUnsafe.withType(context.getRuntimeTypeRuntime(runtimeType));
+  }
+
   set state(State state) {
     for (final behavior in behaviors) {
       behavior.fromState(state);
@@ -33,14 +38,15 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
   }
 
   /// An unsafe state of the ValueObject without the type set.
-  State get scaffoldState {
-    final state = behaviors.fold<State>(
-      State(data: {}),
-      (state, behavior) => behavior.modifyState(state),
-    );
+  State get scaffoldState => behaviors.fold<State>(
+        State(data: {}),
+        (state, behavior) => behavior.modifyState(state),
+      );
 
-    return state;
-  }
+  State get scaffoldStateUnsafe => behaviors.fold<State>(
+        State(data: {}),
+        (state, behavior) => guard(() => behavior.modifyState(state)) ?? state,
+      );
 
   void copyFrom(DropCoreContext context, Stateful stateful) {
     state = stateful.getState(context);

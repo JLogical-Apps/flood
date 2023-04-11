@@ -18,6 +18,9 @@ class State extends Equatable implements Stateful {
   State getState(DropCoreContext context) => this;
 
   @override
+  State getStateUnsafe(DropCoreContext context) => this;
+
+  @override
   List<Object?> get props => [id, type, data];
 
   bool get isNew => id == null;

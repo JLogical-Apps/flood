@@ -106,7 +106,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       port.portFieldByName.map((name, portField) => MapEntry(name, portField.value)),
       runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
     );
-    final mergedState = originalValueObject.getState(dropCoreContext).mergeWith(state);
+    final mergedState = originalValueObject.getStateUnsafe(dropCoreContext).mergeWith(state);
 
     final newValueObject = typeContext.construct(originalValueObject.runtimeType) as V;
     newValueObject.copyFromUnsafe(dropCoreContext, mergedState);

@@ -14,7 +14,7 @@ class FallbackPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModif
 
   @override
   dynamic getHintOrNull(FallbackValueObjectProperty behavior) {
-    return behavior.fallback();
+    return guard(() => behavior.fallback());
   }
 
   @override
