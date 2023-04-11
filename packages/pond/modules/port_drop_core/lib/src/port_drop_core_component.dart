@@ -13,6 +13,7 @@ import 'package:port_drop_core/src/behavior_modifiers/is_not_blank_property_beha
 import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/null_if_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/placeholder_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/required_on_edit_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/stage_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/string_field_behavior_modifier.dart';
@@ -36,6 +37,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       ),
       FieldBehaviorModifier(),
       RequiredPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      RequiredOnEditPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       IsNotBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       FallbackPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       FallbackReplacementPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
@@ -56,6 +58,8 @@ class PortDropCoreComponent with IsCorePondComponent {
         CorePondComponentBehavior.dependency<TypeCoreComponent>(),
         CorePondComponentBehavior.dependency<DropCoreComponent>(),
       ];
+
+  DropCoreComponent get dropCoreComponent => context.locate<DropCoreComponent>();
 
   Port<V> generatePort<V extends ValueObject>(V valueObject) {
     var portFieldByName = <String, PortField>{};

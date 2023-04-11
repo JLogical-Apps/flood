@@ -10,8 +10,11 @@ class EnvelopeTransaction extends BudgetTransaction {
   late final envelopeProperty = reference<EnvelopeEntity>(name: envelopeField).required();
 
   static const amountCentsField = 'amount';
-  late final amountCentsProperty =
-      field<int>(name: amountCentsField).withDisplayName('Amount').currency().withFallback(() => 0);
+  late final amountCentsProperty = field<int>(name: amountCentsField)
+      .withDisplayName('Amount')
+      .requiredOnEdit()
+      .currency()
+      .withFallbackReplacement(() => 0);
 
   @override
   List<String> get affectedEnvelopeIds => [envelopeProperty.value];

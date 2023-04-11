@@ -10,6 +10,10 @@ abstract class PortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
   dynamic getHintOrNull(T behavior) {
     return null;
   }
+
+  bool isRequiredOnEdit(T behavior) {
+    return false;
+  }
 }
 
 abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
@@ -50,5 +54,11 @@ abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavio
   dynamic getHintOrNull(T behavior) {
     final unwrappedBehavior = unwrapBehavior(behavior);
     return modifierGetter(unwrappedBehavior)?.getHintOrNull(unwrappedBehavior);
+  }
+
+  @override
+  bool isRequiredOnEdit(T behavior) {
+    final unwrappedBehavior = unwrapBehavior(behavior);
+    return modifierGetter(unwrappedBehavior)?.isRequiredOnEdit(unwrappedBehavior) ?? false;
   }
 }

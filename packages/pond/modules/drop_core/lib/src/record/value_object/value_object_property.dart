@@ -17,6 +17,7 @@ import 'package:drop_core/src/record/value_object/multiline_value_object_propert
 import 'package:drop_core/src/record/value_object/null_if_blank_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/placeholder_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/required_on_edit_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -81,6 +82,10 @@ extension ValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty> 
   Type get setterType => S;
 
   Type get loadType => L;
+
+  RequiredOnEditValueObjectProperty<G, S, L> requiredOnEdit() {
+    return RequiredOnEditValueObjectProperty<G, S, L>(property: this);
+  }
 
   PlaceholderValueObjectProperty<G, S, L> withPlaceholder(G Function() placeholder) {
     return PlaceholderValueObjectProperty(property: this, placeholder: placeholder);

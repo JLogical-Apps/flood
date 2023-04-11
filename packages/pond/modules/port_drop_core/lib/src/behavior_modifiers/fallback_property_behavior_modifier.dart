@@ -23,6 +23,10 @@ class FallbackPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModif
     PortField sourcePortField,
     PortGeneratorBehaviorModifierContext context,
   ) {
+    if (isRequiredOnEdit(behavior)) {
+      return sourcePortField;
+    }
+
     return sourcePortField.withDynamicHint(() => guard(() {
           final constructedValueObject = context.portDropCoreComponent.getValueObjectFromPort(
             port: context.port,
