@@ -28,23 +28,17 @@ class FallbackReplacementPropertyBehaviorModifier
       return sourcePortField;
     }
 
-    return sourcePortField.withDynamicHint(() => guard(
-          () {
-            final constructedValueObject = context.portDropCoreComponent.getValueObjectFromPort(
-              port: context.port,
-              originalValueObject: context.originalValueObject,
-            );
-            final copiedBehavior = constructedValueObject.behaviors
-                .whereType<ValueObjectProperty>()
-                .where((property) => property.name == behavior.name)
-                .first;
+    return sourcePortField.withDynamicHint(() => guard(() {
+          final constructedValueObject = context.portDropCoreComponent.getValueObjectFromPort(
+            port: context.port,
+            originalValueObject: context.originalValueObject,
+          );
+          final copiedBehavior = constructedValueObject.behaviors
+              .whereType<ValueObjectProperty>()
+              .where((property) => property.name == behavior.name)
+              .first;
 
-            return modifierGetter(copiedBehavior)?.getHintOrNull(copiedBehavior);
-          },
-          onException: (e, stackTrace) {
-            print(e);
-            print(stackTrace);
-          },
-        ));
+          return modifierGetter(copiedBehavior)?.getHintOrNull(copiedBehavior);
+        }));
   }
 }

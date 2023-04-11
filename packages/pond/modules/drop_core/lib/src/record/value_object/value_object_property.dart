@@ -74,6 +74,11 @@ mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements V
   FutureOr<String?> onValidate(ValueObject data) async {
     return null;
   }
+
+  @override
+  String toString() {
+    return '$runtimeType{$name, $valueOrNull}';
+  }
 }
 
 extension ValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
@@ -187,4 +192,9 @@ mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, 
 
   @override
   FutureOr<String?> onValidate(ValueObject data) => property.validate(data);
+
+  @override
+  String toString() {
+    return '$runtimeType{$name, $valueOrNull}';
+  }
 }

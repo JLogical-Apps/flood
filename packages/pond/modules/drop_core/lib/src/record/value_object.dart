@@ -53,7 +53,7 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
   }
 
   void copyFromUnsafe(DropCoreContext context, Stateful stateful) {
-    setStateUnsafe(stateful.getState(context));
+    setStateUnsafe(stateful.getStateUnsafe(context));
   }
 
   @override
