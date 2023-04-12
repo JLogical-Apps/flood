@@ -27,19 +27,25 @@ class StageFieldBehaviorModifier
     final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
 
     final initialValueObject = behavior.value ?? defaultValue as ValueObject?;
-    final intialRuntimeType =
+    final initialRuntimeType =
         initialValueObject?.mapIfNonNull((value) => typeContext.getRuntimeTypeRuntime(value.runtimeType));
+
+    final isRequiredOnEdit =
+        modifierGetter(context.originalBehavior)?.isRequiredOnEdit(context.originalBehavior) ?? false;
 
     return {
       behavior.name: PortField.stage<RuntimeType?, dynamic>(
-          initialValue: intialRuntimeType,
-          options: [null, ...baseRuntimeType.getConcreteChildren()],
+          initialValue: initialRuntimeType,
+          options: [
+            if (!isRequiredOnEdit || initialRuntimeType == null) null,
+            ...baseRuntimeType.getConcreteChildren(),
+          ],
           portMapper: (type) {
             if (type == null) {
               return null;
             }
 
-            if (type == intialRuntimeType && initialValueObject != null) {
+            if (type == initialRuntimeType && initialValueObject != null) {
               return portCreator(initialValueObject);
             }
 

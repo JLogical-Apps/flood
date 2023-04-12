@@ -19,4 +19,9 @@ class RequiredPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModif
   ) {
     return sourcePortField.isNotNull();
   }
+
+  @override
+  bool isRequiredOnEdit(RequiredValueObjectProperty behavior) {
+    return true;
+  }
 }
