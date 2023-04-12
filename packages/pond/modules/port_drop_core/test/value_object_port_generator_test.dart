@@ -136,6 +136,33 @@ void main() {
     userPort[Data7.nameField] = 'Jill';
     expect(userPort.getFieldByName(Data7.nameField).value, 'Jill');
   });
+
+  test('Port with overridden fields.', () async {
+    corePondContext.locate<TypeCoreComponent>().register(Data8.new, name: 'Data8');
+
+    final user = Data8();
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(
+      user,
+      overrides: [
+        PortGeneratorOverride.update(
+          Data8.firstNameField,
+          portFieldUpdater: (portField) => portField.cast<String, String>().isNotBlank(),
+        ),
+        PortGeneratorOverride.override(
+          Data8.lastNameField,
+          portField: PortField.string(initialValue: 'Doe'),
+        ),
+        PortGeneratorOverride.remove(Data8.errorField),
+      ],
+    );
+
+    expect((await userPort.submit()).isValid, false);
+    userPort[Data8.firstNameField] = 'John';
+    expect((await userPort.submit()).isValid, true);
+
+    expect(userPort[Data8.lastNameField], 'Doe');
+    expect(userPort.getFieldByNameOrNull(Data8.errorField), isNull);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -218,4 +245,23 @@ class Data7 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [nameProperty];
+}
+
+class Data8 extends ValueObject {
+  static const firstNameField = 'firstName';
+  late final firstNameProperty = field<String>(name: firstNameField).nullIfBlank().withPlaceholder(() => 'John');
+
+  static const lastNameField = 'lastName';
+  late final lastNameProperty = field<String>(name: lastNameField).nullIfBlank().withFallbackReplacement(() => 'Doe');
+
+  static const nameField = 'name';
+  late final nameProperty = field<String>(name: nameField)
+      .nullIfBlank()
+      .withFallback(() => '${firstNameProperty.value} ${lastNameProperty.value}');
+
+  static const errorField = 'error';
+  late final errorProperty = field<String>(name: errorField).withFallback(() => throw Exception('Error!'));
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [firstNameProperty, lastNameProperty, nameProperty, errorProperty];
 }
