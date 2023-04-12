@@ -125,6 +125,17 @@ void main() {
     expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(), 'John');
     expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(), 'Jill Doe');
   });
+
+  test('Port for default fields.', () async {
+    corePondContext.locate<TypeCoreComponent>().register(Data7.new, name: 'Data7');
+
+    final user = Data7();
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+    expect(userPort.getFieldByName(Data7.nameField).value, 'John');
+
+    userPort[Data7.nameField] = 'Jill';
+    expect(userPort.getFieldByName(Data7.nameField).value, 'Jill');
+  });
 }
 
 class Data1 extends ValueObject {
@@ -199,4 +210,12 @@ class Data6 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [firstNameProperty, lastNameProperty, nameProperty, errorProperty];
+}
+
+class Data7 extends ValueObject {
+  static const nameField = 'person';
+  late final nameProperty = field<String>(name: nameField).withDefault(() => 'John');
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [nameProperty];
 }

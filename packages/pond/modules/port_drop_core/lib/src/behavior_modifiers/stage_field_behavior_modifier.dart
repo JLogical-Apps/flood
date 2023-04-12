@@ -9,8 +9,13 @@ class StageFieldBehaviorModifier
     extends PortGeneratorBehaviorModifier<FieldValueObjectProperty<ValueObject?, dynamic>> {
   final TypeContext typeContext;
   final Port<ValueObject> Function(ValueObject valueObject) portCreator;
+  final PortGeneratorBehaviorModifier? Function(ValueObjectBehavior behavior) modifierGetter;
 
-  StageFieldBehaviorModifier({required this.typeContext, required this.portCreator});
+  StageFieldBehaviorModifier({
+    required this.typeContext,
+    required this.portCreator,
+    required this.modifierGetter,
+  });
 
   @override
   Map<String, PortField> getPortFieldByName(
@@ -19,10 +24,11 @@ class StageFieldBehaviorModifier
   ) {
     final baseType = behavior.fieldType;
     final baseRuntimeType = typeContext.getRuntimeTypeRuntime(baseType);
+    final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
 
+    final initialValueObject = behavior.value ?? defaultValue as ValueObject?;
     final intialRuntimeType =
-        behavior.value?.mapIfNonNull((value) => typeContext.getRuntimeTypeRuntime(value.runtimeType));
-    final initialValueObject = behavior.value;
+        initialValueObject?.mapIfNonNull((value) => typeContext.getRuntimeTypeRuntime(value.runtimeType));
 
     return {
       behavior.name: PortField.stage<RuntimeType?, dynamic>(

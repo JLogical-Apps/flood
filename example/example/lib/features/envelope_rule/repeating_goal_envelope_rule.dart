@@ -2,6 +2,7 @@ import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_change.dart';
 import 'package:example/features/envelope_rule/envelope_rule.dart';
 import 'package:example/features/envelope_rule/firstfruit_envelope_rule.dart';
+import 'package:example/features/envelope_rule/monthly_time_rule.dart';
 import 'package:example/features/envelope_rule/time_rule.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
@@ -20,7 +21,10 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
       .withFallbackReplacement(() => goalCentsProperty.value);
 
   static const timeRuleField = 'timeRule';
-  late final timeRuleProperty = field<TimeRule>(name: timeRuleField).withDisplayName('Timing').required();
+  late final timeRuleProperty = field<TimeRule>(name: timeRuleField)
+      .withDisplayName('Timing')
+      .required()
+      .withDefault(() => MonthlyTimeRule()..dayOfMonthProperty.set(1));
 
   static const lastAppliedDateField = 'lastApplied';
   late final lastAppliedDateProperty =

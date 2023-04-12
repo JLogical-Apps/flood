@@ -14,6 +14,10 @@ abstract class PortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
   bool isRequiredOnEdit(T behavior) {
     return false;
   }
+
+  dynamic getDefaultValue(T behavior) {
+    return null;
+  }
 }
 
 abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
@@ -60,5 +64,11 @@ abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavio
   bool isRequiredOnEdit(T behavior) {
     final unwrappedBehavior = unwrapBehavior(behavior);
     return modifierGetter(unwrappedBehavior)?.isRequiredOnEdit(unwrappedBehavior) ?? false;
+  }
+
+  @override
+  dynamic getDefaultValue(T behavior) {
+    final unwrappedBehavior = unwrapBehavior(behavior);
+    return modifierGetter(unwrappedBehavior)?.getDefaultValue(unwrappedBehavior);
   }
 }

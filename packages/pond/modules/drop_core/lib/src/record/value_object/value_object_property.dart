@@ -5,6 +5,7 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/computed_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/currency_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/default_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/display_name_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
@@ -146,6 +147,13 @@ extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int
 }
 
 extension SameGetterSetterValueObjectPropertyExtensions<T, L, V extends ValueObjectProperty>
+    on ValueObjectProperty<T, T, L, V> {
+  DefaultValueObjectProperty<T, T, L> withDefault(T Function() defaultValueGetter) {
+    return DefaultValueObjectProperty(property: this, defaultValueGetter: defaultValueGetter);
+  }
+}
+
+extension SameNullableGetterSetterValueObjectPropertyExtensions<T, L, V extends ValueObjectProperty>
     on ValueObjectProperty<T?, T?, L, V> {
   FallbackReplacementValueObjectProperty<T, L> withFallbackReplacement(T Function() fallbackReplacement) {
     return FallbackReplacementValueObjectProperty(property: this, fallbackReplacement: fallbackReplacement);

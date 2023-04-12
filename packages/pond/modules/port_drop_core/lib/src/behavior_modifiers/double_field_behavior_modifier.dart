@@ -4,11 +4,16 @@ import 'package:port_drop_core/src/port_generator_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier_context.dart';
 
 class DoubleFieldBehaviorModifier extends PortGeneratorBehaviorModifier<FieldValueObjectProperty<double?, dynamic>> {
+  final PortGeneratorBehaviorModifier? Function(ValueObjectBehavior behavior) modifierGetter;
+
+  DoubleFieldBehaviorModifier({required this.modifierGetter});
+
   @override
   Map<String, PortField> getPortFieldByName(
     FieldValueObjectProperty<double?, dynamic> behavior,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    return {behavior.name: PortField<double?, double?>(value: behavior.value)};
+    final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
+    return {behavior.name: PortField<double?, double?>(value: behavior.value ?? defaultValue)};
   }
 }

@@ -2,6 +2,7 @@ import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:port_core/port_core.dart';
 import 'package:port_drop_core/src/behavior_modifiers/currency_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/default_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/display_name_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/double_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/fallback_property_behavior_modifier.dart';
@@ -28,20 +29,22 @@ class PortDropCoreComponent with IsCorePondComponent {
       Resolver.fromModifiers(
     [
       HiddenPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      StringFieldBehaviorModifier(),
-      DoubleFieldBehaviorModifier(),
-      IntFieldBehaviorModifier(),
+      StringFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      IntFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      DoubleFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       StageFieldBehaviorModifier(
         typeContext: context.locate<TypeCoreComponent>(),
         portCreator: (valueObject) => generatePort(valueObject),
+        modifierGetter: getBehaviorModifierOrNull,
       ),
-      FieldBehaviorModifier(),
+      FieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       RequiredPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       RequiredOnEditPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       IsNotBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       FallbackPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       FallbackReplacementPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       PlaceholderPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      DefaultPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       DisplayNamePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       MultilinePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       NullIfBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
@@ -66,16 +69,18 @@ class PortDropCoreComponent with IsCorePondComponent {
 
     late Port<V> port;
 
-    final portBehaviorContext = PortGeneratorBehaviorModifierContext(
-      originalValueObject: valueObject,
-      portDropCoreComponent: this,
-      portGetter: () => port,
-    );
     for (final behavior in valueObject.behaviors) {
       final modifier = behaviorModifierResolver.resolveOrNull(behavior);
       if (modifier == null) {
         continue;
       }
+
+      final portBehaviorContext = PortGeneratorBehaviorModifierContext(
+        originalValueObject: valueObject,
+        originalBehavior: behavior,
+        portDropCoreComponent: this,
+        portGetter: () => port,
+      );
 
       final behaviorPortFieldByName = modifier.getPortFieldByName(behavior, portBehaviorContext);
       portFieldByName = {...portFieldByName, ...behaviorPortFieldByName};
