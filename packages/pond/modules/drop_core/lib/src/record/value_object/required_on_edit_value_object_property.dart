@@ -11,6 +11,9 @@ class RequiredOnEditValueObjectProperty<T, S, L>
 
   @override
   RequiredOnEditValueObjectProperty<T, S, L> copy() {
-    return RequiredOnEditValueObjectProperty<T, S, L>(property: property.copy());
+    return RequiredOnEditValueObjectProperty<T, S, L>(
+      property: property.copy(),
+      requiredOnEdit: requiredOnEdit,
+    );
   }
 }

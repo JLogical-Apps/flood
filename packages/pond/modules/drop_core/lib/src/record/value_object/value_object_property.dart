@@ -88,8 +88,8 @@ extension ValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty> 
 
   Type get loadType => L;
 
-  RequiredOnEditValueObjectProperty<G, S, L> requiredOnEdit() {
-    return RequiredOnEditValueObjectProperty<G, S, L>(property: this);
+  RequiredOnEditValueObjectProperty<G, S, L> requiredOnEdit([bool requiredOnEdit = true]) {
+    return RequiredOnEditValueObjectProperty<G, S, L>(property: this, requiredOnEdit: requiredOnEdit);
   }
 
   PlaceholderValueObjectProperty<G, S, L> withPlaceholder(G Function() placeholder) {
