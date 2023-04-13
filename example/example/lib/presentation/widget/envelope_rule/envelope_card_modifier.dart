@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 abstract class EnvelopeRuleCardModifier<R extends EnvelopeRule?> with IsTypedModifier<R, EnvelopeRule?> {
-  String getName(R rule);
-
   Widget getIcon(R rule);
 
   Widget getDescription(R rule);

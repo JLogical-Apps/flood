@@ -9,7 +9,10 @@ class PortMapper<T, R> with IsPort<R> {
   final Port<T> port;
   final FutureOr<R?> Function(T source, Port<T> port) mapper;
 
-  PortMapper({required this.port, required this.mapper});
+  @override
+  final Type submitType;
+
+  PortMapper({required this.port, required this.mapper, Type? submitType}) : submitType = submitType ?? R;
 
   @override
   ValueStream<Map<String, PortField>> getPortX() {

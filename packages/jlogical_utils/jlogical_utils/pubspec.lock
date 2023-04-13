@@ -425,6 +425,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  port_style_component:
+    dependency: "direct main"
+    description:
+      path: "../../pond/modules/port_style_component"
+      relative: true
+    source: path
+    version: "0.0.1"
   provider:
     dependency: transitive
     description:

@@ -11,6 +11,8 @@ abstract class Port<T> {
 
   void setPortField({required String name, required PortField portField});
 
+  Type get submitType;
+
   Future<PortSubmitResult<T>> submit();
 
   static Port<Map<String, dynamic>> of(Map<String, PortField> portFieldByName) => _PortImpl(portFieldByName);
@@ -51,8 +53,8 @@ extension PortExtensions<T> on Port<T> {
 
   operator []=(String name, dynamic value) => setValue(name: name, value: value);
 
-  PortMapper<T, R> map<R>(FutureOr<R?> Function(T sourceData, Port<T> port) mapper) {
-    return PortMapper(port: this, mapper: mapper);
+  PortMapper<T, R> map<R>(FutureOr<R?> Function(T sourceData, Port<T> port) mapper, {Type? submitType}) {
+    return PortMapper(port: this, mapper: mapper, submitType: submitType);
   }
 }
 
@@ -76,6 +78,9 @@ class _PortImpl with IsPort<Map<String, dynamic>> {
   void setPortField({required String name, required PortField portField}) {
     portFieldByName = portFieldByName.copy()..set(name, portField);
   }
+
+  @override
+  Type get submitType => typeOf<Map<String, dynamic>>();
 
   @override
   Future<PortSubmitResult<Map<String, dynamic>>> submit() async {

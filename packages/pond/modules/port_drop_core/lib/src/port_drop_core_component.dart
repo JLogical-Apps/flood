@@ -98,24 +98,31 @@ class PortDropCoreComponent with IsCorePondComponent {
       (portFieldByName, override) => override.getModifiedPortFieldByName(portFieldByName, overrideContext),
     );
 
-    port = Port.of(portFieldByName).map((sourceData, port) {
-      final typeContext = context.locate<TypeCoreComponent>();
-      final dropCoreContext = context.locate<DropCoreComponent>();
+    port = Port.of(portFieldByName).map(
+      (sourceData, port) {
+        final typeContext = context.locate<TypeCoreComponent>();
+        final dropCoreContext = context.locate<DropCoreComponent>();
 
-      final state = State.fromMap(
-        sourceData,
-        runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
-      );
-      final mergedState = valueObject.getStateUnsafe(dropCoreContext).mergeWith(state);
+        final state = State.fromMap(
+          sourceData,
+          runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
+        );
+        final mergedState = valueObject.getStateUnsafe(dropCoreContext).mergeWith(state);
 
-      final newValueObject = typeContext.construct(valueObject.runtimeType) as V;
-      newValueObject.copyFrom(dropCoreContext, mergedState);
-      return newValueObject;
-    });
+        final newValueObject = typeContext.construct(valueObject.runtimeType) as V;
+        newValueObject.copyFrom(dropCoreContext, mergedState);
+        return newValueObject;
+      },
+      submitType: valueObject.runtimeType,
+    );
     return port;
   }
 
-  V getValueObjectFromPort<V extends ValueObject>({required Port port, required ValueObject originalValueObject}) {
+  V getValueObjectFromPort<V extends ValueObject>({
+    required Port port,
+    V? originalValueObject,
+    Type? valueObjectType,
+  }) {
     final typeContext = context.locate<TypeCoreComponent>();
     final dropCoreContext = context.locate<DropCoreComponent>();
 
@@ -123,9 +130,10 @@ class PortDropCoreComponent with IsCorePondComponent {
       port.portFieldByName.map((name, portField) => MapEntry(name, portField.value)),
       runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
     );
-    final mergedState = originalValueObject.getStateUnsafe(dropCoreContext).mergeWith(state);
+    final mergedState =
+        originalValueObject == null ? state : originalValueObject.getStateUnsafe(dropCoreContext).mergeWith(state);
 
-    final newValueObject = typeContext.construct(originalValueObject.runtimeType) as V;
+    final newValueObject = typeContext.construct(originalValueObject?.runtimeType ?? valueObjectType ?? V) as V;
     newValueObject.copyFromUnsafe(dropCoreContext, mergedState);
     return newValueObject;
   }

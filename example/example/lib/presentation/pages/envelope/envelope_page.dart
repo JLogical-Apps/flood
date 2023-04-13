@@ -50,7 +50,7 @@ class EnvelopePage extends AppPage {
             children: [
               StyledText.h4(envelope.amountCentsProperty.value.formatCentsAsCurrency()),
               StyledCard.subtle(
-                titleText: envelopeRuleCardWrapper.getName(envelopeRule),
+                titleText: envelopeRule?.getDisplayName(),
                 leading: envelopeRuleCardWrapper.getIcon(envelopeRule),
                 body: envelopeRuleCardWrapper.getDescription(envelopeRule),
               ),

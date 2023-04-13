@@ -11,6 +11,8 @@ import 'package:example/features/user/user.dart';
 import 'package:example/features/user/user_entity.dart';
 import 'package:example/pond.dart';
 import 'package:example/presentation/pages/home_page.dart';
+import 'package:example/presentation/port/envelope_port_override.dart';
+import 'package:example/presentation/port/repeating_goal_port_override.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/valet_pages_pond_component.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +60,10 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(FocusGrabberAppComponent());
   await appPondContext.register(AuthAppComponent());
   await appPondContext.register(DropAppComponent());
+  await appPondContext.register(PortStyleComponent(overrides: [
+    EnvelopePortOverride(context: appPondContext),
+    RepeatingGoalPortOverride(context: appPondContext),
+  ]));
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(UrlBarAppComponent());
   await appPondContext.register(ValetPagesAppPondComponent());

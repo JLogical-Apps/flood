@@ -6,11 +6,6 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class RepeatingGoalEnvelopeCardModifier extends EnvelopeRuleCardModifier<RepeatingGoalEnvelopeRule> {
   @override
-  String getName(RepeatingGoalEnvelopeRule rule) {
-    return 'Repeating Goal';
-  }
-
-  @override
   Widget getIcon(RepeatingGoalEnvelopeRule rule) {
     return StyledIcon(Icons.calendar_month);
   }

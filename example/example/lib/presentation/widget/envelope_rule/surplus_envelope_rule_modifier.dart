@@ -6,11 +6,6 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class SurplusEnvelopeCardModifier extends EnvelopeRuleCardModifier<SurplusEnvelopeRule> {
   @override
-  String getName(SurplusEnvelopeRule rule) {
-    return 'Surplus';
-  }
-
-  @override
   Widget getIcon(SurplusEnvelopeRule rule) {
     return StyledIcon(FontAwesomeIcons.filter);
   }

@@ -6,11 +6,6 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class FirstfruitEnvelopeCardModifier extends EnvelopeRuleCardModifier<FirstfruitEnvelopeRule> {
   @override
-  String getName(FirstfruitEnvelopeRule rule) {
-    return 'Firstfruit';
-  }
-
-  @override
   Widget getIcon(EnvelopeRule rule) {
     return StyledIcon(Icons.apple);
   }

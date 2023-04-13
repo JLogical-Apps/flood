@@ -5,11 +5,6 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class NoneEnvelopeCardModifier extends EnvelopeRuleCardModifier<EnvelopeRule?> {
   @override
-  String getName(EnvelopeRule? rule) {
-    return 'None';
-  }
-
-  @override
   Widget getIcon(EnvelopeRule? rule) {
     return StyledIcon(Icons.block);
   }
