@@ -165,7 +165,9 @@ This is a `code block`.
     final isDark = backgroundColor.computeLuminance() < 0.3;
 
     final newBackground = isDarkMode
-        ? (isDark ? backgroundColor.lighten(10) : backgroundColor.darken(5))
+        ? (backgroundColor == Colors.black
+            ? Color(0xff202020)
+            : (isDark ? backgroundColor.lighten(10) : backgroundColor.darken(5)))
         : (backgroundColor == this.backgroundColor ? Colors.white : this.backgroundColor);
     final newForeground = isDark ? Colors.white : Colors.black;
     final newSubtleForeground = isDark ? Color(0xffeeeeee) : Color(0xff111111);

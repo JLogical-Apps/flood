@@ -246,7 +246,7 @@ packages:
     source: hosted
     version: "1.2.1"
   type:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../../type"
       relative: true
