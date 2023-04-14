@@ -21,10 +21,8 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
       .withFallbackReplacement(() => goalCentsProperty.value);
 
   static const timeRuleField = 'timeRule';
-  late final timeRuleProperty = field<TimeRule>(name: timeRuleField)
-      .withDisplayName('Timing')
-      .required()
-      .withDefault(() => MonthlyTimeRule()..dayOfMonthProperty.set(1));
+  late final timeRuleProperty =
+      field<TimeRule>(name: timeRuleField).withDisplayName('Timing').required().withDefault(() => MonthlyTimeRule());
 
   static const lastAppliedDateField = 'lastApplied';
   late final lastAppliedDateProperty =
