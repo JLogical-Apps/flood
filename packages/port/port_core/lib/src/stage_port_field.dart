@@ -8,12 +8,14 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
   final List<E> options;
   final Port<T>? Function(E option) portMapper;
   final String? Function(E option)? displayNameMapper;
+  final T Function(Port<T>? portValue, E option)? submitRawMapper;
 
   StagePortField({
     required E initialValue,
     required this.options,
     required this.portMapper,
     this.displayNameMapper,
+    this.submitRawMapper,
     Port<T>? portValue,
     dynamic error,
   }) : portField = PortField(
@@ -36,6 +38,9 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
             final result = await stageValue.port?.submit();
             return result?.dataOrNull;
           },
+          submitRawMapper: (stageValue) {
+            return submitRawMapper?.call(portValue, stageValue.value);
+          },
         );
 
   @override
@@ -46,6 +51,7 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
       portMapper: portMapper,
       portValue: value.port,
       displayNameMapper: displayNameMapper,
+      submitRawMapper: submitRawMapper,
       error: error,
     );
   }
@@ -68,4 +74,13 @@ class StageValue<E, T> {
   final Port<T>? port;
 
   StageValue({required this.value, required this.port});
+
+  StageValue<E, T> withPort(Port<T>? port) {
+    return StageValue(value: value, port: port);
+  }
+
+  @override
+  String toString() {
+    return 'StageValue{value=$value, port=$port}';
+  }
 }

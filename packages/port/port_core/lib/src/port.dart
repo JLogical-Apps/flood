@@ -23,6 +23,8 @@ abstract class Port<T> {
 extension PortExtensions<T> on Port<T> {
   Map<String, PortField> get portFieldByName => getPortX().value;
 
+  Map<String, dynamic> get portValueByName => portFieldByName.map((name, field) => MapEntry(name, field.value));
+
   PortField? getFieldByNameOrNull(String name) => portFieldByName[name];
 
   PortField getFieldByName(String name) =>

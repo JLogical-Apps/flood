@@ -17,6 +17,8 @@ abstract class PortField<T, S> with IsValidatorWrapper<T, String> {
 
   dynamic get error;
 
+  S submitRaw(T value);
+
   FutureOr<S> submit(T value);
 
   PortField<T, S> copyWith({required T value, required dynamic error});
@@ -29,12 +31,14 @@ abstract class PortField<T, S> with IsValidatorWrapper<T, String> {
     required T value,
     dynamic error,
     Validator<T, String>? validator,
+    S Function(T value)? submitRawMapper,
     FutureOr<S> Function(T value)? submitMapper,
   }) =>
       _PortFieldImpl<T, S>(
         value: value,
         error: error,
         validator: validator ?? Validator.empty(),
+        submitRawMapper: submitRawMapper,
         submitMapper: submitMapper,
       );
 
@@ -51,12 +55,14 @@ abstract class PortField<T, S> with IsValidatorWrapper<T, String> {
     required List<E> options,
     required Port<T>? Function(E option) portMapper,
     String? Function(E option)? displayNameMapper,
+    T Function(Port<T>? portValue, E option)? submitRawMapper,
   }) {
     return StagePortField<E, T>(
       initialValue: initialValue,
       options: options,
       portMapper: portMapper,
       displayNameMapper: displayNameMapper,
+      submitRawMapper: submitRawMapper,
     );
   }
 
@@ -161,22 +167,26 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<T, String>
   @override
   final Validator<T, String> validator;
 
+  final S Function(T value)? submitRawMapper;
+
   final FutureOr<S> Function(T value)? submitMapper;
 
   _PortFieldImpl({
     required this.value,
     this.error,
     required this.validator,
+    required this.submitRawMapper,
     required this.submitMapper,
   });
 
   @override
-  Future<S> submit(T value) async {
-    if (submitMapper == null) {
-      return value as S;
-    }
+  S submitRaw(T value) {
+    return submitRawMapper?.mapIfNonNull((mapper) => mapper(value)) ?? (value as S);
+  }
 
-    return await submitMapper!(value);
+  @override
+  Future<S> submit(T value) async {
+    return submitMapper?.mapIfNonNull((mapper) async => await mapper(value)) ?? (value as S);
   }
 
   @override
@@ -185,6 +195,7 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<T, String>
       value: value,
       error: error,
       validator: validator,
+      submitRawMapper: submitRawMapper,
       submitMapper: submitMapper,
     );
   }
@@ -217,6 +228,9 @@ mixin IsPortFieldWrapper<T, S> implements PortFieldWrapper<T, S> {
 
   @override
   FutureOr<S> submit(T value) => portField.submit(value);
+
+  @override
+  S submitRaw(T value) => portField.submitRaw(value);
 
   @override
   Validator<T, String> get validator => portField.validator;

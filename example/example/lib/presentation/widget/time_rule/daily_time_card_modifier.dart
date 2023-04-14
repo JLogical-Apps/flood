@@ -10,7 +10,12 @@ class DailyTimeCardModifier extends TimeRuleCardModifier<DailyTimeRule?> {
   }
 
   @override
-  Widget getDescription(DailyTimeRule? rule) {
-    return StyledMarkdown('TODO');
+  String getPeriodMarkdown(DailyTimeRule? rule) {
+    return '`${rule?.daysProperty.valueOrNull ?? '?'}` days';
+  }
+
+  @override
+  String getCurrentPeriodMarkdown(DailyTimeRule? rule) {
+    return 'this set of `${rule?.daysProperty.valueOrNull ?? '?'}` days';
   }
 }

@@ -17,6 +17,14 @@ class EnvelopePortOverride with IsStyledObjectPortOverride<Envelope> {
         Envelope.ruleField: StyledStagePortField(
           fieldName: Envelope.ruleField,
           labelText: 'Rule',
+          beforeBuilder: (StagePortField<RuntimeType?, dynamic> stagePortField, RuntimeType? value) {
+            final envelopeRule = stagePortField.toValueObject<EnvelopeRule>(
+              context: context.find<PortDropCoreComponent>(),
+              value: value,
+            );
+
+            return EnvelopeRuleCardModifier.getModifier(envelopeRule).getDescription(envelopeRule);
+          },
           valueWidgetMapper: (StagePortField<RuntimeType?, dynamic> stagePortField, RuntimeType? value) {
             final envelopeRule = stagePortField.toValueObject<EnvelopeRule>(
               context: context.find<PortDropCoreComponent>(),

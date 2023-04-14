@@ -13,7 +13,7 @@ class SurplusEnvelopeCardModifier extends EnvelopeRuleCardModifier<SurplusEnvelo
   @override
   Widget getDescription(SurplusEnvelopeRule rule) {
     return StyledMarkdown(
-      'Valet will add `${rule.percentProperty.value.formatIntOrDouble()}`% of any remaining income after your goals are complete to this envelope.',
+      'Valet will add `${rule.percentProperty.valueOrNull?.formatIntOrDouble() ?? '?'}`% of any remaining income after your goals are complete to this envelope.',
     );
   }
 }

@@ -9,7 +9,8 @@ extension StagePortFieldExtensions on StagePortField<RuntimeType?, dynamic> {
     required PortDropCoreComponent context,
     required RuntimeType? value,
   }) {
-    return getMappedPort(value)?.mapIfNonNull((port) => context.getValueObjectFromPort<V>(
+    final port = value == this.value.value ? this.value.port : getMappedPort(value);
+    return port?.mapIfNonNull((port) => context.getValueObjectFromPort<V>(
           port: port,
           valueObjectType: port.submitType,
         ));

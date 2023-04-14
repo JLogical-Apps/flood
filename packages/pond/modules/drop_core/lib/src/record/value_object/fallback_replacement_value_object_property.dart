@@ -1,6 +1,7 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:utils_core/utils_core.dart';
 
 class FallbackReplacementValueObjectProperty<T, L>
     with IsValueObjectProperty<T, T?, L, FallbackReplacementValueObjectProperty<T, L>> {
@@ -26,6 +27,9 @@ class FallbackReplacementValueObjectProperty<T, L>
 
   @override
   T get value => property.value ?? fallbackReplacement();
+
+  @override
+  T? get valueOrNull => property.valueOrNull ?? guard(() => fallbackReplacement());
 
   @override
   set(T? value) => property.set(value);

@@ -9,7 +9,7 @@ class StyledMarkdown extends StatelessWidget {
   final WrapAlignment? textAlign;
   final void Function(String href)? onLinkTapped;
 
-  StyledMarkdown(this.markdown, {this.textAlign, this.onLinkTapped});
+  StyledMarkdown(this.markdown, {super.key, this.textAlign, this.onLinkTapped});
 
   @override
   Widget build(BuildContext context) {

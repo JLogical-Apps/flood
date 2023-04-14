@@ -23,9 +23,11 @@ class RepeatingGoalPortOverride with IsStyledObjectPortOverride<RepeatingGoalEnv
               value: value,
             );
 
+            final timeRuleWrapper = TimeRuleCardModifier.getModifierOrNull(timeRule);
+
             return StyledList.row(
               children: [
-                TimeRuleCardModifier.getModifier(timeRule).getIcon(timeRule),
+                if (timeRuleWrapper != null) timeRuleWrapper.getIcon(timeRule),
                 Expanded(
                   child: StyledText.button(value == null ? 'None' : stagePortField.getDisplayName(value) ?? 'None'),
                 ),

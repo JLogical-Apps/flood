@@ -43,6 +43,13 @@ class MapPortField<T1, S1, T2, S2> with IsPortField<T2, S2> {
   }
 
   @override
+  S2 submitRaw(T2 value) {
+    final sourceValue = newToSourceMapper(value);
+    final sourceSubmit = portField.submitRaw(sourceValue);
+    return submitMapper(sourceSubmit);
+  }
+
+  @override
   Validator<T2, String> get validator => portField.validator.map((data) => newToSourceMapper(data));
 
   @override

@@ -13,7 +13,7 @@ class TargetGoalEnvelopeCardModifier extends EnvelopeRuleCardModifier<TargetGoal
   @override
   Widget getDescription(TargetGoalEnvelopeRule rule) {
     return StyledMarkdown(
-      'Valet wil collect `${rule.percentProperty.value.formatIntOrDouble()}`% of any additional income after your goals are completed until you have reached `${rule.maximumCentsProperty.value!.formatCentsAsCurrency()}` in this envelope.',
+      'Valet wil collect `${rule.percentProperty.valueOrNull?.formatIntOrDouble() ?? '?'}`% of any additional income after your goals are completed until you have reached `${rule.maximumCentsProperty.valueOrNull?.formatCentsAsCurrency() ?? '?'}` in this envelope.',
     );
   }
 }

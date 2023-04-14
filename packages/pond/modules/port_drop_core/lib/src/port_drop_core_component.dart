@@ -35,6 +35,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       IntFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       DoubleFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       StageFieldBehaviorModifier(
+        portDropContext: context.locate<PortDropCoreComponent>(),
         typeContext: context.locate<TypeCoreComponent>(),
         portCreator: (valueObject) => generatePort(valueObject),
         modifierGetter: getBehaviorModifierOrNull,
@@ -127,7 +128,7 @@ class PortDropCoreComponent with IsCorePondComponent {
     final dropCoreContext = context.locate<DropCoreComponent>();
 
     final state = State.fromMap(
-      port.portFieldByName.map((name, portField) => MapEntry(name, portField.value)),
+      port.portFieldByName.map((name, portField) => MapEntry(name, portField.submitRaw(portField.value))),
       runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
     );
     final mergedState =

@@ -13,6 +13,6 @@ class FirstfruitEnvelopeCardModifier extends EnvelopeRuleCardModifier<Firstfruit
   @override
   Widget getDescription(FirstfruitEnvelopeRule rule) {
     return StyledMarkdown(
-        'Valet will collect the first `${rule.percentProperty.value.formatIntOrDouble()}`% of all income before it goes into your goals.');
+        'Valet will collect the first `${rule.percentProperty.valueOrNull?.formatIntOrDouble() ?? '?'}`% of all income before it goes into your goals.');
   }
 }

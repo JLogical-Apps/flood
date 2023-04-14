@@ -30,3 +30,18 @@ T useValueStream<T>(ValueStream<T> valueStream) {
   useStream(valueStream);
   return valueStream.value;
 }
+
+T? useValueStreamOrNull<T>(ValueStream<T>? valueStream) {
+  useStream(valueStream);
+  return valueStream?.value;
+}
+
+void useListen<T>(Stream<T> stream, [Function(T? value)? valueChanged]) {
+  useEffect(
+    () {
+      final subscription = stream.listen((event) => valueChanged?.call(event));
+      return () => subscription.cancel();
+    },
+    [stream],
+  );
+}

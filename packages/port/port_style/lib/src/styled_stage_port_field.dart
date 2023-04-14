@@ -14,7 +14,10 @@ class StyledStagePortField<E, T> extends HookWidget {
   final bool enabled;
 
   final Widget Function(StagePortField<E, T> stagePortField, E value) valueWidgetMapper;
-  final Widget Function(Port<T> value) portWidgetMapper;
+  final Widget Function(StagePortField<E, T> stagePortField, Port parentPort, String fieldName, Port<T> value)
+      portWidgetMapper;
+  final Widget Function(StagePortField<E, T> stagePortField, E value)? beforeBuilder;
+  final Widget Function(StagePortField<E, T> stagePortField, E value)? afterBuilder;
 
   const StyledStagePortField({
     super.key,
@@ -23,7 +26,10 @@ class StyledStagePortField<E, T> extends HookWidget {
     this.label,
     this.enabled = true,
     Widget Function(StagePortField<E, T> stagePortField, E value)? valueWidgetMapper,
-    Widget Function(Port<T> port)? portWidgetMapper,
+    Widget Function(StagePortField<E, T> stagePortField, Port parentPort, String fieldName, Port<T> port)?
+        portWidgetMapper,
+    this.beforeBuilder,
+    this.afterBuilder,
   })  : valueWidgetMapper = valueWidgetMapper ?? _defaultValueMapper,
         portWidgetMapper = portWidgetMapper ?? _defaultPortMapper;
 
@@ -36,6 +42,26 @@ class StyledStagePortField<E, T> extends HookWidget {
         final stageField = (field.findStageFieldOrNull() ??
             (throw Exception('Could not find stage field for [$field]'))) as StagePortField<E, T>;
         final valuePort = value.port;
+
+        final containerWidgets = [
+          if (beforeBuilder != null)
+            valuePort != null
+                ? PortBuilder(
+                    port: valuePort,
+                    builder: (context, port) => beforeBuilder!(stageField, value.value),
+                  )
+                : beforeBuilder!(stageField, value.value),
+          if (valuePort != null && valuePort.portFieldByName.isNotEmpty)
+            portWidgetMapper(stageField, port, fieldName, valuePort),
+          if (afterBuilder != null)
+            valuePort != null
+                ? PortBuilder(
+                    port: valuePort,
+                    builder: (context, port) => afterBuilder!(stageField, value.value),
+                  )
+                : afterBuilder!(stageField, value.value),
+        ];
+
         return StyledList.column(
           itemPadding: EdgeInsets.symmetric(vertical: 4),
           children: [
@@ -49,9 +75,9 @@ class StyledStagePortField<E, T> extends HookWidget {
               options: stageField.options,
               widgetMapper: (option) => valueWidgetMapper(stageField, option),
             ),
-            if (valuePort != null && valuePort.portFieldByName.isNotEmpty)
+            if (containerWidgets.isNotEmpty)
               StyledContainer(
-                child: portWidgetMapper(valuePort),
+                child: StyledList.column(children: containerWidgets),
               ),
           ],
         );
@@ -64,6 +90,11 @@ Widget _defaultValueMapper<E, T>(StagePortField<E, T> stagePortField, E value) {
   return StyledText.button(value == null ? 'None' : stagePortField.getDisplayName(value) ?? 'None');
 }
 
-Widget _defaultPortMapper<T>(Port<T> port) {
-  return StyledObjectPortBuilder(port: port);
+Widget _defaultPortMapper<E, T>(StagePortField<E, T> stagePortField, Port parentPort, String fieldName, Port<T> port) {
+  return StyledObjectPortBuilder<T>(
+    port: port,
+    portListener: (subPort) {
+      return parentPort[fieldName] = stagePortField.value.withPort(subPort);
+    },
+  );
 }

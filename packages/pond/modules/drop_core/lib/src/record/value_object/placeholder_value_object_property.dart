@@ -1,6 +1,7 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:utils_core/utils_core.dart';
 
 class PlaceholderValueObjectProperty<G, S, L>
     with IsValueObjectPropertyWrapper<G, S, L, PlaceholderValueObjectProperty<G, S, L>> {
@@ -23,6 +24,9 @@ class PlaceholderValueObjectProperty<G, S, L>
 
   @override
   G get value => property.value ?? placeholder();
+
+  @override
+  G? get valueOrNull => property.valueOrNull ?? guard(() => placeholder());
 
   @override
   set(S value) => property.set(value);

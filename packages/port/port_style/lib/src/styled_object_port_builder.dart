@@ -7,14 +7,17 @@ import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
-class StyledObjectPortBuilder extends HookWidget {
-  final Port port;
+class StyledObjectPortBuilder<T> extends HookWidget {
+  final Port<T> port;
   final Map<String, Widget> overrides;
 
-  StyledObjectPortBuilder({required this.port, this.overrides = const {}});
+  final Function(Port<T> port)? portListener;
+
+  StyledObjectPortBuilder({required this.port, this.overrides = const {}, this.portListener});
 
   @override
   Widget build(BuildContext context) {
+    useListen(useMemoized(() => port.getPortX(), [port]), (_) => portListener?.call(port));
     return PortBuilder(
       key: ObjectKey(port),
       port: port,
