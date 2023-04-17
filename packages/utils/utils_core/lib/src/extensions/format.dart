@@ -56,25 +56,14 @@ extension NumberParseUtil on String {
 
 /// Extension methods for formatting DateTimes.
 extension DateFormatUtil on DateTime {
-  /// Formats to include both date and time.
-  String formatDateTime({bool isLong = true, bool includeSeconds = false}) {
-    DateFormat dateFormat = isLong ? DateFormat.yMMMMd() : DateFormat.yMd();
-    dateFormat = includeSeconds ? dateFormat.add_jms() : dateFormat.add_jm();
-
-    return dateFormat.format(this);
-  }
-
-  /// Formats to include only date.
-  String formatDate({bool isLong = true}) {
-    if (isLong) {
-      return DateFormat.yMMMMd().format(this);
-    } else {
-      return DateFormat.yMd().format(this);
+  String format({bool showDate = true, bool showTime = true}) {
+    var dateFormat = DateFormat();
+    if (showDate) {
+      dateFormat = dateFormat.add_yMd();
     }
-  }
-
-  /// Formats to include only time.
-  String formatTime() {
-    return DateFormat.jm().format(this);
+    if (showTime) {
+      dateFormat = dateFormat.add_jms();
+    }
+    return dateFormat.format(this);
   }
 }

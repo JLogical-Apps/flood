@@ -2,6 +2,7 @@ import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:port_core/port_core.dart';
 import 'package:port_drop_core/src/behavior_modifiers/currency_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/date_time_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/default_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/display_name_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/double_field_behavior_modifier.dart';
@@ -34,6 +35,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       StringFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       IntFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       DoubleFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      DateTimeFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       StageFieldBehaviorModifier(
         portDropContext: context.locate<PortDropCoreComponent>(),
         typeContext: context.locate<TypeCoreComponent>(),

@@ -3,20 +3,24 @@ import 'package:style/src/style_component.dart';
 
 class StyledTextField extends StyleComponent {
   final String? text;
-  final Function(String)? onChanged;
+  final Function(String value)? onChanged;
 
   final Widget? label;
   final String? labelText;
-
   final String? errorText;
-
   final String? hintText;
 
+  final Widget? leading;
+  final IconData? leadingIcon;
+
   final bool enabled;
+  final bool readonly;
 
   final bool obscureText;
 
   final int? maxLines;
+
+  final Function()? onTapped;
 
   StyledTextField({
     super.key,
@@ -26,8 +30,12 @@ class StyledTextField extends StyleComponent {
     this.labelText,
     this.errorText,
     this.hintText,
+    this.leading,
+    this.leadingIcon,
     this.enabled = true,
+    this.readonly = false,
     this.obscureText = false,
     this.maxLines = 1,
+    this.onTapped,
   });
 }

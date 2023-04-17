@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:port_core/port_core.dart';
 import 'package:port_core/src/currency_port_field.dart';
+import 'package:port_core/src/date_port_field.dart';
 import 'package:port_core/src/display_name_port_field.dart';
 import 'package:port_core/src/hint_port_field.dart';
 import 'package:port_core/src/map_port_field.dart';
@@ -44,6 +45,18 @@ abstract class PortField<T, S> with IsValidatorWrapper<T, String> {
 
   static SimplePortField<String> string({String? initialValue}) {
     return PortField(value: initialValue ?? '', validator: Validator.empty());
+  }
+
+  static DatePortField<DateTime?, DateTime?> dateTime({
+    required DateTime? initialValue,
+    bool isDate = true,
+    bool isTime = true,
+  }) {
+    return DatePortField(
+      portField: PortField(value: initialValue),
+      isDate: isDate,
+      isTime: isTime,
+    );
   }
 
   static SimplePortField<T> option<T>({required List<T> options, required T initialValue}) {

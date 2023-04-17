@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:style/src/components/input/styled_text_field.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
+import 'package:style/src/components/misc/styled_icon.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/style_build_context_extensions.dart';
 import 'package:style/src/style_renderer.dart';
@@ -13,6 +14,8 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
   @override
   Widget renderTyped(BuildContext context, StyledTextField component) {
     final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body(text));
+    final leading = component.leading ?? component.leadingIcon?.mapIfNonNull((icon) => StyledIcon(icon));
+
     final textController = useTextEditingController(text: component.text);
 
     return Column(
@@ -27,9 +30,10 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
         TextFormField(
           controller: textController,
           onChanged: (text) => component.onChanged?.call(text),
+          onTap: component.onTapped,
           style: context.style().getTextStyle(context, StyledText.body.empty),
           cursorColor: context.colorPalette().foreground.regular,
-          readOnly: !component.enabled,
+          readOnly: component.readonly || !component.enabled,
           obscureText: component.obscureText,
           maxLines: component.maxLines,
           decoration: InputDecoration(
@@ -37,6 +41,7 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
             focusColor: context.colorPalette().background.regular.background.regular,
             fillColor:
                 component.enabled ? context.colorPalette().background.regular : context.colorPalette().baseBackground,
+            prefixIcon: leading,
             filled: true,
             hintText: component.hintText,
             hintStyle: context.style().getTextStyle(

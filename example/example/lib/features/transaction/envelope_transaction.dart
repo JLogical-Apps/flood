@@ -16,9 +16,23 @@ class EnvelopeTransaction extends BudgetTransaction {
       .currency()
       .withFallbackReplacement(() => 0);
 
+  static const transactionDateField = 'transactionDate';
+  late final transactionDateProperty = field<DateTime>(name: transactionDateField)
+      .withDisplayName('Transaction Date')
+      .withFallback(() => DateTime.now())
+      .withDefault(() => DateTime.now())
+      .requiredOnEdit();
+
   @override
   List<String> get affectedEnvelopeIds => [envelopeProperty.value];
 
   @override
-  List<ValueObjectBehavior> get behaviors => super.behaviors + [nameProperty, envelopeProperty, amountCentsProperty];
+  List<ValueObjectBehavior> get behaviors =>
+      super.behaviors +
+      [
+        nameProperty,
+        envelopeProperty,
+        amountCentsProperty,
+        transactionDateProperty,
+      ];
 }

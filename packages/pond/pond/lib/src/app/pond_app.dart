@@ -179,10 +179,14 @@ class PondApp extends HookWidget {
   }
 
   static Widget wrapPage({
-    required AppPondContext appContext,
+    required AppPondContext? appContext,
     required Widget child,
     required Uri uri,
   }) {
+    if (appContext == null) {
+      return child;
+    }
+
     for (final appComponent in appContext.appComponents) {
       child = appComponent.wrapPage(appContext, child, AppPondPageContext(uri: uri));
     }

@@ -1,4 +1,5 @@
 export 'src/styled_currency_port_field.dart';
+export 'src/styled_date_time_port_field.dart';
 export 'src/styled_object_port_builder.dart';
 export 'src/styled_object_port_field.dart';
 export 'src/styled_object_port_override.dart';
