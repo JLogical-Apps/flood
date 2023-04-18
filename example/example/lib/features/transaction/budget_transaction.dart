@@ -12,9 +12,21 @@ abstract class BudgetTransaction extends ValueObject {
   static const budgetField = 'budget';
   late final budgetProperty = reference<BudgetEntity>(name: budgetField).required();
 
+  static const transactionDateField = 'transactionDate';
+  late final transactionDateProperty = field<DateTime>(name: transactionDateField)
+      .withDisplayName('Transaction Date')
+      .onlyDate()
+      .withFallback(() => DateTime.now())
+      .withDefault(() => DateTime.now())
+      .requiredOnEdit();
+
   List<String> get affectedEnvelopeIds;
 
   @override
   @mustCallSuper
-  List<ValueObjectBehavior> get behaviors => [affectedEnvelopesProperty, budgetProperty];
+  List<ValueObjectBehavior> get behaviors => [
+        affectedEnvelopesProperty,
+        budgetProperty,
+        transactionDateProperty,
+      ];
 }

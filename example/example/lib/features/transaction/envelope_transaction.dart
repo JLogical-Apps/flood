@@ -16,14 +16,6 @@ class EnvelopeTransaction extends BudgetTransaction {
       .currency()
       .withFallbackReplacement(() => 0);
 
-  static const transactionDateField = 'transactionDate';
-  late final transactionDateProperty = field<DateTime>(name: transactionDateField)
-      .withDisplayName('Transaction Date')
-      .onlyDate()
-      .withFallback(() => DateTime.now())
-      .withDefault(() => DateTime.now())
-      .requiredOnEdit();
-
   @override
   List<String> get affectedEnvelopeIds => [envelopeProperty.value];
 
@@ -34,6 +26,5 @@ class EnvelopeTransaction extends BudgetTransaction {
         nameProperty,
         envelopeProperty,
         amountCentsProperty,
-        transactionDateProperty,
       ];
 }

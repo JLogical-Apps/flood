@@ -14,14 +14,23 @@ class StyledPortDialog<T> extends StyledDialog<T> {
     Map<String, Widget>? overrides,
   }) : super(body: _portBuilder(port: port, children: children, overrides: overrides));
 
-  static Widget _portBuilder({required Port port, List<Widget>? children, Map<String, Widget>? overrides}) {
+  static Widget _portBuilder({
+    required Port port,
+    List<Widget>? children,
+    Map<String, Widget>? overrides,
+    List<String>? order,
+  }) {
     assert(children == null || overrides == null, '`children` or `overrides` must be null!');
     return Builder(
       builder: (context) {
         return StyledList.column(
           children: [
             children == null
-                ? StyledObjectPortBuilder(port: port, overrides: overrides ?? {})
+                ? StyledObjectPortBuilder(
+                    port: port,
+                    overrides: overrides ?? {},
+                    order: order ?? [],
+                  )
                 : PortBuilder(
                     port: port,
                     builder: (context, port) => StyledList.column(children: children),

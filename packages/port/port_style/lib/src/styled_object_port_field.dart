@@ -11,12 +11,15 @@ class StyledObjectPortField<T> extends HookWidget {
 
   final bool enabled;
 
+  final List<String> order;
+
   const StyledObjectPortField({
     super.key,
     required this.fieldName,
     this.labelText,
     this.label,
     this.enabled = true,
+    this.order = const [],
   });
 
   @override
@@ -28,7 +31,10 @@ class StyledObjectPortField<T> extends HookWidget {
           return Container();
         }
 
-        return StyledObjectPortBuilder(port: objectPort);
+        return StyledObjectPortBuilder(
+          port: objectPort,
+          order: order,
+        );
       },
     );
   }
