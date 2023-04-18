@@ -16,6 +16,7 @@ import 'package:drop_core/src/record/value_object/list_value_object_property.dar
 import 'package:drop_core/src/record/value_object/map_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/multiline_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/null_if_blank_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/only_date_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/placeholder_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_on_edit_value_object_property.dart';
@@ -136,6 +137,13 @@ extension NullableStringValueObjectPropertyExtensions<G extends String?, S exten
 
   NullIfBlankValueObjectProperty<G, S, L> nullIfBlank() {
     return NullIfBlankValueObjectProperty<G, S, L>(property: this);
+  }
+}
+
+extension DateTimeValueObjectPropertyExtensions<G extends DateTime?, S extends DateTime?, L,
+    V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
+  OnlyDateValueObjectProperty onlyDate([bool onlyDate = true]) {
+    return OnlyDateValueObjectProperty(property: this, onlyDate: onlyDate);
   }
 }
 

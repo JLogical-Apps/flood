@@ -1,6 +1,7 @@
 import 'package:port_core/port_core.dart';
 import 'package:port_core/src/modifier/base_port_field_modifier.dart';
 import 'package:port_core/src/modifier/currency_port_field_modifier.dart';
+import 'package:port_core/src/modifier/date_port_field_modifier.dart';
 import 'package:port_core/src/modifier/display_name_port_field_modifier.dart';
 import 'package:port_core/src/modifier/hint_port_field_modifier.dart';
 import 'package:port_core/src/modifier/map_port_field_node_modifier.dart';
@@ -32,13 +33,22 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return false;
   }
 
+  bool isOnlyDate(T portField) {
+    return false;
+  }
+
   StagePortField? findStagePortFieldOrNull(T portField) {
+    return null;
+  }
+
+  DatePortField? findDatePortFieldOrNull(T portField) {
     return null;
   }
 
   static final nodeModifierResolver = ModifierResolver<PortFieldNodeModifier, PortField>(modifiers: [
     OptionsPortFieldNodeModifier(),
     StagePortFieldNodeModifier(modifierGetter: getModifierOrNull),
+    DatePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     DisplayNamePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     MultilinePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     CurrencyPortFieldNodeModifier(modifierGetter: getModifierOrNull),

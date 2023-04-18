@@ -35,6 +35,7 @@ class StyledDateTimeFieldPortField extends HookWidget {
           label: label,
           errorText: error?.toString(),
           hintText: hintText,
+          showTime: field.findDateFieldOrNull()?.isTime ?? false,
           onChanged: (text) => port[fieldName] = text,
         );
       },

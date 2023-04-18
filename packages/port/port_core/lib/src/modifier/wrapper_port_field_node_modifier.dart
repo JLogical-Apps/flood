@@ -1,3 +1,4 @@
+import 'package:port_core/src/date_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
 import 'package:port_core/src/port_field.dart';
 import 'package:port_core/src/stage_port_field.dart';
@@ -33,7 +34,17 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   }
 
   @override
+  bool isOnlyDate(T portField) {
+    return modifierGetter(portField.portField)?.isOnlyDate(portField.portField) ?? false;
+  }
+
+  @override
   StagePortField? findStagePortFieldOrNull(T portField) {
     return modifierGetter(portField.portField)?.findStagePortFieldOrNull(portField.portField);
+  }
+
+  @override
+  DatePortField? findDatePortFieldOrNull(T portField) {
+    return modifierGetter(portField.portField)?.findDatePortFieldOrNull(portField.portField);
   }
 }

@@ -14,6 +14,7 @@ import 'package:port_drop_core/src/behavior_modifiers/int_field_behavior_modifie
 import 'package:port_drop_core/src/behavior_modifiers/is_not_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/null_if_blank_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/only_date_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/placeholder_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_on_edit_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior_modifier.dart';
@@ -54,6 +55,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       MultilinePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       NullIfBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       CurrencyPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      OnlyDatePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
     ],
   );
 

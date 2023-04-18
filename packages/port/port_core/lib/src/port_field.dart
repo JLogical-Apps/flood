@@ -48,7 +48,7 @@ abstract class PortField<T, S> with IsValidatorWrapper<T, String> {
   }
 
   static DatePortField<DateTime?, DateTime?> dateTime({
-    required DateTime? initialValue,
+    DateTime? initialValue,
     bool isDate = true,
     bool isTime = true,
   }) {
@@ -141,6 +141,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
     return PortFieldNodeModifier.getModifierOrNull(this)?.findStagePortFieldOrNull(this);
   }
 
+  DatePortField? findDateFieldOrNull() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.findDatePortFieldOrNull(this);
+  }
+
   List<T>? findOptionsOrNull() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.getOptionsOrNull(this);
   }
@@ -226,6 +230,11 @@ extension StringPortFieldExtensions<S> on PortField<String, S> {
 extension IntPortFieldExtensions<T extends int?, S> on PortField<T, S> {
   PortField<T, S> currency([bool isCurrency = true]) =>
       CurrencyPortField<T, S>(portField: this, isCurrency: isCurrency);
+}
+
+extension DatePortFieldExtensions<T extends DateTime?, S> on PortField<T, S> {
+  PortField<T, S> dateTime([bool isDate = true, bool isTime = true]) =>
+      DatePortField<T, S>(portField: this, isDate: isDate, isTime: isTime);
 }
 
 abstract class PortFieldWrapper<T, S> implements PortField<T, S> {

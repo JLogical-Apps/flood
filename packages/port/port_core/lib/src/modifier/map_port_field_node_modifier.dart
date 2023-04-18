@@ -26,4 +26,9 @@ class MapPortFieldNodeModifier extends PortFieldNodeModifier<MapPortField> {
   bool isCurrency(MapPortField portField) {
     return modifierGetter(portField.portField)?.isCurrency(portField.portField) ?? false;
   }
+
+  @override
+  bool isOnlyDate(MapPortField portField) {
+    return modifierGetter(portField.portField)?.isOnlyDate(portField.portField) ?? false;
+  }
 }

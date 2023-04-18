@@ -15,6 +15,10 @@ abstract class PortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
     return false;
   }
 
+  bool isOnlyDate(T behavior) {
+    return false;
+  }
+
   dynamic getDefaultValue(T behavior) {
     return null;
   }
@@ -64,6 +68,12 @@ abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavio
   bool isRequiredOnEdit(T behavior) {
     final unwrappedBehavior = unwrapBehavior(behavior);
     return modifierGetter(unwrappedBehavior)?.isRequiredOnEdit(unwrappedBehavior) ?? false;
+  }
+
+  @override
+  bool isOnlyDate(T behavior) {
+    final unwrappedBehavior = unwrapBehavior(behavior);
+    return modifierGetter(unwrappedBehavior)?.isOnlyDate(unwrappedBehavior) ?? false;
   }
 
   @override

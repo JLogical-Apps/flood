@@ -163,6 +163,21 @@ void main() {
     expect(userPort[Data8.lastNameField], 'Doe');
     expect(userPort.getFieldByNameOrNull(Data8.errorField), isNull);
   });
+
+  test('Port for date fields.', () async {
+    corePondContext.locate<TypeCoreComponent>().register(Data9.new, name: 'Data9');
+
+    final user = Data9();
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+    expect(
+      userPort.getFieldByName(Data9.dateField).findDateFieldOrNull(),
+      isA<DatePortField>().having((f) => f.isDate, 'isDate', true).having((f) => f.isTime, 'isTime', false),
+    );
+    expect(
+      userPort.getFieldByName(Data9.createdField).findDateFieldOrNull(),
+      isA<DatePortField>().having((f) => f.isDate, 'isDate', true).having((f) => f.isTime, 'isTime', true),
+    );
+  });
 }
 
 class Data1 extends ValueObject {
@@ -264,4 +279,15 @@ class Data8 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [firstNameProperty, lastNameProperty, nameProperty, errorProperty];
+}
+
+class Data9 extends ValueObject {
+  static const dateField = 'date';
+  late final dateProperty = field<DateTime>(name: dateField).onlyDate().required();
+
+  static const createdField = 'created';
+  late final createdProperty = field<DateTime>(name: createdField);
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [dateProperty, createdProperty];
 }

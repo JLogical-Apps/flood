@@ -15,6 +15,12 @@ class DateTimeFieldBehaviorModifier
     PortGeneratorBehaviorModifierContext context,
   ) {
     final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
-    return {behavior.name: PortField.dateTime(initialValue: behavior.value ?? defaultValue)};
+    final onlyDate = modifierGetter(context.originalBehavior)?.isOnlyDate(context.originalBehavior) ?? false;
+    return {
+      behavior.name: PortField.dateTime(
+        initialValue: behavior.value ?? defaultValue,
+        isTime: !onlyDate,
+      )
+    };
   }
 }
