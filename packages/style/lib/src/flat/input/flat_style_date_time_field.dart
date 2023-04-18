@@ -11,8 +11,8 @@ import 'package:utils/utils.dart';
 class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> {
   @override
   Widget renderTyped(BuildContext context, StyledDateTimeField component) {
-    final valueState = useState<DateTime?>(component.value);
     return StyledTextField(
+      key: ObjectKey(component.value),
       labelText: component.labelText,
       label: component.label,
       enabled: component.onChanged != null,
@@ -20,7 +20,7 @@ class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> 
       errorText: component.errorText,
       hintText: component.hintText,
       leadingIcon: Icons.date_range,
-      text: valueState.value?.format(showDate: component.showDate, showTime: component.showTime),
+      text: component.value?.format(showDate: component.showDate, showTime: component.showTime),
       onTapped: component.onChanged == null
           ? null
           : () async {
@@ -44,8 +44,8 @@ class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> 
                         ),
                       ),
                       textTheme: Theme.of(context).textTheme.apply(
-                        bodyColor: context.colorPalette().foreground.regular,
-                      ),
+                            bodyColor: context.colorPalette().foreground.regular,
+                          ),
                       dialogTheme: DialogTheme(
                         backgroundColor: context.colorPalette().background.regular,
                         shape: RoundedRectangleBorder(
@@ -57,7 +57,7 @@ class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> 
                   );
                 },
                 useRootNavigator: false,
-                initialDate: valueState.value ?? DateTime.now(),
+                initialDate: component.value ?? DateTime.now(),
                 firstDate: DateTime.fromMillisecondsSinceEpoch(0),
                 lastDate: DateTime.now().add(Duration(days: 1000)),
               );
