@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:style/src/components/input/styled_date_time_field.dart';
 import 'package:style/src/components/input/styled_text_field.dart';
-import 'package:style/src/components/text/styled_text.dart';
+import 'package:style/src/style_build_context_extensions.dart';
 import 'package:style/src/style_renderer.dart';
 import 'package:style/src/styleguide.dart';
-import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
 class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> {
