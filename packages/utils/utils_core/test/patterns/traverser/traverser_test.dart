@@ -1,6 +1,5 @@
 import 'package:test/test.dart';
 import 'package:utils_core/src/traverser/export.dart';
-import 'package:utils_core/src/traverser/traverser.dart';
 import 'package:utils_core/utils_core.dart';
 
 void main() {
