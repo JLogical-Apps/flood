@@ -38,6 +38,7 @@ import 'package:style/src/style_renderer.dart';
 import 'package:style/src/styled_text_renderer.dart';
 import 'package:style/src/styleguide.dart';
 import 'package:tinycolor2/tinycolor2.dart';
+import 'package:utils/utils.dart';
 
 class FlatStyle with IsStyle {
   final Color primaryColor;
@@ -165,6 +166,7 @@ This is a `code block`.
 
   ColorPalette getColorPaletteFromBackground(Color backgroundColor) {
     final isDark = backgroundColor.computeLuminance() < 0.3;
+    final isCloseToPrimary = (backgroundColor - primaryColor) < 30;
 
     final newBackground = isDarkMode
         ? (backgroundColor == Colors.black
@@ -181,13 +183,13 @@ This is a `code block`.
       ),
       regularBackgroundColorPaletteGetter: () => getColorPaletteFromBackground(newBackground),
       subtleBackgroundColorPaletteGetter: () => getColorPaletteFromBackground(backgroundColor),
-      strongForegroundColorPaletteGetter: () => backgroundColor == primaryColor
+      strongForegroundColorPaletteGetter: () => isCloseToPrimary
           ? getColorPaletteFromBackground(isDark ? Colors.white : Colors.black)
           : getColorPaletteFromBackground(primaryColor),
-      regularForegroundColorPaletteGetter: () => backgroundColor == primaryColor
+      regularForegroundColorPaletteGetter: () => isCloseToPrimary
           ? getColorPaletteFromBackground(isDark ? Colors.white : Colors.black)
           : getColorPaletteFromBackground(newForeground),
-      subtleForegroundColorPaletteGetter: () => backgroundColor == primaryColor
+      subtleForegroundColorPaletteGetter: () => isCloseToPrimary
           ? getColorPaletteFromBackground(isDark ? Colors.white : Colors.black)
           : getColorPaletteFromBackground(newSubtleForeground),
       strongErrorColorPaletteGetter: () => getColorPaletteFromBackground(Colors.red.shade700),

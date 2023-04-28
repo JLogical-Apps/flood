@@ -98,6 +98,10 @@ extension ValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty> 
     return PlaceholderValueObjectProperty(property: this, placeholder: placeholder);
   }
 
+  DefaultValueObjectProperty<G, S, L> withDefault(G Function() defaultValueGetter) {
+    return DefaultValueObjectProperty(property: this, defaultValueGetter: defaultValueGetter);
+  }
+
   DisplayNameValueObjectProperty<G, S, L> withDisplayName(String? displayName) {
     return DisplayNameValueObjectProperty(property: this, displayNameGetter: () => displayName);
   }
@@ -151,13 +155,6 @@ extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int
     on ValueObjectProperty<G, S, L, V> {
   CurrencyValueObjectProperty<G, S, L> currency([bool isCurrency = true]) {
     return CurrencyValueObjectProperty<G, S, L>(property: this, isCurrency: isCurrency);
-  }
-}
-
-extension SameGetterSetterValueObjectPropertyExtensions<T, L, V extends ValueObjectProperty>
-    on ValueObjectProperty<T, T, L, V> {
-  DefaultValueObjectProperty<T, T, L> withDefault(T Function() defaultValueGetter) {
-    return DefaultValueObjectProperty(property: this, defaultValueGetter: defaultValueGetter);
   }
 }
 

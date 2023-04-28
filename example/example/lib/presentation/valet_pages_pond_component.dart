@@ -14,7 +14,7 @@ class ValetPagesAppPondComponent with IsAppPondComponent {
         HomePage(),
         BudgetsPage(),
         BudgetPage(),
-        AddIncomePage(),
+        AddTransactionsPage(),
         EnvelopePage(),
         TransactionPage(),
       ];

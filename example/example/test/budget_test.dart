@@ -1,4 +1,5 @@
 import 'package:example/features/budget/budget.dart';
+import 'package:example/features/budget/budget_change.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope_rule/daily_time_rule.dart';
 import 'package:example/features/envelope_rule/firstfruit_envelope_rule.dart';
@@ -6,6 +7,9 @@ import 'package:example/features/envelope_rule/monthly_time_rule.dart';
 import 'package:example/features/envelope_rule/repeating_goal_envelope_rule.dart';
 import 'package:example/features/envelope_rule/surplus_envelope_rule.dart';
 import 'package:example/features/envelope_rule/target_goal_envelope_rule.dart';
+import 'package:example/features/transaction/envelope_transaction.dart';
+import 'package:example/features/transaction/income_transaction.dart';
+import 'package:example/features/transaction/transfer_transaction.dart';
 import 'package:example/pond.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -226,6 +230,71 @@ void main() {
         'Surplus': (100 * 100 - totalIncome ~/ 10 - 10 * 100) ~/ 2,
       },
     );
+  });
+
+  test('multiple transactions budget change example.', () {
+    const budgetId = '';
+    final envelopes = [
+      Envelope()
+        ..nameProperty.set('Firstfruit')
+        ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10))
+        ..budgetProperty.set(budgetId),
+      Envelope()
+        ..nameProperty.set('Repeating')
+        ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+          ..goalCentsProperty.set(10 * 100)
+          ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(3)))
+        ..budgetProperty.set(budgetId),
+      Envelope()
+        ..nameProperty.set('Target')
+        ..ruleProperty.set(TargetGoalEnvelopeRule()
+          ..percentProperty.set(50)
+          ..maximumCentsProperty.set(100 * 100))
+        ..budgetProperty.set(budgetId),
+      Envelope()
+        ..nameProperty.set('Surplus')
+        ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(10))
+        ..budgetProperty.set(budgetId),
+    ];
+
+    final budgetChange = Budget().addTransactions(
+      envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
+      transactions: [
+        IncomeTransaction()
+          ..centsByEnvelopeProperty.set({
+            'Firstfruit': 20 * 100,
+            'Repeating': 20 * 100,
+            'Target': 20 * 100,
+            'Surplus': 20 * 100,
+          })
+          ..budgetProperty.set(budgetId),
+        EnvelopeTransaction()
+          ..nameProperty.set('Payment')
+          ..amountCentsProperty.set(-10 * 100)
+          ..envelopeProperty.set('Firstfruit')
+          ..budgetProperty.set(budgetId),
+        EnvelopeTransaction()
+          ..nameProperty.set('Refund')
+          ..amountCentsProperty.set(10 * 100)
+          ..envelopeProperty.set('Repeating')
+          ..budgetProperty.set(budgetId),
+        TransferTransaction()
+          ..nameProperty.set('Transfer')
+          ..amountCentsProperty.set(10 * 100)
+          ..fromEnvelopeProperty.set('Target')
+          ..toEnvelopeProperty.set('Surplus')
+          ..budgetProperty.set(budgetId)
+      ],
+    );
+
+    expect(
+        budgetChange,
+        isA<BudgetChange>()
+            .having((budgetChange) => budgetChange.isIncome, 'isIncome', isFalse)
+            .having((budgetChange) => budgetChange.modifiedCentsByEnvelopeId['Firstfruit'], 'Firstfruit', 10 * 100)
+            .having((budgetChange) => budgetChange.modifiedCentsByEnvelopeId['Repeating'], 'Repeating', 30 * 100)
+            .having((budgetChange) => budgetChange.modifiedCentsByEnvelopeId['Target'], 'Target', 10 * 100)
+            .having((budgetChange) => budgetChange.modifiedCentsByEnvelopeId['Surplus'], 'Surplus', 30 * 100));
   });
 }
 

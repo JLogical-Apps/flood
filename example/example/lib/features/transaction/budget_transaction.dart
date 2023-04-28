@@ -1,3 +1,4 @@
+import 'package:example/features/budget/budget_change.dart';
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 import 'package:meta/meta.dart';
@@ -21,6 +22,8 @@ abstract class BudgetTransaction extends ValueObject {
       .requiredOnEdit();
 
   List<String> get affectedEnvelopeIds;
+
+  BudgetChange getBudgetChange({required Map<String, int> centsByEnvelopeId});
 
   @override
   @mustCallSuper

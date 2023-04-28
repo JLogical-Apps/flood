@@ -1,12 +1,11 @@
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
-import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
-import 'package:example/presentation/pages/transaction/add_income_page.dart';
-import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
+import 'package:example/presentation/pages/transaction/add_transactions_page.dart';
+import 'package:example/presentation/widget/envelope/envelope_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -15,15 +14,16 @@ class BudgetPage extends AppPage {
   late final budgetIdProperty = field<String>(name: 'budgetId').required();
 
   @override
+  PathDefinition get pathDefinition => PathDefinition.string('budget').property(budgetIdProperty);
+
+  @override
   Widget build(BuildContext context) {
     final budgetModel = useQuery(Query.getByIdOrNull<BudgetEntity>(budgetIdProperty.value));
     final envelopesModel =
-        useQuery(Query.from<EnvelopeEntity>().where(Envelope.budgetField).isEqualTo(budgetIdProperty.value).all());
+        useQuery(EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: budgetIdProperty.value, isArchived: false).all());
 
-    final transactionsModel = useQuery(Query.from<BudgetTransactionEntity>()
-        .where(BudgetTransaction.budgetField)
-        .isEqualTo(budgetIdProperty.value)
-        .paginate());
+    final transactionsModel =
+        useQuery(BudgetTransactionEntity.getBudgetTransactionsQuery(budgetId: budgetIdProperty.value).paginate());
 
     final totalCentsModel = useMemoized(() => envelopesModel
         .map((envelopeEntities) => envelopeEntities.sumByInt((entity) => entity.value.amountCentsProperty.value)));
@@ -78,10 +78,10 @@ class BudgetPage extends AppPage {
           body: StyledList.column.scrollable(
             children: [
               StyledButton.strong(
-                labelText: 'Add Income',
+                labelText: 'Add Transactions',
                 iconData: Icons.attach_money,
                 onPressed: () async {
-                  await context.push(AddIncomePage());
+                  await context.push(AddTransactionsPage()..budgetIdProperty.set(budgetIdProperty.value));
                 },
               ),
               StyledCard(
@@ -113,12 +113,8 @@ class BudgetPage extends AppPage {
                       return StyledList.column.withMinChildSize(150)(
                         children: [
                           ...envelopeEntities.map((envelopeEntity) {
-                            final envelopeRuleCardWrapper =
-                                EnvelopeRuleCardModifier.getModifier(envelopeEntity.value.ruleProperty.value);
-                            return StyledCard(
-                              leading: envelopeRuleCardWrapper.getIcon(envelopeEntity.value.ruleProperty.value),
-                              titleText: envelopeEntity.value.nameProperty.value,
-                              bodyText: envelopeEntity.value.amountCentsProperty.value.formatCentsAsCurrency(),
+                            return EnvelopeCard(
+                              envelope: envelopeEntity.value,
                               onPressed: () async {
                                 context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!));
                               },
@@ -167,9 +163,6 @@ class BudgetPage extends AppPage {
   AppPage copy() {
     return BudgetPage();
   }
-
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('budget').property(budgetIdProperty);
 
   @override
   AppPage? getParent() {

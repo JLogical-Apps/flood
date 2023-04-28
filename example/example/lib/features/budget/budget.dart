@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:example/features/budget/budget_change.dart';
 import 'package:example/features/envelope/envelope.dart';
+import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:example/features/user/user_entity.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
@@ -123,5 +124,19 @@ class Budget extends ValueObject {
     }
 
     return BudgetChange(modifiedCentsByEnvelopeId: modifiedCentsByEnvelopeId, isIncome: true);
+  }
+
+  BudgetChange addTransactions({
+    required Map<String, Envelope> envelopeById,
+    required List<BudgetTransaction> transactions,
+  }) {
+    var modifiedCentsByEnvelopeId = envelopeById.map((id, envelope) => MapEntry(id, 0));
+
+    for (final transaction in transactions) {
+      final budgetChange = transaction.getBudgetChange(centsByEnvelopeId: modifiedCentsByEnvelopeId);
+      modifiedCentsByEnvelopeId = budgetChange.modifiedCentsByEnvelopeId;
+    }
+
+    return BudgetChange(modifiedCentsByEnvelopeId: modifiedCentsByEnvelopeId, isIncome: false);
   }
 }

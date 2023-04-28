@@ -1,3 +1,4 @@
+import 'package:example/features/budget/budget_change.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
@@ -27,4 +28,21 @@ class EnvelopeTransaction extends BudgetTransaction {
         envelopeProperty,
         amountCentsProperty,
       ];
+
+  @override
+  BudgetChange getBudgetChange({required Map<String, int> centsByEnvelopeId}) {
+    final envelopeCents = centsByEnvelopeId[envelopeProperty.value];
+    if (envelopeCents == null) {
+      return BudgetChange(
+        modifiedCentsByEnvelopeId: centsByEnvelopeId,
+        isIncome: false,
+      );
+    }
+
+    return BudgetChange(
+      modifiedCentsByEnvelopeId: centsByEnvelopeId.copy()
+        ..set(envelopeProperty.value, envelopeCents + amountCentsProperty.value),
+      isIncome: false,
+    );
+  }
 }
