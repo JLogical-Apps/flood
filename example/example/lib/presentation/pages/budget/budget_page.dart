@@ -6,6 +6,7 @@ import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/pages/transaction/add_transactions_page.dart';
 import 'package:example/presentation/widget/envelope/envelope_card.dart';
+import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -139,7 +140,7 @@ class BudgetPage extends AppPage {
                         ifEmptyText: 'There are no transactions in this budget!',
                         children: [
                           ...transactionEntities
-                              .map((entity) => StyledCard(titleText: entity.value.affectedEnvelopesProperty.name))
+                              .map((entity) => TransactionCard(budgetTransaction: entity.value))
                               .toList(),
                           if (loadMore != null)
                             StyledButton.strong(
