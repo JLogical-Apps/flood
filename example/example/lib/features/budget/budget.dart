@@ -130,7 +130,8 @@ class Budget extends ValueObject {
     required Map<String, Envelope> envelopeById,
     required List<BudgetTransaction> transactions,
   }) {
-    var modifiedCentsByEnvelopeId = envelopeById.map((id, envelope) => MapEntry(id, 0));
+    var modifiedCentsByEnvelopeId =
+        envelopeById.map((id, envelope) => MapEntry(id, envelope.amountCentsProperty.value));
 
     for (final transaction in transactions) {
       final budgetChange = transaction.getBudgetChange(centsByEnvelopeId: modifiedCentsByEnvelopeId);

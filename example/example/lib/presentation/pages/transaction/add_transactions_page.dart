@@ -1,5 +1,7 @@
 import 'package:example/features/budget/budget_entity.dart';
+import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
+import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/pages/transaction/transaction_generator.dart';
@@ -61,6 +63,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
                   ).map((resultByName, port) => IncomeTransactionGenerator(
                         incomeCents: resultByName['incomeCents'] as int,
                         transactionDate: resultByName['transactionDate'] as DateTime,
+                        budgetId: budgetIdProperty.value,
                         budget: budgetEntity.value,
                         dropCoreContext: context.dropCoreComponent,
                         envelopeById: envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value)),
@@ -117,7 +120,25 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
           StyledButton.strong(
             labelText: 'Save',
             iconData: Icons.save,
-            onPressed: () async {},
+            onPressed: () async {
+              if (modifiedCentsById == null || envelopeEntities == null) {
+                return;
+              }
+
+              for (final transaction in transactions) {
+                final budgetTransactionEntity =
+                    BudgetTransactionEntity.constructEntityFromTransactionTypeRuntime(transaction.runtimeType)
+                      ..set(transaction);
+                await context.dropCoreComponent.update(budgetTransactionEntity);
+              }
+              for (final entry in modifiedCentsById.entries) {
+                await context.dropCoreComponent.updateEntity(
+                  envelopeEntities.firstWhere((entity) => entity.id == entry.key),
+                  (Envelope envelope) => envelope.amountCentsProperty.set(entry.value),
+                );
+              }
+              context.pop();
+            },
           ),
         ],
       ),
@@ -163,7 +184,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
       body: StyledList.row(
         itemPadding: EdgeInsets.symmetric(horizontal: 4),
         children: [
-          StyledText.body(envelope.amountCentsProperty.value.formatCurrency()),
+          StyledText.body(envelope.amountCentsProperty.value.formatCentsAsCurrency()),
           StyledIcon(Icons.arrow_right),
           if (modifiedCentsById == null) StyledLoadingIndicator(),
           StyledText.body.withColor(newCents == null

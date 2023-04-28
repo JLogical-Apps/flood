@@ -23,6 +23,7 @@ class IncomeTransactionGenerator extends TransactionGenerator<IncomeTransaction>
   final int incomeCents;
   final DateTime transactionDate;
 
+  final String budgetId;
   final Budget budget;
   final DropCoreContext dropCoreContext;
   final Map<String, Envelope> envelopeById;
@@ -30,6 +31,7 @@ class IncomeTransactionGenerator extends TransactionGenerator<IncomeTransaction>
   IncomeTransactionGenerator({
     required this.incomeCents,
     required this.transactionDate,
+    required this.budgetId,
     required this.budget,
     required this.dropCoreContext,
     required this.envelopeById,
@@ -41,6 +43,7 @@ class IncomeTransactionGenerator extends TransactionGenerator<IncomeTransaction>
         budget.addIncome(context: dropCoreContext, incomeCents: incomeCents, envelopeById: envelopeById);
     return IncomeTransaction()
       ..centsByEnvelopeProperty.set(budgetChange.modifiedCentsByEnvelopeId)
-      ..transactionDateProperty.set(transactionDate);
+      ..transactionDateProperty.set(transactionDate)
+      ..budgetProperty.set(budgetId);
   }
 }

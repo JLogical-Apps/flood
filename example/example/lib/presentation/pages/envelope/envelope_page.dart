@@ -1,11 +1,13 @@
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/budget_transaction.dart';
+import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:example/features/transaction/envelope_transaction_entity.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
+import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -15,7 +17,7 @@ class EnvelopePage extends AppPage {
   @override
   Widget build(BuildContext context) {
     final envelopeModel = useQuery(Query.getById<EnvelopeEntity>(idProperty.value));
-    final envelopeTransactionsModel = useQuery(Query.from<EnvelopeTransactionEntity>()
+    final envelopeTransactionsModel = useQuery(Query.from<BudgetTransactionEntity>()
         .where(BudgetTransaction.affectedEnvelopesField)
         .contains(idProperty.value)
         .paginate());
@@ -85,13 +87,10 @@ class EnvelopePage extends AppPage {
               ),
               PaginatedQueryModelBuilder(
                 paginatedQueryModel: envelopeTransactionsModel,
-                builder: (List<EnvelopeTransactionEntity> envelopeTransactionEntities, Future Function()? loadNext) {
+                builder: (List<BudgetTransactionEntity> envelopeTransactionEntities, Future Function()? loadNext) {
                   return StyledList.column.withMinChildSize(150)(
                     children: envelopeTransactionEntities
-                        .map((entity) => StyledCard(
-                              titleText: entity.value.amountCentsProperty.value.formatCentsAsCurrency(),
-                              bodyText: entity.value.nameProperty.value,
-                            ))
+                        .map((entity) => TransactionCard(budgetTransaction: entity.value))
                         .toList(),
                     ifEmptyText: 'There are no transactions in this envelope!',
                   );
