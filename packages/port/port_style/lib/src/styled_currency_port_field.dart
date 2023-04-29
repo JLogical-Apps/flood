@@ -37,6 +37,7 @@ class StyledCurrencyFieldPortField extends HookWidget {
           hintText: hintText,
           errorText: error?.toString(),
           enabled: enabled,
+          keyboard: TextInputType.numberWithOptions(decimal: true),
           onChanged: (amountRaw) {
             if (amountRaw.isEmpty) {
               port.clearError(name: fieldName);

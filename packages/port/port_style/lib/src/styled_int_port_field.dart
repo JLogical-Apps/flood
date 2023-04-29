@@ -37,6 +37,7 @@ class StyledIntFieldPortField extends HookWidget {
           hintText: hintText,
           errorText: error?.toString(),
           enabled: enabled,
+          keyboard: TextInputType.number,
           onChanged: (amountRaw) {
             if (amountRaw.isEmpty) {
               port.clearError(name: fieldName);
