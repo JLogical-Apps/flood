@@ -193,7 +193,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
           StyledText.body(envelope.amountCentsProperty.value.formatCentsAsCurrency()),
           StyledIcon(Icons.arrow_right),
           if (modifiedCentsById == null) StyledLoadingIndicator(),
-          StyledText.body.withColor(newCents == null
+          StyledText.body.withColor(newCents == null || newCents == cents
               ? null
               : newCents < cents
                   ? Colors.red
