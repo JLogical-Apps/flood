@@ -69,6 +69,10 @@ Model<T?> useNullableQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>?> 
   return resultModel;
 }
 
+Model<E?> useEntityOrNull<E extends Entity>(String id) {
+  return useQuery(Query.getByIdOrNull<E>(id));
+}
+
 Model<T> useQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>> queryRequestModel) {
   final context = useContext();
   final dropCoreContext = useDropCoreContext();

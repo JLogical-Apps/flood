@@ -19,13 +19,7 @@ class TransferTransactionEditDialog extends StyledPortDialog<TransferTransaction
     envelopeEntities.removeWhere((entity) => entity == sourceEnvelopeEntity);
 
     late Port<Map<String, dynamic>> rawPort;
-    final basePort = transferTransaction.asPort(
-      context.corePondContext,
-      overrides: [
-        PortGeneratorOverride.update(TransferTransaction.nameField,
-            portFieldUpdater: (portField) => portField.withFallback('Transfer')),
-      ],
-    );
+    final basePort = transferTransaction.asPort(context.corePondContext);
     rawPort = Port.of({
       'transaction': PortField.port(port: basePort),
       'targetEnvelope': PortField.option<EnvelopeEntity?, String>(

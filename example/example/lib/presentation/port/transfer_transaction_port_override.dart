@@ -13,7 +13,6 @@ class TransferTransactionPortOverride with IsStyledObjectPortOverride<TransferTr
     return StyledObjectPortBuilder(
       port: port,
       order: [
-        TransferTransaction.nameField,
         BudgetTransaction.transactionDateField,
         TransferTransaction.amountCentsField,
       ],

@@ -4,8 +4,6 @@ import 'package:example/features/transaction/budget_transaction_repository.dart'
 import 'package:example/features/user/user_repository.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
-const bool testingLoggedIn = true;
-
 Future<CorePondContext> getCorePondContext({EnvironmentConfig? environmentConfig}) async {
   environmentConfig ??= EnvironmentConfig.static.memory();
 

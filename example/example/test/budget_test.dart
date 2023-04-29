@@ -261,7 +261,7 @@ void main() {
       envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
       transactions: [
         IncomeTransaction()
-          ..centsByEnvelopeProperty.set({
+          ..centsByEnvelopeIdProperty.set({
             'Firstfruit': 20 * 100,
             'Repeating': 20 * 100,
             'Target': 20 * 100,

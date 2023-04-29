@@ -42,7 +42,7 @@ class IncomeTransactionGenerator extends TransactionGenerator<IncomeTransaction>
     final budgetChange =
         budget.addIncome(context: dropCoreContext, incomeCents: incomeCents, envelopeById: envelopeById);
     return IncomeTransaction()
-      ..centsByEnvelopeProperty.set(budgetChange.modifiedCentsByEnvelopeId)
+      ..centsByEnvelopeIdProperty.set(budgetChange.modifiedCentsByEnvelopeId)
       ..transactionDateProperty.set(transactionDate)
       ..budgetProperty.set(budgetId);
   }

@@ -12,6 +12,7 @@ import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
+import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -130,7 +131,10 @@ class EnvelopePage extends AppPage {
                 builder: (List<BudgetTransactionEntity> envelopeTransactionEntities, Future Function()? loadNext) {
                   return StyledList.column.withMinChildSize(150)(
                     children: envelopeTransactionEntities
-                        .map((entity) => TransactionCard(budgetTransaction: entity.value))
+                        .map((entity) => TransactionCard(
+                              budgetTransaction: entity.value,
+                              transactionViewContext: TransactionViewContext.envelope(envelopeId: envelopeEntity.id!),
+                            ))
                         .toList(),
                     ifEmptyText: 'There are no transactions in this envelope!',
                   );
