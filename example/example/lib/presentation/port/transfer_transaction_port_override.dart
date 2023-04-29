@@ -16,43 +16,9 @@ class TransferTransactionPortOverride with IsStyledObjectPortOverride<TransferTr
       port: port,
       order: [
         TransferTransaction.nameField,
-        TransferTransaction.amountCentsField,
         BudgetTransaction.transactionDateField,
+        TransferTransaction.amountCentsField,
       ],
-      overrides: {
-        TransferTransaction.fromEnvelopeField: StyledOptionPortField(
-          fieldName: TransferTransaction.fromEnvelopeField,
-          labelText: 'From',
-          widgetMapper: (EnvelopeEntity? envelopeEntity) {
-            final envelope = envelopeEntity?.value;
-            final envelopeRuleModifier = EnvelopeRuleCardModifier.getModifier(envelope?.ruleProperty.value);
-            return StyledList.row(
-              children: [
-                envelopeRuleModifier.getIcon(envelope?.ruleProperty.value),
-                Expanded(
-                  child: StyledText.body(envelopeEntity?.value.nameProperty.value ?? 'None'),
-                ),
-              ],
-            );
-          },
-        ),
-        TransferTransaction.toEnvelopeField: StyledOptionPortField(
-          fieldName: TransferTransaction.toEnvelopeField,
-          labelText: 'To',
-          widgetMapper: (EnvelopeEntity? envelopeEntity) {
-            final envelope = envelopeEntity?.value;
-            final envelopeRuleModifier = EnvelopeRuleCardModifier.getModifier(envelope?.ruleProperty.value);
-            return StyledList.row(
-              children: [
-                envelopeRuleModifier.getIcon(envelope?.ruleProperty.value),
-                Expanded(
-                  child: StyledText.body(envelopeEntity?.value.nameProperty.value ?? 'None'),
-                ),
-              ],
-            );
-          },
-        ),
-      },
     );
   }
 }

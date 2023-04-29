@@ -8,14 +8,17 @@ class TransferTransaction extends BudgetTransaction {
   late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank();
 
   static const fromEnvelopeField = 'from';
-  late final fromEnvelopeProperty = reference<EnvelopeEntity>(name: fromEnvelopeField).required();
+  late final fromEnvelopeProperty = reference<EnvelopeEntity>(name: fromEnvelopeField).required().hidden();
 
   static const toEnvelopeField = 'to';
-  late final toEnvelopeProperty = reference<EnvelopeEntity>(name: toEnvelopeField).required();
+  late final toEnvelopeProperty = reference<EnvelopeEntity>(name: toEnvelopeField).required().hidden();
 
   static const amountCentsField = 'amount';
-  late final amountCentsProperty =
-      field<int>(name: amountCentsField).withDisplayName('Amount (\$)').withFallback(() => 0).requiredOnEdit();
+  late final amountCentsProperty = field<int>(name: amountCentsField)
+      .withDisplayName('Amount (\$)')
+      .currency()
+      .withFallback(() => 0)
+      .requiredOnEdit();
 
   @override
   List<String> get affectedEnvelopeIds => [fromEnvelopeProperty.value, toEnvelopeProperty.value];

@@ -60,11 +60,28 @@ class EnvelopePage extends AppPage {
                 final result = await context.showStyledDialog(await TransferTransactionEditDialog.create(
                   context,
                   titleText: 'Create Transfer',
+                  sourceEnvelopeEntity: envelopeEntity,
                   transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
                 ));
                 if (result == null) {
                   return;
                 }
+
+                final fromEnvelopeEntity = await context.dropCoreComponent
+                    .executeQuery(Query.getById<EnvelopeEntity>(result.fromEnvelopeProperty.value));
+                final toEnvelopeEntity = await context.dropCoreComponent
+                    .executeQuery(Query.getById<EnvelopeEntity>(result.toEnvelopeProperty.value));
+
+                await context.dropCoreComponent.updateEntity(
+                  fromEnvelopeEntity,
+                  (Envelope envelope) => envelope.amountCentsProperty
+                      .set(envelope.amountCentsProperty.value - result.amountCentsProperty.value),
+                );
+                await context.dropCoreComponent.updateEntity(
+                  toEnvelopeEntity,
+                  (Envelope envelope) => envelope.amountCentsProperty
+                      .set(envelope.amountCentsProperty.value + result.amountCentsProperty.value),
+                );
 
                 await context.dropCoreComponent.update(TransferTransactionEntity()..set(result));
               },
