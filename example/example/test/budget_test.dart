@@ -279,7 +279,6 @@ void main() {
           ..envelopeProperty.set('Repeating')
           ..budgetProperty.set(budgetId),
         TransferTransaction()
-          ..nameProperty.set('Transfer')
           ..amountCentsProperty.set(10 * 100)
           ..fromEnvelopeProperty.set('Target')
           ..toEnvelopeProperty.set('Surplus')

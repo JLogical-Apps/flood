@@ -1,4 +1,3 @@
-import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:example/features/transaction/income_transaction.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';

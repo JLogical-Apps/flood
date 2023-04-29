@@ -1,6 +1,7 @@
 import 'package:drop_core/src/query/query.dart';
+import 'package:drop_core/src/record/entity.dart';
 
-class OrderByQuery extends Query {
+class OrderByQuery<E extends Entity> extends Query<E> {
   final String stateField;
   final OrderByType type;
 

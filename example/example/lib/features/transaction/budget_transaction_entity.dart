@@ -9,7 +9,17 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 abstract class BudgetTransactionEntity<B extends BudgetTransaction> extends Entity<B> {
   static Query<BudgetTransactionEntity> getBudgetTransactionsQuery({required String budgetId}) {
-    return Query.from<BudgetTransactionEntity>().where(BudgetTransaction.budgetField).isEqualTo(budgetId);
+    return Query.from<BudgetTransactionEntity>()
+        .where(BudgetTransaction.budgetField)
+        .isEqualTo(budgetId)
+        .orderByDescending(BudgetTransaction.transactionDateField);
+  }
+
+  static Query<BudgetTransactionEntity> getEnvelopeTransactionsQuery({required String envelopeId}) {
+    return Query.from<BudgetTransactionEntity>()
+        .where(BudgetTransaction.affectedEnvelopesField)
+        .contains(envelopeId)
+        .orderByDescending(BudgetTransaction.transactionDateField);
   }
 
   static BudgetTransactionEntity constructEntityFromTransactionTypeRuntime(Type budgetTransactionType) {

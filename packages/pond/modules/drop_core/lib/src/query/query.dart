@@ -60,15 +60,15 @@ extension QueryExtensions<E extends Entity> on Query<E> {
     return WhereQuery(parent: this, condition: condition);
   }
 
-  OrderByQuery orderBy(String stateField, {required OrderByType type}) {
+  OrderByQuery<E> orderBy(String stateField, {required OrderByType type}) {
     return OrderByQuery(parent: this, stateField: stateField, type: type);
   }
 
-  OrderByQuery orderByDescending(String stateField) {
+  OrderByQuery<E> orderByDescending(String stateField) {
     return orderBy(stateField, type: OrderByType.descending);
   }
 
-  OrderByQuery orderByAscending(String stateField) {
+  OrderByQuery<E> orderByAscending(String stateField) {
     return orderBy(stateField, type: OrderByType.ascending);
   }
 
@@ -83,7 +83,7 @@ extension QueryExtensions<E extends Entity> on Query<E> {
   Query get root {
     Query root = this;
     while (root.parent != null) {
-      root = parent!;
+      root = root.parent!;
     }
     return root;
   }
