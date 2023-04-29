@@ -159,7 +159,12 @@ This is a `code block`.
       enableDrag: false,
       backgroundColor: Colors.transparent,
       builder: (_) {
-        return dialog;
+        return SingleChildScrollView(
+          child: Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: dialog,
+          ),
+        );
       },
     );
   }

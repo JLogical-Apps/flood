@@ -40,20 +40,15 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
                     child: leading,
                   ),
                 Expanded(
-                  child: StyledList.column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (title != null)
-                        Padding(
-                          padding: EdgeInsets.only(top: 4, left: 4, right: 4),
-                          child: title,
-                        ),
-                      if (body != null)
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 4, left: 4, right: 4),
-                          child: body,
-                        ),
-                    ],
+                  child: Padding(
+                    padding: title != null || body != null ? const EdgeInsets.all(4) : EdgeInsets.zero,
+                    child: StyledList.column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (title != null) title,
+                        if (body != null) body,
+                      ],
+                    ),
                   ),
                 ),
                 if (trailing != null)

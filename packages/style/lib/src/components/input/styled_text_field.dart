@@ -19,6 +19,7 @@ class StyledTextField extends StyleComponent {
   final bool obscureText;
 
   final int? maxLines;
+  final TextInputType? keyboard;
 
   final Function()? onTapped;
 
@@ -36,6 +37,7 @@ class StyledTextField extends StyleComponent {
     this.readonly = false,
     this.obscureText = false,
     this.maxLines = 1,
+    this.keyboard,
     this.onTapped,
   });
 }
