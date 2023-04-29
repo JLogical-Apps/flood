@@ -15,7 +15,7 @@ class TransferTransaction extends BudgetTransaction {
 
   static const amountCentsField = 'amount';
   late final amountCentsProperty =
-      field<int>(name: amountCentsField).withDisplayName('Amount (\$)').withFallback(() => 0);
+      field<int>(name: amountCentsField).withDisplayName('Amount (\$)').withFallback(() => 0).requiredOnEdit();
 
   @override
   List<String> get affectedEnvelopeIds => [fromEnvelopeProperty.value, toEnvelopeProperty.value];

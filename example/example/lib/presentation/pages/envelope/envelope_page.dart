@@ -4,7 +4,10 @@ import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:example/features/transaction/envelope_transaction_entity.dart';
+import 'package:example/features/transaction/transfer_transaction.dart';
+import 'package:example/features/transaction/transfer_transaction_entity.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
+import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
@@ -33,7 +36,7 @@ class EnvelopePage extends AppPage {
           actions: [
             ActionItem(
               titleText: 'Edit',
-              descriptionText: 'Edit the Envelope',
+              descriptionText: 'Edit this envelope.',
               color: Colors.orange,
               iconData: Icons.edit,
               onPerform: (context) async {
@@ -46,6 +49,24 @@ class EnvelopePage extends AppPage {
                 }
 
                 await context.dropCoreComponent.update(envelopeEntity..value = result);
+              },
+            ),
+            ActionItem(
+              titleText: 'Transfer',
+              descriptionText: 'Transfer money to/from this envelope.',
+              color: Colors.blue,
+              iconData: Icons.swap_horiz,
+              onPerform: (context) async {
+                final result = await context.showStyledDialog(TransferTransactionEditDialog(
+                  corePondContext: context.corePondContext,
+                  titleText: 'Create Transfer',
+                  transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
+                ));
+                if (result == null) {
+                  return;
+                }
+
+                await context.dropCoreComponent.update(TransferTransactionEntity()..set(result));
               },
             ),
           ],
@@ -65,17 +86,11 @@ class EnvelopePage extends AppPage {
                 iconData: Icons.add,
                 onPressed: () async {
                   final envelopeTransaction = await context.showStyledDialog(EnvelopeTransactionEditDialog(
+                    corePondContext: context.corePondContext,
                     titleText: 'Create Transaction',
-                    basePortBuilder: (nameHintGenerator) => (EnvelopeTransaction()
-                          ..envelopeProperty.set(envelopeEntity.id!)
-                          ..budgetProperty.set(envelope.budgetProperty.value))
-                        .asPort(
-                      context.corePondContext,
-                      overrides: [
-                        PortGeneratorOverride.update(EnvelopeTransaction.nameField,
-                            portFieldUpdater: (portField) => portField.withDynamicFallback(nameHintGenerator))
-                      ],
-                    ),
+                    envelopeTransaction: (EnvelopeTransaction()
+                      ..envelopeProperty.set(envelopeEntity.id!)
+                      ..budgetProperty.set(envelope.budgetProperty.value)),
                   ));
 
                   if (envelopeTransaction == null) {

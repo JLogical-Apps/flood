@@ -5,12 +5,19 @@ class EnvelopeTransactionEditDialog extends StyledPortDialog<EnvelopeTransaction
   EnvelopeTransactionEditDialog._({super.titleText, required super.port, required super.children});
 
   factory EnvelopeTransactionEditDialog({
+    required CorePondContext corePondContext,
     String? titleText,
-    required Port<EnvelopeTransaction> Function(dynamic Function() dynamicFallbackGenerator) basePortBuilder,
+    required EnvelopeTransaction envelopeTransaction,
   }) {
     late Port<Map<String, dynamic>> rawPort;
-    final basePort =
-        basePortBuilder(() => rawPort['transactionType'] == EnvelopeTransactionType.payment ? 'Payment' : 'Refund');
+    final basePort = envelopeTransaction.asPort(
+      corePondContext,
+      overrides: [
+        PortGeneratorOverride.update(EnvelopeTransaction.nameField,
+            portFieldUpdater: (portField) => portField.withDynamicFallback(
+                () => rawPort['transactionType'] == EnvelopeTransactionType.payment ? 'Payment' : 'Refund'))
+      ],
+    );
     rawPort = Port.of({
       'transaction': PortField.port(port: basePort),
       'transactionType': PortField.option(

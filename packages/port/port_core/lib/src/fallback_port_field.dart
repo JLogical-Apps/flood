@@ -25,6 +25,12 @@ class FallbackPortField<T, S> with IsPortFieldWrapper<T, S> {
   }
 
   @override
+  Future<String?> onValidate(T data) {
+    final dataToValidate = (isEmpty(data) ? fallbackGetter() : value);
+    return portField.onValidate(dataToValidate);
+  }
+
+  @override
   PortField<T, S> copyWith({required T value, required error}) {
     return FallbackPortField<T, S>(
       portField: portField.copyWith(value: value, error: error),

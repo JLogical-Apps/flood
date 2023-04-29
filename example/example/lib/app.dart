@@ -14,6 +14,7 @@ import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/port/envelope_port_override.dart';
 import 'package:example/presentation/port/envelope_transaction_port_override.dart';
 import 'package:example/presentation/port/repeating_goal_port_override.dart';
+import 'package:example/presentation/port/transfer_transaction_port_override.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/valet_pages_pond_component.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,7 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(PortStyleComponent(overrides: [
     EnvelopePortOverride(context: appPondContext),
     EnvelopeTransactionPortOverride(context: appPondContext),
+    TransferTransactionPortOverride(context: appPondContext),
     RepeatingGoalPortOverride(context: appPondContext),
   ]));
   await appPondContext.register(StyleAppComponent(style: style));

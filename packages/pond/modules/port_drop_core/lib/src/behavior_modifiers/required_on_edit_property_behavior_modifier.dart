@@ -23,6 +23,6 @@ class RequiredOnEditPropertyBehaviorModifier
     PortField sourcePortField,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    return sourcePortField.isNotNull();
+    return sourcePortField.withHint(null).isNotNull();
   }
 }

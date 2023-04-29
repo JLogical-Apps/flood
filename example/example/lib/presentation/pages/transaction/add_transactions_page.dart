@@ -169,17 +169,11 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
       leading: envelopeCardModification.getIcon(envelope.ruleProperty.value),
       onPressed: () async {
         final envelopeTransaction = await context.showStyledDialog(EnvelopeTransactionEditDialog(
+          corePondContext: context.corePondContext,
           titleText: 'Create Transaction',
-          basePortBuilder: (nameHintGenerator) => (EnvelopeTransaction()
-                ..envelopeProperty.set(envelopeEntity.id!)
-                ..budgetProperty.set(envelope.budgetProperty.value))
-              .asPort(
-            context.corePondContext,
-            overrides: [
-              PortGeneratorOverride.update(EnvelopeTransaction.nameField,
-                  portFieldUpdater: (portField) => portField.withDynamicFallback(nameHintGenerator))
-            ],
-          ),
+          envelopeTransaction: EnvelopeTransaction()
+            ..envelopeProperty.set(envelopeEntity.id!)
+            ..budgetProperty.set(envelope.budgetProperty.value),
         ));
         if (envelopeTransaction == null) {
           return null;
