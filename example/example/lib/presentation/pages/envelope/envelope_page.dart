@@ -9,6 +9,7 @@ import 'package:example/features/transaction/transfer_transaction_entity.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
 import 'package:example/presentation/pages/home_page.dart';
+import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,8 @@ class EnvelopePage extends AppPage {
           ],
           body: StyledList.column.centered.scrollable(
             children: [
-              StyledText.h4(envelope.amountCentsProperty.value.formatCentsAsCurrency()),
+              StyledText.h4.withColor(getCentsColor(envelope.amountCentsProperty.value))(
+                  envelope.amountCentsProperty.value.formatCentsAsCurrency()),
               StyledCard.subtle(
                 titleText: envelopeRule?.getDisplayName(),
                 leading: envelopeRuleCardWrapper.getIcon(envelopeRule),

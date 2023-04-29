@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:example/features/envelope/envelope.dart';
+import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -18,8 +19,9 @@ class EnvelopeCard extends HookWidget {
     final envelopeRuleCardWrapper = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
     return StyledCard(
       leading: envelopeRuleCardWrapper.getIcon(envelope.ruleProperty.value),
-      titleText: envelope.nameProperty.value,
-      bodyText: envelope.amountCentsProperty.value.formatCentsAsCurrency(),
+      title: StyledText.h6(envelope.nameProperty.value),
+      body: StyledText.body.withColor(getCentsColor(envelope.amountCentsProperty.value))(
+          envelope.amountCentsProperty.value.formatCentsAsCurrency()),
       onPressed: onPressed,
     );
   }
