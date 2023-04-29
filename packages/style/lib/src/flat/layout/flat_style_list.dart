@@ -48,14 +48,6 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
         );
       }
     }
-
-    if (component.children.isNotEmpty) {
-      widget = Padding(
-        padding: component.itemPadding,
-        child: widget,
-      );
-    }
-
     return widget;
   }
 

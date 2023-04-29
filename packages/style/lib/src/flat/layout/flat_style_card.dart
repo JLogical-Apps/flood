@@ -28,35 +28,55 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
               ),
               borderRadius: BorderRadius.circular(12),
             ),
-      child: StyledList.column(
-        children: [
-          StyledList.row(
-            children: [
-              if (leading != null)
-                Padding(
-                  padding: EdgeInsets.all(6),
-                  child: leading,
+      child: Padding(
+        padding: EdgeInsets.all(4),
+        child: StyledList.column(
+          children: [
+            StyledList.row(
+              children: [
+                if (leading != null)
+                  Padding(
+                    padding: EdgeInsets.all(6),
+                    child: leading,
+                  ),
+                Expanded(
+                  child: StyledList.column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (title != null)
+                        Padding(
+                          padding: EdgeInsets.only(top: 4, left: 4, right: 4),
+                          child: title,
+                        ),
+                      if (body != null)
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 4, left: 4, right: 4),
+                          child: body,
+                        ),
+                    ],
+                  ),
                 ),
-              Expanded(
-                child: StyledList.column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                if (trailing != null)
+                  Padding(
+                    padding: EdgeInsets.all(6),
+                    child: trailing,
+                  ),
+                if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
+              ],
+            ),
+            if (component.children.isNotEmpty) ...[
+              StyledDivider.subtle(),
+              Padding(
+                padding: EdgeInsets.all(4),
+                child: Column(
                   children: [
-                    if (title != null) title,
-                    if (body != null) body,
+                    ...component.children,
                   ],
                 ),
               ),
-              if (trailing != null)
-                Padding(
-                  padding: EdgeInsets.all(6),
-                  child: trailing,
-                ),
-              if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
-            ],
-          ),
-          if (component.children.isNotEmpty) StyledDivider.subtle(),
-          ...component.children,
-        ],
+            ]
+          ],
+        ),
       ),
     );
   }

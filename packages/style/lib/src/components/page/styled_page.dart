@@ -10,10 +10,13 @@ class StyledPage extends StyleComponent {
 
   final List<ActionItem> actions;
 
+  final EdgeInsets innerPadding;
+
   StyledPage({
     this.title,
     this.titleText,
     required this.body,
     this.actions = const [],
+    this.innerPadding = const EdgeInsets.all(4),
   });
 }
