@@ -18,6 +18,7 @@ class FlatStyleH3Renderer with IsTextStyleRenderer<StyledH3> {
           : text.color ?? context.colorPalette().foreground.getByEmphasis(text.emphasis),
       fontStyle: text.fontStyle,
       fontWeight: text.fontWeight,
+      overflow: TextOverflow.fade,
     );
   }
 
