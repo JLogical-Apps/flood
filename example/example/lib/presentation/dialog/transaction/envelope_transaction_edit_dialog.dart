@@ -2,37 +2,46 @@ import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class EnvelopeTransactionEditDialog extends StyledPortDialog<EnvelopeTransaction> {
-  EnvelopeTransactionEditDialog({
-    super.titleText,
-    required Port<EnvelopeTransaction> envelopeTransactionPort,
-  }) : super(
-          port: Port.of({
-            'transaction': PortField.port(port: envelopeTransactionPort),
-            'transactionType': PortField.option(
-              options: EnvelopeTransactionType.values,
-              initialValue: EnvelopeTransactionType.payment,
-            ),
-          }).map((sourceData, port) {
-            final transactionResult = sourceData['transaction'] as EnvelopeTransaction;
-            final transactionType = sourceData['transactionType'] as EnvelopeTransactionType;
-            transactionType.modifyTransaction(transactionResult);
-            return transactionResult;
-          }),
-          children: [
-            StyledObjectPortBuilder(port: envelopeTransactionPort),
-            StyledDivider.subtle(),
-            StyledRadioPortField<EnvelopeTransactionType>(
-              fieldName: 'transactionType',
-              stringMapper: (EnvelopeTransactionType value) => value.name,
-            ),
-            PortFieldBuilder<EnvelopeTransactionType>(
-              fieldName: 'transactionType',
-              builder: (context, field, value, error) {
-                return StyledText.body(value.note);
-              },
-            ),
-          ],
-        );
+  EnvelopeTransactionEditDialog._({super.titleText, required super.port, required super.children});
+
+  factory EnvelopeTransactionEditDialog({
+    String? titleText,
+    required Port<EnvelopeTransaction> Function(dynamic Function() dynamicFallbackGenerator) basePortBuilder,
+  }) {
+    late Port<Map<String, dynamic>> rawPort;
+    final basePort =
+        basePortBuilder(() => rawPort['transactionType'] == EnvelopeTransactionType.payment ? 'Payment' : 'Refund');
+    rawPort = Port.of({
+      'transaction': PortField.port(port: basePort),
+      'transactionType': PortField.option(
+        options: EnvelopeTransactionType.values,
+        initialValue: EnvelopeTransactionType.payment,
+      ),
+    });
+    return EnvelopeTransactionEditDialog._(
+      titleText: titleText,
+      port: rawPort.map((sourceData, port) {
+        final transactionResult = sourceData['transaction'] as EnvelopeTransaction;
+        final transactionType = sourceData['transactionType'] as EnvelopeTransactionType;
+        transactionType.modifyTransaction(transactionResult);
+        return transactionResult;
+      }),
+      children: [
+        StyledObjectPortBuilder(port: basePort),
+        StyledDivider.subtle(),
+        StyledRadioPortField<EnvelopeTransactionType>(
+          fieldName: 'transactionType',
+          stringMapper: (EnvelopeTransactionType value) => value.name,
+        ),
+        PortFieldBuilder<EnvelopeTransactionType>(
+          fieldName: 'transactionType',
+          builder: (context, field, value, error) {
+            return StyledText.body(value.note);
+          },
+        ),
+      ],
+    );
+  }
 }
 
 enum EnvelopeTransactionType {

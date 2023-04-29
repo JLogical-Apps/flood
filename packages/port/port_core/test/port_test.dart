@@ -1,4 +1,5 @@
 import 'package:port_core/port_core.dart';
+import 'package:port_core/src/port_submit_result.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -109,6 +110,25 @@ void main() {
 
     expect(contactPort.getFieldByName('name').findIsMultiline(), false);
     expect(contactPort.getFieldByName('notes').findIsMultiline(), true);
+  });
+
+  test('fallback fields', () async {
+    final contactPort = Port.of({
+      'name': PortField.string().withFallback('John'),
+    });
+
+    expect(contactPort.getFieldByName('name').findHintOrNull(), 'John');
+    expect(
+      await contactPort.submit(),
+      isA<PortSubmitResult<Map<String, dynamic>>>().having((source) => source.data['name'], 'name', 'John'),
+    );
+
+    contactPort['name'] = 'Jill';
+
+    expect(
+      await contactPort.submit(),
+      isA<PortSubmitResult<Map<String, dynamic>>>().having((source) => source.data['name'], 'name', 'Jill'),
+    );
   });
 
   test('interface fields', () async {

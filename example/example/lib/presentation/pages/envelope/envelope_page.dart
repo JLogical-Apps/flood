@@ -66,10 +66,16 @@ class EnvelopePage extends AppPage {
                 onPressed: () async {
                   final envelopeTransaction = await context.showStyledDialog(EnvelopeTransactionEditDialog(
                     titleText: 'Create Transaction',
-                    envelopeTransactionPort: (EnvelopeTransaction()
+                    basePortBuilder: (nameHintGenerator) => (EnvelopeTransaction()
                           ..envelopeProperty.set(envelopeEntity.id!)
                           ..budgetProperty.set(envelope.budgetProperty.value))
-                        .asPort(context.corePondContext),
+                        .asPort(
+                      context.corePondContext,
+                      overrides: [
+                        PortGeneratorOverride.update(EnvelopeTransaction.nameField,
+                            portFieldUpdater: (portField) => portField.withDynamicFallback(nameHintGenerator))
+                      ],
+                    ),
                   ));
 
                   if (envelopeTransaction == null) {

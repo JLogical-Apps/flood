@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:port_core/port_core.dart';
 import 'package:port_core/src/currency_port_field.dart';
 import 'package:port_core/src/display_name_port_field.dart';
+import 'package:port_core/src/fallback_port_field.dart';
 import 'package:port_core/src/hint_port_field.dart';
 import 'package:port_core/src/map_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
@@ -130,6 +131,11 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
 
   PortField<T, S> withDynamicDisplayName(String? Function() displayNameGetter) =>
       DisplayNamePortField<T, S>(portField: this, displayNameGetter: displayNameGetter);
+
+  PortField<T, S> withFallback(T fallback) => FallbackPortField<T, S>(portField: this, fallbackGetter: () => fallback);
+
+  PortField<T, S> withDynamicFallback(T Function() fallbackGetter) =>
+      FallbackPortField<T, S>(portField: this, fallbackGetter: fallbackGetter);
 
   PortField<T, S> withHint(T? hint) => HintPortField<T, S>(portField: this, hintGetter: () => hint);
 

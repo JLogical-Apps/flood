@@ -12,7 +12,7 @@ class EnvelopeTransaction extends BudgetTransaction {
 
   static const amountCentsField = 'amount';
   late final amountCentsProperty = field<int>(name: amountCentsField)
-      .withDisplayName('Amount')
+      .withDisplayName('Amount (\$)')
       .requiredOnEdit()
       .currency()
       .withFallbackReplacement(() => 0);

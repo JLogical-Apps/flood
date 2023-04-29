@@ -33,7 +33,10 @@ class StyledPortDialog<T> extends StyledDialog<T> {
                   )
                 : PortBuilder(
                     port: port,
-                    builder: (context, port) => StyledList.column(children: children),
+                    builder: (context, port) => StyledList.column(
+                      key: ValueKey(port.portValueByName),
+                      children: children,
+                    ),
                   ),
             StyledButton(
               labelText: 'OK',

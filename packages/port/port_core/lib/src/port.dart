@@ -91,7 +91,7 @@ class _PortImpl with IsPort<Map<String, dynamic>> {
       final name = portFieldByNameEntry.key;
       final portField = portFieldByNameEntry.value;
 
-      final error = await portField.validate(portField.value);
+      final error = await portField.validate(portField.submitRaw(portField.value));
       final newField = portField.copyWithError(error);
       setPortField(name: name, portField: newField);
 
