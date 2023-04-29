@@ -1,9 +1,12 @@
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
+import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
+import 'package:example/features/transaction/transfer_transaction.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
+import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
 import 'package:example/presentation/pages/transaction/transaction_generator.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
@@ -156,7 +159,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
     BuildContext context, {
     required EnvelopeEntity envelopeEntity,
     required Map<String, int>? modifiedCentsById,
-    required Function(EnvelopeTransaction) onTransactionCreated,
+    required Function(BudgetTransaction) onTransactionCreated,
   }) {
     final envelope = envelopeEntity.value;
     final cents = envelope.amountCentsProperty.value;
@@ -167,6 +170,27 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
     return StyledCard(
       titleText: envelope.nameProperty.value,
       leading: envelopeCardModification.getIcon(envelope.ruleProperty.value),
+      actions: [
+        ActionItem(
+          titleText: 'Transfer',
+          descriptionText: 'Transfer money to/from this envelope.',
+          color: Colors.blue,
+          iconData: Icons.swap_horiz,
+          onPerform: (context) async {
+            final result = await context.showStyledDialog(await TransferTransactionEditDialog.create(
+              context,
+              titleText: 'Create Transfer',
+              sourceEnvelopeEntity: envelopeEntity,
+              transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
+            ));
+            if (result == null) {
+              return;
+            }
+
+            onTransactionCreated(result);
+          },
+        ),
+      ],
       onPressed: () async {
         final envelopeTransaction = await context.showStyledDialog(EnvelopeTransactionEditDialog(
           corePondContext: context.corePondContext,

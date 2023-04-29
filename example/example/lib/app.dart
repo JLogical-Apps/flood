@@ -93,23 +93,23 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
       final envelopes = [
         Envelope()
           ..budgetProperty.set(budgetEntity.id!)
-          ..nameProperty.set('Firstfruit')
+          ..nameProperty.set('Tithe')
           ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10)),
         Envelope()
           ..budgetProperty.set(budgetEntity.id!)
-          ..nameProperty.set('Repeating')
+          ..nameProperty.set('Car')
           ..ruleProperty.set(RepeatingGoalEnvelopeRule()
             ..goalCentsProperty.set(100 * 100)
             ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))),
         Envelope()
           ..budgetProperty.set(budgetEntity.id!)
-          ..nameProperty.set('Target')
+          ..nameProperty.set('Emergency Savings')
           ..ruleProperty.set(TargetGoalEnvelopeRule()
             ..percentProperty.set(20)
             ..maximumCentsProperty.set(1000 * 100)),
         Envelope()
           ..budgetProperty.set(budgetEntity.id!)
-          ..nameProperty.set('Surplus')
+          ..nameProperty.set('Savings')
           ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(100)),
       ];
 
