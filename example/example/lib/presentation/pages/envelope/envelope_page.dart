@@ -57,8 +57,8 @@ class EnvelopePage extends AppPage {
               color: Colors.blue,
               iconData: Icons.swap_horiz,
               onPerform: (context) async {
-                final result = await context.showStyledDialog(TransferTransactionEditDialog(
-                  corePondContext: context.corePondContext,
+                final result = await context.showStyledDialog(await TransferTransactionEditDialog.create(
+                  context,
                   titleText: 'Create Transfer',
                   transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
                 ));

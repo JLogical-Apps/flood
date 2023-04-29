@@ -1,6 +1,7 @@
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:example/features/transaction/transfer_transaction.dart';
+import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -22,12 +23,34 @@ class TransferTransactionPortOverride with IsStyledObjectPortOverride<TransferTr
         TransferTransaction.fromEnvelopeField: StyledOptionPortField(
           fieldName: TransferTransaction.fromEnvelopeField,
           labelText: 'From',
-          widgetMapper: (EnvelopeEntity? envelopeEntity) => StyledText.body(envelopeEntity?.value.nameProperty.value ?? 'None'),
+          widgetMapper: (EnvelopeEntity? envelopeEntity) {
+            final envelope = envelopeEntity?.value;
+            final envelopeRuleModifier = EnvelopeRuleCardModifier.getModifier(envelope?.ruleProperty.value);
+            return StyledList.row(
+              children: [
+                envelopeRuleModifier.getIcon(envelope?.ruleProperty.value),
+                Expanded(
+                  child: StyledText.body(envelopeEntity?.value.nameProperty.value ?? 'None'),
+                ),
+              ],
+            );
+          },
         ),
         TransferTransaction.toEnvelopeField: StyledOptionPortField(
           fieldName: TransferTransaction.toEnvelopeField,
           labelText: 'To',
-          widgetMapper: (EnvelopeEntity? envelopeEntity) => StyledText.body(envelopeEntity?.value.nameProperty.value ?? 'None'),
+          widgetMapper: (EnvelopeEntity? envelopeEntity) {
+            final envelope = envelopeEntity?.value;
+            final envelopeRuleModifier = EnvelopeRuleCardModifier.getModifier(envelope?.ruleProperty.value);
+            return StyledList.row(
+              children: [
+                envelopeRuleModifier.getIcon(envelope?.ruleProperty.value),
+                Expanded(
+                  child: StyledText.body(envelopeEntity?.value.nameProperty.value ?? 'None'),
+                ),
+              ],
+            );
+          },
         ),
       },
     );
