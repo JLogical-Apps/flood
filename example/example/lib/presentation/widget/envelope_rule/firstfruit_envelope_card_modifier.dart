@@ -6,8 +6,8 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class FirstfruitEnvelopeCardModifier extends EnvelopeRuleCardModifier<FirstfruitEnvelopeRule> {
   @override
-  Widget getIcon(EnvelopeRule rule) {
-    return StyledIcon(Icons.apple);
+  Widget getIcon(EnvelopeRule rule, {Color? color}) {
+    return StyledIcon(Icons.apple, color: color);
   }
 
   @override

@@ -18,8 +18,8 @@ class EnvelopeCard extends HookWidget {
   Widget build(BuildContext context) {
     final envelopeRuleCardWrapper = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
     return StyledCard(
-      leading: envelopeRuleCardWrapper.getIcon(envelope.ruleProperty.value),
-      title: StyledText.h6(envelope.nameProperty.value),
+      leading: envelopeRuleCardWrapper.getIcon(envelope.ruleProperty.value, color: Color(envelope.colorProperty.value)),
+      title: StyledText.h6.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
       body: StyledText.body.withColor(getCentsColor(envelope.amountCentsProperty.value))(
           envelope.amountCentsProperty.value.formatCentsAsCurrency()),
       onPressed: onPressed,

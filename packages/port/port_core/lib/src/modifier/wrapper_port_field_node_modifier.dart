@@ -34,6 +34,11 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   }
 
   @override
+  bool isColor(T portField) {
+    return modifierGetter(portField.portField)?.isColor(portField.portField) ?? false;
+  }
+
+  @override
   bool isOnlyDate(T portField) {
     return modifierGetter(portField.portField)?.isOnlyDate(portField.portField) ?? false;
   }

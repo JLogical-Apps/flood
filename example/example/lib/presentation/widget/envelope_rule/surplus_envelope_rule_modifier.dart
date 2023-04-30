@@ -6,8 +6,8 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class SurplusEnvelopeCardModifier extends EnvelopeRuleCardModifier<SurplusEnvelopeRule> {
   @override
-  Widget getIcon(SurplusEnvelopeRule rule) {
-    return StyledIcon(FontAwesomeIcons.filter);
+  Widget getIcon(SurplusEnvelopeRule rule, {Color? color}) {
+    return StyledIcon(FontAwesomeIcons.filter, color: color);
   }
 
   @override

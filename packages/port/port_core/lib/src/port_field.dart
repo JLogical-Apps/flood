@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:port_core/port_core.dart';
+import 'package:port_core/src/color_port_field.dart';
 import 'package:port_core/src/currency_port_field.dart';
 import 'package:port_core/src/display_name_port_field.dart';
 import 'package:port_core/src/fallback_port_field.dart';
@@ -176,6 +177,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   bool findIsCurrency() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.isCurrency(this) ?? false;
   }
+
+  bool findIsColor() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.isColor(this) ?? false;
+  }
 }
 
 mixin IsPortField<T, S> implements PortField<T, S> {
@@ -242,6 +247,8 @@ extension StringPortFieldExtensions<S> on PortField<String, S> {
 extension IntPortFieldExtensions<T extends int?, S> on PortField<T, S> {
   PortField<T, S> currency([bool isCurrency = true]) =>
       CurrencyPortField<T, S>(portField: this, isCurrency: isCurrency);
+
+  PortField<T, S> color([bool isColor = true]) => ColorPortField<T, S>(portField: this, isColor: isColor);
 }
 
 extension DatePortFieldExtensions<T extends DateTime?, S> on PortField<T, S> {

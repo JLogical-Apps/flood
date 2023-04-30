@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
+import 'package:drop_core/src/record/value_object/color_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/computed_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/currency_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/default_value_object_property.dart';
@@ -155,6 +156,10 @@ extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int
     on ValueObjectProperty<G, S, L, V> {
   CurrencyValueObjectProperty<G, S, L> currency([bool isCurrency = true]) {
     return CurrencyValueObjectProperty<G, S, L>(property: this, isCurrency: isCurrency);
+  }
+
+  ColorValueObjectProperty<G, S, L> color([bool isColor = true]) {
+    return ColorValueObjectProperty<G, S, L>(property: this, isColor: isColor);
   }
 }
 

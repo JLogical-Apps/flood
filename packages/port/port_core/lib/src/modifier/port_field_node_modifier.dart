@@ -1,5 +1,6 @@
 import 'package:port_core/port_core.dart';
 import 'package:port_core/src/modifier/base_port_field_modifier.dart';
+import 'package:port_core/src/modifier/color_port_field_modifier.dart';
 import 'package:port_core/src/modifier/currency_port_field_modifier.dart';
 import 'package:port_core/src/modifier/date_port_field_modifier.dart';
 import 'package:port_core/src/modifier/display_name_port_field_modifier.dart';
@@ -34,6 +35,10 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return false;
   }
 
+  bool isColor(T portField) {
+    return false;
+  }
+
   bool isOnlyDate(T portField) {
     return false;
   }
@@ -53,6 +58,7 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     DisplayNamePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     MultilinePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     CurrencyPortFieldNodeModifier(modifierGetter: getModifierOrNull),
+    ColorPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     FallbackPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     HintPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     WrapperPortFieldNodeModifier(modifierGetter: getModifierOrNull),

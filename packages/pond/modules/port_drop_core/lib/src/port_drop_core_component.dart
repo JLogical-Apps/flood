@@ -1,6 +1,7 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:port_core/port_core.dart';
+import 'package:port_drop_core/src/behavior_modifiers/color_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/currency_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/date_time_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/default_property_behavior_modifier.dart';
@@ -55,6 +56,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       MultilinePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       NullIfBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       CurrencyPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      ColorPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       OnlyDatePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
     ],
   );

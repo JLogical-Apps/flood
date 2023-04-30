@@ -6,8 +6,8 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class TargetGoalEnvelopeCardModifier extends EnvelopeRuleCardModifier<TargetGoalEnvelopeRule> {
   @override
-  Widget getIcon(TargetGoalEnvelopeRule rule) {
-    return StyledIcon(FontAwesomeIcons.bullseye);
+  Widget getIcon(TargetGoalEnvelopeRule rule, {Color? color}) {
+    return StyledIcon(FontAwesomeIcons.bullseye, color: color);
   }
 
   @override

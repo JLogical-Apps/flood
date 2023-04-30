@@ -28,6 +28,11 @@ class MapPortFieldNodeModifier extends PortFieldNodeModifier<MapPortField> {
   }
 
   @override
+  bool isColor(MapPortField portField) {
+    return modifierGetter(portField.portField)?.isColor(portField.portField) ?? false;
+  }
+
+  @override
   bool isOnlyDate(MapPortField portField) {
     return modifierGetter(portField.portField)?.isOnlyDate(portField.portField) ?? false;
   }

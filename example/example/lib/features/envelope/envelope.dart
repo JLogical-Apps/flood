@@ -19,6 +19,10 @@ class Envelope extends ValueObject {
   static const ruleField = 'rule';
   late final ruleProperty = field<EnvelopeRule>(name: ruleField).withDisplayName('Rule');
 
+  static const colorField = 'color';
+  late final colorProperty =
+      field<int>(name: colorField).withDisplayName('Color').color().withFallback(() => 0xffffffff);
+
   static const lockedField = 'locked';
   late final lockedProperty = field<bool>(name: lockedField).withDisplayName('Locked?').withFallback(() => false);
 
@@ -29,6 +33,7 @@ class Envelope extends ValueObject {
         budgetProperty,
         amountCentsProperty,
         ruleProperty,
+        colorProperty,
         lockedProperty,
       ];
 

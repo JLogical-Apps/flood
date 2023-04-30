@@ -32,7 +32,7 @@ class EnvelopePage extends AppPage {
         final envelopeRule = envelope.ruleProperty.value;
         final envelopeRuleCardWrapper = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
         return StyledPage(
-          titleText: envelope.nameProperty.value,
+          title: StyledText.h2.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
           actions: [
             ActionItem(
               titleText: 'Edit',
