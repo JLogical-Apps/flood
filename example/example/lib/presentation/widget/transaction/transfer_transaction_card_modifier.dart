@@ -1,7 +1,6 @@
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/transfer_transaction.dart';
-import 'package:example/presentation/pages/transaction/transaction_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
@@ -28,14 +27,49 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
           toEnvelope: toEnvelope,
         ),
         bodyText: [transaction.transactionDateProperty.value.format(showTime: false)].join(' - '),
-        onPressed: id == null ? null : () => context.push(TransactionPage()..idProperty.set(id)),
+        onPressed: id == null ? null : () => context.showStyledDialog(buildDialog(transaction)),
       );
     });
   }
 
   @override
   StyledDialog buildDialog(TransferTransaction transaction) {
-    throw UnimplementedError();
+    return StyledDialog(
+      titleText: 'Transfer',
+      actions: [
+        ActionItem(
+          titleText: 'Delete',
+          descriptionText: 'Delete this transaction.',
+          iconData: Icons.delete,
+          color: Colors.red,
+          onPerform: (_) async {},
+        ),
+      ],
+      body: HookBuilder(
+        builder: (context) {
+          final fromEnvelope = useEntityOrNull<EnvelopeEntity>(transaction.fromEnvelopeProperty.value)
+              .getOrNull()
+              ?.mapIfNonNull((entity) => entity.value);
+          final toEnvelope = useEntityOrNull<EnvelopeEntity>(transaction.toEnvelopeProperty.value)
+              .getOrNull()
+              ?.mapIfNonNull((entity) => entity.value);
+
+          return StyledTextSpan(
+            [
+              StyledText.body('Transfer '),
+              StyledText.body.withColor(Colors.green)(transaction.amountCentsProperty.value.formatCentsAsCurrency()),
+              StyledText.body(' from '),
+              StyledText.body.withColor(Color(fromEnvelope?.colorProperty.value ?? 0xffffffff))(fromEnvelope?.nameProperty.value ?? '?'),
+              StyledText.body(' to '),
+              StyledText.body.withColor(Color(toEnvelope?.colorProperty.value ?? 0xffffffff))(toEnvelope?.nameProperty.value ?? '?'),
+              StyledText.body(' on '),
+              StyledText.body
+                  .withColor(Colors.green)(transaction.transactionDateProperty.value.format(showTime: false)),
+            ],
+          );
+        },
+      ),
+    );
   }
 
   Widget _getTitle({

@@ -54,7 +54,8 @@ class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTr
               StyledText.body('Transfer '),
               StyledText.body.withColor(Colors.red)(transaction.amountCentsProperty.value.formatCentsAsCurrency()),
               StyledText.body(transaction.amountCentsProperty.value >= 0 ? ' to ' : ' from '),
-              StyledText.body.withColor(Colors.green)(envelope?.nameProperty.value ?? '?'),
+              StyledText.body
+                  .withColor(Color(envelope?.colorProperty.value ?? 0xffffffff))(envelope?.nameProperty.value ?? '?'),
               StyledText.body(' on '),
               StyledText.body
                   .withColor(Colors.green)(transaction.transactionDateProperty.value.format(showTime: false)),
