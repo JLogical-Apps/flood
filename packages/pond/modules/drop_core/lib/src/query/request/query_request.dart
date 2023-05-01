@@ -7,6 +7,8 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:equatable/equatable.dart';
 import 'package:model_core/model_core.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:utils_core/utils_core.dart';
 
 abstract class QueryRequest<E, T> with EquatableMixin {
   Query get query;
@@ -19,5 +21,13 @@ extension QueryRequestExtensions<E extends Entity, T> on QueryRequest<E, T> {
 
   Model<T> toModel(DropCoreContext context) {
     return Model.fromValueStream(context.executeQueryX(this));
+  }
+
+  Future<T> get(DropCoreContext context) {
+    return context.executeQuery(this);
+  }
+
+  ValueStream<FutureValue<T>> getX(DropCoreContext context) {
+    return context.executeQueryX(this);
   }
 }

@@ -51,7 +51,7 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
               return;
             }
 
-            final entity = await context.dropCoreComponent.executeQuery(Query.getById<TransferTransactionEntity>(id));
+            final entity = await Query.getById<TransferTransactionEntity>(id).get(context.dropCoreComponent);
             await context.dropCoreComponent.delete(entity);
             Navigator.of(context).pop();
           },

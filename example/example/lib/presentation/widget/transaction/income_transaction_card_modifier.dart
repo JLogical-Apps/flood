@@ -43,7 +43,7 @@ class IncomeTransactionCardModifier extends TransactionCardModifier<IncomeTransa
               return;
             }
 
-            final entity = await context.dropCoreComponent.executeQuery(Query.getById<IncomeTransactionEntity>(id));
+            final entity = await Query.getById<IncomeTransactionEntity>(id).get(context.dropCoreComponent);
             await context.dropCoreComponent.delete(entity);
             Navigator.of(context).pop();
           },

@@ -12,14 +12,13 @@ DropCoreContext useDropCoreContext() {
   return useMemoized(() => useAppPondContext().find<DropCoreComponent>());
 }
 
-Model<T>? useQueryOrNull<T>(QueryRequest<dynamic, T>? queryRequest) {
+Model<T>? useQueryOrNull<T>(QueryRequest<Entity, T>? queryRequest) {
   final context = useContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
   final dropCoreContext = useDropCoreContext();
 
   final queryModel = useMemoized(
-    () => queryRequest
-        ?.mapIfNonNull((queryRequest) => Model.fromValueStream(dropCoreContext.executeQueryX(queryRequest))),
+    () => queryRequest?.mapIfNonNull((queryRequest) => queryRequest.toModel(dropCoreContext)),
     [queryRequest],
   );
 
@@ -40,7 +39,7 @@ Model<T>? useQueryOrNull<T>(QueryRequest<dynamic, T>? queryRequest) {
   return queryModel;
 }
 
-Model<T> useQuery<T>(QueryRequest<dynamic, T> queryRequest) {
+Model<T> useQuery<T>(QueryRequest<Entity, T> queryRequest) {
   return useQueryOrNull(queryRequest)!;
 }
 
@@ -102,9 +101,7 @@ List<Model<T>> useQueries<E extends Entity, T>(List<QueryRequest<E, T>> queryReq
   final dropCoreContext = useDropCoreContext();
 
   final queryModels = useMemoized(
-    () => queryRequests
-        .map((queryRequest) => Model.fromValueStream(dropCoreContext.executeQueryX(queryRequest)))
-        .toList(),
+    () => queryRequests.map((queryRequest) => queryRequest.toModel(dropCoreContext)).toList(),
     [queryRequests],
   );
 

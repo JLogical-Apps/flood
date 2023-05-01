@@ -49,7 +49,7 @@ class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTr
               return;
             }
 
-            final entity = await context.dropCoreComponent.executeQuery(Query.getById<EnvelopeTransactionEntity>(id));
+            final entity = await Query.getById<EnvelopeTransactionEntity>(id).get(context.dropCoreComponent);
             await context.dropCoreComponent.delete(entity);
             Navigator.of(context).pop();
           },

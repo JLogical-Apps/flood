@@ -1,8 +1,8 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
+import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
-import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -35,7 +35,7 @@ class ReferenceValueObjectProperty<E extends Entity>
 
   @override
   Future<E?> load(DropCoreContext context) async {
-    return await value?.mapIfNonNullAsync((value) => context.executeQuery(Query.getById<E>(value)));
+    return await value?.mapIfNonNullAsync((value) => Query.getById<E>(value).get(context));
   }
 
   @override

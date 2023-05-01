@@ -66,10 +66,10 @@ class EnvelopePage extends AppPage {
                   return;
                 }
 
-                final fromEnvelopeEntity = await context.dropCoreComponent
-                    .executeQuery(Query.getById<EnvelopeEntity>(result.fromEnvelopeProperty.value));
-                final toEnvelopeEntity = await context.dropCoreComponent
-                    .executeQuery(Query.getById<EnvelopeEntity>(result.toEnvelopeProperty.value));
+                final fromEnvelopeEntity = await Query.getById<EnvelopeEntity>(result.fromEnvelopeProperty.value)
+                    .get(context.dropCoreComponent);
+                final toEnvelopeEntity =
+                    await Query.getById<EnvelopeEntity>(result.toEnvelopeProperty.value).get(context.dropCoreComponent);
 
                 await context.dropCoreComponent.updateEntity(
                   fromEnvelopeEntity,

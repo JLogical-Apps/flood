@@ -176,7 +176,7 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
     );
 
     await Future.wait(budgetChange.modifiedCentsByEnvelopeId.mapToIterable((envelopeId, cents) async {
-      final envelopeEntity = await dropComponent.executeQuery(Query.getById<EnvelopeEntity>(envelopeId));
+      final envelopeEntity = await Query.getById<EnvelopeEntity>(envelopeId).get(dropComponent);
       await dropComponent.updateEntity(envelopeEntity, (Envelope envelope) => envelope.amountCentsProperty.set(cents));
     }));
 
