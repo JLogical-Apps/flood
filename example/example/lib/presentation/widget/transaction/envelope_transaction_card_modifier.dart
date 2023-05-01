@@ -1,6 +1,7 @@
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
+import 'package:example/features/transaction/envelope_transaction_entity.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
@@ -25,13 +26,12 @@ class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTr
         )),
         bodyText:
             '${transaction.nameProperty.value} - ${transaction.transactionDateProperty.value.format(showTime: false)}',
-        onPressed: id == null ? null : () => context.showStyledDialog(buildDialog(transaction)),
+        onPressed: id == null ? null : () => context.showStyledDialog(buildDialog(transaction, id)),
       );
     });
   }
 
-  @override
-  StyledDialog buildDialog(EnvelopeTransaction transaction) {
+  StyledDialog buildDialog(EnvelopeTransaction transaction, String id) {
     return StyledDialog(
       titleText: transaction.nameProperty.value,
       actions: [
@@ -40,7 +40,19 @@ class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTr
           descriptionText: 'Delete this transaction.',
           iconData: Icons.delete,
           color: Colors.red,
-          onPerform: (_) async {},
+          onPerform: (context) async {
+            final confirm = await context.showStyledDialog(StyledDialog.yesNo(
+              titleText: 'Confirm Delete',
+              bodyText: 'Are you sure you want to delete this transaction? You cannot undo this.',
+            ));
+            if (confirm != true) {
+              return;
+            }
+
+            final entity = await context.dropCoreComponent.executeQuery(Query.getById<EnvelopeTransactionEntity>(id));
+            await context.dropCoreComponent.delete(entity);
+            Navigator.of(context).pop();
+          },
         ),
       ],
       body: HookBuilder(

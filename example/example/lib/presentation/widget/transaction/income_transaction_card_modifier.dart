@@ -1,6 +1,6 @@
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/income_transaction.dart';
-import 'package:example/presentation/pages/transaction/transaction_page.dart';
+import 'package:example/features/transaction/income_transaction_entity.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
@@ -19,14 +19,13 @@ class IncomeTransactionCardModifier extends TransactionCardModifier<IncomeTransa
             incomeTransaction: transaction,
           )),
           bodyText: transaction.transactionDateProperty.value.format(showTime: false),
-          onPressed: id == null ? null : () => context.showStyledDialog(buildDialog(transaction)),
+          onPressed: id == null ? null : () => context.showStyledDialog(buildDialog(transaction, id)),
         );
       },
     );
   }
 
-  @override
-  StyledDialog buildDialog(IncomeTransaction transaction) {
+  StyledDialog buildDialog(IncomeTransaction transaction, String id) {
     return StyledDialog(
       titleText: 'Income: ${transaction.totalCents.formatCentsAsCurrency()}',
       actions: [
@@ -35,7 +34,19 @@ class IncomeTransactionCardModifier extends TransactionCardModifier<IncomeTransa
           descriptionText: 'Delete this income.',
           iconData: Icons.delete,
           color: Colors.red,
-          onPerform: (_) async {},
+          onPerform: (context) async {
+            final confirm = await context.showStyledDialog(StyledDialog.yesNo(
+              titleText: 'Confirm Delete',
+              bodyText: 'Are you sure you want to delete this transaction? You cannot undo this.',
+            ));
+            if (confirm != true) {
+              return;
+            }
+
+            final entity = await context.dropCoreComponent.executeQuery(Query.getById<IncomeTransactionEntity>(id));
+            await context.dropCoreComponent.delete(entity);
+            Navigator.of(context).pop();
+          },
         ),
       ],
       body: HookBuilder(

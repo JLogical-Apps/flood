@@ -1,6 +1,7 @@
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/transfer_transaction.dart';
+import 'package:example/features/transaction/transfer_transaction_entity.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
@@ -27,13 +28,12 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
           toEnvelope: toEnvelope,
         ),
         bodyText: [transaction.transactionDateProperty.value.format(showTime: false)].join(' - '),
-        onPressed: id == null ? null : () => context.showStyledDialog(buildDialog(transaction)),
+        onPressed: id == null ? null : () => context.showStyledDialog(buildDialog(transaction, id)),
       );
     });
   }
 
-  @override
-  StyledDialog buildDialog(TransferTransaction transaction) {
+  StyledDialog buildDialog(TransferTransaction transaction, String id) {
     return StyledDialog(
       titleText: 'Transfer',
       actions: [
@@ -42,7 +42,19 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
           descriptionText: 'Delete this transaction.',
           iconData: Icons.delete,
           color: Colors.red,
-          onPerform: (_) async {},
+          onPerform: (context) async {
+            final confirm = await context.showStyledDialog(StyledDialog.yesNo(
+              titleText: 'Confirm Delete',
+              bodyText: 'Are you sure you want to delete this transaction? You cannot undo this.',
+            ));
+            if (confirm != true) {
+              return;
+            }
+
+            final entity = await context.dropCoreComponent.executeQuery(Query.getById<TransferTransactionEntity>(id));
+            await context.dropCoreComponent.delete(entity);
+            Navigator.of(context).pop();
+          },
         ),
       ],
       body: HookBuilder(
@@ -59,9 +71,11 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
               StyledText.body('Transfer '),
               StyledText.body.withColor(Colors.green)(transaction.amountCentsProperty.value.formatCentsAsCurrency()),
               StyledText.body(' from '),
-              StyledText.body.withColor(Color(fromEnvelope?.colorProperty.value ?? 0xffffffff))(fromEnvelope?.nameProperty.value ?? '?'),
+              StyledText.body.withColor(Color(fromEnvelope?.colorProperty.value ?? 0xffffffff))(
+                  fromEnvelope?.nameProperty.value ?? '?'),
               StyledText.body(' to '),
-              StyledText.body.withColor(Color(toEnvelope?.colorProperty.value ?? 0xffffffff))(toEnvelope?.nameProperty.value ?? '?'),
+              StyledText.body.withColor(Color(toEnvelope?.colorProperty.value ?? 0xffffffff))(
+                  toEnvelope?.nameProperty.value ?? '?'),
               StyledText.body(' on '),
               StyledText.body
                   .withColor(Colors.green)(transaction.transactionDateProperty.value.format(showTime: false)),

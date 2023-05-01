@@ -93,9 +93,8 @@ class FlatStyleColorPickerRenderer with IsTypedStyleRenderer<StyledColorPicker> 
                                     selectedColor.value = null;
                                   },
                                 ),
-                              StyledButton.strong(
-                                labelText: 'Save',
-                                iconData: Icons.save,
+                              StyledButton(
+                                labelText: 'OK',
                                 onPressed: () {
                                   Navigator.of(context).pop([selectedColor.value]);
                                 },

@@ -129,25 +129,27 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
           StyledButton.strong(
             labelText: 'Save',
             iconData: Icons.save,
-            onPressed: () async {
-              if (modifiedCentsById == null || envelopeEntities == null) {
-                return;
-              }
+            onPressed: transactions.isEmpty
+                ? null
+                : () async {
+                    if (modifiedCentsById == null || envelopeEntities == null) {
+                      return;
+                    }
 
-              for (final transaction in transactions) {
-                final budgetTransactionEntity =
-                    BudgetTransactionEntity.constructEntityFromTransactionTypeRuntime(transaction.runtimeType)
-                      ..set(transaction);
-                await context.dropCoreComponent.update(budgetTransactionEntity);
-              }
-              for (final entry in modifiedCentsById.entries) {
-                await context.dropCoreComponent.updateEntity(
-                  envelopeEntities.firstWhere((entity) => entity.id == entry.key),
-                  (Envelope envelope) => envelope.amountCentsProperty.set(entry.value),
-                );
-              }
-              context.pop();
-            },
+                    for (final transaction in transactions) {
+                      final budgetTransactionEntity =
+                          BudgetTransactionEntity.constructEntityFromTransactionTypeRuntime(transaction.runtimeType)
+                            ..set(transaction);
+                      await context.dropCoreComponent.update(budgetTransactionEntity);
+                    }
+                    for (final entry in modifiedCentsById.entries) {
+                      await context.dropCoreComponent.updateEntity(
+                        envelopeEntities.firstWhere((entity) => entity.id == entry.key),
+                        (Envelope envelope) => envelope.amountCentsProperty.set(entry.value),
+                      );
+                    }
+                    context.pop();
+                  },
           ),
         ],
       ),
