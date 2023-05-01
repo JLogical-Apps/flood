@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:style/src/action/action_item.dart';
 import 'package:style/src/components/input/styled_button.dart';
 import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/text/styled_text.dart';
@@ -12,11 +13,14 @@ class StyledDialog<T> extends StyleComponent {
   final Widget? body;
   final String? bodyText;
 
+  final List<ActionItem> actions;
+
   StyledDialog({
     this.title,
     this.titleText,
     this.body,
     this.bodyText,
+    this.actions = const [],
   });
 
   static StyledDialog<bool> yesNo({

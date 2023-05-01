@@ -143,6 +143,7 @@ class BudgetPage extends AppPage {
                           ...transactionEntities
                               .map((entity) => TransactionCard(
                                     budgetTransaction: entity.value,
+                                    id: entity.id,
                                     transactionViewContext: TransactionViewContext.budget(),
                                   ))
                               .toList(),

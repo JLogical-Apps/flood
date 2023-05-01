@@ -32,38 +32,42 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
         padding: EdgeInsets.all(4),
         child: StyledList.column(
           children: [
-            StyledList.row(
-              children: [
-                if (leading != null)
-                  Padding(
-                    padding: EdgeInsets.all(6),
-                    child: leading,
-                  ),
-                Expanded(
-                  child: Padding(
-                    padding: title != null || body != null ? const EdgeInsets.all(4) : EdgeInsets.zero,
-                    child: StyledList.column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (title != null) title,
-                        if (body != null) body,
-                      ],
+            if (leading != null || title != null || body != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: StyledList.row(
+                  children: [
+                    if (leading != null)
+                      Padding(
+                        padding: EdgeInsets.all(6),
+                        child: leading,
+                      ),
+                    Expanded(
+                      child: Padding(
+                        padding: title != null || body != null ? const EdgeInsets.all(4) : EdgeInsets.zero,
+                        child: StyledList.column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (title != null) title,
+                            if (body != null) body,
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                    if (trailing != null)
+                      Padding(
+                        padding: EdgeInsets.all(6),
+                        child: trailing,
+                      ),
+                    if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
+                  ],
                 ),
-                if (trailing != null)
-                  Padding(
-                    padding: EdgeInsets.all(6),
-                    child: trailing,
-                  ),
-                if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
-              ],
-            ),
+              ),
             if (component.children.isNotEmpty) ...[
               StyledDivider.subtle(),
               Padding(
                 padding: EdgeInsets.all(4),
-                child: Column(
+                child: StyledList.column(
                   children: [
                     ...component.children,
                   ],

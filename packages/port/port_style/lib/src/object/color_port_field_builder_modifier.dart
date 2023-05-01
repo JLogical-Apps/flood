@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:port/port.dart';
-import 'package:port_style/port_style.dart';
 import 'package:port_style/src/object/port_field_builder_modifier.dart';
 import 'package:port_style/src/styled_color_picker_port_field.dart';
-import 'package:utils/utils.dart';
 
 class ColorPortFieldBuilderModifier extends PortFieldBuilderModifier {
   @override

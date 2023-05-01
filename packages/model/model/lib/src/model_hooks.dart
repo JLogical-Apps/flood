@@ -1,6 +1,6 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:model_core/model_core.dart';
-import 'package:utils_core/utils_core.dart';
+import 'package:utils/utils.dart';
 
 FutureValue<T>? useModelOrNull<T>(Model<T>? model) {
   useStream(model?.stateX);
@@ -9,6 +9,10 @@ FutureValue<T>? useModelOrNull<T>(Model<T>? model) {
 
 FutureValue<T> useModel<T>(Model<T> model) {
   return useModelOrNull(model)!;
+}
+
+List<FutureValue<T>> useModels<T>(List<Model<T>> models) {
+  return useValueStreams(models.map((model) => model.stateX).toList());
 }
 
 Model<T> useFutureModel<T>(

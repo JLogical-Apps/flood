@@ -84,4 +84,21 @@ void main() {
     await Future.delayed(Duration(milliseconds: 1));
     intSubject.value = 2;
   });
+
+  test('combineLatestWithValue', () async {
+    final intSubjects = [
+      BehaviorSubject.seeded(0),
+      BehaviorSubject.seeded(0),
+      BehaviorSubject.seeded(0),
+    ];
+    final combinedStream = intSubjects.combineLatestWithValue((ints) => ints);
+
+    expect(combinedStream.value, [0, 0, 0]);
+
+    expectLater(combinedStream, emitsInOrder([[0, 0, 0], [0, 0, 0], [1, 0, 0], [2, 0, 0]]));
+
+    intSubjects[0].value = 1;
+    await Future.delayed(Duration(milliseconds: 1));
+    intSubjects[0].value = 2;
+  });
 }

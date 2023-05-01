@@ -1,4 +1,6 @@
-import 'package:example/presentation/pages/envelope/envelope_page.dart';
+import 'package:example/features/transaction/budget_transaction_entity.dart';
+import 'package:example/presentation/pages/home_page.dart';
+import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -7,14 +9,20 @@ class TransactionPage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
-    return StyledPage(
-      titleText: 'Transaction',
-      body: Column(
-        children: [
-          StyledText.h1(idProperty.value),
-        ],
-      ),
-    );
+    final transactionEntityModel = useEntityOrNull<BudgetTransactionEntity>(idProperty.value);
+
+    return ModelBuilder.page(
+        model: transactionEntityModel,
+        builder: (BudgetTransactionEntity? budgetTransactionEntity) {
+          if (budgetTransactionEntity == null) {
+            return StyledLoadingPage();
+          }
+
+          final budgetTransaction = budgetTransactionEntity.value;
+          final transactionCardModifier = TransactionCardModifier.getModifier(budgetTransaction);
+
+          return transactionCardModifier.buildDialog(budgetTransaction);
+        });
   }
 
   @override
@@ -27,6 +35,6 @@ class TransactionPage extends AppPage {
 
   @override
   AppPage? getParent() {
-    return EnvelopePage()..idProperty.set('123');
+    return HomePage();
   }
 }

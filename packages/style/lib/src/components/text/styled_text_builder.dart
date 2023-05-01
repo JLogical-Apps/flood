@@ -43,6 +43,16 @@ class StyledTextBuilder<T extends StyledText> {
     return this;
   }
 
+  StyledTextBuilder get leftAligned {
+    textAlign = TextAlign.left;
+    return this;
+  }
+
+  StyledTextBuilder get rightAligned {
+    textAlign = TextAlign.right;
+    return this;
+  }
+
   StyledTextBuilder get italics {
     fontStyle = FontStyle.italic;
     return this;

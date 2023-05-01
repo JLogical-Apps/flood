@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/src/future/future_value.dart';
 import 'package:utils_core/src/stream/async_map_value_stream.dart';
+import 'package:utils_core/src/stream/combine_latest_value_stream.dart';
 import 'package:utils_core/src/stream/map_value_stream.dart';
 import 'package:utils_core/src/stream/merge_value_stream.dart';
 import 'package:utils_core/src/stream/switch_map_value_stream.dart';
@@ -32,6 +33,14 @@ extension ValueStreamExtensions<T> on ValueStream<T> {
 extension ListValueStreamExtension<T> on List<ValueStream<T>> {
   MergeValueStream<T> mergeValueStream({T? initialValue}) {
     return MergeValueStream<T>(sources: this, initialValue: initialValue);
+  }
+
+  ValueStream<R> combineLatestWithValue<R>(R Function(List<T> values) combiner, {R? initialValue}) {
+    return CombineLatestValueStream<T, R>(
+      sources: this,
+      combiner: combiner,
+      initialValue: initialValue,
+    );
   }
 }
 

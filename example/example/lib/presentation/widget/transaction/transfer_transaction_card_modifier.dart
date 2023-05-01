@@ -1,6 +1,7 @@
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/transfer_transaction.dart';
+import 'package:example/presentation/pages/transaction/transaction_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
@@ -10,7 +11,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class TransferTransactionCardModifier extends TransactionCardModifier<TransferTransaction> {
   @override
-  Widget buildCard(TransferTransaction transaction, TransactionViewContext transactionViewContext) {
+  Widget buildCard(TransferTransaction transaction, String? id, TransactionViewContext transactionViewContext) {
     return HookBuilder(builder: (context) {
       final fromEnvelope = useEntityOrNull<EnvelopeEntity>(transaction.fromEnvelopeProperty.value)
           .getOrNull()
@@ -27,8 +28,14 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
           toEnvelope: toEnvelope,
         ),
         bodyText: [transaction.transactionDateProperty.value.format(showTime: false)].join(' - '),
+        onPressed: id == null ? null : () => context.push(TransactionPage()..idProperty.set(id)),
       );
     });
+  }
+
+  @override
+  StyledDialog buildDialog(TransferTransaction transaction) {
+    throw UnimplementedError();
   }
 
   Widget _getTitle({

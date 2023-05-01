@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:debug/debug.dart';
 import 'package:drop/src/drop_app_component.dart';
 import 'package:drop_core/drop_core.dart';
@@ -69,10 +70,6 @@ Model<T?> useNullableQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>?> 
   return resultModel;
 }
 
-Model<E?> useEntityOrNull<E extends Entity>(String id) {
-  return useQuery(Query.getByIdOrNull<E>(id));
-}
-
 Model<T> useQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>> queryRequestModel) {
   final context = useContext();
   final dropCoreContext = useDropCoreContext();
@@ -97,6 +94,43 @@ Model<T> useQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>> queryReque
   );
 
   return resultModel;
+}
+
+List<Model<T>> useQueries<E extends Entity, T>(List<QueryRequest<E, T>> queryRequests) {
+  final context = useContext();
+  final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
+  final dropCoreContext = useDropCoreContext();
+
+  final queryModels = useMemoized(
+    () => queryRequests
+        .map((queryRequest) => Model.fromValueStream(dropCoreContext.executeQueryX(queryRequest)))
+        .toList(),
+    [queryRequests],
+  );
+
+  final results = useModels(queryModels);
+
+  useEffect(
+    () {
+      queryRequests.forEachIndexed((i, queryRequest) {
+        for (final queryRequest in queryRequests) {
+          _debugQueryRequest(
+            debugDialogContext: debugDialogContext,
+            queryRequest: queryRequest,
+            value: results[i],
+          );
+        }
+      });
+      return null;
+    },
+    [queryRequests, debugDialogContext, results],
+  );
+
+  return queryModels;
+}
+
+Model<E?> useEntityOrNull<E extends Entity>(String id) {
+  return useQuery(Query.getByIdOrNull<E>(id));
 }
 
 void _debugQueryRequest({

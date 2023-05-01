@@ -5,7 +5,7 @@ import 'package:model/src/model_hooks.dart';
 import 'package:model_core/model_core.dart';
 import 'package:provider/provider.dart';
 import 'package:style/style.dart';
-import 'package:utils_core/utils_core.dart';
+import 'package:utils/utils.dart';
 
 class ModelBuilder<T> extends HookWidget {
   final Model<T> model;

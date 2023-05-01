@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:style/src/components/dialog/styled_dialog.dart';
 import 'package:style/src/components/input/styled_button.dart';
+import 'package:style/src/components/input/styled_menu_button.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/text/styled_text.dart';
@@ -31,6 +32,11 @@ class FlatStyleDialogRenderer with IsTypedStyleRenderer<StyledDialog> {
             centerTitle: true,
             backgroundColor: context.style().colorPalette.background.regular,
             elevation: 0,
+            actions: component.actions.isEmpty
+                ? null
+                : [
+                    StyledMenuButton(actions: component.actions),
+                  ],
           ),
           if (body != null) body,
           SafeArea(child: Container()),

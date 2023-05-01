@@ -10,7 +10,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTransaction> {
   @override
-  Widget buildCard(EnvelopeTransaction transaction, TransactionViewContext transactionViewContext) {
+  Widget buildCard(EnvelopeTransaction transaction, String? id, TransactionViewContext transactionViewContext) {
     final cents = transaction.amountCentsProperty.value;
     return HookBuilder(builder: (context) {
       final envelope = useEntityOrNull<EnvelopeEntity>(transaction.envelopeProperty.value)
@@ -25,8 +25,44 @@ class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTr
         )),
         bodyText:
             '${transaction.nameProperty.value} - ${transaction.transactionDateProperty.value.format(showTime: false)}',
+        onPressed: id == null ? null : () => context.showStyledDialog(buildDialog(transaction)),
       );
     });
+  }
+
+  @override
+  StyledDialog buildDialog(EnvelopeTransaction transaction) {
+    return StyledDialog(
+      titleText: transaction.nameProperty.value,
+      actions: [
+        ActionItem(
+          titleText: 'Delete',
+          descriptionText: 'Delete this transaction.',
+          iconData: Icons.delete,
+          color: Colors.red,
+          onPerform: (_) async {},
+        ),
+      ],
+      body: HookBuilder(
+        builder: (context) {
+          final envelope = useEntityOrNull<EnvelopeEntity>(transaction.envelopeProperty.value)
+              .getOrNull()
+              ?.mapIfNonNull((entity) => entity.value);
+
+          return StyledTextSpan(
+            [
+              StyledText.body('Transfer '),
+              StyledText.body.withColor(Colors.red)(transaction.amountCentsProperty.value.formatCentsAsCurrency()),
+              StyledText.body(transaction.amountCentsProperty.value >= 0 ? ' to ' : ' from '),
+              StyledText.body.withColor(Colors.green)(envelope?.nameProperty.value ?? '?'),
+              StyledText.body(' on '),
+              StyledText.body
+                  .withColor(Colors.green)(transaction.transactionDateProperty.value.format(showTime: false)),
+            ],
+          );
+        },
+      ),
+    );
   }
 
   String _getTitleText({

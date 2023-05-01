@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:utils/utils.dart';
 
 /// Returns a Value that can be used to get and set values without rebuilding the widget.
 Value<T> useMutable<T>(T Function() defaultValue) {
@@ -34,6 +35,12 @@ T useValueStream<T>(ValueStream<T> valueStream) {
 T? useValueStreamOrNull<T>(ValueStream<T>? valueStream) {
   useStream(valueStream);
   return valueStream?.value;
+}
+
+List<T> useValueStreams<T>(List<ValueStream<T>> valueStreams) {
+  final combinedStream = useMemoized(() => valueStreams.combineLatestWithValue((s) => s), valueStreams);
+  useStream(combinedStream);
+  return combinedStream.value.toList();
 }
 
 void useListen<T>(Stream<T> stream, [Function(T? value)? valueChanged]) {

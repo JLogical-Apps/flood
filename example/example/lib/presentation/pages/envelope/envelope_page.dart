@@ -1,6 +1,5 @@
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
-import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:example/features/transaction/envelope_transaction_entity.dart';
@@ -131,6 +130,7 @@ class EnvelopePage extends AppPage {
                     children: envelopeTransactionEntities
                         .map((entity) => TransactionCard(
                               budgetTransaction: entity.value,
+                              id: entity.id,
                               transactionViewContext: TransactionViewContext.envelope(envelopeId: envelopeEntity.id!),
                             ))
                         .toList(),
