@@ -1,13 +1,16 @@
+import 'dart:async';
+
 import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class EnvelopeTransactionEditDialog extends StyledPortDialog<EnvelopeTransaction> {
-  EnvelopeTransactionEditDialog._({super.titleText, required super.port, required super.children});
+  EnvelopeTransactionEditDialog._({super.titleText, required super.port, required super.children, super.onAccept});
 
   factory EnvelopeTransactionEditDialog({
     required CorePondContext corePondContext,
     String? titleText,
     required EnvelopeTransaction envelopeTransaction,
+    FutureOr Function(EnvelopeTransaction result)? onAccept,
   }) {
     late Port<Map<String, dynamic>> rawPort;
     final basePort = envelopeTransaction.asPort(
@@ -47,6 +50,7 @@ class EnvelopeTransactionEditDialog extends StyledPortDialog<EnvelopeTransaction
           },
         ),
       ],
+      onAccept: onAccept,
     );
   }
 }

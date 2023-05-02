@@ -1,3 +1,4 @@
+import 'package:example/features/budget/budget.dart';
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
@@ -47,15 +48,13 @@ class BudgetPage extends AppPage {
               iconData: Icons.edit,
               color: Colors.orange,
               onPerform: (context) async {
-                final result = await context.showStyledDialog(StyledPortDialog(
+                await context.showStyledDialog(StyledPortDialog(
                   titleText: 'Edit Budget',
                   port: budget.asPort(context.corePondContext),
+                  onAccept: (Budget result) async {
+                    await context.dropCoreComponent.update(budgetEntity..value = result);
+                  },
                 ));
-                if (result == null) {
-                  return;
-                }
-
-                await context.dropCoreComponent.update(budgetEntity..value = result);
               },
             ),
             ActionItem(
@@ -64,16 +63,14 @@ class BudgetPage extends AppPage {
               iconData: Icons.delete,
               color: Colors.red,
               onPerform: (context) async {
-                final result = await context.showStyledDialog(StyledDialog.yesNo(
+                await context.showStyledDialog(StyledDialog.yesNo(
                   titleText: 'Confirm Delete Budget',
                   bodyText: 'Are you sure you want to delete the budget? You cannot undo this.',
+                  onAccept: () async {
+                    await context.dropCoreComponent.delete(budgetEntity);
+                    context.pop();
+                  },
                 ));
-                if (result != true) {
-                  return;
-                }
-
-                await context.dropCoreComponent.delete(budgetEntity);
-                context.pop();
               },
             ),
           ],
@@ -96,15 +93,13 @@ class BudgetPage extends AppPage {
                     iconData: Icons.add,
                     color: Colors.green,
                     onPerform: (_) async {
-                      final result = await context.showStyledDialog(StyledPortDialog(
+                      await context.showStyledDialog(StyledPortDialog(
                         titleText: 'Create New Envelope',
                         port: (Envelope()..budgetProperty.set(budgetEntity.id!)).asPort(context.corePondContext),
+                        onAccept: (Envelope result) async {
+                          await context.dropCoreComponent.update(EnvelopeEntity()..value = result);
+                        },
                       ));
-                      if (result == null) {
-                        return;
-                      }
-
-                      await context.dropCoreComponent.update(EnvelopeEntity()..value = result);
                     },
                   ),
                 ],
@@ -151,17 +146,15 @@ class BudgetPage extends AppPage {
                                         iconData: Icons.delete,
                                         color: Colors.red,
                                         onPerform: (context) async {
-                                          final confirm = await context.showStyledDialog(StyledDialog.yesNo(
+                                          await context.showStyledDialog(StyledDialog.yesNo(
                                             titleText: 'Confirm Delete',
                                             bodyText:
                                                 'Are you sure you want to delete this transaction? You cannot undo this.',
+                                            onAccept: () async {
+                                              await context.dropCoreComponent.delete(entity);
+                                              Navigator.of(context).pop();
+                                            },
                                           ));
-                                          if (confirm != true) {
-                                            return;
-                                          }
-
-                                          await context.dropCoreComponent.delete(entity);
-                                          Navigator.of(context).pop();
                                         },
                                       ),
                                     ],

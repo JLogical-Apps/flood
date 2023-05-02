@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:port/port.dart';
 import 'package:port_style/src/styled_object_port_builder.dart';
@@ -12,13 +14,21 @@ class StyledPortDialog<T> extends StyledDialog<T> {
     super.titleText,
     List<Widget>? children,
     Map<String, Widget>? overrides,
-  }) : super(body: _portBuilder(port: port, children: children, overrides: overrides));
+    FutureOr Function(T result)? onAccept,
+  }) : super(
+            body: _portBuilder<T>(
+          port: port,
+          children: children,
+          overrides: overrides,
+          onAccept: onAccept,
+        ));
 
-  static Widget _portBuilder({
-    required Port port,
+  static Widget _portBuilder<T>({
+    required Port<T> port,
     List<Widget>? children,
     Map<String, Widget>? overrides,
     List<String>? order,
+    FutureOr Function(T result)? onAccept,
   }) {
     assert(children == null || overrides == null, '`children` or `overrides` must be null!');
     return Builder(
@@ -45,6 +55,8 @@ class StyledPortDialog<T> extends StyledDialog<T> {
                 if (!result.isValid) {
                   return;
                 }
+
+                await onAccept?.call(result.data);
 
                 Navigator.of(context).pop(result.data);
               },

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
@@ -180,7 +182,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
     BuildContext context, {
     required EnvelopeEntity envelopeEntity,
     required Map<String, int>? modifiedCentsById,
-    required Function(BudgetTransaction) onTransactionCreated,
+    required FutureOr Function(BudgetTransaction) onTransactionCreated,
   }) {
     final envelope = envelopeEntity.value;
     final cents = envelope.amountCentsProperty.value;
@@ -198,33 +200,29 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
           color: Colors.blue,
           iconData: Icons.swap_horiz,
           onPerform: (context) async {
-            final result = await context.showStyledDialog(await TransferTransactionEditDialog.create(
+            await context.showStyledDialog(await TransferTransactionEditDialog.create(
               context,
               titleText: 'Create Transfer',
               sourceEnvelopeEntity: envelopeEntity,
               transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
+              onAccept: (TransferTransaction result) async {
+                await onTransactionCreated(result);
+              },
             ));
-            if (result == null) {
-              return;
-            }
-
-            onTransactionCreated(result);
           },
         ),
       ],
       onPressed: () async {
-        final envelopeTransaction = await context.showStyledDialog(EnvelopeTransactionEditDialog(
+        await context.showStyledDialog(EnvelopeTransactionEditDialog(
           corePondContext: context.corePondContext,
           titleText: 'Create Transaction',
           envelopeTransaction: EnvelopeTransaction()
             ..envelopeProperty.set(envelopeEntity.id!)
             ..budgetProperty.set(envelope.budgetProperty.value),
+          onAccept: (EnvelopeTransaction envelopeTransaction) async {
+            await onTransactionCreated(envelopeTransaction);
+          },
         ));
-        if (envelopeTransaction == null) {
-          return null;
-        }
-
-        onTransactionCreated(envelopeTransaction);
       },
       body: StyledList.row(
         itemPadding: EdgeInsets.symmetric(horizontal: 4),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:style/src/color_palette_provider.dart';
 import 'package:style/src/components/input/styled_button.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/misc/styled_icon.dart';
+import 'package:style/src/components/misc/styled_loading_indicator.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/emphasis.dart';
 import 'package:style/src/style_build_context_extensions.dart';
@@ -17,14 +19,34 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
     final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body.bold(text));
     final icon = component.icon ?? component.iconData?.mapIfNonNull((iconData) => StyledIcon(iconData));
     final backgroundColorPalette = context.colorPalette().background.getByEmphasis(component.emphasis);
+
+    final loadingState = useState<bool>(false);
+
     return ElevatedButton(
       child: ColorPaletteProvider(
           colorPalette: backgroundColorPalette,
-          child: StyledList.row.shrink(
-            itemPadding: EdgeInsets.all(2),
+          child: Stack(
             children: [
-              if (icon != null) SizedBox(child: icon),
-              if (label != null) label,
+              AnimatedOpacity(
+                opacity: loadingState.value ? 0 : 1,
+                duration: Duration(milliseconds: 100),
+                child: StyledList.row.shrink(
+                  itemPadding: EdgeInsets.all(2),
+                  children: [
+                    if (icon != null) SizedBox(child: icon),
+                    if (label != null) label,
+                  ],
+                ),
+              ),
+              Positioned.fill(
+                child: Center(
+                  child: AnimatedOpacity(
+                    opacity: loadingState.value ? 1 : 0,
+                    duration: Duration(milliseconds: 100),
+                    child: StyledLoadingIndicator(),
+                  ),
+                ),
+              ),
             ],
           )),
       style: ButtonStyle(
@@ -40,7 +62,17 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
         )),
         padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 4, vertical: 2)),
       ),
-      onPressed: component.onPressed,
+      onPressed: component.onPressed?.mapIfNonNull(
+        (onPressed) => () async {
+          if (loadingState.value) {
+            return;
+          }
+
+          loadingState.value = true;
+          await onPressed();
+          loadingState.value = false;
+        },
+      ),
     );
   }
 

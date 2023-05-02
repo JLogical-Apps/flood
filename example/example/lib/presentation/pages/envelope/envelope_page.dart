@@ -39,15 +39,13 @@ class EnvelopePage extends AppPage {
               color: Colors.orange,
               iconData: Icons.edit,
               onPerform: (context) async {
-                final result = await context.showStyledDialog(StyledPortDialog(
+                await context.showStyledDialog(StyledPortDialog(
                   titleText: 'Edit Envelope',
                   port: envelope.asPort(context.corePondContext),
+                  onAccept: (Envelope result) async {
+                    await context.dropCoreComponent.update(envelopeEntity..value = result);
+                  },
                 ));
-                if (result == null) {
-                  return;
-                }
-
-                await context.dropCoreComponent.update(envelopeEntity..value = result);
               },
             ),
             ActionItem(
@@ -56,33 +54,31 @@ class EnvelopePage extends AppPage {
               color: Colors.blue,
               iconData: Icons.swap_horiz,
               onPerform: (context) async {
-                final result = await context.showStyledDialog(await TransferTransactionEditDialog.create(
+                await context.showStyledDialog(await TransferTransactionEditDialog.create(
                   context,
                   titleText: 'Create Transfer',
                   sourceEnvelopeEntity: envelopeEntity,
                   transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
+                  onAccept: (TransferTransaction result) async {
+                    final fromEnvelopeEntity = await Query.getById<EnvelopeEntity>(result.fromEnvelopeProperty.value)
+                        .get(context.dropCoreComponent);
+                    final toEnvelopeEntity = await Query.getById<EnvelopeEntity>(result.toEnvelopeProperty.value)
+                        .get(context.dropCoreComponent);
+
+                    await context.dropCoreComponent.updateEntity(
+                      fromEnvelopeEntity,
+                      (Envelope envelope) => envelope.amountCentsProperty
+                          .set(envelope.amountCentsProperty.value - result.amountCentsProperty.value),
+                    );
+                    await context.dropCoreComponent.updateEntity(
+                      toEnvelopeEntity,
+                      (Envelope envelope) => envelope.amountCentsProperty
+                          .set(envelope.amountCentsProperty.value + result.amountCentsProperty.value),
+                    );
+
+                    await context.dropCoreComponent.update(TransferTransactionEntity()..set(result));
+                  },
                 ));
-                if (result == null) {
-                  return;
-                }
-
-                final fromEnvelopeEntity = await Query.getById<EnvelopeEntity>(result.fromEnvelopeProperty.value)
-                    .get(context.dropCoreComponent);
-                final toEnvelopeEntity =
-                    await Query.getById<EnvelopeEntity>(result.toEnvelopeProperty.value).get(context.dropCoreComponent);
-
-                await context.dropCoreComponent.updateEntity(
-                  fromEnvelopeEntity,
-                  (Envelope envelope) => envelope.amountCentsProperty
-                      .set(envelope.amountCentsProperty.value - result.amountCentsProperty.value),
-                );
-                await context.dropCoreComponent.updateEntity(
-                  toEnvelopeEntity,
-                  (Envelope envelope) => envelope.amountCentsProperty
-                      .set(envelope.amountCentsProperty.value + result.amountCentsProperty.value),
-                );
-
-                await context.dropCoreComponent.update(TransferTransactionEntity()..set(result));
               },
             ),
           ],
@@ -91,7 +87,7 @@ class EnvelopePage extends AppPage {
               StyledText.h4.withColor(getCentsColor(envelope.amountCentsProperty.value))(
                   envelope.amountCentsProperty.value.formatCentsAsCurrency()),
               StyledCard.subtle(
-                titleText: envelopeRule?.getDisplayName(),
+                titleText: envelopeRule?.getDisplayName() ?? 'None',
                 leading: envelopeRuleCardWrapper.getIcon(envelopeRule),
                 body: envelopeRuleCardWrapper.getDescription(envelopeRule),
               ),
@@ -102,25 +98,22 @@ class EnvelopePage extends AppPage {
                 labelText: 'Create Transaction',
                 iconData: Icons.add,
                 onPressed: () async {
-                  final envelopeTransaction = await context.showStyledDialog(EnvelopeTransactionEditDialog(
+                  await context.showStyledDialog(EnvelopeTransactionEditDialog(
                     corePondContext: context.corePondContext,
                     titleText: 'Create Transaction',
                     envelopeTransaction: (EnvelopeTransaction()
                       ..envelopeProperty.set(envelopeEntity.id!)
                       ..budgetProperty.set(envelope.budgetProperty.value)),
+                    onAccept: (EnvelopeTransaction envelopeTransaction) async {
+                      final newEnvelope = Envelope()
+                        ..copyFrom(context.dropCoreComponent, envelope)
+                        ..amountCentsProperty
+                            .set(envelope.amountCentsProperty.value + envelopeTransaction.amountCentsProperty.value);
+
+                      await context.dropCoreComponent.update(envelopeEntity..value = newEnvelope);
+                      await context.dropCoreComponent.update(EnvelopeTransactionEntity()..value = envelopeTransaction);
+                    },
                   ));
-
-                  if (envelopeTransaction == null) {
-                    return;
-                  }
-
-                  final newEnvelope = Envelope()
-                    ..copyFrom(context.dropCoreComponent, envelope)
-                    ..amountCentsProperty
-                        .set(envelope.amountCentsProperty.value + envelopeTransaction.amountCentsProperty.value);
-
-                  await context.dropCoreComponent.update(envelopeEntity..value = newEnvelope);
-                  await context.dropCoreComponent.update(EnvelopeTransactionEntity()..value = envelopeTransaction);
                 },
               ),
               PaginatedQueryModelBuilder(
@@ -138,17 +131,15 @@ class EnvelopePage extends AppPage {
                                   iconData: Icons.delete,
                                   color: Colors.red,
                                   onPerform: (context) async {
-                                    final confirm = await context.showStyledDialog(StyledDialog.yesNo(
+                                    await context.showStyledDialog(StyledDialog.yesNo(
                                       titleText: 'Confirm Delete',
                                       bodyText:
                                           'Are you sure you want to delete this transaction? You cannot undo this.',
+                                      onAccept: () async {
+                                        await context.dropCoreComponent.delete(entity);
+                                        Navigator.of(context).pop();
+                                      },
                                     ));
-                                    if (confirm != true) {
-                                      return;
-                                    }
-
-                                    await context.dropCoreComponent.delete(entity);
-                                    Navigator.of(context).pop();
                                   },
                                 ),
                               ],

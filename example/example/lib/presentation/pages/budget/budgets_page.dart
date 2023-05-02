@@ -52,16 +52,14 @@ class BudgetsPage extends AppPage {
                       labelText: 'Create',
                       iconData: Icons.add,
                       onPressed: () async {
-                        final result = await context.showStyledDialog(StyledPortDialog(
+                        await context.showStyledDialog(StyledPortDialog(
                           titleText: 'Create New Budget',
                           port: (Budget()..ownerProperty.set(loggedInUserIdModel.getOrNull()!))
                               .asPort(context.corePondContext),
+                          onAccept: (Budget result) async {
+                            await context.dropCoreComponent.update(BudgetEntity()..value = result);
+                          },
                         ));
-                        if (result == null) {
-                          return;
-                        }
-
-                        await context.dropCoreComponent.update(BudgetEntity()..value = result);
                       },
                     ),
                   ],

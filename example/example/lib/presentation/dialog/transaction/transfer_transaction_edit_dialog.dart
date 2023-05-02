@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/transfer_transaction.dart';
@@ -6,13 +8,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class TransferTransactionEditDialog extends StyledPortDialog<TransferTransaction> {
-  TransferTransactionEditDialog._({super.titleText, required super.port, required super.children});
+  TransferTransactionEditDialog._({super.titleText, required super.port, required super.children, super.onAccept});
 
   static Future<TransferTransactionEditDialog> create(
     BuildContext context, {
     String? titleText,
     required EnvelopeEntity sourceEnvelopeEntity,
     required TransferTransaction transferTransaction,
+    FutureOr Function(TransferTransaction result)? onAccept,
   }) async {
     final envelopeEntities = await EnvelopeEntity.getBudgetEnvelopesQuery(
             budgetId: transferTransaction.budgetProperty.value, isArchived: false)
@@ -86,6 +89,7 @@ class TransferTransactionEditDialog extends StyledPortDialog<TransferTransaction
           },
         ),
       ],
+      onAccept: onAccept,
     );
   }
 }

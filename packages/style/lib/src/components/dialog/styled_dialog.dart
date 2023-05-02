@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:style/src/action/action_item.dart';
 import 'package:style/src/components/input/styled_button.dart';
@@ -28,6 +30,7 @@ class StyledDialog<T> extends StyleComponent {
     String? titleText,
     Widget? body,
     String? bodyText,
+    FutureOr Function()? onAccept,
   }) {
     body = bodyText?.mapIfNonNull((text) => StyledText.body(text)) ?? body;
     return StyledDialog(
@@ -47,6 +50,7 @@ class StyledDialog<T> extends StyleComponent {
               StyledButton.strong(
                 labelText: 'Ok',
                 onPressed: () async {
+                  await onAccept?.call();
                   Navigator.of(context).pop(true);
                 },
               ),
