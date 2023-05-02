@@ -116,10 +116,23 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
             leadingIcon: Icons.mail,
             children: [
               StyledList.column(
-                children: transactions
-                    .map((transaction) => TransactionCard(
-                          budgetTransaction: transaction,
+                children: transactionGeneratorsState.value
+                    .map((transactionGenerator) => TransactionCard(
+                          budgetTransaction: transactionGenerator.generate(),
                           transactionViewContext: TransactionViewContext.budget(),
+                          actions: [
+                            ActionItem(
+                              titleText: 'Remove',
+                              descriptionText: 'Remove this transaction.',
+                              color: Colors.red,
+                              iconData: Icons.remove_circle_outline,
+                              onPerform: (_) async {
+                                transactionGeneratorsState.value = transactionGeneratorsState.value.copy()
+                                  ..remove(transactionGenerator);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
                         ))
                     .toList(),
                 ifEmptyText: 'No Transactions yet!',
