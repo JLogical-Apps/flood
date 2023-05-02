@@ -7,7 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 abstract class TransactionCardModifier<B extends BudgetTransaction> with IsTypedModifier<B, BudgetTransaction> {
-  Widget buildCard(B transaction, String? id, TransactionViewContext transactionViewContext);
+  Widget buildCard({
+    required B transaction,
+    required TransactionViewContext transactionViewContext,
+    List<ActionItem> actions = const [],
+  });
 
   static final transactionCardModifierResolver =
       ModifierResolver<TransactionCardModifier, BudgetTransaction>(modifiers: [

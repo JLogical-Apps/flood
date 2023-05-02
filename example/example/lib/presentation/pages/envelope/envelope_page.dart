@@ -130,8 +130,28 @@ class EnvelopePage extends AppPage {
                     children: envelopeTransactionEntities
                         .map((entity) => TransactionCard(
                               budgetTransaction: entity.value,
-                              id: entity.id,
                               transactionViewContext: TransactionViewContext.envelope(envelopeId: envelopeEntity.id!),
+                              actions: [
+                                ActionItem(
+                                  titleText: 'Delete',
+                                  descriptionText: 'Delete this transaction.',
+                                  iconData: Icons.delete,
+                                  color: Colors.red,
+                                  onPerform: (context) async {
+                                    final confirm = await context.showStyledDialog(StyledDialog.yesNo(
+                                      titleText: 'Confirm Delete',
+                                      bodyText:
+                                          'Are you sure you want to delete this transaction? You cannot undo this.',
+                                    ));
+                                    if (confirm != true) {
+                                      return;
+                                    }
+
+                                    await context.dropCoreComponent.delete(entity);
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
                             ))
                         .toList(),
                     ifEmptyText: 'There are no transactions in this envelope!',

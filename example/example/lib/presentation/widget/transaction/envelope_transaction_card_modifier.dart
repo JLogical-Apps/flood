@@ -1,7 +1,6 @@
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
-import 'package:example/features/transaction/envelope_transaction_entity.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
@@ -11,7 +10,11 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTransaction> {
   @override
-  Widget buildCard(EnvelopeTransaction transaction, String? id, TransactionViewContext transactionViewContext) {
+  Widget buildCard({
+    required EnvelopeTransaction transaction,
+    required TransactionViewContext transactionViewContext,
+    List<ActionItem> actions = const [],
+  }) {
     final cents = transaction.amountCentsProperty.value;
     return HookBuilder(builder: (context) {
       final envelope = useEntityOrNull<EnvelopeEntity>(transaction.envelopeProperty.value)
@@ -26,35 +29,15 @@ class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTr
         )),
         bodyText:
             '${transaction.nameProperty.value} - ${transaction.transactionDateProperty.value.format(showTime: false)}',
-        onPressed: id == null ? null : () => context.showStyledDialog(buildDialog(transaction, id)),
+        onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
       );
     });
   }
 
-  StyledDialog buildDialog(EnvelopeTransaction transaction, String id) {
+  StyledDialog buildDialog({required EnvelopeTransaction transaction, List<ActionItem> actions = const []}) {
     return StyledDialog(
       titleText: transaction.nameProperty.value,
-      actions: [
-        ActionItem(
-          titleText: 'Delete',
-          descriptionText: 'Delete this transaction.',
-          iconData: Icons.delete,
-          color: Colors.red,
-          onPerform: (context) async {
-            final confirm = await context.showStyledDialog(StyledDialog.yesNo(
-              titleText: 'Confirm Delete',
-              bodyText: 'Are you sure you want to delete this transaction? You cannot undo this.',
-            ));
-            if (confirm != true) {
-              return;
-            }
-
-            final entity = await Query.getById<EnvelopeTransactionEntity>(id).get(context.dropCoreComponent);
-            await context.dropCoreComponent.delete(entity);
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
+      actions: actions,
       body: HookBuilder(
         builder: (context) {
           final envelope = useEntityOrNull<EnvelopeEntity>(transaction.envelopeProperty.value)

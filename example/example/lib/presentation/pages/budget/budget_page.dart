@@ -143,8 +143,28 @@ class BudgetPage extends AppPage {
                           ...transactionEntities
                               .map((entity) => TransactionCard(
                                     budgetTransaction: entity.value,
-                                    id: entity.id,
                                     transactionViewContext: TransactionViewContext.budget(),
+                                    actions: [
+                                      ActionItem(
+                                        titleText: 'Delete',
+                                        descriptionText: 'Delete this transaction.',
+                                        iconData: Icons.delete,
+                                        color: Colors.red,
+                                        onPerform: (context) async {
+                                          final confirm = await context.showStyledDialog(StyledDialog.yesNo(
+                                            titleText: 'Confirm Delete',
+                                            bodyText:
+                                                'Are you sure you want to delete this transaction? You cannot undo this.',
+                                          ));
+                                          if (confirm != true) {
+                                            return;
+                                          }
+
+                                          await context.dropCoreComponent.delete(entity);
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
                                   ))
                               .toList(),
                           if (loadMore != null)
