@@ -50,7 +50,7 @@ class IncomeTransactionCardModifier extends TransactionCardModifier<IncomeTransa
                 return StyledLoadingIndicator();
               }
 
-              return StyledCard(
+              return StyledCard.subtle(
                 title:
                     StyledText.h6.withColor(Color(entity.value.colorProperty.value))(entity.value.nameProperty.value),
                 body: StyledText.body.withColor(getCentsColor(cents))(cents.formatCentsAsCurrency()),
