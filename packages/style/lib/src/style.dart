@@ -12,6 +12,8 @@ abstract class Style {
 
   ColorPalette get colorPalette;
 
+  ColorPalette getColorPaletteFromBackground(Color backgroundColor);
+
   TextStyle getTextStyle(BuildContext context, StyledText text);
 
   Future<T?> showDialog<T>(BuildContext context, StyledDialog<T> dialog);

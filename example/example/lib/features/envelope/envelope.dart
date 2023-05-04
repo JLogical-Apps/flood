@@ -23,8 +23,8 @@ class Envelope extends ValueObject {
   late final colorProperty =
       field<int>(name: colorField).withDisplayName('Color').color().withFallback(() => 0xffffffff);
 
-  static const lockedField = 'locked';
-  late final lockedProperty = field<bool>(name: lockedField).withDisplayName('Locked?').withFallback(() => false);
+  static const archivedField = 'archived';
+  late final archivedProperty = field<bool>(name: archivedField).hidden().withFallback(() => false);
 
   @override
   List<ValueObjectBehavior> get behaviors => [
@@ -34,7 +34,7 @@ class Envelope extends ValueObject {
         amountCentsProperty,
         ruleProperty,
         colorProperty,
-        lockedProperty,
+        archivedProperty,
       ];
 
   /// Returns a copy of the envelope with the [incomeCents] gained and a possibly modified envelope rule.

@@ -33,59 +33,112 @@ class EnvelopePage extends AppPage {
         return StyledPage(
           title: StyledText.h2.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
           actions: [
-            ActionItem(
-              titleText: 'Edit',
-              descriptionText: 'Edit this envelope.',
-              color: Colors.orange,
-              iconData: Icons.edit,
-              onPerform: (context) async {
-                await context.showStyledDialog(StyledPortDialog(
-                  titleText: 'Edit Envelope',
-                  port: envelope.asPort(context.corePondContext),
-                  onAccept: (Envelope result) async {
-                    await context.dropCoreComponent.update(envelopeEntity..value = result);
-                  },
-                ));
-              },
-            ),
-            ActionItem(
-              titleText: 'Transfer',
-              descriptionText: 'Transfer money to/from this envelope.',
-              color: Colors.blue,
-              iconData: Icons.swap_horiz,
-              onPerform: (context) async {
-                await context.showStyledDialog(await TransferTransactionEditDialog.create(
-                  context,
-                  titleText: 'Create Transfer',
-                  sourceEnvelopeEntity: envelopeEntity,
-                  transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
-                  onAccept: (TransferTransaction result) async {
-                    final fromEnvelopeEntity = await Query.getById<EnvelopeEntity>(result.fromEnvelopeProperty.value)
-                        .get(context.dropCoreComponent);
-                    final toEnvelopeEntity = await Query.getById<EnvelopeEntity>(result.toEnvelopeProperty.value)
-                        .get(context.dropCoreComponent);
+            if (!envelope.archivedProperty.value)
+              ActionItem(
+                titleText: 'Edit',
+                descriptionText: 'Edit this envelope.',
+                color: Colors.orange,
+                iconData: Icons.edit,
+                onPerform: (context) async {
+                  await context.showStyledDialog(StyledPortDialog(
+                    titleText: 'Edit Envelope',
+                    port: envelope.asPort(context.corePondContext),
+                    onAccept: (Envelope result) async {
+                      await context.dropCoreComponent.update(envelopeEntity..value = result);
+                    },
+                  ));
+                },
+              ),
+            if (!envelope.archivedProperty.value)
+              ActionItem(
+                titleText: 'Transfer',
+                descriptionText: 'Transfer money to/from this envelope.',
+                color: Colors.blue,
+                iconData: Icons.swap_horiz,
+                onPerform: (context) async {
+                  await context.showStyledDialog(await TransferTransactionEditDialog.create(
+                    context,
+                    titleText: 'Create Transfer',
+                    sourceEnvelopeEntity: envelopeEntity,
+                    transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
+                    onAccept: (TransferTransaction result) async {
+                      final fromEnvelopeEntity = await Query.getById<EnvelopeEntity>(result.fromEnvelopeProperty.value)
+                          .get(context.dropCoreComponent);
+                      final toEnvelopeEntity = await Query.getById<EnvelopeEntity>(result.toEnvelopeProperty.value)
+                          .get(context.dropCoreComponent);
 
-                    await context.dropCoreComponent.updateEntity(
-                      fromEnvelopeEntity,
-                      (Envelope envelope) => envelope.amountCentsProperty
-                          .set(envelope.amountCentsProperty.value - result.amountCentsProperty.value),
-                    );
-                    await context.dropCoreComponent.updateEntity(
-                      toEnvelopeEntity,
-                      (Envelope envelope) => envelope.amountCentsProperty
-                          .set(envelope.amountCentsProperty.value + result.amountCentsProperty.value),
-                    );
+                      await context.dropCoreComponent.updateEntity(
+                        fromEnvelopeEntity,
+                        (Envelope envelope) => envelope.amountCentsProperty
+                            .set(envelope.amountCentsProperty.value - result.amountCentsProperty.value),
+                      );
+                      await context.dropCoreComponent.updateEntity(
+                        toEnvelopeEntity,
+                        (Envelope envelope) => envelope.amountCentsProperty
+                            .set(envelope.amountCentsProperty.value + result.amountCentsProperty.value),
+                      );
 
-                    await context.dropCoreComponent.update(TransferTransactionEntity()..set(result));
-                  },
-                ));
-              },
-            ),
+                      await context.dropCoreComponent.update(TransferTransactionEntity()..set(result));
+                    },
+                  ));
+                },
+              ),
+            if (!envelope.archivedProperty.value)
+              ActionItem(
+                titleText: 'Archive',
+                descriptionText: 'Archive this envelope.',
+                iconData: Icons.archive,
+                color: Colors.blue,
+                onPerform: (context) async {
+                  final confirm = await context.showStyledDialog(StyledDialog.yesNo(
+                    titleText: 'Confirm Archive',
+                    bodyText:
+                        'Are you sure you want to archive this envelope? You can access archived envelopes by clicking the menu button in the home page.',
+                  ));
+
+                  if (confirm != true) {
+                    return;
+                  }
+
+                  await context.dropCoreComponent.updateEntity(
+                    envelopeEntity,
+                    (Envelope envelope) => envelope.archivedProperty.set(true),
+                  );
+                },
+              ),
+            if (envelope.archivedProperty.value)
+              ActionItem(
+                titleText: 'Restore',
+                descriptionText: 'Restores this envelope from the archive.',
+                iconData: Icons.unarchive,
+                color: Colors.blue,
+                onPerform: (context) async {
+                  final confirm = await context.showStyledDialog(StyledDialog.yesNo(
+                    titleText: 'Confirm Restore',
+                    bodyText: 'Are you sure you want to restore this envelope?',
+                  ));
+
+                  if (confirm != true) {
+                    return;
+                  }
+
+                  await context.dropCoreComponent.updateEntity(
+                    envelopeEntity,
+                    (Envelope envelope) => envelope.archivedProperty.set(false),
+                  );
+                },
+              ),
           ],
           body: StyledList.column.centered.scrollable(
             children: [
               StyledText.h4.withColor(getCentsColor(envelope.amountCentsProperty.value))(
                   envelope.amountCentsProperty.value.formatCentsAsCurrency()),
+              if (envelope.archivedProperty.value)
+                StyledChip(
+                  labelText: 'Archived',
+                  iconData: Icons.archive,
+                  backgroundColor: Colors.blue,
+                ),
               StyledCard.subtle(
                 titleText: envelopeRule?.getDisplayName() ?? 'None',
                 leading: envelopeRuleCardWrapper.getIcon(envelopeRule),
