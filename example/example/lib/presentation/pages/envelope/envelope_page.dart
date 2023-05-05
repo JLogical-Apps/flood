@@ -100,10 +100,85 @@ class EnvelopePage extends AppPage {
                     return;
                   }
 
-                  await context.dropCoreComponent.updateEntity(
-                    envelopeEntity,
-                    (Envelope envelope) => envelope.archivedProperty.set(true),
-                  );
+                  var newEnvelope = envelope;
+
+                  if (envelope.amountCentsProperty.value != 0) {
+                    final envelopeEntities = await EnvelopeEntity.getBudgetEnvelopesQuery(
+                      budgetId: envelope.budgetProperty.value,
+                      isArchived: false,
+                    ).all().get(context.dropCoreComponent)
+                      ..remove(envelopeEntity);
+
+                    final port = Port.of({
+                      'envelope': PortField.option<EnvelopeEntity?, EnvelopeEntity>(
+                        options: [
+                          null,
+                          ...envelopeEntities,
+                        ],
+                        initialValue: null,
+                        submitMapper: (envelopeEntity) => envelopeEntity!,
+                      ).isNotNull(),
+                    }).map((sourceData, port) => sourceData['envelope'] as EnvelopeEntity);
+
+                    final result = await context.showStyledDialog(StyledPortDialog(
+                      port: port,
+                      titleText: 'Transfer Before Archive',
+                      overrides: {
+                        'envelope': StyledList.column(
+                          children: [
+                            StyledText.body(
+                                'Before archiving this envelope, select an envelope to transfer all the money to.'),
+                            StyledOptionPortField(
+                              fieldName: 'envelope',
+                              widgetMapper: (EnvelopeEntity? envelopeEntity) {
+                                final envelope = envelopeEntity?.value;
+                                final envelopeRuleModifier =
+                                    EnvelopeRuleCardModifier.getModifier(envelope?.ruleProperty.value);
+                                return StyledList.row(
+                                  children: [
+                                    envelopeRuleModifier.getIcon(envelope?.ruleProperty.value),
+                                    Expanded(
+                                      child: StyledText.body(envelopeEntity?.value.nameProperty.value ?? 'None'),
+                                    ),
+                                  ],
+                                );
+                              },
+                              labelText: 'Target',
+                            ),
+                          ],
+                        ),
+                      },
+                      onAccept: (EnvelopeEntity result) async {
+                        newEnvelope = Envelope()
+                          ..copyFrom(context.dropCoreComponent, envelope)
+                          ..amountCentsProperty.set(0);
+
+                        await context.dropCoreComponent.update(envelopeEntity..set(newEnvelope));
+                        await context.dropCoreComponent.updateEntity(
+                          result,
+                          (Envelope resultEnvelope) => resultEnvelope.amountCentsProperty
+                              .set(resultEnvelope.amountCentsProperty.value + envelope.amountCentsProperty.value),
+                        );
+
+                        await context.dropCoreComponent.update(TransferTransactionEntity()
+                          ..set(TransferTransaction()
+                            ..fromEnvelopeProperty.set(envelopeEntity.id!)
+                            ..toEnvelopeProperty.set(result.id!)
+                            ..amountCentsProperty.set(envelope.amountCentsProperty.value)
+                            ..budgetProperty.set(envelope.budgetProperty.value)));
+                      },
+                    ));
+
+                    if (result == null) {
+                      return;
+                    }
+                  }
+
+                  newEnvelope = Envelope()
+                    ..copyFrom(context.dropCoreComponent, newEnvelope)
+                    ..archivedProperty.set(true);
+
+                  await context.dropCoreComponent.update(envelopeEntity..set(newEnvelope));
                 },
               ),
             if (envelope.archivedProperty.value)
