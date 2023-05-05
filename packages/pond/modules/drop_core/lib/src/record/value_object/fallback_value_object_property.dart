@@ -12,6 +12,9 @@ class FallbackValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L, F
 
   @override
   State modifyState(State state) {
+    if (property.value == null) {
+      return state.withData(state.data.copy()..set(property.name, fallback()));
+    }
     return property.modifyState(state);
   }
 

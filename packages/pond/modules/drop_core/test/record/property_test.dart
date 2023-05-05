@@ -49,7 +49,7 @@ void main() {
 
     final data = Data3();
     expect(data.intProperty.value, -1);
-    expect(data.getState(dropContext).data, {});
+    expect(data.getState(dropContext).data, {'int': -1});
 
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
@@ -83,7 +83,7 @@ void main() {
 
     final data = Data5();
     expect(data.intProperty.value, -1);
-    expect(data.getState(dropContext).data, {});
+    expect(data.getState(dropContext).data, {'int': -1});
 
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);

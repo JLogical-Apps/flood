@@ -14,6 +14,9 @@ class PlaceholderValueObjectProperty<G, S, L>
 
   @override
   State modifyState(State state) {
+    if (property.value == null) {
+      return state.withData(state.data.copy()..set(property.name, placeholder()));
+    }
     return property.modifyState(state);
   }
 

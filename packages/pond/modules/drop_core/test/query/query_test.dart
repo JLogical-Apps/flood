@@ -15,11 +15,11 @@ void main() {
 
     final users = [
       User()
-        ..nameProperty.value = 'Jake'
-        ..emailProperty.value = 'jake@jake.com',
+        ..nameProperty.set('Jake')
+        ..emailProperty.set('jake@jake.com'),
       User()
-        ..nameProperty.value = 'John'
-        ..emailProperty.value = 'john@doe.com',
+        ..nameProperty.set('John')
+        ..emailProperty.set('john@doe.com'),
     ];
 
     final context = CorePondContext();
@@ -49,11 +49,11 @@ void main() {
 
     final users = [
       User()
-        ..nameProperty.value = 'Jake'
-        ..emailProperty.value = 'jake@jake.com',
+        ..nameProperty.set('Jake')
+        ..emailProperty.set('jake@jake.com'),
       User()
-        ..nameProperty.value = 'John'
-        ..emailProperty.value = 'john@doe.com',
+        ..nameProperty.set('John')
+        ..emailProperty.set('john@doe.com'),
     ];
 
     final context = CorePondContext();
@@ -82,11 +82,9 @@ void main() {
 
     final users = [
       User()
-        ..nameProperty.value = 'Jake'
-        ..emailProperty.value = 'jake@jake.com',
-      User()
-        ..nameProperty.value = 'John'
-        ..emailProperty.value = 'john@doe.com',
+        ..nameProperty.set('Jake')
+        ..emailProperty.set('jake@jake.com'),
+      User()..emailProperty.set('john@doe.com'),
     ];
 
     final context = CorePondContext();
@@ -113,13 +111,13 @@ void main() {
 
     final users = [
       User()
-        ..nameProperty.value = 'Jake'
-        ..emailProperty.value = 'jake@jake.com'
-        ..itemsProperty.value = ['a', 'b'],
+        ..nameProperty.set('Jake')
+        ..emailProperty.set('jake@jake.com')
+        ..itemsProperty.set(['a', 'b']),
       User()
-        ..nameProperty.value = 'John'
-        ..emailProperty.value = 'john@doe.com'
-        ..itemsProperty.value = ['b', 'c'],
+        ..nameProperty.set('John')
+        ..emailProperty.set('john@doe.com')
+        ..itemsProperty.set(['b', 'c']),
     ];
 
     final context = CorePondContext();
@@ -319,11 +317,11 @@ void main() {
 
     final users = [
       User()
-        ..nameProperty.value = 'Jake'
-        ..emailProperty.value = 'jake@jake.com',
+        ..nameProperty.set('Jake')
+        ..emailProperty.set('jake@jake.com'),
       User()
-        ..nameProperty.value = 'John'
-        ..emailProperty.value = 'john@doe.com',
+        ..nameProperty.set('John')
+        ..emailProperty.set('john@doe.com'),
     ];
 
     final context = CorePondContext();
@@ -400,8 +398,8 @@ void main() {
     await context.register(DropCoreComponent());
     await context.register(listRepository);
 
-    await listRepository.update(UserEntity()..value = (User()..nameProperty.value = 'John Doe'));
-    await listRepository.update(InvoiceEntity()..value = (Invoice()..amountProperty.value = 35));
+    await listRepository.update(UserEntity()..value = (User()..nameProperty.set('John Doe')));
+    await listRepository.update(InvoiceEntity()..value = (Invoice()..amountProperty.set(35)));
 
     final userEntity = await listRepository.executeQuery(Query.from<UserEntity>().first());
     expect(userEntity.value.nameProperty.value, 'John Doe');
@@ -420,7 +418,7 @@ void main() {
 }
 
 class User extends ValueObject {
-  late final nameProperty = field<String>(name: 'name');
+  late final nameProperty = field<String>(name: 'name').withFallback(() => 'John');
   late final emailProperty = field<String>(name: 'email');
   late final itemsProperty = field<String>(name: 'items').list();
 
