@@ -33,8 +33,8 @@ class FlatStyleMenuButtonRenderer with IsTypedStyleRenderer<StyledMenuButton> {
                                   )) ??
                               action.icon,
                           onTap: action.onPerform?.mapIfNonNull((onPerform) => () async {
-                                await onPerform(context);
                                 Navigator.of(context).pop();
+                                await onPerform(context);
                               }),
                         ))
                     .toList()),

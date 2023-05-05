@@ -1,8 +1,8 @@
-import 'package:example/features/budget/budget.dart';
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
+import 'package:example/presentation/pages/envelope/archived_envelopes_page.dart';
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/pages/transaction/add_transactions_page.dart';
@@ -43,34 +43,12 @@ class BudgetPage extends AppPage {
           titleText: '${budget.nameProperty.value}: ${totalCentsModel.getOrNull()?.formatCentsAsCurrency() ?? '...'}',
           actions: [
             ActionItem(
-              titleText: 'Edit',
-              descriptionText: 'Edit the budget.',
-              iconData: Icons.edit,
-              color: Colors.orange,
-              onPerform: (context) async {
-                await context.showStyledDialog(StyledPortDialog(
-                  titleText: 'Edit Budget',
-                  port: budget.asPort(context.corePondContext),
-                  onAccept: (Budget result) async {
-                    await context.dropCoreComponent.update(budgetEntity..value = result);
-                  },
-                ));
-              },
-            ),
-            ActionItem(
-              titleText: 'Delete',
-              descriptionText: 'Delete the budget.',
-              iconData: Icons.delete,
-              color: Colors.red,
-              onPerform: (context) async {
-                await context.showStyledDialog(StyledDialog.yesNo(
-                  titleText: 'Confirm Delete Budget',
-                  bodyText: 'Are you sure you want to delete the budget? You cannot undo this.',
-                  onAccept: () async {
-                    await context.dropCoreComponent.delete(budgetEntity);
-                    context.pop();
-                  },
-                ));
+              titleText: 'Archived Envelopes',
+              descriptionText: 'View your archived envelopes.',
+              iconData: Icons.archive,
+              color: Colors.blue,
+              onPerform: (context) {
+                context.push(ArchivedEnvelopesPage()..budgetIdProperty.set(budgetIdProperty.value));
               },
             ),
           ],

@@ -67,7 +67,11 @@ class NavigationAppPondComponent with IsAppPondComponent {
       child: page,
       onWillPop: () async {
         PondApp.navigatorKey.currentState!.pop();
-        final path = PondApp.navigatorKey.currentState!.currentPath!;
+        final path = PondApp.navigatorKey.currentState!.currentPath;
+        if (path == null) {
+          return false;
+        }
+
         SystemNavigator.routeInformationUpdated(location: path);
         return false;
       },
