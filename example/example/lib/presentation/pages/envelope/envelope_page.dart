@@ -20,13 +20,17 @@ class EnvelopePage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
-    final envelopeModel = useQuery(Query.getById<EnvelopeEntity>(idProperty.value));
+    final envelopeModel = useQuery(Query.getByIdOrNull<EnvelopeEntity>(idProperty.value));
     final envelopeTransactionsModel =
         useQuery(BudgetTransactionEntity.getEnvelopeTransactionsQuery(envelopeId: idProperty.value).paginate());
 
     return ModelBuilder.page(
       model: envelopeModel,
-      builder: (EnvelopeEntity envelopeEntity) {
+      builder: (EnvelopeEntity? envelopeEntity) {
+        if (envelopeEntity == null) {
+          return StyledLoadingPage();
+        }
+
         final envelope = envelopeEntity.value;
         final envelopeRule = envelope.ruleProperty.value;
         final envelopeRuleCardWrapper = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
@@ -201,6 +205,27 @@ class EnvelopePage extends AppPage {
                     envelopeEntity,
                     (Envelope envelope) => envelope.archivedProperty.set(false),
                   );
+                },
+              ),
+            if (envelope.archivedProperty.value)
+              ActionItem(
+                titleText: 'Delete',
+                descriptionText: 'Deletes the envelope permanently.',
+                iconData: Icons.delete,
+                color: Colors.red,
+                onPerform: (context) async {
+                  final confirm = await context.showStyledDialog(StyledDialog.yesNo(
+                    titleText: 'Confirm Delete',
+                    bodyText:
+                        'Are you sure you want to delete this envelope? Any transactions associated with this envelope will not display correctly. This cannot be undone.',
+                  ));
+
+                  if (confirm != true) {
+                    return;
+                  }
+
+                  context.pop();
+                  await context.dropCoreComponent.delete(envelopeEntity);
                 },
               ),
           ],
