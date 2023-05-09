@@ -4,6 +4,7 @@ import 'package:drop_core/src/record/record.dart';
 import 'package:drop_core/src/record/value_object/computed_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/time/creation_time_property.dart';
 import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -78,4 +79,6 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
 
   ComputedValueObjectProperty<T, dynamic> computed<T>({required String name, required T Function() computation}) =>
       ValueObjectProperty.computed(name: name, computation: computation);
+
+  CreationTimeProperty creationTime() => ValueObjectProperty.creationTime();
 }

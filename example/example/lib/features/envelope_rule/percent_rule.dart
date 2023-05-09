@@ -40,10 +40,10 @@ abstract class PercentRule extends EnvelopeRule {
   }
 
   @override
-  List<ValueObjectBehavior> get behaviors =>
-      super.behaviors +
+  late final List<ValueObjectBehavior> behaviors = super.behaviors +
       [
         percentProperty,
         maximumCentsProperty,
+        creationTime(),
       ];
 }

@@ -161,6 +161,16 @@ void main() {
     });
     expect(data.studentToScoreProperty.value, {'Jack': 82, 'Jill': 93});
   });
+
+  test('timestamp', () {
+    dropContext.register<Data10>(Data10.new, name: 'Data10');
+
+    final data = Data10()..dateProperty.set(Timestamp.now());
+    expect(data.dateProperty.value?.time.isBefore(DateTime.now()), isTrue);
+
+    data.dateProperty.set(Timestamp.of(DateTime.now().add(Duration(days: 1))));
+    expect(data.dateProperty.value?.time.isAfter(DateTime.now()), isTrue);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -229,4 +239,11 @@ class Data9 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [studentToScoreProperty];
+}
+
+class Data10 extends ValueObject {
+  late final dateProperty = field<Timestamp>(name: 'date');
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [dateProperty];
 }

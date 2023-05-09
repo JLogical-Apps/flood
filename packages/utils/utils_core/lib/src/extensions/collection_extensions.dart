@@ -95,6 +95,25 @@ extension MapExtensions<K, V> on Map<K, V> {
   Map<K, V2> mapValues<V2>(V2 Function(K key, V value) mapper) {
     return map((key, value) => MapEntry(key, mapper(key, value)));
   }
+
+  Map replaceWhereTraversed(
+    bool Function(dynamic key, dynamic value) predicate,
+    dynamic Function(dynamic key, dynamic value) replacer,
+  ) {
+    final output = {};
+    forEach((key, dynamic value) {
+      if (value is Map) {
+        value = value.replaceWhereTraversed(predicate, replacer);
+      }
+
+      if (predicate(key, value)) {
+        output[key] = replacer(key, value);
+      } else {
+        output[key] = value;
+      }
+    });
+    return output;
+  }
 }
 
 extension JsonExtensions on Map<String, dynamic> {

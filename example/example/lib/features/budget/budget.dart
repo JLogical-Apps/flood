@@ -13,7 +13,11 @@ class Budget extends ValueObject {
   late final ownerProperty = reference<UserEntity>(name: ownerField).required();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [nameProperty, ownerProperty];
+  late final List<ValueObjectBehavior> behaviors = [
+    nameProperty,
+    ownerProperty,
+    creationTime(),
+  ];
 
   /// Returns a [BudgetChange] of adding income to the budget. Does not actually apply the income to this budget.
   ///

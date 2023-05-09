@@ -1,6 +1,6 @@
 import 'package:drop_core/drop_core.dart';
 
-class OnlyDateValueObjectProperty<G extends DateTime?, S extends DateTime?, L>
+class OnlyDateValueObjectProperty<G, S, L>
     with IsValueObjectPropertyWrapper<G, S, L, OnlyDateValueObjectProperty<G, S, L>> {
   @override
   final ValueObjectProperty<G, S, L, dynamic> property;

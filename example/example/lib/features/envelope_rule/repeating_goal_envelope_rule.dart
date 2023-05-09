@@ -29,13 +29,14 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
       field<DateTime>(name: lastAppliedDateField).withFallbackReplacement(() => DateTime.now()).hidden();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [
-        ValueObjectBehavior.displayName('Repeating Goal'),
-        goalCentsProperty,
-        remainingGoalCentsProperty,
-        timeRuleProperty,
-        lastAppliedDateProperty,
-      ];
+  late final List<ValueObjectBehavior> behaviors = [
+    ValueObjectBehavior.displayName('Repeating Goal'),
+    goalCentsProperty,
+    remainingGoalCentsProperty,
+    timeRuleProperty,
+    lastAppliedDateProperty,
+    creationTime(),
+  ];
 
   @override
   int get priority => rulePriority;

@@ -423,7 +423,7 @@ class User extends ValueObject {
   late final itemsProperty = field<String>(name: 'items').list();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [nameProperty, emailProperty, itemsProperty];
+  late final List<ValueObjectBehavior> behaviors = [nameProperty, emailProperty, itemsProperty];
 }
 
 class UserEntity extends Entity<User> {}
@@ -433,7 +433,7 @@ class Invoice extends ValueObject {
   late final amountProperty = field<double>(name: amountField);
 
   @override
-  List<ValueObjectBehavior> get behaviors => [amountProperty];
+  late final List<ValueObjectBehavior> behaviors = [amountProperty];
 }
 
 class InvoiceEntity extends Entity<Invoice> {}

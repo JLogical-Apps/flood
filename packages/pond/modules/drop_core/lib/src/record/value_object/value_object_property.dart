@@ -22,6 +22,9 @@ import 'package:drop_core/src/record/value_object/placeholder_value_object_prope
 import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_on_edit_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/time/creation_time_property.dart';
+import 'package:drop_core/src/record/value_object/time/time_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/time/timestamp.dart';
 import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
@@ -53,6 +56,10 @@ abstract class ValueObjectProperty<G, S, L, V extends ValueObjectProperty<dynami
     required T Function() computation,
   }) {
     return ComputedValueObjectProperty(name: name, computation: computation);
+  }
+
+  static CreationTimeProperty creationTime() {
+    return CreationTimeProperty();
   }
 }
 
@@ -147,8 +154,15 @@ extension NullableStringValueObjectPropertyExtensions<G extends String?, S exten
 
 extension DateTimeValueObjectPropertyExtensions<G extends DateTime?, S extends DateTime?, L,
     V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
-  OnlyDateValueObjectProperty onlyDate([bool onlyDate = true]) {
+  OnlyDateValueObjectProperty<G, S, L> onlyDate([bool onlyDate = true]) {
     return OnlyDateValueObjectProperty(property: this, onlyDate: onlyDate);
+  }
+}
+
+extension TimestampValueObjectPropertyExtensions<G extends Timestamp?, S extends Timestamp?, L,
+    V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
+  TimeValueObjectProperty<G, S, L> time() {
+    return TimeValueObjectProperty<G, S, L>(property: this);
   }
 }
 

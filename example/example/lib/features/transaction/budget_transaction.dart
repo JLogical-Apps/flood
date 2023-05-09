@@ -27,9 +27,10 @@ abstract class BudgetTransaction extends ValueObject {
 
   @override
   @mustCallSuper
-  List<ValueObjectBehavior> get behaviors => [
-        affectedEnvelopesProperty,
-        budgetProperty,
-        transactionDateProperty,
-      ];
+  late final List<ValueObjectBehavior> behaviors = [
+    affectedEnvelopesProperty,
+    budgetProperty,
+    transactionDateProperty,
+    creationTime(),
+  ];
 }

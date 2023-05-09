@@ -4,5 +4,8 @@ class User extends ValueObject {
   late final nameProperty = field<String>(name: 'name').isNotBlank();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [nameProperty];
+  late final List<ValueObjectBehavior> behaviors = [
+    nameProperty,
+    creationTime(),
+  ];
 }

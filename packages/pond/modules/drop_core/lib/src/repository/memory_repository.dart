@@ -1,4 +1,5 @@
 import 'package:drop_core/src/drop_core_component.dart';
+import 'package:drop_core/src/record/value_object/time/timestamp.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_executor.dart';
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
@@ -40,7 +41,14 @@ class MemoryRepositoryStateHandler implements RepositoryStateHandler {
 
   @override
   Future<void> onUpdate(State state) async {
-    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, state);
+    final updatedState = state.withData(state.data
+        .replaceWhereTraversed(
+          (key, value) => value is Timestamp,
+          (key, value) => (value as Timestamp).time,
+        )
+        .cast<String, dynamic>());
+
+    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, updatedState);
   }
 
   @override

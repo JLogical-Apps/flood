@@ -27,15 +27,16 @@ class Envelope extends ValueObject {
   late final archivedProperty = field<bool>(name: archivedField).hidden().withFallback(() => false);
 
   @override
-  List<ValueObjectBehavior> get behaviors => [
-        nameProperty,
-        descriptionProperty,
-        budgetProperty,
-        amountCentsProperty,
-        ruleProperty,
-        colorProperty,
-        archivedProperty,
-      ];
+  late final List<ValueObjectBehavior> behaviors = [
+    nameProperty,
+    descriptionProperty,
+    budgetProperty,
+    amountCentsProperty,
+    ruleProperty,
+    colorProperty,
+    archivedProperty,
+    creationTime(),
+  ];
 
   /// Returns a copy of the envelope with the [incomeCents] gained and a possibly modified envelope rule.
   /// If [incomeCents] is negative, then an income transaction has been deleted from the envelope.
