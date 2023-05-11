@@ -177,6 +177,10 @@ void main() {
       userPort.getFieldByName(Data9.createdField).findDateFieldOrNull(),
       isA<DatePortField>().having((f) => f.isDate, 'isDate', true).having((f) => f.isTime, 'isTime', true),
     );
+    expect(
+      userPort.getFieldByName(Data9.timestampField).findDateFieldOrNull(),
+      isA<DatePortField>().having((f) => f.isDate, 'isDate', true).having((f) => f.isTime, 'isTime', true),
+    );
   });
 }
 
@@ -288,6 +292,9 @@ class Data9 extends ValueObject {
   static const createdField = 'created';
   late final createdProperty = field<DateTime>(name: createdField);
 
+  static const timestampField = 'timestamp';
+  late final timestampProperty = field<Timestamp>(name: timestampField).time();
+
   @override
-  List<ValueObjectBehavior> get behaviors => [dateProperty, createdProperty];
+  List<ValueObjectBehavior> get behaviors => [dateProperty, createdProperty, timestampProperty];
 }

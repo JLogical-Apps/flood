@@ -6,8 +6,11 @@ class CreationTimeProperty with IsValueObjectPropertyWrapper<Timestamp?, Timesta
   static const field = 'creationTime';
 
   @override
-  late final property =
-      ValueObjectProperty.field<Timestamp>(name: field).time().withFallbackReplacement(() => Timestamp.now());
+  late final property = ValueObjectProperty.field<Timestamp>(name: field)
+      .time()
+      .withDisplayName('Creation Time')
+      .hidden()
+      .withFallbackReplacement(() => Timestamp.now());
 
   @override
   CreationTimeProperty copy() {

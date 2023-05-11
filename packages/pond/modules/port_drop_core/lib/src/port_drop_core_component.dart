@@ -21,6 +21,8 @@ import 'package:port_drop_core/src/behavior_modifiers/required_on_edit_property_
 import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/stage_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/string_field_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/timestamp_field_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/wrapper_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier_context.dart';
 import 'package:port_drop_core/src/port_generator_override.dart';
@@ -38,6 +40,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       IntFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       DoubleFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       DateTimeFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      TimestampFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       StageFieldBehaviorModifier(
         portDropContext: context.locate<PortDropCoreComponent>(),
         typeContext: context.locate<TypeCoreComponent>(),
@@ -58,6 +61,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       CurrencyPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       ColorPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       OnlyDatePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      WrapperPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
     ],
   );
 

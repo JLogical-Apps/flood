@@ -233,7 +233,6 @@ class EnvelopePage extends AppPage {
             children: [
               StyledText.h4.withColor(getCentsColor(envelope.amountCentsProperty.value))(
                   envelope.amountCentsProperty.value.formatCentsAsCurrency()),
-              StyledText.h3(envelope.timeCreated.format()),
               if (envelope.archivedProperty.value)
                 StyledChip(
                   labelText: 'Archived',
