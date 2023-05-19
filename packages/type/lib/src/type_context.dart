@@ -90,6 +90,10 @@ extension TypeContextExtensions on TypeContext {
         .toList();
   }
 
+  List<RuntimeType> getConcreteDescendantsOf(RuntimeType runtimeType) {
+    return getDescendantsOf(runtimeType).where((type) => type.isConcrete).toList();
+  }
+
   List<RuntimeType> getChildrenOf(RuntimeType runtimeType) {
     return runtimeTypes.where((type) => type.parents.contains(runtimeType)).toList();
   }

@@ -5,5 +5,8 @@ T coerce<T>(dynamic value) {
   if (T == double && value is String) {
     return double.parse(value) as T;
   }
+  if (T == String) {
+    return value.toString() as T;
+  }
   return value;
 }

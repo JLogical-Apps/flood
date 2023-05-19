@@ -29,6 +29,10 @@ abstract class Query<E extends Entity> with EquatableMixin {
   static FromQuery<E> from<E extends Entity>() {
     return FromQuery<E>(entityType: E);
   }
+
+  static FromQuery<Entity> fromAll() {
+    return from();
+  }
 }
 
 extension QueryExtensions<E extends Entity> on Query<E> {

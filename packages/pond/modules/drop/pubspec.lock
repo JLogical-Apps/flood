@@ -442,14 +442,14 @@ packages:
     source: hosted
     version: "3.0.1"
   type:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../../../type"
       relative: true
     source: path
     version: "0.0.1"
   type_core:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../type_core"
       relative: true
