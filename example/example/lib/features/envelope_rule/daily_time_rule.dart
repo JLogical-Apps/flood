@@ -3,8 +3,11 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class DailyTimeRule extends TimeRule {
   static const daysField = 'days';
-  late final daysProperty =
-      field<int>(name: daysField).withDisplayName('Period (Days)').required().withDefault(() => 7);
+  late final daysProperty = field<int>(name: daysField)
+      .withDisplayName('Period (Days)')
+      .required()
+      .withDefault(() => 7)
+      .withValidator(Validator.isPositive().cast<int>());
 
   @override
   late final List<ValueObjectBehavior> behaviors = [

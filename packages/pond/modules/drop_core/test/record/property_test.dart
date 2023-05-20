@@ -171,6 +171,29 @@ void main() {
     data.dateProperty.set(Timestamp.of(DateTime.now().add(Duration(days: 1))));
     expect(data.dateProperty.value?.time.isAfter(DateTime.now()), isTrue);
   });
+
+  test('property with validation', () async {
+    dropContext.register<Data11>(Data11.new, name: 'Data11');
+
+    final data = Data11();
+    expect(await data.validate(null), isNotNull);
+
+    data.amountProperty.set(-12);
+    data.emailProperty.set('asdf');
+    expect(await data.validate(null), isNotNull);
+
+    data.amountProperty.set(12);
+    data.emailProperty.set('asdf');
+    expect(await data.validate(null), isNotNull);
+
+    data.amountProperty.set(-12);
+    data.emailProperty.set('test@test.com');
+    expect(await data.validate(null), isNotNull);
+
+    data.amountProperty.set(12);
+    data.emailProperty.set('test@test.com');
+    expect(await data.validate(null), isNull);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -246,4 +269,12 @@ class Data10 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [dateProperty];
+}
+
+class Data11 extends ValueObject {
+  late final amountProperty = field<int>(name: 'amount').required().withValidator(Validator.isPositive().cast<int>());
+  late final emailProperty = field<String>(name: 'email').required().withValidator(Validator.isEmail().cast<String>());
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [amountProperty, emailProperty];
 }

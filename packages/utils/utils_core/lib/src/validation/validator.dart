@@ -166,6 +166,10 @@ extension ValidatorExtensions<T, E> on Validator<T, E> {
   Validator<T2, E> map<T2>(T Function(T2 data) mapper) {
     return MapValueValidator(validator: this, mapper: mapper);
   }
+
+  Validator<T2, E> cast<T2>() {
+    return map<T2>((value) => value as T);
+  }
 }
 
 extension NullableValidatorExtensions<T, E> on Validator<T?, E> {

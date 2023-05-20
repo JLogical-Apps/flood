@@ -13,7 +13,8 @@ abstract class PercentRule extends EnvelopeRule {
       .withDisplayName('Target (\$)')
       .currency()
       .hidden(() => isMaximumCentsHidden)
-      .requiredOnEdit(!isMaximumCentsHidden);
+      .requiredOnEdit(!isMaximumCentsHidden)
+      .withValidator(Validator.isNonNegative().cast<int>());
 
   bool get isMaximumCentsHidden => true;
 

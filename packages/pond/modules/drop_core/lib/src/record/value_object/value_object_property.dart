@@ -25,6 +25,7 @@ import 'package:drop_core/src/record/value_object/required_value_object_property
 import 'package:drop_core/src/record/value_object/time/creation_time_property.dart';
 import 'package:drop_core/src/record/value_object/time/time_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/time/timestamp.dart';
+import 'package:drop_core/src/record/value_object/validator_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
@@ -97,6 +98,10 @@ extension ValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty> 
   Type get setterType => S;
 
   Type get loadType => L;
+
+  ValidatorValueObjectProperty<G, S, L> withValidator(Validator<G, String> validator) {
+    return ValidatorValueObjectProperty(property: this, validator: validator);
+  }
 
   RequiredOnEditValueObjectProperty<G, S, L> requiredOnEdit([bool requiredOnEdit = true]) {
     return RequiredOnEditValueObjectProperty<G, S, L>(property: this, requiredOnEdit: requiredOnEdit);
