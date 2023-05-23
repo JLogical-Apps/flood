@@ -4,7 +4,6 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/adapting_repository.dart';
 import 'package:drop_core/src/repository/memory_repository.dart';
-import 'package:drop_core/src/repository/repository_id_generator.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
@@ -23,8 +22,6 @@ import 'package:utils_core/utils_core.dart';
 abstract class Repository implements CorePondComponent, RepositoryStateHandlerWrapper, RepositoryQueryExecutorWrapper {
   List<RuntimeType> get handledTypes => [];
 
-  RepositoryIdGenerator get idGenerator => RepositoryIdGenerator.uuid();
-
   static MemoryRepository memory() {
     return MemoryRepository();
   }
@@ -42,16 +39,12 @@ extension RepositoryExtension on Repository {
   Future<State> update(Stateful stateful) async {
     var state = stateful.getState(context.locate<DropCoreComponent>());
 
-    if (state.isNew) {
-      state = state.withId(await idGenerator.generateId());
-    }
-
-    await onUpdate(state);
+    state = await onUpdate(state);
 
     return state;
   }
 
-  Future<void> delete(Stateful state) {
+  Future<State> delete(Stateful state) {
     return onDelete(state.getState(context.locate<DropCoreComponent>()));
   }
 
@@ -119,19 +112,16 @@ mixin IsRepository implements Repository, IsRepositoryStateHandlerWrapper, IsRep
   List<RuntimeType> get handledTypes => [];
 
   @override
-  RepositoryIdGenerator get idGenerator => RepositoryIdGenerator.uuid();
-
-  @override
   List<CorePondComponentBehavior> get behaviors => [];
 
   @override
   late CorePondContext context;
 
   @override
-  Future<void> onUpdate(State state) => stateHandler.onUpdate(state);
+  Future<State> onUpdate(State state) => stateHandler.onUpdate(state);
 
   @override
-  Future<void> onDelete(State state) => stateHandler.onDelete(state);
+  Future<State> onDelete(State state) => stateHandler.onDelete(state);
 
   @override
   bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
@@ -151,9 +141,6 @@ abstract class RepositoryWrapper implements Repository {
   List<RuntimeType> get handledTypes => repository.handledTypes;
 
   @override
-  RepositoryIdGenerator get idGenerator => repository.idGenerator;
-
-  @override
   RepositoryStateHandler get stateHandler => repository.stateHandler;
 
   @override
@@ -163,9 +150,6 @@ abstract class RepositoryWrapper implements Repository {
 mixin IsRepositoryWrapper implements RepositoryWrapper, RepositoryStateHandlerWrapper, RepositoryQueryExecutorWrapper {
   @override
   List<RuntimeType> get handledTypes => repository.handledTypes;
-
-  @override
-  RepositoryIdGenerator get idGenerator => repository.idGenerator;
 
   @override
   RepositoryStateHandler get stateHandler => repository.stateHandler;
@@ -183,10 +167,10 @@ mixin IsRepositoryWrapper implements RepositoryWrapper, RepositoryStateHandlerWr
   List<CorePondComponentBehavior> get behaviors => repository.behaviors;
 
   @override
-  Future<void> onUpdate(State state) => stateHandler.onUpdate(state);
+  Future<State> onUpdate(State state) => stateHandler.onUpdate(state);
 
   @override
-  Future<void> onDelete(State state) => stateHandler.onDelete(state);
+  Future<State> onDelete(State state) => stateHandler.onDelete(state);
 
   @override
   bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);

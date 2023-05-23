@@ -28,15 +28,22 @@ void main() {
 
   test('creating, saving, and deleting from a repository.', () async {
     final memoryRepository = Repository.memory();
+    final repository = memoryRepository.forType<UserEntity, User>(
+      UserEntity.new,
+      User.new,
+      entityTypeName: 'UserEntity',
+      valueObjectTypeName: 'User',
+    );
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
     await context.register(DropCoreComponent());
-    await context.register(memoryRepository);
+    await context.register(repository);
 
     expect(memoryRepository.stateByIdX.value, {});
 
     var state = State(
+      type: context.dropCoreComponent.getRuntimeType<UserEntity>(),
       data: {'field': 'value'},
     );
 

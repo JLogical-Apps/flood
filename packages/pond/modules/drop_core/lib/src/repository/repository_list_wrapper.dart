@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/repository/repository.dart';
-import 'package:drop_core/src/repository/repository_id_generator.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -22,9 +21,6 @@ mixin IsRepositoryListWrapper implements RepositoryListWrapper {
   List<RuntimeType> get handledTypes => repositories.expand((repository) => repository.handledTypes).toList();
 
   @override
-  RepositoryIdGenerator get idGenerator => RepositoryIdGenerator.uuid();
-
-  @override
   RepositoryStateHandler get stateHandler => _RepositoryListStateHandler(repositories: repositories);
 
   @override
@@ -42,10 +38,10 @@ mixin IsRepositoryListWrapper implements RepositoryListWrapper {
   late CorePondContext context;
 
   @override
-  Future<void> onUpdate(State state) => stateHandler.onUpdate(state);
+  Future<State> onUpdate(State state) => stateHandler.onUpdate(state);
 
   @override
-  Future<void> onDelete(State state) => stateHandler.onDelete(state);
+  Future<State> onDelete(State state) => stateHandler.onDelete(state);
 
   @override
   bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
@@ -71,13 +67,13 @@ class _RepositoryListStateHandler implements RepositoryStateHandler {
   _RepositoryListStateHandler({required this.repositories});
 
   @override
-  Future<void> onUpdate(State state) {
+  Future<State> onUpdate(State state) {
     return repositories.firstWhereOrNull((repository) => repository.handledTypes.contains(state.type))?.update(state) ??
         (throw Exception('Cannot find repository to handle update for [$state]'));
   }
 
   @override
-  Future<void> onDelete(State state) {
+  Future<State> onDelete(State state) {
     return repositories.firstWhereOrNull((repository) => repository.handledTypes.contains(state.type))?.delete(state) ??
         (throw Exception('Cannot find repository to handle delete for [$state]'));
   }

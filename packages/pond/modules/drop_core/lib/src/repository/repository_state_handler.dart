@@ -1,17 +1,17 @@
 import 'package:drop_core/src/state/state.dart';
 
 abstract class RepositoryStateHandler {
-  Future<void> onUpdate(State state);
+  Future<State> onUpdate(State state);
 
-  Future<void> onDelete(State state);
+  Future<State> onDelete(State state);
 }
 
 extension RepositoryStateHandlerExtensions on RepositoryStateHandler {
-  Future<void> update(State state) {
+  Future<State> update(State state) {
     return onUpdate(state);
   }
 
-  Future<void> delete(State state) {
+  Future<State> delete(State state) {
     return onDelete(state);
   }
 }
@@ -24,8 +24,8 @@ abstract class RepositoryStateHandlerWrapper implements RepositoryStateHandler {
 
 mixin IsRepositoryStateHandlerWrapper implements RepositoryStateHandlerWrapper {
   @override
-  Future<void> onUpdate(State state) => stateHandler.update(state);
+  Future<State> onUpdate(State state) => stateHandler.update(state);
 
   @override
-  Future<void> onDelete(State state) => stateHandler.delete(state);
+  Future<State> onDelete(State state) => stateHandler.delete(state);
 }

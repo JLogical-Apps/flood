@@ -1,3 +1,5 @@
+import 'package:drop_core/src/context/core_pond_context_extensions.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/drop_core_component.dart';
 import 'package:drop_core/src/record/value_object/time/timestamp.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_executor.dart';
@@ -7,6 +9,7 @@ import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
+import 'package:uuid/uuid.dart';
 
 class MemoryRepository with IsRepository {
   final BehaviorSubject<Map<String, State>> stateByIdX = BehaviorSubject.seeded({});
@@ -40,19 +43,51 @@ class MemoryRepositoryStateHandler implements RepositoryStateHandler {
   MemoryRepositoryStateHandler({required this.repository});
 
   @override
-  Future<void> onUpdate(State state) async {
-    final updatedState = state.withData(state.data
+  Future<State> onUpdate(State state) async {
+    final context = repository.context.dropCoreComponent;
+
+    final isNew = state.isNew;
+    final id = state.id ?? Uuid().v4();
+
+    final entity = repository.context.dropCoreComponent.constructEntityFromState(state);
+    if (isNew) {
+      await entity.beforeCreate(context);
+    }
+
+    await entity.beforeSave(context);
+    state = entity.getState(context);
+
+    state = state.withId(id).withData(state.data
         .replaceWhereTraversed(
           (key, value) => value is Timestamp,
           (key, value) => (value as Timestamp).time,
         )
         .cast<String, dynamic>());
 
-    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, updatedState);
+    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, state);
+
+    if (isNew) {
+      await entity.afterCreate(context);
+    }
+
+    await entity.afterSave(context);
+
+    state = entity.getState(context).withId(id);
+
+    return state;
   }
 
   @override
-  Future<void> onDelete(State state) async {
+  Future<State> onDelete(State state) async {
+    final context = repository.context.dropCoreComponent;
+    final entity = context.constructEntityFromState(state);
+
+    await entity.beforeDelete(context);
     repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(state.id!);
+    await entity.afterDelete(context);
+
+    state = entity.getState(context);
+
+    return state;
   }
 }

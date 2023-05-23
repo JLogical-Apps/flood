@@ -25,12 +25,12 @@ class DropCoreComponent extends CorePondComponent with IsDropCoreContext, IsRepo
       context.components.whereType<Repository>().where((repository) => repository != this).toList();
 
   @override
-  Future<void> onUpdate(State state) {
+  Future<State> onUpdate(State state) {
     return context.run(updateAction, state);
   }
 
   @override
-  Future<void> onDelete(State state) {
+  Future<State> onDelete(State state) {
     return context.run(deleteAction, state);
   }
 
