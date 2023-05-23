@@ -24,6 +24,8 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin,
 
   void set(V valueObject) => value = valueObject;
 
+  bool get isNew => id == null;
+
   @override
   State getState(DropCoreContext context) =>
       value.getState(context).withId(id).withType(context.getRuntimeTypeRuntime(runtimeType));

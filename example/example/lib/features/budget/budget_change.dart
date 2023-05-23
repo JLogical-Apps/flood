@@ -1,7 +1,6 @@
 /// A change in a budget after applying a transaction.
 class BudgetChange {
-  /// Maps each modified envelope id to the difference of cents it gained.
-  /// Positive cents means it gained money, negative means it lost money.
+  /// Maps each modified envelope id to the new value of cents it has.
   final Map<String, int> modifiedCentsByEnvelopeId;
 
   /// Whether the budget change represents an income in the budget.

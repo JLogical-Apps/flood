@@ -35,7 +35,7 @@ class ReferenceValueObjectProperty<E extends Entity>
 
   @override
   Future<E?> load(DropCoreContext context) async {
-    return await value?.mapIfNonNullAsync((value) => Query.getById<E>(value).get(context));
+    return await value?.mapIfNonNullAsync((value) => Query.getByIdOrNull<E>(value).get(context));
   }
 
   @override

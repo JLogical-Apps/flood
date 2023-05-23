@@ -66,23 +66,13 @@ class EnvelopePage extends AppPage {
                     sourceEnvelopeEntity: envelopeEntity,
                     transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
                     onAccept: (TransferTransaction result) async {
-                      final fromEnvelopeEntity = await Query.getById<EnvelopeEntity>(result.fromEnvelopeProperty.value)
-                          .get(context.dropCoreComponent);
-                      final toEnvelopeEntity = await Query.getById<EnvelopeEntity>(result.toEnvelopeProperty.value)
-                          .get(context.dropCoreComponent);
+                      final budgetEntity = await envelope.budgetProperty.load(context.dropCoreComponent) ??
+                          (throw Exception('Cannot find budget [${envelope.budgetProperty.value}]'));
 
-                      await context.dropCoreComponent.updateEntity(
-                        fromEnvelopeEntity,
-                        (Envelope envelope) => envelope.amountCentsProperty
-                            .set(envelope.amountCentsProperty.value - result.amountCentsProperty.value),
+                      await budgetEntity.updateAddTransaction(
+                        context.dropCoreComponent,
+                        transactionEntity: TransferTransactionEntity()..set(result),
                       );
-                      await context.dropCoreComponent.updateEntity(
-                        toEnvelopeEntity,
-                        (Envelope envelope) => envelope.amountCentsProperty
-                            .set(envelope.amountCentsProperty.value + result.amountCentsProperty.value),
-                      );
-
-                      await context.dropCoreComponent.update(TransferTransactionEntity()..set(result));
                     },
                   ));
                 },
@@ -258,13 +248,13 @@ class EnvelopePage extends AppPage {
                       ..envelopeProperty.set(envelopeEntity.id!)
                       ..budgetProperty.set(envelope.budgetProperty.value)),
                     onAccept: (EnvelopeTransaction envelopeTransaction) async {
-                      final newEnvelope = Envelope()
-                        ..copyFrom(context.dropCoreComponent, envelope)
-                        ..amountCentsProperty
-                            .set(envelope.amountCentsProperty.value + envelopeTransaction.amountCentsProperty.value);
+                      final budgetEntity = await envelope.budgetProperty.load(context.dropCoreComponent) ??
+                          (throw Exception('Cannot find budget [${envelope.budgetProperty.value}]'));
 
-                      await context.dropCoreComponent.update(envelopeEntity..value = newEnvelope);
-                      await context.dropCoreComponent.update(EnvelopeTransactionEntity()..value = envelopeTransaction);
+                      await budgetEntity.updateAddTransaction(
+                        context.dropCoreComponent,
+                        transactionEntity: EnvelopeTransactionEntity()..value = envelopeTransaction,
+                      );
                     },
                   ));
                 },

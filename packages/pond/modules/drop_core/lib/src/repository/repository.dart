@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:drop_core/src/context/core_pond_context_extensions.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/drop_core_component.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
@@ -42,6 +46,24 @@ extension RepositoryExtension on Repository {
     state = await onUpdate(state);
 
     return state;
+  }
+
+  Future<E> updateEntity<E extends Entity<V>, V extends ValueObject>(
+    E entity, [
+    FutureOr Function(V newValueObject)? updater,
+  ]) async {
+    final valueObjectType = V == ValueObject ? entity.valueObjectType : V;
+    final newValueObject = context.dropCoreComponent.construct(valueObjectType);
+
+    if (entity.hasValue) {
+      newValueObject.state = entity.value.getState(context.dropCoreComponent);
+    }
+
+    await updater?.call(newValueObject);
+    entity.value = newValueObject;
+    await entity.throwIfInvalid(null);
+    final newState = await update(entity);
+    return context.dropCoreComponent.constructEntityFromState(newState);
   }
 
   Future<State> delete(Stateful state) {
