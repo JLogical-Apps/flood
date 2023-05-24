@@ -5,9 +5,9 @@ import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class BudgetEntity extends Entity<Budget> {
-  Future<void> updateAddTransaction(
+  Future<B> updateAddTransaction<B extends BudgetTransactionEntity>(
     DropCoreContext context, {
-    required BudgetTransactionEntity transactionEntity,
+    required B transactionEntity,
   }) async {
     final envelopeEntities =
         await EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: id!, isArchived: null).all().get(context);
@@ -20,6 +20,6 @@ class BudgetEntity extends Entity<Budget> {
       await context.updateEntity(envelopeEntity, (Envelope envelope) => envelope.amountCentsProperty.set(cents));
     }));
 
-    await context.updateEntity(transactionEntity);
+    return await context.updateEntity(transactionEntity);
   }
 }

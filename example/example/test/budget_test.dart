@@ -1,6 +1,8 @@
 import 'package:example/features/budget/budget.dart';
 import 'package:example/features/budget/budget_change.dart';
+import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
+import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/envelope_rule/daily_time_rule.dart';
 import 'package:example/features/envelope_rule/firstfruit_envelope_rule.dart';
 import 'package:example/features/envelope_rule/monthly_time_rule.dart';
@@ -8,8 +10,11 @@ import 'package:example/features/envelope_rule/repeating_goal_envelope_rule.dart
 import 'package:example/features/envelope_rule/surplus_envelope_rule.dart';
 import 'package:example/features/envelope_rule/target_goal_envelope_rule.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
+import 'package:example/features/transaction/envelope_transaction_entity.dart';
 import 'package:example/features/transaction/income_transaction.dart';
+import 'package:example/features/transaction/income_transaction_entity.dart';
 import 'package:example/features/transaction/transfer_transaction.dart';
+import 'package:example/features/transaction/transfer_transaction_entity.dart';
 import 'package:example/pond.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -294,6 +299,126 @@ void main() {
             .having((budgetChange) => budgetChange.modifiedCentsByEnvelopeId['Repeating'], 'Repeating', 30 * 100)
             .having((budgetChange) => budgetChange.modifiedCentsByEnvelopeId['Target'], 'Target', 10 * 100)
             .having((budgetChange) => budgetChange.modifiedCentsByEnvelopeId['Surplus'], 'Surplus', 30 * 100));
+  });
+
+  test('creating and deleting envelope transactions', () async {
+    final budgetEntity = await pondContext.dropCoreComponent.updateEntity(
+        BudgetEntity(),
+        (Budget budget) => budget
+          ..nameProperty.set('Budget')
+          ..ownerProperty.set('asdf'));
+
+    final envelopeEntity = await pondContext.dropCoreComponent.updateEntity(
+        EnvelopeEntity(),
+        (Envelope envelope) => envelope
+          ..nameProperty.set('Envelope')
+          ..budgetProperty.set(budgetEntity.id!));
+
+    await budgetEntity.updateAddTransaction(
+      pondContext.dropCoreComponent,
+      transactionEntity: EnvelopeTransactionEntity()
+        ..set(EnvelopeTransaction()
+          ..nameProperty.set('Refund')
+          ..envelopeProperty.set(envelopeEntity.id!)
+          ..budgetProperty.set(budgetEntity.id!)
+          ..amountCentsProperty.set(10 * 100)),
+    );
+
+    final envelopeTransactionEntity = await budgetEntity.updateAddTransaction(
+      pondContext.dropCoreComponent,
+      transactionEntity: EnvelopeTransactionEntity()
+        ..set(EnvelopeTransaction()
+          ..nameProperty.set('Payment')
+          ..envelopeProperty.set(envelopeEntity.id!)
+          ..budgetProperty.set(budgetEntity.id!)
+          ..amountCentsProperty.set(-5 * 100)),
+    );
+
+    var updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.dropCoreComponent);
+    expect(updatedEnvelope.value.amountCentsProperty.value, 5 * 100);
+
+    await pondContext.dropCoreComponent.delete(envelopeTransactionEntity);
+
+    updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.dropCoreComponent);
+    expect(updatedEnvelope.value.amountCentsProperty.value, 10 * 100);
+  });
+
+  test('creating and deleting transfer transactions', () async {
+    final budgetEntity = await pondContext.dropCoreComponent.updateEntity(
+        BudgetEntity(),
+        (Budget budget) => budget
+          ..nameProperty.set('Budget')
+          ..ownerProperty.set('asdf'));
+
+    final fromEnvelopeEntity = await pondContext.dropCoreComponent.updateEntity(
+        EnvelopeEntity(),
+        (Envelope envelope) => envelope
+          ..nameProperty.set('Envelope')
+          ..budgetProperty.set(budgetEntity.id!));
+
+    final toEnvelopeEntity = await pondContext.dropCoreComponent.updateEntity(
+        EnvelopeEntity(),
+        (Envelope envelope) => envelope
+          ..nameProperty.set('Envelope')
+          ..budgetProperty.set(budgetEntity.id!));
+
+    final transferTransactionEntity = await budgetEntity.updateAddTransaction(
+      pondContext.dropCoreComponent,
+      transactionEntity: TransferTransactionEntity()
+        ..set(TransferTransaction()
+          ..fromEnvelopeProperty.set(fromEnvelopeEntity.id!)
+          ..toEnvelopeProperty.set(toEnvelopeEntity.id!)
+          ..budgetProperty.set(budgetEntity.id!)
+          ..amountCentsProperty.set(10 * 100)),
+    );
+
+    var updatedFromEnvelope =
+        await Query.getById<EnvelopeEntity>(fromEnvelopeEntity.id!).get(pondContext.dropCoreComponent);
+    var updatedToEnvelope =
+        await Query.getById<EnvelopeEntity>(toEnvelopeEntity.id!).get(pondContext.dropCoreComponent);
+
+    expect(updatedFromEnvelope.value.amountCentsProperty.value, -10 * 100);
+    expect(updatedToEnvelope.value.amountCentsProperty.value, 10 * 100);
+
+    await pondContext.dropCoreComponent.delete(transferTransactionEntity);
+
+    updatedFromEnvelope =
+        await Query.getById<EnvelopeEntity>(fromEnvelopeEntity.id!).get(pondContext.dropCoreComponent);
+    updatedToEnvelope = await Query.getById<EnvelopeEntity>(toEnvelopeEntity.id!).get(pondContext.dropCoreComponent);
+    expect(updatedFromEnvelope.value.amountCentsProperty.value, 0);
+    expect(updatedToEnvelope.value.amountCentsProperty.value, 0);
+  });
+
+  test('creating and deleting income transactions', () async {
+    final budgetEntity = await pondContext.dropCoreComponent.updateEntity(
+        BudgetEntity(),
+        (Budget budget) => budget
+          ..nameProperty.set('Budget')
+          ..ownerProperty.set('asdf'));
+
+    final envelopeEntity = await pondContext.dropCoreComponent.updateEntity(
+        EnvelopeEntity(),
+        (Envelope envelope) => envelope
+          ..nameProperty.set('Envelope')
+          ..budgetProperty.set(budgetEntity.id!));
+
+    final incomeTransactionEntity = await budgetEntity.updateAddTransaction(
+      pondContext.dropCoreComponent,
+      transactionEntity: IncomeTransactionEntity()
+        ..set(IncomeTransaction()
+          ..centsByEnvelopeIdProperty.set({
+            envelopeEntity.id!: 10 * 100,
+          })
+          ..budgetProperty.set(budgetEntity.id!)),
+    );
+
+    var updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.dropCoreComponent);
+    expect(updatedEnvelope.value.amountCentsProperty.value, 10 * 100);
+
+    await pondContext.dropCoreComponent.delete(incomeTransactionEntity);
+
+    updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.dropCoreComponent);
+    expect(updatedEnvelope.value.amountCentsProperty.value, 0 * 100);
   });
 }
 

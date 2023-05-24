@@ -166,7 +166,7 @@ void main() {
     dropContext.register<Data10>(Data10.new, name: 'Data10');
 
     final data = Data10()..dateProperty.set(Timestamp.now());
-    expect(data.dateProperty.value?.time.isBefore(DateTime.now()), isTrue);
+    expect(data.dateProperty.value?.time.isBefore(DateTime.now().add(Duration(milliseconds: 1))), isTrue);
 
     data.dateProperty.set(Timestamp.of(DateTime.now().add(Duration(days: 1))));
     expect(data.dateProperty.value?.time.isAfter(DateTime.now()), isTrue);

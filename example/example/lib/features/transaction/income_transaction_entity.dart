@@ -28,7 +28,7 @@ class IncomeTransactionEntity extends BudgetTransactionEntity<IncomeTransaction>
 
       final incomeCents = centsToAddByEnvelopeId[entity!.id!]!;
 
-      final envelopeChange = envelope.ruleProperty.value!.onAddIncome(
+      final envelopeChange = envelope.ruleProperty.value?.onAddIncome(
         context: context,
         incomeCents: incomeCents,
         envelope: envelope,
