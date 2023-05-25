@@ -21,7 +21,7 @@ dependencies:
   filesize: ^2.0.1
   flutter_markdown: ^0.6.8
   flutter_picker: ^2.0.2
-  google_fonts: ^3.0.1
+  google_fonts: ^4.0.0
   image_fade: ^0.6.1
   image_picker: ^0.8.5+3
   loading_overlay: ^0.3.0

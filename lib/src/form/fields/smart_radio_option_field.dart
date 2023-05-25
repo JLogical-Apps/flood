@@ -50,7 +50,7 @@ class SmartRadioOptionField<T> extends SmartFormField<bool> {
                   groupValue: smartFormController.getData(group),
                   value: radioValue,
                   onChanged: (value) => smartFormController.setData(name: group, value: value),
-                  fillColor: MaterialStateProperty.all(inError ? Colors.red : Theme.of(context).accentColor),
+                  fillColor: MaterialStateProperty.all(inError ? Colors.red : Theme.of(context).primaryColor),
                 ),
                 DefaultTextStyle(
                   style: Theme.of(context).textTheme.button!,

@@ -55,7 +55,7 @@ class SmartBoolField extends SmartFormField<bool> {
                                 smartFormController.setData(name: name, value: value);
                               },
                         fillColor:
-                            MaterialStateProperty.all(error == null ? Theme.of(context).accentColor : Colors.red),
+                            MaterialStateProperty.all(error == null ? Theme.of(context).primaryColor : Colors.red),
                       )
                     : Switch(
                         value: value,
