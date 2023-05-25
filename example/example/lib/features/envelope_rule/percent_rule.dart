@@ -19,8 +19,8 @@ abstract class PercentRule extends EnvelopeRule {
   bool get isMaximumCentsHidden => true;
 
   @override
-  int requestIncome({
-    required DropCoreContext context,
+  int requestIncome(
+    DropCoreContext context, {
     required int incomeCents,
     required Envelope envelope,
     required bool isExtraIncome,

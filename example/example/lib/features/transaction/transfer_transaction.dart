@@ -1,4 +1,5 @@
 import 'package:example/features/budget/budget_change.dart';
+import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
@@ -30,21 +31,23 @@ class TransferTransaction extends BudgetTransaction {
       ];
 
   @override
-  BudgetChange getBudgetChange({required Map<String, int> centsByEnvelopeId}) {
-    final fromEnvelopeCents = centsByEnvelopeId[fromEnvelopeProperty.value];
-    final toEnvelopeCents = centsByEnvelopeId[toEnvelopeProperty.value];
-    if (fromEnvelopeCents == null || toEnvelopeCents == null) {
-      return BudgetChange(
-        modifiedCentsByEnvelopeId: centsByEnvelopeId,
-        isIncome: false,
-      );
+  BudgetChange getBudgetChange(DropCoreContext context, {required Map<String, Envelope> envelopeById}) {
+    final fromEnvelope = envelopeById[fromEnvelopeProperty.value];
+    final toEnvelope = envelopeById[toEnvelopeProperty.value];
+    if (fromEnvelope == null || toEnvelope == null) {
+      return BudgetChange(modifiedEnvelopeById: envelopeById);
     }
 
     return BudgetChange(
-      modifiedCentsByEnvelopeId: centsByEnvelopeId.copy()
-        ..set(fromEnvelopeProperty.value, fromEnvelopeCents - amountCentsProperty.value)
-        ..set(toEnvelopeProperty.value, toEnvelopeCents + amountCentsProperty.value),
-      isIncome: false,
+      modifiedEnvelopeById: envelopeById.copy()
+        ..set(
+          fromEnvelopeProperty.value,
+          fromEnvelope.withUpdatedCents(context, (currentCents) => currentCents - amountCentsProperty.value),
+        )
+        ..set(
+          toEnvelopeProperty.value,
+          toEnvelope.withUpdatedCents(context, (currentCents) => currentCents + amountCentsProperty.value),
+        ),
     );
   }
 }

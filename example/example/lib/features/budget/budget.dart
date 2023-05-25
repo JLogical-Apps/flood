@@ -32,18 +32,18 @@ class Budget extends ValueObject {
   /// Notes:
   /// * If a round requested more than the remaining cents, distribute the remaining cents based on the proportion of
   ///   the amount that group of envelopes requested it for.
-  BudgetChange addIncome({
-    required DropCoreContext context,
+  BudgetChange addIncome(
+    DropCoreContext context, {
     required int incomeCents,
     required Map<String, Envelope> envelopeById,
   }) {
     if (envelopeById.isEmpty) {
-      return BudgetChange(modifiedCentsByEnvelopeId: {}, isIncome: true);
+      return BudgetChange(modifiedEnvelopeById: {});
     }
 
     var remainingCents = incomeCents;
 
-    final modifiedCentsByEnvelopeId = <String, int>{};
+    final modifiedEnvelopeById = <String, Envelope>{};
 
     // A map that maps priorities with a map of (envelope ids -> envelopes) of that priority.
     final envelopesMapByPriority = envelopeById.entries
@@ -54,9 +54,10 @@ class Budget extends ValueObject {
 
     /// Runs a round that has the [priority] and an indicator of whether this round is the last round.
     void addCentsToEnvelope({required String envelopeId, required int cents}) {
-      final currentCentsGained = modifiedCentsByEnvelopeId[envelopeId] ?? 0;
-      final totalCentsGained = currentCentsGained + cents;
-      modifiedCentsByEnvelopeId[envelopeId] = totalCentsGained;
+      final envelope = modifiedEnvelopeById[envelopeId] ??
+          envelopeById[envelopeId] ??
+          (throw Exception('Could not find envelope [$envelopeId]'));
+      modifiedEnvelopeById[envelopeId] = envelope.withIncomeAdded(context, incomeCents: cents);
     }
 
     /// If [isExtraIncome], then all envelopes have gotten their satisfied amounts and this round is for collecting extra income.
@@ -64,7 +65,7 @@ class Budget extends ValueObject {
       final envelopeRequestedCentsAmountById = envelopeById.map((id, envelope) => MapEntry(
           id,
           envelope.ruleProperty.value?.requestIncome(
-                context: context,
+                context,
                 envelope: envelope,
                 incomeCents: remainingCents,
                 isExtraIncome: isExtraIncome,
@@ -113,8 +114,8 @@ class Budget extends ValueObject {
         .mapToMap((id, envelope) => MapEntry(
             id,
             envelope.withIncomeAdded(
-              context: context,
-              incomeCents: modifiedCentsByEnvelopeId[id]?.floor() ?? 0,
+              context,
+              incomeCents: modifiedEnvelopeById[id]?.amountCentsProperty.value ?? 0,
             )));
     if (remainingCents > 0 && envelopePriorities.isNotEmpty) {
       runRound(envelopeById: lastRoundEnvelopeById, isExtraIncome: true);
@@ -126,21 +127,19 @@ class Budget extends ValueObject {
       addCentsToEnvelope(envelopeId: firstEnvelopeId, cents: remainingCents);
     }
 
-    return BudgetChange(modifiedCentsByEnvelopeId: modifiedCentsByEnvelopeId, isIncome: true);
+    return BudgetChange(modifiedEnvelopeById: modifiedEnvelopeById);
   }
 
-  BudgetChange addTransactions({
+  BudgetChange addTransactions(
+    DropCoreContext context, {
     required Map<String, Envelope> envelopeById,
     required List<BudgetTransaction> transactions,
   }) {
-    var modifiedCentsByEnvelopeId =
-        envelopeById.map((id, envelope) => MapEntry(id, envelope.amountCentsProperty.value));
-
     for (final transaction in transactions) {
-      final budgetChange = transaction.getBudgetChange(centsByEnvelopeId: modifiedCentsByEnvelopeId);
-      modifiedCentsByEnvelopeId = budgetChange.modifiedCentsByEnvelopeId;
+      final budgetChange = transaction.getBudgetChange(context, envelopeById: envelopeById);
+      envelopeById = budgetChange.modifiedEnvelopeById;
     }
 
-    return BudgetChange(modifiedCentsByEnvelopeId: modifiedCentsByEnvelopeId, isIncome: false);
+    return BudgetChange(modifiedEnvelopeById: envelopeById);
   }
 }

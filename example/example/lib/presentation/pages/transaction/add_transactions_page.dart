@@ -35,13 +35,14 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
     final transactionGeneratorsState = useState<List<TransactionGenerator>>([]);
     final transactions =
         transactionGeneratorsState.value.map((transactionGenerator) => transactionGenerator.generate()).toList();
-    final modifiedCentsById = budget != null && envelopeEntities != null
+    final modifiedEnvelopeById = budget != null && envelopeEntities != null
         ? budget
             .addTransactions(
+              context.dropCoreComponent,
               envelopeById: envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value)),
               transactions: transactions,
             )
-            .modifiedCentsByEnvelopeId
+            .modifiedEnvelopeById
         : null;
 
     return StyledPage(
@@ -96,7 +97,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
                             .map((entity) => _buildEnvelopeSelectCard(
                                   context,
                                   envelopeEntity: entity,
-                                  modifiedCentsById: modifiedCentsById,
+                                  modifiedEnvelopeById: modifiedEnvelopeById,
                                   onTransactionCreated: (envelopeTransaction) =>
                                       transactionGeneratorsState.value = _getSortedTransactionGenerators(
                                     transactionGeneratorsState.value +
@@ -147,7 +148,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
             onPressed: transactions.isEmpty
                 ? null
                 : () async {
-                    if (modifiedCentsById == null || envelopeEntities == null) {
+                    if (modifiedEnvelopeById == null || envelopeEntities == null) {
                       return;
                     }
 
@@ -157,10 +158,9 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
                             ..set(transaction);
                       await context.dropCoreComponent.update(budgetTransactionEntity);
                     }
-                    for (final entry in modifiedCentsById.entries) {
+                    for (final entry in modifiedEnvelopeById.entries) {
                       await context.dropCoreComponent.updateEntity(
-                        envelopeEntities.firstWhere((entity) => entity.id == entry.key),
-                        (Envelope envelope) => envelope.amountCentsProperty.set(entry.value),
+                        envelopeEntities.firstWhere((entity) => entity.id == entry.key)..set(entry.value),
                       );
                     }
                     context.pop();
@@ -181,14 +181,13 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
   StyledCard _buildEnvelopeSelectCard(
     BuildContext context, {
     required EnvelopeEntity envelopeEntity,
-    required Map<String, int>? modifiedCentsById,
+    required Map<String, Envelope>? modifiedEnvelopeById,
     required FutureOr Function(BudgetTransaction) onTransactionCreated,
   }) {
     final envelope = envelopeEntity.value;
-    final cents = envelope.amountCentsProperty.value;
     final envelopeCardModification = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
 
-    final newCents = modifiedCentsById?[envelopeEntity.id];
+    final newEnvelope = modifiedEnvelopeById?[envelopeEntity.id];
 
     return StyledCard(
       titleText: envelope.nameProperty.value,
@@ -229,12 +228,12 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
         children: [
           StyledText.body(envelope.amountCentsProperty.value.formatCentsAsCurrency()),
           StyledIcon(Icons.arrow_right),
-          if (modifiedCentsById == null) StyledLoadingIndicator(),
-          StyledText.body.withColor(newCents == null || newCents == cents
+          if (modifiedEnvelopeById == null) StyledLoadingIndicator(),
+          StyledText.body.withColor(newEnvelope == null || newEnvelope == envelope
               ? null
-              : newCents < cents
+              : newEnvelope.amountCentsProperty.value < envelope.amountCentsProperty.value
                   ? Colors.red
-                  : Colors.green)((newCents ?? cents).formatCentsAsCurrency()),
+                  : Colors.green)((newEnvelope ?? envelope).amountCentsProperty.value.formatCentsAsCurrency()),
         ],
       ),
     );

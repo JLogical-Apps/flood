@@ -46,8 +46,8 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
   int get priority => rulePriority;
 
   @override
-  int requestIncome({
-    required DropCoreContext context,
+  int requestIncome(
+    DropCoreContext context, {
     required Envelope envelope,
     required int incomeCents,
     required bool isExtraIncome,
@@ -64,8 +64,8 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
   }
 
   @override
-  EnvelopeChange? onAddIncome({
-    required DropCoreContext context,
+  EnvelopeChange? onAddIncome(
+    DropCoreContext context, {
     required Envelope envelope,
     required int incomeCents,
   }) {
@@ -84,7 +84,7 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
   }
 
   @override
-  EnvelopeChange? onInitialize({required DropCoreContext context}) {
+  EnvelopeChange? onInitialize(DropCoreContext context) {
     // Handle adjustment on new months.
     final now = DateTime.now();
     final adjustedRemainingGoalCents = _getAdjustedRemainingGoalCents(now);

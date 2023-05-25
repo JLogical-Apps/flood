@@ -263,6 +263,7 @@ void main() {
     ];
 
     final budgetChange = Budget().addTransactions(
+      pondContext.dropCoreComponent,
       envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
       transactions: [
         IncomeTransaction()
@@ -294,11 +295,26 @@ void main() {
     expect(
         budgetChange,
         isA<BudgetChange>()
-            .having((budgetChange) => budgetChange.isIncome, 'isIncome', isFalse)
-            .having((budgetChange) => budgetChange.modifiedCentsByEnvelopeId['Firstfruit'], 'Firstfruit', 10 * 100)
-            .having((budgetChange) => budgetChange.modifiedCentsByEnvelopeId['Repeating'], 'Repeating', 30 * 100)
-            .having((budgetChange) => budgetChange.modifiedCentsByEnvelopeId['Target'], 'Target', 10 * 100)
-            .having((budgetChange) => budgetChange.modifiedCentsByEnvelopeId['Surplus'], 'Surplus', 30 * 100));
+            .having(
+              (budgetChange) => budgetChange.modifiedEnvelopeById['Firstfruit']!.amountCentsProperty.value,
+              'Firstfruit',
+              10 * 100,
+            )
+            .having(
+              (budgetChange) => budgetChange.modifiedEnvelopeById['Repeating']!.amountCentsProperty.value,
+              'Repeating',
+              30 * 100,
+            )
+            .having(
+              (budgetChange) => budgetChange.modifiedEnvelopeById['Target']!.amountCentsProperty.value,
+              'Target',
+              10 * 100,
+            )
+            .having(
+              (budgetChange) => budgetChange.modifiedEnvelopeById['Surplus']!.amountCentsProperty.value,
+              'Surplus',
+              30 * 100,
+            ));
   });
 
   test('creating and deleting envelope transactions', () async {
@@ -420,6 +436,85 @@ void main() {
     updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.dropCoreComponent);
     expect(updatedEnvelope.value.amountCentsProperty.value, 0 * 100);
   });
+
+  test('adding/deleting income updates repeating goals.', () async {
+    final budgetEntity = await pondContext.dropCoreComponent.updateEntity(
+        BudgetEntity(),
+        (Budget budget) => budget
+          ..nameProperty.set('Budget')
+          ..ownerProperty.set('asdf'));
+
+    final monthlyGoalEnvelope = await pondContext.dropCoreComponent.updateEntity(
+        EnvelopeEntity(),
+        (Envelope envelope) => envelope
+          ..nameProperty.set('Envelope')
+          ..budgetProperty.set(budgetEntity.id!)
+          ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+            ..goalCentsProperty.set(10 * 100)
+            ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(seconds: 1)))
+            ..remainingGoalCentsProperty.set(10 * 100)
+            ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))));
+
+    final periodicGoalEnvelope = await pondContext.dropCoreComponent.updateEntity(
+        EnvelopeEntity(),
+        (Envelope envelope) => envelope
+          ..nameProperty.set('Envelope')
+          ..budgetProperty.set(budgetEntity.id!)
+          ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+            ..goalCentsProperty.set(10 * 100)
+            ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(seconds: 1)))
+            ..remainingGoalCentsProperty.set(10 * 100)
+            ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(7))));
+
+    final incomeTransactionEntity = await budgetEntity.updateAddTransaction(
+      pondContext.dropCoreComponent,
+      transactionEntity: IncomeTransactionEntity()
+        ..set(IncomeTransaction()
+          ..centsByEnvelopeIdProperty.set({
+            monthlyGoalEnvelope.id!: 8 * 100,
+            periodicGoalEnvelope.id!: 8 * 100,
+          })
+          ..budgetProperty.set(budgetEntity.id!)),
+    );
+
+    var updatedMonthlyEnvelope =
+        await Query.getById<EnvelopeEntity>(monthlyGoalEnvelope.id!).get(pondContext.dropCoreComponent);
+    expect(updatedMonthlyEnvelope.value.amountCentsProperty.value, 8 * 100);
+    expect(
+      updatedMonthlyEnvelope.value.ruleProperty.value,
+      isA<RepeatingGoalEnvelopeRule>().having(
+          (RepeatingGoalEnvelopeRule rule) => rule.remainingGoalCentsProperty.value, 'remainingGoalCents', 2 * 100),
+    );
+
+    var updatedPeriodicEnvelope =
+        await Query.getById<EnvelopeEntity>(periodicGoalEnvelope.id!).get(pondContext.dropCoreComponent);
+    expect(updatedPeriodicEnvelope.value.amountCentsProperty.value, 8 * 100);
+    expect(
+      updatedPeriodicEnvelope.value.ruleProperty.value,
+      isA<RepeatingGoalEnvelopeRule>().having(
+          (RepeatingGoalEnvelopeRule rule) => rule.remainingGoalCentsProperty.value, 'remainingGoalCents', 2 * 100),
+    );
+
+    await pondContext.dropCoreComponent.delete(incomeTransactionEntity);
+
+    updatedMonthlyEnvelope =
+        await Query.getById<EnvelopeEntity>(monthlyGoalEnvelope.id!).get(pondContext.dropCoreComponent);
+    expect(updatedMonthlyEnvelope.value.amountCentsProperty.value, 0 * 100);
+    expect(
+      updatedMonthlyEnvelope.value.ruleProperty.value,
+      isA<RepeatingGoalEnvelopeRule>().having(
+          (RepeatingGoalEnvelopeRule rule) => rule.remainingGoalCentsProperty.value, 'remainingGoalCents', 10 * 100),
+    );
+
+    updatedPeriodicEnvelope =
+        await Query.getById<EnvelopeEntity>(periodicGoalEnvelope.id!).get(pondContext.dropCoreComponent);
+    expect(updatedPeriodicEnvelope.value.amountCentsProperty.value, 0 * 100);
+    expect(
+      updatedPeriodicEnvelope.value.ruleProperty.value,
+      isA<RepeatingGoalEnvelopeRule>().having(
+          (RepeatingGoalEnvelopeRule rule) => rule.remainingGoalCentsProperty.value, 'remainingGoalCents', 10 * 100),
+    );
+  });
 }
 
 void expectBudgetChange({
@@ -429,9 +524,12 @@ void expectBudgetChange({
   required Map<String, int> expectedCentsByEnvelopeName,
 }) {
   final budgetChange = Budget().addIncome(
-    context: context.locate<DropCoreComponent>(),
+    context.dropCoreComponent,
     incomeCents: incomeCents,
     envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
   );
-  expect(budgetChange.modifiedCentsByEnvelopeId, expectedCentsByEnvelopeName);
+  expect(
+    budgetChange.modifiedEnvelopeById.map((id, envelope) => MapEntry(id, envelope.amountCentsProperty.value)),
+    expectedCentsByEnvelopeName,
+  );
 }

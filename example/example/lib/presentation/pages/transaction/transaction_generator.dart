@@ -39,10 +39,14 @@ class IncomeTransactionGenerator extends TransactionGenerator<IncomeTransaction>
 
   @override
   IncomeTransaction generate() {
-    final budgetChange =
-        budget.addIncome(context: dropCoreContext, incomeCents: incomeCents, envelopeById: envelopeById);
+    final budgetChange = budget.addIncome(
+      dropCoreContext,
+      incomeCents: incomeCents,
+      envelopeById: envelopeById,
+    );
     return IncomeTransaction()
-      ..centsByEnvelopeIdProperty.set(budgetChange.modifiedCentsByEnvelopeId)
+      ..centsByEnvelopeIdProperty.set(budgetChange.modifiedEnvelopeById.map((id, envelope) =>
+          MapEntry(id, envelope.amountCentsProperty.value - envelopeById[id]!.amountCentsProperty.value)))
       ..transactionDateProperty.set(transactionDate)
       ..budgetProperty.set(budgetId);
   }

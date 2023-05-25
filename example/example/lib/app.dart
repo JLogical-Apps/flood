@@ -163,7 +163,7 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
       IncomeTransaction()
         ..centsByEnvelopeIdProperty.set({
           'Tithe': 30 * 100,
-          'Car': 120 * 100,
+          'Car': 70 * 100,
           'Emergency Savings': 200 * 100,
           'Savings': 300 * 100,
         })
@@ -172,13 +172,14 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
     ];
 
     final budgetChange = budgetEntity.value.addTransactions(
+      dropComponent,
       envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
       transactions: transactions,
     );
 
-    await Future.wait(budgetChange.modifiedCentsByEnvelopeId.mapToIterable((envelopeId, cents) async {
+    await Future.wait(budgetChange.modifiedEnvelopeById.mapToIterable((envelopeId, envelope) async {
       final envelopeEntity = await Query.getById<EnvelopeEntity>(envelopeId).get(dropComponent);
-      await dropComponent.updateEntity(envelopeEntity, (Envelope envelope) => envelope.amountCentsProperty.set(cents));
+      await dropComponent.updateEntity(envelopeEntity..set(envelope));
     }));
 
     await Future.wait(transactions

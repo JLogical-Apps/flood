@@ -1,4 +1,5 @@
 import 'package:example/features/budget/budget_change.dart';
+import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/transaction/budget_transaction.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
@@ -16,10 +17,16 @@ class IncomeTransaction extends BudgetTransaction {
       centsByEnvelopeIdProperty.value.values.fold(0, (int cents, envelopeCents) => cents + envelopeCents);
 
   @override
-  BudgetChange getBudgetChange({required Map<String, int> centsByEnvelopeId}) {
+  BudgetChange getBudgetChange(DropCoreContext context, {required Map<String, Envelope> envelopeById}) {
     return BudgetChange(
-        modifiedCentsByEnvelopeId: centsByEnvelopeId.map(
-            (envelopeId, cents) => MapEntry(envelopeId, (centsByEnvelopeIdProperty.value[envelopeId] ?? 0) + cents)),
-        isIncome: true);
+      modifiedEnvelopeById: envelopeById.map(
+        (envelopeId, envelope) => MapEntry(
+            envelopeId,
+            envelope.withIncomeAdded(
+              context,
+              incomeCents: centsByEnvelopeIdProperty.value[envelopeId] ?? 0,
+            )),
+      ),
+    );
   }
 }
