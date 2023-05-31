@@ -49,7 +49,7 @@ class MemoryRepositoryStateHandler implements RepositoryStateHandler {
     final isNew = state.isNew;
     final id = state.id ?? Uuid().v4();
 
-    final entity = repository.context.dropCoreComponent.constructEntityFromState(state);
+    final entity = await context.constructEntityFromState(state);
     if (isNew) {
       await entity.beforeCreate(context);
     }
@@ -80,7 +80,7 @@ class MemoryRepositoryStateHandler implements RepositoryStateHandler {
   @override
   Future<State> onDelete(State state) async {
     final context = repository.context.dropCoreComponent;
-    final entity = context.constructEntityFromState(state);
+    final entity = await context.constructEntityFromState(state);
 
     await entity.beforeDelete(context);
     repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(state.id!);

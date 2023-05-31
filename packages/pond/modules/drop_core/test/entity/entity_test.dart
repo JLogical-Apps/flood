@@ -8,6 +8,8 @@ import 'package:utils_core/utils_core.dart';
 
 void main() {
   test('lifecycle methods', () async {
+    var beforeInitialize = false;
+    var afterInitialize = false;
     var beforeCreate = false;
     var afterCreate = false;
     var beforeSave = false;
@@ -17,6 +19,8 @@ void main() {
 
     final repository = Repository.memory().forType<TestEntity, TestData>(
       () => TestEntity(
+        beforeInitializeGetter: () => beforeInitialize = true,
+        afterInitializeGetter: () => afterInitialize = true,
         beforeCreateGetter: () => beforeCreate = true,
         afterCreateGetter: () => afterCreate = true,
         beforeSaveGetter: () => beforeSave = true,
@@ -37,45 +41,53 @@ void main() {
     var entity = TestEntity()..set(TestData());
 
     var updatedState = await repository.update(entity);
-    entity = context.dropCoreComponent.constructEntityFromState(updatedState);
 
+    expect(beforeInitialize, true);
+    expect(afterInitialize, true);
     expect(beforeCreate, true);
     expect(afterCreate, true);
     expect(beforeSave, true);
     expect(afterSave, true);
     expect(beforeDelete, false);
     expect(afterDelete, false);
-    expect(entity.value.counterProperty.value, 4);
+    expect(updatedState['counter'], 6);
 
+    beforeInitialize = false;
+    afterInitialize = false;
     beforeCreate = false;
     afterCreate = false;
     beforeSave = false;
     afterSave = false;
 
     updatedState = await repository.update(updatedState);
-    entity = context.dropCoreComponent.constructEntityFromState(updatedState);
 
+    expect(beforeInitialize, true);
+    expect(afterInitialize, true);
     expect(beforeCreate, false);
     expect(afterCreate, false);
     expect(beforeSave, true);
     expect(afterSave, true);
     expect(beforeDelete, false);
     expect(afterDelete, false);
-    expect(entity.value.counterProperty.value, 6);
+    expect(updatedState['counter'], 10);
 
+    beforeInitialize = false;
+    afterInitialize = false;
     beforeSave = false;
     afterSave = false;
 
     updatedState = await repository.delete(updatedState);
-    entity = context.dropCoreComponent.constructEntityFromState(updatedState);
 
+    // counter goes up for beforeInitialize, afterInitialize, beforeDelete
+    expect(beforeInitialize, true);
+    expect(afterInitialize, true);
     expect(beforeCreate, false);
     expect(afterCreate, false);
     expect(beforeSave, false);
     expect(afterSave, false);
     expect(beforeDelete, true);
     expect(afterDelete, true);
-    expect(entity.value.counterProperty.value, 8);
+    expect(updatedState['counter'], 14);
   });
 }
 
@@ -87,6 +99,8 @@ class TestData extends ValueObject {
 }
 
 class TestEntity extends Entity<TestData> {
+  final FutureOr Function()? beforeInitializeGetter;
+  final FutureOr Function()? afterInitializeGetter;
   final FutureOr Function()? beforeCreateGetter;
   final FutureOr Function()? afterCreateGetter;
   final FutureOr Function()? beforeSaveGetter;
@@ -95,6 +109,8 @@ class TestEntity extends Entity<TestData> {
   final FutureOr Function()? afterDeleteGetter;
 
   TestEntity({
+    this.beforeInitializeGetter,
+    this.afterInitializeGetter,
     this.beforeCreateGetter,
     this.afterCreateGetter,
     this.beforeSaveGetter,
@@ -104,50 +120,64 @@ class TestEntity extends Entity<TestData> {
   });
 
   @override
-  FutureOr onBeforeCreate(DropCoreContext context) {
-    value = TestData()
-      ..copyFrom(context, value)
-      ..counterProperty.set(value.counterProperty.value + 1);
-    return beforeCreateGetter?.call();
+  FutureOr<State?> onBeforeInitialize(DropCoreContext context, {required State state}) async {
+    await beforeInitializeGetter?.call();
+    return state.withData(state.data.copy()..update('counter', (counter) => counter + 1));
   }
 
   @override
-  FutureOr onAfterCreate(DropCoreContext context) {
+  FutureOr onAfterInitalize(DropCoreContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);
-    return afterCreateGetter?.call();
+    return await afterInitializeGetter?.call();
   }
 
   @override
-  FutureOr onBeforeSave(DropCoreContext context) {
+  FutureOr onBeforeCreate(DropCoreContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);
-    return beforeSaveGetter?.call();
+    return await beforeCreateGetter?.call();
   }
 
   @override
-  FutureOr onAfterSave(DropCoreContext context) {
+  FutureOr onAfterCreate(DropCoreContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);
-    return afterSaveGetter?.call();
+    return await afterCreateGetter?.call();
   }
 
   @override
-  FutureOr onBeforeDelete(DropCoreContext context) {
+  FutureOr onBeforeSave(DropCoreContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);
-    return beforeDeleteGetter?.call();
+    return await beforeSaveGetter?.call();
   }
 
   @override
-  FutureOr onAfterDelete(DropCoreContext context) {
+  FutureOr onAfterSave(DropCoreContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);
-    return afterDeleteGetter?.call();
+    return await afterSaveGetter?.call();
+  }
+
+  @override
+  FutureOr onBeforeDelete(DropCoreContext context) async {
+    value = TestData()
+      ..copyFrom(context, value)
+      ..counterProperty.set(value.counterProperty.value + 1);
+    return await beforeDeleteGetter?.call();
+  }
+
+  @override
+  FutureOr onAfterDelete(DropCoreContext context) async {
+    value = TestData()
+      ..copyFrom(context, value)
+      ..counterProperty.set(value.counterProperty.value + 1);
+    return await afterDeleteGetter?.call();
   }
 }

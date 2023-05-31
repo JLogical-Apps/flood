@@ -16,7 +16,7 @@ class FirstQueryRequest<E extends Entity> with IsMapQueryRequest<E, State?, E>, 
 
   @override
   FutureOr<E> doMap(DropCoreContext context, State? source) async {
-    final entity = context.constructEntityFromState<E>(source ?? (throw Exception('Could not find state!')));
+    final entity = await context.constructEntityFromState<E>(source ?? (throw Exception('Could not find state!')));
     await entity.throwIfInvalid(null);
     return entity;
   }

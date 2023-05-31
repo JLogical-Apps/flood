@@ -34,6 +34,12 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin,
   State getStateUnsafe(DropCoreContext context) =>
       value.getStateUnsafe(context).withId(id).withType(context.getRuntimeTypeRuntime(runtimeType));
 
+  FutureOr<State?> onBeforeInitialize(DropCoreContext context, {required State state}) {
+    return null;
+  }
+
+  FutureOr onAfterInitalize(DropCoreContext context) {}
+
   FutureOr onBeforeCreate(DropCoreContext context) {}
 
   FutureOr onAfterCreate(DropCoreContext context) {}
@@ -45,6 +51,14 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin,
   FutureOr onBeforeDelete(DropCoreContext context) {}
 
   FutureOr onAfterDelete(DropCoreContext context) {}
+
+  Future<State?> beforeInitialize(DropCoreContext context, {required State state}) async {
+    return await onBeforeInitialize(context, state: state);
+  }
+
+  Future<void> afterInitialize(DropCoreContext context) async {
+    return await onAfterInitalize(context);
+  }
 
   Future<void> beforeCreate(DropCoreContext context) async {
     return await onBeforeCreate(context);

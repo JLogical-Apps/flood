@@ -19,7 +19,7 @@ class PaginatedQueryRequest<E extends Entity>
   @override
   FutureOr<PaginatedQueryResult<E>> doMap(DropCoreContext context, PaginatedQueryResult<State> statesPage) {
     return statesPage.map((state) async {
-      final entity = context.constructEntityFromState<E>(state);
+      final entity = await context.constructEntityFromState<E>(state);
       await entity.throwIfInvalid(null);
       return entity;
     });

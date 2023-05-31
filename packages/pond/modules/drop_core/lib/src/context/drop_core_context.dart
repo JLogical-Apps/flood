@@ -42,14 +42,18 @@ extension DropCoreContextExtension on DropCoreContext {
     return getRepositoryForTypeRuntime(E);
   }
 
-  E constructEntityFromState<E extends Entity>(State state) {
+  Future<E> constructEntityFromState<E extends Entity>(State state) async {
     final entity = state.type!.createInstance() as Entity;
     entity.id = state.id;
+
+    state = await entity.beforeInitialize(this, state: state) ?? state;
 
     final valueObject = typeContext.getRuntimeTypeRuntime(entity.valueObjectType).createInstance() as ValueObject;
     valueObject.state = state;
 
     entity.value = valueObject;
+
+    await entity.afterInitialize(this);
 
     return entity as E;
   }

@@ -16,7 +16,7 @@ class FirstOrNullQueryRequest<E extends Entity> with IsMapQueryRequest<E, State?
 
   @override
   FutureOr<E?> doMap(DropCoreContext context, State? source) async {
-    final entity = source?.mapIfNonNull((state) => context.constructEntityFromState<E>(state));
+    final entity = await source?.mapIfNonNullAsync((state) => context.constructEntityFromState<E>(state));
     await entity?.throwIfInvalid(null);
     return entity;
   }

@@ -16,7 +16,7 @@ class AllQueryRequest<E extends Entity> with IsMapQueryRequest<E, List<State>, L
 
   @override
   FutureOr<List<E>> doMap(DropCoreContext context, List<State> states) async {
-    final entities = states.map((state) => context.constructEntityFromState<E>(state)).toList();
+    final entities = await Future.wait(states.map((state) => context.constructEntityFromState<E>(state)));
     await Future.wait(entities.map((entity) => entity.throwIfInvalid(null)));
     return entities;
   }
