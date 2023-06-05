@@ -38,7 +38,7 @@ void main() {
     await context.register(DropCoreComponent());
     await context.register(repository);
 
-    var entity = TestEntity()..set(TestData());
+    final entity = TestEntity()..set(TestData());
 
     var updatedState = await repository.update(entity);
 

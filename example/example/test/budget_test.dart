@@ -515,6 +515,45 @@ void main() {
           (RepeatingGoalEnvelopeRule rule) => rule.remainingGoalCentsProperty.value, 'remainingGoalCents', 10 * 100),
     );
   });
+
+  test('initializing repeating goal.', () async {
+    final budgetEntity = await pondContext.dropCoreComponent.updateEntity(
+        BudgetEntity(),
+        (Budget budget) => budget
+          ..nameProperty.set('Budget')
+          ..ownerProperty.set('asdf'));
+
+    final monthlyGoalEnvelope = await pondContext.dropCoreComponent.updateEntity(
+        EnvelopeEntity(),
+        (Envelope envelope) => envelope
+          ..nameProperty.set('Envelope')
+          ..budgetProperty.set(budgetEntity.id!)
+          ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+            ..goalCentsProperty.set(10 * 100)
+            ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(days: 32)))
+            ..remainingGoalCentsProperty.set(10 * 100)
+            ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))));
+
+    final periodicGoalEnvelope = await pondContext.dropCoreComponent.updateEntity(
+        EnvelopeEntity(),
+        (Envelope envelope) => envelope
+          ..nameProperty.set('Envelope')
+          ..budgetProperty.set(budgetEntity.id!)
+          ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+            ..goalCentsProperty.set(10 * 100)
+            ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(days: 8)))
+            ..remainingGoalCentsProperty.set(10 * 100)
+            ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(7))));
+
+    expect(
+      (monthlyGoalEnvelope.value.ruleProperty.value as RepeatingGoalEnvelopeRule).remainingGoalCentsProperty.value,
+      greaterThan(10 * 100),
+    );
+    expect(
+      (periodicGoalEnvelope.value.ruleProperty.value as RepeatingGoalEnvelopeRule).remainingGoalCentsProperty.value,
+      greaterThan(10 * 100),
+    );
+  });
 }
 
 void expectBudgetChange({

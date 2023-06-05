@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:example/features/envelope/envelope.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
@@ -8,5 +10,10 @@ class EnvelopeEntity extends Entity<Envelope> {
       query = query.where(Envelope.archivedField).isEqualTo(isArchived);
     }
     return query;
+  }
+
+  @override
+  FutureOr onAfterInitalize(DropCoreContext context) async {
+    await value.onInitialize(context);
   }
 }
