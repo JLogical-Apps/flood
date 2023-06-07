@@ -22,4 +22,12 @@ class DailyTimeRule extends TimeRule {
 
     return (duration.inDays / daysProperty.value).floor();
   }
+
+  @override
+  DateTime getStartOfPeriod(DateTime date, DateTime lastAppliedDate) {
+    while (lastAppliedDate.isBefore(date)) {
+      lastAppliedDate = lastAppliedDate.add(Duration(days: daysProperty.value));
+    }
+    return lastAppliedDate.subtract(Duration(days: daysProperty.value));
+  }
 }

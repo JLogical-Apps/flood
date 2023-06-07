@@ -78,8 +78,7 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
     return EnvelopeChange(
       ruleChange: RepeatingGoalEnvelopeRule()
         ..copyFrom(context, this)
-        ..remainingGoalCentsProperty.set(newRemainingCents)
-        ..lastAppliedDateProperty.set(now),
+        ..remainingGoalCentsProperty.set(newRemainingCents),
     );
   }
 
@@ -93,11 +92,13 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
       return null;
     }
 
+    final startOfCurrentPeriod = timeRuleProperty.value.getStartOfPeriod(now, lastAppliedDateProperty.value);
+
     return EnvelopeChange(
       ruleChange: RepeatingGoalEnvelopeRule()
         ..copyFrom(context, this)
         ..remainingGoalCentsProperty.set(adjustedRemainingGoalCents)
-        ..lastAppliedDateProperty.set(now),
+        ..lastAppliedDateProperty.set(startOfCurrentPeriod),
     );
   }
 

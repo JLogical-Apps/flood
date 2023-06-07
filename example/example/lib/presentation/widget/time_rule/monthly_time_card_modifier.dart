@@ -1,4 +1,5 @@
 import 'package:example/features/envelope_rule/monthly_time_rule.dart';
+import 'package:example/features/envelope_rule/repeating_goal_envelope_rule.dart';
 import 'package:example/presentation/widget/time_rule/time_rule_card_modifier.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +12,7 @@ class MonthlyTimeCardModifier extends TimeRuleCardModifier<MonthlyTimeRule?> {
   }
 
   @override
-  String getPeriodMarkdown(MonthlyTimeRule? rule) {
+  String getPeriodMarkdown(RepeatingGoalEnvelopeRule envelopeRule, MonthlyTimeRule? rule) {
     final date = rule?.dayOfMonthProperty.valueOrNull;
     final dateRepresentation = date == null
         ? null
@@ -22,7 +23,7 @@ class MonthlyTimeCardModifier extends TimeRuleCardModifier<MonthlyTimeRule?> {
   }
 
   @override
-  String getCurrentPeriodMarkdown(MonthlyTimeRule? rule) {
+  String getCurrentPeriodMarkdown(RepeatingGoalEnvelopeRule envelopeRule, MonthlyTimeRule? rule) {
     return 'the month of `${_getCurrentMonthName()}`';
   }
 

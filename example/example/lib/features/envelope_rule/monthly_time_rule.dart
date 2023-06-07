@@ -31,4 +31,9 @@ class MonthlyTimeRule extends TimeRule {
 
     return monthValue1 - monthValue2;
   }
+
+  @override
+  DateTime getStartOfPeriod(DateTime date, DateTime lastAppliedDate) {
+    return date.copyWith(day: 1);
+  }
 }

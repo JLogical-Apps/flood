@@ -2,6 +2,7 @@ import 'package:example/features/budget/budget.dart';
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
+import 'package:example/features/envelope_rule/daily_time_rule.dart';
 import 'package:example/features/envelope_rule/firstfruit_envelope_rule.dart';
 import 'package:example/features/envelope_rule/monthly_time_rule.dart';
 import 'package:example/features/envelope_rule/repeating_goal_envelope_rule.dart';
@@ -115,7 +116,17 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
       ..nameProperty.set('Car')
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(100 * 100)
-        ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))),
+        ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))
+        ..remainingGoalCentsProperty.set(100 * 100)
+        ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(days: 6)))),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Eating Out')
+      ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+        ..goalCentsProperty.set(40 * 100)
+        ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(7))
+        ..remainingGoalCentsProperty.set(40 * 100)
+        ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(days: 4)))),
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Emergency Savings')

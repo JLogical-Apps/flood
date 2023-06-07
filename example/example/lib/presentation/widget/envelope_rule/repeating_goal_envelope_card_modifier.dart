@@ -14,8 +14,8 @@ class RepeatingGoalEnvelopeCardModifier extends EnvelopeRuleCardModifier<Repeati
   Widget getDescription(RepeatingGoalEnvelopeRule rule) {
     final timeRule = rule.timeRuleProperty.valueOrNull;
     final timeRuleWrapper = TimeRuleCardModifier.getModifierOrNull(timeRule);
-    final currentPeriod = timeRuleWrapper?.getCurrentPeriodMarkdown(timeRule);
-    final period = timeRuleWrapper?.getPeriodMarkdown(timeRule);
+    final currentPeriod = timeRuleWrapper?.getCurrentPeriodMarkdown(rule, timeRule);
+    final period = timeRuleWrapper?.getPeriodMarkdown(rule, timeRule);
 
     return StyledMarkdown(
         'Valet will prioritize getting `${rule.goalCentsProperty.valueOrNull?.formatCentsAsCurrency() ?? '?'}` every $period. For $currentPeriod, you have `${rule.remainingGoalCentsProperty.valueOrNull?.formatCentsAsCurrency() ?? '?'}` remaining.');
