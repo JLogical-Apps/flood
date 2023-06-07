@@ -1,6 +1,6 @@
 export 'src/context/core_pond_context_extensions.dart';
-export 'src/context/drop_core_context.dart';
-export 'src/drop_core_component.dart';
+export 'src/context/core_drop_context.dart';
+export 'src/core_drop_component.dart';
 export 'src/query/pagination/paginated_query_result.dart';
 export 'src/query/pagination/query_result_page.dart';
 export 'src/query/query.dart';

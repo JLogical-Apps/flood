@@ -5,7 +5,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class BudgetEntity extends Entity<Budget> {
   Future<B> updateAddTransaction<B extends BudgetTransactionEntity>(
-    DropCoreContext context, {
+    CoreDropContext context, {
     required B transactionEntity,
   }) async {
     final envelopeEntities =

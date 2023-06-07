@@ -1,4 +1,4 @@
-import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/context/core_drop_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/repository/query_executor/from_state_query_reducer.dart';
@@ -18,7 +18,7 @@ import 'package:utils_core/utils_core.dart';
 class StateQueryExecutor implements RepositoryQueryExecutor {
   final ValueStream<List<State>> statesX;
 
-  final DropCoreContext dropContext;
+  final CoreDropContext dropContext;
 
   StateQueryExecutor({required this.statesX, required this.dropContext});
 

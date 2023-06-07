@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/context/core_drop_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/map_query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
@@ -15,19 +15,19 @@ abstract class QueryRequest<E, T> with EquatableMixin {
 }
 
 extension QueryRequestExtensions<E extends Entity, T> on QueryRequest<E, T> {
-  MapQueryRequest<E, T, R> map<R>(FutureOr<R> Function(DropCoreContext context, T source) mapper) {
+  MapQueryRequest<E, T, R> map<R>(FutureOr<R> Function(CoreDropContext context, T source) mapper) {
     return MapQueryRequest(sourceQueryRequest: this, mapper: mapper);
   }
 
-  Model<T> toModel(DropCoreContext context) {
+  Model<T> toModel(CoreDropContext context) {
     return Model.fromValueStream(context.executeQueryX(this));
   }
 
-  Future<T> get(DropCoreContext context) {
+  Future<T> get(CoreDropContext context) {
     return context.executeQuery(this);
   }
 
-  ValueStream<FutureValue<T>> getX(DropCoreContext context) {
+  ValueStream<FutureValue<T>> getX(CoreDropContext context) {
     return context.executeQueryX(this);
   }
 }

@@ -19,7 +19,7 @@ class RepeatingGoalPortOverride with IsStyledObjectPortOverride<RepeatingGoalEnv
           labelText: 'Timing',
           valueWidgetMapper: (StagePortField<RuntimeType?, dynamic> stagePortField, RuntimeType? value) {
             final timeRule = stagePortField.toValueObject<TimeRule>(
-              context: context.find<PortDropCoreComponent>(),
+              context: context.find<CorePortDropComponent>(),
               value: value,
             );
 

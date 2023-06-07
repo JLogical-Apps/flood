@@ -28,7 +28,7 @@ class FallbackPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModif
     }
 
     return sourcePortField.withDynamicHint(() => guard(() {
-          final constructedValueObject = context.portDropCoreComponent.getValueObjectFromPort(
+          final constructedValueObject = context.corePortDropComponent.getValueObjectFromPort(
             port: context.port,
             originalValueObject: context.originalValueObject,
           );

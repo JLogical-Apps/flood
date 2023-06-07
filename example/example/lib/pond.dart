@@ -9,12 +9,12 @@ Future<CorePondContext> getCorePondContext({EnvironmentConfig? environmentConfig
 
   final corePondContext = CorePondContext();
   await corePondContext.register(TypeCoreComponent());
-  await corePondContext.register(DropCoreComponent());
+  await corePondContext.register(CoreDropComponent());
   await corePondContext.register(LogCoreComponent.console());
   await corePondContext.register(
       ActionCoreComponent(actionWrapper: <P, R>(Action<P, R> action) => action.log(context: corePondContext)));
   await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
-  await corePondContext.register(PortDropCoreComponent());
+  await corePondContext.register(CorePortDropComponent());
   await corePondContext.register(AuthCoreComponent.memory());
   await corePondContext.register(UserRepository());
   await corePondContext.register(BudgetRepository());

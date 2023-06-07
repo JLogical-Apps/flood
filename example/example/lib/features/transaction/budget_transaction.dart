@@ -24,7 +24,7 @@ abstract class BudgetTransaction extends ValueObject {
 
   List<String> get affectedEnvelopeIds;
 
-  BudgetChange getBudgetChange(DropCoreContext context, {required Map<String, Envelope> envelopeById});
+  BudgetChange getBudgetChange(CoreDropContext context, {required Map<String, Envelope> envelopeById});
 
   @override
   @mustCallSuper

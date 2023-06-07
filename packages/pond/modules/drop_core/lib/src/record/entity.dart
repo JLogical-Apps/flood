@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/context/core_drop_context.dart';
 import 'package:drop_core/src/record/record.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -27,60 +27,60 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin,
   bool get isNew => id == null;
 
   @override
-  State getState(DropCoreContext context) =>
+  State getState(CoreDropContext context) =>
       value.getState(context).withId(id).withType(context.getRuntimeTypeRuntime(runtimeType));
 
   @override
-  State getStateUnsafe(DropCoreContext context) =>
+  State getStateUnsafe(CoreDropContext context) =>
       value.getStateUnsafe(context).withId(id).withType(context.getRuntimeTypeRuntime(runtimeType));
 
-  FutureOr<State?> onBeforeInitialize(DropCoreContext context, {required State state}) {
+  FutureOr<State?> onBeforeInitialize(CoreDropContext context, {required State state}) {
     return null;
   }
 
-  FutureOr onAfterInitalize(DropCoreContext context) {}
+  FutureOr onAfterInitalize(CoreDropContext context) {}
 
-  FutureOr onBeforeCreate(DropCoreContext context) {}
+  FutureOr onBeforeCreate(CoreDropContext context) {}
 
-  FutureOr onAfterCreate(DropCoreContext context) {}
+  FutureOr onAfterCreate(CoreDropContext context) {}
 
-  FutureOr onBeforeSave(DropCoreContext context) {}
+  FutureOr onBeforeSave(CoreDropContext context) {}
 
-  FutureOr onAfterSave(DropCoreContext context) {}
+  FutureOr onAfterSave(CoreDropContext context) {}
 
-  FutureOr onBeforeDelete(DropCoreContext context) {}
+  FutureOr onBeforeDelete(CoreDropContext context) {}
 
-  FutureOr onAfterDelete(DropCoreContext context) {}
+  FutureOr onAfterDelete(CoreDropContext context) {}
 
-  Future<State?> beforeInitialize(DropCoreContext context, {required State state}) async {
+  Future<State?> beforeInitialize(CoreDropContext context, {required State state}) async {
     return await onBeforeInitialize(context, state: state);
   }
 
-  Future<void> afterInitialize(DropCoreContext context) async {
+  Future<void> afterInitialize(CoreDropContext context) async {
     return await onAfterInitalize(context);
   }
 
-  Future<void> beforeCreate(DropCoreContext context) async {
+  Future<void> beforeCreate(CoreDropContext context) async {
     return await onBeforeCreate(context);
   }
 
-  Future<void> afterCreate(DropCoreContext context) async {
+  Future<void> afterCreate(CoreDropContext context) async {
     return await onAfterCreate(context);
   }
 
-  Future<void> beforeSave(DropCoreContext context) async {
+  Future<void> beforeSave(CoreDropContext context) async {
     return await onBeforeSave(context);
   }
 
-  Future<void> afterSave(DropCoreContext context) async {
+  Future<void> afterSave(CoreDropContext context) async {
     return await onAfterSave(context);
   }
 
-  Future<void> beforeDelete(DropCoreContext context) async {
+  Future<void> beforeDelete(CoreDropContext context) async {
     return await onBeforeDelete(context);
   }
 
-  Future<void> afterDelete(DropCoreContext context) async {
+  Future<void> afterDelete(CoreDropContext context) async {
     return await onAfterDelete(context);
   }
 

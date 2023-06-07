@@ -90,7 +90,7 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
   }
 
   final authComponent = corePondContext.locate<AuthCoreComponent>();
-  final dropComponent = corePondContext.locate<DropCoreComponent>();
+  final dropComponent = corePondContext.locate<CoreDropComponent>();
 
   final userId = await authComponent.signup('test@test.com', 'password');
 

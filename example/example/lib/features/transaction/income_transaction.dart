@@ -17,7 +17,7 @@ class IncomeTransaction extends BudgetTransaction {
       centsByEnvelopeIdProperty.value.values.fold(0, (int cents, envelopeCents) => cents + envelopeCents);
 
   @override
-  BudgetChange getBudgetChange(DropCoreContext context, {required Map<String, Envelope> envelopeById}) {
+  BudgetChange getBudgetChange(CoreDropContext context, {required Map<String, Envelope> envelopeById}) {
     return BudgetChange(
       modifiedEnvelopeById: envelopeById.map(
         (envelopeId, envelope) => MapEntry(

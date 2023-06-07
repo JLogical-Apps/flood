@@ -35,7 +35,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(DropCoreComponent());
+    await context.register(CoreDropComponent());
     await context.register(repository);
 
     final entity = TestEntity()..set(TestData());
@@ -120,13 +120,13 @@ class TestEntity extends Entity<TestData> {
   });
 
   @override
-  FutureOr<State?> onBeforeInitialize(DropCoreContext context, {required State state}) async {
+  FutureOr<State?> onBeforeInitialize(CoreDropContext context, {required State state}) async {
     await beforeInitializeGetter?.call();
     return state.withData(state.data.copy()..update('counter', (counter) => counter + 1));
   }
 
   @override
-  FutureOr onAfterInitalize(DropCoreContext context) async {
+  FutureOr onAfterInitalize(CoreDropContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);
@@ -134,7 +134,7 @@ class TestEntity extends Entity<TestData> {
   }
 
   @override
-  FutureOr onBeforeCreate(DropCoreContext context) async {
+  FutureOr onBeforeCreate(CoreDropContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);
@@ -142,7 +142,7 @@ class TestEntity extends Entity<TestData> {
   }
 
   @override
-  FutureOr onAfterCreate(DropCoreContext context) async {
+  FutureOr onAfterCreate(CoreDropContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);
@@ -150,7 +150,7 @@ class TestEntity extends Entity<TestData> {
   }
 
   @override
-  FutureOr onBeforeSave(DropCoreContext context) async {
+  FutureOr onBeforeSave(CoreDropContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);
@@ -158,7 +158,7 @@ class TestEntity extends Entity<TestData> {
   }
 
   @override
-  FutureOr onAfterSave(DropCoreContext context) async {
+  FutureOr onAfterSave(CoreDropContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);
@@ -166,7 +166,7 @@ class TestEntity extends Entity<TestData> {
   }
 
   @override
-  FutureOr onBeforeDelete(DropCoreContext context) async {
+  FutureOr onBeforeDelete(CoreDropContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);
@@ -174,7 +174,7 @@ class TestEntity extends Entity<TestData> {
   }
 
   @override
-  FutureOr onAfterDelete(DropCoreContext context) async {
+  FutureOr onAfterDelete(CoreDropContext context) async {
     value = TestData()
       ..copyFrom(context, value)
       ..counterProperty.set(value.counterProperty.value + 1);

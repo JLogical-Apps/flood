@@ -33,7 +33,7 @@ class Budget extends ValueObject {
   /// * If a round requested more than the remaining cents, distribute the remaining cents based on the proportion of
   ///   the amount that group of envelopes requested it for.
   BudgetChange addIncome(
-    DropCoreContext context, {
+    CoreDropContext context, {
     required int incomeCents,
     required Map<String, Envelope> envelopeById,
   }) {
@@ -131,7 +131,7 @@ class Budget extends ValueObject {
   }
 
   BudgetChange addTransactions(
-    DropCoreContext context, {
+    CoreDropContext context, {
     required Map<String, Envelope> envelopeById,
     required List<BudgetTransaction> transactions,
   }) {

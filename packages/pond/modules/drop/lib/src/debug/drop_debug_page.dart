@@ -7,7 +7,7 @@ import 'package:style/style.dart';
 class DropDebugPage extends AppPage<DropDebugPage> {
   @override
   Widget build(BuildContext context) {
-    final repositories = context.dropCoreComponent.repositories.toList();
+    final repositories = context.coreDropComponent.repositories.toList();
 
     return StyledPage(
       titleText: 'Drop',

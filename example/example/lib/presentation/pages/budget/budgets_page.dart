@@ -57,7 +57,7 @@ class BudgetsPage extends AppPage {
                           port: (Budget()..ownerProperty.set(loggedInUserIdModel.getOrNull()!))
                               .asPort(context.corePondContext),
                           onAccept: (Budget result) async {
-                            await context.dropCoreComponent.update(BudgetEntity()..value = result);
+                            await context.coreDropComponent.update(BudgetEntity()..value = result);
                           },
                         ));
                       },

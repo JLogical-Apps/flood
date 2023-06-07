@@ -7,13 +7,13 @@ import 'package:utils_core/utils_core.dart';
 
 void main() {
   late CorePondContext context;
-  late DropCoreContext dropContext;
+  late CoreDropContext dropContext;
 
   setUp(() {
     context = CorePondContext()
       ..register(TypeCoreComponent())
-      ..register(DropCoreComponent());
-    dropContext = context.locate<DropCoreComponent>();
+      ..register(CoreDropComponent());
+    dropContext = context.locate<CoreDropComponent>();
   });
 
   test('properties', () {

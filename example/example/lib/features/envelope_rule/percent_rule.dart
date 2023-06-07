@@ -20,7 +20,7 @@ abstract class PercentRule extends EnvelopeRule {
 
   @override
   int requestIncome(
-    DropCoreContext context, {
+    CoreDropContext context, {
     required int incomeCents,
     required Envelope envelope,
     required bool isExtraIncome,

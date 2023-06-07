@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:drop_core/src/context/core_pond_context_extensions.dart';
-import 'package:drop_core/src/context/drop_core_context.dart';
-import 'package:drop_core/src/drop_core_component.dart';
+import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/core_drop_component.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
@@ -41,7 +41,7 @@ abstract class Repository implements CorePondComponent, RepositoryStateHandlerWr
 
 extension RepositoryExtension on Repository {
   Future<State> update(Stateful stateful) async {
-    var state = stateful.getState(context.locate<DropCoreComponent>());
+    var state = stateful.getState(context.locate<CoreDropComponent>());
 
     state = await onUpdate(state);
 
@@ -53,10 +53,10 @@ extension RepositoryExtension on Repository {
     FutureOr Function(V newValueObject)? updater,
   ]) async {
     final valueObjectType = V == ValueObject ? entity.valueObjectType : V;
-    final newValueObject = context.dropCoreComponent.construct(valueObjectType) as V;
+    final newValueObject = context.coreDropComponent.construct(valueObjectType) as V;
 
     if (entity.hasValue) {
-      newValueObject.state = entity.value.getState(context.dropCoreComponent);
+      newValueObject.state = entity.value.getState(context.coreDropComponent);
     }
 
     await updater?.call(newValueObject);
@@ -64,11 +64,11 @@ extension RepositoryExtension on Repository {
     await entity.throwIfInvalid(null);
     final newState = await update(entity);
     entity.id = newState.id;
-    return context.dropCoreComponent.constructEntityFromState(newState);
+    return context.coreDropComponent.constructEntityFromState(newState);
   }
 
   Future<State> delete(Stateful state) {
-    return onDelete(state.getState(context.locate<DropCoreComponent>()));
+    return onDelete(state.getState(context.locate<CoreDropComponent>()));
   }
 
   ForTypeRepository<E, V> forType<E extends Entity<V>, V extends ValueObject>(

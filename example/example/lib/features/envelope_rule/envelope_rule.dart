@@ -9,7 +9,7 @@ abstract class EnvelopeRule extends ValueObject {
   /// Returns the requested amount of income for the rule given the [incomeCents].
   /// The requested amount does not guarantee that much will be applied to the envelope. It could be less or more.
   int requestIncome(
-    DropCoreContext context, {
+    CoreDropContext context, {
     required Envelope envelope,
     required int incomeCents,
     required bool isExtraIncome,
@@ -19,12 +19,12 @@ abstract class EnvelopeRule extends ValueObject {
   /// If [incomeCents] is negative, then an income transaction has been deleted from the envelope.
   /// Can return null if no change applied.
   EnvelopeChange? onAddIncome(
-    DropCoreContext context, {
+    CoreDropContext context, {
     required Envelope envelope,
     required int incomeCents,
   }) =>
       null;
 
   /// Called when the envelope rule is first initialized or inflated.
-  EnvelopeChange? onInitialize(DropCoreContext context) => null;
+  EnvelopeChange? onInitialize(CoreDropContext context) => null;
 }

@@ -31,7 +31,7 @@ class EnvelopeTransaction extends BudgetTransaction {
       ];
 
   @override
-  BudgetChange getBudgetChange(DropCoreContext context, {required Map<String, Envelope> envelopeById}) {
+  BudgetChange getBudgetChange(CoreDropContext context, {required Map<String, Envelope> envelopeById}) {
     final envelope = envelopeById[envelopeProperty.value];
     if (envelope == null) {
       return BudgetChange(modifiedEnvelopeById: envelopeById);

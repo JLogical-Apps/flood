@@ -31,7 +31,7 @@ import 'package:type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
-class PortDropCoreComponent with IsCorePondComponent {
+class CorePortDropComponent with IsCorePondComponent {
   late final ModifierResolver<PortGeneratorBehaviorModifier, ValueObjectBehavior> behaviorModifierResolver =
       Resolver.fromModifiers(
     [
@@ -42,7 +42,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       DateTimeFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       TimestampFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       StageFieldBehaviorModifier(
-        portDropContext: context.locate<PortDropCoreComponent>(),
+        portDropContext: context.locate<CorePortDropComponent>(),
         typeContext: context.locate<TypeCoreComponent>(),
         portCreator: (valueObject) => generatePort(valueObject),
         modifierGetter: getBehaviorModifierOrNull,
@@ -72,10 +72,10 @@ class PortDropCoreComponent with IsCorePondComponent {
   @override
   List<CorePondComponentBehavior> get behaviors => [
         CorePondComponentBehavior.dependency<TypeCoreComponent>(),
-        CorePondComponentBehavior.dependency<DropCoreComponent>(),
+        CorePondComponentBehavior.dependency<CoreDropComponent>(),
       ];
 
-  DropCoreComponent get dropCoreComponent => context.locate<DropCoreComponent>();
+  CoreDropComponent get coreDropComponent => context.locate<CoreDropComponent>();
 
   Port<V> generatePort<V extends ValueObject>(V valueObject, {List<PortGeneratorOverride> overrides = const []}) {
     var portFieldByName = <String, PortField>{};
@@ -91,7 +91,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       final portBehaviorContext = PortGeneratorBehaviorModifierContext(
         originalValueObject: valueObject,
         originalBehavior: behavior,
-        portDropCoreComponent: this,
+        corePortDropComponent: this,
         portGetter: () => port,
       );
 
@@ -101,7 +101,7 @@ class PortDropCoreComponent with IsCorePondComponent {
 
     final overrideContext = PortGeneratorOverrideContext(
       initialValueObject: valueObject,
-      portDropCoreComponent: this,
+      corePortDropComponent: this,
     );
 
     portFieldByName = overrides.fold(
@@ -112,16 +112,16 @@ class PortDropCoreComponent with IsCorePondComponent {
     port = Port.of(portFieldByName).map(
       (sourceData, port) {
         final typeContext = context.locate<TypeCoreComponent>();
-        final dropCoreContext = context.locate<DropCoreComponent>();
+        final coreDropContext = context.locate<CoreDropComponent>();
 
         final state = State.fromMap(
           sourceData,
           runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
         );
-        final mergedState = valueObject.getStateUnsafe(dropCoreContext).mergeWith(state);
+        final mergedState = valueObject.getStateUnsafe(coreDropContext).mergeWith(state);
 
         final newValueObject = typeContext.construct(valueObject.runtimeType) as V;
-        newValueObject.copyFrom(dropCoreContext, mergedState);
+        newValueObject.copyFrom(coreDropContext, mergedState);
         return newValueObject;
       },
       submitType: valueObject.runtimeType,
@@ -135,17 +135,17 @@ class PortDropCoreComponent with IsCorePondComponent {
     Type? valueObjectType,
   }) {
     final typeContext = context.locate<TypeCoreComponent>();
-    final dropCoreContext = context.locate<DropCoreComponent>();
+    final coreDropContext = context.locate<CoreDropComponent>();
 
     final state = State.fromMap(
       port.portFieldByName.map((name, portField) => MapEntry(name, portField.submitRaw(portField.value))),
       runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
     );
     final mergedState =
-        originalValueObject == null ? state : originalValueObject.getStateUnsafe(dropCoreContext).mergeWith(state);
+        originalValueObject == null ? state : originalValueObject.getStateUnsafe(coreDropContext).mergeWith(state);
 
     final newValueObject = typeContext.construct(originalValueObject?.runtimeType ?? valueObjectType ?? V) as V;
-    newValueObject.copyFromUnsafe(dropCoreContext, mergedState);
+    newValueObject.copyFromUnsafe(coreDropContext, mergedState);
     return newValueObject;
   }
 }

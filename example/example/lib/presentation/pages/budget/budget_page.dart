@@ -75,7 +75,7 @@ class BudgetPage extends AppPage {
                         titleText: 'Create New Envelope',
                         port: (Envelope()..budgetProperty.set(budgetEntity.id!)).asPort(context.corePondContext),
                         onAccept: (Envelope result) async {
-                          await context.dropCoreComponent.update(EnvelopeEntity()..value = result);
+                          await context.coreDropComponent.update(EnvelopeEntity()..value = result);
                         },
                       ));
                     },
@@ -129,7 +129,7 @@ class BudgetPage extends AppPage {
                                             bodyText:
                                                 'Are you sure you want to delete this transaction? You cannot undo this.',
                                             onAccept: () async {
-                                              await context.dropCoreComponent.delete(entity);
+                                              await context.coreDropComponent.delete(entity);
                                               Navigator.of(context).pop();
                                             },
                                           ));

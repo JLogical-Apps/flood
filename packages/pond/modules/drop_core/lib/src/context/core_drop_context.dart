@@ -6,23 +6,23 @@ import 'package:drop_core/src/repository/repository_list_wrapper.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:type/type.dart';
 
-abstract class DropCoreContext implements TypeContextWrapper, Repository {
+abstract class CoreDropContext implements TypeContextWrapper, Repository {
   List<Repository> get repositories;
 
-  factory DropCoreContext({required TypeContext typeContext}) => _DropCoreContextImpl(typeContext: typeContext);
+  factory CoreDropContext({required TypeContext typeContext}) => _CoreDropContextImpl(typeContext: typeContext);
 }
 
-class _DropCoreContextImpl with IsTypeContextWrapper, IsRepositoryListWrapper implements DropCoreContext {
+class _CoreDropContextImpl with IsTypeContextWrapper, IsRepositoryListWrapper implements CoreDropContext {
   @override
   final List<Repository> repositories;
 
   @override
   final TypeContext typeContext;
 
-  _DropCoreContextImpl({List<Repository>? repositories, required this.typeContext}) : repositories = repositories ?? [];
+  _CoreDropContextImpl({List<Repository>? repositories, required this.typeContext}) : repositories = repositories ?? [];
 }
 
-extension DropCoreContextExtension on DropCoreContext {
+extension CoreDropContextExtension on CoreDropContext {
   Repository? getRepositoryForTypeOrNullRuntime(Type entityType) {
     return repositories.firstWhereOrNull((repository) => repository.handledTypes.any((runtimeType) =>
         runtimeType.type == entityType ||
@@ -59,22 +59,22 @@ extension DropCoreContextExtension on DropCoreContext {
   }
 }
 
-mixin IsDropCoreContext implements DropCoreContext {
+mixin IsCoreDropContext implements CoreDropContext {
   @override
   List<RuntimeType> get runtimeTypes => typeContext.runtimeTypes;
 }
 
-abstract class DropCoreContextWrapper implements DropCoreContext {
-  DropCoreContext get dropCoreContext;
+abstract class CoreDropContextWrapper implements CoreDropContext {
+  CoreDropContext get coreDropContext;
 
   @override
-  List<Repository> get repositories => dropCoreContext.repositories;
+  List<Repository> get repositories => coreDropContext.repositories;
 }
 
-mixin IsDropCoreContextWrapper implements DropCoreContextWrapper {
+mixin IsCoreDropContextWrapper implements CoreDropContextWrapper {
   @override
-  List<Repository> get repositories => dropCoreContext.repositories;
+  List<Repository> get repositories => coreDropContext.repositories;
 
   @override
-  List<RuntimeType> get runtimeTypes => dropCoreContext.runtimeTypes;
+  List<RuntimeType> get runtimeTypes => coreDropContext.runtimeTypes;
 }

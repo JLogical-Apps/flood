@@ -38,7 +38,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
     final modifiedEnvelopeById = budget != null && envelopeEntities != null
         ? budget
             .addTransactions(
-              context.dropCoreComponent,
+              context.coreDropComponent,
               envelopeById: envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value)),
               transactions: transactions,
             )
@@ -72,7 +72,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
                         transactionDate: resultByName['transactionDate'] as DateTime,
                         budgetId: budgetIdProperty.value,
                         budget: budgetEntity.value,
-                        dropCoreContext: context.dropCoreComponent,
+                        coreDropContext: context.coreDropComponent,
                         envelopeById: envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value)),
                       ))));
 
@@ -156,10 +156,10 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
                       final budgetTransactionEntity =
                           BudgetTransactionEntity.constructEntityFromTransactionTypeRuntime(transaction.runtimeType)
                             ..set(transaction);
-                      await context.dropCoreComponent.update(budgetTransactionEntity);
+                      await context.coreDropComponent.update(budgetTransactionEntity);
                     }
                     for (final entry in modifiedEnvelopeById.entries) {
-                      await context.dropCoreComponent.updateEntity(
+                      await context.coreDropComponent.updateEntity(
                         envelopeEntities.firstWhere((entity) => entity.id == entry.key)..set(entry.value),
                       );
                     }

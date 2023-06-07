@@ -1,6 +1,6 @@
 import 'package:drop_core/src/context/core_pond_context_extensions.dart';
-import 'package:drop_core/src/context/drop_core_context.dart';
-import 'package:drop_core/src/drop_core_component.dart';
+import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/core_drop_component.dart';
 import 'package:drop_core/src/record/value_object/time/timestamp.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_executor.dart';
 import 'package:drop_core/src/repository/repository.dart';
@@ -31,7 +31,7 @@ class MemoryRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
     final stateByIdX = repository.stateByIdX;
 
     return StateQueryExecutor(
-      dropContext: repository.context.locate<DropCoreComponent>(),
+      dropContext: repository.context.locate<CoreDropComponent>(),
       statesX: stateByIdX.mapWithValue((stateById) => stateById.values.toList()),
     );
   }
@@ -44,7 +44,7 @@ class MemoryRepositoryStateHandler implements RepositoryStateHandler {
 
   @override
   Future<State> onUpdate(State state) async {
-    final context = repository.context.dropCoreComponent;
+    final context = repository.context.coreDropComponent;
 
     final isNew = state.isNew;
     final id = state.id ?? Uuid().v4();
@@ -79,7 +79,7 @@ class MemoryRepositoryStateHandler implements RepositoryStateHandler {
 
   @override
   Future<State> onDelete(State state) async {
-    final context = repository.context.dropCoreComponent;
+    final context = repository.context.coreDropComponent;
     final entity = await context.constructEntityFromState(state);
 
     await entity.beforeDelete(context);

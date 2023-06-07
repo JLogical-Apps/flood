@@ -70,7 +70,7 @@ class LoginPage extends AppPage {
                       try {
                         final userId = await context.find<AuthCoreComponent>().signup(data['email'], data['password']);
 
-                        await context.dropCoreComponent.updateEntity(
+                        await context.coreDropComponent.updateEntity(
                           UserEntity()..id = userId,
                           (User user) => user..nameProperty.set('Jake'),
                         );

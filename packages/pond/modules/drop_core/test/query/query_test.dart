@@ -24,7 +24,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(DropCoreComponent());
+    await context.register(CoreDropComponent());
     await context.register(repository);
 
     for (final user in users) {
@@ -36,7 +36,7 @@ void main() {
 
     final allUserStates = await repository.executeQuery(Query.from<UserEntity>().allStates());
     expect(allUserStates.map((state) => state.data),
-        users.map((user) => user.getState(context.locate<DropCoreComponent>()).data).toList());
+        users.map((user) => user.getState(context.locate<CoreDropComponent>()).data).toList());
   });
 
   test('query first', () async {
@@ -58,7 +58,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(DropCoreComponent());
+    await context.register(CoreDropComponent());
     await context.register(repository);
 
     for (final user in users) {
@@ -69,7 +69,7 @@ void main() {
     expect(firstUserEntity?.value, users[0]);
 
     final firstUserEntityState = await repository.executeQuery(Query.from<UserEntity>().firstOrNullState());
-    expect(firstUserEntityState?.data, users[0].getState(context.locate<DropCoreComponent>()).data);
+    expect(firstUserEntityState?.data, users[0].getState(context.locate<CoreDropComponent>()).data);
   });
 
   test('query where equals', () async {
@@ -89,7 +89,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(DropCoreComponent());
+    await context.register(CoreDropComponent());
     await context.register(repository);
 
     for (final user in users) {
@@ -122,7 +122,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(DropCoreComponent());
+    await context.register(CoreDropComponent());
     await context.register(repository);
 
     for (final user in users) {
@@ -162,7 +162,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(DropCoreComponent());
+    await context.register(CoreDropComponent());
     await context.register(repository);
 
     for (final invoice in invoices) {
@@ -239,7 +239,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(DropCoreComponent());
+    await context.register(CoreDropComponent());
     await context.register(repository);
 
     for (final invoice in invoices) {
@@ -288,7 +288,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(DropCoreComponent());
+    await context.register(CoreDropComponent());
     await context.register(repository);
 
     for (final invoice in invoices) {
@@ -326,7 +326,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(DropCoreComponent());
+    await context.register(CoreDropComponent());
     await context.register(repository);
 
     for (final user in users) {
@@ -369,7 +369,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(DropCoreComponent());
+    await context.register(CoreDropComponent());
     await context.register(repository);
 
     await Future.wait(transactionEntities.map((e) => repository.update(e)));
@@ -395,7 +395,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(DropCoreComponent());
+    await context.register(CoreDropComponent());
     await context.register(listRepository);
 
     await listRepository.update(UserEntity()..value = (User()..nameProperty.set('John Doe')));
