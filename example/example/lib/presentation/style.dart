@@ -8,8 +8,8 @@ FlatStyle style = FlatStyle(
   backgroundColor: isLight ? Color(0xffeeeeee) : Color(0xff141424),
 );
 
-Color getCentsColor(int amountCents) {
-  if (amountCents == 0) {
+Color getCentsColor(int? amountCents) {
+  if (amountCents == null || amountCents == 0) {
     return Colors.white;
   }
   if (amountCents > 0) {

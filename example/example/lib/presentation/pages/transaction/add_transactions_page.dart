@@ -10,6 +10,7 @@ import 'package:example/features/transaction/transfer_transaction.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
 import 'package:example/presentation/pages/transaction/transaction_generator.dart';
+import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
@@ -188,6 +189,8 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
     final envelopeCardModification = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
 
     final newEnvelope = modifiedEnvelopeById?[envelopeEntity.id];
+    final centDifference =
+        newEnvelope == null ? 0 : newEnvelope.amountCentsProperty.value - envelope.amountCentsProperty.value;
 
     return StyledCard(
       titleText: envelope.nameProperty.value,
@@ -227,13 +230,12 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
         itemPadding: EdgeInsets.symmetric(horizontal: 4),
         children: [
           StyledText.body(envelope.amountCentsProperty.value.formatCentsAsCurrency()),
+          StyledText.body('+'),
+          StyledText.body.withColor(getCentsColor(centDifference))(centDifference.formatCentsAsCurrency()),
           StyledIcon(Icons.arrow_right),
           if (modifiedEnvelopeById == null) StyledLoadingIndicator(),
-          StyledText.body.withColor(newEnvelope == null || newEnvelope == envelope
-              ? null
-              : newEnvelope.amountCentsProperty.value < envelope.amountCentsProperty.value
-                  ? Colors.red
-                  : Colors.green)((newEnvelope ?? envelope).amountCentsProperty.value.formatCentsAsCurrency()),
+          StyledText.body.withColor(getCentsColor(newEnvelope?.amountCentsProperty.value))(
+              (newEnvelope ?? envelope).amountCentsProperty.value.formatCentsAsCurrency()),
         ],
       ),
     );
