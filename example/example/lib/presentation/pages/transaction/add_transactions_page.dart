@@ -205,8 +205,9 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
         newEnvelope == null ? 0 : newEnvelope.amountCentsProperty.value - envelope.amountCentsProperty.value;
 
     return StyledCard(
-      titleText: envelope.nameProperty.value,
-      leading: envelopeCardModification.getIcon(envelope.ruleProperty.value),
+      title: StyledText.h6.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
+      leading:
+          envelopeCardModification.getIcon(envelope.ruleProperty.value, color: Color(envelope.colorProperty.value)),
       actions: [
         ActionItem(
           titleText: 'Edit',
@@ -253,7 +254,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
           },
         ));
       },
-      body: StyledList.row(
+      body: StyledList.row.scrollable.withScrollbar(
         itemPadding: EdgeInsets.symmetric(horizontal: 4),
         children: [
           StyledText.body(envelope.amountCentsProperty.value.formatCentsAsCurrency()),
