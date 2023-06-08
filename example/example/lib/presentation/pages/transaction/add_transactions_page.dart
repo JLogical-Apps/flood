@@ -32,19 +32,23 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
     final envelopesModel =
         useQuery(EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: budgetIdProperty.value, isArchived: false).all());
     final envelopeEntities = envelopesModel.getOrNull();
+    if (envelopeEntities == null) {
+      return StyledLoadingPage();
+    }
+
+    final envelopeById = envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value));
 
     final transactionGeneratorsState = useState<List<TransactionGenerator>>([]);
-    final transactions =
-        transactionGeneratorsState.value.map((transactionGenerator) => transactionGenerator.generate()).toList();
-    final modifiedEnvelopeById = budget != null && envelopeEntities != null
-        ? budget
-            .addTransactions(
-              context.coreDropComponent,
-              envelopeById: envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value)),
-              transactions: transactions,
-            )
-            .modifiedEnvelopeById
-        : null;
+    final transactions = transactionGeneratorsState.value
+        .map((transactionGenerator) => transactionGenerator.generate(envelopeById))
+        .toList();
+    final modifiedEnvelopeById = budget
+        ?.addTransactions(
+          context.coreDropComponent,
+          envelopeById: envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value)),
+          transactions: transactions,
+        )
+        .modifiedEnvelopeById;
 
     return StyledPage(
       titleText: 'Add Transactions',
@@ -56,7 +60,6 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
             onPressed: () async {
               final budgetEntity = (await budgetModel.getOrLoad()) ??
                   (throw Exception('Cannot load budget! [${budgetIdProperty.value}]'));
-              final envelopeEntities = await envelopesModel.getOrLoad();
 
               final transactionGenerator = await context.showStyledDialog(StyledPortDialog(
                   titleText: 'Add Income',
@@ -74,15 +77,16 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
                         budgetId: budgetIdProperty.value,
                         budget: budgetEntity.value,
                         coreDropContext: context.coreDropComponent,
-                        envelopeById: envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value)),
                       ))));
 
               if (transactionGenerator == null) {
                 return;
               }
 
-              transactionGeneratorsState.value =
-                  _getSortedTransactionGenerators(transactionGeneratorsState.value + [transactionGenerator]);
+              transactionGeneratorsState.value = _getSortedTransactionGenerators(
+                existingGenerators: transactionGeneratorsState.value + [transactionGenerator],
+                envelopeById: envelopeById,
+              );
             },
           ),
           StyledCard(
@@ -101,10 +105,11 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
                                   modifiedEnvelopeById: modifiedEnvelopeById,
                                   onTransactionCreated: (envelopeTransaction) =>
                                       transactionGeneratorsState.value = _getSortedTransactionGenerators(
-                                    transactionGeneratorsState.value +
+                                    existingGenerators: transactionGeneratorsState.value +
                                         [
                                           WrapperTransactionGenerator(transaction: envelopeTransaction),
                                         ],
+                                    envelopeById: envelopeById,
                                   ),
                                 ))
                             .toList(),
@@ -122,7 +127,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
               StyledList.column(
                 children: transactionGeneratorsState.value
                     .map((transactionGenerator) => TransactionCard(
-                          budgetTransaction: transactionGenerator.generate(),
+                          budgetTransaction: transactionGenerator.generate(envelopeById),
                           transactionViewContext: TransactionViewContext.budget(),
                           actions: [
                             ActionItem(
@@ -149,7 +154,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
             onPressed: transactions.isEmpty
                 ? null
                 : () async {
-                    if (modifiedEnvelopeById == null || envelopeEntities == null) {
+                    if (modifiedEnvelopeById == null) {
                       return;
                     }
 
@@ -172,9 +177,16 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
     );
   }
 
-  List<TransactionGenerator> _getSortedTransactionGenerators(List<TransactionGenerator> existingGenerators) {
+  List<TransactionGenerator> _getSortedTransactionGenerators({
+    required List<TransactionGenerator> existingGenerators,
+    required Map<String, Envelope> envelopeById,
+  }) {
     existingGenerators.sort(
-      (a, b) => a.generate().transactionDateProperty.value.compareTo(b.generate().transactionDateProperty.value),
+      (a, b) => a
+          .generate(envelopeById)
+          .transactionDateProperty
+          .value
+          .compareTo(b.generate(envelopeById).transactionDateProperty.value),
     );
     return existingGenerators;
   }
@@ -196,6 +208,21 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
       titleText: envelope.nameProperty.value,
       leading: envelopeCardModification.getIcon(envelope.ruleProperty.value),
       actions: [
+        ActionItem(
+          titleText: 'Edit',
+          descriptionText: 'Edit the envelope.',
+          iconData: Icons.edit,
+          color: Colors.orange,
+          onPerform: (context) async {
+            await context.showStyledDialog(StyledPortDialog(
+              titleText: 'Edit Envelope',
+              port: envelope.asPort(context.corePondContext),
+              onAccept: (Envelope result) async {
+                await context.coreDropComponent.update(envelopeEntity..value = result);
+              },
+            ));
+          },
+        ),
         ActionItem(
           titleText: 'Transfer',
           descriptionText: 'Transfer money to/from this envelope.',

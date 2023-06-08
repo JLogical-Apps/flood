@@ -5,7 +5,7 @@ import 'package:example/features/transaction/income_transaction.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 abstract class TransactionGenerator<B extends BudgetTransaction> {
-  B generate();
+  B generate(Map<String, Envelope> envelopeById);
 }
 
 class WrapperTransactionGenerator<B extends BudgetTransaction> extends TransactionGenerator<B> {
@@ -14,7 +14,7 @@ class WrapperTransactionGenerator<B extends BudgetTransaction> extends Transacti
   WrapperTransactionGenerator({required this.transaction});
 
   @override
-  B generate() {
+  B generate(Map<String, Envelope> envelopeById) {
     return transaction;
   }
 }
@@ -26,7 +26,6 @@ class IncomeTransactionGenerator extends TransactionGenerator<IncomeTransaction>
   final String budgetId;
   final Budget budget;
   final CoreDropContext coreDropContext;
-  final Map<String, Envelope> envelopeById;
 
   IncomeTransactionGenerator({
     required this.incomeCents,
@@ -34,11 +33,10 @@ class IncomeTransactionGenerator extends TransactionGenerator<IncomeTransaction>
     required this.budgetId,
     required this.budget,
     required this.coreDropContext,
-    required this.envelopeById,
   });
 
   @override
-  IncomeTransaction generate() {
+  IncomeTransaction generate(Map<String, Envelope> envelopeById) {
     final budgetChange = budget.addIncome(
       coreDropContext,
       incomeCents: incomeCents,
