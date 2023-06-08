@@ -139,13 +139,13 @@ void main() {
         Envelope()
           ..nameProperty.set('Repeating A')
           ..ruleProperty.set(RepeatingGoalEnvelopeRule()
-            ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))
+            ..timeRuleProperty.set(MonthlyTimeRule())
             ..goalCentsProperty.set(totalIncome))
           ..budgetProperty.set(budgetId),
         Envelope()
           ..nameProperty.set('Repeating B')
           ..ruleProperty.set(RepeatingGoalEnvelopeRule()
-            ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))
+            ..timeRuleProperty.set(MonthlyTimeRule())
             ..goalCentsProperty.set(totalIncome))
           ..budgetProperty.set(budgetId),
       ],
@@ -453,7 +453,7 @@ void main() {
             ..goalCentsProperty.set(10 * 100)
             ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(seconds: 1)))
             ..remainingGoalCentsProperty.set(10 * 100)
-            ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))));
+            ..timeRuleProperty.set(MonthlyTimeRule())));
 
     final periodicGoalEnvelope = await pondContext.coreDropComponent.updateEntity(
         EnvelopeEntity(),
@@ -532,7 +532,7 @@ void main() {
             ..goalCentsProperty.set(10 * 100)
             ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(days: 32)))
             ..remainingGoalCentsProperty.set(10 * 100)
-            ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))));
+            ..timeRuleProperty.set(MonthlyTimeRule())));
 
     final periodicGoalEnvelope = await pondContext.coreDropComponent.updateEntity(
         EnvelopeEntity(),

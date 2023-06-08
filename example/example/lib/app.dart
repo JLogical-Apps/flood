@@ -116,7 +116,7 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
       ..nameProperty.set('Car')
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(100 * 100)
-        ..timeRuleProperty.set(MonthlyTimeRule()..dayOfMonthProperty.set(1))
+        ..timeRuleProperty.set(MonthlyTimeRule())
         ..remainingGoalCentsProperty.set(100 * 100)
         ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(days: 6)))),
     Envelope()

@@ -2,22 +2,9 @@ import 'package:example/features/envelope_rule/time_rule.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class MonthlyTimeRule extends TimeRule {
-  static const dayOfMonthField = 'dayOfMonth';
-  late final dayOfMonthProperty = field<int>(name: dayOfMonthField)
-      .withDisplayName('Day of Month')
-      .required()
-      .withDefault(() => 1)
-      .withValidator(Validator((int value) {
-        if (value < 1 || value > 31) {
-          return 'Must be a date between 1 and 31!';
-        }
-        return null;
-      }).cast<int>());
-
   @override
   late final List<ValueObjectBehavior> behaviors = [
     ValueObjectBehavior.displayName('Monthly'),
-    dayOfMonthProperty,
     creationTime(),
   ];
 

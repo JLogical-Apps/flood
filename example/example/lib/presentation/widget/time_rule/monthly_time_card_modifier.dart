@@ -13,13 +13,7 @@ class MonthlyTimeCardModifier extends TimeRuleCardModifier<MonthlyTimeRule?> {
 
   @override
   String getPeriodMarkdown(RepeatingGoalEnvelopeRule envelopeRule, MonthlyTimeRule? rule) {
-    final date = rule?.dayOfMonthProperty.valueOrNull;
-    final dateRepresentation = date == null
-        ? null
-        : date > 31
-            ? 'last'
-            : date.toString();
-    return 'month on the `${dateRepresentation ?? '?'}` day';
+    return '1st day of the month';
   }
 
   @override
