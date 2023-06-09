@@ -1,6 +1,7 @@
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
+import 'package:example/features/settings/settings_entity.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/presentation/pages/envelope/archived_envelopes_page.dart';
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
@@ -21,6 +22,14 @@ class BudgetPage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
+    useOneTimeEffect(() {
+      () async {
+        final settingsEntity = await SettingsEntity.getSettings(context.coreDropComponent);
+        settingsEntity.value.budgetProperty.set(budgetIdProperty.value);
+        await context.coreDropComponent.update(settingsEntity);
+      }();
+      return null;
+    });
     final budgetModel = useQuery(Query.getByIdOrNull<BudgetEntity>(budgetIdProperty.value));
     final envelopesModel =
         useQuery(EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: budgetIdProperty.value, isArchived: false).all());
@@ -159,10 +168,5 @@ class BudgetPage extends AppPage {
   @override
   AppPage copy() {
     return BudgetPage();
-  }
-
-  @override
-  AppPage? getParent() {
-    return HomePage();
   }
 }

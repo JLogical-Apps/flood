@@ -4,6 +4,10 @@ import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class BudgetEntity extends Entity<Budget> {
+  static Query<BudgetEntity> getBudgetsQuery({required String userId}) {
+    return Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(userId);
+  }
+
   Future<B> updateAddTransaction<B extends BudgetTransactionEntity>(
     CoreDropContext context, {
     required B transactionEntity,

@@ -52,3 +52,7 @@ void useListen<T>(Stream<T> stream, [Function(T? value)? valueChanged]) {
     [stream],
   );
 }
+
+void useOneTimeEffect(void Function()? Function() effect) {
+  useEffect(effect, [0]);
+}

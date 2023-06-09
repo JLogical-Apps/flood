@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:example/features/settings/settings_entity.dart';
 import 'package:example/presentation/pages/auth/login_page.dart';
+import 'package:example/presentation/pages/budget/budget_page.dart';
 import 'package:example/presentation/pages/budget/budgets_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -27,6 +29,12 @@ class HomePage extends AppPage {
       return loginPage.uri;
     }
 
-    return null;
+    final settingsEntity = await SettingsEntity.getSettings(context.coreDropComponent);
+    final budgetId = settingsEntity.value.budgetProperty.value;
+    if (budgetId == null) {
+      return null;
+    }
+
+    return (BudgetPage()..budgetIdProperty.set(budgetId)).uri;
   }
 }
