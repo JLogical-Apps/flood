@@ -3,9 +3,9 @@ import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/settings/settings_entity.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
+import 'package:example/presentation/pages/budget/budgets_page.dart';
 import 'package:example/presentation/pages/envelope/archived_envelopes_page.dart';
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
-import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/pages/transaction/add_transactions_page.dart';
 import 'package:example/presentation/widget/envelope/envelope_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
@@ -58,6 +58,15 @@ class BudgetPage extends AppPage {
               color: Colors.blue,
               onPerform: (context) {
                 context.push(ArchivedEnvelopesPage()..budgetIdProperty.set(budgetIdProperty.value));
+              },
+            ),
+            ActionItem(
+              titleText: 'Change Budget',
+              descriptionText: 'Use another budget.',
+              iconData: Icons.change_circle,
+              color: Colors.blue,
+              onPerform: (context) {
+                context.warpTo(BudgetsPage());
               },
             ),
           ],
