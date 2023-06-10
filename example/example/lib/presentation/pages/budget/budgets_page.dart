@@ -23,51 +23,49 @@ class BudgetsPage extends AppPage {
         .map((loggedInUserId) => Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all())));
     return StyledPage(
       titleText: 'Home',
-      body: Center(
-        child: Column(
-          children: [
-            ModelBuilder<UserEntity?>(
-              model: loggedInUserModel,
-              builder: (userEntity) {
-                return StyledText.h1('Welcome ${userEntity?.value.nameProperty.value ?? 'N/A'}');
-              },
-            ),
-            ModelBuilder<List<BudgetEntity>>(
-              model: budgetsModel,
-              builder: (budgetEntities) {
-                return StyledList.column.scrollable(
-                  children: [
-                    StyledList.column.withMinChildSize(150)(
-                      children: budgetEntities
-                          .map((budgetEntity) => StyledCard(
-                                titleText: budgetEntity.value.nameProperty.value,
-                                onPressed: () {
-                                  context.warpTo(BudgetPage()..budgetIdProperty.set(budgetEntity.id!));
-                                },
-                              ))
-                          .toList(),
-                      ifEmptyText: 'You have no budgets! Click the Create button below to create your first one.',
-                    ),
-                    StyledButton.strong(
-                      labelText: 'Create',
-                      iconData: Icons.add,
-                      onPressed: () async {
-                        await context.showStyledDialog(StyledPortDialog(
-                          titleText: 'Create New Budget',
-                          port: (Budget()..ownerProperty.set(loggedInUserIdModel.getOrNull()!))
-                              .asPort(context.corePondContext),
-                          onAccept: (Budget result) async {
-                            await context.coreDropComponent.update(BudgetEntity()..value = result);
-                          },
-                        ));
-                      },
-                    ),
-                  ],
-                );
-              },
-            ),
-          ],
-        ),
+      body: StyledList.column.scrollable.withScrollbar(
+        children: [
+          ModelBuilder<UserEntity?>(
+            model: loggedInUserModel,
+            builder: (userEntity) {
+              return StyledText.h1('Welcome ${userEntity?.value.nameProperty.value ?? 'N/A'}');
+            },
+          ),
+          ModelBuilder<List<BudgetEntity>>(
+            model: budgetsModel,
+            builder: (budgetEntities) {
+              return StyledList.column(
+                children: [
+                  StyledList.column.withMinChildSize(150)(
+                    children: budgetEntities
+                        .map((budgetEntity) => StyledCard(
+                              titleText: budgetEntity.value.nameProperty.value,
+                              onPressed: () {
+                                context.warpTo(BudgetPage()..budgetIdProperty.set(budgetEntity.id!));
+                              },
+                            ))
+                        .toList(),
+                    ifEmptyText: 'You have no budgets! Click the Create button below to create your first one.',
+                  ),
+                  StyledButton.strong(
+                    labelText: 'Create',
+                    iconData: Icons.add,
+                    onPressed: () async {
+                      await context.showStyledDialog(StyledPortDialog(
+                        titleText: 'Create New Budget',
+                        port: (Budget()..ownerProperty.set(loggedInUserIdModel.getOrNull()!))
+                            .asPort(context.corePondContext),
+                        onAccept: (Budget result) async {
+                          await context.coreDropComponent.update(BudgetEntity()..value = result);
+                        },
+                      ));
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }
