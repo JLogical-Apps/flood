@@ -13,6 +13,7 @@ export 'src/components/input/styled_text_field.dart';
 export 'src/components/layout/styled_card.dart';
 export 'src/components/layout/styled_container.dart';
 export 'src/components/layout/styled_list.dart';
+export 'src/components/layout/styled_tabs.dart';
 export 'src/components/media/styled_image.dart';
 export 'src/components/misc/styled_divider.dart';
 export 'src/components/misc/styled_icon.dart';

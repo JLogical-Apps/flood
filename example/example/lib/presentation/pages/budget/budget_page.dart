@@ -52,15 +52,6 @@ class BudgetPage extends AppPage {
           titleText: '${budget.nameProperty.value}: ${totalCentsModel.getOrNull()?.formatCentsAsCurrency() ?? '...'}',
           actions: [
             ActionItem(
-              titleText: 'Archived Envelopes',
-              descriptionText: 'View your archived envelopes.',
-              iconData: Icons.archive,
-              color: Colors.blue,
-              onPerform: (context) {
-                context.push(ArchivedEnvelopesPage()..budgetIdProperty.set(budgetIdProperty.value));
-              },
-            ),
-            ActionItem(
               titleText: 'Change Budget',
               descriptionText: 'Use another budget.',
               iconData: Icons.change_circle,
@@ -70,102 +61,127 @@ class BudgetPage extends AppPage {
               },
             ),
           ],
-          body: StyledList.column.scrollable(
-            children: [
-              StyledButton.strong(
-                labelText: 'Add Transactions',
-                iconData: Icons.attach_money,
-                onPressed: () async {
-                  await context.push(AddTransactionsPage()..budgetIdProperty.set(budgetIdProperty.value));
-                },
-              ),
-              StyledCard(
+          body: StyledTabs(
+            tabs: [
+              StyledTab(
                 titleText: 'Envelopes',
-                leadingIcon: Icons.mail,
-                actions: [
-                  ActionItem(
-                    titleText: 'Create',
-                    descriptionText: 'Create a new envelope.',
-                    iconData: Icons.add,
-                    color: Colors.green,
-                    onPerform: (_) async {
-                      await context.showStyledDialog(StyledPortDialog(
-                        titleText: 'Create New Envelope',
-                        port: (Envelope()..budgetProperty.set(budgetEntity.id!)).asPort(context.corePondContext),
-                        onAccept: (Envelope result) async {
-                          await context.coreDropComponent.update(EnvelopeEntity()..value = result);
-                        },
-                      ));
-                    },
-                  ),
-                ],
-                children: [
-                  ModelBuilder(
-                    model: envelopesModel,
-                    builder: (List<EnvelopeEntity> envelopeEntities) {
-                      return StyledList.column.withMinChildSize(150)(
-                        children: [
-                          ...envelopeEntities.map((envelopeEntity) {
-                            return EnvelopeCard(
-                              envelope: envelopeEntity.value,
-                              onPressed: () async {
-                                context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!));
+                icon: Icons.mail,
+                child: StyledList.column.scrollable.withScrollbar(
+                  children: [
+                    StyledButton.strong(
+                      labelText: 'Add Transactions',
+                      iconData: Icons.attach_money,
+                      onPressed: () async {
+                        await context.push(AddTransactionsPage()..budgetIdProperty.set(budgetIdProperty.value));
+                      },
+                    ),
+                    StyledCard(
+                      titleText: 'Envelopes',
+                      leadingIcon: Icons.mail,
+                      actions: [
+                        ActionItem(
+                          titleText: 'Create',
+                          descriptionText: 'Create a new envelope.',
+                          iconData: Icons.add,
+                          color: Colors.green,
+                          onPerform: (_) async {
+                            await context.showStyledDialog(StyledPortDialog(
+                              titleText: 'Create New Envelope',
+                              port: (Envelope()..budgetProperty.set(budgetEntity.id!)).asPort(context.corePondContext),
+                              onAccept: (Envelope result) async {
+                                await context.coreDropComponent.update(EnvelopeEntity()..value = result);
                               },
+                            ));
+                          },
+                        ),
+                        ActionItem(
+                          titleText: 'Archived Envelopes',
+                          descriptionText: 'View your archived envelopes.',
+                          iconData: Icons.archive,
+                          color: Colors.blue,
+                          onPerform: (context) {
+                            context.push(ArchivedEnvelopesPage()..budgetIdProperty.set(budgetIdProperty.value));
+                          },
+                        ),
+                      ],
+                      children: [
+                        ModelBuilder(
+                          model: envelopesModel,
+                          builder: (List<EnvelopeEntity> envelopeEntities) {
+                            return StyledList.column.withMinChildSize(150)(
+                              children: [
+                                ...envelopeEntities.map((envelopeEntity) {
+                                  return EnvelopeCard(
+                                    envelope: envelopeEntity.value,
+                                    onPressed: () async {
+                                      context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!));
+                                    },
+                                  );
+                                }).toList(),
+                              ],
+                              ifEmptyText:
+                                  'There are no envelopes in this budget! Create one by pressing the triple-dot menu above!',
                             );
-                          }).toList(),
-                        ],
-                        ifEmptyText:
-                            'There are no envelopes in this budget! Create one by pressing the triple-dot menu above!',
-                      );
-                    },
-                  ),
-                ],
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              StyledCard(
+              StyledTab(
                 titleText: 'Transactions',
-                leadingIcon: Icons.swap_horiz,
-                children: [
-                  PaginatedQueryModelBuilder(
-                    paginatedQueryModel: transactionsModel,
-                    builder: (List<BudgetTransactionEntity> transactionEntities, loadMore) {
-                      return StyledList.column(
-                        ifEmptyText: 'There are no transactions in this budget!',
-                        children: [
-                          ...transactionEntities
-                              .map((entity) => TransactionCard(
-                                    budgetTransaction: entity.value,
-                                    transactionViewContext: TransactionViewContext.budget(),
-                                    actions: [
-                                      ActionItem(
-                                        titleText: 'Delete',
-                                        descriptionText: 'Delete this transaction.',
-                                        iconData: Icons.delete,
-                                        color: Colors.red,
-                                        onPerform: (context) async {
-                                          await context.showStyledDialog(StyledDialog.yesNo(
-                                            titleText: 'Confirm Delete',
-                                            bodyText:
-                                                'Are you sure you want to delete this transaction? You cannot undo this.',
-                                            onAccept: () async {
-                                              await context.coreDropComponent.delete(entity);
-                                              Navigator.of(context).pop();
-                                            },
-                                          ));
-                                        },
-                                      ),
-                                    ],
-                                  ))
-                              .toList(),
-                          if (loadMore != null)
-                            StyledButton.strong(
-                              labelText: 'Load More',
-                              onPressed: loadMore,
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
+                icon: Icons.swap_horiz,
+                child: StyledList.column.scrollable.withScrollbar(
+                  children: [
+                    StyledCard(
+                      titleText: 'Transactions',
+                      leadingIcon: Icons.swap_horiz,
+                      children: [
+                        PaginatedQueryModelBuilder(
+                          paginatedQueryModel: transactionsModel,
+                          builder: (List<BudgetTransactionEntity> transactionEntities, loadMore) {
+                            return StyledList.column(
+                              ifEmptyText: 'There are no transactions in this budget!',
+                              children: [
+                                ...transactionEntities
+                                    .map((entity) => TransactionCard(
+                                          budgetTransaction: entity.value,
+                                          transactionViewContext: TransactionViewContext.budget(),
+                                          actions: [
+                                            ActionItem(
+                                              titleText: 'Delete',
+                                              descriptionText: 'Delete this transaction.',
+                                              iconData: Icons.delete,
+                                              color: Colors.red,
+                                              onPerform: (context) async {
+                                                await context.showStyledDialog(StyledDialog.yesNo(
+                                                  titleText: 'Confirm Delete',
+                                                  bodyText:
+                                                      'Are you sure you want to delete this transaction? You cannot undo this.',
+                                                  onAccept: () async {
+                                                    await context.coreDropComponent.delete(entity);
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ));
+                                              },
+                                            ),
+                                          ],
+                                        ))
+                                    .toList(),
+                                if (loadMore != null)
+                                  StyledButton.strong(
+                                    labelText: 'Load More',
+                                    onPressed: loadMore,
+                                  ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
