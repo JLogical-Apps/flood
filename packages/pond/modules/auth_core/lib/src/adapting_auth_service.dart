@@ -9,12 +9,12 @@ class AdaptingAuthService with IsCorePondComponentWrapper, IsAuthServiceWrapper 
 
   @override
   late final AuthService authService =
-      authServiceGetter?.call(context.environment) ?? _getAuthService(context.environment);
+      authServiceGetter?.call(context.environment) ?? _getDefaultAuthService(context.environment);
 
   @override
   late final CorePondComponent corePondComponent = authService;
 
-  AuthService _getAuthService(EnvironmentType environment) {
+  AuthService _getDefaultAuthService(EnvironmentType environment) {
     if (environment == EnvironmentType.static.testing) {
       return AuthService.memory();
     }

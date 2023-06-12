@@ -10,7 +10,7 @@ class EnvelopeTransactionEntity extends BudgetTransactionEntity<EnvelopeTransact
       return;
     }
 
-    final oldEntity = await context.executeQuery(Query.getByIdOrNull<EnvelopeTransactionEntity>(id!)) ??
+    final oldEntity = await Query.getByIdOrNull<EnvelopeTransactionEntity>(id!).get(context) ??
         (throw Exception('Could not find envelope transaction with id [$id]'));
 
     final oldTransaction = oldEntity.value;

@@ -22,14 +22,14 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
 
   StateQueryExecutor({required this.statesX, required this.dropContext});
 
-  ModifierResolver<StateQueryReducer, Query> getQueryReducerResolver() => ModifierResolver(modifiers: [
+  ModifierResolver<StateQueryReducer, Query> getQueryReducerResolver() => Resolver.fromModifiers([
         FromStateQueryReducer(dropContext: dropContext),
         WhereStateQueryReducer(),
         OrderByStateQueryReducer(),
       ]);
 
   ModifierResolver<StateQueryRequestReducer, QueryRequest> getQueryRequestReducerResolver<T>() =>
-      ModifierResolver(modifiers: [
+      Resolver.fromModifiers([
         AllStatesStateQueryRequestReducer(dropContext: dropContext),
         FirstOrNullStateStateQueryRequestReducer(dropContext: dropContext),
         MapStateQueryRequestReducer(

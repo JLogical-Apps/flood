@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:actions_core/actions_core.dart';
+import 'package:collection/collection.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
 import 'package:pond_core/pond_core.dart';
@@ -9,6 +10,10 @@ import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class CoreDropComponent extends CorePondComponent with IsCoreDropContext, IsRepositoryListWrapper {
+  final List<RepositoryImplementation> repositoryImplementations;
+
+  CoreDropComponent({this.repositoryImplementations = const []});
+
   @override
   List<CorePondComponentBehavior> get behaviors => [
         CorePondComponentBehavior.dependency<TypeCoreComponent>(),
@@ -43,4 +48,15 @@ class CoreDropComponent extends CorePondComponent with IsCoreDropContext, IsRepo
     name: 'Delete',
     runner: (State state) => super.onDelete(state),
   );
+
+  Repository? getImplementationOrNull(Repository repository) {
+    return repositoryImplementations
+        .firstWhereOrNull((implementation) => implementation.repositoryType == repository.runtimeType)
+        ?.getImplementation(repository);
+  }
+
+  Repository getImplementation(Repository repository) {
+    return getImplementationOrNull(repository) ??
+        (throw Exception('Could not find implementation for repository [$repository]'));
+  }
 }

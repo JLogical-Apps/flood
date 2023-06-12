@@ -1,21 +1,13 @@
 import 'dart:async';
 
-import 'package:drop_core/src/context/core_pond_context_extensions.dart';
-import 'package:drop_core/src/context/core_drop_context.dart';
-import 'package:drop_core/src/core_drop_component.dart';
-import 'package:drop_core/src/query/request/query_request.dart';
-import 'package:drop_core/src/record/entity.dart';
-import 'package:drop_core/src/record/value_object.dart';
+import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/repository/adapting_repository.dart';
 import 'package:drop_core/src/repository/memory_repository.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
-import 'package:drop_core/src/repository/repository_query_executor.dart';
-import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/repository/type/for_abstract_type_repository.dart';
 import 'package:drop_core/src/repository/type/for_type_repository.dart';
 import 'package:drop_core/src/repository/type/with_embedded_abstract_type_repository.dart';
 import 'package:drop_core/src/repository/type/with_embedded_type_repository.dart';
-import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:environment_core/environment_core.dart';
 import 'package:pond_core/pond_core.dart';
@@ -30,21 +22,27 @@ abstract class Repository implements CorePondComponent, RepositoryStateHandlerWr
     return MemoryRepository();
   }
 
+  static FileRepository file(String rootPath) {
+    return FileRepository(rootPath: rootPath);
+  }
+
   static Repository list(List<Repository> repositories) {
     return RepositoryListWrapper(repositories);
   }
 
-  static Repository adapting(Repository Function(EnvironmentConfigCoreComponent environment) repositoryGetter) {
-    return AdaptingRepository(repositoryGetter);
+  static Repository adaptingCustom(Repository Function(EnvironmentConfigCoreComponent environment) repositoryGetter) {
+    return AdaptingRepository.custom(repositoryGetter);
+  }
+
+  static Repository adapting(String rootPath) {
+    return AdaptingRepository(rootPath);
   }
 }
 
 extension RepositoryExtension on Repository {
   Future<State> update(Stateful stateful) async {
     var state = stateful.getState(context.locate<CoreDropComponent>());
-
     state = await onUpdate(state);
-
     return state;
   }
 
@@ -180,11 +178,16 @@ mixin IsRepositoryWrapper implements RepositoryWrapper, RepositoryStateHandlerWr
   @override
   RepositoryQueryExecutor get queryExecutor => repository.queryExecutor;
 
-  @override
-  CorePondContext get context => repository.context;
+  late CorePondContext _context;
 
   @override
-  set context(CorePondContext context) => repository.context = context;
+  CorePondContext get context => _context;
+
+  @override
+  set context(CorePondContext context) {
+    _context = context;
+    repository.context = context;
+  }
 
   @override
   List<CorePondComponentBehavior> get behaviors => repository.behaviors;

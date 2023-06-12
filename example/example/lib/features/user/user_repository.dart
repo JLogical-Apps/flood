@@ -4,7 +4,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class UserRepository with IsRepositoryWrapper {
   @override
-  late Repository repository = Repository.memory().forType<UserEntity, User>(
+  late Repository repository = Repository.adapting('user').forType<UserEntity, User>(
     UserEntity.new,
     User.new,
     entityTypeName: 'UserEntity',

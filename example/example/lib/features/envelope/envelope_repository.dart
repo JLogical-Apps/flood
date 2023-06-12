@@ -12,7 +12,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class EnvelopeRepository with IsRepositoryWrapper {
   @override
-  late Repository repository = Repository.memory()
+  late Repository repository = Repository.adapting('envelope')
       .forType<EnvelopeEntity, Envelope>(
         EnvelopeEntity.new,
         Envelope.new,

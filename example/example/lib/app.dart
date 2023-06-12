@@ -31,8 +31,13 @@ const testingTransactions = true;
 Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(App(
-    appPondContext:
-        await getAppPondContext(await getCorePondContext(environmentConfig: EnvironmentConfig.static.flutterAssets())),
+    appPondContext: await getAppPondContext(await getCorePondContext(
+      environmentConfig: EnvironmentConfig.static.flutterAssets(),
+      repositoryImplementations: [
+        FlutterFileRepositoryImplementation(),
+        FirebaseCloudRepositoryImplementation(),
+      ],
+    )),
   ));
 }
 

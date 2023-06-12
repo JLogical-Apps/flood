@@ -42,6 +42,8 @@ class EnvironmentConfigStatic {
       EnvironmentTypeEnvironmentConfig(environmentType: environmentType);
 
   FileAssetEnvironmentConfig fileAssets() => FileAssetEnvironmentConfig();
+
+  EnvironmentConfig testing() => memory({'environment': 'testing'});
 }
 
 extension EnvironmentConfigExtensions on EnvironmentConfig {

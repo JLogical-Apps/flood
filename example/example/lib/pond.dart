@@ -5,12 +5,15 @@ import 'package:example/features/transaction/budget_transaction_repository.dart'
 import 'package:example/features/user/user_repository.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
-Future<CorePondContext> getCorePondContext({EnvironmentConfig? environmentConfig}) async {
+Future<CorePondContext> getCorePondContext({
+  EnvironmentConfig? environmentConfig,
+  List<RepositoryImplementation> repositoryImplementations = const [],
+}) async {
   environmentConfig ??= EnvironmentConfig.static.memory();
 
   final corePondContext = CorePondContext();
   await corePondContext.register(TypeCoreComponent());
-  await corePondContext.register(CoreDropComponent());
+  await corePondContext.register(CoreDropComponent(repositoryImplementations: repositoryImplementations));
   await corePondContext.register(LogCoreComponent.console());
   await corePondContext.register(
       ActionCoreComponent(actionWrapper: <P, R>(Action<P, R> action) => action.log(context: corePondContext)));
@@ -24,3 +27,8 @@ Future<CorePondContext> getCorePondContext({EnvironmentConfig? environmentConfig
   await corePondContext.register(BudgetTransactionRepository());
   return corePondContext;
 }
+
+Future<CorePondContext> getTestingCorePondContext() => getCorePondContext(
+      environmentConfig: EnvironmentConfig.static.testing(),
+      repositoryImplementations: [],
+    );

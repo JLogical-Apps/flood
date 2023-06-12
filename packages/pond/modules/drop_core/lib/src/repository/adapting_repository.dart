@@ -5,8 +5,20 @@ import 'package:utils_core/utils_core.dart';
 class AdaptingRepository with IsRepositoryWrapper {
   final Repository Function(EnvironmentConfigCoreComponent environment) repositoryGetter;
 
-  AdaptingRepository(this.repositoryGetter);
+  AdaptingRepository.custom(this.repositoryGetter);
+
+  AdaptingRepository(String rootPath) : repositoryGetter = _defaultRepositoryGetter(rootPath);
 
   @override
-  Repository get repository => repositoryGetter(context.locate<EnvironmentConfigCoreComponent>());
+  late final Repository repository = repositoryGetter(context.locate<EnvironmentConfigCoreComponent>());
+
+  static Repository Function(EnvironmentConfigCoreComponent environment) _defaultRepositoryGetter(String rootPath) {
+    return (environment) {
+      if (environment.environment == EnvironmentType.static.testing) {
+        return Repository.memory();
+      }
+
+      throw UnimplementedError('Unknown environment for adapting repository [${environment.environment}');
+    };
+  }
 }

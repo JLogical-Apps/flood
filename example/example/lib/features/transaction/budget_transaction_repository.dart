@@ -10,7 +10,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class BudgetTransactionRepository with IsRepositoryWrapper {
   @override
-  late final Repository repository = Repository.memory()
+  late final Repository repository = Repository.adapting('transactions')
       .forAbstractType<BudgetTransactionEntity, BudgetTransaction>(
         entityTypeName: 'BudgetTransactionEntity',
         valueObjectTypeName: 'BudgetTransaction',

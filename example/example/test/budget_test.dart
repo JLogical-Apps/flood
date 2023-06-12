@@ -22,7 +22,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 void main() {
   late CorePondContext pondContext;
   setUp(() async {
-    pondContext = await getCorePondContext();
+    pondContext = await getTestingCorePondContext();
   });
 
   test('no change to budget with no envelopes.', () {

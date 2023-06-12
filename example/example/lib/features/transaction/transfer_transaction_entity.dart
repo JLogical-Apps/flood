@@ -12,7 +12,7 @@ class TransferTransactionEntity extends BudgetTransactionEntity<TransferTransact
       return;
     }
 
-    final oldEntity = await context.executeQuery(Query.getByIdOrNull<TransferTransactionEntity>(id!)) ??
+    final oldEntity = await Query.getByIdOrNull<TransferTransactionEntity>(id!).get(context) ??
         (throw Exception('Could not find transfer transaction with id [$id]'));
 
     final oldTransaction = oldEntity.value;
