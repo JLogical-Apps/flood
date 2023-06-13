@@ -35,7 +35,11 @@ extension FutureValueExtensions<T> on FutureValue<T> {
       return LoadingFutureValue();
     }
     if (this is LoadedFutureValue<T>) {
-      return LoadedFutureValue(data: mapper((this as LoadedFutureValue<T>).data));
+      try {
+        return LoadedFutureValue(data: mapper((this as LoadedFutureValue<T>).data));
+      } catch (error, stackTrace) {
+        return ErrorFutureValue(error: error, stackTrace: stackTrace);
+      }
     }
     if (this is ErrorFutureValue<T>) {
       final errorState = this as ErrorFutureValue<T>;
@@ -53,7 +57,11 @@ extension FutureValueExtensions<T> on FutureValue<T> {
       return LoadingFutureValue();
     }
     if (this is LoadedFutureValue<T>) {
-      return LoadedFutureValue(data: await asyncMapper((this as LoadedFutureValue<T>).data));
+      try {
+        return LoadedFutureValue(data: await asyncMapper((this as LoadedFutureValue<T>).data));
+      } catch (error, stackTrace) {
+        return ErrorFutureValue(error: error, stackTrace: stackTrace);
+      }
     }
     if (this is ErrorFutureValue<T>) {
       final errorState = this as ErrorFutureValue<T>;
@@ -76,7 +84,11 @@ extension FutureValueExtensions<T> on FutureValue<T> {
       return onLoading();
     }
     if (this is LoadedFutureValue<T>) {
-      return onLoaded((this as LoadedFutureValue<T>).data);
+      try {
+        return onLoaded((this as LoadedFutureValue<T>).data);
+      } catch (error, stackTrace) {
+        return onError(error, stackTrace);
+      }
     }
     if (this is ErrorFutureValue<T>) {
       final errorState = this as ErrorFutureValue<T>;

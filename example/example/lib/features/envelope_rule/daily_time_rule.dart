@@ -1,5 +1,5 @@
 import 'package:example/features/envelope_rule/time_rule.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class DailyTimeRule extends TimeRule {
   static const daysField = 'days';

@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
 
   collection: ^1.16.0
+  path_provider: ^2.0.15
 
   environment_core:
     git:

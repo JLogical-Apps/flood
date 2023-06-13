@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:persistence_core/src/directory_data_source.dart';
 import 'package:persistence_core/src/file_data_source.dart';
 import 'package:persistence_core/src/json_data_source.dart';
 import 'package:persistence_core/src/mapper_data_source.dart';
@@ -25,6 +26,10 @@ abstract class DataSource<T> {
 class DataSourceStatic {
   MemoryDataSource<T> memory<T>({T? initialData}) {
     return MemoryDataSource(initialData: initialData);
+  }
+
+  DirectoryDataSource directory(Directory directory) {
+    return DirectoryDataSource(directory: directory);
   }
 
   FileDataSource file(File file) {

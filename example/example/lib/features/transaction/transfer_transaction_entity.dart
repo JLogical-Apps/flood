@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/features/transaction/transfer_transaction.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class TransferTransactionEntity extends BudgetTransactionEntity<TransferTransaction> {
   @override

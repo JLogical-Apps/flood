@@ -1,5 +1,5 @@
 import 'package:example/features/envelope_rule/repeating_goal_envelope_rule.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 abstract class TimeRule extends ValueObject {
   int getPeriodsBetween(DateTime date1, DateTime date2);

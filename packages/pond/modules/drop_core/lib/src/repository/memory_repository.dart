@@ -25,10 +25,12 @@ class MemoryRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
   MemoryRepositoryQueryExecutor({required this.repository});
 
   @override
-  RepositoryQueryExecutor get queryExecutor {
+  late final RepositoryQueryExecutor queryExecutor = _getQueryExecutor();
+
+  RepositoryQueryExecutor _getQueryExecutor() {
     final stateByIdX = repository.stateByIdX;
 
-    return StateQueryExecutor(
+    return StateQueryExecutor.fromStatesX(
       dropContext: repository.context.locate<CoreDropComponent>(),
       statesX: stateByIdX.mapWithValue((stateById) => stateById.values.toList()),
     );

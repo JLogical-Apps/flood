@@ -42,6 +42,13 @@ extension RepositoryQueryExecutorExtensions on RepositoryQueryExecutor {
   }
 }
 
+mixin IsRepositoryQueryExecutor implements RepositoryQueryExecutor {
+  @override
+  bool handlesQuery(QueryRequest queryRequest) {
+    return false;
+  }
+}
+
 abstract class RepositoryQueryExecutorWrapper implements RepositoryQueryExecutor {
   RepositoryQueryExecutor get queryExecutor;
 }

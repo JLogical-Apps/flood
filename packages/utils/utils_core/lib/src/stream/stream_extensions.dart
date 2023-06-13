@@ -28,6 +28,21 @@ extension ValueStreamExtensions<T> on ValueStream<T> {
       mapper: mapper,
     );
   }
+
+  Future waitUntil(bool Function(T value) predicate) async {
+    if (predicate(value)) {
+      return;
+    }
+
+    final completer = Completer();
+    final listener = listen((value) {
+      if (predicate(value)) {
+        completer.complete();
+      }
+    });
+    await completer.future;
+    listener.cancel();
+  }
 }
 
 extension ListValueStreamExtension<T> on List<ValueStream<T>> {

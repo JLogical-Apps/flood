@@ -41,7 +41,8 @@ void main() {
     final basicConfig = EnvironmentConfig.static.memory({urlKey: basicUrl, 'basicKey': 'basicValue'});
 
     EnvironmentConfig getConfigFromDevice(EnvironmentType environmentType) => EnvironmentConfig.static
-        .onlyEnvironmentType(environmentType)
+        .memory()
+        .withEnvironmentType(environmentType)
         .environmental((type) => EnvironmentConfig.static.collapsed([
               if (type == EnvironmentType.static.testing) testingConfig,
               if (type == EnvironmentType.static.device) deviceConfig,

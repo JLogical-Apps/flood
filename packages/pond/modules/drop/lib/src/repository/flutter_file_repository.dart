@@ -1,4 +1,12 @@
+import 'dart:io';
+
 import 'package:drop_core/drop_core.dart';
+import 'package:environment/environment.dart';
+import 'package:path/path.dart' as path;
+import 'package:persistence/persistence.dart';
+import 'package:pool/pool.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:utils/utils.dart';
 
 class FlutterFileRepository with IsRepository {
   final FileRepository fileRepository;
@@ -14,13 +22,37 @@ class FlutterFileRepository with IsRepository {
 }
 
 class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
+  static const maxFilesOpen = 30;
+  static Pool filePool = Pool(maxFilesOpen, timeout: Duration(seconds: 30));
+
   final FlutterFileRepository repository;
 
   FlutterFileRepositoryQueryExecutor({required this.repository});
 
+  Directory get directory => repository.context.fileSystem.storageDirectory / repository.fileRepository.rootPath;
+
   @override
-  RepositoryQueryExecutor get queryExecutor {
-    throw UnimplementedError();
+  late final RepositoryQueryExecutor queryExecutor = _getQueryExecutor();
+
+  RepositoryQueryExecutor _getQueryExecutor() {
+    return StateQueryExecutor(
+      maybeStatesX: DataSource.static
+          .directory(directory)
+          .getX()
+          .map((fileEntities) => (fileEntities ?? []).whereType<File>())
+          .asyncMap<FutureValue<List<State>>>(
+              (files) async => FutureValue.loaded(await Future.wait(files.map(getStateFromFile))))
+          .publishValueSeeded(FutureValue.loading())
+          .autoConnect(),
+      dropContext: repository.context.coreDropComponent,
+    );
+  }
+
+  Future<State> getStateFromFile(File file) async {
+    return State(
+      id: path.basenameWithoutExtension(file.path),
+      data: await filePool.withResource(() => file.readJson()),
+    );
   }
 }
 

@@ -14,6 +14,8 @@ dependencies:
   collection: ^1.16.0
   equatable: ^2.0.5
   flutter_hooks: ^0.18.5+1
+  path: ^1.8.3
+  pool: ^1.5.1
   provider: ^6.0.5
   rxdart: ^0.27.5
   uuid: ^3.0.6
@@ -28,11 +30,21 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/pond/packages/drop_core
+  environment:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/pond/packages/environment
   model:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/model/model
+  persistence:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/persistence/persistence
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

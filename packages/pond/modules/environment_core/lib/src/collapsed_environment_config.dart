@@ -1,4 +1,5 @@
 import 'package:environment_core/src/environment_config.dart';
+import 'package:environment_core/src/file_system.dart';
 
 class CollapsedEnvironmentConfig with IsEnvironmentConfig {
   final List<EnvironmentConfig> configs;
@@ -13,5 +14,10 @@ class CollapsedEnvironmentConfig with IsEnvironmentConfig {
       }
     }
     return fallback();
+  }
+
+  @override
+  Future<FileSystem> getFileSystem() {
+    throw Exception('No FileSystem');
   }
 }

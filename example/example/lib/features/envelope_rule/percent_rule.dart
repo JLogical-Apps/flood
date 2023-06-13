@@ -1,6 +1,6 @@
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope_rule/envelope_rule.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 abstract class PercentRule extends EnvelopeRule {
   static const percentField = 'percent';

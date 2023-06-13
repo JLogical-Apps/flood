@@ -2,7 +2,7 @@ import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/features/transaction/income_transaction.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class IncomeTransactionEntity extends BudgetTransactionEntity<IncomeTransaction> {
   @override

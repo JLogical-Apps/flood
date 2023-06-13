@@ -9,9 +9,12 @@ import 'package:environment_core/src/environment_type.dart';
 import 'package:environment_core/src/environment_type_environment_config.dart';
 import 'package:environment_core/src/environmental_environment_config.dart';
 import 'package:environment_core/src/file_asset_environment_config.dart';
+import 'package:environment_core/src/file_system.dart';
+import 'package:environment_core/src/file_system_environment_config.dart';
 import 'package:environment_core/src/platform.dart';
 import 'package:environment_core/src/recognized_environment_types_environment_config.dart';
 import 'package:persistence_core/persistence_core.dart';
+import 'package:utils_core/utils_core.dart';
 
 abstract class EnvironmentConfig {
   Future<T> getOrDefault<T>(String key, {required T Function() fallback});
@@ -23,6 +26,8 @@ abstract class EnvironmentConfig {
   Future<BuildType> getBuildType();
 
   Future<Platform> getPlatform();
+
+  Future<FileSystem> getFileSystem();
 
   static EnvironmentConfigStatic get static => EnvironmentConfigStatic();
 }
@@ -38,12 +43,13 @@ class EnvironmentConfigStatic {
 
   DataSourceEnvironmentConfig yamlFile(File file) => fromDataSource(DataSource.static.file(file).mapYaml());
 
-  EnvironmentTypeEnvironmentConfig onlyEnvironmentType(EnvironmentType environmentType) =>
-      EnvironmentTypeEnvironmentConfig(environmentType: environmentType);
-
   FileAssetEnvironmentConfig fileAssets() => FileAssetEnvironmentConfig();
 
-  EnvironmentConfig testing() => memory({'environment': 'testing'});
+  EnvironmentConfig testing() =>
+      memory().withEnvironmentType(EnvironmentType.static.testing).withFileSystemGetter(() => FileSystem(
+            storageDirectory: Directory.systemTemp / 'dartTesting' / 'storage',
+            tempDirectory: Directory.systemTemp / 'dartTesting' / 'temp',
+          ));
 }
 
 extension EnvironmentConfigExtensions on EnvironmentConfig {
@@ -54,6 +60,9 @@ extension EnvironmentConfigExtensions on EnvironmentConfig {
   Future<T?> getOrNull<T>(String key) async {
     return await getOrDefault<T?>(key, fallback: () => null);
   }
+
+  EnvironmentTypeEnvironmentConfig withEnvironmentType(EnvironmentType environmentType) =>
+      EnvironmentTypeEnvironmentConfig(environmentConfig: this, environmentType: environmentType);
 
   RecognizedEnvironmentTypesEnvironmentConfig withRecognizedEnvironmentTypes(List<EnvironmentType> enviromentTypes) {
     return RecognizedEnvironmentTypesEnvironmentConfig(
@@ -69,6 +78,10 @@ extension EnvironmentConfigExtensions on EnvironmentConfig {
       environmentConfig: this,
       environmentGetter: environmentConfigGetter,
     );
+  }
+
+  FileSystemEnvironmentConfig withFileSystemGetter(FutureOr<FileSystem> Function() fileSystemGetter) {
+    return FileSystemEnvironmentConfig(environmentConfig: this, fileSystemGetter: fileSystemGetter);
   }
 }
 
@@ -117,4 +130,7 @@ mixin IsEnvironmentConfigWrapper implements EnvironmentConfigWrapper {
 
   @override
   Future<bool> containsKey(String key) => environmentConfig.containsKey(key);
+
+  @override
+  Future<FileSystem> getFileSystem() => environmentConfig.getFileSystem();
 }

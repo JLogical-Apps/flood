@@ -1,17 +1,16 @@
-import 'package:environment_core/environment_core.dart';
+import 'package:environment_core/src/environment_config.dart';
+import 'package:environment_core/src/environment_type.dart';
 
-class EnvironmentTypeEnvironmentConfig with IsEnvironmentConfig {
+class EnvironmentTypeEnvironmentConfig with IsEnvironmentConfigWrapper {
   final EnvironmentType environmentType;
 
-  EnvironmentTypeEnvironmentConfig({required this.environmentType});
+  @override
+  final EnvironmentConfig environmentConfig;
+
+  EnvironmentTypeEnvironmentConfig({required this.environmentType, required this.environmentConfig});
 
   @override
   Future<EnvironmentType> getEnvironmentType() async {
     return environmentType;
-  }
-
-  @override
-  Future<T> getOrDefault<T>(String key, {required T Function() fallback}) {
-    throw UnimplementedError();
   }
 }

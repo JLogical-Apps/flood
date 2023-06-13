@@ -16,11 +16,14 @@ import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 class StateQueryExecutor implements RepositoryQueryExecutor {
-  final ValueStream<List<State>> statesX;
+  final ValueStream<FutureValue<List<State>>> maybeStatesX;
 
   final CoreDropContext dropContext;
 
-  StateQueryExecutor({required this.statesX, required this.dropContext});
+  StateQueryExecutor({required this.maybeStatesX, required this.dropContext});
+
+  StateQueryExecutor.fromStatesX({required ValueStream<List<State>> statesX, required this.dropContext})
+      : maybeStatesX = statesX.mapWithValue((value) => FutureValue.loaded(value));
 
   ModifierResolver<StateQueryReducer, Query> getQueryReducerResolver() => Resolver.fromModifiers([
         FromStateQueryReducer(dropContext: dropContext),
@@ -45,20 +48,15 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
   }
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) {
-    return executeOnStates(queryRequest, statesX.value);
+  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) async {
+    await maybeStatesX.waitUntil((maybeStates) => maybeStates.isLoaded);
+    return await executeOnStates(queryRequest, maybeStatesX.value.getOrNull()!);
   }
 
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest) {
-    return statesX.asyncMapWithValue(
-      (states) async {
-        try {
-          return FutureValue.loaded(await executeOnStates(queryRequest, states));
-        } catch (e, stackTrace) {
-          return FutureValue.error(e, stackTrace);
-        }
-      },
+    return maybeStatesX.asyncMapWithValue(
+      (maybeStates) => maybeStates.asyncMap((states) => executeOnStates(queryRequest, states)),
       initialValue: FutureValue.empty(),
     );
   }
