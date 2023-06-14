@@ -87,7 +87,9 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(ValetPagesAppPondComponent());
   await appPondContext.register(TestingSetupAppComponent(onSetup: () => _setupTesting(corePondContext)));
 
-  await appPondContext.corePondContext.reset();
+  if (await appPondContext.environmentConfig.getOrNull('reset') == true) {
+    await appPondContext.corePondContext.reset();
+  }
 
   return appPondContext;
 }

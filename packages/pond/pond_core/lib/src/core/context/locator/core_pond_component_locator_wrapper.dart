@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:pond_core/pond_core.dart';
-import 'package:pond_core/src/core/component/core_pond_component.dart';
 import 'package:pond_core/src/core/context/locator/wrapper_core_pond_component_locator_wrapper.dart';
 
 abstract class CorePondComponentLocatorWrapper {

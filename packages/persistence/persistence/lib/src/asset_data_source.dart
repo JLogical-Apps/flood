@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:persistence_core/persistence_core.dart';
+import 'package:utils_core/utils_core.dart';
 
 class AssetDataSource with IsDataSource<String> {
   final String assetPath;
@@ -8,7 +9,14 @@ class AssetDataSource with IsDataSource<String> {
 
   @override
   Stream<String>? getXOrNull() async* {
-    yield await rootBundle.loadString(assetPath);
+    try {
+      yield await rootBundle.loadString(assetPath);
+    } catch (_) {}
+  }
+
+  @override
+  Future<String?> getOrNull() async {
+    return guardAsync(() => rootBundle.loadString(assetPath));
   }
 
   @override

@@ -11,7 +11,14 @@ class YamlDataSource with IsDataSourceWrapper<Map<String, dynamic>> {
 
   @override
   DataSource<Map<String, dynamic>> get dataSource => sourceDataSource.map(
-        getMapper: (text) => json.decode(json.encode(loadYaml(text))),
+        getMapper: (text) {
+          final yaml = loadYaml(text);
+          if (yaml == null) {
+            return {};
+          }
+
+          return json.decode(json.encode(yaml));
+        },
         setMapper: (yaml) => json2yaml(yaml),
       );
 }
