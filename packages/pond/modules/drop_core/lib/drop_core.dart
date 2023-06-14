@@ -36,4 +36,5 @@ export 'src/repository/repository.dart';
 export 'src/repository/repository_implementation.dart';
 export 'src/repository/repository_query_executor.dart';
 export 'src/repository/repository_state_handler.dart';
+export 'src/state/persistence/state_persister.dart';
 export 'src/state/state.dart';

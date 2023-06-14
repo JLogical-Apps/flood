@@ -11,11 +11,17 @@ class CorePondContext with IsLocatorWrapper<CorePondComponent> {
   late Locator<CorePondComponent> locator = Locator<CorePondComponent>(onRegistered: (component) async {
     components.add(component);
     await component.registerTo(this);
-  }).expand((component) => [component] + CorePondComponentLocatorWrapper.getSubcomponentsOf(component));
+  }).expand((component) => [component] + CorePondComponentLocatorWrapper.getSubcomponentsOf(component, this));
 
   Future<void> load() async {
     for (final component in components) {
       await component.load(this);
+    }
+  }
+
+  Future<void> reset() async {
+    for (final component in components) {
+      await component.reset(this);
     }
   }
 }

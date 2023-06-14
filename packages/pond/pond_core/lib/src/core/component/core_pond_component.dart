@@ -44,6 +44,12 @@ extension CorePondComponentExtension on CorePondComponent {
     }
   }
 
+  Future reset(CorePondContext context) async {
+    for (final behavior in behaviors) {
+      await behavior.onReset(context, this);
+    }
+  }
+
   CorePondComponentAdditionalSetup withAdditionalSetup({
     void Function(CorePondContext context)? onBeforeRegister,
     void Function(CorePondContext context)? onAfterRegister,

@@ -1,4 +1,5 @@
 import 'package:auth_core/src/adapting_auth_service.dart';
+import 'package:auth_core/src/file_auth_service.dart';
 import 'package:auth_core/src/memory_auth_service.dart';
 import 'package:pond_core/pond_core.dart';
 
@@ -11,11 +12,19 @@ abstract class AuthService with IsCorePondComponent {
 
   Future<void> logout();
 
-  static MemoryAuthService memory() {
+  static AuthServiceStatic get static => AuthServiceStatic();
+}
+
+class AuthServiceStatic {
+  MemoryAuthService memory() {
     return MemoryAuthService();
   }
 
-  static AdaptingAuthService adapting() {
+  FileAuthService file() {
+    return FileAuthService();
+  }
+
+  AdaptingAuthService adapting() {
     return AdaptingAuthService();
   }
 }

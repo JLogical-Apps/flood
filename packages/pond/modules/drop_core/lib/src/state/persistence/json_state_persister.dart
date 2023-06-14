@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:drop_core/src/state/persistence/json/date_time_json_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/json/json_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/json/runtime_type_json_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/json/state_json_state_persister_modifier.dart';
@@ -14,6 +15,7 @@ class JsonStatePersister implements StatePersister<String> {
 
   late List<JsonStatePersisterModifier> jsonStatePersisterModifiers = [
     StateJsonStatePersisterModifier(runtimeTypeGetter: runtimeTypeGetter),
+    DateTimeJsonStatePersisterModifier(),
     RuntimeTypeJsonStatePersisterModifier(),
   ];
 

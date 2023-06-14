@@ -2,16 +2,26 @@ import 'dart:io';
 
 import 'package:drop_core/drop_core.dart';
 import 'package:environment/environment.dart';
-import 'package:path/path.dart' as path;
 import 'package:persistence/persistence.dart';
+import 'package:pond/pond.dart';
 import 'package:pool/pool.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:type/type.dart';
 import 'package:utils/utils.dart';
 
 class FlutterFileRepository with IsRepository {
   final FileRepository fileRepository;
 
   FlutterFileRepository({required this.fileRepository});
+
+  @override
+  late final List<CorePondComponentBehavior> behaviors = [
+    CorePondComponentBehavior(onReset: (context, _) async {
+      if (await fileRepository.directory.exists()) {
+        await fileRepository.directory.delete(recursive: true);
+      }
+    }),
+  ];
 
   @override
   late final RepositoryQueryExecutor queryExecutor = FlutterFileRepositoryQueryExecutor(repository: this);
@@ -29,15 +39,17 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
 
   FlutterFileRepositoryQueryExecutor({required this.repository});
 
-  Directory get directory => repository.context.fileSystem.storageDirectory / repository.fileRepository.rootPath;
-
   @override
   late final RepositoryQueryExecutor queryExecutor = _getQueryExecutor();
+
+  late StatePersister statePersister = StatePersister.json(
+    runtimeTypeGetter: (name) => repository.context.coreDropComponent.typeContext.getByName(name),
+  );
 
   RepositoryQueryExecutor _getQueryExecutor() {
     return StateQueryExecutor(
       maybeStatesX: DataSource.static
-          .directory(directory)
+          .directory(repository.fileRepository.directory)
           .getX()
           .map((fileEntities) => (fileEntities ?? []).whereType<File>())
           .asyncMap<FutureValue<List<State>>>(
@@ -49,10 +61,10 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
   }
 
   Future<State> getStateFromFile(File file) async {
-    return State(
-      id: path.basenameWithoutExtension(file.path),
-      data: await filePool.withResource(() => file.readJson()),
-    );
+    return await filePool.withResource(() async {
+      final rawJson = await file.readJson();
+      return statePersister.inflate(rawJson);
+    });
   }
 }
 
@@ -61,9 +73,19 @@ class FlutterFileRepositoryStateHandler implements RepositoryStateHandler {
 
   FlutterFileRepositoryStateHandler({required this.repository});
 
+  late StatePersister statePersister = StatePersister.json(
+    runtimeTypeGetter: (name) => repository.context.coreDropComponent.typeContext.getByName(name),
+  );
+
   @override
   Future<State> onUpdate(State state) async {
-    throw UnimplementedError();
+    final file = repository.fileRepository.directory - '${state.id}.json';
+    await file.ensureCreated();
+
+    final persistedJson = statePersister.persist(state);
+    await file.writeAsString(persistedJson);
+
+    return state;
   }
 
   @override

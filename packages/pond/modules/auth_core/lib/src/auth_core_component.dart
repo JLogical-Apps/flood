@@ -1,24 +1,19 @@
 import 'package:actions_core/actions_core.dart';
 import 'package:auth_core/src/auth_service.dart';
 import 'package:pond_core/pond_core.dart';
-import 'package:utils_core/utils_core.dart';
 
-class AuthCoreComponent with IsCorePondComponent, IsAuthServiceWrapper {
+class AuthCoreComponent with IsAuthServiceWrapper, IsCorePondComponentWrapper {
   @override
   final AuthService authService;
 
   AuthCoreComponent({required this.authService});
 
-  AuthCoreComponent.memory() : authService = AuthService.memory();
+  AuthCoreComponent.memory() : authService = AuthService.static.memory();
 
-  AuthCoreComponent.adapting() : authService = AuthService.adapting();
+  AuthCoreComponent.adapting() : authService = AuthService.static.adapting();
 
   @override
-  List<CorePondComponentBehavior> get behaviors => [
-        CorePondComponentBehavior(
-          onRegister: (context, component) => context.register(authService),
-        ),
-      ];
+  CorePondComponent get corePondComponent => authService;
 
   late final loginAction = Action(
     name: 'Login',
