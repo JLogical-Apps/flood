@@ -27,9 +27,8 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
           colorPalette: backgroundColorPalette,
           child: Stack(
             children: [
-              AnimatedOpacity(
+              Opacity(
                 opacity: loadingState.value ? 0 : 1,
-                duration: Duration(milliseconds: 100),
                 child: StyledList.row.shrink(
                   itemPadding: EdgeInsets.all(2),
                   children: [
@@ -40,9 +39,8 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
               ),
               Positioned.fill(
                 child: Center(
-                  child: AnimatedOpacity(
-                    opacity: loadingState.value ? 1 : 0,
-                    duration: Duration(milliseconds: 100),
+                  child: Visibility(
+                    visible: loadingState.value,
                     child: StyledLoadingIndicator(),
                   ),
                 ),
