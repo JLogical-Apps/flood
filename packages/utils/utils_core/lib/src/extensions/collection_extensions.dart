@@ -102,7 +102,7 @@ extension MapExtensions<K, V> on Map<K, V> {
   ) {
     final output = {};
     forEach((key, dynamic value) {
-      if (value is Map) {
+      if (value is Map && !predicate(key, value)) {
         value = value.replaceWhereTraversed(predicate, replacer);
       }
 

@@ -81,7 +81,7 @@ class State extends Equatable implements Stateful {
     return State(
       id: id,
       type: type,
-      data: fullData.map((key, value) => MapEntry(key.toString(), value)),
+      data: fullData.cast<String, dynamic>(),
     );
   }
 }
