@@ -11,16 +11,16 @@ class FallbackValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L, F
   FallbackValueObjectProperty({required this.property, required this.fallback});
 
   @override
-  State modifyState(CoreDropContext context, State state) {
+  State modifyState(State state) {
     if (property.value == null) {
       return state.withData(state.data.copy()..set(property.name, fallback()));
     }
-    return property.modifyState(context, state);
+    return property.modifyState(state);
   }
 
   @override
-  void fromState(CoreDropContext context, State state) {
-    property.fromState(context, state);
+  void fromState(State state) {
+    property.fromState(state);
   }
 
   @override
@@ -42,7 +42,4 @@ class FallbackValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L, F
 
   @override
   String get name => property.name;
-
-  @override
-  List<Object?> get props => [property];
 }

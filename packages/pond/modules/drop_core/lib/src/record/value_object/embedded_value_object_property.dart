@@ -1,7 +1,7 @@
-import 'package:drop_core/src/context/core_drop_context.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:utils_core/utils_core.dart';
 
 class EmbeddedValueObjectProperty<G extends ValueObject?, S extends ValueObject?, L>
     with IsValueObjectPropertyWrapper<G, S, L, EmbeddedValueObjectProperty<G, S, L>> {
@@ -11,7 +11,7 @@ class EmbeddedValueObjectProperty<G extends ValueObject?, S extends ValueObject?
   EmbeddedValueObjectProperty({required this.property});
 
   @override
-  void fromState(CoreDropContext context, State state) {
+  void fromState(State state) {
     final stateValue = state.data[property.name];
     if (stateValue == null) {
       property.set(null as S);
@@ -20,10 +20,11 @@ class EmbeddedValueObjectProperty<G extends ValueObject?, S extends ValueObject?
     } else if (stateValue is S) {
       property.set(stateValue);
     } else if (stateValue is State) {
-      final valueObject = (stateValue.type!.createInstance() as ValueObject)..setState(context, state);
+      final valueObject = (stateValue.type!.createInstance() as ValueObject)..state = stateValue;
+      valueObject.throwIfInvalid(null);
       property.set(valueObject as S);
     } else {
-      throw Exception('Unknown time value: [$stateValue]');
+      throw Exception('Unknown ValueObject value: [$stateValue]');
     }
   }
 
@@ -31,7 +32,4 @@ class EmbeddedValueObjectProperty<G extends ValueObject?, S extends ValueObject?
   EmbeddedValueObjectProperty<G, S, L> copy() {
     return EmbeddedValueObjectProperty(property: property.copy());
   }
-
-  @override
-  List<Object?> get props => [property];
 }

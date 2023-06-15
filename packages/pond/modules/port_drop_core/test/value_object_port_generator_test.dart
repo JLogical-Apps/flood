@@ -217,7 +217,7 @@ class Data4 extends ValueObject {
 
 class Data5 extends ValueObject {
   static const personField = 'person';
-  late final personProperty = field<Person>(name: personField).withDisplayName('Person');
+  late final personProperty = field<Person>(name: personField).embedded().withDisplayName('Person');
 
   @override
   List<ValueObjectBehavior> get behaviors => [personProperty];

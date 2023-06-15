@@ -17,7 +17,4 @@ class DefaultValueObjectProperty<T, S, L>
   DefaultValueObjectProperty<T, S, L> copy() {
     return DefaultValueObjectProperty<T, S, L>(property: property.copy(), defaultValueGetter: defaultValueGetter);
   }
-
-  @override
-  List<Object?> get props => [property];
 }

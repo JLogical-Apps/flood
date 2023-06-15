@@ -15,8 +15,8 @@ class JsonStatePersister implements StatePersister<String> {
   JsonStatePersister({required this.context});
 
   late List<JsonStatePersisterModifier> jsonStatePersisterModifiers = [
-    StateJsonStatePersisterModifier(context: context),
     RuntimeTypeJsonStatePersisterModifier(),
+    StateJsonStatePersisterModifier(context: context),
     DateTimeJsonStatePersisterModifier(),
   ];
 

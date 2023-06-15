@@ -30,7 +30,4 @@ class ValidatorValueObjectProperty<T, S, L>
 
   @override
   String get name => property.name;
-
-  @override
-  List<Object?> get props => [property];
 }

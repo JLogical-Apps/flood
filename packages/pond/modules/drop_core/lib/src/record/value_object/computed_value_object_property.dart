@@ -10,7 +10,7 @@ class ComputedValueObjectProperty<T, L> with IsValueObjectProperty<T, void, L, C
   ComputedValueObjectProperty({required this.name, required this.computation});
 
   @override
-  State modifyState(CoreDropContext context, State state) {
+  State modifyState(State state) {
     return state.withData(state.data.copy()..set(name, value));
   }
 
@@ -26,7 +26,4 @@ class ComputedValueObjectProperty<T, L> with IsValueObjectProperty<T, void, L, C
   ComputedValueObjectProperty<T, L> copy() {
     return ComputedValueObjectProperty<T, L>(name: name, computation: computation);
   }
-
-  @override
-  List<Object?> get props => [name];
 }

@@ -1,4 +1,3 @@
-import 'package:drop_core/src/context/core_drop_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
@@ -12,17 +11,13 @@ class FieldValueObjectProperty<T, L> with IsValueObjectProperty<T?, T?, L, Field
 
   final Type fieldType;
 
-  FieldValueObjectProperty({required this.name, this.value}) : fieldType = T {
-    if (T == DateTime || T == typeOf<DateTime?>()) {
-      throw Exception('Do not use `DateTime` as a type for a field! Use `Timestamp` instead along with `.time()`');
-    }
-  }
+  FieldValueObjectProperty({required this.name, this.value}) : fieldType = T;
 
   @override
   set(T? value) => this.value = value;
 
   @override
-  void fromState(CoreDropContext context, State state) {
+  void fromState(State state) {
     try {
       value = state[name] as T?;
     } catch (e) {
@@ -31,7 +26,7 @@ class FieldValueObjectProperty<T, L> with IsValueObjectProperty<T?, T?, L, Field
   }
 
   @override
-  State modifyState(CoreDropContext context, State state) {
+  State modifyState(State state) {
     if (value == null) {
       return state;
     }
@@ -48,7 +43,4 @@ class FieldValueObjectProperty<T, L> with IsValueObjectProperty<T?, T?, L, Field
   FieldValueObjectProperty<T, L> copy() {
     return FieldValueObjectProperty<T, L>(name: name, value: value);
   }
-
-  @override
-  List<Object?> get props => [name, value];
 }

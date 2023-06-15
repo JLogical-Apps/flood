@@ -26,7 +26,7 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
 
   static const timeRuleField = 'timeRule';
   late final timeRuleProperty =
-      field<TimeRule>(name: timeRuleField).withDisplayName('Timing').required().withDefault(() => MonthlyTimeRule());
+      field<TimeRule>(name: timeRuleField).embedded().withDisplayName('Timing').required().withDefault(() => MonthlyTimeRule());
 
   static const lastAppliedDateField = 'lastApplied';
   late final lastAppliedDateProperty = field<Timestamp>(name: lastAppliedDateField)

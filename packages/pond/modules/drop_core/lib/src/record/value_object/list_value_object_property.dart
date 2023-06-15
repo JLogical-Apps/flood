@@ -19,12 +19,12 @@ class ListValueObjectProperty<T, L> with IsValueObjectProperty<List<T>, List<T>,
   set(List<T>? value) => this.value = value ?? [];
 
   @override
-  void fromState(CoreDropContext context, State state) {
+  void fromState(State state) {
     value = (state[name] as List?)?.cast<T>() ?? [];
   }
 
   @override
-  State modifyState(CoreDropContext context, State state) {
+  State modifyState(State state) {
     return state.withData(state.data.copy()..set(name, value));
   }
 
@@ -35,7 +35,4 @@ class ListValueObjectProperty<T, L> with IsValueObjectProperty<List<T>, List<T>,
   ListValueObjectProperty<T, L> copy() {
     return ListValueObjectProperty<T, L>(property: property.copy(), value: value);
   }
-
-  @override
-  List<Object?> get props => [property];
 }

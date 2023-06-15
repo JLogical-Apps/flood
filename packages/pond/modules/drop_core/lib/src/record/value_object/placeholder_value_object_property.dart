@@ -13,16 +13,16 @@ class PlaceholderValueObjectProperty<G, S, L>
   PlaceholderValueObjectProperty({required this.property, required this.placeholder});
 
   @override
-  State modifyState(CoreDropContext context, State state) {
+  State modifyState(State state) {
     if (property.value == null) {
       return state.withData(state.data.copy()..set(property.name, placeholder()));
     }
-    return property.modifyState(context, state);
+    return property.modifyState(state);
   }
 
   @override
-  void fromState(CoreDropContext context, State state) {
-    property.fromState(context, state);
+  void fromState(State state) {
+    property.fromState(state);
   }
 
   @override
@@ -41,7 +41,4 @@ class PlaceholderValueObjectProperty<G, S, L>
   PlaceholderValueObjectProperty<G, S, L> copy() {
     return PlaceholderValueObjectProperty<G, S, L>(property: property.copy(), placeholder: placeholder);
   }
-
-  @override
-  List<Object?> get props => [property];
 }

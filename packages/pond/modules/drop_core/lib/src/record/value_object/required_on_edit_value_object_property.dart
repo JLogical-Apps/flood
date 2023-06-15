@@ -16,7 +16,4 @@ class RequiredOnEditValueObjectProperty<T, S, L>
       requiredOnEdit: requiredOnEdit,
     );
   }
-
-  @override
-  List<Object?> get props => [property, requiredOnEdit];
 }

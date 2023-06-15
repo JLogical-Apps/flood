@@ -13,7 +13,4 @@ class DisplayNameValueObjectProperty<G, S, L>
   DisplayNameValueObjectProperty<G, S, L> copy() {
     return DisplayNameValueObjectProperty<G, S, L>(property: property.copy(), displayNameGetter: displayNameGetter);
   }
-
-  @override
-  List<Object?> get props => [property];
 }

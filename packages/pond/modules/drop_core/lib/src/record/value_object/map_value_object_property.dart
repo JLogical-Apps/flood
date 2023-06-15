@@ -20,12 +20,12 @@ class MapValueObjectProperty<K, V, L>
   set(Map<K, V>? value) => this.value = value ?? {};
 
   @override
-  void fromState(CoreDropContext context, State state) {
+  void fromState(State state) {
     value = (state[name] as Map?)?.cast<K, V>() ?? {};
   }
 
   @override
-  State modifyState(CoreDropContext context, State state) {
+  State modifyState(State state) {
     return state.withData(state.data.copy()..set(name, value));
   }
 
@@ -36,7 +36,4 @@ class MapValueObjectProperty<K, V, L>
   MapValueObjectProperty<K, V, L> copy() {
     return MapValueObjectProperty<K, V, L>(property: property.copy());
   }
-
-  @override
-  List<Object?> get props => [property, value];
 }

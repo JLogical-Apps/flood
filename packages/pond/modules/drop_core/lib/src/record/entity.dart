@@ -89,7 +89,7 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin,
 
   @override
   String toString() {
-    return '$runtimeType{id: [$id], value: [$value]';
+    return '$runtimeType{id: [$id], value: [${value.scaffoldState}]';
   }
 
   @override

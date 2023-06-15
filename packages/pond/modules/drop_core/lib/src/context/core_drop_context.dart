@@ -49,7 +49,7 @@ extension CoreDropContextExtension on CoreDropContext {
     state = await entity.beforeInitialize(this, state: state) ?? state;
 
     final valueObject = typeContext.getRuntimeTypeRuntime(entity.valueObjectType).createInstance() as ValueObject;
-    valueObject.setState(this, state);
+    valueObject.state = state;
 
     entity.value = valueObject;
 

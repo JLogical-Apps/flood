@@ -13,7 +13,4 @@ class CurrencyValueObjectProperty<G extends int?, S extends int?, L>
   CurrencyValueObjectProperty<G, S, L> copy() {
     return CurrencyValueObjectProperty<G, S, L>(property: property.copy(), isCurrency: isCurrency);
   }
-
-  @override
-  List<Object?> get props => [property, isCurrency];
 }

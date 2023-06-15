@@ -8,6 +8,7 @@ import 'package:drop_core/src/record/value_object/computed_value_object_property
 import 'package:drop_core/src/record/value_object/currency_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/default_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/display_name_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/embedded_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
@@ -69,10 +70,10 @@ mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements V
   G? get valueOrNull => value;
 
   @override
-  void fromState(CoreDropContext context, State state) {}
+  void fromState(State state) {}
 
   @override
-  State modifyState(CoreDropContext context, State state) {
+  State modifyState(State state) {
     return state;
   }
 
@@ -90,9 +91,6 @@ mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements V
   String toString() {
     return '$runtimeType{$name, $valueOrNull}';
   }
-
-  @override
-  bool? get stringify => false;
 }
 
 extension ValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
@@ -171,6 +169,13 @@ extension TimestampValueObjectPropertyExtensions<G extends Timestamp?, S extends
   }
 }
 
+extension ValueObjectValueObjectPropertyExtensions<G extends ValueObject?, S extends ValueObject?, L,
+    V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
+  EmbeddedValueObjectProperty<G, S, L> embedded() {
+    return EmbeddedValueObjectProperty<G, S, L>(property: this);
+  }
+}
+
 extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int?, L, V extends ValueObjectProperty>
     on ValueObjectProperty<G, S, L, V> {
   CurrencyValueObjectProperty<G, S, L> currency([bool isCurrency = true]) {
@@ -219,10 +224,10 @@ mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, 
   void set(S value) => property.set(value);
 
   @override
-  void fromState(CoreDropContext context, State state) => property.fromState(context, state);
+  void fromState(State state) => property.fromState(state);
 
   @override
-  State modifyState(CoreDropContext context, State state) => property.modifyState(context, state);
+  State modifyState(State state) => property.modifyState(state);
 
   @override
   Future<L> load(CoreDropContext context) => property.load(context);
@@ -234,7 +239,4 @@ mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, 
   String toString() {
     return '$runtimeType{$name, $valueOrNull}';
   }
-
-  @override
-  bool? get stringify => false;
 }

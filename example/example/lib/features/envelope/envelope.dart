@@ -17,7 +17,7 @@ class Envelope extends ValueObject {
       field<int>(name: amountCentsField).withDisplayName('Amount').currency().hidden().withFallback(() => 0);
 
   static const ruleField = 'rule';
-  late final ruleProperty = field<EnvelopeRule>(name: ruleField).withDisplayName('Rule');
+  late final ruleProperty = field<EnvelopeRule>(name: ruleField).embedded().withDisplayName('Rule');
 
   static const colorField = 'color';
   late final colorProperty =

@@ -12,13 +12,13 @@ class IsNotBlankValueObjectProperty<L> with IsValueObjectProperty<String, String
   IsNotBlankValueObjectProperty({required this.property});
 
   @override
-  State modifyState(CoreDropContext context, State state) {
-    return property.modifyState(context, state);
+  State modifyState(State state) {
+    return property.modifyState(state);
   }
 
   @override
-  void fromState(CoreDropContext context, State state) {
-    property.fromState(context, state);
+  void fromState(State state) {
+    property.fromState(state);
   }
 
   @override
@@ -51,7 +51,4 @@ class IsNotBlankValueObjectProperty<L> with IsValueObjectProperty<String, String
 
   @override
   String get name => property.name;
-
-  @override
-  List<Object?> get props => [property];
 }

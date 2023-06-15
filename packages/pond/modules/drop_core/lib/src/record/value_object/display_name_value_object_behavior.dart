@@ -10,9 +10,6 @@ class DisplayNameValueObjectBehavior with IsValueObjectBehavior {
   String? getDisplayName() {
     return displayNameGetter();
   }
-
-  @override
-  List<Object?> get props => [];
 }
 
 extension DisplayNameValueObjectExtensions on ValueObject {

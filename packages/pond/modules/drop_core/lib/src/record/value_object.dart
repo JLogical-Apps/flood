@@ -18,50 +18,47 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
 
   @override
   State getState(CoreDropContext context) {
-    return getScaffoldState(context).withType(context.getRuntimeTypeRuntime(runtimeType));
+    return scaffoldState.withType(context.getRuntimeTypeRuntime(runtimeType));
   }
 
   @override
   State getStateUnsafe(CoreDropContext context) {
-    return getScaffoldStateUnsafe(context).withType(context.getRuntimeTypeRuntime(runtimeType));
+    return scaffoldStateUnsafe.withType(context.getRuntimeTypeRuntime(runtimeType));
   }
 
-  setState(CoreDropContext context, State state) {
+  set state(State state) {
     for (final behavior in behaviors) {
-      behavior.fromState(context, state);
+      behavior.fromState(state);
     }
   }
 
-  void setStateUnsafe(CoreDropContext context, State state) {
+  void setStateUnsafe(State state) {
     for (final behavior in behaviors) {
-      guard(() => behavior.fromState(context, state));
+      guard(() => behavior.fromState(state));
     }
   }
 
   /// An unsafe state of the ValueObject without the type set.
-  State getScaffoldState(CoreDropContext context) =>
-      behaviors.fold<State>(
+  State get scaffoldState => behaviors.fold<State>(
         State(data: {}),
-            (state, behavior) => behavior.modifyState(context, state),
+        (state, behavior) => behavior.modifyState(state),
       );
 
-  State getScaffoldStateUnsafe(CoreDropContext context) =>
-      behaviors.fold<State>(
+  State get scaffoldStateUnsafe => behaviors.fold<State>(
         State(data: {}),
-            (state, behavior) => guard(() => behavior.modifyState(context, state)) ?? state,
+        (state, behavior) => guard(() => behavior.modifyState(state)) ?? state,
       );
 
   void copyFrom(CoreDropContext context, Stateful stateful) {
-    setState(context, stateful.getState(context));
+    state = stateful.getState(context);
   }
 
   void copyFromUnsafe(CoreDropContext context, Stateful stateful) {
-    setStateUnsafe(context, stateful.getStateUnsafe(context));
+    setStateUnsafe(stateful.getStateUnsafe(context));
   }
 
   @override
-  Validator<void, String> get validator =>
-      Validator((_) async {
+  Validator<void, String> get validator => Validator((_) async {
         for (final behavior in behaviors) {
           final error = await behavior.validate(this);
           if (error != null) {
@@ -73,7 +70,7 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
       });
 
   @override
-  List<Object> get props => [behaviors];
+  List<Object> get props => [scaffoldState];
 
   FieldValueObjectProperty<T, dynamic> field<T>({required String name}) => ValueObjectProperty.field<T>(name: name);
 
@@ -84,9 +81,4 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
       ValueObjectProperty.computed(name: name, computation: computation);
 
   CreationTimeProperty creationTime() => ValueObjectProperty.creationTime();
-
-  @override
-  String toString() {
-    return behaviors.join(', ');
-  }
 }

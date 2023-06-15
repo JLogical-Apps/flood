@@ -23,10 +23,10 @@ void main() {
     data.intProperty.value = 0;
     expect(data.intProperty.value, 0);
 
-    data.setState(dropContext, State(data: {}));
+    data.state = State(data: {});
     expect(data.intProperty.value, null);
 
-    data.setState(dropContext, State(data: {'int': 1}));
+    data.state = State(data: {'int': 1});
     expect(data.intProperty.value, 1);
   });
 
@@ -37,10 +37,10 @@ void main() {
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
 
-    data.setState(dropContext, State(data: {}));
+    data.state = State(data: {});
     expect(await data.validate(null), isNotNull);
 
-    data.setState(dropContext, State(data: {'int': 1}));
+    data.state = State(data: {'int': 1});
     expect(data.intProperty.value, 1);
   });
 
@@ -54,10 +54,10 @@ void main() {
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
 
-    data.setState(dropContext, State(data: {}));
+    data.state = State(data: {});
     expect(data.intProperty.value, -1);
 
-    data.setState(dropContext, State(data: {'int': 1}));
+    data.state = State(data: {'int': 1});
     expect(data.intProperty.value, 1);
   });
 
@@ -71,10 +71,10 @@ void main() {
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
 
-    data.setState(dropContext, State(data: {}));
+    data.state = State(data: {});
     expect(data.intProperty.value, -1);
 
-    data.setState(dropContext, State(data: {'int': 1}));
+    data.state = State(data: {'int': 1});
     expect(data.intProperty.value, 1);
   });
 
@@ -88,10 +88,10 @@ void main() {
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
 
-    data.setState(dropContext, State(data: {}));
+    data.state = State(data: {});
     expect(data.intProperty.value, -1);
 
-    data.setState(dropContext, State(data: {'int': 1}));
+    data.state = State(data: {'int': 1});
     expect(data.intProperty.value, 1);
   });
 
@@ -104,10 +104,10 @@ void main() {
     data.nameProperty.set('John Doe');
     expect(data.nameProperty.value, 'John Doe');
 
-    data.setState(dropContext, State(data: {}));
+    data.state = State(data: {});
     expect(await data.validate(null), isNotNull);
 
-    data.setState(dropContext, State(data: {'name': 'John Doe'}));
+    data.state = State(data: {'name': 'John Doe'});
     expect(data.nameProperty.value, 'John Doe');
   });
 
@@ -120,15 +120,12 @@ void main() {
     data.itemsProperty.set(['one', 'two', 'three']);
     expect(data.itemsProperty.value, ['one', 'two', 'three']);
 
-    data.setState(dropContext, State(data: {}));
+    data.state = State(data: {});
     expect(data.itemsProperty.value, []);
 
-    data.setState(
-      dropContext,
-      State(data: {
-        'items': ['hello', 'world'],
-      }),
-    );
+    data.state = State(data: {
+      'items': ['hello', 'world'],
+    });
     expect(data.itemsProperty.value, ['hello', 'world']);
   });
 
@@ -156,15 +153,12 @@ void main() {
     data.studentToScoreProperty.set({'Jack': 82, 'Jill': 93});
     expect(data.studentToScoreProperty.value, {'Jack': 82, 'Jill': 93});
 
-    data.setState(dropContext, State(data: {}));
+    data.state = State(data: {});
     expect(data.studentToScoreProperty.value, {});
 
-    data.setState(
-      dropContext,
-      State(data: {
-        'studentToScore': {'Jack': 82, 'Jill': 93},
-      }),
-    );
+    data.state = State(data: {
+      'studentToScore': {'Jack': 82, 'Jill': 93},
+    });
     expect(data.studentToScoreProperty.value, {'Jack': 82, 'Jill': 93});
   });
 
