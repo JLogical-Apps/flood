@@ -29,8 +29,11 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
       field<TimeRule>(name: timeRuleField).withDisplayName('Timing').required().withDefault(() => MonthlyTimeRule());
 
   static const lastAppliedDateField = 'lastApplied';
-  late final lastAppliedDateProperty =
-      field<DateTime>(name: lastAppliedDateField).withFallbackReplacement(() => DateTime.now()).hidden();
+  late final lastAppliedDateProperty = field<Timestamp>(name: lastAppliedDateField)
+      .time()
+      .onlyDate()
+      .withFallbackReplacement(() => Timestamp.now())
+      .hidden();
 
   @override
   late final List<ValueObjectBehavior> behaviors = [
@@ -92,13 +95,13 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
       return null;
     }
 
-    final startOfCurrentPeriod = timeRuleProperty.value.getStartOfPeriod(now, lastAppliedDateProperty.value);
+    final startOfCurrentPeriod = timeRuleProperty.value.getStartOfPeriod(now, lastAppliedDateProperty.value.time);
 
     return EnvelopeChange(
       ruleChange: RepeatingGoalEnvelopeRule()
         ..copyFrom(context, this)
         ..remainingGoalCentsProperty.set(adjustedRemainingGoalCents)
-        ..lastAppliedDateProperty.set(startOfCurrentPeriod),
+        ..lastAppliedDateProperty.set(Timestamp.of(startOfCurrentPeriod)),
     );
   }
 

@@ -69,10 +69,10 @@ mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements V
   G? get valueOrNull => value;
 
   @override
-  void fromState(State state) {}
+  void fromState(CoreDropContext context, State state) {}
 
   @override
-  State modifyState(State state) {
+  State modifyState(CoreDropContext context, State state) {
     return state;
   }
 
@@ -90,6 +90,9 @@ mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements V
   String toString() {
     return '$runtimeType{$name, $valueOrNull}';
   }
+
+  @override
+  bool? get stringify => false;
 }
 
 extension ValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
@@ -157,17 +160,14 @@ extension NullableStringValueObjectPropertyExtensions<G extends String?, S exten
   }
 }
 
-extension DateTimeValueObjectPropertyExtensions<G extends DateTime?, S extends DateTime?, L,
-    V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
-  OnlyDateValueObjectProperty<G, S, L> onlyDate([bool onlyDate = true]) {
-    return OnlyDateValueObjectProperty(property: this, onlyDate: onlyDate);
-  }
-}
-
 extension TimestampValueObjectPropertyExtensions<G extends Timestamp?, S extends Timestamp?, L,
     V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
   TimeValueObjectProperty<G, S, L> time() {
     return TimeValueObjectProperty<G, S, L>(property: this);
+  }
+
+  OnlyDateValueObjectProperty<G, S, L> onlyDate([bool onlyDate = true]) {
+    return OnlyDateValueObjectProperty(property: this, onlyDate: onlyDate);
   }
 }
 
@@ -219,10 +219,10 @@ mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, 
   void set(S value) => property.set(value);
 
   @override
-  void fromState(State state) => property.fromState(state);
+  void fromState(CoreDropContext context, State state) => property.fromState(context, state);
 
   @override
-  State modifyState(State state) => property.modifyState(state);
+  State modifyState(CoreDropContext context, State state) => property.modifyState(context, state);
 
   @override
   Future<L> load(CoreDropContext context) => property.load(context);
@@ -234,4 +234,7 @@ mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, 
   String toString() {
     return '$runtimeType{$name, $valueOrNull}';
   }
+
+  @override
+  bool? get stringify => false;
 }

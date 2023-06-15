@@ -177,10 +177,6 @@ void main() {
       userPort.getFieldByName(Data9.createdField).findDateFieldOrNull(),
       isA<DatePortField>().having((f) => f.isDate, 'isDate', true).having((f) => f.isTime, 'isTime', true),
     );
-    expect(
-      userPort.getFieldByName(Data9.timestampField).findDateFieldOrNull(),
-      isA<DatePortField>().having((f) => f.isDate, 'isDate', true).having((f) => f.isTime, 'isTime', true),
-    );
   });
 }
 
@@ -287,14 +283,11 @@ class Data8 extends ValueObject {
 
 class Data9 extends ValueObject {
   static const dateField = 'date';
-  late final dateProperty = field<DateTime>(name: dateField).onlyDate().required();
+  late final dateProperty = field<Timestamp>(name: dateField).onlyDate().required();
 
   static const createdField = 'created';
-  late final createdProperty = field<DateTime>(name: createdField);
-
-  static const timestampField = 'timestamp';
-  late final timestampProperty = field<Timestamp>(name: timestampField).time();
+  late final createdProperty = field<Timestamp>(name: createdField).time();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [dateProperty, createdProperty, timestampProperty];
+  List<ValueObjectBehavior> get behaviors => [dateProperty, createdProperty];
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:drop_core/src/context/core_drop_context.dart';
 import 'package:drop_core/src/state/persistence/json/date_time_json_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/json/json_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/json/runtime_type_json_state_persister_modifier.dart';
@@ -9,14 +10,14 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:type/type.dart';
 
 class JsonStatePersister implements StatePersister<String> {
-  final RuntimeType Function(String typeName) runtimeTypeGetter;
+  final CoreDropContext context;
 
-  JsonStatePersister({required this.runtimeTypeGetter});
+  JsonStatePersister({required this.context});
 
   late List<JsonStatePersisterModifier> jsonStatePersisterModifiers = [
-    StateJsonStatePersisterModifier(runtimeTypeGetter: runtimeTypeGetter),
-    DateTimeJsonStatePersisterModifier(),
+    StateJsonStatePersisterModifier(context: context),
     RuntimeTypeJsonStatePersisterModifier(),
+    DateTimeJsonStatePersisterModifier(),
   ];
 
   @override
@@ -34,6 +35,9 @@ class JsonStatePersister implements StatePersister<String> {
     final persistedData = json.decode(persisted) as Map<String, dynamic>;
     final modifiedData = jsonStatePersisterModifiers.fold<Map<String, dynamic>>(
         persistedData, (data, modifier) => modifier.inflate(data));
-    return State.fromMap(modifiedData, runtimeTypeGetter: runtimeTypeGetter);
+    return State.fromMap(
+      modifiedData,
+      runtimeTypeGetter: (name) => context.typeContext.getByName(name),
+    );
   }
 }

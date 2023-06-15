@@ -7,7 +7,7 @@ abstract class TimeRule extends ValueObject {
   DateTime getStartOfPeriod(DateTime date, DateTime lastAppliedDate);
 
   int getCentsRemaining({required RepeatingGoalEnvelopeRule rule, required DateTime now}) {
-    final monthsDifference = getPeriodsBetween(now, rule.lastAppliedDateProperty.value);
+    final monthsDifference = getPeriodsBetween(now, rule.lastAppliedDateProperty.value.time);
     final adjustedRemainingGoalCents =
         monthsDifference * rule.goalCentsProperty.value + rule.remainingGoalCentsProperty.value;
 

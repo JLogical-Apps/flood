@@ -17,7 +17,7 @@ class DailyTimeCardModifier extends TimeRuleCardModifier<DailyTimeRule?> {
 
   @override
   String getCurrentPeriodMarkdown(RepeatingGoalEnvelopeRule envelopeRule, DailyTimeRule? rule) {
-    final daysSinceLastUpdate = DateTime.now().difference(envelopeRule.lastAppliedDateProperty.value).inDays.abs();
+    final daysSinceLastUpdate = DateTime.now().difference(envelopeRule.lastAppliedDateProperty.value.time).inDays.abs();
     final daysRemaining = rule == null ? null : (rule.daysProperty.value - daysSinceLastUpdate);
     return 'the next `${daysRemaining ?? '?'}` day${daysRemaining == null || daysRemaining != 1 ? 's' : ''}';
   }

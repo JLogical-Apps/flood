@@ -5,7 +5,6 @@ import 'package:persistence/persistence.dart';
 import 'package:pond/pond.dart';
 import 'package:pool/pool.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:type/type.dart';
 import 'package:utils/utils.dart';
 
 class FlutterFileRepository with IsRepository {
@@ -41,9 +40,7 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
   @override
   late final RepositoryQueryExecutor queryExecutor = _getQueryExecutor();
 
-  late StatePersister<String> statePersister = StatePersister.json(
-    runtimeTypeGetter: (name) => repository.context.coreDropComponent.typeContext.getByName(name),
-  );
+  late StatePersister<String> statePersister = StatePersister.json(context: repository.context.coreDropComponent);
 
   RepositoryQueryExecutor _getQueryExecutor() {
     return StateQueryExecutor(
@@ -73,9 +70,7 @@ class FlutterFileRepositoryStateHandler implements RepositoryStateHandler {
 
   FlutterFileRepositoryStateHandler({required this.repository});
 
-  late StatePersister<String> statePersister = StatePersister.json(
-    runtimeTypeGetter: (name) => repository.context.coreDropComponent.typeContext.getByName(name),
-  );
+  late StatePersister<String> statePersister = StatePersister.json(context: repository.context.coreDropComponent);
 
   @override
   Future<State> onUpdate(State state) async {

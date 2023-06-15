@@ -22,10 +22,13 @@ void main() {
       'strings': ['one', 'two', 'three'],
     });
 
-    listData.state = State(data: {
-      'ints': [3, 2, 1],
-      'strings': ['three', 'two', 'one'],
-    });
+    listData.setState(
+      context.coreDropComponent,
+      State(data: {
+        'ints': [3, 2, 1],
+        'strings': ['three', 'two', 'one'],
+      }),
+    );
     expect(listData.intsProperty.value, [3, 2, 1]);
     expect(listData.stringsProperty.value, ['three', 'two', 'one']);
   });
@@ -46,10 +49,13 @@ void main() {
       'stringById': {'A': 'a', 'B': 'b', 'C': 'c'},
     });
 
-    mapData.state = State(data: {
-      'intById': {'three': 3, 'two': 2, 'one': 1},
-      'stringById': {'C': 'c', 'B': 'b', 'A': 'a'},
-    });
+    mapData.setState(
+      context.coreDropComponent,
+      State(data: {
+        'intById': {'three': 3, 'two': 2, 'one': 1},
+        'stringById': {'C': 'c', 'B': 'b', 'A': 'a'},
+      }),
+    );
     expect(mapData.intByIdProperty.value, {'three': 3, 'two': 2, 'one': 1});
     expect(mapData.stringByIdProperty.value, {'C': 'c', 'B': 'b', 'A': 'a'});
   });

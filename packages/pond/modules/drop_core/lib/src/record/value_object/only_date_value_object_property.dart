@@ -16,4 +16,7 @@ class OnlyDateValueObjectProperty<G, S, L>
       onlyDate: onlyDate,
     );
   }
+
+  @override
+  List<Object?> get props => [property, onlyDate];
 }

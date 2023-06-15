@@ -13,4 +13,7 @@ class MultilineValueObjectProperty<G extends String?, S extends String?, L>
   MultilineValueObjectProperty<G, S, L> copy() {
     return MultilineValueObjectProperty<G, S, L>(property: property.copy(), isMultiline: isMultiline);
   }
+
+  @override
+  List<Object?> get props => [property, isMultiline];
 }

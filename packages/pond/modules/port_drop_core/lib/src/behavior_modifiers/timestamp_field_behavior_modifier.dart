@@ -14,7 +14,11 @@ class TimestampFieldBehaviorModifier
     FieldValueObjectProperty<Timestamp?, dynamic> behavior,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
+    var defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
+    if (defaultValue is Timestamp) {
+      defaultValue = defaultValue.time;
+    }
+
     final onlyDate = modifierGetter(context.originalBehavior)?.isOnlyDate(context.originalBehavior) ?? false;
     return {
       behavior.name: PortField.dateTime(

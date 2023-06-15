@@ -16,6 +16,9 @@ class CreationTimeProperty with IsValueObjectPropertyWrapper<Timestamp?, Timesta
   CreationTimeProperty copy() {
     return CreationTimeProperty();
   }
+
+  @override
+  List<Object?> get props => [property];
 }
 
 extension CreationTimeExtensions on ValueObject {

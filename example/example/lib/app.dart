@@ -128,7 +128,7 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
         ..goalCentsProperty.set(100 * 100)
         ..timeRuleProperty.set(MonthlyTimeRule())
         ..remainingGoalCentsProperty.set(100 * 100)
-        ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(days: 6)))),
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6))))),
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Eating Out')
@@ -136,7 +136,7 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
         ..goalCentsProperty.set(40 * 100)
         ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(7))
         ..remainingGoalCentsProperty.set(40 * 100)
-        ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(days: 4)))),
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 4))))),
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Emergency Savings')

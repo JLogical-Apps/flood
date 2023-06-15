@@ -56,7 +56,7 @@ extension RepositoryExtension on Repository {
     final newValueObject = context.coreDropComponent.construct(valueObjectType) as V;
 
     if (entity.hasValue) {
-      newValueObject.state = entity.value.getState(context.coreDropComponent);
+      newValueObject.setState(context.coreDropComponent, entity.value.getState(context.coreDropComponent));
     }
 
     await updater?.call(newValueObject);

@@ -451,7 +451,7 @@ void main() {
           ..budgetProperty.set(budgetEntity.id!)
           ..ruleProperty.set(RepeatingGoalEnvelopeRule()
             ..goalCentsProperty.set(10 * 100)
-            ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(seconds: 1)))
+            ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(seconds: 1))))
             ..remainingGoalCentsProperty.set(10 * 100)
             ..timeRuleProperty.set(MonthlyTimeRule())));
 
@@ -462,7 +462,7 @@ void main() {
           ..budgetProperty.set(budgetEntity.id!)
           ..ruleProperty.set(RepeatingGoalEnvelopeRule()
             ..goalCentsProperty.set(10 * 100)
-            ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(seconds: 1)))
+            ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(seconds: 1))))
             ..remainingGoalCentsProperty.set(10 * 100)
             ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(7))));
 
@@ -530,7 +530,7 @@ void main() {
           ..budgetProperty.set(budgetEntity.id!)
           ..ruleProperty.set(RepeatingGoalEnvelopeRule()
             ..goalCentsProperty.set(10 * 100)
-            ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(days: 32)))
+            ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 32))))
             ..remainingGoalCentsProperty.set(10 * 100)
             ..timeRuleProperty.set(MonthlyTimeRule())));
 
@@ -541,7 +541,7 @@ void main() {
           ..budgetProperty.set(budgetEntity.id!)
           ..ruleProperty.set(RepeatingGoalEnvelopeRule()
             ..goalCentsProperty.set(10 * 100)
-            ..lastAppliedDateProperty.set(DateTime.now().subtract(Duration(days: 8)))
+            ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 8))))
             ..remainingGoalCentsProperty.set(10 * 100)
             ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(7))));
 

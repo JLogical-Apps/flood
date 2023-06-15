@@ -15,4 +15,7 @@ class HiddenValueObjectProperty<G, S, L>
   HiddenValueObjectProperty<G, S, L> copy() {
     return HiddenValueObjectProperty<G, S, L>(property: property.copy(), isHiddenGetter: isHiddenGetter);
   }
+
+  @override
+  List<Object?> get props => [property];
 }

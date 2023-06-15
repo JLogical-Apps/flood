@@ -13,4 +13,7 @@ class ColorValueObjectProperty<G extends int?, S extends int?, L>
   ColorValueObjectProperty<G, S, L> copy() {
     return ColorValueObjectProperty<G, S, L>(property: property.copy(), isColor: isColor);
   }
+
+  @override
+  List<Object?> get props => [property, isColor];
 }

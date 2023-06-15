@@ -20,4 +20,7 @@ class NullIfBlankValueObjectProperty<G extends String?, S extends String?, L>
   NullIfBlankValueObjectProperty<G, S, L> copy() {
     return NullIfBlankValueObjectProperty<G, S, L>(property: property.copy(), useNullIfBlank: useNullIfBlank);
   }
+
+  @override
+  List<Object?> get props => [property, useNullIfBlank];
 }

@@ -12,17 +12,17 @@ class FallbackReplacementValueObjectProperty<T, L>
   FallbackReplacementValueObjectProperty({required this.property, required this.fallbackReplacement});
 
   @override
-  State modifyState(State state) {
+  State modifyState(CoreDropContext context, State state) {
     if (property.value == null) {
       property.set(fallbackReplacement());
     }
 
-    return property.modifyState(state);
+    return property.modifyState(context, state);
   }
 
   @override
-  void fromState(State state) {
-    property.fromState(state);
+  void fromState(CoreDropContext context, State state) {
+    property.fromState(context, state);
   }
 
   @override
@@ -47,4 +47,7 @@ class FallbackReplacementValueObjectProperty<T, L>
 
   @override
   String get name => property.name;
+
+  @override
+  List<Object?> get props => [property];
 }

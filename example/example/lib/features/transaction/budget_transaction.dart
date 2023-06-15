@@ -17,6 +17,7 @@ abstract class BudgetTransaction extends ValueObject {
   static const transactionDateField = 'transactionDate';
   late final transactionDateProperty = field<Timestamp>(name: transactionDateField)
       .time()
+      .onlyDate()
       .withDisplayName('Transaction Date')
       .withFallbackReplacement(() => Timestamp.now())
       .withDefault(() => Timestamp.now())

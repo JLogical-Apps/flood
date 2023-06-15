@@ -1,11 +1,16 @@
 import 'package:equatable/equatable.dart';
 
-abstract class Timestamp extends Equatable {
+abstract class Timestamp extends Equatable implements Comparable<Timestamp> {
   DateTime get time;
 
   static Timestamp now() => NowTimestamp();
 
   static Timestamp of(DateTime dateTime) => DateTimestamp(time: dateTime);
+
+  @override
+  int compareTo(Timestamp other) {
+    return time.compareTo(other.time);
+  }
 }
 
 class NowTimestamp extends Timestamp {

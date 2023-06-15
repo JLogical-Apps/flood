@@ -20,12 +20,12 @@ class ReferenceValueObjectProperty<E extends Entity>
   set(String? value) => this.value = value;
 
   @override
-  void fromState(State state) {
+  void fromState(CoreDropContext context, State state) {
     value = state[name] as String?;
   }
 
   @override
-  State modifyState(State state) {
+  State modifyState(CoreDropContext context, State state) {
     if (value == null) {
       return state;
     }
@@ -42,4 +42,7 @@ class ReferenceValueObjectProperty<E extends Entity>
   ReferenceValueObjectProperty<E> copy() {
     return ReferenceValueObjectProperty<E>(name: name, value: value);
   }
+
+  @override
+  List<Object?> get props => [name, value];
 }
