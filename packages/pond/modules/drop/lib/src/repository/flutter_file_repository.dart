@@ -85,6 +85,9 @@ class FlutterFileRepositoryStateHandler implements RepositoryStateHandler {
 
   @override
   Future<State> onDelete(State state) async {
-    throw UnimplementedError();
+    final file = repository.fileRepository.directory - '${state.id}.json';
+    await file.delete();
+
+    return state;
   }
 }
