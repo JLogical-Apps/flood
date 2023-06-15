@@ -114,6 +114,10 @@ extension MapExtensions<K, V> on Map<K, V> {
     });
     return output;
   }
+
+  bool isA<RK, RV>() {
+    return keys.every((key) => key is RK) && values.every((value) => value is RV);
+  }
 }
 
 extension JsonExtensions on Map<String, dynamic> {

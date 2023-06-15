@@ -1,6 +1,7 @@
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:utils_core/utils_core.dart';
 
 class EmbeddedValueObjectProperty<G extends ValueObject?, S extends ValueObject?, L>
     with IsValueObjectPropertyWrapper<G, S, L, EmbeddedValueObjectProperty<G, S, L>> {
@@ -20,7 +21,7 @@ class EmbeddedValueObjectProperty<G extends ValueObject?, S extends ValueObject?
       property.set(stateValue);
     } else if (stateValue is State) {
       final valueObject = (stateValue.type!.createInstance() as ValueObject)..state = stateValue;
-     //  valueObject.throwIfInvalid(null);
+      valueObject.throwIfInvalid(null);
       property.set(valueObject as S);
     } else {
       throw Exception('Unknown ValueObject value: [$stateValue]');

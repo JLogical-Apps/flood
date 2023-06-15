@@ -1,5 +1,4 @@
 import 'package:drop_core/drop_core.dart';
-import 'package:utils_core/utils_core.dart';
 import 'package:uuid/uuid.dart';
 
 class LifecycleStateHandler with IsRepositoryStateHandlerWrapper {
@@ -23,12 +22,7 @@ class LifecycleStateHandler with IsRepositoryStateHandlerWrapper {
     await entity.beforeSave(context);
     state = entity.getState(context);
 
-    state = state.withId(id).withData(state.data
-        .replaceWhereTraversed(
-          (key, value) => value is Timestamp,
-          (key, value) => (value as Timestamp).time,
-        )
-        .cast<String, dynamic>());
+    state = state.withId(id);
 
     await stateHandler.update(state);
 

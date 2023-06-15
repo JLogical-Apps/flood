@@ -1,13 +1,13 @@
 import 'package:drop_core/drop_core.dart';
-import 'package:drop_core/src/state/persistence/json/json_state_persister_modifier.dart';
+import 'package:drop_core/src/state/persistence/modifiers/state_persister_modifier.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
-class StateJsonStatePersisterModifier extends JsonStatePersisterModifier {
+class StateStatePersisterModifier extends StatePersisterModifier {
   final CoreDropContext context;
 
-  StateJsonStatePersisterModifier({required this.context});
+  StateStatePersisterModifier({required this.context});
 
   @override
   Map<String, dynamic> persist(Map<String, dynamic> data) {
@@ -35,9 +35,9 @@ class StateJsonStatePersisterModifier extends JsonStatePersisterModifier {
     var newData = data.copy();
     newData = newData
         .replaceWhereTraversed(
-            (key, value) => value is Map<String, dynamic> && value.containsKey(State.typeField),
+            (key, value) => value is Map && value.isA<String, dynamic>() && value.containsKey(State.typeField),
             (key, value) => State.fromMap(
-                  replaceDataWithState(value as Map<String, dynamic>),
+                  replaceDataWithState((value as Map).cast<String, dynamic>()),
                   runtimeTypeGetter: (name) => context.typeContext.getByName(name),
                 ))
         .cast<String, dynamic>();

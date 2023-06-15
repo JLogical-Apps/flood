@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:drop_core/src/context/core_drop_context.dart';
 import 'package:drop_core/src/state/persistence/modifiers/date_time_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/modifiers/runtime_type_state_persister_modifier.dart';
@@ -7,12 +5,11 @@ import 'package:drop_core/src/state/persistence/modifiers/state_persister_modifi
 import 'package:drop_core/src/state/persistence/modifiers/state_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
-import 'package:type/type.dart';
 
-class JsonStatePersister implements StatePersister<String> {
+class StateStatePersister implements StatePersister<State> {
   final CoreDropContext context;
 
-  JsonStatePersister({required this.context});
+  StateStatePersister({required this.context});
 
   late List<StatePersisterModifier> statePersisterModifiers = [
     RuntimeTypeStatePersisterModifier(),
@@ -21,23 +18,19 @@ class JsonStatePersister implements StatePersister<String> {
   ];
 
   @override
-  String persist(State state) {
-    final data = state.fullData;
+  State persist(State state) {
+    final data = state.data;
     final modifiedData =
         statePersisterModifiers.fold<Map<String, dynamic>>(data, (data, modifier) => modifier.persist(data));
 
-    final jsonEncoder = JsonEncoder.withIndent('  ');
-    return jsonEncoder.convert(modifiedData);
+    return state.withData(modifiedData);
   }
 
   @override
-  State inflate(String persisted) {
-    final persistedData = json.decode(persisted) as Map<String, dynamic>;
+  State inflate(State persisted) {
     final modifiedData =
-        statePersisterModifiers.fold<Map<String, dynamic>>(persistedData, (data, modifier) => modifier.inflate(data));
-    return State.fromMap(
-      modifiedData,
-      runtimeTypeGetter: (name) => context.typeContext.getByName(name),
-    );
+        statePersisterModifiers.fold<Map<String, dynamic>>(persisted.data, (data, modifier) => modifier.inflate(data));
+
+    return persisted.withData(modifiedData);
   }
 }

@@ -3,6 +3,7 @@ import 'package:drop_core/src/repository/query_executor/state_query_executor.dar
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
+import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
@@ -26,12 +27,15 @@ class MemoryRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
   @override
   late final RepositoryQueryExecutor queryExecutor = _getQueryExecutor();
 
+  late StatePersister<State> statePersister = StatePersister.state(context: repository.context.coreDropComponent);
+
   RepositoryQueryExecutor _getQueryExecutor() {
     final stateByIdX = repository.stateByIdX;
 
     return StateQueryExecutor.fromStatesX(
       dropContext: repository.context.coreDropComponent,
-      statesX: stateByIdX.mapWithValue((stateById) => stateById.values.toList()),
+      statesX: stateByIdX
+          .mapWithValue((stateById) => stateById.values.map((state) => statePersister.inflate(state)).toList()),
     );
   }
 }
@@ -41,9 +45,11 @@ class MemoryRepositoryStateHandler with IsRepositoryStateHandler {
 
   MemoryRepositoryStateHandler({required this.repository});
 
+  late StatePersister<State> statePersister = StatePersister.state(context: repository.context.coreDropComponent);
+
   @override
   Future<State> onUpdate(State state) async {
-    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, state);
+    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, statePersister.persist(state));
     return state;
   }
 
