@@ -30,7 +30,7 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
           fromEnvelope: fromEnvelope,
           toEnvelope: toEnvelope,
         ),
-        bodyText: [transaction.transactionDateProperty.value.format(showTime: false)].join(' - '),
+        bodyText: [transaction.transactionDateProperty.value.time.format(showTime: false)].join(' - '),
         onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
       );
     });
@@ -64,7 +64,7 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
                   toEnvelope?.nameProperty.value ?? '?'),
               StyledText.body(' on '),
               StyledText.body
-                  .withColor(Colors.green)(transaction.transactionDateProperty.value.format(showTime: false)),
+                  .withColor(Colors.green)(transaction.transactionDateProperty.value.time.format(showTime: false)),
             ],
           );
         },

@@ -17,7 +17,7 @@ class AdaptingRepository with IsRepositoryWrapper {
       if (environment.environment == EnvironmentType.static.testing) {
         return Repository.memory();
       } else if (environment.environment == EnvironmentType.static.device) {
-        return Repository.file(rootPath);
+        return Repository.file(rootPath).withMemoryCache();
       }
 
       throw UnimplementedError('Unknown environment for adapting repository [${environment.environment}');

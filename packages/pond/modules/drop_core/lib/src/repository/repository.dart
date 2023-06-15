@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/repository/adapting_repository.dart';
+import 'package:drop_core/src/repository/listener_repository.dart';
+import 'package:drop_core/src/repository/memory_cache_repository.dart';
 import 'package:drop_core/src/repository/memory_repository.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
 import 'package:drop_core/src/repository/type/for_abstract_type_repository.dart';
@@ -126,6 +128,19 @@ extension RepositoryExtension on Repository {
       valueObjectParents: valueObjectParents ?? [],
     );
   }
+
+  ListenerRepository withListener({
+    final Function(State state)? onStateRetrieved,
+  }) {
+    return ListenerRepository(
+      repository: this,
+      onStateRetrieved: onStateRetrieved,
+    );
+  }
+
+  MemoryCacheRepository withMemoryCache() {
+    return MemoryCacheRepository(sourceRepository: this);
+  }
 }
 
 mixin IsRepository implements Repository, IsRepositoryStateHandlerWrapper, IsRepositoryQueryExecutorWrapper {
@@ -148,11 +163,18 @@ mixin IsRepository implements Repository, IsRepositoryStateHandlerWrapper, IsRep
   bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) => queryExecutor.onExecuteQuery(queryRequest);
+  Future<T> onExecuteQuery<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) =>
+      queryExecutor.onExecuteQuery(queryRequest, onStateRetreived: onStateRetreived);
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest) =>
-      queryExecutor.onExecuteQueryX(queryRequest);
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) =>
+      queryExecutor.onExecuteQueryX(queryRequest, onStateRetreived: onStateRetreived);
 }
 
 abstract class RepositoryWrapper implements Repository {
@@ -202,9 +224,16 @@ mixin IsRepositoryWrapper implements RepositoryWrapper, RepositoryStateHandlerWr
   bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) => queryExecutor.onExecuteQuery(queryRequest);
+  Future<T> onExecuteQuery<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) =>
+      queryExecutor.onExecuteQuery(queryRequest, onStateRetreived: onStateRetreived);
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest) =>
-      queryExecutor.onExecuteQueryX(queryRequest);
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) =>
+      queryExecutor.onExecuteQueryX(queryRequest, onStateRetreived: onStateRetreived);
 }

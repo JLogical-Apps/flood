@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:drop_core/src/query/pagination/batch_query_result_page.dart';
 import 'package:drop_core/src/query/pagination/mapper_query_result_page.dart';
+import 'package:drop_core/src/query/pagination/query_result_page_listener.dart';
 
 abstract class QueryResultPage<T> {
   FutureOr<List<T>> getItems();
@@ -33,6 +34,10 @@ extension QueryResultPageDefaults<T> on QueryResultPage<T> {
 
   MapperQueryResultPage<T, R> map<R>(FutureOr<R> Function(T source) mapper) {
     return MapperQueryResultPage(sourceQueryResultPage: this, mapper: mapper);
+  }
+
+  QueryResultPageListener<T> withListener({FutureOr Function(QueryResultPage<T> page)? onNextPage}) {
+    return QueryResultPageListener(queryResultPage: this, onNextPage: onNextPage);
   }
 
   Future<QueryResultPage<T>> append(QueryResultPage<T> nextPage) async {
@@ -67,4 +72,16 @@ class _QueryResultPageImpl<T> with IsQueryResultPage<T> {
 
   @override
   FutureOr<List<T>> getItems() => _items;
+}
+
+abstract class QueryResultPageWrapper<T> implements QueryResultPage<T> {
+  QueryResultPage<T> get queryResultPage;
+}
+
+mixin IsQueryResultPageWrapper<T> implements QueryResultPageWrapper<T> {
+  @override
+  FutureOr<List<T>> getItems() => queryResultPage.getItems();
+
+  @override
+  FutureOr<QueryResultPage<T>> Function()? get nextPageGetter => queryResultPage.nextPageGetter;
 }

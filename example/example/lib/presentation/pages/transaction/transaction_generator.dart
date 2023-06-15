@@ -45,7 +45,7 @@ class IncomeTransactionGenerator extends TransactionGenerator<IncomeTransaction>
     return IncomeTransaction()
       ..centsByEnvelopeIdProperty.set(budgetChange.modifiedEnvelopeById.map((id, envelope) =>
           MapEntry(id, envelope.amountCentsProperty.value - envelopeById[id]!.amountCentsProperty.value)))
-      ..transactionDateProperty.set(transactionDate)
+      ..transactionDateProperty.set(Timestamp.of(transactionDate))
       ..budgetProperty.set(budgetId);
   }
 }

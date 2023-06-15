@@ -37,7 +37,11 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
         FirstOrNullStateStateQueryRequestReducer(dropContext: dropContext),
         MapStateQueryRequestReducer(
           dropContext: dropContext,
-          queryRequestResolver: <T>(qr, states) async => await resolveForQueryRequest(qr, states),
+          queryRequestResolver: <T>(qr, states, onStateRetrieved) => resolveForQueryRequest(
+            qr,
+            states,
+            onStateRetreived: onStateRetrieved,
+          ),
         ),
         PaginateStatesStateQueryRequestReducer(dropContext: dropContext),
       ]);
@@ -48,26 +52,52 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
   }
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) async {
+  Future<T> onExecuteQuery<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) async {
     await maybeStatesX.waitUntil((maybeStates) => maybeStates.isLoaded);
-    return await executeOnStates(queryRequest, maybeStatesX.value.getOrNull()!);
+    return await executeOnStates(
+      queryRequest,
+      maybeStatesX.value.getOrNull()!,
+      onStateRetreived: onStateRetreived,
+    );
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest) {
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) {
     return maybeStatesX.asyncMapWithValue(
       (maybeStates) => maybeStates.asyncMap((states) => executeOnStates(queryRequest, states)),
       initialValue: FutureValue.empty(),
     );
   }
 
-  Future<T> executeOnStates<T>(QueryRequest<dynamic, T> queryRequest, List<State> states) async {
+  Future<T> executeOnStates<T>(
+    QueryRequest<dynamic, T> queryRequest,
+    List<State> states, {
+    Function(State state)? onStateRetreived,
+  }) async {
     final reducedStates = reduceStates(states, queryRequest.query);
-    return await resolveForQueryRequest<T>(queryRequest, reducedStates);
+    return await resolveForQueryRequest<T>(
+      queryRequest,
+      reducedStates,
+      onStateRetreived: onStateRetreived,
+    );
   }
 
-  Future<T> resolveForQueryRequest<T>(QueryRequest<dynamic, T> queryRequest, Iterable<State> states) async {
-    return await getQueryRequestReducerResolver<T>().resolve(queryRequest).reduce(queryRequest, states);
+  Future<T> resolveForQueryRequest<T>(
+    QueryRequest<dynamic, T> queryRequest,
+    Iterable<State> states, {
+    Function(State state)? onStateRetreived,
+  }) async {
+    return await getQueryRequestReducerResolver<T>().resolve(queryRequest).reduce(
+          queryRequest,
+          states,
+          onStateRetrieved: onStateRetreived,
+        );
   }
 
   Iterable<State> reduceStates(Iterable<State> states, Query query) {

@@ -186,7 +186,8 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
           .generate(envelopeById)
           .transactionDateProperty
           .value
-          .compareTo(b.generate(envelopeById).transactionDateProperty.value),
+          .time
+          .compareTo(b.generate(envelopeById).transactionDateProperty.value.time),
     );
     return existingGenerators;
   }

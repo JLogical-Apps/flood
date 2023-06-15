@@ -21,12 +21,18 @@ class BlankRepositoryQueryExecutor implements RepositoryQueryExecutor {
   }
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) {
+  Future<T> onExecuteQuery<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) {
     throw UnimplementedError();
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest) {
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) {
     throw UnimplementedError();
   }
 }

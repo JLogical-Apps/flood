@@ -47,11 +47,18 @@ mixin IsRepositoryListWrapper implements RepositoryListWrapper {
   bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) => queryExecutor.onExecuteQuery(queryRequest);
+  Future<T> onExecuteQuery<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) =>
+      queryExecutor.onExecuteQuery(queryRequest, onStateRetreived: onStateRetreived);
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest) =>
-      queryExecutor.onExecuteQueryX(queryRequest);
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) =>
+      queryExecutor.onExecuteQueryX(queryRequest, onStateRetreived: onStateRetreived);
 }
 
 class _RepositoryListWrapperImpl with IsRepositoryListWrapper {
@@ -90,7 +97,10 @@ class _RepositoryListQueryExecutor implements RepositoryQueryExecutor {
   }
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest) {
+  Future<T> onExecuteQuery<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) {
     return repositories
             .firstWhereOrNull((repository) => repository.handlesQuery(queryRequest))
             ?.executeQuery(queryRequest) ??
@@ -98,7 +108,10 @@ class _RepositoryListQueryExecutor implements RepositoryQueryExecutor {
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(QueryRequest<dynamic, T> queryRequest) {
+  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
+    QueryRequest<dynamic, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) {
     return repositories
             .firstWhereOrNull((repository) => repository.handlesQuery(queryRequest))
             ?.executeQueryX(queryRequest) ??

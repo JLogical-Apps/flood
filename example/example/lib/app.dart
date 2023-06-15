@@ -162,25 +162,25 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
         ..amountCentsProperty.set(-90 * 100)
         ..envelopeProperty.set('Car')
         ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(DateTime.now().subtract(Duration(days: 3))),
+        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
       EnvelopeTransaction()
         ..nameProperty.set('Vacation')
         ..amountCentsProperty.set(-180 * 100)
         ..envelopeProperty.set('Savings')
         ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(DateTime.now().subtract(Duration(days: 3))),
+        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
       EnvelopeTransaction()
         ..nameProperty.set('Plumber')
         ..amountCentsProperty.set(-120 * 100)
         ..envelopeProperty.set('Emergency Savings')
         ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(DateTime.now().subtract(Duration(days: 3))),
+        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
       TransferTransaction()
         ..amountCentsProperty.set(20 * 100)
         ..fromEnvelopeProperty.set('Savings')
         ..toEnvelopeProperty.set('Tithe')
         ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(DateTime.now().subtract(Duration(days: 2))),
+        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 2)))),
       IncomeTransaction()
         ..centsByEnvelopeIdProperty.set({
           'Tithe': 30 * 100,
@@ -189,7 +189,7 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
           'Savings': 300 * 100,
         })
         ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(DateTime.now().subtract(Duration(days: 2))),
+        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 1)))),
     ];
 
     final budgetChange = budgetEntity.value.addTransactions(

@@ -21,7 +21,7 @@ class IncomeTransactionCardModifier extends TransactionCardModifier<IncomeTransa
             transactionViewContext: transactionViewContext,
             incomeTransaction: transaction,
           )),
-          bodyText: transaction.transactionDateProperty.value.format(showTime: false),
+          bodyText: transaction.transactionDateProperty.value.time.format(showTime: false),
           onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
         );
       },

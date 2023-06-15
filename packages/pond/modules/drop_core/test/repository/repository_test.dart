@@ -114,6 +114,69 @@ void main() {
 
     expect(queriedEntity?.getState(context.locate<CoreDropComponent>()), userState);
   });
+
+  test('executing query with state listener works.', () async {
+    final states = <State>[];
+    final memoryRepository = UserRepository().withListener(onStateRetrieved: (state) {
+      states.add(state);
+    });
+
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(CoreDropComponent());
+    await context.register(memoryRepository);
+
+    final userEntity = UserEntity()..set(User()..nameProperty.set('John Doe'));
+    final userState = await memoryRepository.update(userEntity);
+
+    await memoryRepository.executeQuery(Query.from<UserEntity>().firstOrNull());
+    expect(states, contains(userState));
+    states.clear();
+
+    await memoryRepository.executeQuery(Query.from<UserEntity>().all());
+    expect(states, contains(userState));
+    states.clear();
+
+    await memoryRepository.executeQuery(Query.from<UserEntity>().paginate());
+    expect(states, contains(userState));
+    states.clear();
+  });
+
+  test('executing paginated query with state listener works.', () async {
+    final states = <State>[];
+    final memoryRepository = UserRepository().withListener(onStateRetrieved: (state) {
+      states.add(state);
+    });
+
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(CoreDropComponent());
+    await context.register(memoryRepository);
+
+    final names = [
+      'John Doe',
+      'Jill Doe',
+      'Jane Doe',
+    ];
+    for (final name in names) {
+      final userEntity = UserEntity()..set(User()..nameProperty.set(name));
+      await memoryRepository.update(userEntity);
+    }
+
+    await memoryRepository.executeQuery(Query.from<UserEntity>().firstOrNull());
+    expect(states.length, 1);
+    states.clear();
+
+    await memoryRepository.executeQuery(Query.from<UserEntity>().all());
+    expect(states.length, names.length);
+    states.clear();
+
+    final pageResult = await memoryRepository.executeQuery(Query.from<UserEntity>().paginate(pageSize: 2));
+    expect(states.length, 2);
+    await pageResult.loadNextPage();
+    expect(states.length, 3);
+    states.clear();
+  });
 }
 
 class User extends ValueObject {

@@ -15,5 +15,9 @@ abstract class StateQueryRequestReducer<QR extends QueryRequest<dynamic, T>, T> 
     return input is QR;
   }
 
-  FutureOr<T> reduce(QR queryRequest, Iterable<State> states);
+  FutureOr<T> reduce(
+    QR queryRequest,
+    Iterable<State> states, {
+    Function(State state)? onStateRetrieved,
+  });
 }

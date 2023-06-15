@@ -8,7 +8,11 @@ import 'package:drop_core/src/state/state.dart';
 
 class MapStateQueryRequestReducer<E extends Entity, T>
     extends StateQueryRequestReducer<MapQueryRequest<E, dynamic, T>, T> {
-  final FutureOr<T> Function<T>(QueryRequest<E, T> queryRequest, Iterable<State> states) queryRequestResolver;
+  final FutureOr<T> Function<T>(
+    QueryRequest<E, T> queryRequest,
+    Iterable<State> states,
+    Function(State state)? onStateRetreived,
+  ) queryRequestResolver;
 
   MapStateQueryRequestReducer({
     required super.dropContext,
@@ -16,8 +20,16 @@ class MapStateQueryRequestReducer<E extends Entity, T>
   });
 
   @override
-  Future<T> reduce(MapQueryRequest<E, dynamic, T> queryRequest, Iterable<State> states) async {
-    final sourceQueryRequestResult = await queryRequestResolver(queryRequest.sourceQueryRequest, states);
+  Future<T> reduce(
+    MapQueryRequest<E, dynamic, T> queryRequest,
+    Iterable<State> states, {
+    Function(State state)? onStateRetrieved,
+  }) async {
+    final sourceQueryRequestResult = await queryRequestResolver(
+      queryRequest.sourceQueryRequest,
+      states,
+      onStateRetrieved,
+    );
     return await queryRequest.doMap(dropContext, sourceQueryRequestResult);
   }
 }

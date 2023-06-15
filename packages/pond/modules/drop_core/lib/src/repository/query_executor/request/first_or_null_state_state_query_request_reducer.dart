@@ -7,7 +7,15 @@ class FirstOrNullStateStateQueryRequestReducer extends StateQueryRequestReducer<
   FirstOrNullStateStateQueryRequestReducer({required super.dropContext});
 
   @override
-  State? reduce(FirstOrNullStateQueryRequest queryRequest, Iterable<State> states) {
-    return states.firstOrNull;
+  State? reduce(
+    FirstOrNullStateQueryRequest queryRequest,
+    Iterable<State> states, {
+    Function(State state)? onStateRetrieved,
+  }) {
+    final result = states.firstOrNull;
+    if (result != null) {
+      onStateRetrieved?.call(result);
+    }
+    return result;
   }
 }

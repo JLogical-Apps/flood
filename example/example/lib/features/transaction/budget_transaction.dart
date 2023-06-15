@@ -15,11 +15,11 @@ abstract class BudgetTransaction extends ValueObject {
   late final budgetProperty = reference<BudgetEntity>(name: budgetField).required();
 
   static const transactionDateField = 'transactionDate';
-  late final transactionDateProperty = field<DateTime>(name: transactionDateField)
+  late final transactionDateProperty = field<Timestamp>(name: transactionDateField)
+      .time()
       .withDisplayName('Transaction Date')
-      .onlyDate()
-      .withFallback(() => DateTime.now())
-      .withDefault(() => DateTime.now())
+      .withFallbackReplacement(() => Timestamp.now())
+      .withDefault(() => Timestamp.now())
       .requiredOnEdit();
 
   List<String> get affectedEnvelopeIds;

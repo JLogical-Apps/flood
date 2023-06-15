@@ -6,7 +6,14 @@ class AllStatesStateQueryRequestReducer extends StateQueryRequestReducer<AllStat
   AllStatesStateQueryRequestReducer({required super.dropContext});
 
   @override
-  List<State> reduce(AllStatesQueryRequest queryRequest, Iterable<State> states) {
+  List<State> reduce(
+    AllStatesQueryRequest queryRequest,
+    Iterable<State> states, {
+    Function(State state)? onStateRetrieved,
+  }) {
+    for (final state in states) {
+      onStateRetrieved?.call(state);
+    }
     return states.toList();
   }
 }
