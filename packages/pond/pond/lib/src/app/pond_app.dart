@@ -44,9 +44,11 @@ class PondApp extends HookWidget {
                 Uri(path: splashRoute, queryParameters: {redirectParam: initialPageGetter().uri.toString()}).toString(),
             routes: [
               VGuard(
-                beforeEnter: (vRedirector) async => isAppContextLoadedValue.value
-                    ? vRedirector.to(VRouterSegmentModifier.getVRouterPath(initialPageGetter()))
-                    : null,
+                beforeEnter: (vRedirector) async {
+                  if (isAppContextLoadedValue.value) {
+                    vRedirector.to(VRouterSegmentModifier.getVRouterPath(initialPageGetter()));
+                  }
+                },
                 stackedRoutes: [
                   VWidget.builder(
                     path: splashRoute,
@@ -69,12 +71,12 @@ class PondApp extends HookWidget {
                     (page) => VGuard(
                       beforeEnter: (vRedirector) async {
                         final uri = vRedirector.toUrl?.mapIfNonNull(Uri.tryParse);
-                        !isAppContextLoadedValue.value
-                            ? vRedirector.to(Uri(
-                                path: splashRoute,
-                                queryParameters: uri?.mapIfNonNull((uri) => {redirectParam: uri.toString()}),
-                              ).toString())
-                            : null;
+                        if (!isAppContextLoadedValue.value) {
+                          vRedirector.to(Uri(
+                            path: splashRoute,
+                            queryParameters: uri?.mapIfNonNull((uri) => {redirectParam: uri.toString()}),
+                          ).toString());
+                        }
                       },
                       stackedRoutes: [
                         _getVElementForPage(context, page),
@@ -99,6 +101,28 @@ class PondApp extends HookWidget {
   }
 
   VRouteElement _getVElementForPage<A extends AppPage>(BuildContext context, A page) {
+    Future checkRedirect(VRedirector vRedirector) async {
+      final path = vRedirector.toUrl;
+      if (path == null) {
+        return;
+      }
+
+      late AppPage displayedPage;
+      if (page.matches(path)) {
+        displayedPage = page.fromPath(path) as AppPage;
+      } else {
+        final matchingPage = appPondContext.getPages().firstWhere((page) => page.matches(path));
+        displayedPage = matchingPage.getParentChain().firstWhere((parent) => parent.runtimeType == page.runtimeType);
+      }
+
+      final redirect = await displayedPage.redirectTo(context, Uri.parse(path));
+      if (redirect == null) {
+        return;
+      }
+
+      vRedirector.to(redirect.toString());
+    }
+
     return VPopHandler(
       onPop: (vRedirector) async {
         final exitingUrl = vRedirector.previousVRouterData?.url;
@@ -119,28 +143,8 @@ class PondApp extends HookWidget {
       },
       stackedRoutes: [
         VGuard(
-          beforeEnter: (vRedirector) async {
-            final path = vRedirector.toUrl;
-            if (path == null) {
-              return;
-            }
-
-            late AppPage displayedPage;
-            if (page.matches(path)) {
-              displayedPage = page.fromPath(path) as AppPage;
-            } else {
-              final matchingPage = appPondContext.getPages().firstWhere((page) => page.matches(path));
-              displayedPage =
-                  matchingPage.getParentChain().firstWhere((parent) => parent.runtimeType == page.runtimeType);
-            }
-
-            final redirect = await displayedPage.redirectTo(context, Uri.parse(path));
-            if (redirect == null) {
-              return;
-            }
-
-            vRedirector.to(redirect.toString());
-          },
+          beforeEnter: checkRedirect,
+          beforeUpdate: checkRedirect,
           stackedRoutes: [
             VWidget.builder(
               path: VRouterSegmentModifier.getVRouterPath(page),
