@@ -36,8 +36,7 @@ class MemoryCacheRepository with IsRepositoryWrapper {
   late final RepositoryQueryExecutor queryExecutor = MemoryCacheRepositoryQueryExecutor(repository: this);
 
   @override
-  late final RepositoryStateHandler stateHandler =
-      MemoryCacheRepositoryStateHandler(repository: this).withEntityLifecycle(context.coreDropComponent);
+  late final RepositoryStateHandler stateHandler = MemoryCacheRepositoryStateHandler(repository: this);
 }
 
 class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
@@ -89,15 +88,15 @@ class MemoryCacheRepositoryStateHandler with IsRepositoryStateHandler {
 
   @override
   Future<State> onUpdate(State state) async {
-    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, statePersister.persist(state));
     state = await repository.repository.update(state);
+    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, statePersister.persist(state));
     return state;
   }
 
   @override
   Future<State> onDelete(State state) async {
-    repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(state.id!);
     state = await repository.repository.delete(state);
+    repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(state.id!);
     return state;
   }
 }
