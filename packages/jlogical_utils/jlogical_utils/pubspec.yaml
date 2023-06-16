@@ -89,6 +89,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
       path: packages/pond/modules/port_style_component
+  reset:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: master
+      path: packages/pond/modules/reset
   style:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

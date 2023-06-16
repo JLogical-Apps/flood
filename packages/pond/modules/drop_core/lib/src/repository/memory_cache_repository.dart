@@ -6,6 +6,7 @@ import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -21,6 +22,15 @@ class MemoryCacheRepository with IsRepositoryWrapper {
       onStateRetrieved: (state) => stateByIdX.value = stateByIdX.value.copy()..set(state.id!, state),
     );
   }
+
+  @override
+  late final List<CorePondComponentBehavior> behaviors = super.behaviors +
+      [
+        CorePondComponentBehavior(onReset: (context, _) async {
+          stateByIdX.value = {};
+          queriesRun.clear();
+        }),
+      ];
 
   @override
   late final RepositoryQueryExecutor queryExecutor = MemoryCacheRepositoryQueryExecutor(repository: this);

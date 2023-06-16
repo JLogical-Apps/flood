@@ -75,6 +75,7 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(FocusGrabberAppComponent());
   await appPondContext.register(AuthAppComponent());
   await appPondContext.register(DropAppComponent());
+  await appPondContext.register(ResetAppComponent());
   await appPondContext.register(PortStyleComponent(overrides: [
     EnvelopePortOverride(context: appPondContext),
     EnvelopeTransactionPortOverride(context: appPondContext),

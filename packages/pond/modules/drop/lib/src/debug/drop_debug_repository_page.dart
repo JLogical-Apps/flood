@@ -20,7 +20,7 @@ class DropDebugRepositoryPage extends AppPage<DropDebugRepositoryPage> {
       builder: (List<Entity> entities, Future Function()? loadMore) {
         return StyledPage(
           titleText: repository.runtimeType.toString(),
-          body: StyledList.column.scrollable.withScrollbar.withMinChildSize(250)(
+          body: StyledList.column.scrollable.withScrollbar.centered.withMinChildSize(250)(
             children: [
               ...entities.map(
                 (entity) => StyledCard(
@@ -43,6 +43,7 @@ class DropDebugRepositoryPage extends AppPage<DropDebugRepositoryPage> {
                   },
                 ),
             ],
+            ifEmptyText: 'There are no entities in this repository.',
           ),
         );
       },

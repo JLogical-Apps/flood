@@ -34,6 +34,7 @@ class PondApp extends HookWidget {
     final isAppContextLoadedValue = useMutable(() => false);
 
     return wrapApp(
+      pondApp: this,
       appContext: appPondContext,
       child: Builder(
         builder: (context) {
@@ -164,7 +165,12 @@ class PondApp extends HookWidget {
     );
   }
 
+  void navigateHome(BuildContext context) {
+    context.warpTo(initialPageGetter());
+  }
+
   static Widget wrapApp({
+    required PondApp pondApp,
     required AppPondContext appContext,
     required Widget child,
   }) {
@@ -172,9 +178,12 @@ class PondApp extends HookWidget {
       child = appComponent.wrapApp(appContext, child);
     }
 
-    return Provider<AppPondContext>(
-      create: (_) => appContext,
-      child: child,
+    return Provider<PondApp>(
+      create: (_) => pondApp,
+      child: Provider<AppPondContext>(
+        create: (_) => appContext,
+        child: child,
+      ),
     );
   }
 
