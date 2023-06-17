@@ -52,3 +52,4 @@ dependency_overrides: # Needed because of [dcli] and [interact]
   win32: 4.1.0
   path: 1.8.3
   js: 0.6.5
+  posix: 5.0.0

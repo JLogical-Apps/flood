@@ -8,7 +8,11 @@ class FileAssetEnvironmentConfig with IsEnvironmentConfigWrapper {
   EnvironmentConfig get environmentConfig {
     final baseConfig = EnvironmentConfig.static
         .yamlFile(Directory.current - 'assets/config.overrides.yaml')
-        .withRecognizedEnvironmentTypes(EnvironmentType.static.defaultTypes);
+        .withRecognizedEnvironmentTypes(EnvironmentType.static.defaultTypes)
+        .withFileSystemGetter(() => FileSystem(
+              storageDirectory: Directory.current / 'tool' / 'output',
+              tempDirectory: Directory.current / 'tool' / 'tmp',
+            ));
 
     return baseConfig.environmental((type) async {
       final isRelease = await baseConfig.getBuildType() == BuildType.release;
