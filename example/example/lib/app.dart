@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:example/features/budget/budget.dart';
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
@@ -29,16 +31,32 @@ const testingLoggedIn = true;
 const testingTransactions = true;
 
 Future<void> main(List<String> args) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(App(
-    appPondContext: await getAppPondContext(await getCorePondContext(
-      environmentConfig: EnvironmentConfig.static.flutterAssets(),
-      repositoryImplementations: [
-        FlutterFileRepositoryImplementation(),
-        FirebaseCloudRepositoryImplementation(),
-      ],
-    )),
-  ));
+  AppPondContext? appPondContext;
+  await runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      appPondContext = await getAppPondContext(await getCorePondContext(
+        environmentConfig: EnvironmentConfig.static.flutterAssets(),
+        repositoryImplementations: [
+          FlutterFileRepositoryImplementation(),
+          FirebaseCloudRepositoryImplementation(),
+        ],
+      ));
+
+      runApp(App(
+        appPondContext: appPondContext!,
+      ));
+    },
+    (Object error, StackTrace stackTrace) {
+      if (appPondContext == null) {
+        print(error);
+        print(stackTrace);
+      } else {
+        appPondContext!.find<LogCoreComponent>().logError(error, stackTrace);
+      }
+    },
+  );
 }
 
 class App extends StatelessWidget {
