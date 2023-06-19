@@ -32,10 +32,8 @@ const testingTransactions = true;
 
 Future<void> main(List<String> args) async {
   AppPondContext? appPondContext;
-  await runZonedGuarded(
-    () async {
-      WidgetsFlutterBinding.ensureInitialized();
-
+  await PondApp.run(
+    appPondContextGetter: () async {
       appPondContext = await getAppPondContext(await getCorePondContext(
         environmentConfig: EnvironmentConfig.static.flutterAssets(),
         repositoryImplementations: [
@@ -43,12 +41,22 @@ Future<void> main(List<String> args) async {
           FirebaseCloudRepositoryImplementation(),
         ],
       ));
-
-      runApp(App(
-        appPondContext: appPondContext!,
-      ));
+      return appPondContext!;
     },
-    (Object error, StackTrace stackTrace) {
+    splashPage: StyledPage(
+      body: Center(
+        child: StyledLoadingIndicator(),
+      ),
+    ),
+    notFoundPage: StyledPage(
+      body: Center(
+        child: StyledText.h1('Not Found!'),
+      ),
+    ),
+    initialPageGetter: () {
+      return HomePage();
+    },
+    onError: (error, stackTrace) {
       if (appPondContext == null) {
         print(error);
         print(stackTrace);
@@ -57,32 +65,6 @@ Future<void> main(List<String> args) async {
       }
     },
   );
-}
-
-class App extends StatelessWidget {
-  final AppPondContext appPondContext;
-
-  const App({super.key, required this.appPondContext});
-
-  @override
-  Widget build(BuildContext context) {
-    return PondApp(
-      splashPage: StyledPage(
-        body: Center(
-          child: StyledLoadingIndicator(),
-        ),
-      ),
-      notFoundPage: StyledPage(
-        body: Center(
-          child: StyledText.h1('Not Found!'),
-        ),
-      ),
-      appPondContext: appPondContext,
-      initialPageGetter: () {
-        return HomePage();
-      },
-    );
-  }
 }
 
 Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async {
@@ -105,10 +87,6 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(EnvironmentBannerAppComponent());
   await appPondContext.register(ValetPagesAppPondComponent());
   await appPondContext.register(TestingSetupAppComponent(onSetup: () => _setupTesting(corePondContext)));
-
-  if (await appPondContext.environmentConfig.getOrNull('reset') == true) {
-    await appPondContext.corePondContext.reset();
-  }
 
   return appPondContext;
 }

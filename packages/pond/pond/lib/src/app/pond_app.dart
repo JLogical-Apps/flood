@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:path_core/path_core.dart';
@@ -28,6 +30,32 @@ class PondApp extends HookWidget {
     required this.splashPage,
     required this.notFoundPage,
   });
+
+  static Future<void> run({
+    required FutureOr<AppPondContext> Function() appPondContextGetter,
+    required AppPage Function() initialPageGetter,
+    required Widget splashPage,
+    required Widget notFoundPage,
+    Function(Object error, StackTrace stackTrace)? onError,
+  }) async {
+    await runZonedGuarded(
+      () async {
+        WidgetsFlutterBinding.ensureInitialized();
+
+        final appPondContext = await appPondContextGetter();
+
+        runApp(PondApp(
+          appPondContext: appPondContext,
+          initialPageGetter: initialPageGetter,
+          splashPage: splashPage,
+          notFoundPage: notFoundPage,
+        ));
+      },
+      (Object error, StackTrace stackTrace) {
+        onError?.call(error, stackTrace);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
