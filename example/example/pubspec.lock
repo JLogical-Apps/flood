@@ -251,6 +251,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  device_files:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/pond/modules/device_files"
+      relative: true
+    source: path
+    version: "0.0.1"
   directed_graph:
     dependency: transitive
     description:

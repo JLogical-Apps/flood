@@ -6,7 +6,7 @@ import 'package:style/style.dart';
 
 class LogAppComponent with IsAppPondComponent, IsDebugPageComponent {
   @override
-  String get name => 'View Logs';
+  String get name => 'Logs';
 
   @override
   String get description => 'View the logs from the current app session';
