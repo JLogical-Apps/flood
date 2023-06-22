@@ -3,6 +3,7 @@ import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/settings/settings_entity.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
+import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
 import 'package:example/presentation/pages/budget/budgets_page.dart';
 import 'package:example/presentation/pages/envelope/archived_envelopes_page.dart';
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
@@ -80,14 +81,15 @@ class BudgetPage extends AppPage {
                       leadingIcon: Icons.mail,
                       actions: [
                         ActionItem(
-                          titleText: 'Create',
+                          titleText: 'Create Envelope',
                           descriptionText: 'Create a new envelope.',
                           iconData: Icons.add,
                           color: Colors.green,
                           onPerform: (_) async {
-                            await context.showStyledDialog(StyledPortDialog(
-                              titleText: 'Create New Envelope',
-                              port: (Envelope()..budgetProperty.set(budgetEntity.id!)).asPort(context.corePondContext),
+                            await context.showStyledDialog(await EnvelopeEditDialog.create(
+                              titleText: 'Edit Envelope',
+                              corePondContext: context.corePondContext,
+                              envelope: Envelope()..budgetProperty.set(budgetEntity.id!),
                               onAccept: (Envelope result) async {
                                 await context.coreDropComponent.update(EnvelopeEntity()..value = result);
                               },

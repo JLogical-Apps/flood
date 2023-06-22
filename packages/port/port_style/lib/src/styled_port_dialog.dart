@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:port/port.dart';
 import 'package:port_style/src/styled_object_port_builder.dart';
 import 'package:style/style.dart';
+import 'package:utils/utils.dart';
 
 class StyledPortDialog<T> extends StyledDialog<T> {
   final Port<T> port;
@@ -43,10 +44,12 @@ class StyledPortDialog<T> extends StyledDialog<T> {
                   )
                 : PortBuilder(
                     port: port,
-                    builder: (context, port) => StyledList.column(
-                      key: ValueKey(port.portValueByName),
-                      children: children,
-                    ),
+                    builder: (context, port) {
+                      return StyledList.column(
+                        key: EquatableKey(port.portValueByName),
+                        children: children,
+                      );
+                    },
                   ),
             StyledButton(
               labelText: 'OK',

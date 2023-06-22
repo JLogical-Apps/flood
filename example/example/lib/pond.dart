@@ -2,6 +2,7 @@ import 'package:example/features/budget/budget_repository.dart';
 import 'package:example/features/envelope/envelope_repository.dart';
 import 'package:example/features/settings/settings_repository.dart';
 import 'package:example/features/transaction/budget_transaction_repository.dart';
+import 'package:example/features/tray/tray_repository.dart';
 import 'package:example/features/user/user_repository.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
@@ -23,6 +24,7 @@ Future<CorePondContext> getCorePondContext({
   await corePondContext.register(UserRepository());
   await corePondContext.register(BudgetRepository());
   await corePondContext.register(EnvelopeRepository());
+  await corePondContext.register(TrayRepository());
   await corePondContext.register(SettingsRepository());
   await corePondContext.register(BudgetTransactionRepository());
   return corePondContext;

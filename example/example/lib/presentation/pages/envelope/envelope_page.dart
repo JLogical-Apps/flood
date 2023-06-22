@@ -5,6 +5,7 @@ import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:example/features/transaction/envelope_transaction_entity.dart';
 import 'package:example/features/transaction/transfer_transaction.dart';
 import 'package:example/features/transaction/transfer_transaction_entity.dart';
+import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
 import 'package:example/presentation/pages/home_page.dart';
@@ -44,9 +45,10 @@ class EnvelopePage extends AppPage {
                 color: Colors.orange,
                 iconData: Icons.edit,
                 onPerform: (context) async {
-                  await context.showStyledDialog(StyledPortDialog(
+                  await context.showStyledDialog(await EnvelopeEditDialog.create(
                     titleText: 'Edit Envelope',
-                    port: envelope.asPort(context.corePondContext),
+                    corePondContext: context.corePondContext,
+                    envelope: envelope,
                     onAccept: (Envelope result) async {
                       await context.coreDropComponent.update(envelopeEntity..value = result);
                     },

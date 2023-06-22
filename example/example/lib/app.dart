@@ -14,6 +14,8 @@ import 'package:example/features/transaction/budget_transaction_entity.dart';
 import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:example/features/transaction/income_transaction.dart';
 import 'package:example/features/transaction/transfer_transaction.dart';
+import 'package:example/features/tray/tray.dart';
+import 'package:example/features/tray/tray_entity.dart';
 import 'package:example/features/user/user.dart';
 import 'package:example/features/user/user_entity.dart';
 import 'package:example/pond.dart';
@@ -114,6 +116,12 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
       ..ownerProperty.set(userEntity.id!),
   );
 
+  final trayEntity = await corePondContext.coreDropComponent.updateEntity(
+      TrayEntity(),
+      (Tray tray) => tray
+        ..nameProperty.set('Repeating')
+        ..budgetProperty.set(budgetEntity.id!));
+
   final envelopes = [
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
@@ -122,6 +130,7 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Car')
+      ..trayProperty.set(trayEntity.id!)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(100 * 100)
         ..timeRuleProperty.set(MonthlyTimeRule())
@@ -130,6 +139,7 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Eating Out')
+      ..trayProperty.set(trayEntity.id!)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(40 * 100)
         ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(7))

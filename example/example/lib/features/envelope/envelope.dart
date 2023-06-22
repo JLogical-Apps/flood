@@ -1,5 +1,6 @@
 import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope_rule/envelope_rule.dart';
+import 'package:example/features/tray/tray_entity.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class Envelope extends ValueObject {
@@ -26,6 +27,9 @@ class Envelope extends ValueObject {
   static const archivedField = 'archived';
   late final archivedProperty = field<bool>(name: archivedField).hidden().withFallback(() => false);
 
+  static const trayField = 'tray';
+  late final trayProperty = reference<TrayEntity>(name: trayField);
+
   @override
   late final List<ValueObjectBehavior> behaviors = [
     nameProperty,
@@ -35,6 +39,7 @@ class Envelope extends ValueObject {
     ruleProperty,
     colorProperty,
     archivedProperty,
+    trayProperty,
     creationTime(),
   ];
 

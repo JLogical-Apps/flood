@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:port_core/port_core.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -69,7 +70,7 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
   }
 }
 
-class StageValue<E, T> {
+class StageValue<E, T> with EquatableMixin {
   final E value;
   final Port<T>? port;
 
@@ -83,4 +84,7 @@ class StageValue<E, T> {
   String toString() {
     return 'StageValue{value=$value, port=$port}';
   }
+
+  @override
+  List<Object?> get props => [value];
 }
