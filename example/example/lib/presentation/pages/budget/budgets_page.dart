@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:example/features/budget/budget.dart';
 import 'package:example/features/budget/budget_entity.dart';
+import 'package:example/features/settings/settings.dart';
+import 'package:example/features/settings/settings_entity.dart';
 import 'package:example/features/user/user_entity.dart';
 import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/pages/budget/budget_page.dart';
@@ -40,7 +42,12 @@ class BudgetsPage extends AppPage {
                     children: budgetEntities
                         .map((budgetEntity) => StyledCard(
                               titleText: budgetEntity.value.nameProperty.value,
-                              onPressed: () {
+                              onPressed: () async {
+                                await context.coreDropComponent.updateEntity(
+                                  await SettingsEntity.getSettings(context.coreDropComponent),
+                                  (Settings settings) => settings.budgetProperty.set(budgetEntity.id!),
+                                );
+
                                 context.warpTo(BudgetPage()..budgetIdProperty.set(budgetEntity.id!));
                               },
                             ))

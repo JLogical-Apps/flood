@@ -23,7 +23,7 @@ class DeviceFilesDebugPage extends AppPage {
           return null;
         }
 
-        return directory.listSync();
+        return directory.listSync()..sort((a, b) => a.path.toLowerCase().compareTo(b.path.toLowerCase()));
       },
       [pathState.value],
     );

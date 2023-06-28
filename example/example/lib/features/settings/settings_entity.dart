@@ -11,8 +11,10 @@ class SettingsEntity extends Entity<Settings> {
 
     final budgetEntity = await _findDefaultBudgetEntity(context);
 
-    final settings = Settings()..budgetProperty.set(budgetEntity?.id);
-    return SettingsEntity()..set(settings);
+    return await context.updateEntity(
+      SettingsEntity(),
+      (Settings settings) => settings.budgetProperty.set(budgetEntity?.id),
+    );
   }
 
   static Future<BudgetEntity?> _findDefaultBudgetEntity(CoreDropContext context) async {
