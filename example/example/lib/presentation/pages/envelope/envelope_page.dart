@@ -246,11 +246,9 @@ class EnvelopePage extends AppPage {
                     builder: (TrayEntity? trayEntity) {
                       return trayEntity == null
                           ? Container()
-                          : StyledChip(
-                              labelText: trayEntity.value.nameProperty.value,
-                              iconData: Icons.inventory,
-                              backgroundColor: Colors.orange,
-                            );
+                          : StyledChip.subtle(
+                              label: StyledText.body.withColor(Color(trayEntity.value.colorProperty.value))(
+                                  trayEntity.value.nameProperty.value));
                     },
                   ),
                 ],
