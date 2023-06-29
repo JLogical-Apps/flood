@@ -5,6 +5,7 @@ import 'package:example/features/transaction/envelope_transaction.dart';
 import 'package:example/features/transaction/envelope_transaction_entity.dart';
 import 'package:example/features/transaction/transfer_transaction.dart';
 import 'package:example/features/transaction/transfer_transaction_entity.dart';
+import 'package:example/features/tray/tray_entity.dart';
 import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
@@ -14,6 +15,7 @@ import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class EnvelopePage extends AppPage {
@@ -24,6 +26,12 @@ class EnvelopePage extends AppPage {
     final envelopeModel = useQuery(Query.getByIdOrNull<EnvelopeEntity>(idProperty.value));
     final envelopeTransactionsModel =
         useQuery(BudgetTransactionEntity.getEnvelopeTransactionsQuery(envelopeId: idProperty.value).paginate());
+
+    final trayModel = useNullableQueryModel(useMemoized(
+      () => envelopeModel.map((envelopeEntity) =>
+          envelopeEntity?.value.trayProperty.value?.mapIfNonNull((trayId) => Query.getByIdOrNull<TrayEntity>(trayId))),
+      [envelopeModel.getOrNull()],
+    ));
 
     return ModelBuilder.page(
       model: envelopeModel,
@@ -221,16 +229,32 @@ class EnvelopePage extends AppPage {
                 },
               ),
           ],
-          body: StyledList.column.centered.scrollable(
+          body: StyledList.column.centered.withScrollbar(
             children: [
               StyledText.h4.withColor(getCentsColor(envelope.amountCentsProperty.value))(
                   envelope.amountCentsProperty.value.formatCentsAsCurrency()),
-              if (envelope.archivedProperty.value)
-                StyledChip(
-                  labelText: 'Archived',
-                  iconData: Icons.archive,
-                  backgroundColor: Colors.blue,
-                ),
+              StyledList.row.centered.scrollable(
+                children: [
+                  if (envelope.archivedProperty.value)
+                    StyledChip(
+                      labelText: 'Archived',
+                      iconData: Icons.archive,
+                      backgroundColor: Colors.blue,
+                    ),
+                  ModelBuilder(
+                    model: trayModel,
+                    builder: (TrayEntity? trayEntity) {
+                      return trayEntity == null
+                          ? Container()
+                          : StyledChip(
+                              labelText: trayEntity.value.nameProperty.value,
+                              iconData: Icons.inventory,
+                              backgroundColor: Colors.orange,
+                            );
+                    },
+                  ),
+                ],
+              ),
               StyledCard.subtle(
                 titleText: envelopeRule?.getDisplayName() ?? 'None',
                 leading: envelopeRuleCardWrapper.getIcon(envelopeRule),

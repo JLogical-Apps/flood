@@ -40,7 +40,6 @@ class EnvelopeEditDialog extends StyledPortDialog<Envelope> {
       port: port,
       children: [
         StyledObjectPortBuilder(port: port),
-        StyledDivider.subtle(),
         StyledOptionPortField(
           fieldName: Envelope.trayField,
           widgetMapper: (TrayEntity? trayEntity) {

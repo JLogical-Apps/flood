@@ -2,6 +2,8 @@ import 'package:example/features/budget/budget_entity.dart';
 import 'package:example/features/envelope/envelope.dart';
 import 'package:example/features/envelope/envelope_entity.dart';
 import 'package:example/features/transaction/budget_transaction_entity.dart';
+import 'package:example/features/tray/tray.dart';
+import 'package:example/features/tray/tray_entity.dart';
 import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
 import 'package:example/presentation/pages/budget/budgets_page.dart';
 import 'package:example/presentation/pages/envelope/archived_envelopes_page.dart';
@@ -10,6 +12,7 @@ import 'package:example/presentation/pages/transaction/add_transactions_page.dar
 import 'package:example/presentation/widget/envelope/envelope_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
+import 'package:example/presentation/widget/tray/tray_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -25,6 +28,7 @@ class BudgetPage extends AppPage {
     final budgetModel = useQuery(Query.getByIdOrNull<BudgetEntity>(budgetIdProperty.value));
     final envelopesModel =
         useQuery(EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: budgetIdProperty.value, isArchived: false).all());
+    final traysModel = useQuery(TrayEntity.getBudgetTraysQuery(budgetId: budgetIdProperty.value).all());
 
     final transactionsModel =
         useQuery(BudgetTransactionEntity.getBudgetTransactionsQuery(budgetId: budgetIdProperty.value).paginate());
@@ -78,11 +82,27 @@ class BudgetPage extends AppPage {
                           color: Colors.green,
                           onPerform: (_) async {
                             await context.showStyledDialog(await EnvelopeEditDialog.create(
-                              titleText: 'Edit Envelope',
+                              titleText: 'Create Envelope',
                               corePondContext: context.corePondContext,
                               envelope: Envelope()..budgetProperty.set(budgetEntity.id!),
                               onAccept: (Envelope result) async {
                                 await context.coreDropComponent.update(EnvelopeEntity()..value = result);
+                              },
+                            ));
+                          },
+                        ),
+                        ActionItem(
+                          titleText: 'Create Tray',
+                          descriptionText: 'Create a new tray.',
+                          iconData: Icons.add,
+                          color: Colors.green,
+                          onPerform: (_) async {
+                            await context.showStyledDialog(StyledPortDialog(
+                              port:
+                                  (Tray()..budgetProperty.set(budgetIdProperty.value)).asPort(context.corePondContext),
+                              titleText: 'Create Tray',
+                              onAccept: (Tray result) async {
+                                await context.coreDropComponent.updateEntity(TrayEntity()..value = result);
                               },
                             ));
                           },
@@ -98,19 +118,32 @@ class BudgetPage extends AppPage {
                         ),
                       ],
                       children: [
-                        ModelBuilder(
-                          model: envelopesModel,
-                          builder: (List<EnvelopeEntity> envelopeEntities) {
+                        HookBuilder(
+                          builder: (BuildContext context) {
+                            final envelopeEntities = useModel(envelopesModel).getOrNull();
+                            final trayEntities = useModel(traysModel).getOrNull();
+                            if (envelopeEntities == null || trayEntities == null) {
+                              return StyledLoadingIndicator();
+                            }
+
+                            final nonTrayedEnvelopes =
+                                envelopeEntities.where((entity) => entity.value.trayProperty.value == null).toList();
+
                             return StyledList.column.withMinChildSize(150)(
                               children: [
-                                ...envelopeEntities.map((envelopeEntity) {
-                                  return EnvelopeCard(
-                                    envelope: envelopeEntity.value,
-                                    onPressed: () async {
-                                      context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!));
-                                    },
-                                  );
-                                }).toList(),
+                                ...trayEntities.map((trayEntity) => TrayCard(
+                                      trayEntity: trayEntity,
+                                      // onPressed: () => context.push(EnvelopePage()..idProperty.set(trayEntity.id!)),
+                                      onEnvelopePressed: (envelopeEntity) =>
+                                          context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!)),
+                                    )),
+                                ...nonTrayedEnvelopes
+                                    .map((envelopeEntity) => EnvelopeCard(
+                                          envelope: envelopeEntity.value,
+                                          onPressed: () =>
+                                              context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!)),
+                                        ))
+                                    .toList(),
                               ],
                               ifEmptyText:
                                   'There are no envelopes in this budget! Create one by pressing the triple-dot menu above!',
