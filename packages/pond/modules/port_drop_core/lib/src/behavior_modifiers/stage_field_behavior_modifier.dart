@@ -52,30 +52,32 @@ class StageFieldBehaviorModifier
 
     return {
       behavior.name: PortField.stage<RuntimeType?, dynamic>(
-          initialValue: initialRuntimeType,
-          options: [
-            if (!isRequiredOnEdit || initialRuntimeType == null) null,
-            ...baseRuntimeType.getConcreteChildren(),
-          ],
-          portMapper: (type) => getPort(type),
-          submitRawMapper: (portValue, type) {
-            if (type == null || portValue == null) {
-              return null;
-            }
+        initialValue: initialRuntimeType,
+        options: [
+          if (!isRequiredOnEdit || initialRuntimeType == null) null,
+          ...baseRuntimeType.getConcreteChildren(),
+        ],
+        portMapper: (type) => getPort(type),
+        submitRawMapper: (portValue, type) {
+          portValue ??= (defaultValue as ValueObject?)?.asPort(context.corePondContext);
+          if (type == null || portValue == null) {
+            return null;
+          }
 
-            return portDropContext.getValueObjectFromPort(
-              port: portValue,
-              valueObjectType: type.type,
-            );
-          },
-          displayNameMapper: (type) {
-            if (type == null) {
-              return null;
-            }
+          return portDropContext.getValueObjectFromPort(
+            port: portValue,
+            valueObjectType: type.type,
+          );
+        },
+        displayNameMapper: (type) {
+          if (type == null) {
+            return null;
+          }
 
-            final valueObject = type.createInstance() as ValueObject;
-            return valueObject.getDisplayName() ?? valueObject.runtimeType.toString();
-          }),
+          final valueObject = type.createInstance() as ValueObject;
+          return valueObject.getDisplayName() ?? valueObject.runtimeType.toString();
+        },
+      ),
     };
   }
 }

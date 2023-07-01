@@ -92,6 +92,7 @@ class CorePortDropComponent with IsCorePondComponent {
         originalValueObject: valueObject,
         originalBehavior: behavior,
         corePortDropComponent: this,
+        corePondContext: context,
         portGetter: () => port,
       );
 
