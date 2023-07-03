@@ -26,6 +26,7 @@ class TrayCard extends HookWidget {
             .where(Envelope.trayField)
             .isEqualTo(trayEntity.id!)
             .all());
+    final envelopeEntities = envelopesModel.getOrNull();
 
     return StyledCard(
       title: StyledText.h6.withColor(Color(tray.colorProperty.value))(tray.nameProperty.value),
@@ -46,21 +47,36 @@ class TrayCard extends HookWidget {
             ));
           },
         ),
+        ActionItem(
+            titleText: 'Delete',
+            descriptionText: 'Delete this tray.',
+            iconData: Icons.delete,
+            color: Colors.red,
+            onPerform: (context) async {
+              await context.showStyledDialog(StyledDialog.yesNo(
+                titleText: 'Confirm Delete',
+                bodyText: 'Are you sure you want to delete this tray? You cannot undo this.',
+                onAccept: () async {
+                  await context.coreDropComponent.delete(trayEntity);
+                },
+              ));
+            }),
       ],
       children: [
-        ModelBuilder(
-          model: envelopesModel,
-          builder: (List<EnvelopeEntity> envelopeEntities) {
-            return StyledList.column(
-              children: envelopeEntities
-                  .map((envelopeEntity) => EnvelopeCard(
-                        envelope: envelopeEntity.value,
-                        onPressed: onEnvelopePressed == null ? null : () => onEnvelopePressed!(envelopeEntity),
-                      ))
-                  .toList(),
-            );
-          },
-        ),
+        if (envelopeEntities != null && envelopeEntities.isNotEmpty)
+          ModelBuilder(
+            model: envelopesModel,
+            builder: (List<EnvelopeEntity> envelopeEntities) {
+              return StyledList.column(
+                children: envelopeEntities
+                    .map((envelopeEntity) => EnvelopeCard(
+                          envelope: envelopeEntity.value,
+                          onPressed: onEnvelopePressed == null ? null : () => onEnvelopePressed!(envelopeEntity),
+                        ))
+                    .toList(),
+              );
+            },
+          ),
       ],
     );
   }
