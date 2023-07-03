@@ -12,7 +12,7 @@ class PortBuilder<T> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useValueStream(port.getPortX());
+    useValueStream(useMemoized(() => port.getPortX()));
 
     return Provider<Port>(
       create: (_) => port,
