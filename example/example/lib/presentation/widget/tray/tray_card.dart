@@ -28,7 +28,7 @@ class TrayCard extends HookWidget {
             .all());
     final envelopeEntities = envelopesModel.getOrNull();
 
-    return StyledCard(
+    return StyledCard.subtle(
       title: StyledText.h6.withColor(Color(tray.colorProperty.value))(tray.nameProperty.value),
       onPressed: onPressed,
       actions: [
