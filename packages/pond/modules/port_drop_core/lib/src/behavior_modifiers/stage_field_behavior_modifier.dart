@@ -30,6 +30,8 @@ class StageFieldBehaviorModifier
     final baseRuntimeType = typeContext.getRuntimeTypeRuntime(baseType);
     final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
 
+    final options = baseRuntimeType.isAbstract ? baseRuntimeType.getConcreteDescendants() : [baseRuntimeType];
+
     final initialValueObject = behavior.value ?? defaultValue as ValueObject?;
     final initialRuntimeType =
         initialValueObject?.mapIfNonNull((value) => typeContext.getRuntimeTypeRuntime(value.runtimeType));
@@ -55,7 +57,7 @@ class StageFieldBehaviorModifier
         initialValue: initialRuntimeType,
         options: [
           if (!isRequiredOnEdit || initialRuntimeType == null) null,
-          ...baseRuntimeType.getConcreteChildren(),
+          ...options,
         ],
         portMapper: (type) => getPort(type),
         submitRawMapper: (portValue, type) {

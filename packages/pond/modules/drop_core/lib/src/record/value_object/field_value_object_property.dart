@@ -21,7 +21,7 @@ class FieldValueObjectProperty<T, L> with IsValueObjectProperty<T?, T?, L, Field
     try {
       value = state[name] as T?;
     } catch (e) {
-      throw Exception('Could not set value of [$name] to [${state[name]}]');
+      throw Exception('Could not set value of [$name] to [${state[name]}] due to:\n$e');
     }
   }
 
