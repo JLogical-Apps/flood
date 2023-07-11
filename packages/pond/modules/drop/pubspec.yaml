@@ -24,17 +24,17 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "3.0"
-      path: packages/pond/packages/debug
+      path: packages/pond/modules/debug
   drop_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "3.0"
-      path: packages/pond/packages/drop_core
+      path: packages/pond/modules/drop_core
   environment:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "3.0"
-      path: packages/pond/packages/environment
+      path: packages/pond/modules/environment
   model:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
