@@ -16,12 +16,12 @@ dependencies:
   actions_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: master
+      ref: "3.0"
       path: packages/pond/packages/actions_core
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: master
+      ref: "3.0"
       path: packages/pond/pond
 dev_dependencies:
   flutter_test:

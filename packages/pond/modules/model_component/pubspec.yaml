@@ -17,12 +17,12 @@ dependencies:
   model:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: master
+      ref: "3.0"
       path: packages/model/model
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: master
+      ref: "3.0"
       path: packages/pond/pond
 
 dev_dependencies:

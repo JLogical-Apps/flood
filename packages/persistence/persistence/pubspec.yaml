@@ -17,12 +17,12 @@ dependencies:
   persistence_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: master
+      ref: "3.0"
       path: packages/persistence/persistence_core
   utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: master
+      ref: "3.0"
       path: packages/utils/utils_core
 dev_dependencies:
   lints: ^2.0.0
