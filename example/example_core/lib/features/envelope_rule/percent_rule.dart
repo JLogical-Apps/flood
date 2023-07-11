@@ -1,6 +1,5 @@
 import 'package:example_core/features/envelope/envelope.dart';
-
-import 'envelope_rule.dart';
+import 'package:example_core/features/envelope_rule/envelope_rule.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 abstract class PercentRule extends EnvelopeRule {

@@ -1,6 +1,6 @@
 import 'package:example_core/features/budget/budget_change.dart';
 import 'package:example_core/features/envelope/envelope.dart';
-import 'budget_transaction.dart';
+import 'package:example_core/features/transaction/budget_transaction.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class IncomeTransaction extends BudgetTransaction {

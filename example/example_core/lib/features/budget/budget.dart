@@ -1,10 +1,9 @@
 import 'package:collection/collection.dart';
+import 'package:example_core/features/budget/budget_change.dart';
 import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/transaction/budget_transaction.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
-
-import 'budget_change.dart';
 
 class Budget extends ValueObject {
   static const nameField = 'name';

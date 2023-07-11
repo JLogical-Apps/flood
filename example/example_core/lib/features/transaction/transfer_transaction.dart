@@ -1,9 +1,8 @@
 import 'package:example_core/features/budget/budget_change.dart';
 import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
+import 'package:example_core/features/transaction/budget_transaction.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
-
-import 'budget_transaction.dart';
 
 class TransferTransaction extends BudgetTransaction {
   static const fromEnvelopeField = 'from';

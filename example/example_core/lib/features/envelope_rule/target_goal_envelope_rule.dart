@@ -1,6 +1,5 @@
 import 'package:example_core/features/envelope_rule/percent_rule.dart';
-
-import 'repeating_goal_envelope_rule.dart';
+import 'package:example_core/features/envelope_rule/repeating_goal_envelope_rule.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class TargetGoalEnvelopeRule extends PercentRule {

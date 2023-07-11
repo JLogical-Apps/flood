@@ -1,6 +1,6 @@
 import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
-import 'budget_transaction_entity.dart';
+import 'package:example_core/features/transaction/budget_transaction_entity.dart';
 import 'package:example_core/features/transaction/income_transaction.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 

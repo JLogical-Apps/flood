@@ -1,10 +1,9 @@
 import 'package:example_core/features/envelope/envelope.dart';
+import 'package:example_core/features/envelope/envelope_change.dart';
+import 'package:example_core/features/envelope_rule/envelope_rule.dart';
 import 'package:example_core/features/envelope_rule/firstfruit_envelope_rule.dart';
 import 'package:example_core/features/envelope_rule/monthly_time_rule.dart';
 import 'package:example_core/features/envelope_rule/time_rule.dart';
-
-import '../envelope/envelope_change.dart';
-import 'envelope_rule.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class RepeatingGoalEnvelopeRule extends EnvelopeRule {
@@ -26,8 +25,11 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
       .withFallbackReplacement(() => goalCentsProperty.value);
 
   static const timeRuleField = 'timeRule';
-  late final timeRuleProperty =
-      field<TimeRule>(name: timeRuleField).embedded().withDisplayName('Timing').required().withDefault(() => MonthlyTimeRule());
+  late final timeRuleProperty = field<TimeRule>(name: timeRuleField)
+      .embedded()
+      .withDisplayName('Timing')
+      .required()
+      .withDefault(() => MonthlyTimeRule());
 
   static const lastAppliedDateField = 'lastApplied';
   late final lastAppliedDateProperty = field<Timestamp>(name: lastAppliedDateField)
