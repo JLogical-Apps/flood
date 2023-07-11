@@ -1,9 +1,3 @@
-import 'package:example/features/budget/budget_entity.dart';
-import 'package:example/features/envelope/envelope.dart';
-import 'package:example/features/envelope/envelope_entity.dart';
-import 'package:example/features/transaction/budget_transaction_entity.dart';
-import 'package:example/features/tray/tray.dart';
-import 'package:example/features/tray/tray_entity.dart';
 import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
 import 'package:example/presentation/pages/budget/budgets_page.dart';
 import 'package:example/presentation/pages/envelope/archived_envelopes_page.dart';
@@ -13,6 +7,7 @@ import 'package:example/presentation/widget/envelope/envelope_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
 import 'package:example/presentation/widget/tray/tray_card.dart';
+import 'package:example_core/example_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';

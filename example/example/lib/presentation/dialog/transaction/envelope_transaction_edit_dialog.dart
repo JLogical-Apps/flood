@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:example/features/transaction/envelope_transaction.dart';
+import 'package:example_core/example_core.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class EnvelopeTransactionEditDialog extends StyledPortDialog<EnvelopeTransaction> {

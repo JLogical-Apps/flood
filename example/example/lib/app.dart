@@ -1,24 +1,5 @@
 import 'dart:async';
 
-import 'package:example/features/budget/budget.dart';
-import 'package:example/features/budget/budget_entity.dart';
-import 'package:example/features/envelope/envelope.dart';
-import 'package:example/features/envelope/envelope_entity.dart';
-import 'package:example/features/envelope_rule/daily_time_rule.dart';
-import 'package:example/features/envelope_rule/firstfruit_envelope_rule.dart';
-import 'package:example/features/envelope_rule/monthly_time_rule.dart';
-import 'package:example/features/envelope_rule/repeating_goal_envelope_rule.dart';
-import 'package:example/features/envelope_rule/surplus_envelope_rule.dart';
-import 'package:example/features/envelope_rule/target_goal_envelope_rule.dart';
-import 'package:example/features/transaction/budget_transaction_entity.dart';
-import 'package:example/features/transaction/envelope_transaction.dart';
-import 'package:example/features/transaction/income_transaction.dart';
-import 'package:example/features/transaction/transfer_transaction.dart';
-import 'package:example/features/tray/tray.dart';
-import 'package:example/features/tray/tray_entity.dart';
-import 'package:example/features/user/user.dart';
-import 'package:example/features/user/user_entity.dart';
-import 'package:example/pond.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/port/envelope_port_override.dart';
 import 'package:example/presentation/port/envelope_transaction_port_override.dart';
@@ -26,6 +7,7 @@ import 'package:example/presentation/port/repeating_goal_port_override.dart';
 import 'package:example/presentation/port/transfer_transaction_port_override.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/valet_pages_pond_component.dart';
+import 'package:example_core/example_core.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 

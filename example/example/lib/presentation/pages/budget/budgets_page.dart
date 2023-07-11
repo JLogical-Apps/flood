@@ -1,12 +1,8 @@
 import 'dart:async';
 
-import 'package:example/features/budget/budget.dart';
-import 'package:example/features/budget/budget_entity.dart';
-import 'package:example/features/settings/settings.dart';
-import 'package:example/features/settings/settings_entity.dart';
-import 'package:example/features/user/user_entity.dart';
 import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/pages/budget/budget_page.dart';
+import 'package:example_core/example_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';

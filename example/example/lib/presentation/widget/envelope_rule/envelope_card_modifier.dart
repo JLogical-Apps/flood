@@ -1,9 +1,9 @@
-import 'package:example/features/envelope_rule/envelope_rule.dart';
 import 'package:example/presentation/widget/envelope_rule/firstfruit_envelope_card_modifier.dart';
 import 'package:example/presentation/widget/envelope_rule/none_envelope_card_modifier.dart';
 import 'package:example/presentation/widget/envelope_rule/repeating_goal_envelope_card_modifier.dart';
 import 'package:example/presentation/widget/envelope_rule/surplus_envelope_rule_modifier.dart';
 import 'package:example/presentation/widget/envelope_rule/target_goal_envelope_rule_modifier.dart';
+import 'package:example_core/example_core.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 

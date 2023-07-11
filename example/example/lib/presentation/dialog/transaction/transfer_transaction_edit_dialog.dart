@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:example/features/envelope/envelope.dart';
-import 'package:example/features/envelope/envelope_entity.dart';
-import 'package:example/features/transaction/transfer_transaction.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
+import 'package:example_core/example_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 

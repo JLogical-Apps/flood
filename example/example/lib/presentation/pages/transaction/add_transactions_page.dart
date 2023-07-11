@@ -1,12 +1,5 @@
 import 'dart:async';
 
-import 'package:example/features/budget/budget_entity.dart';
-import 'package:example/features/envelope/envelope.dart';
-import 'package:example/features/envelope/envelope_entity.dart';
-import 'package:example/features/transaction/budget_transaction.dart';
-import 'package:example/features/transaction/budget_transaction_entity.dart';
-import 'package:example/features/transaction/envelope_transaction.dart';
-import 'package:example/features/transaction/transfer_transaction.dart';
 import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
@@ -15,6 +8,7 @@ import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
+import 'package:example_core/example_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';

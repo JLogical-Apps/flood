@@ -317,6 +317,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.5"
+  example_core:
+    dependency: "direct main"
+    description:
+      path: "../example_core"
+      relative: true
+    source: path
+    version: "1.0.0"
   exception_templates:
     dependency: transitive
     description:
@@ -555,14 +562,14 @@ packages:
     source: path
     version: "0.0.1"
   jlogical_utils_cli:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       path: "../../packages/jlogical_utils/jlogical_utils_cli"
       relative: true
     source: path
     version: "0.0.1"
   jlogical_utils_core:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       path: "../../packages/jlogical_utils/jlogical_utils_core"
       relative: true

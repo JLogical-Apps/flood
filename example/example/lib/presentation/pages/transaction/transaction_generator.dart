@@ -1,7 +1,4 @@
-import 'package:example/features/budget/budget.dart';
-import 'package:example/features/envelope/envelope.dart';
-import 'package:example/features/transaction/budget_transaction.dart';
-import 'package:example/features/transaction/income_transaction.dart';
+import 'package:example_core/example_core.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 abstract class TransactionGenerator<B extends BudgetTransaction> {

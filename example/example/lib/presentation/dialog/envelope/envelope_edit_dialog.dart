@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:example/features/envelope/envelope.dart';
-import 'package:example/features/tray/tray_entity.dart';
+import 'package:example_core/example_core.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class EnvelopeEditDialog extends StyledPortDialog<Envelope> {
