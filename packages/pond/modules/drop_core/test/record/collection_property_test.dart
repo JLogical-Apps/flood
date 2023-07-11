@@ -9,8 +9,8 @@ void main() {
   test('list properties', () {
     final context = CorePondContext()
       ..register(TypeCoreComponent())
-      ..register(CoreDropComponent());
-    final dropContext = context.locate<CoreDropComponent>()..register<ListData>(ListData.new, name: 'ListData');
+      ..register(DropCoreComponent());
+    final dropContext = context.locate<DropCoreComponent>()..register<ListData>(ListData.new, name: 'ListData');
 
     final listData = ListData();
     expect(listData.getState(dropContext).data, {});
@@ -33,8 +33,8 @@ void main() {
   test('map properties', () {
     final context = CorePondContext()
       ..register(TypeCoreComponent())
-      ..register(CoreDropComponent());
-    final dropContext = context.locate<CoreDropComponent>()..register<MapData>(MapData.new, name: 'MapData');
+      ..register(DropCoreComponent());
+    final dropContext = context.locate<DropCoreComponent>()..register<MapData>(MapData.new, name: 'MapData');
 
     final mapData = MapData();
     expect(mapData.getState(dropContext).data, {});

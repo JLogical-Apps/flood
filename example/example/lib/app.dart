@@ -71,7 +71,7 @@ Future<void> main(List<String> args) async {
 
 Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async {
   final appPondContext = AppPondContext(corePondContext: corePondContext);
-  await appPondContext.register(NavigationAppPondComponent());
+  await appPondContext.register(NavigationAppComponent());
   await appPondContext.register(DebugAppComponent());
   await appPondContext.register(LogAppComponent());
   await appPondContext.register(DeviceFilesAppComponent());
@@ -79,7 +79,7 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(AuthAppComponent());
   await appPondContext.register(DropAppComponent());
   await appPondContext.register(ResetAppComponent());
-  await appPondContext.register(PortStyleComponent(overrides: [
+  await appPondContext.register(PortStyleAppComponent(overrides: [
     EnvelopePortOverride(context: appPondContext),
     EnvelopeTransactionPortOverride(context: appPondContext),
     TransferTransactionPortOverride(context: appPondContext),
@@ -88,8 +88,8 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(UrlBarAppComponent());
   await appPondContext.register(EnvironmentBannerAppComponent());
-  await appPondContext.register(ValetPagesAppPondComponent());
   await appPondContext.register(TestingSetupAppComponent(onSetup: () => _setupTesting(corePondContext)));
+  await appPondContext.register(ValetPagesAppPondComponent());
 
   return appPondContext;
 }
@@ -100,7 +100,7 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
   }
 
   final authComponent = corePondContext.locate<AuthCoreComponent>();
-  final dropComponent = corePondContext.locate<CoreDropComponent>();
+  final dropComponent = corePondContext.locate<DropCoreComponent>();
 
   final userId = await authComponent.signup('test@test.com', 'password');
 

@@ -31,7 +31,7 @@ import 'package:type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
-class CorePortDropComponent with IsCorePondComponent {
+class PortDropCoreComponent with IsCorePondComponent {
   late final ModifierResolver<PortGeneratorBehaviorModifier, ValueObjectBehavior> behaviorModifierResolver =
       Resolver.fromModifiers(
     [
@@ -42,7 +42,7 @@ class CorePortDropComponent with IsCorePondComponent {
       DateTimeFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       TimestampFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       StageFieldBehaviorModifier(
-        portDropContext: context.locate<CorePortDropComponent>(),
+        portDropContext: context.locate<PortDropCoreComponent>(),
         typeContext: context.locate<TypeCoreComponent>(),
         portCreator: (valueObject) => generatePort(valueObject),
         modifierGetter: getBehaviorModifierOrNull,
@@ -72,10 +72,10 @@ class CorePortDropComponent with IsCorePondComponent {
   @override
   List<CorePondComponentBehavior> get behaviors => [
         CorePondComponentBehavior.dependency<TypeCoreComponent>(),
-        CorePondComponentBehavior.dependency<CoreDropComponent>(),
+        CorePondComponentBehavior.dependency<DropCoreComponent>(),
       ];
 
-  CoreDropComponent get coreDropComponent => context.locate<CoreDropComponent>();
+  DropCoreComponent get coreDropComponent => context.locate<DropCoreComponent>();
 
   Port<V> generatePort<V extends ValueObject>(V valueObject, {List<PortGeneratorOverride> overrides = const []}) {
     var portFieldByName = <String, PortField>{};
@@ -113,7 +113,7 @@ class CorePortDropComponent with IsCorePondComponent {
     port = Port.of(portFieldByName).map(
       (sourceData, port) {
         final typeContext = context.locate<TypeCoreComponent>();
-        final coreDropContext = context.locate<CoreDropComponent>();
+        final coreDropContext = context.locate<DropCoreComponent>();
 
         final state = State.fromMap(
           sourceData,
@@ -136,7 +136,7 @@ class CorePortDropComponent with IsCorePondComponent {
     Type? valueObjectType,
   }) {
     final typeContext = context.locate<TypeCoreComponent>();
-    final coreDropContext = context.locate<CoreDropComponent>();
+    final coreDropContext = context.locate<DropCoreComponent>();
 
     final state = State.fromMap(
       port.portFieldByName.map((name, portField) => MapEntry(name, portField.submitRaw(portField.value))),

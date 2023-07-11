@@ -4,7 +4,7 @@ import 'package:pond/pond.dart';
 import 'package:utils/utils.dart';
 import 'package:vrouter/vrouter.dart';
 
-class NavigationAppPondComponent with IsAppPondComponent {
+class NavigationAppComponent with IsAppPondComponent {
   String getUrl(BuildContext context) {
     return PondApp.navigatorKey.currentState?.currentPath ?? context.vRouter.url;
   }

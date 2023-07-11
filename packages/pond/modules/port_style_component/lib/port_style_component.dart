@@ -1,1 +1,1 @@
-export 'src/port_style_component.dart';
+export 'src/port_style_app_component.dart';

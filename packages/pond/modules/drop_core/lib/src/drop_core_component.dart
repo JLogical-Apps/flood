@@ -9,10 +9,10 @@ import 'package:type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
-class CoreDropComponent extends CorePondComponent with IsCoreDropContext, IsRepositoryListWrapper {
+class DropCoreComponent with IsCorePondComponent, IsCoreDropContext, IsRepositoryListWrapper {
   final List<RepositoryImplementation> repositoryImplementations;
 
-  CoreDropComponent({this.repositoryImplementations = const []});
+  DropCoreComponent({this.repositoryImplementations = const []});
 
   @override
   List<CorePondComponentBehavior> get behaviors => [

@@ -14,12 +14,12 @@ Future<CorePondContext> getCorePondContext({
 
   final corePondContext = CorePondContext();
   await corePondContext.register(TypeCoreComponent());
-  await corePondContext.register(CoreDropComponent(repositoryImplementations: repositoryImplementations));
+  await corePondContext.register(DropCoreComponent(repositoryImplementations: repositoryImplementations));
   await corePondContext.register(LogCoreComponent.console());
   await corePondContext.register(
       ActionCoreComponent(actionWrapper: <P, R>(Action<P, R> action) => action.log(context: corePondContext)));
   await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
-  await corePondContext.register(CorePortDropComponent());
+  await corePondContext.register(PortDropCoreComponent());
   await corePondContext.register(AuthCoreComponent.adapting());
   await corePondContext.register(UserRepository());
   await corePondContext.register(BudgetRepository());

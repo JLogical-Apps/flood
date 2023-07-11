@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pond/src/app/context/app_pond_context_build_context_extensions.dart';
-import 'package:pond/src/app/navigation/navigation_app_pond_component.dart';
+import 'package:pond/src/app/navigation/navigation_app_component.dart';
 import 'package:pond/src/app/page/app_page.dart';
 
 extension NavigationBuildContextExtensions on BuildContext {
-  NavigationAppPondComponent get _navigationComponent => appPondContext.find<NavigationAppPondComponent>();
+  NavigationAppComponent get _navigationComponent => appPondContext.find<NavigationAppComponent>();
 
   String get url {
     return _navigationComponent.getUrl(this);

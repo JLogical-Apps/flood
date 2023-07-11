@@ -20,7 +20,7 @@ void main() {
       valueObjectTypeName: 'Content',
     );
 
-    final coreDropComponent = CoreDropComponent();
+    final coreDropComponent = DropCoreComponent();
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());

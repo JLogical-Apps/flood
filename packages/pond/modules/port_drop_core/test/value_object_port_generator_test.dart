@@ -12,22 +12,22 @@ void main() {
   setUp(() async {
     corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
-    await corePondContext.register(CoreDropComponent());
-    await corePondContext.register(CorePortDropComponent());
+    await corePondContext.register(DropCoreComponent());
+    await corePondContext.register(PortDropCoreComponent());
   });
 
   test('Port for basic ValueObject.', () async {
     corePondContext.locate<TypeCoreComponent>().register(Data1.new, name: 'Data1');
 
     final user = Data1();
-    var userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(userPort.getFieldByName(Data1.nameField), isA<PortField<String, String>>());
 
     var result = await userPort.submit();
     expect(result.data.nameProperty.value, '');
 
     user.nameProperty.set('Jill');
-    userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(userPort.getByName(Data1.nameField), 'Jill');
 
     userPort.setValue(name: Data1.nameField, value: 'John Doe');
@@ -41,14 +41,14 @@ void main() {
     corePondContext.locate<TypeCoreComponent>().register(Data2.new, name: 'Data2');
 
     final user = Data2();
-    var userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(userPort.getFieldByName(Data2.nameField), isA<PortField>());
 
     final invalidResult = await userPort.submit();
     expect(invalidResult.isValid, false);
 
     user.nameProperty.set('Jill');
-    userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(userPort.getByName(Data2.nameField), 'Jill');
 
     userPort.setValue(name: Data2.nameField, value: 'John Doe');
@@ -62,7 +62,7 @@ void main() {
     corePondContext.locate<TypeCoreComponent>().register(Data3.new, name: 'Data3');
 
     final user = Data3();
-    final userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(userPort.getFieldByName(Data3.nameField).findDisplayNameOrNull(), 'Name');
   });
 
@@ -70,7 +70,7 @@ void main() {
     corePondContext.locate<TypeCoreComponent>().register(Data4.new, name: 'Data4');
 
     final user = Data4();
-    final userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(userPort.getFieldByName(Data4.nameField).findIsMultiline(), false);
     expect(userPort.getFieldByName(Data4.descriptionField).findIsMultiline(), true);
   });
@@ -83,12 +83,12 @@ void main() {
       ..register<Teacher>(Teacher.new, name: 'Teacher', parents: [Person]);
 
     final user = Data5();
-    var userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(userPort.getFieldByName(Data5.personField).findStageFieldOrNull(), isNotNull);
     expect((userPort[Data5.personField] as StageValue).value, isNull);
 
     user.personProperty.set(Teacher());
-    userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(
       (userPort[Data5.personField] as StageValue).value,
       corePondContext.locate<TypeCoreComponent>().getRuntimeType<Teacher>(),
@@ -97,7 +97,7 @@ void main() {
     expect(result.data.personProperty.value, isA<Teacher>());
 
     user.personProperty.set(Student());
-    userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(
       (userPort[Data5.personField] as StageValue).value,
       corePondContext.locate<TypeCoreComponent>().getRuntimeType<Student>(),
@@ -115,7 +115,7 @@ void main() {
     corePondContext.locate<TypeCoreComponent>().register(Data6.new, name: 'Data6');
 
     final user = Data6();
-    final userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(), 'John');
     expect(userPort.getFieldByName(Data6.lastNameField).findHintOrNull(), 'Doe');
     expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(), 'John Doe');
@@ -130,7 +130,7 @@ void main() {
     corePondContext.locate<TypeCoreComponent>().register(Data7.new, name: 'Data7');
 
     final user = Data7();
-    final userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(userPort.getFieldByName(Data7.nameField).value, 'John');
 
     userPort[Data7.nameField] = 'Jill';
@@ -141,7 +141,7 @@ void main() {
     corePondContext.locate<TypeCoreComponent>().register(Data8.new, name: 'Data8');
 
     final user = Data8();
-    final userPort = corePondContext.locate<CorePortDropComponent>().generatePort(
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(
       user,
       overrides: [
         PortGeneratorOverride.update(
@@ -168,7 +168,7 @@ void main() {
     corePondContext.locate<TypeCoreComponent>().register(Data9.new, name: 'Data9');
 
     final user = Data9();
-    final userPort = corePondContext.locate<CorePortDropComponent>().generatePort(user);
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(
       userPort.getFieldByName(Data9.dateField).findDateFieldOrNull(),
       isA<DatePortField>().having((f) => f.isDate, 'isDate', true).having((f) => f.isTime, 'isTime', false),

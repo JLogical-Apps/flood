@@ -12,8 +12,8 @@ void main() {
   setUp(() {
     context = CorePondContext()
       ..register(TypeCoreComponent())
-      ..register(CoreDropComponent());
-    dropContext = context.locate<CoreDropComponent>();
+      ..register(DropCoreComponent());
+    dropContext = context.locate<DropCoreComponent>();
   });
 
   test('serialize ValueObject', () {

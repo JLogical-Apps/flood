@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 import 'package:port_style/port_style.dart';
 
-class PortStyleComponent with IsAppPondComponent {
+class PortStyleAppComponent with IsAppPondComponent {
   final List<StyledObjectPortOverride> overrides;
 
-  PortStyleComponent({this.overrides = const []});
+  PortStyleAppComponent({this.overrides = const []});
 
   @override
   Widget wrapApp(AppPondContext context, Widget app) {

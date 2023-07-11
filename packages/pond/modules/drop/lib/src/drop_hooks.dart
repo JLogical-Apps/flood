@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:utils/utils.dart';
 
 CoreDropContext useCoreDropContext() {
-  return useMemoized(() => useAppPondContext().find<CoreDropComponent>());
+  return useMemoized(() => useAppPondContext().find<DropCoreComponent>());
 }
 
 Model<T>? useQueryOrNull<T>(QueryRequest<Entity, T>? queryRequest) {

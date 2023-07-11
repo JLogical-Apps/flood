@@ -10,11 +10,11 @@ void main() {
   test('find right repository.', () async {
     final corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
-    await corePondContext.register(CoreDropComponent());
+    await corePondContext.register(DropCoreComponent());
     await corePondContext.register(UserRepository());
     await corePondContext.register(BudgetRepository());
 
-    final coreDropComponent = corePondContext.locate<CoreDropComponent>();
+    final coreDropComponent = corePondContext.locate<DropCoreComponent>();
 
     expect(coreDropComponent.getRepositoryFor<UserEntity>(), isA<UserRepository>());
     expect(coreDropComponent.getRepositoryFor<BudgetEntity>(), isA<BudgetRepository>());
@@ -37,7 +37,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(CoreDropComponent());
+    await context.register(DropCoreComponent());
     await context.register(repository);
 
     expect(memoryRepository.stateByIdX.value, {});
@@ -70,16 +70,16 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(CoreDropComponent());
+    await context.register(DropCoreComponent());
     await context.register(ActionCoreComponent());
     await context.register(memoryRepository);
 
     final userEntity = UserEntity()..set(User());
 
-    expect(() => context.locate<CoreDropComponent>().updateEntity(userEntity), throwsA(isA<String>()));
+    expect(() => context.locate<DropCoreComponent>().updateEntity(userEntity), throwsA(isA<String>()));
     expect(
       () => context
-          .locate<CoreDropComponent>()
+          .locate<DropCoreComponent>()
           .updateEntity(userEntity, (User user) => user..nameProperty.set('John Doe')),
       returnsNormally,
     );
@@ -90,7 +90,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(CoreDropComponent());
+    await context.register(DropCoreComponent());
     await context.register(memoryRepository);
 
     var userState = State(
@@ -112,7 +112,7 @@ void main() {
 
     final queriedEntity = await memoryRepository.executeQuery(Query.from<UserEntity>().firstOrNull());
 
-    expect(queriedEntity?.getState(context.locate<CoreDropComponent>()), userState);
+    expect(queriedEntity?.getState(context.locate<DropCoreComponent>()), userState);
   });
 
   test('executing query with state listener works.', () async {
@@ -123,7 +123,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(CoreDropComponent());
+    await context.register(DropCoreComponent());
     await context.register(memoryRepository);
 
     final userEntity = UserEntity()..set(User()..nameProperty.set('John Doe'));
@@ -150,7 +150,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(CoreDropComponent());
+    await context.register(DropCoreComponent());
     await context.register(memoryRepository);
 
     final names = [

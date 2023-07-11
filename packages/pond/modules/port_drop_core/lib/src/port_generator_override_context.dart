@@ -3,7 +3,7 @@ import 'package:port_drop_core/port_drop_core.dart';
 
 class PortGeneratorOverrideContext {
   final ValueObject initialValueObject;
-  final CorePortDropComponent corePortDropComponent;
+  final PortDropCoreComponent corePortDropComponent;
 
   const PortGeneratorOverrideContext({
     required this.initialValueObject,

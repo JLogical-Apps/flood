@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 
 extension DropBuildContextExtensions on BuildContext {
-  CoreDropComponent get coreDropComponent {
-    return appPondContext.find<CoreDropComponent>();
+  DropCoreComponent get coreDropComponent {
+    return appPondContext.find<DropCoreComponent>();
   }
 }

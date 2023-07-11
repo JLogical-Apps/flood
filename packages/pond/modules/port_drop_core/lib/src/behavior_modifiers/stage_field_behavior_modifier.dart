@@ -8,7 +8,7 @@ import 'package:utils_core/utils_core.dart';
 
 class StageFieldBehaviorModifier
     extends PortGeneratorBehaviorModifier<FieldValueObjectProperty<ValueObject?, dynamic>> {
-  final CorePortDropComponent portDropContext;
+  final PortDropCoreComponent portDropContext;
   final TypeContext typeContext;
 
   final Port<ValueObject> Function(ValueObject valueObject) portCreator;

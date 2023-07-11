@@ -43,7 +43,7 @@ abstract class Repository implements CorePondComponent, RepositoryStateHandlerWr
 
 extension RepositoryExtension on Repository {
   Future<State> update(Stateful stateful) async {
-    var state = stateful.getState(context.locate<CoreDropComponent>());
+    var state = stateful.getState(context.locate<DropCoreComponent>());
     state = await onUpdate(state);
     return state;
   }
@@ -68,7 +68,7 @@ extension RepositoryExtension on Repository {
   }
 
   Future<State> delete(Stateful state) {
-    return onDelete(state.getState(context.locate<CoreDropComponent>()));
+    return onDelete(state.getState(context.locate<DropCoreComponent>()));
   }
 
   ForTypeRepository<E, V> forType<E extends Entity<V>, V extends ValueObject>(

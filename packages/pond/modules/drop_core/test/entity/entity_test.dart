@@ -35,7 +35,7 @@ void main() {
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(CoreDropComponent());
+    await context.register(DropCoreComponent());
     await context.register(repository);
 
     final entity = TestEntity()..set(TestData());

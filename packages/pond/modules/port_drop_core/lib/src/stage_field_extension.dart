@@ -6,7 +6,7 @@ import 'package:utils_core/utils_core.dart';
 
 extension StagePortFieldExtensions on StagePortField<RuntimeType?, dynamic> {
   V? toValueObject<V extends ValueObject>({
-    required CorePortDropComponent context,
+    required PortDropCoreComponent context,
     required RuntimeType? value,
   }) {
     final port = value == this.value.value ? this.value.port : getMappedPort(value);
