@@ -30,7 +30,7 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "3.0"
-      path: packages/pond/modules/model
+      path: packages/model/model
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
