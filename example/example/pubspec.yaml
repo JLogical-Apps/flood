@@ -24,17 +24,17 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/jlogical_utils
+      path: packages/jlogical_utils/jlogical_utils
   jlogical_utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/jlogical_utils_core
+      path: packages/jlogical_utils/jlogical_utils_core
   jlogical_utils_cli:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/jlogical_utils_cli
+      path: packages/jlogical_utils/jlogical_utils_cli
 flutter:
   uses-material-design: true
 

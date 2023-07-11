@@ -17,7 +17,7 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/pond/packages/environment
+      path: packages/pond/modules/environment
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

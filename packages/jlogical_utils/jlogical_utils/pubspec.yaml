@@ -13,7 +13,7 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/jlogical_utils_core
+      path: packages/jlogical_utils/jlogical_utils_core
   actions:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
@@ -28,12 +28,12 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/modules/debug
+      path: packages/pond/modules/debug
   device_files:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/modules/device_files
+      path: packages/pond/modules/device_files
   drop:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
@@ -43,17 +43,17 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/modules/environment
+      path: packages/pond/modules/environment
   environment_banner:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/modules/environment_banner
+      path: packages/pond/modules/environment_banner
   focus_grabber:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/modules/focus_grabber
+      path: packages/pond/modules/focus_grabber
   log:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
@@ -108,17 +108,17 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/pond/style_component
+      path: packages/pond/modules/style_component
   testing_setup:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/modules/testing_setup
+      path: packages/pond/modules/testing_setup
   url_bar:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: master
-      path: packages/pond/url_bar
+      path: packages/pond/modules/url_bar
   utils:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
