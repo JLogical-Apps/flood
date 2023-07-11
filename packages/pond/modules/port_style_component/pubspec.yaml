@@ -19,12 +19,12 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "3.0"
-      path: port/port
+      path: packages/port/port
   port_style:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "3.0"
-      path: port/port_style
+      path: packages/port/port_style
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
