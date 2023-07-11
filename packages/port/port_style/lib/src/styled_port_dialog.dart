@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:port/port.dart';
 import 'package:port_style/src/styled_object_port_builder.dart';
 import 'package:style/style.dart';
-import 'package:utils/utils.dart';
 
 class StyledPortDialog<T> extends StyledDialog<T> {
   final Port<T> port;
