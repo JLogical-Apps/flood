@@ -68,7 +68,7 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "3.0"
-      path: packages/pond/modules/functions_core
+      path: packages/pond/modules/task_core
   type:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
