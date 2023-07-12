@@ -11,22 +11,18 @@ import 'package:example_core/example_core.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+// When setting up the test suite [testingLoggedIn] will determine whether to have the user logged in.
 const testingLoggedIn = true;
-const testingTransactions = true;
 
 Future<void> main(List<String> args) async {
-  AppPondContext? appPondContext;
   await PondApp.run(
-    appPondContextGetter: () async {
-      appPondContext = await getAppPondContext(await getCorePondContext(
-        environmentConfig: EnvironmentConfig.static.flutterAssets(),
-        repositoryImplementations: [
-          FlutterFileRepositoryImplementation(),
-          FirebaseCloudRepositoryImplementation(),
-        ],
-      ));
-      return appPondContext!;
-    },
+    appPondContextGetter: () async => await getAppPondContext(await getCorePondContext(
+      environmentConfig: EnvironmentConfig.static.flutterAssets(),
+      repositoryImplementations: [
+        FlutterFileRepositoryImplementation(),
+        FirebaseCloudRepositoryImplementation(),
+      ],
+    )),
     splashPage: StyledPage(
       body: Center(
         child: StyledLoadingIndicator(),
@@ -37,15 +33,13 @@ Future<void> main(List<String> args) async {
         child: StyledText.h1('Not Found!'),
       ),
     ),
-    initialPageGetter: () {
-      return HomePage();
-    },
-    onError: (error, stackTrace) {
+    initialPageGetter: () => HomePage(),
+    onError: (appPondContext, error, stackTrace) {
       if (appPondContext == null) {
         print(error);
         print(stackTrace);
       } else {
-        appPondContext!.find<LogCoreComponent>().logError(error, stackTrace);
+        appPondContext.find<LogCoreComponent>().logError(error, stackTrace);
       }
     },
   );
@@ -70,17 +64,17 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(UrlBarAppComponent());
   await appPondContext.register(EnvironmentBannerAppComponent());
-  await appPondContext.register(TestingSetupAppComponent(onSetup: () => _setupTesting(corePondContext)));
+  await appPondContext.register(TestingSetupAppComponent(onSetup: () async {
+    if (testingLoggedIn) {
+      await _setupTesting(corePondContext);
+    }
+  }));
   await appPondContext.register(ValetPagesAppPondComponent());
 
   return appPondContext;
 }
 
 Future<void> _setupTesting(CorePondContext corePondContext) async {
-  if (!testingLoggedIn) {
-    return;
-  }
-
   final authComponent = corePondContext.locate<AuthCoreComponent>();
   final dropComponent = corePondContext.locate<DropCoreComponent>();
 
@@ -145,57 +139,55 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
         ..set(envelope))
       .map((entity) => dropComponent.update(entity)));
 
-  if (testingTransactions) {
-    final transactions = [
-      EnvelopeTransaction()
-        ..nameProperty.set('Payment')
-        ..amountCentsProperty.set(-90 * 100)
-        ..envelopeProperty.set('Car')
-        ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
-      EnvelopeTransaction()
-        ..nameProperty.set('Vacation')
-        ..amountCentsProperty.set(-180 * 100)
-        ..envelopeProperty.set('Savings')
-        ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
-      EnvelopeTransaction()
-        ..nameProperty.set('Plumber')
-        ..amountCentsProperty.set(-120 * 100)
-        ..envelopeProperty.set('Emergency Savings')
-        ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
-      TransferTransaction()
-        ..amountCentsProperty.set(20 * 100)
-        ..fromEnvelopeProperty.set('Savings')
-        ..toEnvelopeProperty.set('Tithe')
-        ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 2)))),
-      IncomeTransaction()
-        ..centsByEnvelopeIdProperty.set({
-          'Tithe': 30 * 100,
-          'Car': 70 * 100,
-          'Emergency Savings': 200 * 100,
-          'Savings': 300 * 100,
-        })
-        ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 1)))),
-    ];
+  final transactions = [
+    EnvelopeTransaction()
+      ..nameProperty.set('Payment')
+      ..amountCentsProperty.set(-90 * 100)
+      ..envelopeProperty.set('Car')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
+    EnvelopeTransaction()
+      ..nameProperty.set('Vacation')
+      ..amountCentsProperty.set(-180 * 100)
+      ..envelopeProperty.set('Savings')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
+    EnvelopeTransaction()
+      ..nameProperty.set('Plumber')
+      ..amountCentsProperty.set(-120 * 100)
+      ..envelopeProperty.set('Emergency Savings')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
+    TransferTransaction()
+      ..amountCentsProperty.set(20 * 100)
+      ..fromEnvelopeProperty.set('Savings')
+      ..toEnvelopeProperty.set('Tithe')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 2)))),
+    IncomeTransaction()
+      ..centsByEnvelopeIdProperty.set({
+        'Tithe': 30 * 100,
+        'Car': 70 * 100,
+        'Emergency Savings': 200 * 100,
+        'Savings': 300 * 100,
+      })
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 1)))),
+  ];
 
-    final budgetChange = budgetEntity.value.addTransactions(
-      dropComponent,
-      envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
-      transactions: transactions,
-    );
+  final budgetChange = budgetEntity.value.addTransactions(
+    dropComponent,
+    envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
+    transactions: transactions,
+  );
 
-    await Future.wait(budgetChange.modifiedEnvelopeById.mapToIterable((envelopeId, envelope) async {
-      final envelopeEntity = await Query.getById<EnvelopeEntity>(envelopeId).get(dropComponent);
-      await dropComponent.updateEntity(envelopeEntity..set(envelope));
-    }));
+  await Future.wait(budgetChange.modifiedEnvelopeById.mapToIterable((envelopeId, envelope) async {
+    final envelopeEntity = await Query.getById<EnvelopeEntity>(envelopeId).get(dropComponent);
+    await dropComponent.updateEntity(envelopeEntity..set(envelope));
+  }));
 
-    await Future.wait(transactions
-        .map((transaction) => BudgetTransactionEntity.constructEntityFromTransactionTypeRuntime(transaction.runtimeType)
-          ..set(transaction))
-        .map((entity) => dropComponent.update(entity)));
-  }
+  await Future.wait(transactions
+      .map((transaction) =>
+          BudgetTransactionEntity.constructEntityFromTransactionTypeRuntime(transaction.runtimeType)..set(transaction))
+      .map((entity) => dropComponent.update(entity)));
 }

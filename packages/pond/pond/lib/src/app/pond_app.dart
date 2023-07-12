@@ -36,23 +36,24 @@ class PondApp extends HookWidget {
     required AppPage Function() initialPageGetter,
     required Widget splashPage,
     required Widget notFoundPage,
-    Function(Object error, StackTrace stackTrace)? onError,
+    Function(AppPondContext? appPondContext, Object error, StackTrace stackTrace)? onError,
   }) async {
+    AppPondContext? appPondContext;
     await runZonedGuarded(
       () async {
         WidgetsFlutterBinding.ensureInitialized();
 
-        final appPondContext = await appPondContextGetter();
+        appPondContext = await appPondContextGetter();
 
         runApp(PondApp(
-          appPondContext: appPondContext,
+          appPondContext: appPondContext!,
           initialPageGetter: initialPageGetter,
           splashPage: splashPage,
           notFoundPage: notFoundPage,
         ));
       },
       (Object error, StackTrace stackTrace) {
-        onError?.call(error, stackTrace);
+        onError?.call(appPondContext, error, stackTrace);
       },
     );
   }
