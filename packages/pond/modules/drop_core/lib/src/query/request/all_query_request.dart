@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/request/map_query_request.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
@@ -15,7 +15,7 @@ class AllQueryRequest<E extends Entity> with IsMapQueryRequest<E, List<State>, L
   AllQueryRequest({required this.sourceQueryRequest});
 
   @override
-  FutureOr<List<E>> doMap(CoreDropContext context, List<State> states) async {
+  FutureOr<List<E>> doMap(DropCoreContext context, List<State> states) async {
     final entities = await Future.wait(states.map((state) => context.constructEntityFromState<E>(state)));
     await Future.wait(entities.map((entity) => entity.throwIfInvalid(null)));
     return entities;

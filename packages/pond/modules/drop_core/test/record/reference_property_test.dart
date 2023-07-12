@@ -20,11 +20,11 @@ void main() {
       valueObjectTypeName: 'Content',
     );
 
-    final coreDropComponent = DropCoreComponent();
+    final dropCoreComponent = DropCoreComponent();
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
-    await context.register(coreDropComponent);
+    await context.register(dropCoreComponent);
     await context.register(userRepository);
     await context.register(contentRepository);
 
@@ -38,7 +38,7 @@ void main() {
     final queriedContent = queriedContentEntity.value;
     expect(queriedContent.ownerProperty.value, newState.id);
 
-    final loadedUserEntity = await queriedContent.ownerProperty.load(coreDropComponent);
+    final loadedUserEntity = await queriedContent.ownerProperty.load(dropCoreComponent);
     expect(loadedUserEntity!.id, newState.id);
   });
 }

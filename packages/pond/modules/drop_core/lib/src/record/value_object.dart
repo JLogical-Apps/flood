@@ -1,4 +1,4 @@
-import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/record.dart';
 import 'package:drop_core/src/record/value_object/computed_value_object_property.dart';
@@ -17,12 +17,12 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
   List<ValueObjectBehavior> get behaviors => [];
 
   @override
-  State getState(CoreDropContext context) {
+  State getState(DropCoreContext context) {
     return scaffoldState.withType(context.getRuntimeTypeRuntime(runtimeType));
   }
 
   @override
-  State getStateUnsafe(CoreDropContext context) {
+  State getStateUnsafe(DropCoreContext context) {
     return scaffoldStateUnsafe.withType(context.getRuntimeTypeRuntime(runtimeType));
   }
 
@@ -49,11 +49,11 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
         (state, behavior) => guard(() => behavior.modifyState(state)) ?? state,
       );
 
-  void copyFrom(CoreDropContext context, Stateful stateful) {
+  void copyFrom(DropCoreContext context, Stateful stateful) {
     state = stateful.getState(context);
   }
 
-  void copyFromUnsafe(CoreDropContext context, Stateful stateful) {
+  void copyFromUnsafe(DropCoreContext context, Stateful stateful) {
     setStateUnsafe(stateful.getStateUnsafe(context));
   }
 

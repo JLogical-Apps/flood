@@ -39,8 +39,8 @@ class BudgetsPage extends AppPage {
                         .map((budgetEntity) => StyledCard(
                               titleText: budgetEntity.value.nameProperty.value,
                               onPressed: () async {
-                                await context.coreDropComponent.updateEntity(
-                                  await SettingsEntity.getSettings(context.coreDropComponent),
+                                await context.dropCoreComponent.updateEntity(
+                                  await SettingsEntity.getSettings(context.dropCoreComponent),
                                   (Settings settings) => settings.budgetProperty.set(budgetEntity.id!),
                                 );
 
@@ -59,7 +59,7 @@ class BudgetsPage extends AppPage {
                         port: (Budget()..ownerProperty.set(loggedInUserIdModel.getOrNull()!))
                             .asPort(context.corePondContext),
                         onAccept: (Budget result) async {
-                          await context.coreDropComponent.update(BudgetEntity()..value = result);
+                          await context.dropCoreComponent.update(BudgetEntity()..value = result);
                         },
                       ));
                     },

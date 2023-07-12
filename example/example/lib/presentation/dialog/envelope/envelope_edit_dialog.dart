@@ -15,7 +15,7 @@ class EnvelopeEditDialog extends StyledPortDialog<Envelope> {
   }) async {
     final trayEntities = await TrayEntity.getBudgetTraysQuery(budgetId: envelope.budgetProperty.value)
         .all()
-        .get(corePondContext.coreDropComponent);
+        .get(corePondContext.dropCoreComponent);
 
     final port = envelope.asPort(
       corePondContext,

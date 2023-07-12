@@ -53,10 +53,10 @@ extension RepositoryExtension on Repository {
     FutureOr Function(V newValueObject)? updater,
   ]) async {
     final valueObjectType = V == ValueObject ? entity.valueObjectType : V;
-    final newValueObject = context.coreDropComponent.construct(valueObjectType) as V;
+    final newValueObject = context.dropCoreComponent.construct(valueObjectType) as V;
 
     if (entity.hasValue) {
-      newValueObject.state = entity.value.getState(context.coreDropComponent);
+      newValueObject.state = entity.value.getState(context.dropCoreComponent);
     }
 
     await updater?.call(newValueObject);
@@ -64,7 +64,7 @@ extension RepositoryExtension on Repository {
     await entity.throwIfInvalid(null);
     final newState = await update(entity);
     entity.id = newState.id;
-    return context.coreDropComponent.constructEntityFromState(newState);
+    return context.dropCoreComponent.constructEntityFromState(newState);
   }
 
   Future<State> delete(Stateful state) {

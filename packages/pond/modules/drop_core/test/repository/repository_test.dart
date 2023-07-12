@@ -14,16 +14,16 @@ void main() {
     await corePondContext.register(UserRepository());
     await corePondContext.register(BudgetRepository());
 
-    final coreDropComponent = corePondContext.locate<DropCoreComponent>();
+    final dropCoreComponent = corePondContext.locate<DropCoreComponent>();
 
-    expect(coreDropComponent.getRepositoryFor<UserEntity>(), isA<UserRepository>());
-    expect(coreDropComponent.getRepositoryFor<BudgetEntity>(), isA<BudgetRepository>());
-    expect(coreDropComponent.getRepositoryForTypeOrNull<BudgetTransactionEntity>(), isNull);
+    expect(dropCoreComponent.getRepositoryFor<UserEntity>(), isA<UserRepository>());
+    expect(dropCoreComponent.getRepositoryFor<BudgetEntity>(), isA<BudgetRepository>());
+    expect(dropCoreComponent.getRepositoryForTypeOrNull<BudgetTransactionEntity>(), isNull);
 
     await corePondContext.register(BudgetTransactionRepository());
 
-    expect(coreDropComponent.getRepositoryFor<BudgetTransactionEntity>(), isA<BudgetTransactionRepository>());
-    expect(coreDropComponent.getRepositoryFor<EnvelopeTransactionEntity>(), isA<BudgetTransactionRepository>());
+    expect(dropCoreComponent.getRepositoryFor<BudgetTransactionEntity>(), isA<BudgetTransactionRepository>());
+    expect(dropCoreComponent.getRepositoryFor<EnvelopeTransactionEntity>(), isA<BudgetTransactionRepository>());
   });
 
   test('creating, saving, and deleting from a repository.', () async {
@@ -43,7 +43,7 @@ void main() {
     expect(memoryRepository.stateByIdX.value, {});
 
     var state = State(
-      type: context.coreDropComponent.getRuntimeType<UserEntity>(),
+      type: context.dropCoreComponent.getRuntimeType<UserEntity>(),
       data: {'field': 'value'},
     );
 

@@ -246,7 +246,7 @@ void main() {
     ];
 
     final budgetChange = Budget().addTransactions(
-      pondContext.coreDropComponent,
+      pondContext.dropCoreComponent,
       envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
       transactions: [
         IncomeTransaction()
@@ -301,20 +301,20 @@ void main() {
   });
 
   test('creating and deleting envelope transactions', () async {
-    final budgetEntity = await pondContext.coreDropComponent.updateEntity(
+    final budgetEntity = await pondContext.dropCoreComponent.updateEntity(
         BudgetEntity(),
         (Budget budget) => budget
           ..nameProperty.set('Budget')
           ..ownerProperty.set('asdf'));
 
-    final envelopeEntity = await pondContext.coreDropComponent.updateEntity(
+    final envelopeEntity = await pondContext.dropCoreComponent.updateEntity(
         EnvelopeEntity(),
         (Envelope envelope) => envelope
           ..nameProperty.set('Envelope')
           ..budgetProperty.set(budgetEntity.id!));
 
     await budgetEntity.updateAddTransaction(
-      pondContext.coreDropComponent,
+      pondContext.dropCoreComponent,
       transactionEntity: EnvelopeTransactionEntity()
         ..set(EnvelopeTransaction()
           ..nameProperty.set('Refund')
@@ -324,7 +324,7 @@ void main() {
     );
 
     final envelopeTransactionEntity = await budgetEntity.updateAddTransaction(
-      pondContext.coreDropComponent,
+      pondContext.dropCoreComponent,
       transactionEntity: EnvelopeTransactionEntity()
         ..set(EnvelopeTransaction()
           ..nameProperty.set('Payment')
@@ -333,36 +333,36 @@ void main() {
           ..amountCentsProperty.set(-5 * 100)),
     );
 
-    var updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.coreDropComponent);
+    var updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.dropCoreComponent);
     expect(updatedEnvelope.value.amountCentsProperty.value, 5 * 100);
 
-    await pondContext.coreDropComponent.delete(envelopeTransactionEntity);
+    await pondContext.dropCoreComponent.delete(envelopeTransactionEntity);
 
-    updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.coreDropComponent);
+    updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.dropCoreComponent);
     expect(updatedEnvelope.value.amountCentsProperty.value, 10 * 100);
   });
 
   test('creating and deleting transfer transactions', () async {
-    final budgetEntity = await pondContext.coreDropComponent.updateEntity(
+    final budgetEntity = await pondContext.dropCoreComponent.updateEntity(
         BudgetEntity(),
         (Budget budget) => budget
           ..nameProperty.set('Budget')
           ..ownerProperty.set('asdf'));
 
-    final fromEnvelopeEntity = await pondContext.coreDropComponent.updateEntity(
+    final fromEnvelopeEntity = await pondContext.dropCoreComponent.updateEntity(
         EnvelopeEntity(),
         (Envelope envelope) => envelope
           ..nameProperty.set('Envelope')
           ..budgetProperty.set(budgetEntity.id!));
 
-    final toEnvelopeEntity = await pondContext.coreDropComponent.updateEntity(
+    final toEnvelopeEntity = await pondContext.dropCoreComponent.updateEntity(
         EnvelopeEntity(),
         (Envelope envelope) => envelope
           ..nameProperty.set('Envelope')
           ..budgetProperty.set(budgetEntity.id!));
 
     final transferTransactionEntity = await budgetEntity.updateAddTransaction(
-      pondContext.coreDropComponent,
+      pondContext.dropCoreComponent,
       transactionEntity: TransferTransactionEntity()
         ..set(TransferTransaction()
           ..fromEnvelopeProperty.set(fromEnvelopeEntity.id!)
@@ -372,37 +372,37 @@ void main() {
     );
 
     var updatedFromEnvelope =
-        await Query.getById<EnvelopeEntity>(fromEnvelopeEntity.id!).get(pondContext.coreDropComponent);
+        await Query.getById<EnvelopeEntity>(fromEnvelopeEntity.id!).get(pondContext.dropCoreComponent);
     var updatedToEnvelope =
-        await Query.getById<EnvelopeEntity>(toEnvelopeEntity.id!).get(pondContext.coreDropComponent);
+        await Query.getById<EnvelopeEntity>(toEnvelopeEntity.id!).get(pondContext.dropCoreComponent);
 
     expect(updatedFromEnvelope.value.amountCentsProperty.value, -10 * 100);
     expect(updatedToEnvelope.value.amountCentsProperty.value, 10 * 100);
 
-    await pondContext.coreDropComponent.delete(transferTransactionEntity);
+    await pondContext.dropCoreComponent.delete(transferTransactionEntity);
 
     updatedFromEnvelope =
-        await Query.getById<EnvelopeEntity>(fromEnvelopeEntity.id!).get(pondContext.coreDropComponent);
-    updatedToEnvelope = await Query.getById<EnvelopeEntity>(toEnvelopeEntity.id!).get(pondContext.coreDropComponent);
+        await Query.getById<EnvelopeEntity>(fromEnvelopeEntity.id!).get(pondContext.dropCoreComponent);
+    updatedToEnvelope = await Query.getById<EnvelopeEntity>(toEnvelopeEntity.id!).get(pondContext.dropCoreComponent);
     expect(updatedFromEnvelope.value.amountCentsProperty.value, 0);
     expect(updatedToEnvelope.value.amountCentsProperty.value, 0);
   });
 
   test('creating and deleting income transactions', () async {
-    final budgetEntity = await pondContext.coreDropComponent.updateEntity(
+    final budgetEntity = await pondContext.dropCoreComponent.updateEntity(
         BudgetEntity(),
         (Budget budget) => budget
           ..nameProperty.set('Budget')
           ..ownerProperty.set('asdf'));
 
-    final envelopeEntity = await pondContext.coreDropComponent.updateEntity(
+    final envelopeEntity = await pondContext.dropCoreComponent.updateEntity(
         EnvelopeEntity(),
         (Envelope envelope) => envelope
           ..nameProperty.set('Envelope')
           ..budgetProperty.set(budgetEntity.id!));
 
     final incomeTransactionEntity = await budgetEntity.updateAddTransaction(
-      pondContext.coreDropComponent,
+      pondContext.dropCoreComponent,
       transactionEntity: IncomeTransactionEntity()
         ..set(IncomeTransaction()
           ..centsByEnvelopeIdProperty.set({
@@ -411,23 +411,23 @@ void main() {
           ..budgetProperty.set(budgetEntity.id!)),
     );
 
-    var updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.coreDropComponent);
+    var updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.dropCoreComponent);
     expect(updatedEnvelope.value.amountCentsProperty.value, 10 * 100);
 
-    await pondContext.coreDropComponent.delete(incomeTransactionEntity);
+    await pondContext.dropCoreComponent.delete(incomeTransactionEntity);
 
-    updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.coreDropComponent);
+    updatedEnvelope = await Query.getById<EnvelopeEntity>(envelopeEntity.id!).get(pondContext.dropCoreComponent);
     expect(updatedEnvelope.value.amountCentsProperty.value, 0 * 100);
   });
 
   test('adding/deleting income updates repeating goals.', () async {
-    final budgetEntity = await pondContext.coreDropComponent.updateEntity(
+    final budgetEntity = await pondContext.dropCoreComponent.updateEntity(
         BudgetEntity(),
         (Budget budget) => budget
           ..nameProperty.set('Budget')
           ..ownerProperty.set('asdf'));
 
-    final monthlyGoalEnvelope = await pondContext.coreDropComponent.updateEntity(
+    final monthlyGoalEnvelope = await pondContext.dropCoreComponent.updateEntity(
         EnvelopeEntity(),
         (Envelope envelope) => envelope
           ..nameProperty.set('Envelope')
@@ -438,7 +438,7 @@ void main() {
             ..remainingGoalCentsProperty.set(10 * 100)
             ..timeRuleProperty.set(MonthlyTimeRule())));
 
-    final periodicGoalEnvelope = await pondContext.coreDropComponent.updateEntity(
+    final periodicGoalEnvelope = await pondContext.dropCoreComponent.updateEntity(
         EnvelopeEntity(),
         (Envelope envelope) => envelope
           ..nameProperty.set('Envelope')
@@ -450,7 +450,7 @@ void main() {
             ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(7))));
 
     final incomeTransactionEntity = await budgetEntity.updateAddTransaction(
-      pondContext.coreDropComponent,
+      pondContext.dropCoreComponent,
       transactionEntity: IncomeTransactionEntity()
         ..set(IncomeTransaction()
           ..centsByEnvelopeIdProperty.set({
@@ -461,7 +461,7 @@ void main() {
     );
 
     var updatedMonthlyEnvelope =
-        await Query.getById<EnvelopeEntity>(monthlyGoalEnvelope.id!).get(pondContext.coreDropComponent);
+        await Query.getById<EnvelopeEntity>(monthlyGoalEnvelope.id!).get(pondContext.dropCoreComponent);
     expect(updatedMonthlyEnvelope.value.amountCentsProperty.value, 8 * 100);
     expect(
       updatedMonthlyEnvelope.value.ruleProperty.value,
@@ -470,7 +470,7 @@ void main() {
     );
 
     var updatedPeriodicEnvelope =
-        await Query.getById<EnvelopeEntity>(periodicGoalEnvelope.id!).get(pondContext.coreDropComponent);
+        await Query.getById<EnvelopeEntity>(periodicGoalEnvelope.id!).get(pondContext.dropCoreComponent);
     expect(updatedPeriodicEnvelope.value.amountCentsProperty.value, 8 * 100);
     expect(
       updatedPeriodicEnvelope.value.ruleProperty.value,
@@ -478,10 +478,10 @@ void main() {
           (RepeatingGoalEnvelopeRule rule) => rule.remainingGoalCentsProperty.value, 'remainingGoalCents', 2 * 100),
     );
 
-    await pondContext.coreDropComponent.delete(incomeTransactionEntity);
+    await pondContext.dropCoreComponent.delete(incomeTransactionEntity);
 
     updatedMonthlyEnvelope =
-        await Query.getById<EnvelopeEntity>(monthlyGoalEnvelope.id!).get(pondContext.coreDropComponent);
+        await Query.getById<EnvelopeEntity>(monthlyGoalEnvelope.id!).get(pondContext.dropCoreComponent);
     expect(updatedMonthlyEnvelope.value.amountCentsProperty.value, 0 * 100);
     expect(
       updatedMonthlyEnvelope.value.ruleProperty.value,
@@ -490,7 +490,7 @@ void main() {
     );
 
     updatedPeriodicEnvelope =
-        await Query.getById<EnvelopeEntity>(periodicGoalEnvelope.id!).get(pondContext.coreDropComponent);
+        await Query.getById<EnvelopeEntity>(periodicGoalEnvelope.id!).get(pondContext.dropCoreComponent);
     expect(updatedPeriodicEnvelope.value.amountCentsProperty.value, 0 * 100);
     expect(
       updatedPeriodicEnvelope.value.ruleProperty.value,
@@ -500,13 +500,13 @@ void main() {
   });
 
   test('initializing repeating goal.', () async {
-    final budgetEntity = await pondContext.coreDropComponent.updateEntity(
+    final budgetEntity = await pondContext.dropCoreComponent.updateEntity(
         BudgetEntity(),
         (Budget budget) => budget
           ..nameProperty.set('Budget')
           ..ownerProperty.set('asdf'));
 
-    final monthlyGoalEnvelope = await pondContext.coreDropComponent.updateEntity(
+    final monthlyGoalEnvelope = await pondContext.dropCoreComponent.updateEntity(
         EnvelopeEntity(),
         (Envelope envelope) => envelope
           ..nameProperty.set('Envelope')
@@ -517,7 +517,7 @@ void main() {
             ..remainingGoalCentsProperty.set(10 * 100)
             ..timeRuleProperty.set(MonthlyTimeRule())));
 
-    final periodicGoalEnvelope = await pondContext.coreDropComponent.updateEntity(
+    final periodicGoalEnvelope = await pondContext.dropCoreComponent.updateEntity(
         EnvelopeEntity(),
         (Envelope envelope) => envelope
           ..nameProperty.set('Envelope')
@@ -546,7 +546,7 @@ void expectBudgetChange({
   required Map<String, int> expectedCentsByEnvelopeName,
 }) {
   final budgetChange = Budget().addIncome(
-    context.coreDropComponent,
+    context.dropCoreComponent,
     incomeCents: incomeCents,
     envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
   );

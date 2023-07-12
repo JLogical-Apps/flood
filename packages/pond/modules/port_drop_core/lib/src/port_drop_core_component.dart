@@ -75,7 +75,7 @@ class PortDropCoreComponent with IsCorePondComponent {
         CorePondComponentBehavior.dependency<DropCoreComponent>(),
       ];
 
-  DropCoreComponent get coreDropComponent => context.locate<DropCoreComponent>();
+  DropCoreComponent get dropCoreComponent => context.locate<DropCoreComponent>();
 
   Port<V> generatePort<V extends ValueObject>(V valueObject, {List<PortGeneratorOverride> overrides = const []}) {
     var portFieldByName = <String, PortField>{};
@@ -113,16 +113,16 @@ class PortDropCoreComponent with IsCorePondComponent {
     port = Port.of(portFieldByName).map(
       (sourceData, port) {
         final typeContext = context.locate<TypeCoreComponent>();
-        final coreDropContext = context.locate<DropCoreComponent>();
+        final dropCoreContext = context.locate<DropCoreComponent>();
 
         final state = State.fromMap(
           sourceData,
           runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
         );
-        final mergedState = valueObject.getStateUnsafe(coreDropContext).mergeWith(state);
+        final mergedState = valueObject.getStateUnsafe(dropCoreContext).mergeWith(state);
 
         final newValueObject = typeContext.construct(valueObject.runtimeType) as V;
-        newValueObject.copyFrom(coreDropContext, mergedState);
+        newValueObject.copyFrom(dropCoreContext, mergedState);
         return newValueObject;
       },
       submitType: valueObject.runtimeType,
@@ -136,17 +136,17 @@ class PortDropCoreComponent with IsCorePondComponent {
     Type? valueObjectType,
   }) {
     final typeContext = context.locate<TypeCoreComponent>();
-    final coreDropContext = context.locate<DropCoreComponent>();
+    final dropCoreContext = context.locate<DropCoreComponent>();
 
     final state = State.fromMap(
       port.portFieldByName.map((name, portField) => MapEntry(name, portField.submitRaw(portField.value))),
       runtimeTypeGetter: (typeName) => typeContext.getByName(typeName),
     );
     final mergedState =
-        originalValueObject == null ? state : originalValueObject.getStateUnsafe(coreDropContext).mergeWith(state);
+        originalValueObject == null ? state : originalValueObject.getStateUnsafe(dropCoreContext).mergeWith(state);
 
     final newValueObject = typeContext.construct(originalValueObject?.runtimeType ?? valueObjectType ?? V) as V;
-    newValueObject.copyFromUnsafe(coreDropContext, mergedState);
+    newValueObject.copyFromUnsafe(dropCoreContext, mergedState);
     return newValueObject;
   }
 }

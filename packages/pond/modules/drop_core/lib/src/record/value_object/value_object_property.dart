@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/color_value_object_property.dart';
@@ -41,7 +41,7 @@ abstract class ValueObjectProperty<G, S, L, V extends ValueObjectProperty<dynami
 
   void set(S value);
 
-  Future<L> load(CoreDropContext context);
+  Future<L> load(DropCoreContext context);
 
   V copy();
 
@@ -78,7 +78,7 @@ mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements V
   }
 
   @override
-  Future<L> load(CoreDropContext context) {
+  Future<L> load(DropCoreContext context) {
     throw Exception('Load not supported!');
   }
 
@@ -230,7 +230,7 @@ mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, 
   State modifyState(State state) => property.modifyState(state);
 
   @override
-  Future<L> load(CoreDropContext context) => property.load(context);
+  Future<L> load(DropCoreContext context) => property.load(context);
 
   @override
   FutureOr<String?> onValidate(ValueObject data) => property.validate(data);

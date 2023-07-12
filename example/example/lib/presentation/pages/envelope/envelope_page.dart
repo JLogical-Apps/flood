@@ -51,7 +51,7 @@ class EnvelopePage extends AppPage {
                     corePondContext: context.corePondContext,
                     envelope: envelope,
                     onAccept: (Envelope result) async {
-                      await context.coreDropComponent.update(envelopeEntity..value = result);
+                      await context.dropCoreComponent.update(envelopeEntity..value = result);
                     },
                   ));
                 },
@@ -69,11 +69,11 @@ class EnvelopePage extends AppPage {
                     sourceEnvelopeEntity: envelopeEntity,
                     transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
                     onAccept: (TransferTransaction result) async {
-                      final budgetEntity = await envelope.budgetProperty.load(context.coreDropComponent) ??
+                      final budgetEntity = await envelope.budgetProperty.load(context.dropCoreComponent) ??
                           (throw Exception('Cannot find budget [${envelope.budgetProperty.value}]'));
 
                       await budgetEntity.updateAddTransaction(
-                        context.coreDropComponent,
+                        context.dropCoreComponent,
                         transactionEntity: TransferTransactionEntity()..set(result),
                       );
                     },
@@ -103,7 +103,7 @@ class EnvelopePage extends AppPage {
                     final envelopeEntities = await EnvelopeEntity.getBudgetEnvelopesQuery(
                       budgetId: envelope.budgetProperty.value,
                       isArchived: false,
-                    ).all().get(context.coreDropComponent)
+                    ).all().get(context.dropCoreComponent)
                       ..remove(envelopeEntity);
 
                     final port = Port.of({
@@ -147,17 +147,17 @@ class EnvelopePage extends AppPage {
                       },
                       onAccept: (EnvelopeEntity result) async {
                         newEnvelope = Envelope()
-                          ..copyFrom(context.coreDropComponent, envelope)
+                          ..copyFrom(context.dropCoreComponent, envelope)
                           ..amountCentsProperty.set(0);
 
-                        await context.coreDropComponent.update(envelopeEntity..set(newEnvelope));
-                        await context.coreDropComponent.updateEntity(
+                        await context.dropCoreComponent.update(envelopeEntity..set(newEnvelope));
+                        await context.dropCoreComponent.updateEntity(
                           result,
                           (Envelope resultEnvelope) => resultEnvelope.amountCentsProperty
                               .set(resultEnvelope.amountCentsProperty.value + envelope.amountCentsProperty.value),
                         );
 
-                        await context.coreDropComponent.update(TransferTransactionEntity()
+                        await context.dropCoreComponent.update(TransferTransactionEntity()
                           ..set(TransferTransaction()
                             ..fromEnvelopeProperty.set(envelopeEntity.id!)
                             ..toEnvelopeProperty.set(result.id!)
@@ -172,10 +172,10 @@ class EnvelopePage extends AppPage {
                   }
 
                   newEnvelope = Envelope()
-                    ..copyFrom(context.coreDropComponent, newEnvelope)
+                    ..copyFrom(context.dropCoreComponent, newEnvelope)
                     ..archivedProperty.set(true);
 
-                  await context.coreDropComponent.update(envelopeEntity..set(newEnvelope));
+                  await context.dropCoreComponent.update(envelopeEntity..set(newEnvelope));
                 },
               ),
             if (envelope.archivedProperty.value)
@@ -194,7 +194,7 @@ class EnvelopePage extends AppPage {
                     return;
                   }
 
-                  await context.coreDropComponent.updateEntity(
+                  await context.dropCoreComponent.updateEntity(
                     envelopeEntity,
                     (Envelope envelope) => envelope.archivedProperty.set(false),
                   );
@@ -218,7 +218,7 @@ class EnvelopePage extends AppPage {
                   }
 
                   context.pop();
-                  await context.coreDropComponent.delete(envelopeEntity);
+                  await context.dropCoreComponent.delete(envelopeEntity);
                 },
               ),
           ],
@@ -265,11 +265,11 @@ class EnvelopePage extends AppPage {
                       ..envelopeProperty.set(envelopeEntity.id!)
                       ..budgetProperty.set(envelope.budgetProperty.value)),
                     onAccept: (EnvelopeTransaction envelopeTransaction) async {
-                      final budgetEntity = await envelope.budgetProperty.load(context.coreDropComponent) ??
+                      final budgetEntity = await envelope.budgetProperty.load(context.dropCoreComponent) ??
                           (throw Exception('Cannot find budget [${envelope.budgetProperty.value}]'));
 
                       await budgetEntity.updateAddTransaction(
-                        context.coreDropComponent,
+                        context.dropCoreComponent,
                         transactionEntity: EnvelopeTransactionEntity()..value = envelopeTransaction,
                       );
                     },
@@ -296,7 +296,7 @@ class EnvelopePage extends AppPage {
                                       bodyText:
                                           'Are you sure you want to delete this transaction? You cannot undo this.',
                                       onAccept: () async {
-                                        await context.coreDropComponent.delete(entity);
+                                        await context.dropCoreComponent.delete(entity);
                                         Navigator.of(context).pop();
                                       },
                                     ));

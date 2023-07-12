@@ -3,7 +3,7 @@ import 'package:example_core/features/settings/settings.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class SettingsEntity extends Entity<Settings> {
-  static Future<SettingsEntity> getSettings(CoreDropContext context) async {
+  static Future<SettingsEntity> getSettings(DropCoreContext context) async {
     final existingSettings = await Query.from<SettingsEntity>().firstOrNull().get(context);
     if (existingSettings != null) {
       return existingSettings;
@@ -17,7 +17,7 @@ class SettingsEntity extends Entity<Settings> {
     );
   }
 
-  static Future<BudgetEntity?> _findDefaultBudgetEntity(CoreDropContext context) async {
+  static Future<BudgetEntity?> _findDefaultBudgetEntity(DropCoreContext context) async {
     final authService = context.context.locate<AuthCoreComponent>();
     final loggedInUserId = await authService.getLoggedInUserId();
     if (loggedInUserId == null) {

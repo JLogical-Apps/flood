@@ -43,15 +43,15 @@ class Envelope extends ValueObject {
     creationTime(),
   ];
 
-  Envelope copy(CoreDropContext context) {
+  Envelope copy(DropCoreContext context) {
     return Envelope()..copyFrom(context, this);
   }
 
-  Envelope withUpdatedCents(CoreDropContext context, int Function(int currentCents) centsGetter) {
+  Envelope withUpdatedCents(DropCoreContext context, int Function(int currentCents) centsGetter) {
     return copy(context)..amountCentsProperty.set(centsGetter(amountCentsProperty.value));
   }
 
-  Future onInitialize(CoreDropContext context) async {
+  Future onInitialize(DropCoreContext context) async {
     final ruleChange = ruleProperty.value?.onInitialize(context)?.ruleChange;
     if (ruleChange == null) {
       return;
@@ -62,7 +62,7 @@ class Envelope extends ValueObject {
 
   /// Returns a copy of the envelope with the [incomeCents] gained and a possibly modified envelope rule.
   /// If [incomeCents] is negative, then an income transaction has been deleted from the envelope.
-  Envelope withIncomeAdded(CoreDropContext context, {required int incomeCents}) {
+  Envelope withIncomeAdded(DropCoreContext context, {required int incomeCents}) {
     final envelopeChange = ruleProperty.value?.onAddIncome(
       context,
       envelope: this,

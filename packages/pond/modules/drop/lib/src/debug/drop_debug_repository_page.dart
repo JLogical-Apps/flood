@@ -12,7 +12,7 @@ class DropDebugRepositoryPage extends AppPage<DropDebugRepositoryPage> {
   @override
   Widget build(BuildContext context) {
     final repository =
-        context.coreDropComponent.repositories.firstWhere((repository) => repository.hashCode == hashProperty.value);
+        context.dropCoreComponent.repositories.firstWhere((repository) => repository.hashCode == hashProperty.value);
     final entitiesModel = useFutureModel(() => repository.executeQuery(Query.fromAll().paginate(pageSize: 50)));
 
     return PaginatedQueryModelBuilder(
@@ -26,7 +26,7 @@ class DropDebugRepositoryPage extends AppPage<DropDebugRepositoryPage> {
                 (entity) => StyledCard(
                   titleText: entity.id,
                   children: entity
-                      .getStateUnsafe(context.coreDropComponent)
+                      .getStateUnsafe(context.dropCoreComponent)
                       .data
                       .mapToIterable((name, value) => StyledMarkdown(
                             '`$name`: $value',

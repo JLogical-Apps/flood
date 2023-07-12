@@ -1,4 +1,4 @@
-import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:equatable/equatable.dart';
 import 'package:type/type.dart';
@@ -15,10 +15,10 @@ class State extends Equatable implements Stateful {
   const State({this.id, this.type, required this.data});
 
   @override
-  State getState(CoreDropContext context) => this;
+  State getState(DropCoreContext context) => this;
 
   @override
-  State getStateUnsafe(CoreDropContext context) => this;
+  State getStateUnsafe(DropCoreContext context) => this;
 
   @override
   List<Object?> get props => [id, type, data];

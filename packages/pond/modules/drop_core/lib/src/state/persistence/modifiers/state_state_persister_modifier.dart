@@ -5,7 +5,7 @@ import 'package:type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 class StateStatePersisterModifier extends StatePersisterModifier {
-  final CoreDropContext context;
+  final DropCoreContext context;
 
   StateStatePersisterModifier({required this.context});
 

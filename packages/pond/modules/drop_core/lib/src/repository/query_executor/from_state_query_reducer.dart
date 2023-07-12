@@ -1,4 +1,4 @@
-import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/from_query.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_reducer.dart';
@@ -7,7 +7,7 @@ import 'package:type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 class FromStateQueryReducer extends StateQueryReducer<FromQuery> {
-  final CoreDropContext dropContext;
+  final DropCoreContext dropContext;
 
   FromStateQueryReducer({required this.dropContext});
 

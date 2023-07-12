@@ -39,7 +39,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
         .toList();
     final modifiedEnvelopeById = budget
         ?.addTransactions(
-          context.coreDropComponent,
+          context.dropCoreComponent,
           envelopeById: envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value)),
           transactions: transactions,
         )
@@ -71,7 +71,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
                         transactionDate: resultByName['transactionDate'] as DateTime,
                         budgetId: budgetIdProperty.value,
                         budget: budgetEntity.value,
-                        coreDropContext: context.coreDropComponent,
+                        dropCoreContext: context.dropCoreComponent,
                       ))));
 
               if (transactionGenerator == null) {
@@ -157,10 +157,10 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
                       final budgetTransactionEntity =
                           BudgetTransactionEntity.constructEntityFromTransactionTypeRuntime(transaction.runtimeType)
                             ..set(transaction);
-                      await context.coreDropComponent.update(budgetTransactionEntity);
+                      await context.dropCoreComponent.update(budgetTransactionEntity);
                     }
                     for (final entry in modifiedEnvelopeById.entries) {
-                      await context.coreDropComponent.updateEntity(
+                      await context.dropCoreComponent.updateEntity(
                         envelopeEntities.firstWhere((entity) => entity.id == entry.key)..set(entry.value),
                       );
                     }
@@ -216,7 +216,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
               corePondContext: context.corePondContext,
               envelope: envelope,
               onAccept: (Envelope result) async {
-                await context.coreDropComponent.update(envelopeEntity..value = result);
+                await context.dropCoreComponent.update(envelopeEntity..value = result);
               },
             ));
           },

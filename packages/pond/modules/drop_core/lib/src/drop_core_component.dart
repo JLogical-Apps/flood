@@ -9,7 +9,7 @@ import 'package:type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
-class DropCoreComponent with IsCorePondComponent, IsCoreDropContext, IsRepositoryListWrapper {
+class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositoryListWrapper {
   final List<RepositoryImplementation> repositoryImplementations;
 
   DropCoreComponent({this.repositoryImplementations = const []});

@@ -26,7 +26,7 @@ class FlutterFileRepository with IsRepository {
 
   @override
   late final RepositoryStateHandler stateHandler =
-      FlutterFileRepositoryStateHandler(repository: this).withEntityLifecycle(context.coreDropComponent);
+      FlutterFileRepositoryStateHandler(repository: this).withEntityLifecycle(context.dropCoreComponent);
 }
 
 class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
@@ -40,7 +40,7 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
   @override
   late final RepositoryQueryExecutor queryExecutor = _getQueryExecutor();
 
-  late StatePersister<String> statePersister = StatePersister.json(context: repository.context.coreDropComponent);
+  late StatePersister<String> statePersister = StatePersister.json(context: repository.context.dropCoreComponent);
 
   RepositoryQueryExecutor _getQueryExecutor() {
     return StateQueryExecutor(
@@ -52,7 +52,7 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
               (files) async => FutureValue.loaded(await Future.wait(files.map(getStateFromFile))))
           .publishValueSeeded(FutureValue.loading())
           .autoConnect(),
-      dropContext: repository.context.coreDropComponent,
+      dropContext: repository.context.dropCoreComponent,
     );
   }
 
@@ -70,7 +70,7 @@ class FlutterFileRepositoryStateHandler implements RepositoryStateHandler {
 
   FlutterFileRepositoryStateHandler({required this.repository});
 
-  late StatePersister<String> statePersister = StatePersister.json(context: repository.context.coreDropComponent);
+  late StatePersister<String> statePersister = StatePersister.json(context: repository.context.dropCoreComponent);
 
   @override
   Future<State> onUpdate(State state) async {

@@ -9,7 +9,7 @@ class TrayEntity extends Entity<Tray> {
   }
 
   @override
-  Future onBeforeDelete(CoreDropContext context) async {
+  Future onBeforeDelete(DropCoreContext context) async {
     final envelopeEntities =
         await EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: value.budgetProperty.value, isArchived: null)
             .where(Envelope.trayField)

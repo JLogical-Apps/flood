@@ -1,4 +1,4 @@
-import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/repository/lifecycle_state_handler.dart';
 import 'package:drop_core/src/state/state.dart';
 
@@ -17,7 +17,7 @@ extension RepositoryStateHandlerExtensions on RepositoryStateHandler {
     return onDelete(state);
   }
 
-  RepositoryStateHandler withEntityLifecycle(CoreDropContext context) {
+  RepositoryStateHandler withEntityLifecycle(DropCoreContext context) {
     return LifecycleStateHandler(context: context, stateHandler: this);
   }
 }

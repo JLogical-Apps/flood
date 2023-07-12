@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/pagination/paginated_query_result.dart';
 import 'package:drop_core/src/query/request/map_query_request.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
@@ -17,7 +17,7 @@ class PaginatedQueryRequest<E extends Entity>
   PaginatedQueryRequest({required this.sourceQueryRequest});
 
   @override
-  FutureOr<PaginatedQueryResult<E>> doMap(CoreDropContext context, PaginatedQueryResult<State> statesPage) {
+  FutureOr<PaginatedQueryResult<E>> doMap(DropCoreContext context, PaginatedQueryResult<State> statesPage) {
     return statesPage.map((state) async {
       final entity = await context.constructEntityFromState<E>(state);
       await entity.throwIfInvalid(null);

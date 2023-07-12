@@ -18,7 +18,7 @@ class TransferTransactionEditDialog extends StyledPortDialog<TransferTransaction
     final envelopeEntities = await EnvelopeEntity.getBudgetEnvelopesQuery(
             budgetId: transferTransaction.budgetProperty.value, isArchived: false)
         .all()
-        .get(context.coreDropComponent);
+        .get(context.dropCoreComponent);
     envelopeEntities.removeWhere((entity) => entity == sourceEnvelopeEntity);
 
     late Port<Map<String, dynamic>> rawPort;

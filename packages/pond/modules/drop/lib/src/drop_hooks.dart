@@ -8,17 +8,17 @@ import 'package:pond/pond.dart';
 import 'package:provider/provider.dart';
 import 'package:utils/utils.dart';
 
-CoreDropContext useCoreDropContext() {
+DropCoreContext useDropCoreContext() {
   return useMemoized(() => useAppPondContext().find<DropCoreComponent>());
 }
 
 Model<T>? useQueryOrNull<T>(QueryRequest<Entity, T>? queryRequest) {
   final context = useContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
-  final coreDropContext = useCoreDropContext();
+  final dropCoreContext = useDropCoreContext();
 
   final queryModel = useMemoized(
-    () => queryRequest?.mapIfNonNull((queryRequest) => queryRequest.toModel(coreDropContext)),
+    () => queryRequest?.mapIfNonNull((queryRequest) => queryRequest.toModel(dropCoreContext)),
     [queryRequest],
   );
 
@@ -45,11 +45,11 @@ Model<T> useQuery<T>(QueryRequest<Entity, T> queryRequest) {
 
 Model<T?> useNullableQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>?> queryRequestModel) {
   final context = useContext();
-  final coreDropContext = useCoreDropContext();
+  final dropCoreContext = useDropCoreContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
 
   final resultModel = useMemoized(
-    () => queryRequestModel.flatMap((queryRequest) => queryRequest?.toModel(coreDropContext) ?? Model.value(null)),
+    () => queryRequestModel.flatMap((queryRequest) => queryRequest?.toModel(dropCoreContext) ?? Model.value(null)),
     [queryRequestModel],
   );
   final result = useModel(resultModel);
@@ -71,11 +71,11 @@ Model<T?> useNullableQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>?> 
 
 Model<T> useQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>> queryRequestModel) {
   final context = useContext();
-  final coreDropContext = useCoreDropContext();
+  final dropCoreContext = useDropCoreContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
 
   final resultModel = useMemoized(
-    () => queryRequestModel.flatMap((queryRequest) => queryRequest.toModel(coreDropContext)),
+    () => queryRequestModel.flatMap((queryRequest) => queryRequest.toModel(dropCoreContext)),
     [queryRequestModel],
   );
   final result = useModel(resultModel);
@@ -98,10 +98,10 @@ Model<T> useQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>> queryReque
 List<Model<T>> useQueries<E extends Entity, T>(List<QueryRequest<E, T>> queryRequests) {
   final context = useContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
-  final coreDropContext = useCoreDropContext();
+  final dropCoreContext = useDropCoreContext();
 
   final queryModels = useMemoized(
-    () => queryRequests.map((queryRequest) => queryRequest.toModel(coreDropContext)).toList(),
+    () => queryRequests.map((queryRequest) => queryRequest.toModel(dropCoreContext)).toList(),
     [queryRequests],
   );
 

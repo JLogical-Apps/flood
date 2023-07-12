@@ -10,7 +10,7 @@ class FirebaseCloudRepository with IsRepository {
 
   @override
   late final RepositoryStateHandler stateHandler =
-      FirebaseCloudRepositoryStateHandler(repository: this).withEntityLifecycle(context.coreDropComponent);
+      FirebaseCloudRepositoryStateHandler(repository: this).withEntityLifecycle(context.dropCoreComponent);
 }
 
 class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {

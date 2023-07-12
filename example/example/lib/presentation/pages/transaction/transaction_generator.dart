@@ -22,20 +22,20 @@ class IncomeTransactionGenerator extends TransactionGenerator<IncomeTransaction>
 
   final String budgetId;
   final Budget budget;
-  final CoreDropContext coreDropContext;
+  final DropCoreContext dropCoreContext;
 
   IncomeTransactionGenerator({
     required this.incomeCents,
     required this.transactionDate,
     required this.budgetId,
     required this.budget,
-    required this.coreDropContext,
+    required this.dropCoreContext,
   });
 
   @override
   IncomeTransaction generate(Map<String, Envelope> envelopeById) {
     final budgetChange = budget.addIncome(
-      coreDropContext,
+      dropCoreContext,
       incomeCents: incomeCents,
       envelopeById: envelopeById,
     );

@@ -9,7 +9,7 @@ class BudgetEntity extends Entity<Budget> {
   }
 
   Future<B> updateAddTransaction<B extends BudgetTransactionEntity>(
-    CoreDropContext context, {
+    DropCoreContext context, {
     required B transactionEntity,
   }) async {
     final envelopeEntities =

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/state/persistence/modifiers/date_time_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/modifiers/runtime_type_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/modifiers/state_persister_modifier.dart';
@@ -10,7 +10,7 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:type/type.dart';
 
 class JsonStatePersister implements StatePersister<String> {
-  final CoreDropContext context;
+  final DropCoreContext context;
 
   JsonStatePersister({required this.context});
 

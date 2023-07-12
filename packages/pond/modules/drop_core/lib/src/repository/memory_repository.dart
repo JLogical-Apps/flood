@@ -16,7 +16,7 @@ class MemoryRepository with IsRepository {
 
   @override
   late final RepositoryStateHandler stateHandler =
-      MemoryRepositoryStateHandler(repository: this).withEntityLifecycle(context.coreDropComponent);
+      MemoryRepositoryStateHandler(repository: this).withEntityLifecycle(context.dropCoreComponent);
 }
 
 class MemoryRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
@@ -27,13 +27,13 @@ class MemoryRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
   @override
   late final RepositoryQueryExecutor queryExecutor = _getQueryExecutor();
 
-  late StatePersister<State> statePersister = StatePersister.state(context: repository.context.coreDropComponent);
+  late StatePersister<State> statePersister = StatePersister.state(context: repository.context.dropCoreComponent);
 
   RepositoryQueryExecutor _getQueryExecutor() {
     final stateByIdX = repository.stateByIdX;
 
     return StateQueryExecutor.fromStatesX(
-      dropContext: repository.context.coreDropComponent,
+      dropContext: repository.context.dropCoreComponent,
       statesX: stateByIdX
           .mapWithValue((stateById) => stateById.values.map((state) => statePersister.inflate(state)).toList()),
     );
@@ -45,7 +45,7 @@ class MemoryRepositoryStateHandler with IsRepositoryStateHandler {
 
   MemoryRepositoryStateHandler({required this.repository});
 
-  late StatePersister<State> statePersister = StatePersister.state(context: repository.context.coreDropComponent);
+  late StatePersister<State> statePersister = StatePersister.state(context: repository.context.dropCoreComponent);
 
   @override
   Future<State> onUpdate(State state) async {

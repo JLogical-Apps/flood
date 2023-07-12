@@ -39,7 +39,7 @@ class TrayCard extends HookWidget {
               port: tray.asPort(context.corePondContext),
               titleText: 'Edit Tray',
               onAccept: (Tray tray) async {
-                await context.coreDropComponent.updateEntity(trayEntity..set(tray));
+                await context.dropCoreComponent.updateEntity(trayEntity..set(tray));
               },
             ));
           },
@@ -54,7 +54,7 @@ class TrayCard extends HookWidget {
                 titleText: 'Confirm Delete',
                 bodyText: 'Are you sure you want to delete this tray? You cannot undo this.',
                 onAccept: () async {
-                  await context.coreDropComponent.delete(trayEntity);
+                  await context.dropCoreComponent.delete(trayEntity);
                 },
               ));
             }),

@@ -6,7 +6,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class IncomeTransactionEntity extends BudgetTransactionEntity<IncomeTransaction> {
   @override
-  Future<void> onBeforeDelete(CoreDropContext context) async {
+  Future<void> onBeforeDelete(DropCoreContext context) async {
     await _adjustEnvelopeAmount(
       context,
       centsToAddByEnvelopeId: value.centsByEnvelopeIdProperty.value.map((id, cents) => MapEntry(id, -cents)),
@@ -14,7 +14,7 @@ class IncomeTransactionEntity extends BudgetTransactionEntity<IncomeTransaction>
   }
 
   Future<void> _adjustEnvelopeAmount(
-    CoreDropContext context, {
+    DropCoreContext context, {
     required Map<String, int> centsToAddByEnvelopeId,
   }) async {
     final envelopeEntities = await Future.wait(

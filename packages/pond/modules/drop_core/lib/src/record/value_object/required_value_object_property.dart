@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -30,7 +30,7 @@ class RequiredValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L, R
   void set(S value) => property.set(value ?? (throw Exception('Required property [$property]!')));
 
   @override
-  Future<L> load(CoreDropContext context) => property.load(context);
+  Future<L> load(DropCoreContext context) => property.load(context);
 
   @override
   FutureOr<String?> onValidate(ValueObject data) {

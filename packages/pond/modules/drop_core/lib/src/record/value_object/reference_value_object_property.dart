@@ -1,4 +1,4 @@
-import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
@@ -34,7 +34,7 @@ class ReferenceValueObjectProperty<E extends Entity>
   }
 
   @override
-  Future<E?> load(CoreDropContext context) async {
+  Future<E?> load(DropCoreContext context) async {
     return await value?.mapIfNonNullAsync((value) => Query.getByIdOrNull<E>(value).get(context));
   }
 

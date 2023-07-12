@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:drop_core/src/context/core_drop_context.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/request/map_query_request.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
@@ -15,7 +15,7 @@ class FirstQueryRequest<E extends Entity> with IsMapQueryRequest<E, State?, E>, 
   FirstQueryRequest({required this.sourceQueryRequest});
 
   @override
-  FutureOr<E> doMap(CoreDropContext context, State? source) async {
+  FutureOr<E> doMap(DropCoreContext context, State? source) async {
     final entity = await context.constructEntityFromState<E>(source ?? (throw Exception('Could not find state!')));
     await entity.throwIfInvalid(null);
     return entity;

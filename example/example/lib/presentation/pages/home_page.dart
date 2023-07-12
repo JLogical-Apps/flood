@@ -29,13 +29,13 @@ class HomePage extends AppPage {
       return loginPage.uri;
     }
 
-    final settingsEntity = await SettingsEntity.getSettings(context.coreDropComponent);
+    final settingsEntity = await SettingsEntity.getSettings(context.dropCoreComponent);
     final budgetId = settingsEntity.value.budgetProperty.value;
     if (budgetId == null) {
       return null;
     }
 
-    final budgetEntity = await Query.getByIdOrNull<BudgetEntity>(budgetId).get(context.coreDropComponent);
+    final budgetEntity = await Query.getByIdOrNull<BudgetEntity>(budgetId).get(context.dropCoreComponent);
     if (budgetEntity == null) {
       return null;
     }

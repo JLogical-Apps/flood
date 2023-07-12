@@ -92,7 +92,7 @@ Future<void> _setupTesting(CorePondContext corePondContext) async {
       ..ownerProperty.set(userEntity.id!),
   );
 
-  final trayEntity = await corePondContext.coreDropComponent.updateEntity(
+  final trayEntity = await corePondContext.dropCoreComponent.updateEntity(
       TrayEntity(),
       (Tray tray) => tray
         ..nameProperty.set('Repeating')

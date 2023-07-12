@@ -3,5 +3,5 @@ import 'package:pond_core/pond_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 extension CorePondContextDropExtensions on CorePondContext {
-  DropCoreComponent get coreDropComponent => locate<DropCoreComponent>();
+  DropCoreComponent get dropCoreComponent => locate<DropCoreComponent>();
 }

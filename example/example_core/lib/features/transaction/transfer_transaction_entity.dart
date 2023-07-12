@@ -7,7 +7,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class TransferTransactionEntity extends BudgetTransactionEntity<TransferTransaction> {
   @override
-  FutureOr onBeforeSave(CoreDropContext context) async {
+  FutureOr onBeforeSave(DropCoreContext context) async {
     if (isNew) {
       return;
     }
@@ -22,11 +22,11 @@ class TransferTransactionEntity extends BudgetTransactionEntity<TransferTransact
   }
 
   @override
-  FutureOr onBeforeDelete(CoreDropContext context) async {
+  FutureOr onBeforeDelete(DropCoreContext context) async {
     await _adjustEnvelopeAmount(context, centsToAdd: -value.amountCentsProperty.value);
   }
 
-  Future<void> _adjustEnvelopeAmount(CoreDropContext context, {required int centsToAdd}) async {
+  Future<void> _adjustEnvelopeAmount(DropCoreContext context, {required int centsToAdd}) async {
     final fromEnvelopeEntity = await value.fromEnvelopeProperty.load(context);
     final toEnvelopeEntity = await value.toEnvelopeProperty.load(context);
 

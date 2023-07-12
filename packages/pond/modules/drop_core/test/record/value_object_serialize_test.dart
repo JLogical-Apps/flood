@@ -7,7 +7,7 @@ import 'package:utils_core/utils_core.dart';
 
 void main() {
   late CorePondContext context;
-  late CoreDropContext dropContext;
+  late DropCoreContext dropContext;
 
   setUp(() {
     context = CorePondContext()

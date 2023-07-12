@@ -13,7 +13,7 @@ class EnvelopeEntity extends Entity<Envelope> {
   }
 
   @override
-  FutureOr onAfterInitalize(CoreDropContext context) async {
+  FutureOr onAfterInitalize(DropCoreContext context) async {
     await value.onInitialize(context);
   }
 }

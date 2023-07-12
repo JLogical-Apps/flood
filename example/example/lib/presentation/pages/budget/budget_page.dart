@@ -81,7 +81,7 @@ class BudgetPage extends AppPage {
                               corePondContext: context.corePondContext,
                               envelope: Envelope()..budgetProperty.set(budgetEntity.id!),
                               onAccept: (Envelope result) async {
-                                await context.coreDropComponent.update(EnvelopeEntity()..value = result);
+                                await context.dropCoreComponent.update(EnvelopeEntity()..value = result);
                               },
                             ));
                           },
@@ -97,7 +97,7 @@ class BudgetPage extends AppPage {
                                   (Tray()..budgetProperty.set(budgetIdProperty.value)).asPort(context.corePondContext),
                               titleText: 'Create Tray',
                               onAccept: (Tray result) async {
-                                await context.coreDropComponent.updateEntity(TrayEntity()..value = result);
+                                await context.dropCoreComponent.updateEntity(TrayEntity()..value = result);
                               },
                             ));
                           },
@@ -181,7 +181,7 @@ class BudgetPage extends AppPage {
                                                   bodyText:
                                                       'Are you sure you want to delete this transaction? You cannot undo this.',
                                                   onAccept: () async {
-                                                    await context.coreDropComponent.delete(entity);
+                                                    await context.dropCoreComponent.delete(entity);
                                                     Navigator.of(context).pop();
                                                   },
                                                 ));

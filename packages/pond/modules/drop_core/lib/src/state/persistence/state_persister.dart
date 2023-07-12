@@ -7,7 +7,7 @@ abstract class StatePersister<T> {
 
   State inflate(T persisted);
 
-  static JsonStatePersister json({required CoreDropContext context}) => JsonStatePersister(context: context);
+  static JsonStatePersister json({required DropCoreContext context}) => JsonStatePersister(context: context);
 
-  static StateStatePersister state({required CoreDropContext context}) => StateStatePersister(context: context);
+  static StateStatePersister state({required DropCoreContext context}) => StateStatePersister(context: context);
 }

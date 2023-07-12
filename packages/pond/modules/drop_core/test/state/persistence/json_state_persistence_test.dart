@@ -31,7 +31,7 @@ void main() {
     );
 
     expect(
-      JsonStatePersister(context: CoreDropContext(typeContext: typeContext)).persist(state),
+      JsonStatePersister(context: DropCoreContext(typeContext: typeContext)).persist(state),
       '''\
 {
   "_id": "$id",

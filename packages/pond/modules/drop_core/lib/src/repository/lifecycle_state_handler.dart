@@ -2,7 +2,7 @@ import 'package:drop_core/drop_core.dart';
 import 'package:uuid/uuid.dart';
 
 class LifecycleStateHandler with IsRepositoryStateHandlerWrapper {
-  final CoreDropContext context;
+  final DropCoreContext context;
 
   @override
   final RepositoryStateHandler stateHandler;
