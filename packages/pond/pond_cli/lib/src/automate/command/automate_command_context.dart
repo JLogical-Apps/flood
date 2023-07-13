@@ -4,13 +4,21 @@ import 'package:pond_cli/src/automate/context/automate_pond_context.dart';
 import 'package:pond_cli/src/automate/util/file_system/automate_file_system.dart';
 import 'package:pond_cli/src/automate/util/package_manager/package_manager.dart';
 import 'package:pond_cli/src/automate/util/package_manager/pubspec_package_manager.dart';
-import 'package:pond_cli/src/automate/util/terminal/shell_terminal.dart';
 import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 
 class AutomateCommandContext with IsTerminalWrapper, IsPackageManagerWrapper, IsAutomateFileSystemWrapper {
   final AutomatePondContext automateContext;
 
-  AutomateCommandContext({required this.automateContext, Terminal? terminal}) : terminal = terminal ?? ShellTerminal();
+  AutomateCommandContext._({required this.automateContext, required this.terminal});
+
+  factory AutomateCommandContext({required AutomatePondContext automateContext, Terminal? terminal}) {
+    final fileSystem = AutomateFileSystem();
+
+    return AutomateCommandContext._(
+      automateContext: automateContext,
+      terminal: terminal ?? Terminal.static.shell(workingDirectory: fileSystem.getRootDirectory()),
+    );
+  }
 
   List<File> tempFiles = [];
 

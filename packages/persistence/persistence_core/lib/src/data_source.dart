@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:persistence_core/persistence_core.dart';
 import 'package:persistence_core/src/directory_data_source.dart';
 import 'package:persistence_core/src/file_data_source.dart';
 import 'package:persistence_core/src/json_data_source.dart';
@@ -38,6 +39,10 @@ class DataSourceStatic {
 
   RawFileDataSource rawFile(File file) {
     return RawFileDataSource(file: file);
+  }
+
+  UrlDataSource url(Uri url) {
+    return UrlDataSource(url: url);
   }
 }
 

@@ -43,7 +43,8 @@ class EnvironmentConfigStatic {
 
   DataSourceEnvironmentConfig yamlFile(File file) => fromDataSource(DataSource.static.file(file).mapYaml());
 
-  FileAssetEnvironmentConfig fileAssets() => FileAssetEnvironmentConfig();
+  FileAssetEnvironmentConfig fileAssets({Directory? projectDirectory}) =>
+      FileAssetEnvironmentConfig(projectDirectory: projectDirectory);
 
   EnvironmentConfig testing() =>
       memory().withEnvironmentType(EnvironmentType.static.testing).withFileSystemGetter(() => FileSystem(

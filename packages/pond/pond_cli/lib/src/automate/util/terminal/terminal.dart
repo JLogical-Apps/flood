@@ -27,13 +27,15 @@ abstract class Terminal {
     required String Function(T value) stringMapper,
   });
 
-  Future<void> run(String command, {Directory? workingDirectory});
+  /// Runs the [command] (or multiple commands if split by a `\n`) in [workingDirectory].
+  /// If [interactable] is true, then enables user interaction in the [command], such as inputting login credentials for `firebase login`. But, this prevents any output from being returned due to the quirks of [dcli].
+  Future<String> run(String command, {Directory? workingDirectory, bool interactable = false});
 
   static TerminalStatic get static => TerminalStatic();
 }
 
 class TerminalStatic {
-  Terminal get shell => ShellTerminal();
+  Terminal shell({Directory? workingDirectory}) => ShellTerminal(workingDirectory: workingDirectory);
 
   CaptureTerminal get capture => CaptureTerminal();
 }
@@ -87,8 +89,9 @@ mixin IsTerminalWrapper implements TerminalWrapper {
       );
 
   @override
-  Future<void> run(String command, {Directory? workingDirectory}) => terminal.run(
+  Future<String> run(String command, {Directory? workingDirectory, bool interactable = false}) => terminal.run(
         command,
         workingDirectory: workingDirectory,
+        interactable: interactable,
       );
 }

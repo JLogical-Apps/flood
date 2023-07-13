@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:example_core/example_core.dart';
 import 'package:jlogical_utils_cli/jlogical_utils_cli.dart';
 
 Future<void> main(List<String> args) async {
-  final corePondContext = await getCorePondContext(environmentConfig: EnvironmentConfig.static.fileAssets());
+  final corePondContext = await getCorePondContext(
+      environmentConfig: EnvironmentConfig.static.fileAssets(projectDirectory: Directory.current.parent / 'example'));
   final automatePondContext = AutomatePondContext(corePondContext: corePondContext);
 
   await automatePondContext.register(AppIconAutomateComponent(
@@ -10,6 +13,9 @@ Future<void> main(List<String> args) async {
     backgroundColor: 0x172434,
     padding: 80,
   ));
+  await automatePondContext.register(OpsAutomateComponent(environments: {
+    EnvironmentType.static.device: AppwriteLocalOpsEnvironment(),
+  }));
 
   await Automate.automate(context: automatePondContext, args: args);
 }

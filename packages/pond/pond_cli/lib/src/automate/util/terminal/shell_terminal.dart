@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:colorize_lumberdash/colorize_lumberdash.dart';
 import 'package:dcli/dcli.dart' as dcli;
-import 'package:dcli/dcli.dart';
 import 'package:interact/interact.dart';
 import 'package:interact/interact.dart' as interact;
 import 'package:lumberdash/lumberdash.dart' as lumberdash;
@@ -12,7 +11,11 @@ import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 import 'package:utils_core/utils_core.dart';
 
 class ShellTerminal with IsTerminal {
+  final Directory? workingDirectory;
+
   bool _isLumberdashInitialized = false;
+
+  ShellTerminal({this.workingDirectory});
 
   @override
   void print(obj) {
@@ -70,18 +73,19 @@ class ShellTerminal with IsTerminal {
   }
 
   @override
-  Future<void> run(String command, {Directory? workingDirectory}) async {
-    command.split('\n').forEach((line) {
+  Future<String> run(String command, {Directory? workingDirectory, bool interactable = false}) async {
+    return command.split('\n').map((line) {
       core.print('> $line');
-      dcli.start(
+      final progress = dcli.start(
         line,
-        workingDirectory: workingDirectory?.path,
-        terminal: true,
+        workingDirectory: (workingDirectory ?? this.workingDirectory)?.path,
+        terminal: interactable,
         runInShell: true,
-        progress: dcli.Progress(print, stderr: printerr),
+        progress: dcli.Progress.print(capture: true),
       );
       core.print('');
-    });
+      return progress.lines.join('\n');
+    }).join('\n');
   }
 
   void _initializeLumberdashIfNeeded() {
