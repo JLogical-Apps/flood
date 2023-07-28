@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:environment_core/environment_core.dart';
-import 'package:ops/src/build.dart';
 import 'package:ops/src/ops_environment.dart';
 import 'package:pond_cli/pond_cli.dart';
 
@@ -55,15 +54,11 @@ class DeployCommand extends AutomateCommand<DeployCommand> {
       }
     }
 
-    final environmentInfo = await opsEnvironment.getInfo(context);
-    context.print('${environmentType.name} Info:');
-    context.print('  - Build: [${environmentInfo.build}]');
-
     if (!context.confirm('Are you sure you want to deploy [${buildProperty.value}] to [${environmentType.name}]?')) {
       return;
     }
 
-    await opsEnvironment.deploy(context, build: Build());
+    await opsEnvironment.deploy(context);
   }
 
   @override
@@ -110,10 +105,6 @@ class DeleteCommand extends AutomateCommand<DeleteCommand> {
       context.warning('Ops environment for [${environmentType.name}] does not exist, so nothing will be deleted.');
       return;
     }
-
-    final environmentInfo = await opsEnvironment.getInfo(context);
-    context.print('${environmentType.name} Info:');
-    context.print('  - Build: [${environmentInfo.build}]');
 
     if (!context.confirm('Are you sure you want to delete [${environmentType.name}]?')) {
       return;

@@ -1,5 +1,3 @@
-import 'package:ops/src/build.dart';
-import 'package:ops/src/environment_info.dart';
 import 'package:ops/src/ops_environment.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
@@ -31,13 +29,8 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
   }
 
   @override
-  Future<void> onDeploy(AutomateCommandContext context, {required Build build}) async {
+  Future<void> onDeploy(AutomateCommandContext context) async {
     throw UnimplementedError('Deploy is not implemented!');
-  }
-
-  @override
-  Future<EnvironmentInfo> getInfo(AutomateCommandContext context) async {
-    return EnvironmentInfo(build: 'latest');
   }
 
   @override

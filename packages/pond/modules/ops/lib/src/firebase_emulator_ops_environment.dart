@@ -1,5 +1,3 @@
-import 'package:ops/src/build.dart';
-import 'package:ops/src/environment_info.dart';
 import 'package:ops/src/ops_environment.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:utils_core/utils_core.dart';
@@ -13,11 +11,6 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
     } catch (e) {
       return false;
     }
-  }
-
-  @override
-  Future<EnvironmentInfo> getInfo(AutomateCommandContext context) async {
-    return EnvironmentInfo(build: 'latest');
   }
 
   @override
@@ -45,7 +38,7 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
   }
 
   @override
-  Future<void> onDeploy(AutomateCommandContext context, {required Build build}) {
+  Future<void> onDeploy(AutomateCommandContext context) {
     throw UnimplementedError('Deploy not implemented.');
   }
 
@@ -110,7 +103,6 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
       'firebase use',
       workingDirectory: firebaseDirectory,
     );
-    // return output.split('\n')[0].substring('Active Project: '.length);
     return output;
   }
 }

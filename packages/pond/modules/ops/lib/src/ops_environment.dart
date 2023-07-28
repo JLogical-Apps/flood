@@ -1,6 +1,4 @@
 import 'package:ops/src/appwrite_local_ops_environment.dart';
-import 'package:ops/src/build.dart';
-import 'package:ops/src/environment_info.dart';
 import 'package:ops/src/firebase_emulator_ops_environment.dart';
 import 'package:pond_cli/pond_cli.dart';
 
@@ -9,9 +7,7 @@ abstract class OpsEnvironment {
 
   Future<void> onCreate(AutomateCommandContext context);
 
-  Future<EnvironmentInfo> getInfo(AutomateCommandContext context);
-
-  Future<void> onDeploy(AutomateCommandContext context, {required Build build});
+  Future<void> onDeploy(AutomateCommandContext context);
 
   Future<void> onDelete(AutomateCommandContext context);
 
@@ -29,8 +25,8 @@ extension OpsEnvironmentExtensions on OpsEnvironment {
     return onCreate(context);
   }
 
-  Future<void> deploy(AutomateCommandContext context, {required Build build}) {
-    return onDeploy(context, build: build);
+  Future<void> deploy(AutomateCommandContext context) {
+    return onDeploy(context);
   }
 
   Future<void> delete(AutomateCommandContext context) {
