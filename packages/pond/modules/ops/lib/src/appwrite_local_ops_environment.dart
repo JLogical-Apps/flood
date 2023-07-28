@@ -1,3 +1,4 @@
+import 'package:environment_core/environment_core.dart';
 import 'package:ops/src/ops_environment.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
@@ -5,7 +6,7 @@ import 'package:utils_core/utils_core.dart';
 
 class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
   @override
-  Future<bool> exists(AutomateCommandContext context) async {
+  Future<bool> exists(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     if (!await _isDockerInstalled(context)) {
       return false;
     }
@@ -15,7 +16,7 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
   }
 
   @override
-  Future<void> onCreate(AutomateCommandContext context) async {
+  Future<void> onCreate(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     if (!await _isDockerInstalled(context)) {
       throw Exception('Ensure docker is installed and running!');
     }
@@ -29,12 +30,12 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
   }
 
   @override
-  Future<void> onDeploy(AutomateCommandContext context) async {
+  Future<void> onDeploy(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     throw UnimplementedError('Deploy is not implemented!');
   }
 
   @override
-  Future<void> onDelete(AutomateCommandContext context) async {
+  Future<void> onDelete(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     if (!await _isDockerInstalled(context)) {
       throw Exception('Ensure docker is installed and running!');
     }

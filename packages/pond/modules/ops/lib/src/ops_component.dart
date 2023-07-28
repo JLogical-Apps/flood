@@ -39,15 +39,15 @@ class DeployCommand extends AutomateCommand<DeployCommand> {
     final opsEnvironment = environments[environmentType] ??
         (throw Exception('Could not find associated ops environment for [${environmentType.name}]!'));
 
-    var exists = await opsEnvironment.exists(context);
+    var exists = await opsEnvironment.exists(context, environmentType: environmentType);
     if (!exists) {
       if (!context.confirm('Environment for [${environmentType.name}] does not exist. Would you like to create it?')) {
         return;
       }
 
-      await opsEnvironment.onCreate(context);
+      await opsEnvironment.onCreate(context, environmentType: environmentType);
 
-      exists = await opsEnvironment.exists(context);
+      exists = await opsEnvironment.exists(context, environmentType: environmentType);
       if (!exists) {
         throw Exception('Could not successfully create the environment');
       }
@@ -57,7 +57,7 @@ class DeployCommand extends AutomateCommand<DeployCommand> {
       return;
     }
 
-    await opsEnvironment.deploy(context);
+    await opsEnvironment.deploy(context, environmentType: environmentType);
   }
 
   @override
@@ -98,7 +98,7 @@ class DeleteCommand extends AutomateCommand<DeleteCommand> {
     final opsEnvironment = environments[environmentType] ??
         (throw Exception('Could not find associated ops environment for [${environmentType.name}]!'));
 
-    final exists = await opsEnvironment.exists(context);
+    final exists = await opsEnvironment.exists(context, environmentType: environmentType);
     if (!exists) {
       context.warning('Ops environment for [${environmentType.name}] does not exist, so nothing will be deleted.');
       return;
@@ -108,7 +108,7 @@ class DeleteCommand extends AutomateCommand<DeleteCommand> {
       return;
     }
 
-    await opsEnvironment.delete(context);
+    await opsEnvironment.delete(context, environmentType: environmentType);
   }
 
   @override

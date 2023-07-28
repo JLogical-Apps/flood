@@ -1,10 +1,11 @@
+import 'package:environment_core/environment_core.dart';
 import 'package:ops/src/ops_environment.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:utils_core/utils_core.dart';
 
 class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
   @override
-  Future<bool> exists(AutomateCommandContext context) async {
+  Future<bool> exists(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     try {
       final output = await context.run('lsof -i :9099');
       return output.isNotEmpty;
@@ -14,7 +15,7 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
   }
 
   @override
-  Future<void> onCreate(AutomateCommandContext context) async {
+  Future<void> onCreate(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     if (!await _setupFirebase(context)) {
       throw Exception('Unable to setup Firebase!');
     }
@@ -33,12 +34,12 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
   }
 
   @override
-  Future<void> onDelete(AutomateCommandContext context) async {
+  Future<void> onDelete(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     throw UnimplementedError('Delete not implemented.');
   }
 
   @override
-  Future<void> onDeploy(AutomateCommandContext context) {
+  Future<void> onDeploy(AutomateCommandContext context, {required EnvironmentType environmentType}) {
     throw UnimplementedError('Deploy not implemented.');
   }
 
