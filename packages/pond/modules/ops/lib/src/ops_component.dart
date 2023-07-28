@@ -19,7 +19,6 @@ class DeployCommand extends AutomateCommand<DeployCommand> {
   final Map<EnvironmentType, OpsEnvironment> environments;
 
   late final environmentProperty = field<String>(name: 'environment').required();
-  late final buildProperty = field<String>(name: 'build').required();
 
   DeployCommand({required this.environments});
 
@@ -54,7 +53,7 @@ class DeployCommand extends AutomateCommand<DeployCommand> {
       }
     }
 
-    if (!context.confirm('Are you sure you want to deploy [${buildProperty.value}] to [${environmentType.name}]?')) {
+    if (!context.confirm('Are you sure you want to deploy to [${environmentType.name}]?')) {
       return;
     }
 
@@ -62,8 +61,7 @@ class DeployCommand extends AutomateCommand<DeployCommand> {
   }
 
   @override
-  AutomatePathDefinition get pathDefinition =>
-      AutomatePathDefinition.property(environmentProperty).property(buildProperty);
+  AutomatePathDefinition get pathDefinition => AutomatePathDefinition.property(environmentProperty);
 
   EnvironmentType? getEnvironmentTypeOrNull() {
     return EnvironmentType.static.defaultTypes
