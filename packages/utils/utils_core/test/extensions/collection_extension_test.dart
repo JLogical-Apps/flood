@@ -31,4 +31,12 @@ void main() {
       },
     );
   });
+
+  test('ensureNested', () {
+    var map = <String, dynamic>{'outer': <String, dynamic>{}};
+
+    map = map.ensureNested(['outer', 'center', 'inner']);
+
+    expect(map['outer']['center']['inner'], isA<Map<String, dynamic>>());
+  });
 }

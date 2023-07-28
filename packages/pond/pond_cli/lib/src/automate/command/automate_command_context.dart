@@ -23,7 +23,7 @@ class AutomateCommandContext with IsTerminalWrapper, IsPackageManagerWrapper, Is
 
   List<File> tempFiles = [];
 
-  File get stateFile => getRootDirectory() - 'state.json';
+  File get stateFile => getRootDirectory() / 'tool' - 'state.yaml';
 
   @override
   final Terminal terminal;

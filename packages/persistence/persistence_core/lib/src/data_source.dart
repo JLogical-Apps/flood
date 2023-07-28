@@ -55,6 +55,13 @@ extension DataSourceExtension<T> on DataSource<T> {
     return (await getOrNull()) ?? (throw Exception('Could not get data for [$this]'));
   }
 
+  Future<T> update(T Function(T? existingData) newDataGetter) async {
+    final existingData = await getOrNull();
+    final newData = newDataGetter(existingData);
+    await set(newData);
+    return newData;
+  }
+
   MapperDataSource<T, T2> map<T2>({
     required FutureOr<T2> Function(T data) getMapper,
     FutureOr<bool> Function(T? data)? existsMapper,
