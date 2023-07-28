@@ -26,13 +26,13 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
 
     await context.run(
       'docker compose up -d --remove-orphans',
-      workingDirectory: context.fileSystem.getRootDirectory() / 'appwrite',
+      workingDirectory: context.getRootDirectory() / 'appwrite',
     );
   }
 
   @override
   Future<void> onDeploy(AutomateCommandContext context, {required Build build}) async {
-    await context.run('dart test');
+    throw UnimplementedError('Deploy is not implemented!');
   }
 
   @override

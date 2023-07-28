@@ -16,7 +16,7 @@ class OpsAutomateComponent with IsAutomatePondComponent {
       ];
 }
 
-class DeployCommand extends AutomateCommand<DeleteCommand> {
+class DeployCommand extends AutomateCommand<DeployCommand> {
   final Map<EnvironmentType, OpsEnvironment> environments;
 
   late final environmentProperty = field<String>(name: 'environment').required();
@@ -31,8 +31,8 @@ class DeployCommand extends AutomateCommand<DeleteCommand> {
   String get description => 'Deploys a build to an environment.';
 
   @override
-  DeleteCommand copy() {
-    return DeleteCommand(environments: environments);
+  DeployCommand copy() {
+    return DeployCommand(environments: environments);
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:pond_cli/src/automate/util/file_system/automate_file_system.dart
 import 'package:pond_cli/src/automate/util/package_manager/package_manager.dart';
 import 'package:pond_cli/src/automate/util/package_manager/pubspec_package_manager.dart';
 import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
+import 'package:utils_core/utils_core.dart';
 
 class AutomateCommandContext with IsTerminalWrapper, IsPackageManagerWrapper, IsAutomateFileSystemWrapper {
   final AutomatePondContext automateContext;
@@ -21,6 +22,8 @@ class AutomateCommandContext with IsTerminalWrapper, IsPackageManagerWrapper, Is
   }
 
   List<File> tempFiles = [];
+
+  File get stateFile => getRootDirectory() - 'state.json';
 
   @override
   final Terminal terminal;
