@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:environment_core/environment_core.dart';
 import 'package:ops/src/ops_environment.dart';
 import 'package:persistence_core/persistence_core.dart';
@@ -8,8 +10,13 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
   @override
   Future<bool> exists(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     try {
-      final output = await context.run('lsof -i :9099');
-      return output.isNotEmpty;
+      final projectId = await _getEnvironmentProjectIdOrNull(context, environmentType: environmentType);
+      if (projectId == null) {
+        return false;
+      }
+
+      final emulatorOutput = await context.run('lsof -i :9099');
+      return emulatorOutput.isNotEmpty;
     } catch (e) {
       return false;
     }
@@ -21,16 +28,15 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
       throw Exception('Unable to setup Firebase!');
     }
 
-    final firebaseDirectory = context.getRootDirectory() / 'firebase';
-    final projectId = await _getFirebaseProjectId(context, environmentType: environmentType);
+    final projectId = await _getOrCreateFirebaseProjectId(context, environmentType: environmentType);
     await context.run(
       'firebase use $projectId',
-      workingDirectory: firebaseDirectory,
+      workingDirectory: context.firebaseDirectory,
     );
 
     await context.run(
       'firebase emulators:start',
-      workingDirectory: firebaseDirectory,
+      workingDirectory: context.firebaseDirectory,
     );
   }
 
@@ -41,12 +47,13 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
 
   @override
   Future<void> onDeploy(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
-    final stateFileDataSource = DataSource.static.file(context.stateFile).mapYaml();
-    final state = await stateFileDataSource.getOrNull() ?? {};
-    context.print('project id: ${state['firebase'][environmentType.name]['project_id']}');
+    final projectId = await _getEnvironmentProjectIdOrNull(context, environmentType: environmentType);
+    context.print('project id: $projectId');
   }
 
   Future<bool> _setupFirebase(AutomateCommandContext context) async {
+    await context.firebaseDirectory.ensureCreated();
+
     try {
       await context.run('firebase --version');
     } catch (e) {
@@ -75,51 +82,96 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
     return true;
   }
 
-  Future<String> _getFirebaseProjectId(
+  Future<String> _getOrCreateFirebaseProjectId(
     AutomateCommandContext context, {
     required EnvironmentType environmentType,
   }) async {
-    final firebaseDirectory = context.getRootDirectory() / 'firebase';
-    final firebaseSourceFile = firebaseDirectory - 'firebase.json';
+    final firebaseSourceFile = context.firebaseDirectory - 'firebase.json';
     if (!await firebaseSourceFile.exists()) {
-      final shouldInit =
-          context.confirm('A firebase project has not been initialized. Would you like to initialize one?');
-      if (!shouldInit) {
-        throw Exception('No Firebase project initialized!');
-      }
-
-      await firebaseDirectory.ensureCreated();
-      await context.run(
-        'firebase init',
-        workingDirectory: firebaseDirectory,
-        interactable: true,
-      );
+      await _initFirebase(context, environmentType: environmentType);
 
       if (!await firebaseSourceFile.exists()) {
         throw Exception('Unable to initialize Firebase project!');
       }
+    }
 
-      final projectId = await _getCurrentlyUsedProjectId(context);
-
-      final stateFileDataSource = DataSource.static.file(context.stateFile).mapYaml();
-      await stateFileDataSource.update((state) {
-        state = (state ?? {}).copy()..ensureNested(['firebase', environmentType.name, 'project_id']);
-        state['firebase'][environmentType.name]['project_id'] = projectId;
-        return state;
-      });
+    final projectId = await _getEnvironmentProjectIdOrNull(context, environmentType: environmentType);
+    if (projectId != null) {
       return projectId;
     }
 
-    return await _getCurrentlyUsedProjectId(context);
+    final shouldAdd = context.confirm(
+        "There isn't a Firebase project configured with the ${environmentType.name} environment. Would you like to set one up?");
+    if (!shouldAdd) {
+      throw Exception('No Firebase projecet configured with the ${environmentType.name} environment.');
+    }
+
+    await context.run(
+      'firebase use --add',
+      workingDirectory: context.firebaseDirectory,
+      interactable: true,
+    );
+
+    final currentlyUsedProjectId = await _getCurrentlyUsedProjectId(context);
+    await _updateEnvironmentProject(context, environmentType: environmentType, projectId: currentlyUsedProjectId);
+    return currentlyUsedProjectId;
+  }
+
+  Future<String?> _initFirebase(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
+    final shouldInit =
+        context.confirm('A firebase project has not been initialized. Would you like to initialize one?');
+    if (!shouldInit) {
+      throw Exception('No Firebase project initialized!');
+    }
+
+    await context.run(
+      'firebase init',
+      workingDirectory: context.firebaseDirectory,
+      interactable: true,
+    );
+
+    final projectId = await _getCurrentlyUsedProjectId(context);
+    await _updateEnvironmentProject(context, environmentType: environmentType, projectId: projectId);
+    return projectId;
+  }
+
+  Future<String?> _getCurrentlyUsedProjectIdOrNull(AutomateCommandContext context) async {
+    final output = await context.run(
+      'firebase use',
+      workingDirectory: context.firebaseDirectory,
+    );
+    return output.nullIfBlank;
   }
 
   Future<String> _getCurrentlyUsedProjectId(AutomateCommandContext context) async {
-    final firebaseDirectory = context.getRootDirectory() / 'firebase';
-
-    final output = await context.run(
-      'firebase use',
-      workingDirectory: firebaseDirectory,
-    );
-    return output;
+    return await _getCurrentlyUsedProjectIdOrNull(context) ??
+        (throw Exception('Unable to get currently used Firebase Project ID'));
   }
+
+  Future<String?> _getEnvironmentProjectIdOrNull(
+    AutomateCommandContext context, {
+    required EnvironmentType environmentType,
+  }) async {
+    final stateFileDataSource = DataSource.static.file(context.stateFile).mapYaml();
+    final state = await stateFileDataSource.getOrNull() ?? <String, dynamic>{};
+    state.ensureNested(['firebase', environmentType.name]);
+    return state['firebase'][environmentType.name]['project_id'];
+  }
+
+  Future<void> _updateEnvironmentProject(
+    AutomateCommandContext context, {
+    required EnvironmentType environmentType,
+    required String projectId,
+  }) async {
+    final stateFileDataSource = DataSource.static.file(context.stateFile).mapYaml();
+    await stateFileDataSource.update((state) {
+      state = (state ?? {}).copy()..ensureNested(['firebase', environmentType.name]);
+      state['firebase'][environmentType.name]['project_id'] = projectId;
+      return state;
+    });
+  }
+}
+
+extension _AutomateCommandContextExtensions on AutomateCommandContext {
+  Directory get firebaseDirectory => getRootDirectory() / 'firebase';
 }

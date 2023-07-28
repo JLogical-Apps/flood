@@ -18,7 +18,7 @@ abstract class OpsEnvironment {
 class OpsEnvironmentStatic {
   AppwriteLocalOpsEnvironment get appwriteLocal => AppwriteLocalOpsEnvironment();
 
-  FirebaseEmulatorOpsEnvironment get firebaseEmulators => FirebaseEmulatorOpsEnvironment();
+  FirebaseEmulatorOpsEnvironment get firebaseEmulator => FirebaseEmulatorOpsEnvironment();
 }
 
 extension OpsEnvironmentExtensions on OpsEnvironment {

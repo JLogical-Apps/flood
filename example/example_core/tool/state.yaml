@@ -1,4 +1,5 @@
 firebase:
   qa:
-    projectId: pond-automation-1
     project_id: pond-automation-1
+  staging:
+    project_id: jlogical-utils
