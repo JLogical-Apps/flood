@@ -15,7 +15,8 @@ Future<void> main(List<String> args) async {
   ));
   await automatePondContext.register(OpsAutomateComponent(environments: {
     EnvironmentType.static.qa: OpsEnvironment.static.firebaseEmulator,
-    EnvironmentType.static.staging: OpsEnvironment.static.firebaseEmulator,
+    EnvironmentType.static.staging: OpsEnvironment.static.firebase,
+    EnvironmentType.static.production: OpsEnvironment.static.firebase,
   }));
 
   await Automate.automate(context: automatePondContext, args: args);

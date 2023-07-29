@@ -3,3 +3,5 @@ firebase:
     project_id: pond-automation-1
   staging:
     project_id: jlogical-utils
+  production:
+    project_id: pond-automation-1

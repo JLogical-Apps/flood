@@ -3,17 +3,12 @@ import 'package:ops/src/firebase_ops_utils.dart';
 import 'package:ops/src/ops_environment.dart';
 import 'package:pond_cli/pond_cli.dart';
 
-class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
+class FirebaseOpsEnvironment with IsOpsEnvironment {
   @override
   Future<bool> exists(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     try {
       final projectId = await FirebaseOpsUtils.getEnvironmentProjectIdOrNull(context, environmentType: environmentType);
-      if (projectId == null) {
-        return false;
-      }
-
-      final emulatorOutput = await context.run('lsof -i :9099');
-      return emulatorOutput.isNotEmpty;
+      return projectId != null;
     } catch (e) {
       return false;
     }
@@ -28,11 +23,6 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
     final projectId = await FirebaseOpsUtils.getOrCreateFirebaseProjectId(context, environmentType: environmentType);
     await context.run(
       'firebase use $projectId',
-      workingDirectory: context.firebaseDirectory,
-    );
-
-    await context.run(
-      'firebase emulators:start',
       workingDirectory: context.firebaseDirectory,
     );
   }
