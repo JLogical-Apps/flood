@@ -75,7 +75,6 @@ class SecurityStateHandler with IsRepositoryStateHandlerWrapper {
   @override
   Future<State> onUpdate(State state) {
     if (state.isNew) {
-      print('checking permissions for $authenticatedUserId');
       if (!repositorySecurity.create.passes(authenticatedUserId: authenticatedUserId)) {
         throw Exception('Invalid permissions to create [$state]!');
       }
