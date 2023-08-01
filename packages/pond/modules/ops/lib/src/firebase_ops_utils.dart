@@ -1,11 +1,17 @@
 import 'dart:io';
 
+import 'package:drop_core/drop_core.dart';
 import 'package:environment_core/environment_core.dart';
+import 'package:ops/src/permission/permission_text_modifier.dart';
+import 'package:ops/src/repository_security/repository_security_modifier.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
+import 'package:pond_core/pond_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class FirebaseOpsUtils {
+  FirebaseOpsUtils._();
+
   static Future<bool> setupFirebase(AutomateCommandContext context) async {
     await context.firebaseDirectory.ensureCreated();
 
@@ -125,6 +131,54 @@ class FirebaseOpsUtils {
       state['firebase'][environmentType.name]['project_id'] = projectId;
       return state;
     });
+  }
+
+  static String generateFirestoreRules(CorePondContext context) {
+    final repositories = context.dropCoreComponent.repositories;
+
+    String getPermissionText(Permission permission) {
+      return PermissionTextModifier.getModifier(permission).getText(permission);
+    }
+
+    final repositoryRules = repositories
+        .map((repository) {
+          final securityModifier = RepositorySecurityModifier.getModifierOrNull(repository);
+          if (securityModifier == null) {
+            return null;
+          }
+
+          final path = securityModifier.getPath(repository);
+          final security = securityModifier.getSecurity(repository);
+
+          if (path == null || security == null) {
+            return null;
+          }
+
+          final firestorePermissions = {
+            'read': security.read,
+            'create': security.create,
+            'update': security.update,
+            'delete': security.delete,
+          }.mapToIterable((action, permission) => 'allow $action: if ${getPermissionText(permission)};').join('\n');
+
+          return '''\
+match /$path/{id} {
+${firestorePermissions.withIndent(2)}
+}''';
+        })
+        .whereNonNull()
+        .join('\n');
+
+    return '''\
+rules_version = '2';     
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+${repositoryRules.withIndent(4)}
+  }
+}''';
   }
 }
 

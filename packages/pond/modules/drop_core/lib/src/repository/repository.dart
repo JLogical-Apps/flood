@@ -1,16 +1,27 @@
 import 'dart:async';
 
-import 'package:drop_core/drop_core.dart';
+import 'package:drop_core/src/context/core_pond_context_extensions.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/drop_core_component.dart';
+import 'package:drop_core/src/query/request/query_request.dart';
+import 'package:drop_core/src/record/entity.dart';
+import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/adapting_repository.dart';
+import 'package:drop_core/src/repository/cloud_repository.dart';
+import 'package:drop_core/src/repository/file_repository.dart';
 import 'package:drop_core/src/repository/listener_repository.dart';
 import 'package:drop_core/src/repository/memory_cache_repository.dart';
 import 'package:drop_core/src/repository/memory_repository.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
+import 'package:drop_core/src/repository/repository_query_executor.dart';
+import 'package:drop_core/src/repository/repository_state_handler.dart';
+import 'package:drop_core/src/repository/security/repository_security.dart';
 import 'package:drop_core/src/repository/security/security_repository.dart';
 import 'package:drop_core/src/repository/type/for_abstract_type_repository.dart';
 import 'package:drop_core/src/repository/type/for_type_repository.dart';
 import 'package:drop_core/src/repository/type/with_embedded_abstract_type_repository.dart';
 import 'package:drop_core/src/repository/type/with_embedded_type_repository.dart';
+import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:environment_core/environment_core.dart';
 import 'package:pond_core/pond_core.dart';
@@ -29,16 +40,16 @@ abstract class Repository implements CorePondComponent, RepositoryStateHandlerWr
     return FileRepository(rootPath: rootPath);
   }
 
+  static CloudRepository cloud(String rootPath) {
+    return CloudRepository(rootPath: rootPath);
+  }
+
   static Repository list(List<Repository> repositories) {
     return RepositoryListWrapper(repositories);
   }
 
-  static Repository adaptingCustom(Repository Function(EnvironmentConfigCoreComponent environment) repositoryGetter) {
-    return AdaptingRepository.custom(repositoryGetter);
-  }
-
   static Repository adapting(String rootPath) {
-    return AdaptingRepository(rootPath);
+    return AdaptingRepository(rootPath: rootPath);
   }
 }
 

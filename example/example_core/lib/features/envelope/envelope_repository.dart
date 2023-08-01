@@ -50,5 +50,6 @@ class EnvelopeRepository with IsRepositoryWrapper {
         MonthlyTimeRule.new,
         valueObjectTypeName: 'MonthlyTimeRule',
         valueObjectParents: [TimeRule],
-      );
+      )
+      .withSecurity(RepositorySecurity.authenticated());
 }

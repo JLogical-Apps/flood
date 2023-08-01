@@ -1,3 +1,4 @@
+import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/repository/security/permission.dart';
 
 class RepositorySecurity {
@@ -14,6 +15,10 @@ class RepositorySecurity {
         delete = write;
 
   RepositorySecurity.public() : this.readWrite(read: Permission.all, write: Permission.all);
+
+  RepositorySecurity.authenticated() : this.readWrite(read: Permission.authenticated, write: Permission.authenticated);
+
+  RepositorySecurity.none() : this.readWrite(read: Permission.none, write: Permission.none);
 
   RepositorySecurity copyWith({Permission? read, Permission? create, Permission? update, Permission? delete}) {
     return RepositorySecurity(

@@ -32,5 +32,6 @@ class BudgetTransactionRepository with IsRepositoryWrapper {
         TransferTransaction.new,
         entityTypeName: 'TransferTransactionEntity',
         valueObjectTypeName: 'TransferTransaction',
-      );
+      )
+      .withSecurity(RepositorySecurity.authenticated());
 }

@@ -11,4 +11,8 @@ extension StringExtensions on String {
       .isNotEmpty;
 
   String? get nullIfBlank => isBlank ? null : this;
+
+  String withIndent(int spaces) {
+    return split('\n').map((line) => (' ' * spaces) + line).join('\n');
+  }
 }

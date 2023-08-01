@@ -11,6 +11,11 @@ version: 0.0.1
 dependencies:
   collection: ^1.16.0
 
+  drop_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/modules/drop_core
   environment_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
@@ -31,6 +36,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "3.0"
       path: packages/pond/pond_core
+  type_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/modules/type_core
   utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
