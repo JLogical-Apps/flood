@@ -6,6 +6,7 @@ import 'package:drop_core/src/repository/listener_repository.dart';
 import 'package:drop_core/src/repository/memory_cache_repository.dart';
 import 'package:drop_core/src/repository/memory_repository.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
+import 'package:drop_core/src/repository/security/security_repository.dart';
 import 'package:drop_core/src/repository/type/for_abstract_type_repository.dart';
 import 'package:drop_core/src/repository/type/for_type_repository.dart';
 import 'package:drop_core/src/repository/type/with_embedded_abstract_type_repository.dart';
@@ -140,6 +141,10 @@ extension RepositoryExtension on Repository {
 
   MemoryCacheRepository withMemoryCache() {
     return MemoryCacheRepository(sourceRepository: this);
+  }
+
+  SecurityRepository withSecurity(RepositorySecurity repositorySecurity) {
+    return SecurityRepository(repository: this, repositorySecurity: repositorySecurity);
   }
 }
 

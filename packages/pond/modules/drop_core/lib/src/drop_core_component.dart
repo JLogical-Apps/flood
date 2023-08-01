@@ -5,14 +5,17 @@ import 'package:collection/collection.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
 import 'package:pond_core/pond_core.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositoryListWrapper {
   final List<RepositoryImplementation> repositoryImplementations;
+  final ValueStream<String?> authenticatedUserX;
 
-  DropCoreComponent({this.repositoryImplementations = const []});
+  DropCoreComponent({this.repositoryImplementations = const [], ValueStream<String?>? authenticatedUserIdX})
+      : authenticatedUserX = authenticatedUserIdX ?? BehaviorSubject.seeded(null);
 
   @override
   List<CorePondComponentBehavior> get behaviors => [
