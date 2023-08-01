@@ -1,6 +1,5 @@
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:environment_core/environment_core.dart';
-import 'package:utils_core/utils_core.dart';
 
 class AdaptingRepository with IsRepositoryWrapper {
   final String rootPath;

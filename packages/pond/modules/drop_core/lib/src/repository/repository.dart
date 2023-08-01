@@ -23,7 +23,6 @@ import 'package:drop_core/src/repository/type/with_embedded_abstract_type_reposi
 import 'package:drop_core/src/repository/type/with_embedded_type_repository.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
-import 'package:environment_core/environment_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:type/type.dart';
