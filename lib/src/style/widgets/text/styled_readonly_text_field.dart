@@ -9,9 +9,20 @@ class StyledReadonlyTextField extends StatelessWidget {
   final String? text;
   final String? errorText;
 
+  final Widget? leading;
+  final Widget? trailing;
+
   final int maxLines;
 
-  StyledReadonlyTextField(this.text, {this.label, this.labelText, this.errorText, this.maxLines: 1});
+  StyledReadonlyTextField(
+    this.text, {
+    this.label,
+    this.labelText,
+    this.errorText,
+    this.maxLines: 1,
+    this.leading,
+    this.trailing,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +33,8 @@ class StyledReadonlyTextField extends StatelessWidget {
       labelText: labelText,
       maxLines: maxLines,
       errorText: errorText,
+      leading: leading,
+      trailing: trailing,
       enabled: false,
     );
   }
