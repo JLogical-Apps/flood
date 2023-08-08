@@ -959,7 +959,7 @@ class FlatStyle extends Style {
             ),
       hintText: 'Select a color',
       initialText: initialColor?.value.toRadixString(16).mapIfNonNull((color) => '#$color'),
-      enabled: true,
+      enabled: false,
       onTap: colorPicker.onChanged != null
           ? () async {
               final result = await showDialog(
