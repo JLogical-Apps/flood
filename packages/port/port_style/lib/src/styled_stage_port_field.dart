@@ -67,7 +67,7 @@ class StyledStagePortField<E, T> extends HookWidget {
           children: [
             StyledOptionField<E>(
               value: value.value,
-              labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
+              labelText: label == null ? (labelText ?? field.findDisplayNameOrNull(port)) : null,
               label: label,
               errorText: error?.toString(),
               enabled: enabled,

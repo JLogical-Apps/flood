@@ -27,7 +27,7 @@ class PlaceholderPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorMo
       return sourcePortField;
     }
 
-    return sourcePortField.withDynamicHint(() => guard(() {
+    return sourcePortField.withDynamicHint((port) => guard(() {
           final constructedValueObject = context.corePortDropComponent.getValueObjectFromPort(
             port: context.port,
             originalValueObject: context.originalValueObject,

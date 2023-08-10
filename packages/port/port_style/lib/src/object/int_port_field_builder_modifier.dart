@@ -9,7 +9,7 @@ class IntPortFieldBuilderModifier extends PortFieldBuilderModifier {
   Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
     return StyledIntFieldPortField(
       fieldName: fieldName,
-      labelText: portField.findDisplayNameOrNull(),
+      labelText: portField.findDisplayNameOrNull(port),
       hintText: (portField.findHintOrNull(port) as Object?)?.as<int>()?.formatIntOrDouble(),
     );
   }

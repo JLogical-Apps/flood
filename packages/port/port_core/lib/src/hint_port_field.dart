@@ -1,15 +1,16 @@
+import 'package:port_core/src/port.dart';
 import 'package:port_core/src/port_field.dart';
 
 class HintPortField<T, S> with IsPortFieldWrapper<T, S> {
   @override
   final PortField<T, S> portField;
 
-  final T? Function() hintGetter;
+  final T? Function(Port port) hintGetter;
 
   HintPortField({required this.portField, required this.hintGetter});
 
-  T? getHint() {
-    return hintGetter();
+  T? getHint(Port port) {
+    return hintGetter(port);
   }
 
   @override

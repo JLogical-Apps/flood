@@ -32,7 +32,7 @@ class StyledDoubleFieldPortField extends HookWidget {
       builder: (context, field, amount, error) {
         return StyledTextField(
           text: amount?.formatIntOrDouble() ?? '',
-          labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
+          labelText: label == null ? (labelText ?? field.findDisplayNameOrNull(port)) : null,
           label: label,
           hintText: hintText,
           errorText: error?.toString(),

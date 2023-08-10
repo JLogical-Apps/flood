@@ -1,15 +1,16 @@
+import 'package:port_core/src/port.dart';
 import 'package:port_core/src/port_field.dart';
 
 class DisplayNamePortField<T, S> with IsPortFieldWrapper<T, S> {
   @override
   final PortField<T, S> portField;
 
-  final String? Function() displayNameGetter;
+  final String? Function(Port port) displayNameGetter;
 
   DisplayNamePortField({required this.portField, required this.displayNameGetter});
 
-  String? getDisplayName() {
-    return displayNameGetter();
+  String? getDisplayName(Port port) {
+    return displayNameGetter(port);
   }
 
   @override

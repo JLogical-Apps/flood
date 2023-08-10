@@ -1,5 +1,6 @@
 import 'package:port_core/src/map_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
+import 'package:port_core/src/port.dart';
 import 'package:port_core/src/port_field.dart';
 
 class MapPortFieldNodeModifier extends PortFieldNodeModifier<MapPortField> {
@@ -13,8 +14,8 @@ class MapPortFieldNodeModifier extends PortFieldNodeModifier<MapPortField> {
   }
 
   @override
-  String? getDisplayNameOrNull(MapPortField portField) {
-    return modifierGetter(portField.portField)?.getDisplayNameOrNull(portField.portField);
+  String? getDisplayNameOrNull(Port port, MapPortField portField) {
+    return modifierGetter(portField.portField)?.getDisplayNameOrNull(port, portField.portField);
   }
 
   @override

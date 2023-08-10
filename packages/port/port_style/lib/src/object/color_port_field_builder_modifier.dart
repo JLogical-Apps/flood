@@ -8,7 +8,7 @@ class ColorPortFieldBuilderModifier extends PortFieldBuilderModifier {
   Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
     return StyledColorPickerPortField(
       fieldName: fieldName,
-      labelText: portField.findDisplayNameOrNull(),
+      labelText: portField.findDisplayNameOrNull(port),
     );
   }
 

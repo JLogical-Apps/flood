@@ -17,6 +17,6 @@ class DisplayNamePropertyBehaviorModifier extends WrapperPortGeneratorBehaviorMo
     PortField sourcePortField,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    return sourcePortField.withDynamicDisplayName(behavior.displayNameGetter);
+    return sourcePortField.withDynamicDisplayName((port) => behavior.displayNameGetter());
   }
 }

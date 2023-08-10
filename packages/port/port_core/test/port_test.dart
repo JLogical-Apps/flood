@@ -97,9 +97,9 @@ void main() {
       'gender': PortField.option(initialValue: 'M', options: ['M', 'F']).withDisplayName('Gender'),
     });
 
-    expect(contactPort.getFieldByName('phone').findDisplayNameOrNull(), 'Phone');
-    expect(contactPort.getFieldByName('email').findDisplayNameOrNull(), 'Email');
-    expect(contactPort.getFieldByName('gender').findDisplayNameOrNull(), 'Gender');
+    expect(contactPort.getFieldByName('phone').findDisplayNameOrNull(contactPort), 'Phone');
+    expect(contactPort.getFieldByName('email').findDisplayNameOrNull(contactPort), 'Email');
+    expect(contactPort.getFieldByName('gender').findDisplayNameOrNull(contactPort), 'Gender');
   });
 
   test('multiline fields', () {

@@ -34,7 +34,7 @@ class StyledColorPickerPortField extends HookWidget {
       builder: (context, field, color, error) {
         return StyledColorPicker(
           value: color?.mapIfNonNull((value) => Color(value)),
-          labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
+          labelText: label == null ? (labelText ?? field.findDisplayNameOrNull(port)) : null,
           label: label,
           errorText: error?.toString(),
           onChanged: (color) => port[fieldName] = color?.value,

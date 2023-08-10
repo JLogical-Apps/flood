@@ -138,9 +138,9 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   PortField<T, S> isNotNull() => withValidator(Validator.isNotNull<T>().forPortField());
 
   PortField<T, S> withDisplayName(String displayName) =>
-      DisplayNamePortField<T, S>(portField: this, displayNameGetter: () => displayName);
+      DisplayNamePortField<T, S>(portField: this, displayNameGetter: (port) => displayName);
 
-  PortField<T, S> withDynamicDisplayName(String? Function() displayNameGetter) =>
+  PortField<T, S> withDynamicDisplayName(String? Function(Port port) displayNameGetter) =>
       DisplayNamePortField<T, S>(portField: this, displayNameGetter: displayNameGetter);
 
   PortField<T, S> withFallback(T fallback) =>
@@ -149,9 +149,9 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   PortField<T, S> withDynamicFallback(T Function(Port port) fallbackGetter) =>
       FallbackPortField<T, S>(portField: this, fallbackGetter: fallbackGetter);
 
-  PortField<T, S> withHint(T? hint) => HintPortField<T, S>(portField: this, hintGetter: () => hint);
+  PortField<T, S> withHint(T? hint) => HintPortField<T, S>(portField: this, hintGetter: (port) => hint);
 
-  PortField<T, S> withDynamicHint(T? Function() hintGetter) =>
+  PortField<T, S> withDynamicHint(T? Function(Port port) hintGetter) =>
       HintPortField<T, S>(portField: this, hintGetter: hintGetter);
 
   StagePortField? findStageFieldOrNull() {
@@ -166,8 +166,8 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
     return PortFieldNodeModifier.getModifierOrNull(this)?.getOptionsOrNull(this);
   }
 
-  String? findDisplayNameOrNull() {
-    return PortFieldNodeModifier.getModifierOrNull(this)?.getDisplayNameOrNull(this);
+  String? findDisplayNameOrNull(Port port) {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.getDisplayNameOrNull(port, this);
   }
 
   T? findHintOrNull(Port port) {

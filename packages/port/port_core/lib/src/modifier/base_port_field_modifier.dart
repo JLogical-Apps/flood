@@ -1,4 +1,5 @@
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
+import 'package:port_core/src/port.dart';
 import 'package:port_core/src/port_field.dart';
 
 class BasePortFieldModifier extends PortFieldNodeModifier<PortField> {
@@ -8,7 +9,7 @@ class BasePortFieldModifier extends PortFieldNodeModifier<PortField> {
   }
 
   @override
-  String? getDisplayNameOrNull(PortField portField) {
+  String? getDisplayNameOrNull(Port port, PortField portField) {
     return null;
   }
 

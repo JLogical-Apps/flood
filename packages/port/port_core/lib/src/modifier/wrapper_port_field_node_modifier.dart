@@ -15,8 +15,8 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   }
 
   @override
-  String? getDisplayNameOrNull(T portField) {
-    return modifierGetter(portField.portField)?.getDisplayNameOrNull(portField.portField);
+  String? getDisplayNameOrNull(Port port, T portField) {
+    return modifierGetter(portField.portField)?.getDisplayNameOrNull(port, portField.portField);
   }
 
   @override

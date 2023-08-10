@@ -63,7 +63,7 @@ void main() {
 
     final user = Data3();
     final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data3.nameField).findDisplayNameOrNull(), 'Name');
+    expect(userPort.getFieldByName(Data3.nameField).findDisplayNameOrNull(userPort), 'Name');
   });
 
   test('Port for multiline fields.', () async {

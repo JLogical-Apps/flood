@@ -7,6 +7,6 @@ class HintPortFieldNodeModifier extends WrapperPortFieldNodeModifier<HintPortFie
 
   @override
   dynamic getHintOrNull(Port port, HintPortField portField) {
-    return portField.getHint();
+    return portField.getHint(port);
   }
 }
