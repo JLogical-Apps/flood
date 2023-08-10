@@ -23,7 +23,7 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
           value: StageValue<E, T>(value: initialValue, port: portValue ?? portMapper(initialValue)),
           error: error,
           validator: Validator((stageValue) async {
-            final port = stageValue.port;
+            final port = stageValue.value.port;
             if (port == null) {
               return null;
             }

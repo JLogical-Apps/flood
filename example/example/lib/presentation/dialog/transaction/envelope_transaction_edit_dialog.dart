@@ -18,7 +18,7 @@ class EnvelopeTransactionEditDialog extends StyledPortDialog<EnvelopeTransaction
       overrides: [
         PortGeneratorOverride.update(EnvelopeTransaction.nameField,
             portFieldUpdater: (portField) => portField.withDynamicFallback(
-                () => rawPort['transactionType'] == EnvelopeTransactionType.payment ? 'Payment' : 'Refund'))
+                (port) => rawPort['transactionType'] == EnvelopeTransactionType.payment ? 'Payment' : 'Refund'))
       ],
     );
     rawPort = Port.of({

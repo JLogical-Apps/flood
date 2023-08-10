@@ -11,7 +11,7 @@ class StringPortFieldBuilderModifier extends PortFieldBuilderModifier {
       fieldName: fieldName,
       labelText: portField.findDisplayNameOrNull(),
       maxLines: portField.findIsMultiline() ? 3 : 1,
-      hintText: portField.findHintOrNull()?.toString(),
+      hintText: portField.findHintOrNull(port)?.toString(),
     );
   }
 

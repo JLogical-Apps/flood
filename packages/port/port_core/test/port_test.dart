@@ -117,7 +117,7 @@ void main() {
       'name': PortField.string().withFallback('John'),
     });
 
-    expect(contactPort.getFieldByName('name').findHintOrNull(), 'John');
+    expect(contactPort.getFieldByName('name').findHintOrNull(contactPort), 'John');
     expect(
       await contactPort.submit(),
       isA<PortSubmitResult<Map<String, dynamic>>>().having((source) => source.data['name'], 'name', 'John'),

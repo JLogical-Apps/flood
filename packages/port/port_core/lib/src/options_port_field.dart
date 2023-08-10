@@ -1,4 +1,5 @@
 import 'package:port_core/src/port_field.dart';
+import 'package:port_core/src/port_field_validator_context.dart';
 import 'package:utils_core/utils_core.dart';
 
 class OptionsPortField<T, S> with IsPortFieldWrapper<T, S> {
@@ -18,6 +19,7 @@ class OptionsPortField<T, S> with IsPortFieldWrapper<T, S> {
   }
 
   @override
-  Validator<T, String> get validator =>
-      portField.validator + Validator((item) => options.contains(item) ? null : '[$item] is not a valid choice!');
+  Validator<PortFieldValidatorContext<T>, String> get validator =>
+      portField.validator +
+      Validator((context) => options.contains(context.value) ? null : '[${context.value}] is not a valid choice!');
 }

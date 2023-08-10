@@ -10,7 +10,7 @@ class DateTimePortFieldBuilderModifier extends PortFieldBuilderModifier {
     return StyledDateTimeFieldPortField(
       fieldName: fieldName,
       labelText: portField.findDisplayNameOrNull(),
-      hintText: portField.findHintOrNull()?.toString(),
+      hintText: portField.findHintOrNull(port)?.toString(),
     );
   }
 

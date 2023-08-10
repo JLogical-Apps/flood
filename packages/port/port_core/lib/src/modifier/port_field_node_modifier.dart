@@ -23,7 +23,7 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return null;
   }
 
-  dynamic getHintOrNull(T portField) {
+  dynamic getHintOrNull(Port port, T portField) {
     return null;
   }
 

@@ -91,7 +91,7 @@ class _PortImpl with IsPort<Map<String, dynamic>> {
       final name = portFieldByNameEntry.key;
       final portField = portFieldByNameEntry.value;
 
-      final error = await portField.validate((portField.value));
+      final error = await portField.validate(portField.createValidationContext(this));
       final newField = portField.copyWithError(error);
       setPortField(name: name, portField: newField);
 
@@ -105,7 +105,7 @@ class _PortImpl with IsPort<Map<String, dynamic>> {
     }
 
     final submitValueByNameEntries = await Future.wait(portFieldByName
-        .mapToIterable((name, portField) async => MapEntry(name, await portField.submit(portField.getOrNull()))));
+        .mapToIterable((name, portField) async => MapEntry(name, await portField.submit(this, portField.getOrNull()))));
     return PortSubmitResult(data: submitValueByNameEntries.toMap());
   }
 }

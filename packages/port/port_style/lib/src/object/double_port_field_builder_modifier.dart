@@ -10,7 +10,7 @@ class DoublePortFieldBuilderModifier extends PortFieldBuilderModifier {
     return StyledDoubleFieldPortField(
       fieldName: fieldName,
       labelText: portField.findDisplayNameOrNull(),
-      hintText: (portField.findHintOrNull() as Object?)?.as<double>()?.formatIntOrDouble(),
+      hintText: (portField.findHintOrNull(port) as Object?)?.as<double>()?.formatIntOrDouble(),
     );
   }
 

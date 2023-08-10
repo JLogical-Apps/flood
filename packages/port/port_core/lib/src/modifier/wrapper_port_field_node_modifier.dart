@@ -1,5 +1,6 @@
 import 'package:port_core/src/date_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
+import 'package:port_core/src/port.dart';
 import 'package:port_core/src/port_field.dart';
 import 'package:port_core/src/stage_port_field.dart';
 
@@ -19,8 +20,8 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   }
 
   @override
-  dynamic getHintOrNull(T portField) {
-    return modifierGetter(portField.portField)?.getHintOrNull(portField.portField);
+  dynamic getHintOrNull(Port port, T portField) {
+    return modifierGetter(portField.portField)?.getHintOrNull(port, portField.portField);
   }
 
   @override

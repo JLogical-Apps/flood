@@ -1,11 +1,12 @@
 import 'package:port_core/port_core.dart';
+import 'package:port_core/src/port_field_validator_context.dart';
 import 'package:utils_core/utils_core.dart';
 
 class ValidatorPortField<T, S> with IsPortFieldWrapper<T, S> {
   @override
   final PortField<T, S> portField;
 
-  final Validator<T, String> additionalValidator;
+  final Validator<PortFieldValidatorContext<T>, String> additionalValidator;
 
   ValidatorPortField({required this.portField, required this.additionalValidator});
 
@@ -18,5 +19,5 @@ class ValidatorPortField<T, S> with IsPortFieldWrapper<T, S> {
   }
 
   @override
-  Validator<T, String> get validator => portField.validator + additionalValidator;
+  Validator<PortFieldValidatorContext<T>, String> get validator => portField.validator + additionalValidator;
 }

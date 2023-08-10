@@ -116,14 +116,14 @@ void main() {
 
     final user = Data6();
     final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(), 'John');
-    expect(userPort.getFieldByName(Data6.lastNameField).findHintOrNull(), 'Doe');
-    expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(), 'John Doe');
-    expect(userPort.getFieldByName(Data6.errorField).findHintOrNull(), isNull);
+    expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(userPort), 'John');
+    expect(userPort.getFieldByName(Data6.lastNameField).findHintOrNull(userPort), 'Doe');
+    expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(userPort), 'John Doe');
+    expect(userPort.getFieldByName(Data6.errorField).findHintOrNull(userPort), isNull);
 
     userPort[Data6.firstNameField] = 'Jill';
-    expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(), 'John');
-    expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(), 'Jill Doe');
+    expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(userPort), 'John');
+    expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(userPort), 'Jill Doe');
   });
 
   test('Port for default fields.', () async {

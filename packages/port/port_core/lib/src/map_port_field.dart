@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:port_core/port_core.dart';
+import 'package:port_core/src/port_field_validator_context.dart';
 import 'package:utils_core/utils_core.dart';
 
 class MapPortField<T1, S1, T2, S2> with IsPortField<T2, S2> {
@@ -31,27 +32,33 @@ class MapPortField<T1, S1, T2, S2> with IsPortField<T2, S2> {
   get error => portField.error;
 
   @override
-  Future<String?> onValidate(T2 data) async {
+  Future<String?> onValidate(PortFieldValidatorContext<T2> data) async {
     return validator.onValidate(data);
   }
 
   @override
-  FutureOr<S2> submit(T2 value) async {
+  FutureOr<S2> submit(Port port, T2 value) async {
     final sourceValue = newToSourceMapper(value);
-    final sourceSubmit = await portField.submit(sourceValue);
+    final sourceSubmit = await portField.submit(port, sourceValue);
     return submitMapper(sourceSubmit);
   }
 
   @override
-  S2 submitRaw(T2 value) {
+  S2 submitRaw(Port port, T2 value) {
     final sourceValue = newToSourceMapper(value);
-    final sourceSubmit = portField.submitRaw(sourceValue);
+    final sourceSubmit = portField.submitRaw(port, sourceValue);
     return submitMapper(sourceSubmit);
   }
 
   @override
-  Validator<T2, String> get validator => portField.validator.map((data) => newToSourceMapper(data));
+  Validator<PortFieldValidatorContext<T2>, String> get validator =>
+      portField.validator.map<PortFieldValidatorContext<T2>>((context) => context.map<T1>((value) => newToSourceMapper(value)));
 
   @override
   T2 get value => sourceToNewMapper(portField.value);
+
+  @override
+  PortFieldValidatorContext<T2> createValidationContext(Port port) {
+    return portField.createValidationContext(port).map(sourceToNewMapper);
+  }
 }

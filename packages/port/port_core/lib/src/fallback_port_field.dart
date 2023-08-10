@@ -1,33 +1,35 @@
 import 'dart:async';
 
+import 'package:port_core/src/port.dart';
 import 'package:port_core/src/port_field.dart';
+import 'package:port_core/src/port_field_validator_context.dart';
 
 class FallbackPortField<T, S> with IsPortFieldWrapper<T, S> {
   @override
   final PortField<T, S> portField;
 
-  final T Function() fallbackGetter;
+  final T Function(Port port) fallbackGetter;
 
   FallbackPortField({required this.portField, required this.fallbackGetter});
 
-  T getFallback() {
-    return fallbackGetter();
+  T getFallback(Port port) {
+    return fallbackGetter(port);
   }
 
   @override
-  S submitRaw(T value) {
-    return (isEmpty(value) ? fallbackGetter() : value) as S;
+  S submitRaw(Port port, T value) {
+    return (isEmpty(value) ? fallbackGetter(port) : value) as S;
   }
 
   @override
-  FutureOr<S> submit(T value) {
-    return (isEmpty(value) ? fallbackGetter() : value) as S;
+  FutureOr<S> submit(Port port, T value) {
+    return (isEmpty(value) ? fallbackGetter(port) : value) as S;
   }
 
   @override
-  Future<String?> onValidate(T data) {
-    final dataToValidate = (isEmpty(data) ? fallbackGetter() : value);
-    return portField.onValidate(dataToValidate);
+  Future<String?> onValidate(PortFieldValidatorContext<T> data) {
+    final valueToValidate = (isEmpty(value) ? fallbackGetter(data.port) : value);
+    return portField.onValidate(data.withValue(valueToValidate));
   }
 
   @override
