@@ -22,31 +22,66 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
 
     final loadingState = useState<bool>(false);
 
+    final onPressed = component.onPressed?.mapIfNonNull(
+      (onPressed) => () async {
+        if (loadingState.value) {
+          return;
+        }
+
+        loadingState.value = true;
+        await onPressed();
+        loadingState.value = false;
+      },
+    );
+
+    if (label == null && icon != null) {
+      return IconButton(
+        icon: Stack(
+          children: [
+            Opacity(
+              opacity: loadingState.value ? 0 : 1,
+              child: icon,
+            ),
+            Positioned.fill(
+              child: Center(
+                child: Visibility(
+                  visible: loadingState.value,
+                  child: StyledLoadingIndicator(),
+                ),
+              ),
+            ),
+          ],
+        ),
+        onPressed: onPressed,
+      );
+    }
+
     return ElevatedButton(
       child: ColorPaletteProvider(
-          colorPalette: backgroundColorPalette,
-          child: Stack(
-            children: [
-              Opacity(
-                opacity: loadingState.value ? 0 : 1,
-                child: StyledList.row.shrink(
-                  itemPadding: EdgeInsets.all(2),
-                  children: [
-                    if (icon != null) SizedBox(child: icon),
-                    if (label != null) label,
-                  ],
+        colorPalette: backgroundColorPalette,
+        child: Stack(
+          children: [
+            Opacity(
+              opacity: loadingState.value ? 0 : 1,
+              child: StyledList.row.shrink(
+                itemPadding: EdgeInsets.all(2),
+                children: [
+                  if (icon != null) icon,
+                  if (label != null) label,
+                ],
+              ),
+            ),
+            Positioned.fill(
+              child: Center(
+                child: Visibility(
+                  visible: loadingState.value,
+                  child: StyledLoadingIndicator(),
                 ),
               ),
-              Positioned.fill(
-                child: Center(
-                  child: Visibility(
-                    visible: loadingState.value,
-                    child: StyledLoadingIndicator(),
-                  ),
-                ),
-              ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
       style: ButtonStyle(
         backgroundColor:
             MaterialStateProperty.all(backgroundColorPalette.withOpacity(component.onPressed == null ? 0.6 : 1)),
@@ -60,17 +95,7 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
         )),
         padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 4, vertical: 2)),
       ),
-      onPressed: component.onPressed?.mapIfNonNull(
-        (onPressed) => () async {
-          if (loadingState.value) {
-            return;
-          }
-
-          loadingState.value = true;
-          await onPressed();
-          loadingState.value = false;
-        },
-      ),
+      onPressed: onPressed,
     );
   }
 
@@ -126,6 +151,22 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
           StyledButton.strong(
             labelText: 'Strong',
             iconData: Icons.add,
+            onPressed: () => Future.delayed(Duration(seconds: 1)),
+          )
+        ],
+      ))
+      ..add(StyledList.row.withScrollbar(
+        children: [
+          StyledButton.subtle(
+            iconData: Icons.face,
+            onPressed: () => Future.delayed(Duration(seconds: 1)),
+          ),
+          StyledButton(
+            iconData: Icons.face,
+            onPressed: () => Future.delayed(Duration(seconds: 1)),
+          ),
+          StyledButton.strong(
+            iconData: Icons.face,
             onPressed: () => Future.delayed(Duration(seconds: 1)),
           )
         ],

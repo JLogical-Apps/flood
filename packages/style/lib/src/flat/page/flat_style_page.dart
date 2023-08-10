@@ -17,6 +17,7 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
+          ...component.actionWidgets,
           if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
         ],
       ),

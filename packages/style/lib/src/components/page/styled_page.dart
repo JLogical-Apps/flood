@@ -8,6 +8,7 @@ class StyledPage extends StyleComponent {
 
   final Widget body;
 
+  final List<Widget> actionWidgets;
   final List<ActionItem> actions;
 
   final EdgeInsets innerPadding;
@@ -16,6 +17,7 @@ class StyledPage extends StyleComponent {
     this.title,
     this.titleText,
     required this.body,
+    this.actionWidgets = const [],
     this.actions = const [],
     this.innerPadding = const EdgeInsets.all(4),
   });
