@@ -258,9 +258,9 @@ extension StringPortFieldExtensions<S> on PortField<String, S> {
 
   PortField<String, S> isPassword([bool isPassword = true]) => SecretPortField(portField: this, isSecret: isPassword);
 
-  PortField<String, S> isConfirmPassword({required String emailField}) =>
+  PortField<String, S> isConfirmPassword({required String passwordField}) =>
       SecretPortField(portField: this).withValidator(Validator((context) {
-        if (context.port[emailField] != context.value) {
+        if (context.port[passwordField] != context.value) {
           return 'Does not match password!';
         }
 
