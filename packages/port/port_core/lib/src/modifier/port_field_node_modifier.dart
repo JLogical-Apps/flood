@@ -9,6 +9,7 @@ import 'package:port_core/src/modifier/hint_port_field_modifier.dart';
 import 'package:port_core/src/modifier/map_port_field_node_modifier.dart';
 import 'package:port_core/src/modifier/multiline_port_field_modifier.dart';
 import 'package:port_core/src/modifier/options_port_field_modifier.dart';
+import 'package:port_core/src/modifier/secret_port_field_modifier.dart';
 import 'package:port_core/src/modifier/stage_port_field_modifier.dart';
 import 'package:port_core/src/modifier/wrapper_port_field_node_modifier.dart';
 import 'package:utils_core/utils_core.dart';
@@ -61,6 +62,7 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     DatePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     DisplayNamePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     MultilinePortFieldNodeModifier(modifierGetter: getModifierOrNull),
+    SecretPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     CurrencyPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     ColorPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     FallbackPortFieldNodeModifier(modifierGetter: getModifierOrNull),
