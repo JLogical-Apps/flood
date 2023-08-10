@@ -194,6 +194,19 @@ void main() {
     data.emailProperty.set('test@test.com');
     expect(await data.validate(null), isNull);
   });
+
+  test('email property', () async {
+    dropContext.register<Data12>(Data12.new, name: 'Data12');
+
+    final data = Data12();
+    expect(await data.validate(null), isNotNull);
+
+    data.emailProperty.set('asdf');
+    expect(await data.validate(null), isNotNull);
+
+    data.emailProperty.set('test@test.com');
+    expect(await data.validate(null), isNull);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -277,4 +290,11 @@ class Data11 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [amountProperty, emailProperty];
+}
+
+class Data12 extends ValueObject {
+  late final emailProperty = field<String>(name: 'email').isEmail().isNotBlank();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [emailProperty];
 }

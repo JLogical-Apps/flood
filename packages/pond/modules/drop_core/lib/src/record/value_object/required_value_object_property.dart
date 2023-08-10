@@ -4,6 +4,7 @@ import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:utils_core/utils_core.dart';
 
 class RequiredValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L, RequiredValueObjectProperty<T, S, L>> {
   final ValueObjectProperty<T?, S?, L, dynamic> property;
@@ -38,7 +39,7 @@ class RequiredValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L, R
       return 'Required property [$property]!';
     }
 
-    return null;
+    return property.validate(data);
   }
 
   @override

@@ -13,6 +13,7 @@ import 'package:drop_core/src/record/value_object/fallback_replacement_value_obj
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/hidden_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/is_email_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/is_not_blank_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/list_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/map_value_object_property.dart';
@@ -147,6 +148,10 @@ extension NullableStringValueObjectPropertyExtensions<G extends String?, S exten
     V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
   IsNotBlankValueObjectProperty<L> isNotBlank() {
     return IsNotBlankValueObjectProperty<L>(property: this);
+  }
+
+  IsEmailValueObjectProperty<G, S, L> isEmail() {
+    return IsEmailValueObjectProperty<G, S, L>(property: this);
   }
 
   MultilineValueObjectProperty<G, S, L> multiline([bool isMultiline = true]) {

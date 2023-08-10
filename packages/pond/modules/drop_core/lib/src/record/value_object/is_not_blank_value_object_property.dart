@@ -27,7 +27,7 @@ class IsNotBlankValueObjectProperty<L> with IsValueObjectProperty<String, String
       return 'Cannot be blank! [$property]';
     }
 
-    return null;
+    return property.validate(data);
   }
 
   @override
