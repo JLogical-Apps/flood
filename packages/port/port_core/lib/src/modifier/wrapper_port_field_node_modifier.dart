@@ -30,6 +30,11 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   }
 
   @override
+  bool isSecret(T portField) {
+    return modifierGetter(portField.portField)?.isSecret(portField.portField) ?? false;
+  }
+
+  @override
   bool isCurrency(T portField) {
     return modifierGetter(portField.portField)?.isCurrency(portField.portField) ?? false;
   }

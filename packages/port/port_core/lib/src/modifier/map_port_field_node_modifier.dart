@@ -24,6 +24,11 @@ class MapPortFieldNodeModifier extends PortFieldNodeModifier<MapPortField> {
   }
 
   @override
+  bool isSecret(MapPortField portField) {
+    return modifierGetter(portField.portField)?.isSecret(portField.portField) ?? false;
+  }
+
+  @override
   bool isCurrency(MapPortField portField) {
     return modifierGetter(portField.portField)?.isCurrency(portField.portField) ?? false;
   }

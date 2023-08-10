@@ -10,6 +10,7 @@ import 'package:port_core/src/map_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
 import 'package:port_core/src/multiline_port_field.dart';
 import 'package:port_core/src/port_field_validator_context.dart';
+import 'package:port_core/src/secret_port_field.dart';
 import 'package:port_core/src/validator_port_field.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -178,6 +179,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
     return PortFieldNodeModifier.getModifierOrNull(this)?.isMultiline(this) ?? false;
   }
 
+  bool findIsSecret() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.isSecret(this) ?? false;
+  }
+
   bool findIsCurrency() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.isCurrency(this) ?? false;
   }
@@ -248,6 +253,19 @@ extension StringPortFieldExtensions<S> on PortField<String, S> {
   PortField<String, S> isNotBlank() => withValidator(Validator.isNotBlank().asNonNullable().forPortField());
 
   PortField<String, S> isEmail() => withValidator(Validator.isEmail().asNonNullable().forPortField());
+
+  PortField<String, S> isSecret([bool isPassword = true]) => SecretPortField(portField: this, isSecret: isPassword);
+
+  PortField<String, S> isPassword([bool isPassword = true]) => SecretPortField(portField: this, isSecret: isPassword);
+
+  PortField<String, S> isConfirmPassword({required String emailField}) =>
+      SecretPortField(portField: this).withValidator(Validator((context) {
+        if (context.port[emailField] != context.value) {
+          return 'Does not match password!';
+        }
+
+        return null;
+      }));
 
   PortField<String, S> multiline([bool isMultiline = true]) =>
       MultilinePortField(portField: this, isMultiline: isMultiline);
