@@ -14,13 +14,16 @@ Future<CorePondContext> getCorePondContext({
 
   final corePondContext = CorePondContext();
   await corePondContext.register(TypeCoreComponent());
-  await corePondContext.register(DropCoreComponent(repositoryImplementations: repositoryImplementations));
+  await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
+  await corePondContext.register(AuthCoreComponent.adapting());
+  await corePondContext.register(DropCoreComponent(
+    repositoryImplementations: repositoryImplementations,
+    authenticatedUserIdX: corePondContext.locate<AuthCoreComponent>().authenticatedUserIdX,
+  ));
   await corePondContext.register(LogCoreComponent.console());
   await corePondContext.register(
       ActionCoreComponent(actionWrapper: <P, R>(Action<P, R> action) => action.log(context: corePondContext)));
-  await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
   await corePondContext.register(PortDropCoreComponent());
-  await corePondContext.register(AuthCoreComponent.adapting());
   await corePondContext.register(UserRepository());
   await corePondContext.register(BudgetRepository());
   await corePondContext.register(EnvelopeRepository());
@@ -30,7 +33,13 @@ Future<CorePondContext> getCorePondContext({
   return corePondContext;
 }
 
-Future<CorePondContext> getTestingCorePondContext() => getCorePondContext(
-      environmentConfig: EnvironmentConfig.static.testing(),
-      repositoryImplementations: [],
-    );
+Future<CorePondContext> getTestingCorePondContext() async {
+  final corePondContext = await getCorePondContext(
+    environmentConfig: EnvironmentConfig.static.testing(),
+    repositoryImplementations: [],
+  );
+
+  await corePondContext.locate<AuthCoreComponent>().signup('asdf@asdf.com', 'mypassword');
+
+  return corePondContext;
+}
