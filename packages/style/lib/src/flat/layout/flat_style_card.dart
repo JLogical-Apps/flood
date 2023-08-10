@@ -12,6 +12,8 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
     final leading = component.leadingIcon?.mapIfNonNull((icon) => StyledIcon(icon)) ?? component.leading;
     final trailing = component.trailingIcon?.mapIfNonNull((icon) => StyledIcon(icon)) ?? component.trailing;
 
+    final hasHeader = leading != null || title != null || body != null || trailing != null;
+
     return StyledContainer(
       color: component.color,
       width: component.width,
@@ -32,7 +34,7 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
         padding: EdgeInsets.all(4),
         child: StyledList.column(
           children: [
-            if (leading != null || title != null || body != null)
+            if (hasHeader)
               Padding(
                 padding: const EdgeInsets.only(top: 2),
                 child: StyledList.row(
@@ -63,8 +65,8 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
                   ],
                 ),
               ),
+            if (hasHeader && component.children.isNotEmpty) StyledDivider.subtle(),
             if (component.children.isNotEmpty) ...[
-              StyledDivider.subtle(),
               Padding(
                 padding: EdgeInsets.all(4),
                 child: StyledList.column(
