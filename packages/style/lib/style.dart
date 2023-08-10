@@ -23,6 +23,7 @@ export 'src/components/page/styled_page.dart';
 export 'src/components/text/styled_markdown.dart';
 export 'src/components/text/styled_text.dart';
 export 'src/components/text/styled_text_span.dart';
+export 'src/emphasis.dart';
 export 'src/flat/flat_style.dart';
 export 'src/page/styleguide_widget.dart';
 export 'src/style.dart';
