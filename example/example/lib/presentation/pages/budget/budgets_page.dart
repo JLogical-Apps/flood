@@ -13,8 +13,7 @@ class BudgetsPage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
-    final loggedInUserIdModel =
-        useFutureModel(() => context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId());
+    final loggedInUserIdModel = useLoggedInUserIdModel();
     final loggedInUserModel = useNullableQueryModel(useMemoized(() => loggedInUserIdModel.map((loggedInUserId) =>
         loggedInUserId?.mapIfNonNull((loggedInUserId) => Query.getByIdOrNull<UserEntity>(loggedInUserId)))));
     final budgetsModel = useQueryModel(useMemoized(() => loggedInUserIdModel
