@@ -15,7 +15,7 @@ import 'package:utils_core/utils_core.dart';
 
 typedef SimplePortField<T> = PortField<T, T>;
 
-abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext<T>, String> {
+abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext, String> {
   T get value;
 
   dynamic get error;
@@ -35,7 +35,7 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
   factory PortField({
     required T value,
     dynamic error,
-    Validator<PortFieldValidatorContext<T>, String>? validator,
+    Validator<PortFieldValidatorContext, String>? validator,
     S Function(T value)? submitRawMapper,
     FutureOr<S> Function(T value)? submitMapper,
   }) =>
@@ -93,16 +93,15 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
   static PortField<Port<T>, T> port<T>({required Port<T> port}) {
     return PortField(
       value: port,
-      validator: Validator((context) async {
-        final port = context.value;
-        final result = await port.submit();
-        if (!result.isValid) {
-          return 'Embedded port [$port] is not valid!';
-        }
-        return null;
-      }),
       submitMapper: (port) async => (await port.submit()).data,
-    );
+    ).withValidator(Validator((context) async {
+      final port = context.value;
+      final result = await port.submit();
+      if (!result.isValid) {
+        return 'Embedded port [$port] is not valid!';
+      }
+      return null;
+    }));
   }
 }
 
@@ -136,7 +135,7 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
         submitMapper: (submit) => submit as S2,
       );
 
-  PortField<T, S> isNotNull() => withValidator(this + Validator.isNotNull<T>().forPortField());
+  PortField<T, S> isNotNull() => withValidator(Validator.isNotNull<T>().forPortField());
 
   PortField<T, S> withDisplayName(String displayName) =>
       DisplayNamePortField<T, S>(portField: this, displayNameGetter: () => displayName);
@@ -196,7 +195,7 @@ mixin IsPortField<T, S> implements PortField<T, S> {
   Type get submitType => S;
 }
 
-class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldValidatorContext<T>, String> {
+class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldValidatorContext, String> {
   @override
   final T value;
 
@@ -204,7 +203,7 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
   final dynamic error;
 
   @override
-  final Validator<PortFieldValidatorContext<T>, String> validator;
+  final Validator<PortFieldValidatorContext, String> validator;
 
   final S Function(T value)? submitRawMapper;
 
@@ -284,7 +283,7 @@ mixin IsPortFieldWrapper<T, S> implements PortFieldWrapper<T, S> {
   S submitRaw(Port port, T value) => portField.submitRaw(port, value);
 
   @override
-  Validator<PortFieldValidatorContext<T>, String> get validator => portField.validator;
+  Validator<PortFieldValidatorContext, String> get validator => portField.validator;
 
   @override
   Future<String?> onValidate(data) {

@@ -27,7 +27,7 @@ class FallbackPortField<T, S> with IsPortFieldWrapper<T, S> {
   }
 
   @override
-  Future<String?> onValidate(PortFieldValidatorContext<T> data) {
+  Future<String?> onValidate(PortFieldValidatorContext data) {
     final valueToValidate = (isEmpty(value) ? fallbackGetter(data.port) : value);
     return portField.onValidate(data.withValue(valueToValidate));
   }

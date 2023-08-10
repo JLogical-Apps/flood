@@ -19,7 +19,7 @@ class OptionsPortField<T, S> with IsPortFieldWrapper<T, S> {
   }
 
   @override
-  Validator<PortFieldValidatorContext<T>, String> get validator =>
+  Validator<PortFieldValidatorContext, String> get validator =>
       portField.validator +
       Validator((context) => options.contains(context.value) ? null : '[${context.value}] is not a valid choice!');
 }
