@@ -178,7 +178,7 @@ class PondApp extends HookWidget {
             VWidget.builder(
               path: VRouterSegmentModifier.getVRouterPath(page),
               builder: (context, state) {
-                final path = state.path!;
+                final path = state.url!;
                 if (page.matches(path)) {
                   return page.fromPath(path);
                 }
