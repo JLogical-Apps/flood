@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:style/src/components/input/styled_text_field.dart';
-import 'package:style/src/style_component.dart';
 
 class StyledReadonlyTextField extends StatelessWidget {
   final String? text;
