@@ -178,6 +178,24 @@ void main() {
       isA<DatePortField>().having((f) => f.isDate, 'isDate', true).having((f) => f.isTime, 'isTime', true),
     );
   });
+
+  test('Port for email field.', () async {
+    corePondContext.locate<TypeCoreComponent>().register(Data10.new, name: 'Data10');
+
+    final user = Data10();
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+
+    var result = await userPort.submit();
+    expect(result.isValid, isFalse);
+
+    userPort[Data10.emailField] = 'asdf';
+    result = await userPort.submit();
+    expect(result.isValid, isFalse);
+
+    userPort[Data10.emailField] = 'asdf@asdf.com';
+    result = await userPort.submit();
+    expect(result.isValid, isTrue);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -290,4 +308,12 @@ class Data9 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [dateProperty, createdProperty];
+}
+
+class Data10 extends ValueObject {
+  static const emailField = 'email';
+  late final emailProperty = field<String>(name: emailField).withDisplayName('Paypal Email').isEmail().isNotBlank();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [emailProperty];
 }

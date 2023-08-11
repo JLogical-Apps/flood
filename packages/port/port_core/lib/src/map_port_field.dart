@@ -52,13 +52,13 @@ class MapPortField<T1, S1, T2, S2> with IsPortField<T2, S2> {
 
   @override
   Validator<PortFieldValidatorContext, String> get validator =>
-      portField.validator.map<PortFieldValidatorContext<T2>>((context) => context.map<T1>((value) => newToSourceMapper(value)));
+      portField.validator.map((context) => context.map<T1>((value) => newToSourceMapper(value)));
 
   @override
   T2 get value => sourceToNewMapper(portField.value);
 
   @override
-  PortFieldValidatorContext<T2> createValidationContext(Port port) {
-    return portField.createValidationContext(port).map(sourceToNewMapper);
+  PortFieldValidatorContext createValidationContext(Port port) {
+    return portField.createValidationContext(port).map((value) => sourceToNewMapper(value));
   }
 }

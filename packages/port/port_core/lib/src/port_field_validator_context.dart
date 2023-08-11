@@ -1,16 +1,16 @@
 import 'package:port_core/port_core.dart';
 
-class PortFieldValidatorContext<T> {
-  final T value;
+class PortFieldValidatorContext {
+  final dynamic value;
   final Port port;
 
   PortFieldValidatorContext({required this.value, required this.port});
 
-  PortFieldValidatorContext<T> withValue(T value) {
+  PortFieldValidatorContext withValue(dynamic value) {
     return PortFieldValidatorContext(value: value, port: port);
   }
 
-  PortFieldValidatorContext<T2> map<T2>(T2 Function(T value) mapper) {
-    return PortFieldValidatorContext<T2>(value: mapper(value), port: port);
+  PortFieldValidatorContext map<T2>(dynamic Function(dynamic value) mapper) {
+    return PortFieldValidatorContext(value: mapper(value), port: port);
   }
 }

@@ -31,7 +31,7 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
 
   Type get submitType;
 
-  PortFieldValidatorContext<T> createValidationContext(Port port);
+  PortFieldValidatorContext createValidationContext(Port port);
 
   factory PortField({
     required T value,
@@ -113,7 +113,7 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
 
   PortField<T, S> copyWithError(dynamic error) => copyWith(value: value, error: error);
 
-  PortField<T, S> withValidator(Validator<PortFieldValidatorContext<T>, String> validator) => ValidatorPortField(
+  PortField<T, S> withValidator(Validator<PortFieldValidatorContext, String> validator) => ValidatorPortField(
         portField: this,
         additionalValidator: validator,
       );
@@ -244,7 +244,7 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
   }
 
   @override
-  PortFieldValidatorContext<T> createValidationContext(Port port) {
+  PortFieldValidatorContext createValidationContext(Port port) {
     return PortFieldValidatorContext(value: value, port: port);
   }
 }
@@ -315,13 +315,13 @@ mixin IsPortFieldWrapper<T, S> implements PortFieldWrapper<T, S> {
   Type get submitType => portField.submitType;
 
   @override
-  PortFieldValidatorContext<T> createValidationContext(Port port) {
+  PortFieldValidatorContext createValidationContext(Port port) {
     return PortFieldValidatorContext(value: value, port: port);
   }
 }
 
 extension PortFieldValidatorExtensions<T> on Validator<T, String> {
-  Validator<PortFieldValidatorContext<T>, String> forPortField() {
+  Validator<PortFieldValidatorContext, String> forPortField() {
     return map((context) => context.value);
   }
 }
