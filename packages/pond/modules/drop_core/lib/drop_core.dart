@@ -17,6 +17,7 @@ export 'src/record/value_object/fallback_replacement_value_object_property.dart'
 export 'src/record/value_object/fallback_value_object_property.dart';
 export 'src/record/value_object/field_value_object_property.dart';
 export 'src/record/value_object/hidden_value_object_property.dart';
+export 'src/record/value_object/is_email_value_object_property.dart';
 export 'src/record/value_object/is_not_blank_value_object_property.dart';
 export 'src/record/value_object/multiline_value_object_property.dart';
 export 'src/record/value_object/null_if_blank_value_object_property.dart';
