@@ -12,7 +12,6 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
     final colorPalette = context.colorPalette();
     return WillPopScope(
       onWillPop: () async {
-        print('POPPING');
         return await component.shouldPop?.call() ?? true;
       },
       child: Scaffold(

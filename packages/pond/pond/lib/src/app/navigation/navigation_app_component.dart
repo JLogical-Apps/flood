@@ -35,7 +35,7 @@ class NavigationAppComponent with IsAppPondComponent {
 
     SystemNavigator.routeInformationUpdated(location: location);
 
-    return PondApp.navigatorKey.currentState!.push(MaterialPageRoute(
+    final result = await PondApp.navigatorKey.currentState!.push(MaterialPageRoute(
       builder: (_) => PondApp.wrapPage(
         appContext: context.appPondContext,
         child: newPage,
@@ -43,38 +43,33 @@ class NavigationAppComponent with IsAppPondComponent {
       ),
       settings: RouteSettings(name: location),
     ));
+
+    _updateSystemPath();
+
+    return result;
   }
 
   Future<T> pushReplacement<T>(BuildContext context, AppPage page) async {
     final location = page.uri.toString();
     SystemNavigator.routeInformationUpdated(location: location);
 
-    return await PondApp.navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+    final result = await PondApp.navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
       builder: (_) => page,
       settings: RouteSettings(name: location),
     ));
+
+    return result;
   }
 
   void pop<T>([T? result]) {
     PondApp.navigatorKey.currentState!.pop(result);
-    final path = PondApp.navigatorKey.currentState!.currentPath!;
-    SystemNavigator.routeInformationUpdated(location: path);
+    _updateSystemPath();
   }
 
-  @override
-  Widget wrapPage(AppPondContext context, Widget page, AppPondPageContext pageContext) {
-    return WillPopScope(
-      child: page,
-      onWillPop: () async {
-        PondApp.navigatorKey.currentState!.pop();
-        final path = PondApp.navigatorKey.currentState!.currentPath;
-        if (path == null) {
-          return false;
-        }
-
-        SystemNavigator.routeInformationUpdated(location: path);
-        return false;
-      },
-    );
+  void _updateSystemPath() {
+    final path = PondApp.navigatorKey.currentState!.currentPath;
+    if (path != null) {
+      SystemNavigator.routeInformationUpdated(location: path);
+    }
   }
 }
