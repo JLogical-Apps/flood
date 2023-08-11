@@ -12,6 +12,7 @@ import 'package:port_drop_core/src/behavior_modifiers/fallback_replacement_prope
 import 'package:port_drop_core/src/behavior_modifiers/field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/hidden_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/int_field_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/is_email_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/is_not_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/null_if_blank_property_behavior_modifier.dart';
@@ -57,6 +58,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       DefaultPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       DisplayNamePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       MultilinePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      IsEmailPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       NullIfBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       CurrencyPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       ColorPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
