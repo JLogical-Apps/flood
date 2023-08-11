@@ -10,21 +10,27 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
   @override
   Widget renderTyped(BuildContext context, StyledPage component) {
     final colorPalette = context.colorPalette();
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: component.title ?? component.titleText?.mapIfNonNull(StyledText.h2.strong),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          ...component.actionWidgets,
-          if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
-        ],
-      ),
-      backgroundColor: colorPalette.baseBackground,
-      body: Padding(
-        padding: component.innerPadding,
-        child: component.body,
+    return WillPopScope(
+      onWillPop: () async {
+        print('POPPING');
+        return await component.shouldPop?.call() ?? true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: component.title ?? component.titleText?.mapIfNonNull(StyledText.h2.strong),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          actions: [
+            ...component.actionWidgets,
+            if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
+          ],
+        ),
+        backgroundColor: colorPalette.baseBackground,
+        body: Padding(
+          padding: component.innerPadding,
+          child: component.body,
+        ),
       ),
     );
   }

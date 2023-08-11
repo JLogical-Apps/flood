@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:style/src/action/action_item.dart';
 import 'package:style/src/style_component.dart';
@@ -11,6 +13,8 @@ class StyledPage extends StyleComponent {
   final List<Widget> actionWidgets;
   final List<ActionItem> actions;
 
+  final FutureOr<bool> Function()? shouldPop;
+
   final EdgeInsets innerPadding;
 
   StyledPage({
@@ -19,6 +23,7 @@ class StyledPage extends StyleComponent {
     required this.body,
     this.actionWidgets = const [],
     this.actions = const [],
+    this.shouldPop,
     this.innerPadding = const EdgeInsets.all(4),
   });
 }
