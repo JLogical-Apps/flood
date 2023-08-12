@@ -34,20 +34,20 @@ class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositor
 
   @override
   Future<State> onUpdate(State state) {
-    return context.run(updateAction, state);
+    return context.run(_updateAction, state);
   }
 
   @override
   Future<State> onDelete(State state) {
-    return context.run(deleteAction, state);
+    return context.run(_deleteAction, state);
   }
 
-  late final updateAction = Action(
+  late final _updateAction = Action(
     name: 'Update',
     runner: (State state) => super.onUpdate(state),
   );
 
-  late final deleteAction = Action(
+  late final _deleteAction = Action(
     name: 'Delete',
     runner: (State state) => super.onDelete(state),
   );
