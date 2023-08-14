@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:model_core/src/async_map_model.dart';
 import 'package:model_core/src/flat_map_model.dart';
 import 'package:model_core/src/map_model.dart';
+import 'package:model_core/src/union_model.dart';
 import 'package:model_core/src/value_stream_model.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
@@ -24,6 +25,10 @@ abstract class Model<T> {
         stateX: stateX,
         loader: onLoad,
       );
+
+  static Model<List> union(List<Model> models) {
+    return UnionModel(models: models);
+  }
 }
 
 extension ModelExtensions<T> on Model<T> {

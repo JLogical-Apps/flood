@@ -125,4 +125,21 @@ void main() {
 
     expect(valueStreamModel.getOrNull(), 1);
   });
+
+  test('joining models together', () async {
+    final model1 = Model.value(1);
+    final model2 = Model(loader: () => 2);
+
+    final joined = Model.union([model1, model2]);
+
+    expectLater(
+        joined.stateX.distinct(),
+        emitsInOrder([
+          FutureValue.empty<List>(),
+          FutureValue.loading<List>(),
+          FutureValue.loaded<List>([1, 2]),
+        ]));
+
+    expect(await joined.getOrLoad(), [1, 2]);
+  });
 }
