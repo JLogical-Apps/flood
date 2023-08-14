@@ -4,7 +4,6 @@ import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/pages/budget/budget_page.dart';
 import 'package:example_core/example_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class BudgetsPage extends AppPage {
@@ -13,11 +12,9 @@ class BudgetsPage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
-    final loggedInUserIdModel = useLoggedInUserIdModel();
-    final loggedInUserModel = useNullableQueryModel(useMemoized(() => loggedInUserIdModel.map((loggedInUserId) =>
-        loggedInUserId?.mapIfNonNull((loggedInUserId) => Query.getByIdOrNull<UserEntity>(loggedInUserId)))));
-    final budgetsModel = useQueryModel(useMemoized(() => loggedInUserIdModel
-        .map((loggedInUserId) => Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all())));
+    final loggedInUserId = useLoggedInUserId()!;
+    final loggedInUserModel = useQuery(Query.getByIdOrNull<UserEntity>(loggedInUserId));
+    final budgetsModel = useQuery(Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all());
     return StyledPage(
       titleText: 'Home',
       body: StyledList.column.scrollable.withScrollbar(
@@ -55,8 +52,7 @@ class BudgetsPage extends AppPage {
                     onPressed: () async {
                       await context.showStyledDialog(StyledPortDialog(
                         titleText: 'Create New Budget',
-                        port: (Budget()..ownerProperty.set(loggedInUserIdModel.getOrNull()!))
-                            .asPort(context.corePondContext),
+                        port: (Budget()..ownerProperty.set(loggedInUserId)).asPort(context.corePondContext),
                         onAccept: (Budget result) async {
                           await context.dropCoreComponent.update(BudgetEntity()..value = result);
                         },

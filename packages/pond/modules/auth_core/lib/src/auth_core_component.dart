@@ -19,6 +19,16 @@ class AuthCoreComponent with IsAuthServiceWrapper, IsCorePondComponentWrapper {
   @override
   CorePondComponent get corePondComponent => authService;
 
+  @override
+  List<CorePondComponentBehavior> get behaviors =>
+      corePondComponent.behaviors +
+      [
+        CorePondComponentBehavior(onLoad: (context, _) async {
+          final initialLoggedInUserId = await getLoggedInUserId();
+          _authenticatedUserIdX.value = initialLoggedInUserId;
+        }),
+      ];
+
   late final loginAction = Action(
     name: 'Login',
     runner: (LoginParameters parameters) async {
