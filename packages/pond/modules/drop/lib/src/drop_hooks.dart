@@ -126,6 +126,10 @@ List<Model<T>> useQueries<E extends Entity, T>(List<QueryRequest<E, T>> queryReq
   return queryModels;
 }
 
+List<Model<T>> useQueriesOrNull<E extends Entity, T>(List<QueryRequest<E, T>>? queryRequests) {
+  return useQueries<E, T>(queryRequests ?? []);
+}
+
 Model<E?> useEntityOrNull<E extends Entity>(String id) {
   return useQuery(Query.getByIdOrNull<E>(id));
 }
