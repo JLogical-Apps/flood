@@ -12,13 +12,13 @@ DropCoreContext useDropCoreContext() {
   return useMemoized(() => useAppPondContext().find<DropCoreComponent>());
 }
 
-Model<T>? useQueryOrNull<T>(QueryRequest<Entity, T>? queryRequest) {
+Model<T?> useQueryOrNull<T>(QueryRequest<Entity, T>? queryRequest) {
   final context = useContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
   final dropCoreContext = useDropCoreContext();
 
   final queryModel = useMemoized(
-    () => queryRequest?.mapIfNonNull((queryRequest) => queryRequest.toModel(dropCoreContext)),
+    () => queryRequest?.mapIfNonNull((queryRequest) => queryRequest.toModel(dropCoreContext)) ?? Model<T?>.value(null),
     [queryRequest],
   );
 
@@ -40,7 +40,7 @@ Model<T>? useQueryOrNull<T>(QueryRequest<Entity, T>? queryRequest) {
 }
 
 Model<T> useQuery<T>(QueryRequest<Entity, T> queryRequest) {
-  return useQueryOrNull(queryRequest)!;
+  return useQueryOrNull(queryRequest).map((value) => value!);
 }
 
 Model<T?> useNullableQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>?> queryRequestModel) {
