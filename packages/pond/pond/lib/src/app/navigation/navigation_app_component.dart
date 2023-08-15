@@ -33,6 +33,11 @@ class NavigationAppComponent with IsAppPondComponent {
     final page = context.appPondContext.getPages().firstWhere((page) => page.matches(location));
     final newPage = page.fromPath(location);
 
+    final redirectUri = await newPage.redirectTo(context, Uri.parse(location));
+    if (redirectUri != null) {
+      return pushLocation(context, redirectUri.toString());
+    }
+
     SystemNavigator.routeInformationUpdated(location: location);
 
     final result = await PondApp.navigatorKey.currentState!.push(MaterialPageRoute(
