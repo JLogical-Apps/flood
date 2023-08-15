@@ -3,7 +3,7 @@ import 'package:ops/src/permission/permission_text_modifier.dart';
 
 class AuthenticatedPermissionTextModifier extends PermissionTextModifier<AuthenticatedPermission> {
   @override
-  String getText(AuthenticatedPermission permission) {
+  String getText(DropCoreContext context, AuthenticatedPermission permission) {
     return 'request.auth != null';
   }
 }

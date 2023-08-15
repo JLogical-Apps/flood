@@ -20,4 +20,9 @@ abstract class RepositorySecurityModifier<R extends Repository> with IsTypedModi
   static RepositorySecurityModifier? getModifierOrNull(Repository repository) {
     return repositoryPathModifierResolver.resolveOrNull(repository);
   }
+
+  static RepositorySecurityModifier getModifier(Repository repository) {
+    return getModifierOrNull(repository) ??
+        (throw Exception('Could not find security modifier for repository [$repository]!'));
+  }
 }

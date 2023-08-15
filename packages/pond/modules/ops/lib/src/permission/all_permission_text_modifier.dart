@@ -3,7 +3,7 @@ import 'package:ops/src/permission/permission_text_modifier.dart';
 
 class AllPermissionTextModifier extends PermissionTextModifier<AllPermission> {
   @override
-  String getText(AllPermission permission) {
+  String getText(DropCoreContext context, AllPermission permission) {
     return 'true';
   }
 }

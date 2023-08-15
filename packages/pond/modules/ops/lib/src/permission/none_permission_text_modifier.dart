@@ -3,7 +3,7 @@ import 'package:ops/src/permission/permission_text_modifier.dart';
 
 class NonePermissionTextModifier extends PermissionTextModifier<NonePermission> {
   @override
-  String getText(NonePermission permission) {
+  String getText(DropCoreContext context, NonePermission permission) {
     return 'false';
   }
 }

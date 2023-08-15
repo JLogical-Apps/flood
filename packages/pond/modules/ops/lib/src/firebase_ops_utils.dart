@@ -137,7 +137,7 @@ class FirebaseOpsUtils {
     final repositories = context.dropCoreComponent.repositories;
 
     String getPermissionText(Permission permission) {
-      return PermissionTextModifier.getModifier(permission).getText(permission);
+      return PermissionTextModifier.getModifier(permission).getText(context.dropCoreComponent, permission);
     }
 
     final repositoryRules = repositories

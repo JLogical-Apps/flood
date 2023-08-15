@@ -11,5 +11,6 @@ class UserRepository with IsRepositoryWrapper {
         entityTypeName: 'UserEntity',
         valueObjectTypeName: 'User',
       )
-      .withSecurity(RepositorySecurity.authenticated());
+      .withSecurity(RepositorySecurity.authenticated()
+          .copyWith(delete: Permission.isAdmin(userEntityType: UserEntity, adminField: User.adminField)));
 }
