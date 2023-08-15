@@ -11,6 +11,7 @@ import 'package:drop_core/src/record/value_object/display_name_value_object_prop
 import 'package:drop_core/src/record/value_object/embedded_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/fallback_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/fallback_without_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/hidden_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/is_email_value_object_property.dart';
@@ -141,6 +142,10 @@ extension GetterNullableValueObjectPropertyExtensions<G, S, L, V extends ValueOb
     on ValueObjectProperty<G?, S, L, V> {
   FallbackValueObjectProperty<G, S, L> withFallback(G Function() fallback) {
     return FallbackValueObjectProperty(property: this, fallback: fallback);
+  }
+
+  FallbackWithoutReplacementValueObjectProperty<G, S, L> withFallbackWithoutReplacement(G Function() fallback) {
+    return FallbackWithoutReplacementValueObjectProperty(property: this, fallback: fallback);
   }
 }
 

@@ -158,6 +158,37 @@ void main() {
       returnsNormally,
     );
   });
+
+  test('security rules for unmodifiable fields.', () async {
+    final userRepository = UserRepository().withSecurity(RepositorySecurity(
+      read: Permission.all,
+      create: Permission.unmodifiable(User.adminField),
+      update: Permission.unmodifiable(User.adminField),
+      delete: Permission.isAdmin(userEntityType: UserEntity, adminField: User.adminField),
+    ));
+
+    final corePondContext = CorePondContext();
+    await corePondContext.register(TypeCoreComponent());
+    await corePondContext.register(ActionCoreComponent());
+    await corePondContext.register(DropCoreComponent(
+      authenticatedUserIdX: BehaviorSubject.seeded(null),
+    ));
+    await corePondContext.register(userRepository);
+
+    final userEntity = await corePondContext.dropCoreComponent.updateEntity(UserEntity()
+      ..id = 'admin'
+      ..set(User()));
+
+    expect(
+      () => userRepository.updateEntity(userEntity, (User user) => user..adminProperty.set(true)),
+      throwsA(isA<Exception>()),
+    );
+
+    expect(
+      () => userRepository.updateEntity(UserEntity()..set(User()..adminProperty.set(false))),
+      throwsA(isA<Exception>()),
+    );
+  });
 }
 
 Future<T> expectFailsWithoutAuth<T>(
@@ -225,7 +256,7 @@ class DocumentRepository with IsRepositoryWrapper {
 
 class User extends ValueObject {
   static const adminField = 'admin';
-  late final adminProperty = field<bool>(name: adminField).withFallback(() => false);
+  late final adminProperty = field<bool>(name: adminField).withFallbackWithoutReplacement(() => false);
 
   @override
   List<ValueObjectBehavior> get behaviors => [adminProperty];

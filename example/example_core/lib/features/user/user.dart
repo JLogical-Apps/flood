@@ -5,7 +5,7 @@ class User extends ValueObject {
   late final nameProperty = field<String>(name: nameField).isNotBlank();
 
   static const adminField = 'admin';
-  late final adminProperty = field<bool>(name: adminField).withFallback(() => false);
+  late final adminProperty = field<bool>(name: adminField).withFallbackWithoutReplacement(() => false);
 
   @override
   late final List<ValueObjectBehavior> behaviors = [
