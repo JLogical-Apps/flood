@@ -6,8 +6,8 @@ service cloud.firestore {
     }
     match /user/{id} {
       allow read: if request.auth != null;
-      allow create: if request.auth != null;
-      allow update: if request.auth != null;
+      allow create: if (request.auth != null) && (!request.resource.data.diff(resource == null ? {} : resource.data).affectedKeys().hasAny(['admin']));
+      allow update: if (request.auth != null) && (!request.resource.data.diff(resource == null ? {} : resource.data).affectedKeys().hasAny(['admin']));
       allow delete: if request.auth.uid != null && get(/databases/$(database)/documents/user/$(request.auth.uid)).data.admin == true;
     }
     match /budget/{id} {
