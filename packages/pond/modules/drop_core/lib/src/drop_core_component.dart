@@ -13,11 +13,13 @@ import 'package:utils_core/utils_core.dart';
 class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositoryListWrapper {
   final List<RepositoryImplementation> repositoryImplementations;
   final ValueStream<String?> authenticatedUserIdX;
-  final bool ignoreSecurity;
+
+  bool _ignoreSecurity = false;
+
+  bool get ignoreSecurity => _ignoreSecurity;
 
   DropCoreComponent({this.repositoryImplementations = const [], ValueStream<String?>? authenticatedUserIdX})
-      : authenticatedUserIdX = authenticatedUserIdX ?? BehaviorSubject.seeded(null),
-        ignoreSecurity = false;
+      : authenticatedUserIdX = authenticatedUserIdX ?? BehaviorSubject.seeded(null);
 
   @override
   List<CorePondComponentBehavior> get behaviors => [
@@ -26,6 +28,12 @@ class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositor
           context.locate<TypeCoreComponent>().registerAbstract<ValueObject>(name: 'ValueObject');
         })
       ];
+
+  Future<void> runWithoutSecurity(FutureOr Function() runner) async {
+    _ignoreSecurity = true;
+    await runner();
+    _ignoreSecurity = false;
+  }
 
   @override
   TypeContext get typeContext => context.locate<TypeCoreComponent>();
