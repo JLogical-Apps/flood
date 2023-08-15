@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:actions_core/actions_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,6 +16,7 @@ void main() {
 
     final corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
+    await corePondContext.register(ActionCoreComponent());
     await corePondContext.register(DropCoreComponent(
       authenticatedUserIdX: authenticatedUserIdX,
     ));
@@ -107,6 +109,55 @@ void main() {
       throwsA(isA<Exception>()),
     );
   });
+
+  test('security rules for admin users.', () async {
+    final documentRepository = DocumentRepository().withSecurity(RepositorySecurity.readWrite(
+      read: Permission.all,
+      write: Permission.isAdmin(userEntityType: UserEntity, adminField: User.adminField),
+    ));
+    final authenticatedUserIdX = BehaviorSubject<String?>.seeded('user1');
+
+    final corePondContext = CorePondContext();
+    await corePondContext.register(TypeCoreComponent());
+    await corePondContext.register(ActionCoreComponent());
+    await corePondContext.register(DropCoreComponent(
+      authenticatedUserIdX: authenticatedUserIdX,
+    ));
+    await corePondContext.register(documentRepository);
+    await corePondContext.register(UserRepository());
+
+    await corePondContext.dropCoreComponent.updateEntity(UserEntity()
+      ..id = 'admin'
+      ..set(User()..adminProperty.set(true)));
+
+    // Test create
+    expect(
+      () => documentRepository.updateEntity(DocumentEntity()..set(Document())),
+      throwsA(isA<Exception>()),
+    );
+
+    // Test read
+    expect(
+      () => documentRepository.executeQuery(Query.fromAll().all()),
+      returnsNormally,
+    );
+
+    // Allow previous [expect] to run before changing to admin user.
+    await Future.delayed(Duration(milliseconds: 1));
+    authenticatedUserIdX.value = 'admin';
+
+    // Test create
+    expect(
+      () => documentRepository.updateEntity(DocumentEntity()..set(Document())),
+      returnsNormally,
+    );
+
+    // Test read
+    expect(
+      () => documentRepository.executeQuery(Query.fromAll().all()),
+      returnsNormally,
+    );
+  });
 }
 
 Future<T> expectFailsWithoutAuth<T>(
@@ -154,6 +205,7 @@ Future<T> expectPassesWithoutAuth<T>(
   await completer.future;
 
   authenticatedUserIdX.value = 'user1';
+
   return await function();
 }
 
@@ -168,5 +220,25 @@ class DocumentRepository with IsRepositoryWrapper {
     Document.new,
     entityTypeName: 'DocumentEntity',
     valueObjectTypeName: 'Document',
+  );
+}
+
+class User extends ValueObject {
+  static const adminField = 'admin';
+  late final adminProperty = field<bool>(name: adminField).withFallback(() => false);
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [adminProperty];
+}
+
+class UserEntity extends Entity<User> {}
+
+class UserRepository with IsRepositoryWrapper {
+  @override
+  late Repository repository = Repository.memory().forType<UserEntity, User>(
+    UserEntity.new,
+    User.new,
+    entityTypeName: 'UserEntity',
+    valueObjectTypeName: 'User',
   );
 }

@@ -26,8 +26,20 @@ abstract class Query<E extends Entity> with EquatableMixin {
     return Query.from<E>().where(State.idField).isEqualTo(id).first();
   }
 
+  static QueryRequest<Entity, Entity?> getByIdOrNullRuntime(Type entityType, String id) {
+    return Query.fromRuntime(entityType).where(State.idField).isEqualTo(id).firstOrNull();
+  }
+
+  static QueryRequest<Entity, Entity> getByIdRuntime(Type entityType, String id) {
+    return Query.fromRuntime(entityType).where(State.idField).isEqualTo(id).first();
+  }
+
   static FromQuery<E> from<E extends Entity>() {
     return FromQuery<E>(entityType: E);
+  }
+
+  static FromQuery fromRuntime(Type entityType) {
+    return FromQuery(entityType: entityType);
   }
 
   static FromQuery<Entity> fromAll() {
