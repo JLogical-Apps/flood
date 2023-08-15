@@ -38,16 +38,20 @@ class SecurityQueryExecutor with IsRepositoryQueryExecutorWrapper {
 
   String? get authenticatedUserId => context.authenticatedUserIdX.value;
 
+  Future<bool> passesReadPermission() async {
+    if (context.ignoreSecurity) {
+      return true;
+    }
+
+    return await repositorySecurity.read.passes(context, authenticatedUserId: authenticatedUserId, stateChange: null);
+  }
+
   @override
   Future<T> onExecuteQuery<T>(
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) async {
-    if (!await repositorySecurity.read.passes(
-      context,
-      authenticatedUserId: authenticatedUserId,
-      stateChange: null,
-    )) {
+    if (!await passesReadPermission()) {
       throw Exception('Invalid permissions to read from [$securityRepository]!');
     }
 
@@ -61,11 +65,7 @@ class SecurityQueryExecutor with IsRepositoryQueryExecutorWrapper {
   }) {
     return queryExecutor.executeQueryX(queryRequest, onStateRetreived: onStateRetreived).asyncMapWithValue(
       (result) async {
-        if (!await repositorySecurity.read.passes(
-          context,
-          authenticatedUserId: authenticatedUserId,
-          stateChange: null,
-        )) {
+        if (!await passesReadPermission()) {
           throw Exception('Invalid permissions to read from [$securityRepository]!');
         }
 
@@ -95,19 +95,11 @@ class SecurityStateHandler with IsRepositoryStateHandlerWrapper {
     final stateChange = await getStateChange(state);
 
     if (state.isNew) {
-      if (!await repositorySecurity.create.passes(
-        context,
-        authenticatedUserId: authenticatedUserId,
-        stateChange: stateChange,
-      )) {
+      if (!await passesPermission(repositorySecurity.create, stateChange: stateChange)) {
         throw Exception('Invalid permissions to create [$state]!');
       }
     } else {
-      if (!await repositorySecurity.update.passes(
-        context,
-        authenticatedUserId: authenticatedUserId,
-        stateChange: stateChange,
-      )) {
+      if (!await passesPermission(repositorySecurity.update, stateChange: stateChange)) {
         throw Exception('Invalid permissions to update [$state]!');
       }
     }
@@ -117,11 +109,19 @@ class SecurityStateHandler with IsRepositoryStateHandlerWrapper {
 
   @override
   Future<State> onDelete(State state) async {
-    if (!await repositorySecurity.delete.passes(context, authenticatedUserId: authenticatedUserId, stateChange: null)) {
+    if (!await passesPermission(repositorySecurity.delete)) {
       throw Exception('Invalid permissions to delete [$state]!');
     }
 
     return await stateHandler.delete(state);
+  }
+
+  Future<bool> passesPermission(Permission permission, {StateChange? stateChange}) async {
+    if (context.ignoreSecurity) {
+      return true;
+    }
+
+    return await permission.passes(context, authenticatedUserId: authenticatedUserId, stateChange: stateChange);
   }
 
   Future<StateChange> getStateChange(State state) async {

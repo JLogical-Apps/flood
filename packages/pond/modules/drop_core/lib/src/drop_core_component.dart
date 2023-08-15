@@ -13,9 +13,11 @@ import 'package:utils_core/utils_core.dart';
 class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositoryListWrapper {
   final List<RepositoryImplementation> repositoryImplementations;
   final ValueStream<String?> authenticatedUserIdX;
+  final bool ignoreSecurity;
 
   DropCoreComponent({this.repositoryImplementations = const [], ValueStream<String?>? authenticatedUserIdX})
-      : authenticatedUserIdX = authenticatedUserIdX ?? BehaviorSubject.seeded(null);
+      : authenticatedUserIdX = authenticatedUserIdX ?? BehaviorSubject.seeded(null),
+        ignoreSecurity = false;
 
   @override
   List<CorePondComponentBehavior> get behaviors => [
