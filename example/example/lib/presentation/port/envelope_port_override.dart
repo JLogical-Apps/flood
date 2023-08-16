@@ -39,6 +39,14 @@ class EnvelopePortOverride with IsStyledObjectPortOverride<Envelope> {
             );
           },
         ),
+        Envelope.trayField: StyledOptionPortField(
+          fieldName: Envelope.trayField,
+          widgetMapper: (TrayEntity? trayEntity) {
+            final tray = trayEntity?.value;
+            return StyledText.body(tray?.nameProperty.value ?? 'None');
+          },
+          labelText: 'Tray',
+        ),
       },
     );
   }
