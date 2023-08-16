@@ -157,6 +157,10 @@ Model<E?> useEntityOrNull<E extends Entity>(String id) {
   return useQuery(Query.getByIdOrNull<E>(id));
 }
 
+Model<E> useEntity<E extends Entity>(String id) {
+  return useQuery(Query.getById<E>(id));
+}
+
 void _debugQueryRequest({
   required DebugDialogContext? debugDialogContext,
   required QueryRequest? queryRequest,
