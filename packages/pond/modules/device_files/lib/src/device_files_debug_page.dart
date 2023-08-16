@@ -6,6 +6,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:model/model.dart';
 import 'package:path/path.dart';
 import 'package:pond/pond.dart';
+import 'package:port_core/port_core.dart';
+import 'package:port_style/port_style.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
@@ -58,6 +60,28 @@ class DeviceFilesDebugPage extends AppPage {
                   iconData: Icons.home,
                   onPressed: () => pathState.value = '.',
                 ),
+                Expanded(child: Container()),
+                if (fileContents != null)
+                  StyledChip(
+                    backgroundColor: Colors.orange,
+                    labelText: 'Edit',
+                    iconData: Icons.edit,
+                    onPressed: () async {
+                      final port = Port.of({
+                        'contents':
+                            PortField.string(initialValue: fileContents).withDisplayName('Contents').multiline(),
+                      }).map((data, port) => port['contents'] as String);
+                      await context.showStyledDialog(StyledPortDialog(
+                        port: port,
+                        titleText: 'Edit File',
+                        onAccept: (contents) async {
+                          final file = context.corePondContext.fileSystem.storageDirectory - pathState.value;
+                          await file.writeAsString(contents);
+                          await fileContentsModel.load();
+                        },
+                      ));
+                    },
+                  ),
               ],
             ),
           files == null && fileContents == null
