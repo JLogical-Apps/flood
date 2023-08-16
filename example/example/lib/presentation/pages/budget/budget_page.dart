@@ -20,7 +20,7 @@ class BudgetPage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
-    final budgetModel = useQuery(Query.getByIdOrNull<BudgetEntity>(budgetIdProperty.value));
+    final budgetModel = useEntityOrNull<BudgetEntity>(budgetIdProperty.value);
     final envelopesModel =
         useQuery(EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: budgetIdProperty.value, isArchived: false).all());
     final traysModel = useQuery(TrayEntity.getBudgetTraysQuery(budgetId: budgetIdProperty.value).all());

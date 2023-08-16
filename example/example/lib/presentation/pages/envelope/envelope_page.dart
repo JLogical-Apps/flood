@@ -16,7 +16,7 @@ class EnvelopePage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
-    final envelopeModel = useQuery(Query.getByIdOrNull<EnvelopeEntity>(idProperty.value));
+    final envelopeModel = useEntityOrNull<EnvelopeEntity>(idProperty.value);
     final envelopeTransactionsModel =
         useQuery(BudgetTransactionEntity.getEnvelopeTransactionsQuery(envelopeId: idProperty.value).paginate());
 

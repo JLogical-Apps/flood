@@ -21,7 +21,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final budgetModel = useQuery(Query.getByIdOrNull<BudgetEntity>(budgetIdProperty.value));
+    final budgetModel = useEntityOrNull<BudgetEntity>(budgetIdProperty.value);
     final budget = budgetModel.getOrNull()?.value;
 
     final envelopesModel =

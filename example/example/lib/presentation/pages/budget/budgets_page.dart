@@ -13,7 +13,7 @@ class BudgetsPage extends AppPage {
   @override
   Widget build(BuildContext context) {
     final loggedInUserId = useLoggedInUserId()!;
-    final loggedInUserModel = useQuery(Query.getByIdOrNull<UserEntity>(loggedInUserId));
+    final loggedInUserModel = useEntityOrNull<UserEntity>(loggedInUserId);
     final budgetsModel = useQuery(Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all());
     return StyledPage(
       titleText: 'Home',
