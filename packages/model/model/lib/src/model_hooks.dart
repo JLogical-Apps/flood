@@ -3,6 +3,12 @@ import 'package:model_core/model_core.dart';
 import 'package:utils/utils.dart';
 
 FutureValue<T>? useModelOrNull<T>(Model<T>? model) {
+  useEffect(
+    () => () {
+      model?.loadIfNotStarted();
+    },
+    [model],
+  );
   useStream(model?.stateX);
   return model?.stateX.value;
 }
