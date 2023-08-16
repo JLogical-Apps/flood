@@ -1,2 +1,4 @@
 export 'src/auth_core_component.dart';
 export 'src/auth_service.dart';
+export 'src/login_failure.dart';
+export 'src/signup_failure.dart';

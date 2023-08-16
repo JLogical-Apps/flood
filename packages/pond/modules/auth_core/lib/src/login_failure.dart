@@ -1,4 +1,6 @@
 abstract class LoginFailure {
+  String get displayText;
+
   static LoginFailure invalidEmail() => InvalidEmailLoginFailure();
 
   static LoginFailure userDisabled() => UserDisabledLoginFailure();
@@ -8,10 +10,22 @@ abstract class LoginFailure {
   static LoginFailure wrongPassword() => WrongPasswordLoginFailure();
 }
 
-class InvalidEmailLoginFailure implements LoginFailure {}
+class InvalidEmailLoginFailure implements LoginFailure {
+  @override
+  String get displayText => 'Invalid Email!';
+}
 
-class UserDisabledLoginFailure implements LoginFailure {}
+class UserDisabledLoginFailure implements LoginFailure {
+  @override
+  String get displayText => 'Invalid Email!';
+}
 
-class UserNotFoundLoginFailure implements LoginFailure {}
+class UserNotFoundLoginFailure implements LoginFailure {
+  @override
+  String get displayText => 'Cannot find account with this email and password!';
+}
 
-class WrongPasswordLoginFailure implements LoginFailure {}
+class WrongPasswordLoginFailure implements LoginFailure {
+  @override
+  String get displayText => 'Cannot find account with this email and password!';
+}
