@@ -46,6 +46,7 @@ class StyledReadonlyTextField extends StatelessWidget {
       obscureText: obscureText,
       maxLines: maxLines,
       onTapped: onTapped,
+      readonly: true,
     );
   }
 }
