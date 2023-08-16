@@ -4,8 +4,9 @@ import 'package:utils/utils.dart';
 
 FutureValue<T>? useModelOrNull<T>(Model<T>? model) {
   useEffect(
-    () => () {
+    () {
       model?.loadIfNotStarted();
+      return null;
     },
     [model],
   );
