@@ -38,14 +38,18 @@ class EnvelopeEditDialog extends StyledPortDialog<Envelope> {
       titleText: titleText,
       port: port,
       children: [
-        StyledObjectPortBuilder(port: port),
-        StyledOptionPortField(
-          fieldName: Envelope.trayField,
-          widgetMapper: (TrayEntity? trayEntity) {
-            final tray = trayEntity?.value;
-            return StyledText.body(tray?.nameProperty.value ?? 'None');
+        StyledObjectPortBuilder(
+          port: port,
+          overrides: {
+            Envelope.trayField: StyledOptionPortField(
+              fieldName: Envelope.trayField,
+              widgetMapper: (TrayEntity? trayEntity) {
+                final tray = trayEntity?.value;
+                return StyledText.body(tray?.nameProperty.value ?? 'None');
+              },
+              labelText: 'Tray',
+            ),
           },
-          labelText: 'Tray',
         ),
       ],
       onAccept: onAccept,
