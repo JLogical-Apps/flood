@@ -1,6 +1,7 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/query/condition/query_condition.dart';
 import 'package:drop_core/src/query/from_query.dart';
+import 'package:drop_core/src/query/limit_query.dart';
 import 'package:drop_core/src/query/order_by_query.dart';
 import 'package:drop_core/src/query/query_where_builder.dart';
 import 'package:drop_core/src/query/request/all_query_request.dart';
@@ -86,6 +87,10 @@ extension QueryExtensions<E extends Entity> on Query<E> {
 
   OrderByQuery<E> orderByAscending(String stateField) {
     return orderBy(stateField, type: OrderByType.ascending);
+  }
+
+  LimitQuery<E> limit(int limit) {
+    return LimitQuery(parent: this, limit: limit);
   }
 
   PaginateStatesQueryRequest paginateStates({int pageSize = 20}) {

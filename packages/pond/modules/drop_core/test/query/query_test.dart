@@ -415,6 +415,36 @@ void main() {
     expect(Query.from<UserEntity>().where('a').isEqualTo('b').all(),
         Query.from<UserEntity>().where('a').isEqualTo('b').all());
   });
+
+  test('query limit', () async {
+    final repository = Repository.memory().forType<UserEntity, User>(
+      UserEntity.new,
+      User.new,
+      entityTypeName: 'UserEntity',
+      valueObjectTypeName: 'User',
+    );
+
+    final users = [
+      User()
+        ..nameProperty.set('Jake')
+        ..emailProperty.set('jake@jake.com'),
+      User()
+        ..nameProperty.set('John')
+        ..emailProperty.set('john@doe.com'),
+    ];
+
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
+
+    for (final user in users) {
+      await repository.update(UserEntity()..value = user);
+    }
+
+    final firstUser = await Query.from<UserEntity>().limit(1).all().get(context.dropCoreComponent);
+    expect(firstUser[0].value, users[0]);
+  });
 }
 
 class User extends ValueObject {
