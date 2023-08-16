@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' as flutter;
 import 'package:intersperse/intersperse.dart';
 import 'package:style/src/color_palette.dart';
 import 'package:style/src/components/dialog/styled_dialog.dart';
+import 'package:style/src/components/message/styled_message.dart';
 import 'package:style/src/components/misc/styled_divider.dart';
 import 'package:style/src/components/text/styled_markdown.dart';
 import 'package:style/src/components/text/styled_text.dart';
@@ -171,6 +172,13 @@ This is a `code block`.
         );
       },
     );
+  }
+
+  @override
+  Future<void> showMessage(BuildContext context, StyledMessage message) async {
+    final label = message.labelText?.mapIfNonNull((label) => StyledText.h6.centered(label)) ?? message.label;
+
+    await ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: label!, backgroundColor: primaryColor)).closed;
   }
 
   @override
