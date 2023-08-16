@@ -40,7 +40,30 @@ Model<T?> useQueryOrNull<T>(QueryRequest<Entity, T>? queryRequest) {
 }
 
 Model<T> useQuery<T>(QueryRequest<Entity, T> queryRequest) {
-  return useQueryOrNull(queryRequest).map((value) => value!);
+  final context = useContext();
+  final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
+  final dropCoreContext = useDropCoreContext();
+
+  final queryModel = useMemoized(
+    () => queryRequest.toModel(dropCoreContext),
+    [queryRequest],
+  );
+
+  final result = useModel(queryModel);
+
+  useEffect(
+    () {
+      _debugQueryRequest(
+        debugDialogContext: debugDialogContext,
+        queryRequest: queryRequest,
+        value: result,
+      );
+      return null;
+    },
+    [queryRequest, debugDialogContext, result],
+  );
+
+  return queryModel;
 }
 
 Model<T?> useNullableQueryModel<E extends Entity, T>(Model<QueryRequest<E, T>?> queryRequestModel) {
