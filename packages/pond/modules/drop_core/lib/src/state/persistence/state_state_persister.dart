@@ -9,12 +9,15 @@ import 'package:drop_core/src/state/state.dart';
 class StateStatePersister implements StatePersister<State> {
   final DropCoreContext context;
 
-  StateStatePersister({required this.context});
+  final List<StatePersisterModifier> extraStatePersisterModifiers;
+
+  StateStatePersister({required this.context, this.extraStatePersisterModifiers = const []});
 
   late List<StatePersisterModifier> statePersisterModifiers = [
     RuntimeTypeStatePersisterModifier(),
     StateStatePersisterModifier(context: context),
     DateTimeStatePersisterModifier(),
+    ...extraStatePersisterModifiers
   ];
 
   @override

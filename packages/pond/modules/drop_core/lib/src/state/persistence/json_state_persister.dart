@@ -9,13 +9,15 @@ import 'package:type/type.dart';
 
 class JsonStatePersister implements StatePersister<Map<String, dynamic>> {
   final DropCoreContext context;
+  final List<StatePersisterModifier> extraStatePersisterModifiers;
 
-  JsonStatePersister({required this.context});
+  JsonStatePersister({required this.context, this.extraStatePersisterModifiers = const []});
 
   late List<StatePersisterModifier> statePersisterModifiers = [
     RuntimeTypeStatePersisterModifier(),
     StateStatePersisterModifier(context: context),
     DateTimeStatePersisterModifier(),
+    ...extraStatePersisterModifiers,
   ];
 
   @override

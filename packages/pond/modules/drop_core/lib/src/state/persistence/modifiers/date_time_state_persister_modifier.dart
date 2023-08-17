@@ -1,4 +1,4 @@
-import 'package:drop_core/drop_core.dart';
+import 'package:drop_core/src/record/value_object/time/timestamp.dart';
 import 'package:drop_core/src/state/persistence/modifiers/state_persister_modifier.dart';
 import 'package:utils_core/utils_core.dart';
 
