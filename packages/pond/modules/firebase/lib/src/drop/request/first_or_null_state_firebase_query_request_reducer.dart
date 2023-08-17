@@ -15,7 +15,7 @@ class FirstOrNullStateFirebaseQueryRequestReducer
     firebase.Query firestoreQuery, {
     Function(State state)? onStateRetrieved,
   }) async {
-    final snap = await firestoreQuery.limit(1).get();
+    final snap = await firestoreQuery.limit(1).get(firebase.GetOptions(source: firebase.Source.server));
 
     final state = snap.docs.firstOrNull?.mapIfNonNull(getStateFromDocument);
     if (state != null) {

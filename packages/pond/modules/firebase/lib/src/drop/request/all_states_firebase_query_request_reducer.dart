@@ -13,7 +13,7 @@ class AllStatesFirebaseQueryRequestReducer extends FirebaseQueryRequestReducer<A
     firebase.Query firestoreQuery, {
     Function(State state)? onStateRetrieved,
   }) async {
-    final snap = await firestoreQuery.get();
+    final snap = await firestoreQuery.get(firebase.GetOptions(source: firebase.Source.server));
 
     final states = snap.docs.map(getStateFromDocument).toList();
     for (final state in states) {

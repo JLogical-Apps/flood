@@ -45,7 +45,7 @@ class PaginateStatesFirebaseQueryRequestReducer
       paginateQuery = paginateQuery.startAfterDocument(lastSnap);
     }
 
-    final snap = await paginateQuery.get();
+    final snap = await paginateQuery.get(firebase.GetOptions(source: firebase.Source.server));
     final states = snap.docs.map(getStateFromDocument).toList();
 
     for (final state in states) {
