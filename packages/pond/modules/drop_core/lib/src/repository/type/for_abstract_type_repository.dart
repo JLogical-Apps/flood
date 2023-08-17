@@ -2,16 +2,14 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
+import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/repository/type/abstract_type_implementation_repository.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
-class ForAbstractTypeRepository<E extends Entity<V>, V extends ValueObject> with IsRepositoryWrapper {
-  @override
-  final Repository repository;
-
+class ForAbstractTypeRepository<E extends Entity<V>, V extends ValueObject> with IsRepository {
   final String entityTypeName;
   final String valueObjectTypeName;
 
@@ -24,7 +22,6 @@ class ForAbstractTypeRepository<E extends Entity<V>, V extends ValueObject> with
   late List<RuntimeType> valueObjectParentsRuntimeTypes;
 
   ForAbstractTypeRepository({
-    required this.repository,
     required this.entityTypeName,
     required this.valueObjectTypeName,
     required this.entityParents,
@@ -32,12 +29,10 @@ class ForAbstractTypeRepository<E extends Entity<V>, V extends ValueObject> with
   });
 
   @override
-  List<RuntimeType> get handledTypes => repository.handledTypes + [entityRuntimeType];
+  List<RuntimeType> get handledTypes => [entityRuntimeType];
 
   @override
-  List<CorePondComponentBehavior> get behaviors =>
-      repository.behaviors +
-      [
+  List<CorePondComponentBehavior> get behaviors => [
         CorePondComponentBehavior(
           onRegister: (context, comp) {
             final typeComponent = context.locate<TypeCoreComponent>();
@@ -71,5 +66,8 @@ class ForAbstractTypeRepository<E extends Entity<V>, V extends ValueObject> with
   }
 
   @override
-  RepositoryQueryExecutor get queryExecutor => repository.queryExecutor.withHandledTypes([entityRuntimeType]);
+  RepositoryQueryExecutor get queryExecutor => throw UnimplementedError();
+
+  @override
+  RepositoryStateHandler get stateHandler => throw UnimplementedError();
 }

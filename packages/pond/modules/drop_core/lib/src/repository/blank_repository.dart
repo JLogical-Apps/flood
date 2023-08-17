@@ -16,11 +16,6 @@ class BlankRepository with IsRepository {
 
 class BlankRepositoryQueryExecutor implements RepositoryQueryExecutor {
   @override
-  bool handlesQuery(QueryRequest queryRequest) {
-    return false;
-  }
-
-  @override
   Future<T> onExecuteQuery<T>(
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,

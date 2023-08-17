@@ -5,24 +5,24 @@ import 'package:persistence/persistence.dart';
 import 'package:pond/pond.dart';
 import 'package:pool/pool.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:type/type.dart';
 import 'package:utils/utils.dart';
 
-class FlutterFileRepository with IsRepository {
+class FlutterFileRepository with IsRepositoryWrapper {
   final FileRepository fileRepository;
 
   FlutterFileRepository({required this.fileRepository});
 
   @override
-  late final List<CorePondComponentBehavior> behaviors = [
-    CorePondComponentBehavior(
-      onReset: (context, _) async {
-        if (await fileRepository.directory.exists()) {
-          await fileRepository.directory.delete(recursive: true);
-        }
-      },
-    ),
-  ];
+  late final List<CorePondComponentBehavior> behaviors = super.behaviors +
+      [
+        CorePondComponentBehavior(
+          onReset: (context, _) async {
+            if (await fileRepository.directory.exists()) {
+              await fileRepository.directory.delete(recursive: true);
+            }
+          },
+        ),
+      ];
 
   @override
   late final RepositoryQueryExecutor queryExecutor = FlutterFileRepositoryQueryExecutor(repository: this);
@@ -32,7 +32,7 @@ class FlutterFileRepository with IsRepository {
       FlutterFileRepositoryStateHandler(repository: this).withEntityLifecycle(context.dropCoreComponent);
 
   @override
-  List<RuntimeType> get handledTypes => fileRepository.handledTypes;
+  Repository get repository => fileRepository.childRepository;
 }
 
 class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {

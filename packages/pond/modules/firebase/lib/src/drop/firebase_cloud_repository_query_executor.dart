@@ -83,11 +83,6 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
         .autoConnect();
   }
 
-  @override
-  bool handlesQuery(QueryRequest queryRequest) {
-    return false;
-  }
-
   firebase.Query reduceQuery(firebase.Query? firestoreQuery, Query query) {
     final queryParent = query.parent;
     return getQueryReducerResolver()

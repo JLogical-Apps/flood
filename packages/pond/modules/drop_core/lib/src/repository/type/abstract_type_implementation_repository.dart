@@ -1,7 +1,6 @@
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/repository.dart';
-import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:type/type.dart';
 import 'package:type_core/type_core.dart';
@@ -73,7 +72,4 @@ class AbstractTypeImplementationRepository<E extends Entity<V>, V extends ValueO
       valueObjectConstructor: valueObjectConstructor,
     );
   }
-
-  @override
-  RepositoryQueryExecutor get queryExecutor => repository.queryExecutor.withHandledTypes([entityRuntimeType]);
 }

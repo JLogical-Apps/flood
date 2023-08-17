@@ -4,10 +4,10 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class SettingsRepository with IsRepositoryWrapper {
   @override
-  late Repository repository = Repository.file('settings').forType<SettingsEntity, Settings>(
+  late Repository repository = Repository.forType<SettingsEntity, Settings>(
     SettingsEntity.new,
     Settings.new,
     entityTypeName: 'SettingsEntity',
     valueObjectTypeName: 'Settings',
-  );
+  ).file('settings');
 }

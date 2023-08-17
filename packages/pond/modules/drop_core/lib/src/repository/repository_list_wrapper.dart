@@ -1,5 +1,8 @@
 import 'package:collection/collection.dart';
+import 'package:drop_core/src/query/from_query.dart';
+import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
+import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
@@ -42,9 +45,6 @@ mixin IsRepositoryListWrapper implements RepositoryListWrapper {
 
   @override
   Future<State> onDelete(State state) => stateHandler.onDelete(state);
-
-  @override
-  bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
 
   @override
   Future<T> onExecuteQuery<T>(
@@ -92,19 +92,14 @@ class _RepositoryListQueryExecutor implements RepositoryQueryExecutor {
   _RepositoryListQueryExecutor({required this.repositories});
 
   @override
-  bool handlesQuery(QueryRequest queryRequest) {
-    return repositories.any((repository) => repository.handlesQuery(queryRequest));
-  }
-
-  @override
   Future<T> onExecuteQuery<T>(
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
-    return repositories
-            .firstWhereOrNull((repository) => repository.handlesQuery(queryRequest))
-            ?.executeQuery(queryRequest) ??
-        (throw Exception('Cannot find repository to handle query request [$queryRequest]'));
+    return findRepositoryToHandleQuery(queryRequest).executeQuery(
+      queryRequest,
+      onStateRetreived: onStateRetreived,
+    );
   }
 
   @override
@@ -112,9 +107,21 @@ class _RepositoryListQueryExecutor implements RepositoryQueryExecutor {
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
-    return repositories
-            .firstWhereOrNull((repository) => repository.handlesQuery(queryRequest))
-            ?.executeQueryX(queryRequest) ??
+    return findRepositoryToHandleQuery(queryRequest).executeQueryX(
+      queryRequest,
+      onStateRetreived: onStateRetreived,
+    );
+  }
+
+  Repository findRepositoryToHandleQuery(QueryRequest queryRequest) {
+    final root = queryRequest.query.root;
+    final entitySearchType = (root as FromQuery).entityType;
+    if (entitySearchType == typeOf<Entity>()) {
+      return repositories.first;
+    }
+
+    return repositories.firstWhereOrNull((repository) =>
+            repository.handledTypes.map((runtimeType) => runtimeType.type).contains(entitySearchType)) ??
         (throw Exception('Cannot find repository to handle query request [$queryRequest]'));
   }
 }

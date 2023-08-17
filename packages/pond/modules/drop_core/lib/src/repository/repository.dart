@@ -31,24 +31,40 @@ import 'package:utils_core/utils_core.dart';
 abstract class Repository implements CorePondComponent, RepositoryStateHandlerWrapper, RepositoryQueryExecutorWrapper {
   List<RuntimeType> get handledTypes => [];
 
-  static MemoryRepository memory() {
-    return MemoryRepository();
-  }
-
-  static FileRepository file(String rootPath) {
-    return FileRepository(rootPath: rootPath);
-  }
-
-  static CloudRepository cloud(String rootPath) {
-    return CloudRepository(rootPath: rootPath);
-  }
-
   static Repository list(List<Repository> repositories) {
     return RepositoryListWrapper(repositories);
   }
 
-  static Repository adapting(String rootPath) {
-    return AdaptingRepository(rootPath: rootPath);
+  static ForTypeRepository<E, V> forType<E extends Entity<V>, V extends ValueObject>(
+    E Function() entityConstructor,
+    V Function() valueObjectConstructor, {
+    required String entityTypeName,
+    required String valueObjectTypeName,
+    List<Type>? entityParents,
+    List<Type>? valueObjectParents,
+  }) {
+    return ForTypeRepository<E, V>(
+      entityConstructor: entityConstructor,
+      valueObjectConstructor: valueObjectConstructor,
+      entityTypeName: entityTypeName,
+      valueObjectTypeName: valueObjectTypeName,
+      entityParents: entityParents ?? [],
+      valueObjectParents: valueObjectParents ?? [],
+    );
+  }
+
+  static ForAbstractTypeRepository<E, V> forAbstractType<E extends Entity<V>, V extends ValueObject>({
+    required String entityTypeName,
+    required String valueObjectTypeName,
+    List<Type>? entityParents,
+    List<Type>? valueObjectParents,
+  }) {
+    return ForAbstractTypeRepository<E, V>(
+      entityTypeName: entityTypeName,
+      valueObjectTypeName: valueObjectTypeName,
+      entityParents: entityParents ?? [],
+      valueObjectParents: valueObjectParents ?? [],
+    );
   }
 }
 
@@ -80,40 +96,6 @@ extension RepositoryExtension on Repository {
 
   Future<State> delete(Stateful state) {
     return onDelete(state.getState(context.locate<DropCoreComponent>()));
-  }
-
-  ForTypeRepository<E, V> forType<E extends Entity<V>, V extends ValueObject>(
-    E Function() entityConstructor,
-    V Function() valueObjectConstructor, {
-    required String entityTypeName,
-    required String valueObjectTypeName,
-    List<Type>? entityParents,
-    List<Type>? valueObjectParents,
-  }) {
-    return ForTypeRepository<E, V>(
-      repository: this,
-      entityConstructor: entityConstructor,
-      valueObjectConstructor: valueObjectConstructor,
-      entityTypeName: entityTypeName,
-      valueObjectTypeName: valueObjectTypeName,
-      entityParents: entityParents ?? [],
-      valueObjectParents: valueObjectParents ?? [],
-    );
-  }
-
-  ForAbstractTypeRepository<E, V> forAbstractType<E extends Entity<V>, V extends ValueObject>({
-    required String entityTypeName,
-    required String valueObjectTypeName,
-    List<Type>? entityParents,
-    List<Type>? valueObjectParents,
-  }) {
-    return ForAbstractTypeRepository<E, V>(
-      repository: this,
-      entityTypeName: entityTypeName,
-      valueObjectTypeName: valueObjectTypeName,
-      entityParents: entityParents ?? [],
-      valueObjectParents: valueObjectParents ?? [],
-    );
   }
 
   WithEmbeddedTypeRepository<V> withEmbeddedType<V extends ValueObject>(
@@ -149,6 +131,22 @@ extension RepositoryExtension on Repository {
     );
   }
 
+  MemoryRepository memory() {
+    return MemoryRepository(repository: this);
+  }
+
+  FileRepository file(String rootPath) {
+    return FileRepository(rootPath: rootPath, childRepository: this);
+  }
+
+  CloudRepository cloud(String rootPath) {
+    return CloudRepository(rootPath: rootPath, childRepository: this);
+  }
+
+  Repository adapting(String rootPath) {
+    return AdaptingRepository(rootPath: rootPath, childRepository: this);
+  }
+
   MemoryCacheRepository withMemoryCache() {
     return MemoryCacheRepository(sourceRepository: this);
   }
@@ -173,9 +171,6 @@ mixin IsRepository implements Repository, IsRepositoryStateHandlerWrapper, IsRep
 
   @override
   Future<State> onDelete(State state) => stateHandler.onDelete(state);
-
-  @override
-  bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
 
   @override
   Future<T> onExecuteQuery<T>(
@@ -234,9 +229,6 @@ mixin IsRepositoryWrapper implements RepositoryWrapper, RepositoryStateHandlerWr
 
   @override
   Future<State> onDelete(State state) => stateHandler.onDelete(state);
-
-  @override
-  bool handlesQuery(QueryRequest queryRequest) => queryExecutor.handlesQuery(queryRequest);
 
   @override
   Future<T> onExecuteQuery<T>(

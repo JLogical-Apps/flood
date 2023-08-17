@@ -12,13 +12,12 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class EnvelopeRepository with IsRepositoryWrapper {
   @override
-  late Repository repository = Repository.adapting('envelope')
-      .forType<EnvelopeEntity, Envelope>(
-        EnvelopeEntity.new,
-        Envelope.new,
-        entityTypeName: 'EnvelopeEntity',
-        valueObjectTypeName: 'Envelope',
-      )
+  late Repository repository = Repository.forType<EnvelopeEntity, Envelope>(
+    EnvelopeEntity.new,
+    Envelope.new,
+    entityTypeName: 'EnvelopeEntity',
+    valueObjectTypeName: 'Envelope',
+  )
       .withEmbeddedAbstractType<EnvelopeRule>(valueObjectTypeName: 'EnvelopeRule')
       .withEmbeddedType<FirstfruitEnvelopeRule>(
         FirstfruitEnvelopeRule.new,
@@ -51,5 +50,6 @@ class EnvelopeRepository with IsRepositoryWrapper {
         valueObjectTypeName: 'MonthlyTimeRule',
         valueObjectParents: [TimeRule],
       )
+      .adapting('envelope')
       .withSecurity(RepositorySecurity.authenticated());
 }

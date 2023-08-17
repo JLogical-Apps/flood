@@ -4,14 +4,12 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class UserRepository with IsRepositoryWrapper {
   @override
-  late Repository repository = Repository.adapting('user')
-      .forType<UserEntity, User>(
-        UserEntity.new,
-        User.new,
-        entityTypeName: 'UserEntity',
-        valueObjectTypeName: 'User',
-      )
-      .withSecurity(RepositorySecurity(
+  late Repository repository = Repository.forType<UserEntity, User>(
+    UserEntity.new,
+    User.new,
+    entityTypeName: 'UserEntity',
+    valueObjectTypeName: 'User',
+  ).adapting('tray').withSecurity(RepositorySecurity(
         read: Permission.authenticated,
         create: Permission.authenticated & Permission.unmodifiable(User.adminField),
         update: Permission.authenticated & Permission.unmodifiable(User.adminField),

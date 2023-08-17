@@ -8,8 +8,9 @@ import 'package:utils_core/utils_core.dart';
 
 class FileRepository with IsRepositoryWrapper {
   final String rootPath;
+  final Repository childRepository;
 
-  FileRepository({required this.rootPath});
+  FileRepository({required this.rootPath, required this.childRepository});
 
   Directory get directory => context.fileSystem.storageDirectory / rootPath;
 

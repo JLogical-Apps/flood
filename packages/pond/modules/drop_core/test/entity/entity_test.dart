@@ -17,7 +17,7 @@ void main() {
     var beforeDelete = false;
     var afterDelete = false;
 
-    final repository = Repository.memory().forType<TestEntity, TestData>(
+    final repository = Repository.forType<TestEntity, TestData>(
       () => TestEntity(
         beforeInitializeGetter: () => beforeInitialize = true,
         afterInitializeGetter: () => afterInitialize = true,
@@ -31,7 +31,7 @@ void main() {
       TestData.new,
       entityTypeName: 'TestEntity',
       valueObjectTypeName: 'TestData',
-    );
+    ).memory();
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());

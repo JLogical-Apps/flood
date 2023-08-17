@@ -5,8 +5,9 @@ import 'package:utils_core/utils_core.dart';
 
 class CloudRepository with IsRepositoryWrapper {
   final String rootPath;
+  final Repository childRepository;
 
-  CloudRepository({required this.rootPath});
+  CloudRepository({required this.rootPath, required this.childRepository});
 
   @override
   late final Repository repository =

@@ -246,12 +246,12 @@ class DocumentEntity extends Entity<Document> {}
 
 class DocumentRepository with IsRepositoryWrapper {
   @override
-  late Repository repository = Repository.memory().forType<DocumentEntity, Document>(
+  late Repository repository = Repository.forType<DocumentEntity, Document>(
     DocumentEntity.new,
     Document.new,
     entityTypeName: 'DocumentEntity',
     valueObjectTypeName: 'Document',
-  );
+  ).memory();
 }
 
 class User extends ValueObject {
@@ -266,10 +266,10 @@ class UserEntity extends Entity<User> {}
 
 class UserRepository with IsRepositoryWrapper {
   @override
-  late Repository repository = Repository.memory().forType<UserEntity, User>(
+  late Repository repository = Repository.forType<UserEntity, User>(
     UserEntity.new,
     User.new,
     entityTypeName: 'UserEntity',
     valueObjectTypeName: 'User',
-  );
+  ).memory();
 }

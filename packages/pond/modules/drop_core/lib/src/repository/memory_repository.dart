@@ -8,8 +8,13 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
-class MemoryRepository with IsRepository {
+class MemoryRepository with IsRepositoryWrapper {
   final BehaviorSubject<Map<String, State>> stateByIdX = BehaviorSubject.seeded({});
+
+  @override
+  final Repository repository;
+
+  MemoryRepository({required this.repository});
 
   @override
   late final RepositoryQueryExecutor queryExecutor = MemoryRepositoryQueryExecutor(repository: this);

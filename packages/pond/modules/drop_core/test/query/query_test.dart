@@ -6,12 +6,12 @@ import 'package:utils_core/utils_core.dart';
 
 void main() {
   test('query all', () async {
-    final repository = Repository.memory().forType<UserEntity, User>(
+    final repository = Repository.forType<UserEntity, User>(
       UserEntity.new,
       User.new,
       entityTypeName: 'UserEntity',
       valueObjectTypeName: 'User',
-    );
+    ).memory();
 
     final users = [
       User()
@@ -40,12 +40,12 @@ void main() {
   });
 
   test('query first', () async {
-    final repository = Repository.memory().forType<UserEntity, User>(
+    final repository = Repository.forType<UserEntity, User>(
       UserEntity.new,
       User.new,
       entityTypeName: 'UserEntity',
       valueObjectTypeName: 'User',
-    );
+    ).memory();
 
     final users = [
       User()
@@ -73,12 +73,12 @@ void main() {
   });
 
   test('query where equals', () async {
-    final repository = Repository.memory().forType<UserEntity, User>(
+    final repository = Repository.forType<UserEntity, User>(
       UserEntity.new,
       User.new,
       entityTypeName: 'UserEntity',
       valueObjectTypeName: 'User',
-    );
+    ).memory();
 
     final users = [
       User()
@@ -102,12 +102,12 @@ void main() {
   });
 
   test('query where equals', () async {
-    final repository = Repository.memory().forType<UserEntity, User>(
+    final repository = Repository.forType<UserEntity, User>(
       UserEntity.new,
       User.new,
       entityTypeName: 'UserEntity',
       valueObjectTypeName: 'User',
-    );
+    ).memory();
 
     final users = [
       User()
@@ -143,12 +143,12 @@ void main() {
   });
 
   test('query where numeric', () async {
-    final repository = Repository.memory().forType<InvoiceEntity, Invoice>(
+    final repository = Repository.forType<InvoiceEntity, Invoice>(
       InvoiceEntity.new,
       Invoice.new,
       entityTypeName: 'InvoiceEntity',
       valueObjectTypeName: 'Invoice',
-    );
+    ).memory();
 
     final invoices = [
       Invoice()..amountProperty.set(0),
@@ -220,12 +220,12 @@ void main() {
   });
 
   test('query orderby numeric', () async {
-    final repository = Repository.memory().forType<InvoiceEntity, Invoice>(
+    final repository = Repository.forType<InvoiceEntity, Invoice>(
       InvoiceEntity.new,
       Invoice.new,
       entityTypeName: 'InvoiceEntity',
       valueObjectTypeName: 'Invoice',
-    );
+    ).memory();
 
     final invoices = [
       Invoice()..amountProperty.set(20),
@@ -272,12 +272,12 @@ void main() {
   });
 
   test('paginate queries', () async {
-    final repository = Repository.memory().forType<InvoiceEntity, Invoice>(
+    final repository = Repository.forType<InvoiceEntity, Invoice>(
       InvoiceEntity.new,
       Invoice.new,
       entityTypeName: 'InvoiceEntity',
       valueObjectTypeName: 'Invoice',
-    );
+    ).memory();
 
     final invoices = [
       Invoice()..amountProperty.set(0),
@@ -308,12 +308,12 @@ void main() {
   });
 
   test('query all map', () async {
-    final repository = Repository.memory().forType<UserEntity, User>(
+    final repository = Repository.forType<UserEntity, User>(
       UserEntity.new,
       User.new,
       entityTypeName: 'UserEntity',
       valueObjectTypeName: 'User',
-    );
+    ).memory();
 
     final users = [
       User()
@@ -344,11 +344,10 @@ void main() {
   });
 
   test('query on abstract type.', () async {
-    final repository = Repository.memory()
-        .forAbstractType<TransactionEntity, Transaction>(
-          entityTypeName: 'TransactionEntity',
-          valueObjectTypeName: 'Transaction',
-        )
+    final repository = Repository.forAbstractType<TransactionEntity, Transaction>(
+      entityTypeName: 'TransactionEntity',
+      valueObjectTypeName: 'Transaction',
+    )
         .withImplementation<EnvelopeTransactionEntity, EnvelopeTransaction>(
           EnvelopeTransactionEntity.new,
           EnvelopeTransaction.new,
@@ -360,7 +359,8 @@ void main() {
           TransferTransaction.new,
           entityTypeName: 'TransferTransactionEntity',
           valueObjectTypeName: 'TransferTransaction',
-        );
+        )
+        .memory();
 
     final transactionEntities = <TransactionEntity>[
       EnvelopeTransactionEntity()..value = EnvelopeTransaction(),
@@ -379,18 +379,18 @@ void main() {
   });
 
   test('list repository', () async {
-    final userRepository = Repository.memory().forType<UserEntity, User>(
+    final userRepository = Repository.forType<UserEntity, User>(
       UserEntity.new,
       User.new,
       entityTypeName: 'UserEntity',
       valueObjectTypeName: 'User',
-    );
-    final invoiceRepository = Repository.memory().forType<InvoiceEntity, Invoice>(
+    ).memory();
+    final invoiceRepository = Repository.forType<InvoiceEntity, Invoice>(
       InvoiceEntity.new,
       Invoice.new,
       entityTypeName: 'InvoiceEntity',
       valueObjectTypeName: 'Invoice',
-    );
+    ).memory();
     final listRepository = Repository.list([userRepository, invoiceRepository]);
 
     final context = CorePondContext();
@@ -417,12 +417,12 @@ void main() {
   });
 
   test('query limit', () async {
-    final repository = Repository.memory().forType<UserEntity, User>(
+    final repository = Repository.forType<UserEntity, User>(
       UserEntity.new,
       User.new,
       entityTypeName: 'UserEntity',
       valueObjectTypeName: 'User',
-    );
+    ).memory();
 
     final users = [
       User()

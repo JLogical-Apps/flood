@@ -10,11 +10,10 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class BudgetTransactionRepository with IsRepositoryWrapper {
   @override
-  late final Repository repository = Repository.adapting('transactions')
-      .forAbstractType<BudgetTransactionEntity, BudgetTransaction>(
-        entityTypeName: 'BudgetTransactionEntity',
-        valueObjectTypeName: 'BudgetTransaction',
-      )
+  late final Repository repository = Repository.forAbstractType<BudgetTransactionEntity, BudgetTransaction>(
+    entityTypeName: 'BudgetTransactionEntity',
+    valueObjectTypeName: 'BudgetTransaction',
+  )
       .withImplementation<EnvelopeTransactionEntity, EnvelopeTransaction>(
         EnvelopeTransactionEntity.new,
         EnvelopeTransaction.new,
@@ -33,5 +32,6 @@ class BudgetTransactionRepository with IsRepositoryWrapper {
         entityTypeName: 'TransferTransactionEntity',
         valueObjectTypeName: 'TransferTransaction',
       )
+      .adapting('transactions')
       .withSecurity(RepositorySecurity.authenticated());
 }

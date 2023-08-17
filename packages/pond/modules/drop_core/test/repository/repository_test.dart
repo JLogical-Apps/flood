@@ -27,20 +27,19 @@ void main() {
   });
 
   test('creating, saving, and deleting from a repository.', () async {
-    final memoryRepository = Repository.memory();
-    final repository = memoryRepository.forType<UserEntity, User>(
+    final repository = Repository.forType<UserEntity, User>(
       UserEntity.new,
       User.new,
       entityTypeName: 'UserEntity',
       valueObjectTypeName: 'User',
-    );
+    ).memory();
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
     await context.register(DropCoreComponent());
     await context.register(repository);
 
-    expect(memoryRepository.stateByIdX.value, {});
+    expect(repository.stateByIdX.value, {});
 
     var state = State(
       type: context.dropCoreComponent.getRuntimeType<UserEntity>(),
@@ -49,20 +48,20 @@ void main() {
 
     expect(state.isNew, true);
 
-    state = await memoryRepository.update(state);
+    state = await repository.update(state);
 
     expect(state.isNew, false);
-    expect(memoryRepository.stateByIdX.value, {state.id: state});
+    expect(repository.stateByIdX.value, {state.id: state});
 
     state = state.withData({'newField': 'newValue'});
 
-    state = await memoryRepository.update(state);
+    state = await repository.update(state);
 
-    expect(memoryRepository.stateByIdX.value, {state.id: state});
+    expect(repository.stateByIdX.value, {state.id: state});
 
-    await memoryRepository.delete(state);
+    await repository.delete(state);
 
-    expect(memoryRepository.stateByIdX.value, {});
+    expect(repository.stateByIdX.value, {});
   });
 
   test('throw on saving invalid ValueObject', () async {
@@ -190,12 +189,12 @@ class UserEntity extends Entity<User> {}
 
 class UserRepository with IsRepositoryWrapper {
   @override
-  final Repository repository = Repository.memory().forType<UserEntity, User>(
+  final Repository repository = Repository.forType<UserEntity, User>(
     UserEntity.new,
     User.new,
     entityTypeName: 'UserEntity',
     valueObjectTypeName: 'User',
-  );
+  ).memory();
 }
 
 class Budget extends ValueObject {}
@@ -204,12 +203,12 @@ class BudgetEntity extends Entity<Budget> {}
 
 class BudgetRepository with IsRepositoryWrapper {
   @override
-  final Repository repository = Repository.memory().forType<BudgetEntity, Budget>(
+  final Repository repository = Repository.forType<BudgetEntity, Budget>(
     BudgetEntity.new,
     Budget.new,
     entityTypeName: 'BudgetEntity',
     valueObjectTypeName: 'Budget',
-  );
+  ).memory();
 }
 
 abstract class BudgetTransaction extends ValueObject {}
@@ -222,15 +221,15 @@ class EnvelopeTransactionEntity extends BudgetTransactionEntity<EnvelopeTransact
 
 class BudgetTransactionRepository with IsRepositoryWrapper {
   @override
-  final Repository repository = Repository.memory()
-      .forAbstractType<BudgetTransactionEntity, BudgetTransaction>(
-        entityTypeName: 'BudgetTransactionEntity',
-        valueObjectTypeName: 'BudgetTransaction',
-      )
+  final Repository repository = Repository.forAbstractType<BudgetTransactionEntity, BudgetTransaction>(
+    entityTypeName: 'BudgetTransactionEntity',
+    valueObjectTypeName: 'BudgetTransaction',
+  )
       .withImplementation<EnvelopeTransactionEntity, EnvelopeTransaction>(
         EnvelopeTransactionEntity.new,
         EnvelopeTransaction.new,
         entityTypeName: 'EnvelopeTransactionEntity',
         valueObjectTypeName: 'EnvelopeTransaction',
-      );
+      )
+      .memory();
 }

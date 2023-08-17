@@ -44,14 +44,12 @@ class UserEntity extends Entity<User> {}
 
 class UserRepository with IsRepositoryWrapper {
   @override
-  late final Repository repository = Repository.cloud('users')
-      .forType<UserEntity, User>(
-        UserEntity.new,
-        User.new,
-        entityTypeName: 'UserEntity',
-        valueObjectTypeName: 'User',
-      )
-      .withSecurity(RepositorySecurity.authenticated());
+  late final Repository repository = Repository.forType<UserEntity, User>(
+    UserEntity.new,
+    User.new,
+    entityTypeName: 'UserEntity',
+    valueObjectTypeName: 'User',
+  ).cloud('users').withSecurity(RepositorySecurity.authenticated());
 }
 
 class Document extends ValueObject {}
@@ -60,12 +58,12 @@ class DocumentEntity extends Entity<Document> {}
 
 class DocumentRepository with IsRepositoryWrapper {
   @override
-  late final Repository repository = Repository.cloud('documents')
-      .forType<DocumentEntity, Document>(
-        DocumentEntity.new,
-        Document.new,
-        entityTypeName: 'DocumentEntity',
-        valueObjectTypeName: 'Document',
-      )
+  late final Repository repository = Repository.forType<DocumentEntity, Document>(
+    DocumentEntity.new,
+    Document.new,
+    entityTypeName: 'DocumentEntity',
+    valueObjectTypeName: 'Document',
+  )
+      .cloud('documents')
       .withSecurity(RepositorySecurity.public().withWrite(Permission.authenticated).copyWith(delete: Permission.none));
 }

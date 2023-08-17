@@ -3,17 +3,18 @@ import 'package:environment_core/environment_core.dart';
 
 class AdaptingRepository with IsRepositoryWrapper {
   final String rootPath;
+  final Repository childRepository;
 
-  AdaptingRepository({required this.rootPath});
+  AdaptingRepository({required this.rootPath, required this.childRepository});
 
   @override
   late final Repository repository = () {
     if (context.environment == EnvironmentType.static.testing) {
-      return Repository.memory();
+      return childRepository.memory();
     } else if (context.environment == EnvironmentType.static.device) {
-      return Repository.file(rootPath).withMemoryCache();
+      return childRepository.file(rootPath).withMemoryCache();
     } else {
-      return Repository.cloud(rootPath).withMemoryCache();
+      return childRepository.cloud(rootPath).withMemoryCache();
     }
   }();
 }

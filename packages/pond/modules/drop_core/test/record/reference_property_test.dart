@@ -7,18 +7,18 @@ import 'package:utils_core/utils_core.dart';
 
 void main() {
   test('reference property', () async {
-    final userRepository = Repository.memory().forType<UserEntity, User>(
+    final userRepository = Repository.forType<UserEntity, User>(
       UserEntity.new,
       User.new,
       entityTypeName: 'UserEntity',
       valueObjectTypeName: 'User',
-    );
-    final contentRepository = Repository.memory().forType<ContentEntity, Content>(
+    ).memory();
+    final contentRepository = Repository.forType<ContentEntity, Content>(
       ContentEntity.new,
       Content.new,
       entityTypeName: 'ContentEntity',
       valueObjectTypeName: 'Content',
-    );
+    ).memory();
 
     final dropCoreComponent = DropCoreComponent();
 
