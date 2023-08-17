@@ -9,8 +9,8 @@ class AppPondComponentAdditionalSetup with IsAppPondComponentWrapper {
   @override
   final AppPondComponent appPondComponent;
 
-  final void Function(AppPondContext context)? onBeforeRegister;
-  final void Function(AppPondContext context)? onAfterRegister;
+  final FutureOr Function(AppPondContext context)? onBeforeRegister;
+  final FutureOr Function(AppPondContext context)? onAfterRegister;
   final FutureOr Function(AppPondContext context)? onBeforeLoad;
   final FutureOr Function(AppPondContext context)? onAfterLoad;
   final Widget Function(AppPondContext context, Widget app)? appWrapper;
@@ -27,10 +27,10 @@ class AppPondComponentAdditionalSetup with IsAppPondComponentWrapper {
   });
 
   @override
-  void onRegister(AppPondContext context) {
-    onBeforeRegister?.call(context);
-    appPondComponent.onRegister(context);
-    onAfterRegister?.call(context);
+  Future onRegister(AppPondContext context) async {
+    await onBeforeRegister?.call(context);
+    await appPondComponent.onRegister(context);
+    await onAfterRegister?.call(context);
   }
 
   @override

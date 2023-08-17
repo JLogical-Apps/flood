@@ -46,10 +46,12 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
 
   @override
   late final List<CorePondComponentBehavior> behaviors = [
-    CorePondComponentBehavior(onReset: (context, __) async {
-      await loggedInUserIdDataSource.delete();
-      await registeredUsersDataSource.delete();
-    }),
+    CorePondComponentBehavior(
+      onReset: (context, __) async {
+        await loggedInUserIdDataSource.delete();
+        await registeredUsersDataSource.delete();
+      },
+    ),
   ];
 
   @override

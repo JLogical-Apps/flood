@@ -1,4 +1,3 @@
-import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/query/condition/query_condition.dart';
 import 'package:drop_core/src/query/from_query.dart';
 import 'package:drop_core/src/query/limit_query.dart';
@@ -11,7 +10,10 @@ import 'package:drop_core/src/query/request/first_or_null_state_query_request.da
 import 'package:drop_core/src/query/request/first_query_request.dart';
 import 'package:drop_core/src/query/request/paginate_query_request.dart';
 import 'package:drop_core/src/query/request/paginate_states_query_request.dart';
+import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/query/where_query.dart';
+import 'package:drop_core/src/record/entity.dart';
+import 'package:drop_core/src/state/state.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class Query<E extends Entity> with EquatableMixin {

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/state/persistence/modifiers/date_time_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/modifiers/runtime_type_state_persister_modifier.dart';
@@ -9,7 +7,7 @@ import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:type/type.dart';
 
-class JsonStatePersister implements StatePersister<String> {
+class JsonStatePersister implements StatePersister<Map<String, dynamic>> {
   final DropCoreContext context;
 
   JsonStatePersister({required this.context});
@@ -21,20 +19,18 @@ class JsonStatePersister implements StatePersister<String> {
   ];
 
   @override
-  String persist(State state) {
+  Map<String, dynamic> persist(State state) {
     final data = state.fullData;
     final modifiedData =
         statePersisterModifiers.fold<Map<String, dynamic>>(data, (data, modifier) => modifier.persist(data));
 
-    final jsonEncoder = JsonEncoder.withIndent('  ');
-    return jsonEncoder.convert(modifiedData);
+    return modifiedData;
   }
 
   @override
-  State inflate(String persisted) {
-    final persistedData = json.decode(persisted) as Map<String, dynamic>;
+  State inflate(Map<String, dynamic> persisted) {
     final modifiedData =
-        statePersisterModifiers.fold<Map<String, dynamic>>(persistedData, (data, modifier) => modifier.inflate(data));
+        statePersisterModifiers.fold<Map<String, dynamic>>(persisted, (data, modifier) => modifier.inflate(data));
     return State.fromMap(
       modifiedData,
       runtimeTypeGetter: (name) => context.typeContext.getByName(name),

@@ -92,7 +92,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
               ModelBuilder(
                 model: envelopesModel,
                 builder: (List<EnvelopeEntity> envelopeEntities) {
-                  return StyledList.column.withMinChildSize(200).centered(
+                  return StyledList.column.withMinChildSize(250).centered(
                         children: envelopeEntities
                             .map((entity) => _buildEnvelopeSelectCard(
                                   context,

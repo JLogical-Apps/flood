@@ -49,6 +49,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "3.0"
       path: packages/pond/modules/environment_banner
+  firebase:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/modules/firebase
   focus_grabber:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

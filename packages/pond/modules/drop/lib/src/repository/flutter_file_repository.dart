@@ -14,11 +14,13 @@ class FlutterFileRepository with IsRepository {
 
   @override
   late final List<CorePondComponentBehavior> behaviors = [
-    CorePondComponentBehavior(onReset: (context, _) async {
-      if (await fileRepository.directory.exists()) {
-        await fileRepository.directory.delete(recursive: true);
-      }
-    }),
+    CorePondComponentBehavior(
+      onReset: (context, _) async {
+        if (await fileRepository.directory.exists()) {
+          await fileRepository.directory.delete(recursive: true);
+        }
+      },
+    ),
   ];
 
   @override
@@ -40,7 +42,7 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
   @override
   late final RepositoryQueryExecutor queryExecutor = _getQueryExecutor();
 
-  late StatePersister<String> statePersister = StatePersister.json(context: repository.context.dropCoreComponent);
+  late StatePersister<String> statePersister = StatePersister.jsonString(context: repository.context.dropCoreComponent);
 
   RepositoryQueryExecutor _getQueryExecutor() {
     return StateQueryExecutor(
@@ -70,7 +72,7 @@ class FlutterFileRepositoryStateHandler implements RepositoryStateHandler {
 
   FlutterFileRepositoryStateHandler({required this.repository});
 
-  late StatePersister<String> statePersister = StatePersister.json(context: repository.context.dropCoreComponent);
+  late StatePersister<String> statePersister = StatePersister.jsonString(context: repository.context.dropCoreComponent);
 
   @override
   Future<State> onUpdate(State state) async {

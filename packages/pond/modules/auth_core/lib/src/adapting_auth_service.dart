@@ -1,8 +1,7 @@
 import 'package:auth_core/src/auth_service.dart';
 import 'package:environment_core/environment_core.dart';
-import 'package:pond_core/pond_core.dart';
 
-class AdaptingAuthService with IsAuthServiceWrapper, IsCorePondComponentWrapper {
+class AdaptingAuthService with IsAuthServiceWrapper {
   final AuthService Function(EnvironmentType environment)? authServiceGetter;
 
   AdaptingAuthService({this.authServiceGetter});
@@ -10,9 +9,6 @@ class AdaptingAuthService with IsAuthServiceWrapper, IsCorePondComponentWrapper 
   @override
   late final AuthService authService =
       authServiceGetter?.call(context.environment) ?? _getDefaultAuthService(context.environment);
-
-  @override
-  CorePondComponent get corePondComponent => authService;
 
   AuthService _getDefaultAuthService(EnvironmentType environment) {
     if (environment == EnvironmentType.static.testing) {
@@ -22,6 +18,6 @@ class AdaptingAuthService with IsAuthServiceWrapper, IsCorePondComponentWrapper 
       return AuthService.static.file();
     }
 
-    throw Exception('Unknown auth service');
+    return AuthService.static.cloud();
   }
 }

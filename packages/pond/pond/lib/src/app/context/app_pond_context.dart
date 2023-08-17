@@ -27,7 +27,7 @@ class AppPondContext with IsLocatorWrapper<AppPondComponent> {
   late final Locator<AppPondComponent> locator = Locator<AppPondComponent>(
     onRegistered: (component) async {
       appComponents.add(component);
-      component.registerTo(this);
+      await component.registerTo(this);
     },
   ).expand((component) => [component] + AppPondComponentLocatorWrapper.getSubcomponentsOf(component));
 

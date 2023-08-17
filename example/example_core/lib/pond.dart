@@ -8,14 +8,22 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 Future<CorePondContext> getCorePondContext({
   EnvironmentConfig? environmentConfig,
+  List<CorePondComponent> additionalCoreComponents = const [],
   List<RepositoryImplementation> repositoryImplementations = const [],
+  List<AuthServiceImplementation> authServiceImplementations = const [],
 }) async {
   environmentConfig ??= EnvironmentConfig.static.memory();
 
   final corePondContext = CorePondContext();
+
   await corePondContext.register(TypeCoreComponent());
   await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
-  await corePondContext.register(AuthCoreComponent.adapting());
+
+  for (final coreComponent in additionalCoreComponents) {
+    await corePondContext.register(coreComponent);
+  }
+
+  await corePondContext.register(AuthCoreComponent.adapting(authServiceImplementations: authServiceImplementations));
   await corePondContext.register(DropCoreComponent(
     repositoryImplementations: repositoryImplementations,
     authenticatedUserIdX: corePondContext.locate<AuthCoreComponent>().authenticatedUserIdX,
@@ -36,7 +44,6 @@ Future<CorePondContext> getCorePondContext({
 Future<CorePondContext> getTestingCorePondContext() async {
   final corePondContext = await getCorePondContext(
     environmentConfig: EnvironmentConfig.static.testing(),
-    repositoryImplementations: [],
   );
 
   await corePondContext.locate<AuthCoreComponent>().signup('asdf@asdf.com', 'mypassword');

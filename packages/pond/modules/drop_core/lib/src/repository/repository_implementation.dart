@@ -6,8 +6,6 @@ abstract class RepositoryImplementation<T extends Repository> {
   Type get repositoryType;
 }
 
-extension RepositoryImplementationExtensions<T extends Repository> on RepositoryImplementation<T> {}
-
 mixin IsRepositoryImplementation<T extends Repository> implements RepositoryImplementation<T> {
   @override
   Type get repositoryType => T;

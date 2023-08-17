@@ -1,0 +1,63 @@
+name: firebase
+description: Contains Firebase-related components.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  collection: ^1.16.0
+  rxdart: ^0.27.5
+
+  cloud_firestore: ^4.0.4
+  cloud_functions: ^4.0.3
+  firebase_analytics: ^10.0.4
+  firebase_auth: ^4.1.1
+  firebase_core: ^2.1.1
+  firebase_messaging: ^14.0.4
+  firebase_storage: ^11.0.4
+
+  auth_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/modules/auth_core
+  drop_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/modules/drop_core
+  environment_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/modules/environment_core
+  pond:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/pond
+  pond_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/pond_core
+  type:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/type
+  utils:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/utils/utils
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^2.0.0

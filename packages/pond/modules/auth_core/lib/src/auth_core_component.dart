@@ -1,27 +1,31 @@
 import 'package:actions_core/actions_core.dart';
 import 'package:auth_core/src/auth_service.dart';
+import 'package:auth_core/src/auth_service_implementation.dart';
+import 'package:collection/collection.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 
-class AuthCoreComponent with IsAuthServiceWrapper, IsCorePondComponentWrapper {
+class AuthCoreComponent with IsAuthServiceWrapper {
   @override
   final AuthService authService;
+
+  final List<AuthServiceImplementation> authServiceImplementations;
 
   final BehaviorSubject<String?> _authenticatedUserIdX = BehaviorSubject.seeded(null);
   late final ValueStream<String?> authenticatedUserIdX = _authenticatedUserIdX;
 
-  AuthCoreComponent({required this.authService});
+  AuthCoreComponent({required this.authService, this.authServiceImplementations = const []});
 
-  AuthCoreComponent.memory() : authService = AuthService.static.memory();
+  AuthCoreComponent.memory()
+      : authService = AuthService.static.memory(),
+        authServiceImplementations = [];
 
-  AuthCoreComponent.adapting() : authService = AuthService.static.adapting();
-
-  @override
-  CorePondComponent get corePondComponent => authService;
+  AuthCoreComponent.adapting({this.authServiceImplementations = const []})
+      : authService = AuthService.static.adapting();
 
   @override
   List<CorePondComponentBehavior> get behaviors =>
-      corePondComponent.behaviors +
+      super.behaviors +
       [
         CorePondComponentBehavior(onLoad: (context, _) async {
           final initialLoggedInUserId = await getLoggedInUserId();
@@ -68,6 +72,17 @@ class AuthCoreComponent with IsAuthServiceWrapper, IsCorePondComponentWrapper {
   @override
   Future<void> logout() async {
     await context.run(logoutAction, null as dynamic);
+  }
+
+  AuthService? getImplementationOrNull(AuthService authService) {
+    return authServiceImplementations
+        .firstWhereOrNull((implementation) => implementation.authServiceType == authService.runtimeType)
+        ?.getImplementation(authService);
+  }
+
+  AuthService getImplementation(AuthService authService) {
+    return getImplementationOrNull(authService) ??
+        (throw Exception('Could not find implementation for auth service [$authService]'));
   }
 }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:example/firebase_options.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/port/envelope_port_override.dart';
 import 'package:example/presentation/port/envelope_transaction_port_override.dart';
@@ -18,9 +19,17 @@ Future<void> main(List<String> args) async {
   await PondApp.run(
     appPondContextGetter: () async => await getAppPondContext(await getCorePondContext(
       environmentConfig: EnvironmentConfig.static.flutterAssets(),
+      additionalCoreComponents: [
+        FirebaseCoreComponent(
+          app: DefaultFirebaseOptions.currentPlatform,
+        ),
+      ],
       repositoryImplementations: [
         FlutterFileRepositoryImplementation(),
         FirebaseCloudRepositoryImplementation(),
+      ],
+      authServiceImplementations: [
+        FirebaseAuthServiceImplementation(),
       ],
     )),
     splashPage: StyledPage(

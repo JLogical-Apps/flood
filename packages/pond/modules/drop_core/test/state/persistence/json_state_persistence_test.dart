@@ -1,5 +1,5 @@
 import 'package:drop_core/drop_core.dart';
-import 'package:drop_core/src/state/persistence/json_state_persister.dart';
+import 'package:drop_core/src/state/persistence/json_string_state_persister.dart';
 import 'package:test/test.dart';
 import 'package:type/type.dart';
 
@@ -31,7 +31,7 @@ void main() {
     );
 
     expect(
-      JsonStatePersister(context: DropCoreContext(typeContext: typeContext)).persist(state),
+      JsonStringStatePersister(context: DropCoreContext(typeContext: typeContext)).persist(state),
       '''\
 {
   "_id": "$id",

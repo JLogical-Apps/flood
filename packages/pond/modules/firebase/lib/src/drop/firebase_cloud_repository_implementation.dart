@@ -1,5 +1,5 @@
-import 'package:drop/src/repository/firebase_cloud_repository.dart';
 import 'package:drop_core/drop_core.dart';
+import 'package:firebase/src/drop/firebase_cloud_repository.dart';
 
 class FirebaseCloudRepositoryImplementation with IsRepositoryImplementation<CloudRepository> {
   @override

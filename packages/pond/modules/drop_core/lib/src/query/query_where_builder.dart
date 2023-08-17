@@ -1,5 +1,6 @@
-import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/query/condition/query_condition.dart';
+import 'package:drop_core/src/query/query.dart';
+import 'package:drop_core/src/record/entity.dart';
 
 class QueryWhereBuilder<E extends Entity> {
   final Query<E> query;

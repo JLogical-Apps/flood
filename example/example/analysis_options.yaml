@@ -1,7 +1,9 @@
 include: package:lints/recommended.yaml
 
 analyzer:
-  exclude: [ build/** ]
+  exclude:
+    - build/**
+    - lib/firebase_options.dart
 
 linter:
   rules:

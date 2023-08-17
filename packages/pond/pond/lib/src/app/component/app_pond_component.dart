@@ -7,7 +7,7 @@ import 'package:pond/src/app/context/app_pond_context.dart';
 import 'package:pond/src/app/page/app_page.dart';
 
 abstract class AppPondComponent {
-  void onRegister(AppPondContext context);
+  Future onRegister(AppPondContext context);
 
   Future onLoad(AppPondContext context);
 
@@ -23,8 +23,8 @@ abstract class AppPondComponent {
 }
 
 extension AppPondComponentExtension on AppPondComponent {
-  void registerTo(AppPondContext context) {
-    onRegister(context);
+  Future registerTo(AppPondContext context) async {
+    await onRegister(context);
   }
 
   Future load(AppPondContext context) {
@@ -51,7 +51,7 @@ extension AppPondComponentExtension on AppPondComponent {
 
 mixin IsAppPondComponent implements AppPondComponent {
   @override
-  void onRegister(AppPondContext context) {}
+  Future onRegister(AppPondContext context) async {}
 
   @override
   Future onLoad(AppPondContext context) async {}
@@ -80,8 +80,8 @@ abstract class AppPondComponentWrapper implements AppPondComponent {
 
 mixin IsAppPondComponentWrapper implements AppPondComponentWrapper {
   @override
-  void onRegister(AppPondContext context) {
-    appPondComponent.onRegister(context);
+  Future onRegister(AppPondContext context) {
+    return appPondComponent.onRegister(context);
   }
 
   @override
