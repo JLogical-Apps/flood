@@ -5,6 +5,7 @@ import 'package:persistence/persistence.dart';
 import 'package:pond/pond.dart';
 import 'package:pool/pool.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:type/type.dart';
 import 'package:utils/utils.dart';
 
 class FlutterFileRepository with IsRepository {
@@ -29,6 +30,9 @@ class FlutterFileRepository with IsRepository {
   @override
   late final RepositoryStateHandler stateHandler =
       FlutterFileRepositoryStateHandler(repository: this).withEntityLifecycle(context.dropCoreComponent);
+
+  @override
+  List<RuntimeType> get handledTypes => fileRepository.handledTypes;
 }
 
 class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
