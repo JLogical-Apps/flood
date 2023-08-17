@@ -50,9 +50,9 @@ class LoginPage extends AppPage {
                         await context.find<AuthCoreComponent>().login(data['email'], data['password']);
                         context.warpTo(HomePage());
                       } catch (e, stackTrace) {
-                        loginPort.setError(name: 'email', error: e.toString());
-                        print(e);
-                        print(stackTrace);
+                        final errorText = e.as<LoginFailure>()?.displayText ?? e.toString();
+                        loginPort.setError(name: 'email', error: errorText);
+                        context.logError(e, stackTrace);
                       }
                     },
                   ),
@@ -76,9 +76,9 @@ class LoginPage extends AppPage {
 
                         context.warpTo(HomePage());
                       } catch (e, stackTrace) {
-                        loginPort.setError(name: 'email', error: e.toString());
-                        print(e);
-                        print(stackTrace);
+                        final errorText = e.as<SignupFailure>()?.displayText ?? e.toString();
+                        loginPort.setError(name: 'email', error: errorText);
+                        context.logError(e, stackTrace);
                       }
                     },
                   ),
