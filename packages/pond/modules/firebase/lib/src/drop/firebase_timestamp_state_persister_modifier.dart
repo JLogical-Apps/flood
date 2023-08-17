@@ -12,4 +12,20 @@ class FirebaseTimestampStatePersisterModifier extends StatePersisterModifier {
         .cast<String, dynamic>();
     return newData;
   }
+
+  @override
+  Map<String, dynamic> persist(Map<String, dynamic> data) {
+    var newData = data.copy();
+    newData = newData.replaceWhereTraversed((key, value) => value is Timestamp, (key, value) {
+      value as Timestamp;
+      if (value is NowTimestamp) {
+        return firestore.FieldValue.serverTimestamp();
+      } else if (value is DateTimestamp) {
+        return firestore.Timestamp.fromDate(value.time);
+      }
+
+      throw UnimplementedError();
+    }).cast<String, dynamic>();
+    return newData;
+  }
 }

@@ -14,10 +14,10 @@ class JsonStatePersister implements StatePersister<Map<String, dynamic>> {
   JsonStatePersister({required this.context, this.extraStatePersisterModifiers = const []});
 
   late List<StatePersisterModifier> statePersisterModifiers = [
+    ...extraStatePersisterModifiers,
     RuntimeTypeStatePersisterModifier(),
     StateStatePersisterModifier(context: context),
     DateTimeStatePersisterModifier(),
-    ...extraStatePersisterModifiers,
   ];
 
   @override
