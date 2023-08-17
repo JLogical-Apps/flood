@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:firebase/src/drop/firebase_cloud_repository.dart';
+import 'package:firebase/src/drop/firebase_timestamp_state_persister_modifier.dart';
 import 'package:type/type.dart';
 
 class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
@@ -14,6 +15,9 @@ class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
 
   late StatePersister<Map<String, dynamic>> statePersister = StatePersister.json(
     context: repository.context.dropCoreComponent,
+    extraStatePersisterModifiers: [
+      FirebaseTimestampStatePersisterModifier(),
+    ],
   );
 
   @override

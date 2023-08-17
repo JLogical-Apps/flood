@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart' as firebase;
 import 'package:drop_core/drop_core.dart';
+import 'package:firebase/src/drop/firebase_timestamp_state_persister_modifier.dart';
 import 'package:type/type.dart';
 import 'package:utils/utils.dart';
 
@@ -9,7 +10,12 @@ abstract class FirebaseQueryRequestReducer<QR extends QueryRequest<dynamic, T>, 
   final DropCoreContext dropContext;
   final RuntimeType? inferredType;
 
-  late StatePersister<Map<String, dynamic>> statePersister = StatePersister.json(context: dropContext);
+  late StatePersister<Map<String, dynamic>> statePersister = StatePersister.json(
+    context: dropContext,
+    extraStatePersisterModifiers: [
+      FirebaseTimestampStatePersisterModifier(),
+    ],
+  );
 
   FirebaseQueryRequestReducer({required this.dropContext, required this.inferredType});
 
