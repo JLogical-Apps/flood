@@ -13,6 +13,7 @@ class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
 
   RuntimeType? get inferredType => repository.handledTypes.length == 1 ? repository.handledTypes[0] : null;
 
+  @override
   late StatePersister<Map<String, dynamic>> statePersister = StatePersister.json(
     context: repository.context.dropCoreComponent,
     extraStatePersisterModifiers: [

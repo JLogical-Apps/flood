@@ -76,6 +76,7 @@ class FlutterFileRepositoryStateHandler implements RepositoryStateHandler {
 
   FlutterFileRepositoryStateHandler({required this.repository});
 
+  @override
   late StatePersister<String> statePersister = StatePersister.jsonString(context: repository.context.dropCoreComponent);
 
   @override

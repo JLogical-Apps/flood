@@ -6,6 +6,7 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
+import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -47,6 +48,9 @@ mixin IsRepositoryListWrapper implements RepositoryListWrapper {
   Future<State> onDelete(State state) => stateHandler.onDelete(state);
 
   @override
+  StatePersister get statePersister => stateHandler.statePersister;
+
+  @override
   Future<T> onExecuteQuery<T>(
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
@@ -84,6 +88,9 @@ class _RepositoryListStateHandler implements RepositoryStateHandler {
     return repositories.firstWhereOrNull((repository) => repository.handledTypes.contains(state.type))?.delete(state) ??
         (throw Exception('Cannot find repository to handle delete for [$state]'));
   }
+
+  @override
+  StatePersister get statePersister => throw Exception('Repository list handlers do not have a state persister!');
 }
 
 class _RepositoryListQueryExecutor implements RepositoryQueryExecutor {
