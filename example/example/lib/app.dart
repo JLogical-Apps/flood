@@ -19,9 +19,25 @@ Future<void> main(List<String> args) async {
   await PondApp.run(
     appPondContextGetter: () async => await getAppPondContext(await getCorePondContext(
       environmentConfig: EnvironmentConfig.static.flutterAssets(),
-      additionalCoreComponents: [
-        FirebaseCoreComponent(
-          app: DefaultFirebaseOptions.currentPlatform,
+      additionalCoreComponents: (context) => [
+        FirebaseCoreComponent(app: DefaultFirebaseOptions.currentPlatform),
+        FirebaseMessagingCoreComponent(
+          onTokenGenerated: (token) async {
+            final loggedInUserId = await context.locate<AuthCoreComponent>().getLoggedInUserId();
+            if (loggedInUserId == null) {
+              return;
+            }
+
+            final userEntity = await Query.getByIdOrNull<UserEntity>(loggedInUserId).get(context.dropCoreComponent);
+            if (userEntity == null) {
+              return;
+            }
+
+            await context.dropCoreComponent.updateEntity(
+              userEntity,
+              (User user) => user..deviceTokenProperty.set(token),
+            );
+          },
         ),
       ],
       repositoryImplementations: [
@@ -31,6 +47,24 @@ Future<void> main(List<String> args) async {
       authServiceImplementations: [
         FirebaseAuthServiceImplementation(),
       ],
+      onAfterLogin: (context, userId) async {
+        final token = context.locate<FirebaseMessagingCoreComponent>().token;
+
+        final userEntity = await Query.getByIdOrNull<UserEntity>(userId).get(context.dropCoreComponent);
+        if (userEntity == null) {
+          return;
+        }
+
+        await context.dropCoreComponent.updateEntity(userEntity, (User user) => user..deviceTokenProperty.set(token));
+      },
+      onBeforeLogout: (context, userId) async {
+        final userEntity = await Query.getByIdOrNull<UserEntity>(userId).get(context.dropCoreComponent);
+        if (userEntity == null) {
+          return;
+        }
+
+        await context.dropCoreComponent.updateEntity(userEntity, (User user) => user..deviceTokenProperty.set(null));
+      },
     )),
     splashPage: StyledPage(
       body: Center(

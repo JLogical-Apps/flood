@@ -9,7 +9,7 @@ class UserRepository with IsRepositoryWrapper {
     User.new,
     entityTypeName: 'UserEntity',
     valueObjectTypeName: 'User',
-  ).adapting('tray').withSecurity(RepositorySecurity(
+  ).adapting('user').withSecurity(RepositorySecurity(
         read: Permission.authenticated,
         create: Permission.authenticated & Permission.unmodifiable(User.adminField),
         update: Permission.authenticated & Permission.unmodifiable(User.adminField),

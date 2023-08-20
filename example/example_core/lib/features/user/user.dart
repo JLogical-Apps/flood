@@ -7,10 +7,14 @@ class User extends ValueObject {
   static const adminField = 'admin';
   late final adminProperty = field<bool>(name: adminField).withFallbackWithoutReplacement(() => false);
 
+  static const deviceTokenField = 'deviceToken';
+  late final deviceTokenProperty = field<String>(name: deviceTokenField);
+
   @override
   late final List<ValueObjectBehavior> behaviors = [
     nameProperty,
     adminProperty,
+    deviceTokenProperty,
     creationTime(),
   ];
 }

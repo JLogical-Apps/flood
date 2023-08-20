@@ -16,21 +16,16 @@ class AuthCoreComponent with IsAuthServiceWrapper {
 
   AuthCoreComponent({required this.authService, this.authServiceImplementations = const []});
 
-  AuthCoreComponent.memory()
-      : authService = AuthService.static.memory(),
-        authServiceImplementations = [];
-
-  AuthCoreComponent.adapting({this.authServiceImplementations = const []})
-      : authService = AuthService.static.adapting();
-
   @override
   List<CorePondComponentBehavior> get behaviors =>
       super.behaviors +
       [
-        CorePondComponentBehavior(onLoad: (context, _) async {
-          final initialLoggedInUserId = await getLoggedInUserId();
-          _authenticatedUserIdX.value = initialLoggedInUserId;
-        }),
+        CorePondComponentBehavior(
+          onRegister: (context, _) async {
+            final initialLoggedInUserId = await getLoggedInUserId();
+            _authenticatedUserIdX.value = initialLoggedInUserId;
+          },
+        ),
       ];
 
   late final loginAction = Action(

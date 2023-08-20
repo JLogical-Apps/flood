@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:auth_core/src/adapting_auth_service.dart';
 import 'package:auth_core/src/cloud_auth_service.dart';
 import 'package:auth_core/src/file_auth_service.dart';
+import 'package:auth_core/src/listener_auth_service.dart';
 import 'package:auth_core/src/memory_auth_service.dart';
 import 'package:pond_core/pond_core.dart';
 
@@ -14,6 +17,18 @@ abstract class AuthService with IsCorePondComponent {
   Future<void> logout();
 
   static AuthServiceStatic get static => AuthServiceStatic();
+}
+
+extension AuthServiceExtension on AuthService {
+  AuthService withListener({
+    FutureOr Function(String userId)? onAfterLogin,
+    FutureOr Function(String userId)? onBeforeLogout,
+  }) =>
+      ListenerAuthService(
+        authService: this,
+        onAfterLogin: onAfterLogin,
+        onBeforeLogout: onBeforeLogout,
+      );
 }
 
 class AuthServiceStatic {
