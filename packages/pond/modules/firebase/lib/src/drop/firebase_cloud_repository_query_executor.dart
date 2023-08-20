@@ -10,6 +10,7 @@ import 'package:firebase/src/drop/request/all_states_firebase_query_request_redu
 import 'package:firebase/src/drop/request/first_or_null_state_firebase_query_request_reducer.dart';
 import 'package:firebase/src/drop/request/map_firebase_query_request_reducer.dart';
 import 'package:firebase/src/drop/request/paginate_states_firebase_query_request_reducer.dart';
+import 'package:firebase/src/drop/request/wrapper_firebase_query_request_reducer.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:type/type.dart';
 import 'package:utils/utils.dart';
@@ -56,6 +57,20 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
         PaginateStatesFirebaseQueryRequestReducer(
           dropContext: dropContext,
           inferredType: inferredType,
+        ),
+        WrapperFirebaseQueryRequestReducer(
+          dropContext: dropContext,
+          inferredType: inferredType,
+          queryRequestResolver: <T>(qr, states, onStateRetrieved) => resolveForQueryRequest(
+            qr,
+            states,
+            onStateRetreived: onStateRetrieved,
+          ),
+          queryRequestResolverX: <T>(qr, states, onStateRetrieved) => resolveForQueryRequestX(
+            qr,
+            states,
+            onStateRetreived: onStateRetrieved,
+          ),
         ),
       ]);
 

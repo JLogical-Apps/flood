@@ -1,4 +1,5 @@
 import 'package:drop_core/src/context/core_pond_context_extensions.dart';
+import 'package:drop_core/src/query/request/modifier/query_request_modifier.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_executor.dart';
 import 'package:drop_core/src/repository/repository.dart';
@@ -57,6 +58,10 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) async {
+    if (QueryRequestModifier.findIsWithoutCache(queryRequest)) {
+      return await repository.repository.executeQuery(queryRequest);
+    }
+
     if (!repository.queriesRun.contains(queryRequest)) {
       repository.queriesRun.add(queryRequest);
       await repository.repository.executeQuery(queryRequest);
@@ -70,6 +75,10 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
+    if (QueryRequestModifier.findIsWithoutCache(queryRequest)) {
+      return repository.repository.executeQueryX(queryRequest);
+    }
+
     if (!repository.queriesRun.contains(queryRequest)) {
       repository.queriesRun.add(queryRequest);
       repository.repository.executeQuery(queryRequest);

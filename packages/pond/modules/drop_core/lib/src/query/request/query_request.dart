@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/map_query_request.dart';
+import 'package:drop_core/src/query/request/without_cache_query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:equatable/equatable.dart';
@@ -19,6 +20,10 @@ extension QueryRequestExtensions<E extends Entity, T> on QueryRequest<E, T> {
     return MapQueryRequest(sourceQueryRequest: this, mapper: mapper);
   }
 
+  WithoutCacheQueryRequest<E, T> withoutCache() {
+    return WithoutCacheQueryRequest(queryRequest: this);
+  }
+
   Model<T> toModel(DropCoreContext context) {
     return Model.fromValueStream(context.executeQueryX(this));
   }
@@ -30,4 +35,22 @@ extension QueryRequestExtensions<E extends Entity, T> on QueryRequest<E, T> {
   ValueStream<FutureValue<T>> getX(DropCoreContext context) {
     return context.executeQueryX(this);
   }
+}
+
+mixin IsQueryRequest<E extends Entity, T> implements QueryRequest<E, T> {
+  @override
+  bool? get stringify => true;
+}
+
+abstract class QueryRequestWrapper<E extends Entity, T> extends QueryRequest<E, T> {
+  QueryRequest<E, T> get queryRequest;
+
+  @override
+  Query<Entity> get query => queryRequest.query;
+
+  @override
+  bool? get stringify => true;
+
+  @override
+  List<Object?> get props => queryRequest.props;
 }

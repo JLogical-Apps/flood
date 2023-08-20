@@ -414,6 +414,9 @@ void main() {
     expect(Query.from<UserEntity>().allStates(), Query.from<UserEntity>().allStates());
     expect(Query.from<UserEntity>().where('a').isEqualTo('b').all(),
         Query.from<UserEntity>().where('a').isEqualTo('b').all());
+    expect(Query.from<UserEntity>().all(), isNot(Query.from<UserEntity>().all().withoutCache()));
+    expect(Query.from<UserEntity>().all().withoutCache(), Query.from<UserEntity>().all().withoutCache());
+
   });
 
   test('query limit', () async {

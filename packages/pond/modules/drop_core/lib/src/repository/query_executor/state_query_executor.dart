@@ -9,6 +9,7 @@ import 'package:drop_core/src/repository/query_executor/request/first_or_null_st
 import 'package:drop_core/src/repository/query_executor/request/map_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/paginate_states_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/state_query_request_reducer.dart';
+import 'package:drop_core/src/repository/query_executor/request/wrapper_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/where_state_query_reducer.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
@@ -46,6 +47,14 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
           ),
         ),
         PaginateStatesStateQueryRequestReducer(dropContext: dropContext),
+        WrapperStateQueryRequestReducer(
+          dropContext: dropContext,
+          queryRequestResolver: <T>(qr, states, onStateRetrieved) => resolveForQueryRequest(
+            qr,
+            states,
+            onStateRetreived: onStateRetrieved,
+          ),
+        ),
       ]);
 
   @override
