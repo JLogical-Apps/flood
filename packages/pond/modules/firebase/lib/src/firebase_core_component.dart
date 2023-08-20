@@ -31,9 +31,8 @@ class FirebaseCoreComponent with IsCorePondComponent {
 
             await Firebase.initializeApp(options: app);
 
-            final host = isEmulator ? '10.0.2.2' : 'localhost';
-
             if (context.environment == EnvironmentType.static.qa) {
+              final host = isEmulator ? '10.0.2.2' : 'localhost';
               FirebaseFirestore.instance.settings = Settings(
                 host: '$host:$firestorePort',
                 sslEnabled: false,
@@ -43,6 +42,10 @@ class FirebaseCoreComponent with IsCorePondComponent {
               await FirebaseAuth.instance.useAuthEmulator(host, 9099);
               await FirebaseStorage.instance.useStorageEmulator(host, 9199);
               FirebaseFunctions.instance.useFunctionsEmulator(host, 5001);
+            } else {
+              FirebaseFirestore.instance.settings = Settings(
+                persistenceEnabled: false,
+              );
             }
           },
         ),
