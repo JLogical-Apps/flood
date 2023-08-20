@@ -38,6 +38,12 @@ class EnvelopePage extends AppPage {
         final envelopeRuleCardWrapper = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
         return StyledPage(
           title: StyledText.h2.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
+          onRefresh: () async {
+            await Future.wait([
+              envelopeModel.load(),
+              envelopeTransactionsModel.load(),
+            ]);
+          },
           actions: [
             if (!envelope.archivedProperty.value)
               ActionItem(

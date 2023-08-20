@@ -25,7 +25,10 @@ extension QueryRequestExtensions<E extends Entity, T> on QueryRequest<E, T> {
   }
 
   Model<T> toModel(DropCoreContext context) {
-    return Model.fromValueStream(context.executeQueryX(this));
+    return Model.fromValueStream(
+      context.executeQueryX(this),
+      onLoad: () => context.executeQuery(this.withoutCache()),
+    );
   }
 
   Future<T> get(DropCoreContext context) {
