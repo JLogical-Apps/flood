@@ -19,7 +19,7 @@ class SettingsEntity extends Entity<Settings> {
 
   static Future<BudgetEntity?> _findDefaultBudgetEntity(DropCoreContext context) async {
     final authService = context.context.locate<AuthCoreComponent>();
-    final loggedInUserId = await authService.getLoggedInUserId();
+    final loggedInUserId = authService.loggedInUserId;
     if (loggedInUserId == null) {
       return null;
     }

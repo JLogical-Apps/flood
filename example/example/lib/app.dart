@@ -23,7 +23,7 @@ Future<void> main(List<String> args) async {
         FirebaseCoreComponent(app: DefaultFirebaseOptions.currentPlatform),
         FirebaseMessagingCoreComponent(
           onTokenGenerated: (token) async {
-            final loggedInUserId = await context.locate<AuthCoreComponent>().getLoggedInUserId();
+            final loggedInUserId = context.locate<AuthCoreComponent>().loggedInUserId;
             if (loggedInUserId == null) {
               return;
             }

@@ -3,16 +3,12 @@ import 'package:auth_core/src/auth_service.dart';
 import 'package:auth_core/src/auth_service_implementation.dart';
 import 'package:collection/collection.dart';
 import 'package:pond_core/pond_core.dart';
-import 'package:rxdart/rxdart.dart';
 
 class AuthCoreComponent with IsAuthServiceWrapper {
   @override
   final AuthService authService;
 
   final List<AuthServiceImplementation> authServiceImplementations;
-
-  final BehaviorSubject<String?> _authenticatedUserIdX = BehaviorSubject.seeded(null);
-  late final ValueStream<String?> authenticatedUserIdX = _authenticatedUserIdX;
 
   AuthCoreComponent({required this.authService, this.authServiceImplementations = const []});
 
@@ -21,37 +17,25 @@ class AuthCoreComponent with IsAuthServiceWrapper {
       super.behaviors +
       [
         CorePondComponentBehavior(
-          onRegister: (context, _) async {
-            final initialLoggedInUserId = await getLoggedInUserId();
-            _authenticatedUserIdX.value = initialLoggedInUserId;
+          onReset: (context, __) async {
+            await logout();
           },
         ),
       ];
 
   late final loginAction = Action(
     name: 'Login',
-    runner: (LoginParameters parameters) async {
-      final userId = await authService.login(parameters.email, parameters.password);
-      _authenticatedUserIdX.value = userId;
-      return userId;
-    },
+    runner: (LoginParameters parameters) => authService.login(parameters.email, parameters.password),
   );
 
   late final signupAction = Action(
     name: 'Signup',
-    runner: (SignupParameters parameters) async {
-      final userId = await authService.signup(parameters.email, parameters.password);
-      _authenticatedUserIdX.value = userId;
-      return userId;
-    },
+    runner: (SignupParameters parameters) => authService.signup(parameters.email, parameters.password),
   );
 
   late final logoutAction = Action(
     name: 'Logout',
-    runner: (_) async {
-      _authenticatedUserIdX.value = null;
-      await authService.logout();
-    },
+    runner: (_) => authService.logout(),
   );
 
   @override

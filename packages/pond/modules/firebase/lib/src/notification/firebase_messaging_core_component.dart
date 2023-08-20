@@ -1,15 +1,17 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pond/pond.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:utils/utils.dart';
 
 class FirebaseMessagingCoreComponent with IsCorePondComponent {
   final Function()? onNotificationReceived;
   final Function(String? token)? onTokenGenerated;
 
-  final BehaviorSubject<String?> _tokenSubject = BehaviorSubject();
+  final BehaviorSubject<FutureValue<String?>> _tokenSubject = BehaviorSubject.seeded(FutureValue.empty());
 
-  ValueStream<String?> get tokenX => _tokenSubject;
-  String? get token => tokenX.value;
+  ValueStream<FutureValue<String?>> get tokenX => _tokenSubject;
+
+  String? get token => tokenX.value.getOrNull();
 
   FirebaseMessagingCoreComponent({this.onNotificationReceived, this.onTokenGenerated});
 
@@ -34,12 +36,12 @@ class FirebaseMessagingCoreComponent with IsCorePondComponent {
             final token = await FirebaseMessaging.instance.getToken();
 
             // Save the initial token to the database
-            _tokenSubject.value = token;
+            _tokenSubject.value = FutureValue.loaded(token);
             onTokenGenerated?.call(token);
 
             // Any time the token refreshes, store this in the database too.
             FirebaseMessaging.instance.onTokenRefresh.listen((token) {
-              _tokenSubject.value = token;
+              _tokenSubject.value = FutureValue.loaded(token);
               onTokenGenerated?.call(token);
             });
           },

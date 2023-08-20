@@ -2,7 +2,6 @@ import 'package:auth_core/auth_core.dart';
 import 'package:debug/debug.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:model/model.dart';
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
@@ -12,16 +11,9 @@ class AuthAppComponent with IsAppPondComponent, IsDebugDialogComponent {
   @override
   Widget renderDebug(BuildContext context, DebugDialogContext debugContext) {
     return HookBuilder(builder: (context) {
-      final loggedInUserIdModel =
-          useFutureModel(() => context.appPondContext.find<AuthCoreComponent>().getLoggedInUserId());
-      return ModelBuilder<String?>(
-        model: loggedInUserIdModel,
-        builder: (loggedInUserId) {
-          return StyledCard(
-            titleText: 'Auth',
-            bodyText: 'ID: ${loggedInUserId ?? 'N/A'}',
-          );
-        },
+      return StyledCard(
+        titleText: 'Auth',
+        bodyText: 'ID: ${context.appPondContext.find<AuthCoreComponent>().loggedInUserId ?? 'N/A'}',
       );
     });
   }

@@ -1,20 +1,21 @@
 import 'package:auth_core/src/auth_service.dart';
 import 'package:collection/collection.dart';
 import 'package:pond_core/pond_core.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:utils_core/utils_core.dart';
 import 'package:uuid/uuid.dart';
 
 class MemoryAuthService with IsAuthService, IsCorePondComponent {
   final List<_UserToken> _userTokens = [];
-  String? _currentUserId;
+
+  final BehaviorSubject<String?> _userIdX = BehaviorSubject.seeded(null);
 
   @override
-  Future<String?> getLoggedInUserId() async {
-    return _currentUserId;
-  }
+  ValueStream<FutureValue<String?>> get userIdX => _userIdX.mapWithValue((userId) => FutureValue.loaded(userId));
 
   @override
   Future<String> login(String email, String password) async {
-    if (_currentUserId != null) {
+    if (loggedInUserId != null) {
       throw Exception('Cannot login when already logged in!');
     }
 
@@ -23,13 +24,13 @@ class MemoryAuthService with IsAuthService, IsCorePondComponent {
       throw Exception('Email [$email] does not exist!');
     }
 
-    _currentUserId = existingToken.userId;
-    return _currentUserId!;
+    _userIdX.value = existingToken.userId;
+    return _userIdX.value!;
   }
 
   @override
   Future<String> signup(String email, String password) async {
-    if (_currentUserId != null) {
+    if (loggedInUserId != null) {
       throw Exception('Cannot login when already logged in!');
     }
 
@@ -41,13 +42,13 @@ class MemoryAuthService with IsAuthService, IsCorePondComponent {
     final id = Uuid().v4();
     _userTokens.add(_UserToken(userId: id, email: email, password: password));
 
-    _currentUserId = id;
+    _userIdX.value = id;
     return id;
   }
 
   @override
   Future<void> logout() async {
-    _currentUserId = null;
+    _userIdX.value = null;
   }
 }
 

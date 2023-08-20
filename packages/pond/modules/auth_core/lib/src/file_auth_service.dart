@@ -7,6 +7,7 @@ import 'package:environment_core/environment_core.dart';
 import 'package:equatable/equatable.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_core/pond_core.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 import 'package:uuid/uuid.dart';
 
@@ -44,20 +45,21 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
             },
           );
 
+  final BehaviorSubject<FutureValue<String?>> _userIdX = BehaviorSubject.seeded(FutureValue.empty());
+
   @override
   late final List<CorePondComponentBehavior> behaviors = [
     CorePondComponentBehavior(
+      onRegister: (context, _) async {
+        final userId = await loggedInUserIdDataSource.getOrNull();
+        _userIdX.value = FutureValue.loaded(userId);
+      },
       onReset: (context, __) async {
         await loggedInUserIdDataSource.delete();
         await registeredUsersDataSource.delete();
       },
     ),
   ];
-
-  @override
-  Future<String?> getLoggedInUserId() async {
-    return await loggedInUserIdDataSource.getOrNull();
-  }
 
   @override
   Future<String> login(String email, String password) async {
@@ -100,6 +102,9 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
   Future<void> logout() {
     return loggedInUserIdDataSource.delete();
   }
+
+  @override
+  ValueStream<FutureValue<String?>> get userIdX => _userIdX;
 }
 
 /// Token used to simulate logging in. Only used for local testing purposes.

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:auth_core/auth_core.dart';
 import 'package:pond_core/pond_core.dart';
+import 'package:utils_core/utils_core.dart';
 
 class ListenerAuthService with IsAuthServiceWrapper {
   @override
@@ -13,16 +14,20 @@ class ListenerAuthService with IsAuthServiceWrapper {
   ListenerAuthService({required this.authService, this.onAfterLogin, this.onBeforeLogout});
 
   @override
-  List<CorePondComponentBehavior> get behaviors => super.behaviors + [
-    CorePondComponentBehavior(
-      onLoad: (context, component) async {
-        final loggedInUserId = await getLoggedInUserId();
-        if (loggedInUserId != null) {
-          await onAfterLogin?.call(loggedInUserId);
-        }
-      },
-    ),
-  ];
+  List<CorePondComponentBehavior> get behaviors =>
+      super.behaviors +
+      [
+        CorePondComponentBehavior(
+          onLoad: (context, component) async {
+            authService.userIdX.listen((maybeUserId) async {
+              final userId = maybeUserId.getOrNull();
+              if (userId != null) {
+                await onAfterLogin?.call(userId);
+              }
+            });
+          },
+        ),
+      ];
 
   @override
   Future<String> login(String email, String password) async {
@@ -40,9 +45,8 @@ class ListenerAuthService with IsAuthServiceWrapper {
 
   @override
   Future<void> logout() async {
-    final loggedInUserId = await getLoggedInUserId();
     if (loggedInUserId != null) {
-      await onBeforeLogout?.call(loggedInUserId);
+      await onBeforeLogout?.call(loggedInUserId!);
     }
 
     await authService.logout();
