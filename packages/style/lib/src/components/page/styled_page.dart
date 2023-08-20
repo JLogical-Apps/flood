@@ -13,6 +13,8 @@ class StyledPage extends StyleComponent {
   final List<Widget> actionWidgets;
   final List<ActionItem> actions;
 
+  final FutureOr Function()? onRefresh;
+
   final FutureOr<bool> Function()? shouldPop;
 
   final EdgeInsets innerPadding;
@@ -23,6 +25,7 @@ class StyledPage extends StyleComponent {
     required this.body,
     this.actionWidgets = const [],
     this.actions = const [],
+    this.onRefresh,
     this.shouldPop,
     this.innerPadding = const EdgeInsets.all(4),
   });
