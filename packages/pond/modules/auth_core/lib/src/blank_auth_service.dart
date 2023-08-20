@@ -23,5 +23,5 @@ class BlankAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
-  ValueStream<FutureValue<String?>> get userIdX => throw UnimplementedError();
+  ValueStream<FutureValue<String?>> get userIdX => BehaviorSubject.seeded(FutureValue.loaded(null));
 }
