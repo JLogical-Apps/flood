@@ -59,7 +59,7 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     Function(State state)? onStateRetreived,
   }) async {
     if (QueryRequestModifier.findIsWithoutCache(queryRequest)) {
-      return await repository.repository.executeQuery(queryRequest);
+      return await fetchSourceAndDeleteStale(queryRequest);
     }
 
     if (!repository.queriesRun.contains(queryRequest)) {
@@ -76,6 +76,7 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     Function(State state)? onStateRetreived,
   }) {
     if (QueryRequestModifier.findIsWithoutCache(queryRequest)) {
+      fetchSourceAndDeleteStale(queryRequest);
       return repository.repository.executeQueryX(queryRequest);
     }
 
@@ -85,6 +86,24 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     }
 
     return stateQueryExecutor.executeQueryX(queryRequest);
+  }
+
+  Future<T> fetchSourceAndDeleteStale<T>(QueryRequest<dynamic, T> queryRequest) async {
+    final cachedStateIds = (await stateQueryExecutor.getFetchedStates(queryRequest)).map((state) => state.id!);
+
+    final sourceStateIds = <String>[];
+    final result = await repository.repository.executeQuery(
+      queryRequest,
+      onStateRetreived: (state) => sourceStateIds.add(state.id!),
+    );
+
+    for (final cachedStateId in cachedStateIds) {
+      if (!sourceStateIds.contains(cachedStateId)) {
+        repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(cachedStateId);
+      }
+    }
+
+    return result;
   }
 }
 

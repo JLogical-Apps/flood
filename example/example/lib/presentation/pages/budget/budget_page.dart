@@ -40,6 +40,12 @@ class BudgetPage extends AppPage {
 
         final budget = budgetEntity.value;
         return StyledPage(
+          onRefresh: () => Future.wait([
+            budgetModel.load(),
+            envelopesModel.load(),
+            traysModel.load(),
+            transactionsModel.load(),
+          ]),
           titleText: '${budget.nameProperty.value}: ${totalCentsModel.getOrNull()?.formatCentsAsCurrency() ?? '...'}',
           actions: [
             ActionItem(

@@ -16,6 +16,12 @@ abstract class RepositoryQueryExecutor {
 }
 
 extension RepositoryQueryExecutorExtensions on RepositoryQueryExecutor {
+  Future<List<State>> getFetchedStates(QueryRequest queryRequest) async {
+    final states = <State>[];
+    await executeQuery(queryRequest, onStateRetreived: (state) => states.add(state));
+    return states;
+  }
+
   Future<T> executeQuery<T>(
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
