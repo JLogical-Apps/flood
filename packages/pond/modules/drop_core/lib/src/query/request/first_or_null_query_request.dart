@@ -8,7 +8,7 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:equatable/equatable.dart';
 import 'package:utils_core/utils_core.dart';
 
-class FirstOrNullQueryRequest<E extends Entity> with IsMapQueryRequest<E, State?, E?>, EquatableMixin {
+class FirstOrNullQueryRequest<E extends Entity> extends MapQueryRequest<E, State?, E?> with EquatableMixin {
   @override
   final QueryRequest<E, State?> sourceQueryRequest;
 

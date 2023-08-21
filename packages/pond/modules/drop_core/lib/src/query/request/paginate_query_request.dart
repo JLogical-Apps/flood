@@ -10,15 +10,15 @@ import 'package:equatable/equatable.dart';
 import 'package:utils_core/utils_core.dart';
 
 class PaginatedQueryRequest<E extends Entity>
-    with IsMapQueryRequest<E, PaginatedQueryResult<State>, PaginatedQueryResult<E>>, EquatableMixin {
+    extends MapQueryRequest<E, PaginatedQueryResult<State>, PaginatedQueryResult<E>> with EquatableMixin {
   @override
   final QueryRequest<E, PaginatedQueryResult<State>> sourceQueryRequest;
 
   PaginatedQueryRequest({required this.sourceQueryRequest});
 
   @override
-  FutureOr<PaginatedQueryResult<E>> doMap(DropCoreContext context, PaginatedQueryResult<State> statesPage) {
-    return statesPage.map((state) async {
+  FutureOr<PaginatedQueryResult<E>> doMap(DropCoreContext context, PaginatedQueryResult<State> source) {
+    return source.map((state) async {
       final entity = await context.constructEntityFromState<E>(state);
       await entity.throwIfInvalid(null);
       return entity;

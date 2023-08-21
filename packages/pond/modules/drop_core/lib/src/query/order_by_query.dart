@@ -13,7 +13,7 @@ class OrderByQuery<E extends Entity> extends Query<E> {
   }
 
   @override
-  List<Object?> get props => [stateField, type];
+  List<Object?> get props => [parent, stateField, type];
 }
 
 enum OrderByType {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drop_core/src/context/core_pond_context_extensions.dart';
 import 'package:drop_core/src/query/request/modifier/query_request_modifier.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
@@ -16,7 +18,7 @@ class MemoryCacheRepository with IsRepositoryWrapper {
   late final Repository repository;
 
   final BehaviorSubject<Map<String, State>> stateByIdX = BehaviorSubject.seeded({});
-  final List<QueryRequest> queriesRun = [];
+  final Set<QueryRequest> queriesRun = {};
 
   MemoryCacheRepository({required Repository sourceRepository}) {
     repository = sourceRepository.withListener(
@@ -43,6 +45,10 @@ class MemoryCacheRepository with IsRepositoryWrapper {
 class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   final MemoryCacheRepository repository;
 
+  final BehaviorSubject<Map<QueryRequest, Completer>> _completerByLoadingQueryRequestX = BehaviorSubject.seeded({});
+
+  Map<QueryRequest, Completer> get completerByLoadingQueryRequest => _completerByLoadingQueryRequestX.value;
+
   MemoryCacheRepositoryQueryExecutor({required this.repository});
 
   late StatePersister<State> statePersister = StatePersister.state(context: repository.context.dropCoreComponent);
@@ -58,13 +64,16 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) async {
-    if (QueryRequestModifier.findIsWithoutCache(queryRequest)) {
-      return await fetchSourceAndDeleteStale(queryRequest);
+    final isNewlyRunQuery = repository.queriesRun.add(queryRequest);
+    final needsSource = QueryRequestModifier.findIsWithoutCache(queryRequest) || isNewlyRunQuery;
+
+    final loadingCompleter = completerByLoadingQueryRequest[queryRequest];
+    if (loadingCompleter != null) {
+      return await loadingCompleter.future;
     }
 
-    if (!repository.queriesRun.contains(queryRequest)) {
-      repository.queriesRun.add(queryRequest);
-      await repository.repository.executeQuery(queryRequest);
+    if (needsSource) {
+      return await fetchSourceAndDeleteStale(queryRequest);
     }
 
     return await stateQueryExecutor.executeQuery(queryRequest);
@@ -75,20 +84,46 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
+    final isNewlyRunQuery = repository.queriesRun.add(queryRequest);
+
     if (QueryRequestModifier.findIsWithoutCache(queryRequest)) {
-      fetchSourceAndDeleteStale(queryRequest);
       return repository.repository.executeQueryX(queryRequest);
     }
 
-    if (!repository.queriesRun.contains(queryRequest)) {
-      repository.queriesRun.add(queryRequest);
-      repository.repository.executeQuery(queryRequest);
+    return [
+      repository.stateByIdX,
+      _completerByLoadingQueryRequestX,
+    ].combineLatestWithValue((values) => values).asyncMapWithValue(
+      (stateById) async {
+        if (completerByLoadingQueryRequest[queryRequest] != null) {
+          return FutureValue.loading();
+        }
+
+        return FutureValue.loaded(await executeQuery(queryRequest));
+      },
+      initialValue: getInitialValue(
+        queryRequest: queryRequest,
+        isNewlyRunQuery: isNewlyRunQuery,
+      ),
+    );
+  }
+
+  FutureValue<T> getInitialValue<T>({
+    required QueryRequest<dynamic, T> queryRequest,
+    required bool isNewlyRunQuery,
+  }) {
+    if (isNewlyRunQuery) {
+      fetchSourceAndDeleteStale(queryRequest);
+      return FutureValue.loading();
     }
 
-    return stateQueryExecutor.executeQueryX(queryRequest);
+    return stateQueryExecutor.executeQueryX(queryRequest).value;
   }
 
   Future<T> fetchSourceAndDeleteStale<T>(QueryRequest<dynamic, T> queryRequest) async {
+    final completer = Completer();
+    _completerByLoadingQueryRequestX.value = completerByLoadingQueryRequest.copy()..set(queryRequest, completer);
+
     final cachedStateIds = (await stateQueryExecutor.getFetchedStates(queryRequest)).map((state) => state.id!);
 
     final sourceStateIds = <String>[];
@@ -102,6 +137,9 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
         repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(cachedStateId);
       }
     }
+
+    completer.complete(result);
+    _completerByLoadingQueryRequestX.value = completerByLoadingQueryRequest.copy()..remove(queryRequest);
 
     return result;
   }

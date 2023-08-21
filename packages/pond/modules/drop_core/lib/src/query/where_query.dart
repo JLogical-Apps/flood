@@ -13,5 +13,5 @@ class WhereQuery<E extends Entity> extends Query<E> {
   }
 
   @override
-  List<Object?> get props => [condition];
+  List<Object?> get props => [parent, condition];
 }

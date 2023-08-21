@@ -17,7 +17,7 @@ abstract class QueryRequest<E, T> with EquatableMixin {
 
 extension QueryRequestExtensions<E extends Entity, T> on QueryRequest<E, T> {
   MapQueryRequest<E, T, R> map<R>(FutureOr<R> Function(DropCoreContext context, T source) mapper) {
-    return MapQueryRequest(sourceQueryRequest: this, mapper: mapper);
+    return MapQueryRequest.create(sourceQueryRequest: this, mapper: mapper);
   }
 
   WithoutCacheQueryRequest<E, T> withoutCache() {

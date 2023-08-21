@@ -134,7 +134,6 @@ class BudgetPage extends AppPage {
                               children: [
                                 ...trayEntities.map((trayEntity) => TrayCard(
                                       trayEntity: trayEntity,
-                                      // onPressed: () => context.push(EnvelopePage()..idProperty.set(trayEntity.id!)),
                                       onEnvelopePressed: (envelopeEntity) =>
                                           context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!)),
                                     )),

@@ -25,9 +25,9 @@ class BudgetsPage extends AppPage {
               return StyledText.h1('Welcome ${userEntity?.value.nameProperty.value ?? 'N/A'}');
             },
           ),
-          ModelBuilder<List<BudgetEntity>>(
+          ModelBuilder(
             model: budgetsModel,
-            builder: (budgetEntities) {
+            builder: (List<BudgetEntity> budgetEntities) {
               return StyledList.column(
                 children: [
                   StyledList.column.withMinChildSize(150)(

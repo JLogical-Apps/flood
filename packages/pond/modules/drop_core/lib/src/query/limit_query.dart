@@ -12,5 +12,5 @@ class LimitQuery<E extends Entity> extends Query<E> {
   }
 
   @override
-  List<Object?> get props => [limit];
+  List<Object?> get props => [parent, limit];
 }
