@@ -1,3 +1,5 @@
+import 'package:environment_core/environment_core.dart';
+import 'package:firebase/firebase.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pond/pond.dart';
 import 'package:rxdart/rxdart.dart';
@@ -19,6 +21,15 @@ class FirebaseMessagingCoreComponent with IsCorePondComponent {
   List<CorePondComponentBehavior> get behaviors => [
         CorePondComponentBehavior(
           onLoad: (context, component) async {
+            final firebaseCoreComponent = context.locateOrNull<FirebaseCoreComponent>();
+            if (firebaseCoreComponent == null) {
+              return;
+            }
+
+            if (!firebaseCoreComponent.shouldInitialize(context.environment)) {
+              return;
+            }
+
             await FirebaseMessaging.instance.requestPermission(
               alert: true,
               announcement: false,
