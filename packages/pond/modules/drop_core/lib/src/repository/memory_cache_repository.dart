@@ -124,10 +124,11 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     final completer = Completer();
     _completerByLoadingQueryRequestX.value = completerByLoadingQueryRequest.copy()..set(queryRequest, completer);
 
-    final cachedStateIds = (await stateQueryExecutor.getFetchedStates(queryRequest)).map((state) => state.id!);
+    final cachedStates = await guardAsync(() => stateQueryExecutor.getFetchedStates(queryRequest)) ?? [];
+    final cachedStateIds = cachedStates.map((state) => state.id!).toList();
 
     final sourceStateIds = <String>[];
-    final result = await repository.repository.executeQuery(
+    final sourceResult = await repository.repository.executeQuery(
       queryRequest,
       onStateRetreived: (state) => sourceStateIds.add(state.id!),
     );
@@ -138,10 +139,10 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       }
     }
 
-    completer.complete(result);
+    completer.complete(sourceResult);
     _completerByLoadingQueryRequestX.value = completerByLoadingQueryRequest.copy()..remove(queryRequest);
 
-    return result;
+    return sourceResult;
   }
 }
 
