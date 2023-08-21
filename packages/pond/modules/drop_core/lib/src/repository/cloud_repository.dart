@@ -11,5 +11,5 @@ class CloudRepository with IsRepositoryWrapper {
 
   @override
   late final Repository repository =
-      context.locate<DropCoreComponent>().getImplementationOrNull(this) ?? BlankRepository();
+      context.locate<DropCoreComponent>().getImplementationOrNull(this) ?? BlankRepository(repository: childRepository);
 }
