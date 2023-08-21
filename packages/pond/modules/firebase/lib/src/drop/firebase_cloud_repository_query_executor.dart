@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart' as firebase;
 import 'package:drop_core/drop_core.dart';
 import 'package:firebase/src/drop/firebase_cloud_repository.dart';
 import 'package:firebase/src/drop/firebase_query_reducer.dart';
@@ -11,10 +12,10 @@ import 'package:firebase/src/drop/request/first_or_null_state_firebase_query_req
 import 'package:firebase/src/drop/request/map_firebase_query_request_reducer.dart';
 import 'package:firebase/src/drop/request/paginate_states_firebase_query_request_reducer.dart';
 import 'package:firebase/src/drop/request/wrapper_firebase_query_request_reducer.dart';
+import 'package:log_core/log_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:type/type.dart';
 import 'package:utils/utils.dart';
-import 'package:cloud_firestore/cloud_firestore.dart' as firebase;
 
 class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   final FirebaseCloudRepository repository;
@@ -76,6 +77,7 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
 
   @override
   Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest, {Function(State state)? onStateRetreived}) async {
+    repository.context.log('Executing query to Firebase: [$queryRequest]');
     final firestoreQuery = reduceQuery(null, queryRequest.query);
     return await getQueryRequestReducerResolver().resolve(queryRequest).reduce(
           queryRequest,
@@ -89,6 +91,7 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
+    repository.context.log('Executing queryX to Firebase: [$queryRequest]');
     final firestoreQuery = reduceQuery(null, queryRequest.query);
     return getQueryRequestReducerResolver()
         .resolve(queryRequest)

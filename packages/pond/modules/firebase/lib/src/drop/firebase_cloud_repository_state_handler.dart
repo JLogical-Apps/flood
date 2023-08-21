@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:firebase/src/drop/firebase_cloud_repository.dart';
 import 'package:firebase/src/drop/firebase_timestamp_state_persister_modifier.dart';
+import 'package:log_core/log_core.dart';
 import 'package:type/type.dart';
 
 class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
@@ -25,6 +26,8 @@ class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
 
   @override
   Future<State> onUpdate(State state) async {
+    repository.context.log('Saving state to Firebase: [$state]');
+
     final doc = collection.doc(state.id!);
     final json = statePersister.persist(state);
 
@@ -41,6 +44,8 @@ class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
 
   @override
   Future<State> onDelete(State state) async {
+    repository.context.log('Deleting state to Firebase: [$state]');
+
     final id = state.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
     final doc = collection.doc(id);
     await doc.delete();
