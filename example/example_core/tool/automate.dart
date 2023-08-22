@@ -19,5 +19,9 @@ Future<void> main(List<String> args) async {
     EnvironmentType.static.production: OpsEnvironment.static.firebase,
   }));
 
-  await Automate.automate(context: automatePondContext, args: args);
+  await Automate.automate(
+    context: automatePondContext,
+    args: args,
+    appDirectoryGetter: (coreDirectory) => coreDirectory.parent / 'example',
+  );
 }

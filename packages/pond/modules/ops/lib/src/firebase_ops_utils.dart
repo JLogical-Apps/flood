@@ -16,26 +16,26 @@ class FirebaseOpsUtils {
     await context.firebaseDirectory.ensureCreated();
 
     try {
-      await context.run('firebase --version');
+      await context.coreProject.run('firebase --version');
     } catch (e) {
       final shouldInstallFirebase =
-          context.confirm('Firebase is not installed on this machine. Would you like to install it?');
+          context.coreProject.confirm('Firebase is not installed on this machine. Would you like to install it?');
       if (!shouldInstallFirebase) {
-        context.error('Firebase needs to be installed.');
+        context.coreProject.error('Firebase needs to be installed.');
         return false;
       }
 
       try {
-        await context.run('npm install -g firebase-tools');
+        await context.coreProject.run('npm install -g firebase-tools');
       } catch (e) {
-        context.error(
+        context.coreProject.error(
             'Unable to install Firebase. Follow `https://firebase.google.com/docs/cli` to install Firebase manually.');
         return false;
       }
     }
 
     try {
-      await context.run('firebase login --interactive', interactable: true);
+      await context.coreProject.run('firebase login --interactive', interactable: true);
     } catch (e) {
       return false;
     }
@@ -61,13 +61,13 @@ class FirebaseOpsUtils {
       return projectId;
     }
 
-    final shouldAdd = context.confirm(
+    final shouldAdd = context.coreProject.confirm(
         "There isn't a Firebase project configured with the ${environmentType.name} environment. Would you like to set one up?");
     if (!shouldAdd) {
       throw Exception('No Firebase projecet configured with the ${environmentType.name} environment.');
     }
 
-    await context.run(
+    await context.coreProject.run(
       'firebase use --add',
       workingDirectory: context.firebaseDirectory,
       interactable: true,
@@ -78,15 +78,17 @@ class FirebaseOpsUtils {
     return currentlyUsedProjectId;
   }
 
-  static Future<String?> initFirebase(AutomateCommandContext context,
-      {required EnvironmentType environmentType}) async {
+  static Future<String?> initFirebase(
+    AutomateCommandContext context, {
+    required EnvironmentType environmentType,
+  }) async {
     final shouldInit =
-        context.confirm('A firebase project has not been initialized. Would you like to initialize one?');
+        context.coreProject.confirm('A firebase project has not been initialized. Would you like to initialize one?');
     if (!shouldInit) {
       throw Exception('No Firebase project initialized!');
     }
 
-    await context.run(
+    await context.coreProject.run(
       'firebase init',
       workingDirectory: context.firebaseDirectory,
       interactable: true,
@@ -98,7 +100,7 @@ class FirebaseOpsUtils {
   }
 
   static Future<String?> getCurrentlyUsedProjectIdOrNull(AutomateCommandContext context) async {
-    final output = await context.run(
+    final output = await context.coreProject.run(
       'firebase use',
       workingDirectory: context.firebaseDirectory,
     );
@@ -183,5 +185,5 @@ ${repositoryRules.withIndent(4)}
 }
 
 extension AutomateCommandContextExtensions on AutomateCommandContext {
-  Directory get firebaseDirectory => getRootDirectory() / 'firebase';
+  Directory get firebaseDirectory => coreDirectory / 'firebase';
 }

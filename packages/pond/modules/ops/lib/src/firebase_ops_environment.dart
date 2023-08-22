@@ -23,7 +23,7 @@ class FirebaseOpsEnvironment with IsOpsEnvironment {
     }
 
     final projectId = await FirebaseOpsUtils.getOrCreateFirebaseProjectId(context, environmentType: environmentType);
-    await context.run(
+    await context.coreProject.run(
       'firebase use $projectId',
       workingDirectory: context.firebaseDirectory,
     );
@@ -40,12 +40,12 @@ class FirebaseOpsEnvironment with IsOpsEnvironment {
     await DataSource.static.file(context.firebaseDirectory - 'firestore.rules').set(firestoreRules);
 
     final shouldDeploy =
-        context.confirm('You will deploy firestore.rules if you confirm. Are you sure you want to deploy?');
+        context.coreProject.confirm('You will deploy firestore.rules if you confirm. Are you sure you want to deploy?');
     if (!shouldDeploy) {
       return;
     }
 
-    await context.run(
+    await context.coreProject.run(
       'firebase deploy --only firestore:rules',
       workingDirectory: context.firebaseDirectory,
     );

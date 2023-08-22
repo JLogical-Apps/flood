@@ -1,17 +1,18 @@
+import 'dart:io';
+
 import 'package:persistence_core/persistence_core.dart';
-import 'package:pond_cli/src/automate/util/file_system/automate_file_system.dart';
 import 'package:pond_cli/src/automate/util/package_manager/package_manager.dart';
 import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 import 'package:utils_core/utils_core.dart';
 
 class PubspecPackageManager with IsPackageManager {
   final Terminal terminal;
-  final AutomateFileSystem fileSystem;
+  final Directory projectDirectory;
   final String pubGetCommand;
 
   PubspecPackageManager({
     required this.terminal,
-    required this.fileSystem,
+    required this.projectDirectory,
     this.pubGetCommand = 'flutter pub get',
   });
 
@@ -50,8 +51,7 @@ class PubspecPackageManager with IsPackageManager {
       return;
     }
 
-    final rootDirectory = fileSystem.getRootDirectory();
-    final pubspecDataSource = DataSource.static.file(rootDirectory - 'pubspec.yaml').mapYaml();
+    final pubspecDataSource = DataSource.static.file(projectDirectory - 'pubspec.yaml').mapYaml();
     _parsedPubspec = (await pubspecDataSource.getOrNull()) ?? (throw Exception('Cannot find pubspec.yaml to parse!'));
   }
 

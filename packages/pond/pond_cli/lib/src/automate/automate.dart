@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:pond_cli/src/automate/command/automate_command.dart';
 import 'package:pond_cli/src/automate/command/automate_command_context.dart';
@@ -8,7 +10,8 @@ class Automate {
   static Future<void> automate({
     required AutomatePondContext context,
     required List<String> args,
-    Terminal? terminal,
+    Directory Function(Directory coreDirectory)? appDirectoryGetter,
+    Terminal Function(Directory coreDirectory)? terminalGetter,
   }) async {
     if (args.isEmpty) {
       _printUsage(context: context);
@@ -28,7 +31,11 @@ class Automate {
 
     final instanceCommand = automateCommand.fromPath(args.skip(1).join(' '));
 
-    final commandContext = AutomateCommandContext(automateContext: context, terminal: terminal);
+    final commandContext = AutomateCommandContext(
+      automateContext: context,
+      terminalGetter: terminalGetter,
+      appDirectoryGetter: appDirectoryGetter,
+    );
     await instanceCommand.onRun(commandContext);
     await commandContext.cleanup();
   }

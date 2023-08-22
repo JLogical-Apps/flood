@@ -41,7 +41,8 @@ class DeployCommand extends AutomateCommand<DeployCommand> {
 
     var exists = await opsEnvironment.exists(context, environmentType: environmentType);
     if (!exists) {
-      if (!context.confirm('Environment for [${environmentType.name}] does not exist. Would you like to create it?')) {
+      if (!context.coreProject
+          .confirm('Environment for [${environmentType.name}] does not exist. Would you like to create it?')) {
         return;
       }
 
@@ -53,7 +54,7 @@ class DeployCommand extends AutomateCommand<DeployCommand> {
       }
     }
 
-    if (!context.confirm('Are you sure you want to deploy to [${environmentType.name}]?')) {
+    if (!context.coreProject.confirm('Are you sure you want to deploy to [${environmentType.name}]?')) {
       return;
     }
 
@@ -100,11 +101,12 @@ class DeleteCommand extends AutomateCommand<DeleteCommand> {
 
     final exists = await opsEnvironment.exists(context, environmentType: environmentType);
     if (!exists) {
-      context.warning('Ops environment for [${environmentType.name}] does not exist, so nothing will be deleted.');
+      context.coreProject
+          .warning('Ops environment for [${environmentType.name}] does not exist, so nothing will be deleted.');
       return;
     }
 
-    if (!context.confirm('Are you sure you want to delete [${environmentType.name}]?')) {
+    if (!context.coreProject.confirm('Are you sure you want to delete [${environmentType.name}]?')) {
       return;
     }
 

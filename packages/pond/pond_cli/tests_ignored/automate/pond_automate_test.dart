@@ -57,14 +57,14 @@ void main() {
     await Automate.automate(
       context: automateContext,
       args: [echoCommandName, '"Hello World!"'],
-      terminal: captureTerminal,
+      terminalGetter: (_) => captureTerminal,
     );
 
     captureTerminal = Terminal.static.capture;
     await Automate.automate(
       context: automateContext,
       args: [echoCommandName, '"Hello World!"', 'repeat:3'],
-      terminal: captureTerminal,
+      terminalGetter: (_) => captureTerminal,
     );
 
     expect(captureTerminal.output, ['print: Hello World!'].repeat(3));
@@ -121,7 +121,7 @@ class EchoAutomateCommand extends AutomateCommand<EchoAutomateCommand> {
   @override
   Future<void> onRun(AutomateCommandContext context) async {
     for (var i = 0; i < repeatField.value; i++) {
-      context.print(echoField.value);
+      context.coreProject.print(echoField.value);
     }
   }
 }

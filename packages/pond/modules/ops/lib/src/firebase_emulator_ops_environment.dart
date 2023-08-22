@@ -14,7 +14,7 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
         return false;
       }
 
-      final emulatorOutput = await context.run('lsof -i :9099');
+      final emulatorOutput = await context.coreProject.run('lsof -i :9099');
       return emulatorOutput.isNotEmpty;
     } catch (e) {
       return false;
@@ -28,12 +28,12 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
     }
 
     final projectId = await FirebaseOpsUtils.getOrCreateFirebaseProjectId(context, environmentType: environmentType);
-    await context.run(
+    await context.coreProject.run(
       'firebase use $projectId',
       workingDirectory: context.firebaseDirectory,
     );
 
-    await context.run(
+    await context.coreProject.run(
       'firebase emulators:start',
       workingDirectory: context.firebaseDirectory,
     );

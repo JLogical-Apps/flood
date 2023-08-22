@@ -6,7 +6,7 @@ import 'package:pond_cli/pond_cli.dart';
 import 'package:utils_core/utils_core.dart';
 
 class AppIconAutomateComponent with IsAutomatePondComponent {
-  final File Function(Directory rootDirectory) appIconForegroundFileGetter;
+  final File Function(Directory appDirectory) appIconForegroundFileGetter;
   final int backgroundColor;
   final int padding;
 
@@ -54,29 +54,29 @@ class AppIconCommand extends AutomateCommand<AppIconCommand> {
 
   @override
   Future<void> onRun(AutomateCommandContext context) async {
-    await context.ensurePackageInstalled('flutter_launcher_icons', isDevDependency: true);
+    await context.appProject.ensurePackageInstalled('flutter_launcher_icons', isDevDependency: true);
 
     // Sometimes the AppIcon.appiconset folder isn't created causing flutter_launcher_icons to crash.
-    final iosAssetsFolder = context.getRootDirectory() / 'ios' / 'Runner' / 'Assets.xcassets' / 'AppIcon.appiconset';
+    final iosAssetsFolder = context.appDirectory / 'ios' / 'Runner' / 'Assets.xcassets' / 'AppIcon.appiconset';
     iosAssetsFolder.ensureCreated();
 
     final configurationFile = await context.createTempFile('flutter_launcher_icons.yaml');
     await DataSource.static.file(configurationFile).mapYaml().set(await _constructConfig(context));
 
-    context.run('flutter pub run flutter_launcher_icons:main -f "${configurationFile.relativePath}"');
+    context.appProject.run('flutter pub run flutter_launcher_icons:main -f "${configurationFile.absolute.path}"');
   }
 
   @override
   AutomatePathDefinition get pathDefinition => AutomatePathDefinition.empty;
 
   Future<Map<String, dynamic>> _constructConfig(AutomateCommandContext context) async {
-    final appIconForegroundFile = appIconForegroundFileGetter(context.getRootDirectory());
+    final appIconForegroundFile = appIconForegroundFileGetter(context.appDirectory);
     return {
       'flutter_icons': {
         'android': true,
         'ios': true,
         'remove_alpha_ios': true,
-        'image_path': (await _constructAppIcon(context, foregroundImageFile: appIconForegroundFile)).relativePath,
+        'image_path': (await _constructAppIcon(context, foregroundImageFile: appIconForegroundFile)).absolute.path,
         'adaptive_icon_background': '#${backgroundColor.toRadixString(16)}',
         'adaptive_icon_foreground': appIconForegroundFile.relativePath,
       },
