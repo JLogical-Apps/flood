@@ -14,6 +14,10 @@ class FromFirebaseQueryReducer extends FirebaseQueryReducer<FromQuery> {
   @override
   firebase.Query reduce(FromQuery query, firebase.Query? currentFirestoreQuery) {
     final collection = firebase.FirebaseFirestore.instance.collection(rootPath);
+    if (query.entityType == Entity) {
+      return collection;
+    }
+
     final queryEntityRuntimeType = context.getRuntimeTypeRuntime(query.entityType);
 
     if (queryEntityRuntimeType == inferredType) {
