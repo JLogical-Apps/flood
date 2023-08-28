@@ -20,7 +20,7 @@ class UrlBarAppComponent with IsAppPondComponent {
             right: isExpanded ? 0 : null,
             width: isExpanded ? null : 60,
             height: isExpanded ? 120 : 40,
-            bottom: 0,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
             child: Material(
               color: Colors.transparent,
               child: Overlay(
