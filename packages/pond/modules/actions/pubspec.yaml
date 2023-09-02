@@ -1,0 +1,29 @@
+name: actions
+description: Flutter utils for Actions
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  collection: ^1.16.0
+
+  actions_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/modules/actions_core
+  pond:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/pond
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^2.0.0

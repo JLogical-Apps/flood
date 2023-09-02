@@ -1,0 +1,41 @@
+name: reset
+description: Flutter utils for resetting the app.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  collection: ^1.16.0
+  flutter_hooks: ^0.18.5+1
+  provider: ^6.0.5
+
+  debug:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/modules/debug
+  pond:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/pond
+  style:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/style
+  utils:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/utils/utils
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^2.0.0

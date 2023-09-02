@@ -1,0 +1,12 @@
+include: package:lints/recommended.yaml
+
+analyzer:
+  exclude: [ build/** ]
+
+linter:
+  rules:
+    - avoid_type_to_string
+    - prefer_single_quotes
+    - prefer_final_locals
+    - always_use_package_imports
+    - avoid_relative_lib_imports

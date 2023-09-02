@@ -1,0 +1,32 @@
+name: environment_core
+description: Core module for Environment configs
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  collection: ^1.16.0
+  equatable: 2.0.5
+
+  persistence_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/persistence/persistence_core
+  pond_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/pond_core
+  utils_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/utils/utils_core
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.4

@@ -1,16 +1,14 @@
 # example
 
-Example for JLogical Utils.
+Example Flutter app using JLogical Utils.
 
-## Getting Started
+This will demonstrate the core functionality of the different packages in `jlogical_utils` in a
+Flutter app.
 
-This project is a starting point for a Flutter application.
+## Configuration
 
-A few resources to get you started if this is your first Flutter project:
+Modify `assets/config.overrides.yaml` to override any local configurations. You can choose from a
+variety of environments:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- `testing`
+- `device`

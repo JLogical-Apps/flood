@@ -1,0 +1,38 @@
+name: debug
+description: App Component to display debug info.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_hooks: ^0.18.5+1
+  provider: ^6.0.5
+  rxdart: ^0.27.5
+
+  pond:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/pond
+  style:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/style
+  utils:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/utils/utils
+
+dev_dependencies:
+  lints: ^2.0.0
+  flutter_test:
+    sdk: flutter

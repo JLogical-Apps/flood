@@ -1,0 +1,4 @@
+enum BuildType {
+  release,
+  regular,
+}

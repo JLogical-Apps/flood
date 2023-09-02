@@ -1,0 +1,43 @@
+name: pond
+description: The Pond Framework.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  collection: ^1.16.0
+  flutter_hooks: ^0.18.5+1
+  provider: ^6.0.5
+  vrouter: ^1.2.1
+
+  path_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/path_core
+  pond_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/pond_core
+  utils:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/utils/utils
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.1
+
+flutter:
+  uses-material-design: true
+

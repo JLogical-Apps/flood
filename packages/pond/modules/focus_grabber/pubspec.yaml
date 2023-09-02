@@ -1,0 +1,29 @@
+name: focus_grabber
+description: App Component to lose focus when tapping on nothing.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  pond:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/pond
+  environment:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/pond/modules/environment
+
+dev_dependencies:
+  lints: ^2.0.0
+  flutter_test:
+    sdk: flutter

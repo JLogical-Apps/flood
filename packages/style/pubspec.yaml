@@ -1,0 +1,36 @@
+name: style
+description: The style system.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  collection: ^1.16.0
+  font_awesome_flutter: ^10.4.0
+  flutter_hooks: ^0.18.5+1
+  flutter_markdown: ^0.6.8
+  intersperse: ^2.0.0
+  flutter_staggered_grid_view: ^0.6.2
+  provider: ^6.0.5
+  pull_to_refresh: ^2.0.0
+  tinycolor2: ^3.0.1
+
+  utils:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "3.0"
+      path: packages/utils/utils
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.4
+
+flutter:
+  uses-material-design: true
