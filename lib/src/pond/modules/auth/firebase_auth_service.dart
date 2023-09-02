@@ -140,4 +140,9 @@ class FirebaseAuthService extends AuthService implements PasswordResettable {
       return user.uid;
     }
   }
+
+  @override
+  Future<void> onChangePassword(String password) async {
+    await auth.currentUser!.updatePassword(password);
+  }
 }
