@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:image/image.dart';
+import 'package:image/image.dart' as image;
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:utils_core/utils_core.dart';
@@ -84,10 +84,10 @@ class AppIconCommand extends AutomateCommand<AppIconCommand> {
   }
 
   Future<File> _constructAppIcon(AutomateCommandContext context, {required File foregroundImageFile}) async {
-    final foregroundImage =
-        decodeImage(await foregroundImageFile.readAsBytes()) ?? (throw Exception('Cannot load the foreground image!'));
+    final foregroundImage = image.decodeImage(await foregroundImageFile.readAsBytes()) ??
+        (throw Exception('Cannot load the foreground image!'));
 
-    final image = _scaleImageCentered(
+    final appIconImage = _scaleImageCentered(
       source: foregroundImage,
       colorBackground: _getColor(backgroundColor),
       maxWidth: 1024,
@@ -97,18 +97,24 @@ class AppIconCommand extends AutomateCommand<AppIconCommand> {
 
     final outputFile = await context.createTempFile('app_icon.png');
 
-    await outputFile.writeAsBytes(encodePng(image));
+    await outputFile.writeAsBytes(image.encodePng(appIconImage));
 
     return outputFile;
   }
 
-  int _getColor(int rgb) => Color.fromRgb((rgb & 0xff0000) >>> 16, (rgb & 0x00ff00) >>> 8, rgb & 0x0000ff);
+  image.Color _getColor(int rgb) {
+    return image.ColorRgb8(
+      (rgb & 0xff0000) >>> 16,
+      (rgb & 0x00ff00) >>> 8,
+      rgb & 0x0000ff,
+    );
+  }
 
-  Image _scaleImageCentered({
-    required Image source,
+  image.Image _scaleImageCentered({
+    required image.Image source,
     required int maxWidth,
     required int maxHeight,
-    required int colorBackground,
+    required image.Color colorBackground,
     int padding = 0,
   }) {
     final scaleX = maxWidth / source.width;
@@ -116,14 +122,14 @@ class AppIconCommand extends AutomateCommand<AppIconCommand> {
     final scale = (scaleX * source.height > maxHeight) ? scaleY : scaleX;
     final width = (source.width * scale).round() - padding * 2;
     final height = (source.height * scale).round() - padding * 2;
-    return drawImage(
-        Image(maxWidth, maxHeight)..fill(colorBackground),
-        copyResize(
-          source,
-          width: width,
-          height: height,
-        ),
-        dstX: ((maxWidth - width) / 2).round(),
-        dstY: ((maxHeight - height) / 2).round());
+    return image.compositeImage(
+      image.fill(image.Image(width: maxWidth, height: maxHeight), color: colorBackground),
+      source,
+      blend: image.BlendMode.alpha,
+      dstX: ((maxWidth - width) / 2).round(),
+      dstY: ((maxHeight - height) / 2).round(),
+      dstW: width,
+      dstH: height,
+    );
   }
 }
