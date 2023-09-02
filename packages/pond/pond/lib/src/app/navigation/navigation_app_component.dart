@@ -38,7 +38,7 @@ class NavigationAppComponent with IsAppPondComponent {
       return pushLocation(context, redirectUri.toString());
     }
 
-    SystemNavigator.routeInformationUpdated(location: location);
+    SystemNavigator.routeInformationUpdated(uri: Uri.parse(location));
 
     final result = await PondApp.navigatorKey.currentState!.push(MaterialPageRoute(
       builder: (_) => PondApp.wrapPage(
@@ -56,7 +56,7 @@ class NavigationAppComponent with IsAppPondComponent {
 
   Future<T> pushReplacement<T>(BuildContext context, AppPage page) async {
     final location = page.uri.toString();
-    SystemNavigator.routeInformationUpdated(location: location);
+    SystemNavigator.routeInformationUpdated(uri: page.uri);
 
     final result = await PondApp.navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
       builder: (_) => page,
@@ -74,7 +74,7 @@ class NavigationAppComponent with IsAppPondComponent {
   void _updateSystemPath() {
     final path = PondApp.navigatorKey.currentState!.currentPath;
     if (path != null) {
-      SystemNavigator.routeInformationUpdated(location: path);
+      SystemNavigator.routeInformationUpdated(uri: Uri.parse(path));
     }
   }
 }

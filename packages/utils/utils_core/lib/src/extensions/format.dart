@@ -1,6 +1,5 @@
 import 'package:filesize/filesize.dart';
 import 'package:intl/intl.dart';
-import 'package:filesize/filesize.dart';
 
 /// Extension methods for formatting.
 extension NumberFormatUtil on num {
