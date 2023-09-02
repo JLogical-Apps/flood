@@ -1,4 +1,4 @@
-import 'package:utils_core/src/traverser/modifier_traverser.dart';
+import 'package:utils_core/src/patterns/traverser/modifier_traverser.dart';
 
 abstract class Traverser<T> {
   Iterable<T> traverse(T object);

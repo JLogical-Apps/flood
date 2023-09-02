@@ -1,3 +1,7 @@
-# Persistence (Core)
+# Port (Core)
 
-Utilities to help with persisting and storing data.
+This package exports utilities to handle defining forms, validating them, and transforming their results.
+
+## Port
+
+A `Port`

@@ -1,5 +1,5 @@
 import 'package:utils_core/src/patterns/patterns.dart';
-import 'package:utils_core/src/traverser/traverser.dart';
+import 'package:utils_core/src/patterns/traverser/traverser.dart';
 
 class ModifierTraverser<T> with IsTraverser<T> {
   final List<TraverserModifier<T>> modifiers;

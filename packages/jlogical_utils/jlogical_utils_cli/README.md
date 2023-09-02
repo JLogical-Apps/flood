@@ -1,6 +1,8 @@
-# JLogical Utils (Core)
+# JLogical Utils (CLI)
 
-This simply exports all core packages out.
+This simply exports all the CLI and core packages out.
 
-This allows you to easily `import 'package:jlogical_utils/jlogical_utils_core.dart'` in a Dart file
-and have all of the core JLogical Utils easily available to use.
+This allows you to easily `import 'package:jlogical_utils_cli/jlogical_utils_cli.dart'` in a Dart file
+and have all of the CLI and core JLogical Utils easily available to use.
+
+Use this when building a CLI tool.

@@ -1,4 +1,5 @@
-# Type
+# Utils
 
-This handles runtime type checking such as finding whether a `Type` is an instance of another
-`Type` or find all the ancestors and children of a `Type`.
+This package exports utilities for Flutter applications.
+
+All of the utilities here are really simple, so there is no substance to write about in this README.
