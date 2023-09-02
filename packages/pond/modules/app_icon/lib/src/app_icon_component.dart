@@ -58,7 +58,7 @@ class AppIconCommand extends AutomateCommand<AppIconCommand> {
 
     // Sometimes the AppIcon.appiconset folder isn't created causing flutter_launcher_icons to crash.
     final iosAssetsFolder = context.appDirectory / 'ios' / 'Runner' / 'Assets.xcassets' / 'AppIcon.appiconset';
-    iosAssetsFolder.ensureCreated();
+    await iosAssetsFolder.ensureCreated();
 
     final configurationFile = await context.createTempFile('flutter_launcher_icons.yaml');
     await DataSource.static.file(configurationFile).mapYaml().set(await _constructConfig(context));

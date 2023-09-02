@@ -1,5 +1,3 @@
-# Drop (Core)
+# URL Bar
 
-Handles abstracting data models from repositories. 
-
-Serializes and deserializes models into data classes.
+This package exports `UrlBarAppComponent` which adds a URL bar if you long-press the bottom-left of the screen.

@@ -1,5 +1,3 @@
-# Drop (Core)
+Task (Core)
 
-Handles abstracting data models from repositories. 
-
-Serializes and deserializes models into data classes.
+This feature is under construction. It will allow you define `Task`s which are executed based on a URL.

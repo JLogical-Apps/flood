@@ -1,5 +1,3 @@
-# Drop (Core)
+# Log
 
-Handles abstracting data models from repositories. 
-
-Serializes and deserializes models into data classes.
+This package exports `LogAppComponent` which adds a debug page to view logs and provides utilities to log using a `BuildContext`.

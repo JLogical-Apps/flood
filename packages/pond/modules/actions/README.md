@@ -1,5 +1,7 @@
-# Drop (Core)
+# Actions
 
-Handles abstracting data models from repositories. 
+This package exports utils to help use [actions_core](../actions_core/README.md) in your Flutter app.
 
-Serializes and deserializes models into data classes.
+## Running Actions
+
+To run an action in a Flutter Pond app, simply call `await context.run(action, input)`.

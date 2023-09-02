@@ -1,5 +1,3 @@
-# Drop (Core)
+# Style Component
 
-Handles abstracting data models from repositories. 
-
-Serializes and deserializes models into data classes.
+This package exports `StyleAppComponent` which allows you to set the [style](../../../style/README.md) of your `PondApp` and view the `Styleguide` at `/_styleguide`.

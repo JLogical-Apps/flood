@@ -1,5 +1,3 @@
-# Drop (Core)
+# Testing Setup
 
-Handles abstracting data models from repositories. 
-
-Serializes and deserializes models into data classes.
+This package exports `TestingSetupAppComponent` which allows you to setup testing data if the [environment](../environment_core/README.md) is `EnvironmentType.static.testing`.

@@ -875,13 +875,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  model_component:
-    dependency: "direct overridden"
-    description:
-      path: "../../packages/pond/modules/model_component"
-      relative: true
-    source: path
-    version: "0.0.1"
   model_core:
     dependency: "direct overridden"
     description:

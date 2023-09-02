@@ -1,5 +1,3 @@
-# Drop (Core)
+# Reset
 
-Handles abstracting data models from repositories. 
-
-Serializes and deserializes models into data classes.
+This package exports `ResetAppComponent` which adds a debug page to reset the app as if you had never opened it before.

@@ -1,5 +1,3 @@
-# Drop (Core)
+# Environment Banner
 
-Handles abstracting data models from repositories. 
-
-Serializes and deserializes models into data classes.
+This package exports `EnvironmentBannerAppComponent` which displays a banner on the top-right with the environment name.

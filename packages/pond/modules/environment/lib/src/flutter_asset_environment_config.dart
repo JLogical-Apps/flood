@@ -22,6 +22,7 @@ class FlutterAssetEnvironmentConfig with IsEnvironmentConfigWrapper {
         if (type == EnvironmentType.static.testing) EnvironmentConfig.static.yamlAsset('assets/config.testing.yaml'),
         if (type == EnvironmentType.static.device) EnvironmentConfig.static.yamlAsset('assets/config.device.yaml'),
         if (type == EnvironmentType.static.qa) EnvironmentConfig.static.yamlAsset('assets/config.uat.yaml'),
+        if (type == EnvironmentType.static.staging) EnvironmentConfig.static.yamlAsset('assets/config.staging.yaml'),
         if (type == EnvironmentType.static.production)
           EnvironmentConfig.static.yamlAsset('assets/config.production.yaml'),
         EnvironmentConfig.static.yamlAsset('assets/config.yaml'),

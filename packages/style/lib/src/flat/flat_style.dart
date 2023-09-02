@@ -111,7 +111,7 @@ This is a `code block`.
   bool get isDarkMode => backgroundColor.isDark;
 
   void addRenderer(StyleRenderer renderer) {
-    renderers.add(renderer);
+    renderers.insert(0, renderer);
   }
 
   @override

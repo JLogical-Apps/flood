@@ -69,11 +69,6 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "3.0"
       path: packages/model/model
-  model_component:
-    git:
-      url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "3.0"
-      path: packages/pond/modules/model_component
   persistence:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

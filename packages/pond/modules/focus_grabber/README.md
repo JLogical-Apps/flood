@@ -1,5 +1,3 @@
-# Drop (Core)
+# Focus Grabber
 
-Handles abstracting data models from repositories. 
-
-Serializes and deserializes models into data classes.
+This package exports `FocusGrabberAppComponent` which will remove focus from an active element if you tap on the background.
