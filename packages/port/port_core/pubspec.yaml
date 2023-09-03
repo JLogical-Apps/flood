@@ -16,12 +16,12 @@ dependencies:
   type:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "3.0"
+      ref: "v3.0"
       path: packages/type
   utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "3.0"
+      ref: "v3.0"
       path: packages/utils/utils_core
 dev_dependencies:
   lints: ^2.0.0

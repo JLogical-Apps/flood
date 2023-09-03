@@ -12,22 +12,22 @@ dependencies:
   jlogical_utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "3.0"
+      ref: "v3.0"
       path: packages/jlogical_utils/jlogical_utils_core
   app_icon:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "3.0"
+      ref: "v3.0"
       path: packages/pond/modules/app_icon
   ops:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "3.0"
+      ref: "v3.0"
       path: packages/pond/modules/ops
   pond_cli:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "3.0"
+      ref: "v3.0"
       path: packages/pond/pond_cli
 dev_dependencies:
   lints: ^2.0.0
