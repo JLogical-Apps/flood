@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:drop_core/drop_core.dart';
 import 'package:persistence/persistence.dart';
 import 'package:pond/pond.dart';
@@ -18,7 +16,7 @@ class FlutterFileRepository with IsRepositoryWrapper {
         CorePondComponentBehavior(
           onReset: (context, _) async {
             if (await fileRepository.directory.exists()) {
-              await fileRepository.directory.delete(recursive: true);
+              await fileRepository.directory.delete();
             }
           },
         ),
@@ -51,9 +49,11 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
   RepositoryQueryExecutor _getQueryExecutor() {
     return StateQueryExecutor(
       maybeStatesX: DataSource.static
-          .directory(repository.fileRepository.directory)
+          .crossDirectory(repository.fileRepository.directory)
           .getX()
-          .map((fileEntities) => (fileEntities ?? []).whereType<File>())
+          .map((fileEntities) {
+            return (fileEntities ?? []).whereType<CrossFile>();
+          })
           .asyncMap<FutureValue<List<State>>>(
               (files) async => FutureValue.loaded(await Future.wait(files.map(getStateFromFile))))
           .publishValueSeeded(FutureValue.loading())
@@ -62,7 +62,7 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
     );
   }
 
-  Future<State> getStateFromFile(File file) async {
+  Future<State> getStateFromFile(CrossFile file) async {
     return await filePool.withResource(() async {
       final rawJson = await file.readAsString();
       final state = statePersister.inflate(rawJson);

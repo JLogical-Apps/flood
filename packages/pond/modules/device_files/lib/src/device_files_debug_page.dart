@@ -1,15 +1,13 @@
-import 'dart:io';
-
 import 'package:environment/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:model/model.dart';
 import 'package:path/path.dart';
+import 'package:persistence_core/persistence_core.dart';
 import 'package:pond/pond.dart';
 import 'package:port_core/port_core.dart';
 import 'package:port_style/port_style.dart';
 import 'package:style/style.dart';
-import 'package:utils/utils.dart';
 
 class DeviceFilesDebugPage extends AppPage {
   @override
@@ -21,11 +19,12 @@ class DeviceFilesDebugPage extends AppPage {
     final filesModel = useFutureModel(
       () async {
         final directory = context.corePondContext.fileSystem.storageDirectory / pathState.value;
-        if (!directory.existsSync()) {
+        if (!await directory.exists()) {
           return null;
         }
 
-        return directory.listSync()..sort((a, b) => a.path.toLowerCase().compareTo(b.path.toLowerCase()));
+        final files = await directory.list();
+        return files..sort((a, b) => a.path.toLowerCase().compareTo(b.path.toLowerCase()));
       },
       [pathState.value],
     );
@@ -34,7 +33,7 @@ class DeviceFilesDebugPage extends AppPage {
     final fileContentsModel = useFutureModel(
       () async {
         final file = context.corePondContext.fileSystem.storageDirectory - pathState.value;
-        if (!file.existsSync()) {
+        if (!await file.exists()) {
           return null;
         }
         return file.readAsString();
@@ -106,13 +105,13 @@ class DeviceFilesDebugPage extends AppPage {
   Widget directoryView(
     BuildContext context, {
     required String path,
-    required List<FileSystemEntity> files,
+    required List<CrossElement> files,
     required Function(String path) onUpdatePath,
   }) {
     return StyledList.column.withScrollbar.centered(
       children: [
         ...files.map<Widget>((file) {
-          if (file is File) {
+          if (file is CrossFile) {
             return fileCard(
               file,
               onPressed: () {
@@ -122,7 +121,7 @@ class DeviceFilesDebugPage extends AppPage {
                 ));
               },
             );
-          } else if (file is Directory) {
+          } else if (file is CrossDirectory) {
             return directoryCard(
               file,
               onPressed: () {
@@ -131,10 +130,6 @@ class DeviceFilesDebugPage extends AppPage {
                   from: context.corePondContext.fileSystem.storageDirectory.path,
                 ));
               },
-            );
-          } else if (file is Link) {
-            return StyledCard(
-              titleText: file.targetSync(),
             );
           }
 
@@ -150,7 +145,7 @@ class DeviceFilesDebugPage extends AppPage {
     return DeviceFilesDebugPage();
   }
 
-  Widget fileCard(File file, {required Function() onPressed}) {
+  Widget fileCard(CrossFile file, {required Function() onPressed}) {
     return StyledCard(
       titleText: basename(file.path),
       leadingIcon: Icons.file_present,
@@ -158,7 +153,7 @@ class DeviceFilesDebugPage extends AppPage {
     );
   }
 
-  Widget directoryCard(Directory directory, {required Function() onPressed}) {
+  Widget directoryCard(CrossDirectory directory, {required Function() onPressed}) {
     return StyledCard(
       titleText: basename(directory.path),
       leadingIcon: Icons.folder,

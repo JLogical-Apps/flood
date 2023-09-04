@@ -28,10 +28,15 @@ class FlutterAssetEnvironmentConfig with IsEnvironmentConfigWrapper {
         EnvironmentConfig.static.yamlAsset('assets/config.yaml'),
       ]);
     }).withFileSystemGetter(() async {
-      return FileSystem(
-        storageDirectory: await getApplicationSupportDirectory(),
-        tempDirectory: await getTemporaryDirectory(),
-      );
+      final platform = await baseConfig.getPlatform();
+      if (platform == Platform.web) {
+        throw Exception('Cannot generate file system!');
+      } else {
+        return FileSystem.io(
+          storageDirectory: await getApplicationSupportDirectory(),
+          tempDirectory: await getTemporaryDirectory(),
+        );
+      }
     });
   }
 }

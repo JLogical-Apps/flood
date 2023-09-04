@@ -2,11 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:persistence_core/persistence_core.dart';
+import 'package:persistence_core/src/cross_directory_data_source.dart';
+import 'package:persistence_core/src/cross_file_data_source.dart';
 import 'package:persistence_core/src/directory_data_source.dart';
 import 'package:persistence_core/src/file_data_source.dart';
 import 'package:persistence_core/src/json_data_source.dart';
 import 'package:persistence_core/src/mapper_data_source.dart';
 import 'package:persistence_core/src/memory_data_source.dart';
+import 'package:persistence_core/src/raw_cross_file_data_source.dart';
 import 'package:persistence_core/src/raw_file_data_source.dart';
 import 'package:persistence_core/src/yaml_data_source.dart';
 
@@ -39,6 +42,18 @@ class DataSourceStatic {
 
   RawFileDataSource rawFile(File file) {
     return RawFileDataSource(file: file);
+  }
+
+  CrossFileDataSource crossFile(CrossFile file) {
+    return CrossFileDataSource(file: file);
+  }
+
+  RawCrossFileDataSource rawCrossFile(CrossFile file) {
+    return RawCrossFileDataSource(file: file);
+  }
+
+  CrossDirectoryDataSource crossDirectory(CrossDirectory directory) {
+    return CrossDirectoryDataSource(directory: directory);
   }
 
   UrlDataSource url(Uri url) {

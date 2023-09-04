@@ -47,7 +47,7 @@ class EnvironmentConfigStatic {
       FileAssetEnvironmentConfig(projectDirectory: projectDirectory);
 
   EnvironmentConfig testing() =>
-      memory().withEnvironmentType(EnvironmentType.static.testing).withFileSystemGetter(() => FileSystem(
+      memory().withEnvironmentType(EnvironmentType.static.testing).withFileSystemGetter(() => FileSystem.io(
             storageDirectory: Directory.systemTemp / 'dartTesting' / 'storage',
             tempDirectory: Directory.systemTemp / 'dartTesting' / 'temp',
           ));

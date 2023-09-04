@@ -354,7 +354,7 @@ packages:
     source: path
     version: "0.0.1"
   persistence_core:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../../../persistence/persistence_core"
       relative: true

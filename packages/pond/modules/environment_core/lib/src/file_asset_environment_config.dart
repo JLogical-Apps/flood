@@ -13,7 +13,7 @@ class FileAssetEnvironmentConfig with IsEnvironmentConfigWrapper {
     final baseConfig = EnvironmentConfig.static
         .yamlFile(projectDirectory - 'assets/config.overrides.yaml')
         .withRecognizedEnvironmentTypes(EnvironmentType.static.defaultTypes)
-        .withFileSystemGetter(() => FileSystem(
+        .withFileSystemGetter(() => FileSystem.io(
               storageDirectory: projectDirectory / 'tool' / 'output',
               tempDirectory: projectDirectory / 'tool' / 'tmp',
             ));

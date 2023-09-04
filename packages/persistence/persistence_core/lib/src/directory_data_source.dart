@@ -36,6 +36,10 @@ class DirectoryDataSource extends DataSource<List<FileSystemEntity>?> {
 
   @override
   Future<void> delete() async {
-    throw Exception('Cannot delete the data for a DirectoryDataSource!');
+    if (!await exists()) {
+      return;
+    }
+
+    await directory.delete(recursive: true);
   }
 }

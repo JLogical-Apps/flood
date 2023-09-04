@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:auth_core/src/auth_service.dart';
 import 'package:auth_core/src/login_failure.dart';
 import 'package:auth_core/src/signup_failure.dart';
@@ -12,18 +10,18 @@ import 'package:utils_core/utils_core.dart';
 import 'package:uuid/uuid.dart';
 
 class FileAuthService with IsAuthService, IsCorePondComponent {
-  Directory get authDirectory => context.fileSystem.storageDirectory / 'auth';
+  CrossDirectory get authDirectory => context.fileSystem.storageDirectory / 'auth';
 
   DataSource<String?>? _loggedInUserIdDataSource;
   late DataSource<String?> loggedInUserIdDataSource =
-      _loggedInUserIdDataSource ??= DataSource.static.file(authDirectory - 'logged_in_user_token.txt').map(
+      _loggedInUserIdDataSource ??= DataSource.static.crossFile(authDirectory - 'logged_in_user_token.txt').map(
             getMapper: (string) => string.nullIfBlank,
             setMapper: (string) => string ?? '',
           );
 
   DataSource<Map<LoginToken, String>?>? _registeredUsersDataSource;
   late DataSource<Map<LoginToken, String>?> registeredUsersDataSource =
-      _registeredUsersDataSource ??= DataSource.static.file(authDirectory - 'registered_users.json').mapJson().map(
+      _registeredUsersDataSource ??= DataSource.static.crossFile(authDirectory - 'registered_users.json').mapJson().map(
             getMapper: (json) {
               final registeredUsers = json['registeredUsers'] as Map<String, dynamic>;
               return registeredUsers.map((email, data) => MapEntry(
@@ -72,6 +70,7 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
     }
 
     await loggedInUserIdDataSource.set(userId);
+    _userIdX.value = FutureValue.loaded(userId);
 
     return userId;
   }
@@ -95,12 +94,15 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
       loggedInUserIdDataSource.set(userId),
     ]);
 
+    _userIdX.value = FutureValue.loaded(userId);
+
     return userId;
   }
 
   @override
-  Future<void> logout() {
-    return loggedInUserIdDataSource.delete();
+  Future<void> logout() async {
+    await loggedInUserIdDataSource.delete();
+    _userIdX.value = FutureValue.loaded(null);
   }
 
   @override

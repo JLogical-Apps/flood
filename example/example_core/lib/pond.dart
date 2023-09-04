@@ -36,7 +36,8 @@ Future<CorePondContext> getCorePondContext({
   ));
   await corePondContext.register(DropCoreComponent(
     repositoryImplementations: repositoryImplementations,
-    authenticatedUserIdX: corePondContext.locate<AuthCoreComponent>().userIdX.mapWithValue((maybeUserId) => maybeUserId.getOrNull()),
+    authenticatedUserIdX:
+        corePondContext.locate<AuthCoreComponent>().userIdX.mapWithValue((maybeUserIdX) => maybeUserIdX.getOrNull()),
   ));
   await corePondContext.register(LogCoreComponent.console());
   await corePondContext.register(
