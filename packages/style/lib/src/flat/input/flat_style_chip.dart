@@ -36,13 +36,10 @@ class FlatStyleChipRenderer with IsTypedStyleRenderer<StyledChip> {
     );
 
     return IntrinsicWidth(
-      child: ActionChip(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
-          side: BorderSide(
-            color: backgroundColorPalette.background.regular,
-            width: 1,
-          ),
+      child: RawChip(
+        side: BorderSide(
+          color: backgroundColorPalette.background.regular,
+          width: 1,
         ),
         label: ColorPaletteProvider(
           colorPalette: backgroundColorPalette,

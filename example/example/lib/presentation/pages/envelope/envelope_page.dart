@@ -243,11 +243,17 @@ class EnvelopePage extends AppPage {
                   ModelBuilder(
                     model: trayModel,
                     builder: (TrayEntity? trayEntity) {
-                      return trayEntity == null
-                          ? Container()
-                          : StyledChip.subtle(
-                              label: StyledText.body.withColor(Color(trayEntity.value.colorProperty.value))(
-                                  trayEntity.value.nameProperty.value));
+                      if (trayEntity == null) {
+                        return Container();
+                      }
+                      final trayColor = Color(trayEntity.value.colorProperty.value);
+                      return StyledChip.subtle(
+                        icon: StyledIcon(
+                          Icons.inbox,
+                          color: trayColor,
+                        ),
+                        label: StyledText.body.withColor(trayColor)(trayEntity.value.nameProperty.value),
+                      );
                     },
                   ),
                 ],
