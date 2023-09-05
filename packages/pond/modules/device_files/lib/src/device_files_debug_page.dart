@@ -23,7 +23,7 @@ class DeviceFilesDebugPage extends AppPage {
           return null;
         }
 
-        final files = await directory.list();
+        final files = (await directory.listOrNull()) ?? [];
         return files..sort((a, b) => a.path.toLowerCase().compareTo(b.path.toLowerCase()));
       },
       [pathState.value],

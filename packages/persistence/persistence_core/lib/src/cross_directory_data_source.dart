@@ -8,8 +8,8 @@ class CrossDirectoryDataSource extends DataSource<List<CrossElement>?> {
   CrossDirectoryDataSource({required this.directory});
 
   @override
-  Stream<List<CrossElement>?>? getXOrNull() async* {
-    yield* directory.listX();
+  Stream<List<CrossElement>?>? getXOrNull() {
+    return directory.listX();
   }
 
   @override

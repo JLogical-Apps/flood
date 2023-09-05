@@ -11,4 +11,8 @@ class FileSystem {
   FileSystem.io({required Directory storageDirectory, required Directory tempDirectory})
       : storageDirectory = CrossDirectory.io(storageDirectory),
         tempDirectory = CrossDirectory.io(tempDirectory);
+
+  FileSystem.web()
+      : storageDirectory = CrossDirectory.web('storage'),
+        tempDirectory = CrossDirectory.web('temp');
 }

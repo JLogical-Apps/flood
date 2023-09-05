@@ -17,7 +17,7 @@ class BudgetsPage extends AppPage {
     final budgetsModel = useQuery(Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all());
     return StyledPage(
       titleText: 'Home',
-      body: StyledList.column.scrollable.withScrollbar(
+      body: StyledList.column.scrollable.centered.withScrollbar(
         children: [
           ModelBuilder<UserEntity?>(
             model: loggedInUserModel,

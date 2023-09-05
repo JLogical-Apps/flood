@@ -30,7 +30,7 @@ class FlutterAssetEnvironmentConfig with IsEnvironmentConfigWrapper {
     }).withFileSystemGetter(() async {
       final platform = await baseConfig.getPlatform();
       if (platform == Platform.web) {
-        throw Exception('Cannot generate file system!');
+        return FileSystem.web();
       } else {
         return FileSystem.io(
           storageDirectory: await getApplicationSupportDirectory(),

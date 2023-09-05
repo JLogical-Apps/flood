@@ -124,12 +124,70 @@ extension JsonExtensions on Map<String, dynamic> {
   /// Ensures that a path can be walked from the root of this json by key.
   /// For example, if [keys] = ['top', 'mid', 'leaf'] and this is {'top': {'random': 3}},
   /// this will set the json to {'top': {'random': 3, 'mid': {'leaf': {}}}}
-  Map<String, dynamic> ensureNested(List<String> keys) {
+  void ensureNested(List<String> keys) {
     var map = this;
     for (final key in keys) {
       map = map.putIfAbsent(key, () => <String, dynamic>{});
     }
-    return this;
+  }
+
+  dynamic getPathed(String path) {
+    final keys = path.split('/');
+
+    dynamic current = this;
+    for (var key in keys) {
+      if (current is Map<String, dynamic> && current.containsKey(key)) {
+        current = current[key];
+      } else {
+        return null;
+      }
+    }
+
+    return current;
+  }
+
+  void updatePathed(String path, dynamic Function(dynamic oldValue) updater) {
+    final keys = path.split('/');
+
+    dynamic current = this;
+    for (var i = 0; i < keys.length - 1; i++) {
+      final key = keys[i];
+      if (current is Map<String, dynamic> && current.containsKey(key)) {
+        current = current[key];
+      } else {
+        current[key] = <String, dynamic>{};
+        current = current[key];
+      }
+    }
+
+    final lastKey = keys.last;
+    if (current is Map<String, dynamic>) {
+      if (!current.containsKey(lastKey)) {
+        current[lastKey] = updater(null);
+      } else {
+        current[lastKey] = updater(current[lastKey]);
+      }
+    }
+  }
+
+  void removePathed(String path) {
+    final keys = path.split('/');
+
+    dynamic current = this;
+    for (int i = 0; i < keys.length - 1; i++) {
+      final key = keys[i];
+
+      if (current is Map<String, dynamic> && current.containsKey(key)) {
+        current = current[key];
+      } else {
+        return; // Path doesn't exist, so we exit early.
+      }
+    }
+
+    final lastKey = keys.last;
+    if (current is Map<String, dynamic> && current.containsKey(lastKey)) {
+      current.remove(lastKey);
+    }
   }
 }
 

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:persistence_core/src/crossfile/cross_element.dart';
 import 'package:persistence_core/src/crossfile/cross_file.dart';
 import 'package:persistence_core/src/crossfile/io/io_cross_directory.dart';
+import 'package:persistence_core/src/crossfile/web/web_cross_directory.dart';
 
 abstract class CrossDirectory implements CrossElement {
   CrossDirectory getDirectory(String path);
@@ -14,10 +15,16 @@ abstract class CrossDirectory implements CrossElement {
   Future<List<CrossElement>?> listOrNull();
 
   static CrossDirectory io(Directory directory) => IoCrossDirectory(directory: directory);
+
+  static CrossDirectory web(String path) => WebCrossDirectory(path: path);
 }
 
 extension CrossDirectoryExtensions on CrossDirectory {
   CrossDirectory operator /(String path) {
+    if (path == '.') {
+      return this;
+    }
+
     return getDirectory(path);
   }
 
