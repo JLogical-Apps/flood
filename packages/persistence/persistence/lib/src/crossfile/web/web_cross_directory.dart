@@ -1,8 +1,6 @@
-import 'package:persistence_core/src/crossfile/cross_directory.dart';
-import 'package:persistence_core/src/crossfile/cross_element.dart';
-import 'package:persistence_core/src/crossfile/cross_file.dart';
-import 'package:persistence_core/src/crossfile/web/web_cross_context.dart';
-import 'package:persistence_core/src/crossfile/web/web_cross_file.dart';
+import 'package:persistence_core/persistence_core.dart';
+import 'package:persistence/src/crossfile/web/web_cross_context.dart';
+import 'package:persistence/src/crossfile/web/web_cross_file.dart';
 import 'package:utils_core/utils_core.dart';
 
 class WebCrossDirectory with IsCrossDirectory {

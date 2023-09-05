@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:path/path.dart';
-import 'package:persistence_core/src/crossfile/cross_file.dart';
-import 'package:persistence_core/src/crossfile/web/web_cross_context.dart';
+import 'package:persistence/src/crossfile/web/web_cross_context.dart';
+import 'package:persistence_core/persistence_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class WebCrossFile with IsCrossFile {

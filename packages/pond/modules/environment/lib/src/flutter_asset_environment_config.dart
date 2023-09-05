@@ -2,6 +2,7 @@ import 'package:environment/src/environment_config_extension.dart';
 import 'package:environment/src/flutter_environment_static_extension.dart';
 import 'package:environment_core/environment_core.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:persistence/persistence.dart';
 
 class FlutterAssetEnvironmentConfig with IsEnvironmentConfigWrapper {
   @override
@@ -30,7 +31,10 @@ class FlutterAssetEnvironmentConfig with IsEnvironmentConfigWrapper {
     }).withFileSystemGetter(() async {
       final platform = await baseConfig.getPlatform();
       if (platform == Platform.web) {
-        return FileSystem.web();
+        return FileSystem(
+          storageDirectory: CrossDirectory.static.web('storage'),
+          tempDirectory: CrossDirectory.static.web('temp'),
+        );
       } else {
         return FileSystem.io(
           storageDirectory: await getApplicationSupportDirectory(),

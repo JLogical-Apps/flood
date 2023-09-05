@@ -9,10 +9,6 @@ class FileSystem {
   const FileSystem({required this.storageDirectory, required this.tempDirectory});
 
   FileSystem.io({required Directory storageDirectory, required Directory tempDirectory})
-      : storageDirectory = CrossDirectory.io(storageDirectory),
-        tempDirectory = CrossDirectory.io(tempDirectory);
-
-  FileSystem.web()
-      : storageDirectory = CrossDirectory.web('storage'),
-        tempDirectory = CrossDirectory.web('temp');
+      : storageDirectory = CrossDirectory.static.io(storageDirectory),
+        tempDirectory = CrossDirectory.static.io(tempDirectory);
 }
