@@ -38,17 +38,19 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
       automateContext: automateContext,
       fileSystem: fileSystem,
       coreProject: Project(
+        executableRoot: 'dart',
+        directory: fileSystem.coreDirectory,
         terminal: coreTerminal,
-        pubspecFile: fileSystem.coreDirectory - 'pubspec.yaml',
-        pubGetCommand: 'dart pub get',
       ),
       appProject: Project(
+        executableRoot: 'flutter',
+        directory: fileSystem.appDirectory,
         terminal: appTerminal,
-        pubspecFile: fileSystem.appDirectory - 'pubspec.yaml',
-        pubGetCommand: 'flutter pub get',
       ),
     );
   }
+
+  List<Project> get projects => [coreProject, appProject];
 
   @override
   Terminal get terminal => Terminal.static.shell().withoutRun();

@@ -17,7 +17,9 @@ class VersionPipelineStep with IsPipelineStep {
     final currentVersion = Version.parse(currentVersionRaw);
     final currentBuild = int.tryParse(currentVersion.build) ?? 1;
 
-    final newVersion = getVersionInput(context, currentVersion: currentVersion).withBuild(currentBuild + 1);
+    var newVersion = getVersionInput(context, currentVersion: currentVersion);
+    final newBuild = newVersion > currentVersion ? currentBuild + 1 : currentBuild;
+    newVersion = newVersion.withBuild(newBuild);
 
     await updatePubspec(context, version: newVersion);
     if (platforms.contains(ReleasePlatform.ios)) {
@@ -30,20 +32,12 @@ class VersionPipelineStep with IsPipelineStep {
     while (true) {
       final newVersion = context.input(
         'What version would you like to set the app to? (Current version: [$currentVersion]): ',
+        initialText: currentVersion.toString(),
       );
+
       final parsedVersion = guard(() => Version.parse(newVersion));
       if (parsedVersion == null) {
         context.print('[$newVersion] is not a valid version.');
-        continue;
-      }
-
-      if (parsedVersion <= currentVersion) {
-        context.print('[$newVersion] needs to be newer than the existing version [$currentVersion]');
-        continue;
-      }
-
-      if (parsedVersion.build.isNotBlank) {
-        context.print('[$newVersion] should not include a build number!');
         continue;
       }
 
@@ -52,11 +46,8 @@ class VersionPipelineStep with IsPipelineStep {
   }
 
   Future updatePubspec(AutomateCommandContext context, {required Version version}) async {
-    for (final pubspecDataSource in [
-      context.appProject.pubspecYamlDataSource,
-      context.coreProject.pubspecYamlDataSource,
-    ]) {
-      await pubspecDataSource.update((pubspec) {
+    for (final project in context.projects) {
+      await project.pubspecYamlDataSource.update((pubspec) {
         pubspec!['version'] = version.toString();
         return pubspec;
       });

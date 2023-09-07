@@ -13,7 +13,7 @@ abstract class Terminal {
 
   bool confirm(String prompt);
 
-  String input(String prompt);
+  String input(String prompt, {String? hintText, String? initialText});
 
   T select<T>({
     required String prompt,
@@ -65,7 +65,7 @@ mixin IsTerminalWrapper implements TerminalWrapper {
   bool confirm(String prompt) => terminal.confirm(prompt);
 
   @override
-  String input(String prompt) => terminal.input(prompt);
+  String input(String prompt, {String? hintText, String? initialText}) => terminal.input(prompt, hintText: hintText, initialText: initialText);
 
   @override
   T select<T>({

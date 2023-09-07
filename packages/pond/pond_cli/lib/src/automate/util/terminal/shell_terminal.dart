@@ -41,8 +41,8 @@ class ShellTerminal with IsTerminal {
   }
 
   @override
-  String input(String prompt) {
-    return Input(prompt: prompt).interact();
+  String input(String prompt, {String? hintText, String? initialText}) {
+    return Input(prompt: prompt, defaultValue: hintText, initialText: initialText ?? '').interact();
   }
 
   @override

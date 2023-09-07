@@ -18,7 +18,7 @@ class CaptureTerminal with IsTerminal {
   }
 
   @override
-  String input(String prompt) {
+  String input(String prompt, {String? hintText, String? initialText}) {
     output.add('input: $prompt');
     return '';
   }
