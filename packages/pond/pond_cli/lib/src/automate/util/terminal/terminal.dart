@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:pond_cli/src/automate/util/terminal/capture_terminal.dart';
 import 'package:pond_cli/src/automate/util/terminal/shell_terminal.dart';
+import 'package:pond_cli/src/automate/util/terminal/without_run_terminal.dart';
 
 abstract class Terminal {
   void print(dynamic obj);
@@ -32,6 +33,10 @@ abstract class Terminal {
   Future<String> run(String command, {Directory? workingDirectory, bool interactable = false});
 
   static TerminalStatic get static => TerminalStatic();
+}
+
+extension TerminalExtensions on Terminal {
+  Terminal withoutRun() => WithoutRunTerminal(terminal: this);
 }
 
 class TerminalStatic {

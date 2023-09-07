@@ -3,16 +3,15 @@ import 'dart:io';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/src/automate/util/package_manager/package_manager.dart';
 import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
-import 'package:utils_core/utils_core.dart';
 
 class PubspecPackageManager with IsPackageManager {
   final Terminal terminal;
-  final Directory projectDirectory;
+  final File pubspecFile;
   final String pubGetCommand;
 
   PubspecPackageManager({
     required this.terminal,
-    required this.projectDirectory,
+    required this.pubspecFile,
     this.pubGetCommand = 'flutter pub get',
   });
 
@@ -51,7 +50,7 @@ class PubspecPackageManager with IsPackageManager {
       return;
     }
 
-    final pubspecDataSource = DataSource.static.file(projectDirectory - 'pubspec.yaml').mapYaml();
+    final pubspecDataSource = DataSource.static.file(pubspecFile).mapYaml();
     _parsedPubspec = (await pubspecDataSource.getOrNull()) ?? (throw Exception('Cannot find pubspec.yaml to parse!'));
   }
 

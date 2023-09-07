@@ -1,13 +1,29 @@
+import 'dart:io';
+
+import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:pond_cli/src/automate/util/package_manager/package_manager.dart';
+import 'package:pond_cli/src/automate/util/package_manager/pubspec_package_manager.dart';
 
 abstract class Project with IsPackageManagerWrapper, IsTerminalWrapper {
-  factory Project({required PackageManager packageManager, required Terminal terminal}) {
-    return _ProjectImpl(packageManager: packageManager, terminal: terminal);
+  File get pubspecFile;
+
+  factory Project({required File pubspecFile, required Terminal terminal, required String pubGetCommand}) {
+    return _ProjectImpl(
+      pubspecFile: pubspecFile,
+      packageManager: PubspecPackageManager(
+        terminal: terminal,
+        pubspecFile: pubspecFile,
+        pubGetCommand: pubGetCommand,
+      ),
+      terminal: terminal,
+    );
   }
 }
 
 extension ProjectExtensions on Project {
+  DataSource<Map<String, dynamic>> get pubspecYamlDataSource => DataSource.static.file(pubspecFile).mapYaml();
+
   Future<void> ensurePackageInstalled(String packageName, {bool isDevDependency = false}) async {
     if (await isPackageRegistered(packageName, isDevDependency: isDevDependency)) {
       return;
@@ -28,10 +44,13 @@ mixin IsProject implements Project {}
 
 class _ProjectImpl with IsProject, IsTerminalWrapper, IsPackageManagerWrapper {
   @override
+  final File pubspecFile;
+
+  @override
   final PackageManager packageManager;
 
   @override
   final Terminal terminal;
 
-  _ProjectImpl({required this.packageManager, required this.terminal});
+  _ProjectImpl({required this.pubspecFile, required this.packageManager, required this.terminal});
 }

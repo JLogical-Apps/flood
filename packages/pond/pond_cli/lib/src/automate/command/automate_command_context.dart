@@ -3,11 +3,10 @@ import 'dart:io';
 import 'package:pond_cli/src/automate/context/automate_pond_context.dart';
 import 'package:pond_cli/src/automate/project/project.dart';
 import 'package:pond_cli/src/automate/util/file_system/automate_file_system.dart';
-import 'package:pond_cli/src/automate/util/package_manager/pubspec_package_manager.dart';
 import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 import 'package:utils_core/utils_core.dart';
 
-class AutomateCommandContext with IsAutomateFileSystemWrapper {
+class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper {
   final AutomatePondContext automateContext;
 
   @override
@@ -40,22 +39,19 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper {
       fileSystem: fileSystem,
       coreProject: Project(
         terminal: coreTerminal,
-        packageManager: PubspecPackageManager(
-          terminal: coreTerminal,
-          projectDirectory: fileSystem.coreDirectory,
-          pubGetCommand: 'dart pub get',
-        ),
+        pubspecFile: fileSystem.coreDirectory - 'pubspec.yaml',
+        pubGetCommand: 'dart pub get',
       ),
       appProject: Project(
         terminal: appTerminal,
-        packageManager: PubspecPackageManager(
-          terminal: appTerminal,
-          projectDirectory: fileSystem.appDirectory,
-          pubGetCommand: 'flutter pub get',
-        ),
+        pubspecFile: fileSystem.appDirectory - 'pubspec.yaml',
+        pubGetCommand: 'flutter pub get',
       ),
     );
   }
+
+  @override
+  Terminal get terminal => Terminal.static.shell().withoutRun();
 
   List<File> tempFiles = [];
 

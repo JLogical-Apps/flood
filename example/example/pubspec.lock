@@ -379,7 +379,7 @@ packages:
       path: "../example_core"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "0.0.2"
   exception_templates:
     dependency: transitive
     description:
@@ -1182,6 +1182,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
+  release:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/pond/modules/release"
+      relative: true
+    source: path
+    version: "0.0.1"
   reset:
     dependency: "direct overridden"
     description:
@@ -1266,6 +1273,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  snapshot:
+    dependency: transitive
+    description:
+      name: snapshot
+      sha256: "04a7910492987d00ca8c6767297ed773e6e206d0fc1ce7365a3cddf6847e92b5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.5"
   source_map_stack_trace:
     dependency: transitive
     description:
@@ -1553,6 +1568,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  version:
+    dependency: transitive
+    description:
+      name: version
+      sha256: "3d4140128e6ea10d83da32fef2fa4003fccbf6852217bb854845802f04191f94"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
   vm_service:
     dependency: transitive
     description:
@@ -1609,6 +1632,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  xcodeproj:
+    dependency: transitive
+    description:
+      name: xcodeproj
+      sha256: "9c1652d6fd1519e195f356b378e27bf68b7dd454e03a5ae499f4a934b0f22d09"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.3"
   xdg_directories:
     dependency: transitive
     description:
@@ -1629,10 +1660,10 @@ packages:
     dependency: transitive
     description:
       name: yaml
-      sha256: "23812a9b125b48d4007117254bca50abb6c712352927eece9e155207b1db2370"
+      sha256: "75769501ea3489fca56601ff33454fe45507ea3bfb014161abc3b43ae25989d5"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.1"
+    version: "3.1.2"
 sdks:
   dart: ">=3.1.0-185.0.dev <4.0.0"
   flutter: ">=3.3.0"

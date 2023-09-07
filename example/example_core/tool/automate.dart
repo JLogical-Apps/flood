@@ -18,6 +18,9 @@ Future<void> main(List<String> args) async {
     EnvironmentType.static.staging: OpsEnvironment.static.firebase,
     EnvironmentType.static.production: OpsEnvironment.static.firebase,
   }));
+  await automatePondContext.register(ReleaseAutomateComponent(pipelines: {
+    ReleaseEnvironmentType.beta: Pipeline().setVersion(),
+  }));
 
   await Automate.automate(
     context: automatePondContext,

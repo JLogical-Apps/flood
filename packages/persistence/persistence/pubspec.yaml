@@ -13,7 +13,9 @@ dependencies:
     sdk: flutter
 
   collection: ^1.16.0
+  localstorage: ^4.0.1+4
   path: ^1.8.3
+  rxdart: ^0.27.5
 
   persistence_core:
     git:
