@@ -52,7 +52,7 @@ mixin IsMapperDataSource<T, T2> implements MapperDataSource<T, T2> {
 
   @override
   Future<void> set(T2 data) async {
-    dataSource.set(await setMapper(data));
+    await dataSource.set(await setMapper(data));
   }
 
   @override

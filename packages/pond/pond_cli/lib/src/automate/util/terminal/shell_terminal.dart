@@ -73,19 +73,29 @@ class ShellTerminal with IsTerminal {
   }
 
   @override
-  Future<String> run(String command, {Directory? workingDirectory, bool interactable = false}) async {
-    return command.split('\n').map((line) {
-      core.print('> $line');
-      final progress = dcli.start(
-        line,
-        workingDirectory: (workingDirectory ?? this.workingDirectory)?.path,
-        terminal: interactable,
-        runInShell: true,
-        progress: dcli.Progress.print(capture: true),
-      );
-      core.print('');
-      return progress.lines.join('\n');
-    }).join('\n');
+  Future<String> run(
+    String command, {
+    Directory? workingDirectory,
+    bool interactable = false,
+    Map<String, String> environment = const {},
+  }) async {
+    return await dcli.withEnvironment(
+      () async {
+        return command.split('\n').map((line) {
+          core.print('> $line');
+          final progress = dcli.start(
+            line,
+            workingDirectory: (workingDirectory ?? this.workingDirectory)?.path,
+            terminal: interactable,
+            runInShell: true,
+            progress: dcli.Progress.print(capture: true),
+          );
+          core.print('');
+          return progress.lines.join('\n');
+        }).join('\n');
+      },
+      environment: environment,
+    );
   }
 
   void _initializeLumberdashIfNeeded() {

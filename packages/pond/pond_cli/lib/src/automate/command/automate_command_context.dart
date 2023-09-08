@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/src/automate/context/automate_pond_context.dart';
 import 'package:pond_cli/src/automate/project/project.dart';
 import 'package:pond_cli/src/automate/util/file_system/automate_file_system.dart';
@@ -57,8 +59,6 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
 
   List<File> tempFiles = [];
 
-  File get stateFile => coreDirectory / 'tool' - 'state.yaml';
-
   @override
   Future<File> createTempFile(String name) async {
     final file = await super.createTempFile(name);
@@ -71,4 +71,42 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
       file.deleteSync();
     }
   }
+
+  late final File stateFile = coreDirectory / 'tool' - 'state.yaml';
+  late final File hiddenStateFile = coreDirectory / 'tool' - 'state.hidden.yaml';
+
+  Future<T> _getStateOrElse<T>(String path, FutureOr<T> Function() orElse, {required File stateFile}) async {
+    final stateJsonDataSource = DataSource.static.file(stateFile).mapJson();
+    final stateJson = (await stateJsonDataSource.getOrNull()) ?? {};
+
+    final value = stateJson.getPathed(path);
+    if (value != null) {
+      return value;
+    }
+
+    final newValue = await orElse();
+    stateJson.updatePathed(path, (_) => newValue);
+    await stateJsonDataSource.set(stateJson);
+
+    return newValue;
+  }
+
+  Future _updateState(String path, dynamic value, {required File stateFile}) async {
+    final stateJsonDataSource = DataSource.static.file(stateFile).mapJson();
+    final stateJson = (await stateJsonDataSource.getOrNull()) ?? {};
+
+    stateJson.updatePathed(path, (_) => value);
+
+    await stateJsonDataSource.set(stateJson);
+  }
+
+  Future<T> getStateOrElse<T>(String path, FutureOr<T> Function() orElse) =>
+      _getStateOrElse(path, orElse, stateFile: stateFile);
+
+  Future<T> getHiddenStateOrElse<T>(String path, FutureOr<T> Function() orElse) =>
+      _getStateOrElse(path, orElse, stateFile: hiddenStateFile);
+
+  Future updateState(String path, dynamic value) => _updateState(path, value, stateFile: stateFile);
+
+  Future updateHiddenState(String path, dynamic value) => _updateState(path, value, stateFile: hiddenStateFile);
 }

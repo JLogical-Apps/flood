@@ -30,7 +30,12 @@ abstract class Terminal {
 
   /// Runs the [command] (or multiple commands if split by a `\n`) in [workingDirectory].
   /// If [interactable] is true, then enables user interaction in the [command], such as inputting login credentials for `firebase login`. But, this prevents any output from being returned due to the quirks of [dcli].
-  Future<String> run(String command, {Directory? workingDirectory, bool interactable = false});
+  Future<String> run(
+    String command, {
+    Directory? workingDirectory,
+    bool interactable = false,
+    Map<String, String> environment = const {},
+  });
 
   static TerminalStatic get static => TerminalStatic();
 }
@@ -65,7 +70,8 @@ mixin IsTerminalWrapper implements TerminalWrapper {
   bool confirm(String prompt) => terminal.confirm(prompt);
 
   @override
-  String input(String prompt, {String? hintText, String? initialText}) => terminal.input(prompt, hintText: hintText, initialText: initialText);
+  String input(String prompt, {String? hintText, String? initialText}) =>
+      terminal.input(prompt, hintText: hintText, initialText: initialText);
 
   @override
   T select<T>({
@@ -94,9 +100,16 @@ mixin IsTerminalWrapper implements TerminalWrapper {
       );
 
   @override
-  Future<String> run(String command, {Directory? workingDirectory, bool interactable = false}) => terminal.run(
+  Future<String> run(
+    String command, {
+    Directory? workingDirectory,
+    bool interactable = false,
+    Map<String, String> environment = const {},
+  }) =>
+      terminal.run(
         command,
         workingDirectory: workingDirectory,
         interactable: interactable,
+        environment: environment,
       );
 }

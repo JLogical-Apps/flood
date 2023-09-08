@@ -39,7 +39,12 @@ class CaptureTerminal with IsTerminal {
   }
 
   @override
-  Future<String> run(String command, {Directory? workingDirectory, bool interactable = false}) async {
+  Future<String> run(
+    String command, {
+    Directory? workingDirectory,
+    bool interactable = false,
+    Map<String, String> environment = const {},
+  }) async {
     final directoryString = workingDirectory == null ? '' : ' ${workingDirectory.relativePath}';
     output.add('run: $command$directoryString');
     return 'run: $command$directoryString';

@@ -40,7 +40,7 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
         (throw Exception('Could not find pipeline for release environment [${environment.name}]'));
 
     for (final step in pipeline.pipelineSteps) {
-      await step.execute(context, [ReleasePlatform.android, ReleasePlatform.ios, ReleasePlatform.web]);
+      await step.execute(context, [ReleasePlatform.ios]);
     }
   }
 

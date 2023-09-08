@@ -4,7 +4,6 @@ import 'package:drop_core/drop_core.dart';
 import 'package:environment_core/environment_core.dart';
 import 'package:ops/src/permission/permission_text_modifier.dart';
 import 'package:ops/src/repository_security/repository_security_modifier.dart';
-import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:utils_core/utils_core.dart';
@@ -116,10 +115,7 @@ class FirebaseOpsUtils {
     AutomateCommandContext context, {
     required EnvironmentType environmentType,
   }) async {
-    final stateFileDataSource = DataSource.static.file(context.stateFile).mapYaml();
-    final state = await stateFileDataSource.getOrNull() ?? <String, dynamic>{};
-    state.ensureNested(['firebase', environmentType.name]);
-    return state['firebase'][environmentType.name]['project_id'];
+    return await context.getStateOrElse('firebase/${environmentType.name}/project_id', () => null);
   }
 
   static Future<void> updateEnvironmentProject(
@@ -127,12 +123,7 @@ class FirebaseOpsUtils {
     required EnvironmentType environmentType,
     required String projectId,
   }) async {
-    final stateFileDataSource = DataSource.static.file(context.stateFile).mapYaml();
-    await stateFileDataSource.update((state) {
-      state = (state ?? {}).copy()..ensureNested(['firebase', environmentType.name]);
-      state['firebase'][environmentType.name]['project_id'] = projectId;
-      return state;
-    });
+    await context.updateState('firebase/${environmentType.name}/project_id', projectId);
   }
 
   static String generateFirestoreRules(CorePondContext context) {

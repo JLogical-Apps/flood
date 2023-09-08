@@ -9,7 +9,12 @@ class WithoutRunTerminal with IsTerminalWrapper {
   WithoutRunTerminal({required this.terminal});
 
   @override
-  Future<String> run(String command, {Directory? workingDirectory, bool interactable = false}) {
+  Future<String> run(
+    String command, {
+    Directory? workingDirectory,
+    bool interactable = false,
+    Map<String, String> environment = const {},
+  }) {
     throw Exception('Cannot run commands from this terminal!');
   }
 }
