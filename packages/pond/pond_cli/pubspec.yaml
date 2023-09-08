@@ -15,6 +15,7 @@ dependencies:
   equatable: ^2.0.5
   interact: ^2.2.0
   lumberdash: ^3.0.0
+  path: ^1.8.0
   process_run: ^0.12.5+2
 
   persistence_core:

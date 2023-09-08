@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/src/automate/context/automate_pond_context.dart';
 import 'package:pond_cli/src/automate/project/project.dart';
 import 'package:pond_cli/src/automate/util/file_system/automate_file_system.dart';
 import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 import 'package:utils_core/utils_core.dart';
+import 'package:path/path.dart' as path;
 
 class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper {
   final AutomatePondContext automateContext;
@@ -62,7 +64,11 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
   @override
   Future<File> createTempFile(String name) async {
     final file = await super.createTempFile(name);
-    tempFiles.add(file);
+    final alreadyExists = tempFiles.any((tempFile) => tempFile.path == file.path);
+    if (!alreadyExists) {
+      tempFiles.add(file);
+    }
+
     return file;
   }
 

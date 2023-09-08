@@ -37,7 +37,37 @@ class TestflightDeployTarget with IsDeployTarget {
   }
 
   @override
-  Future onDeploy(AutomateCommandContext context, ReleasePlatform platform) async {}
+  Future onDeploy(AutomateCommandContext context, ReleasePlatform platform) async {
+    final identifier = getIdentifier(context);
+
+    final apiKeyFile = await createApiKeyFile(
+      context,
+      apiKeyEncoded: await getApiKeyEncoded(context),
+      keyId: await getApiKeyId(context),
+      issuerId: await getApiKeyIssuer(context),
+    );
+
+    final matchPassword = await getMatchPassword(context);
+    final appleId = await getAppleId(context);
+    final teamId = await getTeamId(context);
+    final ipaFile = context.appDirectory / 'build' / 'ios' - 'Runner.ipa';
+
+    final releaseNotesFile = context.appDirectory / 'build' - 'release_notes.txt';
+    final releaseNotes = await DataSource.static.file(releaseNotesFile).getOrNull();
+
+    await context.appProject.run(
+      'fastlane pilot upload '
+      '--app_identifier $identifier '
+      '--api_key_path ${apiKeyFile.path} '
+      '--ipa ${ipaFile.path} '
+      '--apple_id $appleId '
+      '--team_id $teamId '
+      '--changelog ${releaseNotes ?? ''} ',
+      environment: {
+        'MATCH_PASSWORD': matchPassword,
+      },
+    );
+  }
 
   String getIdentifier(AutomateCommandContext context) {
     final xcodeFile = context.fileSystem.appDirectory / 'ios' - 'Runner.xcodeproj';
@@ -143,6 +173,18 @@ class TestflightDeployTarget with IsDeployTarget {
       }
 
       return matchPassword;
+    });
+  }
+
+  Future<String> getAppleId(AutomateCommandContext context) async {
+    return await context.getHiddenStateOrElse('testflight/appleId', () async {
+      final appleId = context.input(
+          'Provide the Apple ID of the app. You will find this by going to the App Store page for the app > App Information > General Information > Apple ID.');
+      if (appleId.isBlank) {
+        throw Exception('Apple ID not provided!');
+      }
+
+      return appleId;
     });
   }
 }

@@ -41,6 +41,7 @@ class IosReleasePlatform implements ReleasePlatform {
       '--workspace $workspace '
       '--scheme Runner '
       '--output_directory $outputDirectory '
+      '--output_name Runner.ipa '
       '--export_method app-store '
       '--export_options ${exportOptionsFile.path} '
       '--clean '

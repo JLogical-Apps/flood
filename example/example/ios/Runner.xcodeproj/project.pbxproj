@@ -476,7 +476,7 @@
         CLANG_ENABLE_MODULES = YES;
         "CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
         CODE_SIGN_STYLE = Manual;
-        CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+        CURRENT_PROJECT_VERSION = 6;
         DEVELOPMENT_TEAM = "";
         "DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9D79HMA943;
         ENABLE_BITCODE = NO;
@@ -493,7 +493,7 @@
           "$(inherited)",
           "$(PROJECT_DIR)/Flutter"
         );
-        MARKETING_VERSION = "0.0.1+1";
+        MARKETING_VERSION = 0.0.5;
         PRODUCT_BUNDLE_IDENTIFIER = com.jlogical.example;
         PRODUCT_NAME = "$(TARGET_NAME)";
         PROVISIONING_PROFILE_SPECIFIER = "";
@@ -619,7 +619,7 @@
         CLANG_ENABLE_MODULES = YES;
         "CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
         CODE_SIGN_STYLE = Manual;
-        CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+        CURRENT_PROJECT_VERSION = 6;
         DEVELOPMENT_TEAM = "";
         "DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9D79HMA943;
         ENABLE_BITCODE = NO;
@@ -636,7 +636,7 @@
           "$(inherited)",
           "$(PROJECT_DIR)/Flutter"
         );
-        MARKETING_VERSION = "0.0.1+1";
+        MARKETING_VERSION = 0.0.5;
         PRODUCT_BUNDLE_IDENTIFIER = com.jlogical.example;
         PRODUCT_NAME = "$(TARGET_NAME)";
         PROVISIONING_PROFILE_SPECIFIER = "";
@@ -656,7 +656,7 @@
         CLANG_ENABLE_MODULES = YES;
         "CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
         CODE_SIGN_STYLE = Manual;
-        CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+        CURRENT_PROJECT_VERSION = 6;
         DEVELOPMENT_TEAM = "";
         "DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9D79HMA943;
         ENABLE_BITCODE = NO;
@@ -673,7 +673,7 @@
           "$(inherited)",
           "$(PROJECT_DIR)/Flutter"
         );
-        MARKETING_VERSION = "0.0.1+1";
+        MARKETING_VERSION = 0.0.5;
         PRODUCT_BUNDLE_IDENTIFIER = com.jlogical.example;
         PRODUCT_NAME = "$(TARGET_NAME)";
         PROVISIONING_PROFILE_SPECIFIER = "";

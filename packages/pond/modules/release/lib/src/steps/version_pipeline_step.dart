@@ -60,7 +60,8 @@ class VersionPipelineStep with IsPipelineStep {
 
     for (final target in xcodeProject.targets) {
       for (final buildConfiguration in target.buildConfigurationList!.buildConfigurations) {
-        buildConfiguration.buildSettings['MARKETING_VERSION'] = version.toString();
+        buildConfiguration.buildSettings['MARKETING_VERSION'] = version.withoutBuild().toString();
+        buildConfiguration.buildSettings['CURRENT_PROJECT_VERSION'] = version.build;
       }
     }
 
