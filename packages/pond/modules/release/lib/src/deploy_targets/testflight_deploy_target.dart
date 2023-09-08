@@ -153,7 +153,7 @@ class TestflightDeployTarget with IsDeployTarget {
   }
 
   Future<String> getGitUrl(AutomateCommandContext context) async {
-    return await context.getHiddenStateOrElse('testflight/gitUrl', () async {
+    return await context.getHiddenStateOrElse('match/gitUrl', () async {
       final gitUrl = context.input(
           'Provide the Git URL for Fastlane to store the iOS certs. Create a new repository if you haven\'t already.');
       if (gitUrl.isBlank) {
@@ -165,7 +165,7 @@ class TestflightDeployTarget with IsDeployTarget {
   }
 
   Future<String> getMatchPassword(AutomateCommandContext context) async {
-    return await context.getHiddenStateOrElse('testflight/matchPassword', () async {
+    return await context.getHiddenStateOrElse('match/matchPassword', () async {
       final matchPassword = context.input(
           'Provide the Match password to be used to encrypt/decrypt your repository. If you just created a new Git repository, create a password and provide it.');
       if (matchPassword.isBlank) {

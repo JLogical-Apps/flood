@@ -1,4 +1,3 @@
-import 'package:release/release.dart';
 import 'package:release/src/deploy_target.dart';
 import 'package:release/src/pipeline_step.dart';
 import 'package:release/src/release_platform.dart';

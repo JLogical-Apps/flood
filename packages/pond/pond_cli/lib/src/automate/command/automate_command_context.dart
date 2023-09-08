@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/src/automate/context/automate_pond_context.dart';
 import 'package:pond_cli/src/automate/project/project.dart';
 import 'package:pond_cli/src/automate/util/file_system/automate_file_system.dart';
 import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 import 'package:utils_core/utils_core.dart';
-import 'package:path/path.dart' as path;
 
 class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper {
   final AutomatePondContext automateContext;
@@ -82,28 +80,28 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
   late final File hiddenStateFile = coreDirectory / 'tool' - 'state.hidden.yaml';
 
   Future<T> _getStateOrElse<T>(String path, FutureOr<T> Function() orElse, {required File stateFile}) async {
-    final stateJsonDataSource = DataSource.static.file(stateFile).mapJson();
-    final stateJson = (await stateJsonDataSource.getOrNull()) ?? {};
+    final stateYamlDataSource = DataSource.static.file(stateFile).mapYaml();
+    final stateYaml = (await stateYamlDataSource.getOrNull()) ?? {};
 
-    final value = stateJson.getPathed(path);
+    final value = stateYaml.getPathed(path);
     if (value != null) {
       return value;
     }
 
     final newValue = await orElse();
-    stateJson.updatePathed(path, (_) => newValue);
-    await stateJsonDataSource.set(stateJson);
+    stateYaml.updatePathed(path, (_) => newValue);
+    await stateYamlDataSource.set(stateYaml);
 
     return newValue;
   }
 
   Future _updateState(String path, dynamic value, {required File stateFile}) async {
-    final stateJsonDataSource = DataSource.static.file(stateFile).mapJson();
-    final stateJson = (await stateJsonDataSource.getOrNull()) ?? {};
+    final stateYamlDataSource = DataSource.static.file(stateFile).mapYaml();
+    final stateYaml = (await stateYamlDataSource.getOrNull()) ?? {};
 
-    stateJson.updatePathed(path, (_) => value);
+    stateYaml.updatePathed(path, (_) => value);
 
-    await stateJsonDataSource.set(stateJson);
+    await stateYamlDataSource.set(stateYaml);
   }
 
   Future<T> getStateOrElse<T>(String path, FutureOr<T> Function() orElse) =>
