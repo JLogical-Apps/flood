@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:persistence_core/persistence_core.dart';
+import 'package:pond_cli/src/automate/command/path/automate_path.dart';
 import 'package:pond_cli/src/automate/context/automate_pond_context.dart';
 import 'package:pond_cli/src/automate/project/project.dart';
 import 'package:pond_cli/src/automate/util/file_system/automate_file_system.dart';
@@ -10,6 +11,8 @@ import 'package:utils_core/utils_core.dart';
 
 class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper {
   final AutomatePondContext automateContext;
+
+  final AutomatePath path;
 
   @override
   final AutomateFileSystem fileSystem;
@@ -20,6 +23,7 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
 
   AutomateCommandContext._({
     required this.automateContext,
+    required this.path,
     required this.coreProject,
     required this.appProject,
     required this.fileSystem,
@@ -27,6 +31,7 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
 
   factory AutomateCommandContext({
     required AutomatePondContext automateContext,
+    required AutomatePath path,
     Directory Function(Directory coreDirectory)? appDirectoryGetter,
     Terminal Function(Directory workingDirectory)? terminalGetter,
   }) {
@@ -38,6 +43,7 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
 
     return AutomateCommandContext._(
       automateContext: automateContext,
+      path: path,
       fileSystem: fileSystem,
       coreProject: Project(
         executableRoot: 'dart',

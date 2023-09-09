@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:pond_cli/src/automate/command/automate_command.dart';
 import 'package:pond_cli/src/automate/command/automate_command_context.dart';
+import 'package:pond_cli/src/automate/command/path/automate_path.dart';
 import 'package:pond_cli/src/automate/context/automate_pond_context.dart';
 import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 
@@ -29,10 +30,12 @@ class Automate {
 
     automateCommand as AutomateCommand<AutomateCommand>;
 
-    final instanceCommand = automateCommand.fromPath(args.skip(1).join(' '));
+    final automatePath = AutomatePath.parse(args.skip(1).join(' '));
+    final instanceCommand = automateCommand.fromPath(automatePath);
 
     final commandContext = AutomateCommandContext(
       automateContext: context,
+      path: automatePath,
       terminalGetter: terminalGetter,
       appDirectoryGetter: appDirectoryGetter,
     );

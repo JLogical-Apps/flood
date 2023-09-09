@@ -77,12 +77,10 @@ extension AutomateCommandDefaults<A extends AutomateCommand> on AutomateCommand<
     await onRun(context);
   }
 
-  A fromPath(String path) {
-    if (!pathDefinition.matches(path)) {
-      throw Exception('[$path] does not match this command!');
+  A fromPath(AutomatePath automatePath) {
+    if (!pathDefinition.matches(automatePath)) {
+      throw Exception('[$automatePath] does not match this command!');
     }
-
-    final automatePath = AutomatePath.parse(path);
 
     final instance = copy();
 

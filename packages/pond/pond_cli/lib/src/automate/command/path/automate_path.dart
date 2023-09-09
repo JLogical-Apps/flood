@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:utils_core/utils_core.dart';
 
 class AutomatePath with EquatableMixin {
   final List<String> segments;
@@ -32,4 +33,9 @@ class AutomatePath with EquatableMixin {
         segments,
         parameters,
       ];
+
+  @override
+  String toString() {
+    return segments.join(' ') + parameters.mapToIterable((name, value) => '$name:$value').join(' ');
+  }
 }

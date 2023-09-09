@@ -27,9 +27,7 @@ abstract class AutomatePathDefinition {
 }
 
 extension AutomatePathDefinitionExtensions on AutomatePathDefinition {
-  bool matches(String path) {
-    final automatePath = AutomatePath.parse(path);
-
+  bool matches(AutomatePath automatePath) {
     if (automatePath.segments.length != segments.length) {
       return false;
     }

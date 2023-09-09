@@ -6,21 +6,24 @@ import 'package:release/src/release_platform.dart';
 
 class ReleaseAutomateComponent with IsAutomatePondComponent {
   final Map<ReleaseEnvironmentType, Pipeline> pipelines;
+  final List<ReleasePlatform>? platforms;
 
-  ReleaseAutomateComponent({required this.pipelines});
+  ReleaseAutomateComponent({required this.pipelines, this.platforms});
 
   @override
   List<AutomateCommand> get commands => [
-        ReleaseCommand(pipelines: pipelines),
+        ReleaseCommand(pipelines: pipelines, platforms: platforms),
       ];
 }
 
 class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
   final Map<ReleaseEnvironmentType, Pipeline> pipelines;
+  final List<ReleasePlatform>? platforms;
 
   late final environmentProperty = field<String>(name: 'environment');
+  late final platformsProperty = field<String>(name: 'only');
 
-  ReleaseCommand({required this.pipelines});
+  ReleaseCommand({required this.pipelines, required this.platforms});
 
   @override
   String get name => 'release';
@@ -30,7 +33,7 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
 
   @override
   ReleaseCommand copy() {
-    return ReleaseCommand(pipelines: pipelines);
+    return ReleaseCommand(pipelines: pipelines, platforms: platforms);
   }
 
   @override
@@ -38,14 +41,25 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
     final environment = getEnvironment();
     final pipeline = pipelines[environment] ??
         (throw Exception('Could not find pipeline for release environment [${environment.name}]'));
+    final platforms = getPlatforms();
 
     for (final step in pipeline.pipelineSteps) {
-      await step.execute(context, [ReleasePlatform.ios]);
+      if (context.path.parameters['skip_${step.name}'] == 'true') {
+        print('SKIPPING [${step.name}]\n');
+        continue;
+      }
+
+      print('===[${step.name}]===');
+      await step.execute(context, platforms);
+      print('');
     }
   }
 
   @override
   AutomatePathDefinition get pathDefinition => AutomatePathDefinition.property(environmentProperty);
+
+  @override
+  List<AutomateCommandProperty> get parameters => [platformsProperty];
 
   ReleaseEnvironmentType? getEnvironmentOrNull() {
     final releaseTypes = [
@@ -60,5 +74,26 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
   ReleaseEnvironmentType getEnvironment() {
     return getEnvironmentOrNull() ??
         (throw Exception('Cannot find release environment with name [${environmentProperty.value}]'));
+  }
+
+  List<ReleasePlatform> getPlatforms() {
+    if (platformsProperty.value == null) {
+      return getDefaultPlatforms();
+    }
+
+    return platformsProperty.value!
+        .split(',')
+        .map((rawPlatform) =>
+            getDefaultPlatforms().firstWhere((platform) => platform.name.toLowerCase() == rawPlatform.toLowerCase()))
+        .toList();
+  }
+
+  List<ReleasePlatform> getDefaultPlatforms() {
+    return platforms ??
+        [
+          ReleasePlatform.android,
+          ReleasePlatform.ios,
+          ReleasePlatform.web,
+        ];
   }
 }
