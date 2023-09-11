@@ -30,31 +30,33 @@ class FirebaseMessagingCoreComponent with IsCorePondComponent {
               return;
             }
 
-            await FirebaseMessaging.instance.requestPermission(
-              alert: true,
-              announcement: false,
-              badge: true,
-              carPlay: false,
-              criticalAlert: false,
-              provisional: false,
-              sound: true,
-            );
+            () async {
+              await FirebaseMessaging.instance.requestPermission(
+                alert: true,
+                announcement: true,
+                badge: true,
+                carPlay: true,
+                criticalAlert: false,
+                provisional: false,
+                sound: true,
+              );
 
-            FirebaseMessaging.onMessage.listen((message) => onNotificationReceived?.call());
-            FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+              FirebaseMessaging.onMessage.listen((message) => onNotificationReceived?.call());
+              FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-            // Get the token each time the application loads
-            final token = await FirebaseMessaging.instance.getToken();
+              // Get the token each time the application loads
+              final token = await FirebaseMessaging.instance.getToken();
 
-            // Save the initial token to the database
-            _tokenSubject.value = FutureValue.loaded(token);
-            onTokenGenerated?.call(token);
-
-            // Any time the token refreshes, store this in the database too.
-            FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+              // Save the initial token to the database
               _tokenSubject.value = FutureValue.loaded(token);
               onTokenGenerated?.call(token);
-            });
+
+              // Any time the token refreshes, store this in the database too.
+              FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+                _tokenSubject.value = FutureValue.loaded(token);
+                onTokenGenerated?.call(token);
+              });
+            }();
           },
         ),
       ];
