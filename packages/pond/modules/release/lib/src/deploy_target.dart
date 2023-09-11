@@ -10,6 +10,9 @@ abstract class DeployTarget {
   Future onDeploy(AutomateCommandContext context, ReleasePlatform platform);
 
   static final DeployTarget testflight = TestflightDeployTarget();
+
+  static DeployTarget googlePlay(GooglePlayTrack track, {bool isDraft = false}) =>
+      GooglePlayDeployTarget(track: track, isDraft: isDraft);
 }
 
 extension DeployTargetExtensions on DeployTarget {

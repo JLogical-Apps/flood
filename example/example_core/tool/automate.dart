@@ -20,6 +20,7 @@ Future<void> main(List<String> args) async {
   }));
   await automatePondContext.register(ReleaseAutomateComponent(pipelines: {
     ReleaseEnvironmentType.beta: Pipeline.defaultDeploy({
+      ReleasePlatform.android: DeployTarget.googlePlay(GooglePlayTrack.internal, isDraft: true),
       ReleasePlatform.ios: DeployTarget.testflight,
     }),
     ReleaseEnvironmentType.production: Pipeline.defaultDeploy({}),

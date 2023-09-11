@@ -1,6 +1,6 @@
 name: example_core
 description: A sample command-line application.
-version: 0.0.5+6
+version: 0.0.6+7
 publish_to: none
 environment:
   sdk: ">=2.19.2 <3.0.0"
