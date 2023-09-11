@@ -64,4 +64,18 @@ extension DirectoryExtensions on Directory {
       directory = directory.parent;
     }
   }
+
+  Future<Directory> copyTo(Directory destination) async {
+    await destination.ensureCreated();
+    for (final fileElement in listSync(recursive: true)) {
+      final fileElementBasename = basename(fileElement.path);
+      if (fileElement is File) {
+        await fileElement.copy((destination - fileElementBasename).path);
+      } else if (fileElement is Directory) {
+        await fileElement.copyTo(destination / fileElementBasename);
+      }
+    }
+
+    return destination;
+  }
 }

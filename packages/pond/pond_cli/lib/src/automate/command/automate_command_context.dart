@@ -61,7 +61,7 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
   List<Project> get projects => [coreProject, appProject];
 
   @override
-  Terminal get terminal => Terminal.static.shell().withoutRun();
+  Terminal get terminal => Terminal.static.shell();
 
   List<File> tempFiles = [];
 

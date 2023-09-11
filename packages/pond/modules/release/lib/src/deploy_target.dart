@@ -1,5 +1,6 @@
 import 'package:pond_cli/pond_cli.dart';
 import 'package:release/release.dart';
+import 'package:release/src/deploy_targets/firebase_hosting_deploy_target.dart';
 import 'package:release/src/deploy_targets/testflight_deploy_target.dart';
 
 abstract class DeployTarget {
@@ -13,6 +14,8 @@ abstract class DeployTarget {
 
   static DeployTarget googlePlay(GooglePlayTrack track, {bool isDraft = false}) =>
       GooglePlayDeployTarget(track: track, isDraft: isDraft);
+
+  static DeployTarget firebase({String? channel}) => FirebaseHostingDeployTarget(channel: channel);
 }
 
 extension DeployTargetExtensions on DeployTarget {

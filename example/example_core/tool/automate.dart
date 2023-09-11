@@ -22,6 +22,7 @@ Future<void> main(List<String> args) async {
     ReleaseEnvironmentType.beta: Pipeline.defaultDeploy({
       ReleasePlatform.android: DeployTarget.googlePlay(GooglePlayTrack.internal, isDraft: true),
       ReleasePlatform.ios: DeployTarget.testflight,
+      ReleasePlatform.web: DeployTarget.firebase(channel: 'beta'),
     }),
     ReleaseEnvironmentType.production: Pipeline.defaultDeploy({}),
   }));
