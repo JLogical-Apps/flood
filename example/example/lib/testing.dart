@@ -26,7 +26,9 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
 
   final userEntity = await dropComponent.updateEntity(
     UserEntity()..id = userId,
-    (User user) => user.nameProperty.set('John Doe'),
+    (User user) => user
+      ..nameProperty.set('John Doe')
+      ..emailProperty.set('test@test.com'),
   );
 
   final budgetEntity = await dropComponent.updateEntity(

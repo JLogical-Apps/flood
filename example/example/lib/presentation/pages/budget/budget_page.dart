@@ -1,8 +1,8 @@
 import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
-import 'package:example/presentation/pages/budget/budgets_page.dart';
 import 'package:example/presentation/pages/envelope/archived_envelopes_page.dart';
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/pages/transaction/add_transactions_page.dart';
+import 'package:example/presentation/pages/user/profile_page.dart';
 import 'package:example/presentation/widget/envelope/envelope_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
@@ -52,14 +52,11 @@ class BudgetPage extends AppPage {
             transactionsModel.load(),
           ]),
           titleText: '${budget.nameProperty.value}: ${totalCents?.formatCentsAsCurrency() ?? '...'}',
-          actions: [
-            ActionItem(
-              titleText: 'Change Budget',
-              descriptionText: 'Use another budget.',
-              iconData: Icons.change_circle,
-              color: Colors.blue,
-              onPerform: (context) {
-                context.warpTo(BudgetsPage());
+          actionWidgets: [
+            StyledButton(
+              iconData: Icons.face,
+              onPressed: () async {
+                context.push(ProfilePage());
               },
             ),
           ],

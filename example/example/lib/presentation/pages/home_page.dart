@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/pages/budget/budget_page.dart';
-import 'package:example/presentation/pages/budget/budgets_page.dart';
+import 'package:example/presentation/pages/user/profile_page.dart';
 import 'package:example_core/features/budget/budget_entity.dart';
 import 'package:example_core/features/settings/settings_entity.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class HomePage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
-    return BudgetsPage();
+    return ProfilePage();
   }
 
   @override

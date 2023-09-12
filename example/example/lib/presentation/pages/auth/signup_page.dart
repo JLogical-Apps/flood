@@ -57,7 +57,9 @@ class SignupPage extends AppPage {
 
                 await context.dropCoreComponent.updateEntity(
                   UserEntity()..id = userId,
-                  (User user) => user..nameProperty.set(data['name']),
+                  (User user) => user
+                    ..emailProperty.set(data['email'])
+                    ..nameProperty.set(data['name']),
                 );
 
                 context.warpTo(HomePage());
