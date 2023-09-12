@@ -3,23 +3,22 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/tray/tray_entity.dart';
+import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class EnvelopeEditDialog extends StyledPortDialog<Envelope> {
-  EnvelopeEditDialog._({super.titleText, required super.port, super.children, super.onAccept});
-
-  static Future<EnvelopeEditDialog> create({
-    required CorePondContext corePondContext,
+class EnvelopeEditDialog {
+  static Future<void> show(
+    BuildContext context, {
     String? titleText,
     required Envelope envelope,
     FutureOr Function(Envelope result)? onAccept,
   }) async {
     final trayEntities = await TrayEntity.getBudgetTraysQuery(budgetId: envelope.budgetProperty.value)
         .all()
-        .get(corePondContext.dropCoreComponent);
+        .get(context.dropCoreComponent);
 
     final port = envelope.asPort(
-      corePondContext,
+      context.corePondContext,
       overrides: [
         PortGeneratorOverride.override(
           Envelope.trayField,
@@ -35,13 +34,11 @@ class EnvelopeEditDialog extends StyledPortDialog<Envelope> {
         ),
       ],
     );
-    return EnvelopeEditDialog._(
-      titleText: titleText,
+
+    await context.showStyledDialog(StyledPortDialog(
       port: port,
-      children: [
-        StyledObjectPortBuilder(port: port),
-      ],
       onAccept: onAccept,
-    );
+      titleText: titleText,
+    ));
   }
 }

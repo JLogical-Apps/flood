@@ -87,14 +87,14 @@ class BudgetPage extends AppPage {
                           iconData: Icons.add,
                           color: Colors.green,
                           onPerform: (_) async {
-                            await context.showStyledDialog(await EnvelopeEditDialog.create(
+                            await EnvelopeEditDialog.show(
+                              context,
                               titleText: 'Create Envelope',
-                              corePondContext: context.corePondContext,
                               envelope: Envelope()..budgetProperty.set(budgetEntity.id!),
                               onAccept: (Envelope result) async {
                                 await context.dropCoreComponent.update(EnvelopeEntity()..value = result);
                               },
-                            ));
+                            );
                           },
                         ),
                         ActionItem(

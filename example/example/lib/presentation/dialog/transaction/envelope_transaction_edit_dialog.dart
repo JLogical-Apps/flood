@@ -1,24 +1,25 @@
 import 'dart:async';
 
 import 'package:example_core/features/transaction/envelope_transaction.dart';
+import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class EnvelopeTransactionEditDialog extends StyledPortDialog<EnvelopeTransaction> {
-  EnvelopeTransactionEditDialog._({super.titleText, required super.port, required super.children, super.onAccept});
-
-  factory EnvelopeTransactionEditDialog({
-    required CorePondContext corePondContext,
+class EnvelopeTransactionEditDialog {
+  static Future<void> show(
+    BuildContext context, {
     String? titleText,
     required EnvelopeTransaction envelopeTransaction,
     FutureOr Function(EnvelopeTransaction result)? onAccept,
-  }) {
+  }) async {
     late Port<Map<String, dynamic>> rawPort;
     final basePort = envelopeTransaction.asPort(
-      corePondContext,
+      context.corePondContext,
       overrides: [
-        PortGeneratorOverride.update(EnvelopeTransaction.nameField,
-            portFieldUpdater: (portField) => portField.withDynamicFallback(
-                (port) => rawPort['transactionType'] == EnvelopeTransactionType.payment ? 'Payment' : 'Refund'))
+        PortGeneratorOverride.update(
+          EnvelopeTransaction.nameField,
+          portFieldUpdater: (portField) => portField.withDynamicFallback(
+              (port) => rawPort['transactionType'] == EnvelopeTransactionType.payment ? 'Payment' : 'Refund'),
+        )
       ],
     );
     rawPort = Port.of({
@@ -28,8 +29,8 @@ class EnvelopeTransactionEditDialog extends StyledPortDialog<EnvelopeTransaction
         initialValue: EnvelopeTransactionType.payment,
       ),
     });
-    return EnvelopeTransactionEditDialog._(
-      titleText: titleText,
+
+    await context.showStyledDialog(StyledPortDialog(
       port: rawPort.map((sourceData, port) {
         final transactionResult = sourceData['transaction'] as EnvelopeTransaction;
         final transactionType = sourceData['transactionType'] as EnvelopeTransactionType;
@@ -51,7 +52,7 @@ class EnvelopeTransactionEditDialog extends StyledPortDialog<EnvelopeTransaction
         ),
       ],
       onAccept: onAccept,
-    );
+    ));
   }
 }
 

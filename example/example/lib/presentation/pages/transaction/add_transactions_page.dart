@@ -217,14 +217,14 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
           iconData: Icons.edit,
           color: Colors.orange,
           onPerform: (context) async {
-            await context.showStyledDialog(await EnvelopeEditDialog.create(
+            await EnvelopeEditDialog.show(
+              context,
               titleText: 'Edit Envelope',
-              corePondContext: context.corePondContext,
               envelope: envelope,
               onAccept: (Envelope result) async {
                 await context.dropCoreComponent.update(envelopeEntity..value = result);
               },
-            ));
+            );
           },
         ),
         ActionItem(
@@ -233,7 +233,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
           color: Colors.blue,
           iconData: Icons.swap_horiz,
           onPerform: (context) async {
-            await context.showStyledDialog(await TransferTransactionEditDialog.create(
+            await TransferTransactionEditDialog.show(
               context,
               titleText: 'Create Transfer',
               sourceEnvelopeEntity: envelopeEntity,
@@ -241,13 +241,13 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
               onAccept: (TransferTransaction result) async {
                 await onTransactionCreated(result);
               },
-            ));
+            );
           },
         ),
       ],
       onPressed: () async {
-        await context.showStyledDialog(EnvelopeTransactionEditDialog(
-          corePondContext: context.corePondContext,
+        await EnvelopeTransactionEditDialog.show(
+          context,
           titleText: 'Create Transaction',
           envelopeTransaction: EnvelopeTransaction()
             ..envelopeProperty.set(envelopeEntity.id!)
@@ -255,7 +255,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
           onAccept: (EnvelopeTransaction envelopeTransaction) async {
             await onTransactionCreated(envelopeTransaction);
           },
-        ));
+        );
       },
       body: StyledList.row.scrollable.withScrollbar(
         itemPadding: EdgeInsets.symmetric(horizontal: 4),

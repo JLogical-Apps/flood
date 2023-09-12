@@ -56,14 +56,14 @@ class EnvelopePage extends AppPage {
                 color: Colors.orange,
                 iconData: Icons.edit,
                 onPerform: (context) async {
-                  await context.showStyledDialog(await EnvelopeEditDialog.create(
+                  await EnvelopeEditDialog.show(
+                    context,
                     titleText: 'Edit Envelope',
-                    corePondContext: context.corePondContext,
                     envelope: envelope,
                     onAccept: (Envelope result) async {
                       await context.dropCoreComponent.update(envelopeEntity..value = result);
                     },
-                  ));
+                  );
                 },
               ),
             if (!envelope.archivedProperty.value)
@@ -73,7 +73,7 @@ class EnvelopePage extends AppPage {
                 color: Colors.blue,
                 iconData: Icons.swap_horiz,
                 onPerform: (context) async {
-                  await context.showStyledDialog(await TransferTransactionEditDialog.create(
+                  await TransferTransactionEditDialog.show(
                     context,
                     titleText: 'Create Transfer',
                     sourceEnvelopeEntity: envelopeEntity,
@@ -87,7 +87,7 @@ class EnvelopePage extends AppPage {
                         transactionEntity: TransferTransactionEntity()..set(result),
                       );
                     },
-                  ));
+                  );
                 },
               ),
             if (!envelope.archivedProperty.value)
@@ -274,8 +274,8 @@ class EnvelopePage extends AppPage {
                 labelText: 'Create Transaction',
                 iconData: Icons.add,
                 onPressed: () async {
-                  await context.showStyledDialog(EnvelopeTransactionEditDialog(
-                    corePondContext: context.corePondContext,
+                  await EnvelopeTransactionEditDialog.show(
+                    context,
                     titleText: 'Create Transaction',
                     envelopeTransaction: (EnvelopeTransaction()
                       ..envelopeProperty.set(envelopeEntity.id!)
@@ -289,7 +289,7 @@ class EnvelopePage extends AppPage {
                         transactionEntity: EnvelopeTransactionEntity()..value = envelopeTransaction,
                       );
                     },
-                  ));
+                  );
                 },
               ),
               PaginatedQueryModelBuilder(

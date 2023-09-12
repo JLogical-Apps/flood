@@ -4,13 +4,11 @@ import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier
 import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
 import 'package:example_core/features/transaction/transfer_transaction.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class TransferTransactionEditDialog extends StyledPortDialog<TransferTransaction> {
-  TransferTransactionEditDialog._({super.titleText, required super.port, required super.children, super.onAccept});
-
-  static Future<TransferTransactionEditDialog> create(
+class TransferTransactionEditDialog {
+  static Future<void> show(
     BuildContext context, {
     String? titleText,
     required EnvelopeEntity sourceEnvelopeEntity,
@@ -41,8 +39,7 @@ class TransferTransactionEditDialog extends StyledPortDialog<TransferTransaction
       ),
     });
 
-    return TransferTransactionEditDialog._(
-      titleText: titleText,
+    await context.showStyledDialog(StyledPortDialog(
       port: rawPort.map((sourceData, port) {
         final transactionResult = sourceData['transaction'] as TransferTransaction;
         final transferType = sourceData['transferType'] as TransferType;
@@ -90,7 +87,7 @@ class TransferTransactionEditDialog extends StyledPortDialog<TransferTransaction
         ),
       ],
       onAccept: onAccept,
-    );
+    ));
   }
 }
 
