@@ -1,4 +1,5 @@
 import 'package:example/presentation/pages/auth/login_page.dart';
+import 'package:example/presentation/pages/auth/signup_page.dart';
 import 'package:example/presentation/pages/budget/budget_page.dart';
 import 'package:example/presentation/pages/budget/budgets_page.dart';
 import 'package:example/presentation/pages/envelope/archived_envelopes_page.dart';
@@ -11,6 +12,7 @@ class ValetPagesAppPondComponent with IsAppPondComponent {
   @override
   List<AppPage> get pages => [
         LoginPage(),
+        SignupPage(),
         HomePage(),
         BudgetsPage(),
         BudgetPage(),
