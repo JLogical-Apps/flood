@@ -11,5 +11,5 @@ class IsLessThanQueryCondition extends QueryCondition {
   }
 
   @override
-  List<Object?> get props => [value];
+  List<Object?> get props => super.props + [value];
 }

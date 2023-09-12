@@ -9,4 +9,7 @@ abstract class QueryCondition with EquatableMixin {
   static QueryConditionBuilder field(String stateField) {
     return QueryConditionBuilder(stateField: stateField);
   }
+
+  @override
+  List<Object?> get props => [stateField];
 }

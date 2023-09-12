@@ -15,5 +15,5 @@ class AllStatesQueryRequest<E extends Entity> extends QueryRequest<E, List<State
   }
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [query];
 }
