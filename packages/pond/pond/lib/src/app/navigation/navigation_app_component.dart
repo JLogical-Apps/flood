@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pond/pond.dart';
@@ -30,7 +31,12 @@ class NavigationAppComponent with IsAppPondComponent {
   }
 
   Future<T?> pushLocation<T>(BuildContext context, String location) async {
-    final page = context.appPondContext.getPages().firstWhere((page) => page.matches(location));
+    final page = context.appPondContext.getPages().firstWhereOrNull((page) => page.matches(location));
+    if (page == null) {
+      warpToLocation(context, location);
+      return null;
+    }
+
     final newPage = page.fromPath(location);
 
     final redirectUri = await newPage.redirectTo(context, Uri.parse(location));

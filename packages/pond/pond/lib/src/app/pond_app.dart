@@ -113,7 +113,7 @@ class PondApp extends HookWidget {
                     ),
                   ),
               VWidget.builder(
-                path: '*',
+                path: ':_(.*)',
                 builder: (context, state) => notFoundPage,
               ),
             ],

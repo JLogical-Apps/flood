@@ -10,7 +10,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class HomePage extends AppPage {
   @override
-  PathDefinition get pathDefinition => PathDefinition.string('home');
+  PathDefinition get pathDefinition => PathDefinition.home;
 
   @override
   Widget build(BuildContext context) {
