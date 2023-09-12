@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 
 class EnvironmentBannerAppComponent with IsAppPondComponent {
-  final bool Function(EnvironmentType environmentType)? shouldShow;
+  final bool Function()? shouldShow;
 
   EnvironmentBannerAppComponent({this.shouldShow});
 
   @override
   Widget wrapPage(AppPondContext context, Widget page, AppPondPageContext pageContext) {
-    final shouldShow = this.shouldShow ?? (environment) => environment != EnvironmentType.static.production;
-    if (!shouldShow(context.environment)) {
+    final shouldShow = this.shouldShow ?? () => context.buildType != BuildType.release;
+    if (!shouldShow()) {
       return page;
     }
 
