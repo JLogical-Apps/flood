@@ -1,5 +1,6 @@
 import 'package:example/presentation/widget/time_rule/time_rule_card_modifier.dart';
-import 'package:example_core/example_core.dart';
+import 'package:example_core/features/envelope_rule/monthly_time_rule.dart';
+import 'package:example_core/features/envelope_rule/repeating_goal_envelope_rule.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';

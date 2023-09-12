@@ -1,4 +1,5 @@
-import 'package:example_core/example_core.dart';
+import 'package:example_core/features/transaction/budget_transaction.dart';
+import 'package:example_core/features/transaction/transfer_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 

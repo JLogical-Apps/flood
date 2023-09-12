@@ -1,4 +1,21 @@
-import 'package:example_core/example_core.dart';
+import 'package:example_core/features/budget/budget.dart';
+import 'package:example_core/features/budget/budget_change.dart';
+import 'package:example_core/features/budget/budget_entity.dart';
+import 'package:example_core/features/envelope/envelope.dart';
+import 'package:example_core/features/envelope/envelope_entity.dart';
+import 'package:example_core/features/envelope_rule/daily_time_rule.dart';
+import 'package:example_core/features/envelope_rule/firstfruit_envelope_rule.dart';
+import 'package:example_core/features/envelope_rule/monthly_time_rule.dart';
+import 'package:example_core/features/envelope_rule/repeating_goal_envelope_rule.dart';
+import 'package:example_core/features/envelope_rule/surplus_envelope_rule.dart';
+import 'package:example_core/features/envelope_rule/target_goal_envelope_rule.dart';
+import 'package:example_core/features/transaction/envelope_transaction.dart';
+import 'package:example_core/features/transaction/envelope_transaction_entity.dart';
+import 'package:example_core/features/transaction/income_transaction.dart';
+import 'package:example_core/features/transaction/income_transaction_entity.dart';
+import 'package:example_core/features/transaction/transfer_transaction.dart';
+import 'package:example_core/features/transaction/transfer_transaction_entity.dart';
+import 'package:example_core/pond.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 import 'package:test/test.dart';
 

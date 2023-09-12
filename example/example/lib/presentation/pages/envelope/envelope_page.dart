@@ -6,7 +6,14 @@ import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
-import 'package:example_core/example_core.dart';
+import 'package:example_core/features/envelope/envelope.dart';
+import 'package:example_core/features/envelope/envelope_entity.dart';
+import 'package:example_core/features/transaction/budget_transaction_entity.dart';
+import 'package:example_core/features/transaction/envelope_transaction.dart';
+import 'package:example_core/features/transaction/envelope_transaction_entity.dart';
+import 'package:example_core/features/transaction/transfer_transaction.dart';
+import 'package:example_core/features/transaction/transfer_transaction_entity.dart';
+import 'package:example_core/features/tray/tray_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -20,11 +27,8 @@ class EnvelopePage extends AppPage {
     final envelopeTransactionsModel =
         useQuery(BudgetTransactionEntity.getEnvelopeTransactionsQuery(envelopeId: idProperty.value).paginate());
 
-    final trayModel = useNullableQueryModel(useMemoized(
-      () => envelopeModel.map((envelopeEntity) =>
-          envelopeEntity?.value.trayProperty.value?.mapIfNonNull((trayId) => Query.getByIdOrNull<TrayEntity>(trayId))),
-      [envelopeModel.getOrNull()],
-    ));
+    final trayModel = useNullableQueryModel(useMemoized(() => envelopeModel.map((envelopeEntity) =>
+        envelopeEntity?.value.trayProperty.value?.mapIfNonNull((trayId) => Query.getByIdOrNull<TrayEntity>(trayId)))));
 
     return ModelBuilder.page(
       model: envelopeModel,

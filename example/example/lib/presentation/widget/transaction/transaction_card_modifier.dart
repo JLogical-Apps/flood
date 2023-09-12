@@ -2,7 +2,7 @@ import 'package:example/presentation/widget/transaction/envelope_transaction_car
 import 'package:example/presentation/widget/transaction/income_transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
 import 'package:example/presentation/widget/transaction/transfer_transaction_card_modifier.dart';
-import 'package:example_core/example_core.dart';
+import 'package:example_core/features/transaction/budget_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 

@@ -1,6 +1,6 @@
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/widget/envelope/envelope_card.dart';
-import 'package:example_core/example_core.dart';
+import 'package:example_core/features/envelope/envelope_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 

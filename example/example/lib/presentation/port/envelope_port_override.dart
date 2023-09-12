@@ -1,5 +1,7 @@
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
-import 'package:example_core/example_core.dart';
+import 'package:example_core/features/envelope/envelope.dart';
+import 'package:example_core/features/envelope_rule/envelope_rule.dart';
+import 'package:example_core/features/tray/tray_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
