@@ -33,8 +33,8 @@ class BudgetPage extends AppPage {
     final transactionsModel =
         useQuery(BudgetTransactionEntity.getBudgetTransactionsQuery(budgetId: budgetIdProperty.value).paginate());
 
-    final totalCentsModel = useMemoized(() => envelopesModel
-        .map((envelopeEntities) => envelopeEntities.sumByInt((entity) => entity.value.amountCentsProperty.value)));
+    final totalCents = envelopesModel.getOrNull()?.mapIfNonNull(
+        (envelopeEntities) => envelopeEntities.sumByInt((entity) => entity.value.amountCentsProperty.value));
 
     return ModelBuilder.page(
       model: budgetModel,
@@ -51,7 +51,7 @@ class BudgetPage extends AppPage {
             traysModel.load(),
             transactionsModel.load(),
           ]),
-          titleText: '${budget.nameProperty.value}: ${totalCentsModel.getOrNull()?.formatCentsAsCurrency() ?? '...'}',
+          titleText: '${budget.nameProperty.value}: ${totalCents?.formatCentsAsCurrency() ?? '...'}',
           actions: [
             ActionItem(
               titleText: 'Change Budget',

@@ -3,10 +3,10 @@ import 'package:example_core/features/transaction/envelope_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class EnvelopeTransactionPortOverride with IsStyledObjectPortOverride<EnvelopeTransaction> {
+class EnvelopeTransactionStyledPortOverride with IsStyledObjectPortOverride<EnvelopeTransaction> {
   final AppPondContext context;
 
-  EnvelopeTransactionPortOverride({required this.context});
+  EnvelopeTransactionStyledPortOverride({required this.context});
 
   @override
   Widget build(Port port) {

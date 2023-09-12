@@ -28,154 +28,157 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
   @override
   Widget build(BuildContext context) {
     final budgetModel = useEntityOrNull<BudgetEntity>(budgetIdProperty.value);
-    final budget = budgetModel.getOrNull()?.value;
 
     final envelopesModel =
         useQuery(EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: budgetIdProperty.value, isArchived: false).all());
-    final envelopeEntities = envelopesModel.getOrNull();
-    if (envelopeEntities == null) {
-      return StyledLoadingPage();
-    }
-
-    final envelopeById = envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value));
 
     final transactionGeneratorsState = useState<List<TransactionGenerator>>([]);
-    final transactions = transactionGeneratorsState.value
-        .map((transactionGenerator) => transactionGenerator.generate(envelopeById))
-        .toList();
-    final modifiedEnvelopeById = budget
-        ?.addTransactions(
-          context.dropCoreComponent,
-          envelopeById: envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value)),
-          transactions: transactions,
-        )
-        .modifiedEnvelopeById;
 
-    return StyledPage(
-      titleText: 'Add Transactions',
-      body: StyledList.column.scrollable.withScrollbar.centered(
-        children: [
-          StyledButton.strong(
-            labelText: 'Add Income',
-            iconData: Icons.attach_money,
-            onPressed: () async {
-              final budgetEntity = (await budgetModel.getOrLoad()) ??
-                  (throw Exception('Cannot load budget! [${budgetIdProperty.value}]'));
+    return ModelBuilder.page(
+        model: Model.union([budgetModel, envelopesModel]),
+        builder: (values) {
+          final [BudgetEntity? budgetEntity, List<EnvelopeEntity> envelopeEntities] = values;
+          final budget = budgetEntity?.value;
 
-              final transactionGenerator = await context.showStyledDialog(StyledPortDialog(
-                  titleText: 'Add Income',
-                  port: Port.of(
-                    {
-                      'incomeCents':
-                          PortField<int?, int>(value: null).withDisplayName('Income (\$)').currency().isNotNull(),
-                      'transactionDate': PortField.dateTime(isTime: false, initialValue: DateTime.now())
-                          .withDisplayName('Income Date')
-                          .isNotNull(),
-                    },
-                  ).map((resultByName, port) => IncomeTransactionGenerator(
-                        incomeCents: resultByName['incomeCents'] as int,
-                        transactionDate: resultByName['transactionDate'] as DateTime,
-                        budgetId: budgetIdProperty.value,
-                        budget: budgetEntity.value,
-                        dropCoreContext: context.dropCoreComponent,
-                      ))));
+          final envelopeById = envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value));
 
-              if (transactionGenerator == null) {
-                return;
-              }
+          final transactions = transactionGeneratorsState.value
+              .map((transactionGenerator) => transactionGenerator.generate(envelopeById))
+              .toList();
+          final modifiedEnvelopeById = budget
+              ?.addTransactions(
+                context.dropCoreComponent,
+                envelopeById: envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value)),
+                transactions: transactions,
+              )
+              .modifiedEnvelopeById;
 
-              transactionGeneratorsState.value = _getSortedTransactionGenerators(
-                existingGenerators: transactionGeneratorsState.value + [transactionGenerator],
-                envelopeById: envelopeById,
-              );
-            },
-          ),
-          StyledCard(
-            titleText: 'Envelopes',
-            bodyText: 'Add a transaction to an envelope by tapping it.',
-            leadingIcon: Icons.mail,
-            children: [
-              ModelBuilder(
-                model: envelopesModel,
-                builder: (List<EnvelopeEntity> envelopeEntities) {
-                  return StyledList.column.withMinChildSize(250).centered(
-                        children: envelopeEntities
-                            .map((entity) => _buildEnvelopeSelectCard(
-                                  context,
-                                  envelopeEntity: entity,
-                                  modifiedEnvelopeById: modifiedEnvelopeById,
-                                  onTransactionCreated: (envelopeTransaction) =>
-                                      transactionGeneratorsState.value = _getSortedTransactionGenerators(
-                                    existingGenerators: transactionGeneratorsState.value +
-                                        [
-                                          WrapperTransactionGenerator(transaction: envelopeTransaction),
-                                        ],
-                                    envelopeById: envelopeById,
-                                  ),
-                                ))
-                            .toList(),
-                        ifEmptyText: 'You have no envelopes!',
-                      );
-                },
-              ),
-            ],
-          ),
-          StyledCard(
-            titleText: 'Transactions',
-            bodyText: 'View the transactions in this batch.',
-            leadingIcon: Icons.mail,
-            children: [
-              StyledList.column(
-                children: transactionGeneratorsState.value
-                    .map((transactionGenerator) => TransactionCard(
-                          budgetTransaction: transactionGenerator.generate(envelopeById),
-                          transactionViewContext: TransactionViewContext.budget(),
-                          actions: [
-                            ActionItem(
-                              titleText: 'Remove',
-                              descriptionText: 'Remove this transaction.',
-                              color: Colors.red,
-                              iconData: Icons.remove_circle_outline,
-                              onPerform: (_) async {
-                                transactionGeneratorsState.value = transactionGeneratorsState.value.copy()
-                                  ..remove(transactionGenerator);
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        ))
-                    .toList(),
-                ifEmptyText: 'No Transactions yet!',
-              ),
-            ],
-          ),
-          StyledButton.strong(
-            labelText: 'Save',
-            iconData: Icons.save,
-            onPressed: transactions.isEmpty
-                ? null
-                : () async {
-                    if (modifiedEnvelopeById == null) {
+          return StyledPage(
+            titleText: 'Add Transactions',
+            body: StyledList.column.scrollable.withScrollbar.centered(
+              children: [
+                StyledButton.strong(
+                  labelText: 'Add Income',
+                  iconData: Icons.attach_money,
+                  onPressed: () async {
+                    final budgetEntity = (await budgetModel.getOrLoad()) ??
+                        (throw Exception('Cannot load budget! [${budgetIdProperty.value}]'));
+
+                    final transactionGenerator = await context.showStyledDialog(StyledPortDialog(
+                        titleText: 'Add Income',
+                        port: Port.of(
+                          {
+                            'incomeCents':
+                                PortField<int?, int>(value: null).withDisplayName('Income (\$)').currency().isNotNull(),
+                            'transactionDate': PortField.dateTime(isTime: false, initialValue: DateTime.now())
+                                .withDisplayName('Income Date')
+                                .isNotNull(),
+                          },
+                        ).map((resultByName, port) => IncomeTransactionGenerator(
+                              incomeCents: resultByName['incomeCents'] as int,
+                              transactionDate: resultByName['transactionDate'] as DateTime,
+                              budgetId: budgetIdProperty.value,
+                              budget: budgetEntity.value,
+                              dropCoreContext: context.dropCoreComponent,
+                            ))));
+
+                    if (transactionGenerator == null) {
                       return;
                     }
 
-                    for (final transaction in transactions) {
-                      final budgetTransactionEntity =
-                          BudgetTransactionEntity.constructEntityFromTransactionTypeRuntime(transaction.runtimeType)
-                            ..set(transaction);
-                      await context.dropCoreComponent.update(budgetTransactionEntity);
-                    }
-                    for (final entry in modifiedEnvelopeById.entries) {
-                      await context.dropCoreComponent.updateEntity(
-                        envelopeEntities.firstWhere((entity) => entity.id == entry.key)..set(entry.value),
-                      );
-                    }
-                    context.pop();
+                    transactionGeneratorsState.value = _getSortedTransactionGenerators(
+                      existingGenerators: transactionGeneratorsState.value + [transactionGenerator],
+                      envelopeById: envelopeById,
+                    );
                   },
-          ),
-        ],
-      ),
-    );
+                ),
+                StyledCard(
+                  titleText: 'Envelopes',
+                  bodyText: 'Add a transaction to an envelope by tapping it.',
+                  leadingIcon: Icons.mail,
+                  children: [
+                    ModelBuilder(
+                      model: envelopesModel,
+                      builder: (List<EnvelopeEntity> envelopeEntities) {
+                        return StyledList.column.withMinChildSize(250).centered(
+                              children: envelopeEntities
+                                  .map((entity) => _buildEnvelopeSelectCard(
+                                        context,
+                                        envelopeEntity: entity,
+                                        modifiedEnvelopeById: modifiedEnvelopeById,
+                                        onTransactionCreated: (envelopeTransaction) =>
+                                            transactionGeneratorsState.value = _getSortedTransactionGenerators(
+                                          existingGenerators: transactionGeneratorsState.value +
+                                              [
+                                                WrapperTransactionGenerator(transaction: envelopeTransaction),
+                                              ],
+                                          envelopeById: envelopeById,
+                                        ),
+                                      ))
+                                  .toList(),
+                              ifEmptyText: 'You have no envelopes!',
+                            );
+                      },
+                    ),
+                  ],
+                ),
+                StyledCard(
+                  titleText: 'Transactions',
+                  bodyText: 'View the transactions in this batch.',
+                  leadingIcon: Icons.mail,
+                  children: [
+                    StyledList.column(
+                      children: transactionGeneratorsState.value
+                          .map((transactionGenerator) => TransactionCard(
+                                budgetTransaction: transactionGenerator.generate(envelopeById),
+                                transactionViewContext: TransactionViewContext.budget(),
+                                actions: [
+                                  ActionItem(
+                                    titleText: 'Remove',
+                                    descriptionText: 'Remove this transaction.',
+                                    color: Colors.red,
+                                    iconData: Icons.remove_circle_outline,
+                                    onPerform: (_) async {
+                                      transactionGeneratorsState.value = transactionGeneratorsState.value.copy()
+                                        ..remove(transactionGenerator);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              ))
+                          .toList(),
+                      ifEmptyText: 'No Transactions yet!',
+                    ),
+                  ],
+                ),
+                StyledButton.strong(
+                  labelText: 'Save',
+                  iconData: Icons.save,
+                  onPressed: transactions.isEmpty
+                      ? null
+                      : () async {
+                          if (modifiedEnvelopeById == null) {
+                            return;
+                          }
+
+                          for (final transaction in transactions) {
+                            final budgetTransactionEntity = BudgetTransactionEntity
+                                .constructEntityFromTransactionTypeRuntime(transaction.runtimeType)
+                              ..set(transaction);
+                            await context.dropCoreComponent.update(budgetTransactionEntity);
+                          }
+                          for (final entry in modifiedEnvelopeById.entries) {
+                            await context.dropCoreComponent.updateEntity(
+                              envelopeEntities.firstWhere((entity) => entity.id == entry.key)..set(entry.value),
+                            );
+                          }
+                          context.pop();
+                        },
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   List<TransactionGenerator> _getSortedTransactionGenerators({

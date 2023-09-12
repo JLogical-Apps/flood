@@ -5,10 +5,10 @@ import 'package:example_core/features/tray/tray_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class EnvelopePortOverride with IsStyledObjectPortOverride<Envelope> {
+class EnvelopeStyledPortOverride with IsStyledObjectPortOverride<Envelope> {
   final AppPondContext context;
 
-  EnvelopePortOverride({required this.context});
+  EnvelopeStyledPortOverride({required this.context});
 
   @override
   Widget build(Port port) {

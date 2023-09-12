@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:example/firebase_options.dart';
 import 'package:example/presentation/pages/home_page.dart';
-import 'package:example/presentation/port/envelope_port_override.dart';
-import 'package:example/presentation/port/envelope_transaction_port_override.dart';
-import 'package:example/presentation/port/repeating_goal_port_override.dart';
-import 'package:example/presentation/port/transfer_transaction_port_override.dart';
+import 'package:example/presentation/port/envelope_styled_port_override.dart';
+import 'package:example/presentation/port/envelope_styled_transaction_port_override.dart';
+import 'package:example/presentation/port/repeating_goal_styled_port_override.dart';
+import 'package:example/presentation/port/transfer_transaction_styled_port_override.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/valet_pages_pond_component.dart';
 import 'package:example/testing.dart';
@@ -102,10 +102,10 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(DropAppComponent());
   await appPondContext.register(ResetAppComponent());
   await appPondContext.register(PortStyleAppComponent(overrides: [
-    EnvelopePortOverride(context: appPondContext),
-    EnvelopeTransactionPortOverride(context: appPondContext),
-    TransferTransactionPortOverride(context: appPondContext),
-    RepeatingGoalPortOverride(context: appPondContext),
+    EnvelopeStyledPortOverride(context: appPondContext),
+    EnvelopeTransactionStyledPortOverride(context: appPondContext),
+    TransferTransactionStyledPortOverride(context: appPondContext),
+    RepeatingGoalStyledPortOverride(context: appPondContext),
   ]));
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(UrlBarAppComponent());

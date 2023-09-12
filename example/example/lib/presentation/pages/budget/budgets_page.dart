@@ -16,16 +16,16 @@ class BudgetsPage extends AppPage {
 
   @override
   Widget build(BuildContext context) {
-    final loggedInUserId = useLoggedInUserId()!;
+    final loggedInUserId = useLoggedInUserId();
     final loggedInUserModel = useEntityOrNull<UserEntity>(loggedInUserId);
     final budgetsModel = useQuery(Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all());
     return StyledPage(
       titleText: 'Home',
       body: StyledList.column.scrollable.centered.withScrollbar(
         children: [
-          ModelBuilder<UserEntity?>(
+          ModelBuilder(
             model: loggedInUserModel,
-            builder: (userEntity) {
+            builder: (UserEntity? userEntity) {
               return StyledText.h1('Welcome ${userEntity?.value.nameProperty.value ?? 'N/A'}');
             },
           ),

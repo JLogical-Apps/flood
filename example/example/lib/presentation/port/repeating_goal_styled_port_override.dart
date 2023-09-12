@@ -4,10 +4,10 @@ import 'package:example_core/features/envelope_rule/time_rule.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class RepeatingGoalPortOverride with IsStyledObjectPortOverride<RepeatingGoalEnvelopeRule> {
+class RepeatingGoalStyledPortOverride with IsStyledObjectPortOverride<RepeatingGoalEnvelopeRule> {
   final AppPondContext context;
 
-  RepeatingGoalPortOverride({required this.context});
+  RepeatingGoalStyledPortOverride({required this.context});
 
   @override
   Widget build(Port port) {
