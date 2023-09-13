@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
+import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
@@ -344,5 +347,16 @@ class EnvelopePage extends AppPage {
   @override
   AppPage? getParent() {
     return HomePage();
+  }
+
+  @override
+  FutureOr<Uri?> redirectTo(BuildContext context, Uri currentUri) async {
+    final loggedInUser = context.appPondContext.find<AuthCoreComponent>().loggedInUserId;
+    if (loggedInUser == null) {
+      final loginPage = LoginPage()..redirectPathProperty.set(currentUri.toString());
+      return loginPage.uri;
+    }
+
+    return null;
   }
 }
