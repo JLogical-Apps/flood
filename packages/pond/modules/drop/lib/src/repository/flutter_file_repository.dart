@@ -51,13 +51,18 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
       maybeStatesX: DataSource.static
           .crossDirectory(repository.fileRepository.directory)
           .getX()
-          .map((fileEntities) {
-            return (fileEntities ?? []).whereType<CrossFile>();
-          })
+          .map((fileEntities) => (fileEntities ?? []).whereType<CrossFile>())
           .asyncMap<FutureValue<List<State>>>(
               (files) async => FutureValue.loaded(await Future.wait(files.map(getStateFromFile))))
           .publishValueSeeded(FutureValue.loading())
           .autoConnect(),
+      statesGetter: () async {
+        final crossElements = (await DataSource.static.crossDirectory(repository.fileRepository.directory).getOrNull()) ?? [];
+
+        final crossFiles = crossElements.whereType<CrossFile>();
+        final states = await Future.wait(crossFiles.map(getStateFromFile));
+        return states;
+      },
       dropContext: repository.context.dropCoreComponent,
     );
   }

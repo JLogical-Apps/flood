@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:example/presentation/pages/home_page.dart';
+import 'package:example/presentation/utils/budget_utils.dart';
+import 'package:example_core/features/budget/budget.dart';
+import 'package:example_core/features/budget/budget_entity.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +65,14 @@ class SignupPage extends AppPage {
                     ..nameProperty.set(data['name']),
                 );
 
-                context.warpTo(HomePage());
+                final budgetEntity = await context.dropCoreComponent.updateEntity(
+                  BudgetEntity(),
+                  (Budget budget) => budget
+                    ..nameProperty.set('Personal')
+                    ..ownerProperty.set(userId),
+                );
+
+                await context.pushBudgetPage(budgetEntity.id!);
               } catch (e, stackTrace) {
                 final errorText = e.as<SignupFailure>()?.displayText ?? e.toString();
                 signupPort.setError(name: 'email', error: errorText);

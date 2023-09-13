@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
@@ -22,10 +24,15 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
 
   final DropCoreContext dropContext;
 
-  StateQueryExecutor({required this.maybeStatesX, required this.dropContext});
+  final FutureOr<List<State>> Function()? statesGetter;
 
-  StateQueryExecutor.fromStatesX({required ValueStream<List<State>> statesX, required this.dropContext})
-      : maybeStatesX = statesX.mapWithValue((value) => FutureValue.loaded(value));
+  StateQueryExecutor({required this.maybeStatesX, required this.dropContext, this.statesGetter});
+
+  StateQueryExecutor.fromStatesX({
+    required ValueStream<List<State>> statesX,
+    required this.dropContext,
+    this.statesGetter,
+  }) : maybeStatesX = statesX.mapWithValue((value) => FutureValue.loaded(value));
 
   ModifierResolver<StateQueryReducer, Query> getQueryReducerResolver() => Resolver.fromModifiers([
         FromStateQueryReducer(dropContext: dropContext),
@@ -62,10 +69,9 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) async {
-    await maybeStatesX.waitUntil((maybeStates) => maybeStates.isLoaded);
     return await executeOnStates(
       queryRequest,
-      maybeStatesX.value.getOrNull()!,
+      await fetchStates(),
       onStateRetreived: onStateRetreived,
     );
   }
@@ -79,6 +85,15 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
       (maybeStates) => maybeStates.asyncMap((states) => executeOnStates(queryRequest, states)),
       initialValue: FutureValue.empty(),
     );
+  }
+
+  Future<List<State>> fetchStates() async {
+    if (statesGetter != null) {
+      return await statesGetter!();
+    }
+
+    await maybeStatesX.waitUntil((maybeStates) => maybeStates.isLoaded);
+    return maybeStatesX.value.getOrNull()!;
   }
 
   Future<T> executeOnStates<T>(
