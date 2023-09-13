@@ -143,7 +143,7 @@ void main() {
     );
 
     // Allow previous [expect] to run before changing to admin user.
-    await Future.delayed(Duration(milliseconds: 1));
+    await Future(() {});
     authenticatedUserIdX.value = 'admin';
 
     // Test create

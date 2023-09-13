@@ -79,9 +79,9 @@ void main() {
 
     expectLater(rangeStream, emitsInOrder([0, 0, 0, 0, 0, 1, 0, 0, 1, 2]));
 
-    await Future.delayed(Duration(milliseconds: 1));
+    await Future(() {});
     intSubject.value = 1;
-    await Future.delayed(Duration(milliseconds: 1));
+    await Future(() {});
     intSubject.value = 2;
   });
 
@@ -98,7 +98,7 @@ void main() {
     expectLater(combinedStream, emitsInOrder([[0, 0, 0], [0, 0, 0], [1, 0, 0], [2, 0, 0]]));
 
     intSubjects[0].value = 1;
-    await Future.delayed(Duration(milliseconds: 1));
+    await Future(() {});
     intSubjects[0].value = 2;
   });
 }
