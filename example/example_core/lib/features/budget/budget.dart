@@ -51,7 +51,7 @@ class Budget extends ValueObject {
         .groupListsBy((entry) => entry.value.ruleProperty.value!.priority)
         .map((priority, idToEnvelopeEntries) => MapEntry(priority, Map.fromEntries(idToEnvelopeEntries)));
 
-    if(envelopesMapByPriority.isEmpty) {
+    if (envelopesMapByPriority.isEmpty) {
       return BudgetChange(modifiedEnvelopeById: modifiedEnvelopeById);
     }
 
@@ -115,6 +115,7 @@ class Budget extends ValueObject {
 
     final lastPriority = envelopePriorities.last;
     final lastRoundEnvelopeById = envelopeById.entries
+        .where((entry) => entry.value.ruleProperty.value != null)
         .where((entry) => entry.value.ruleProperty.value!.priority == lastPriority)
         .mapToMap((id, envelope) => MapEntry(
             id,

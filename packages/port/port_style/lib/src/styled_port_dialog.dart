@@ -16,12 +16,13 @@ class StyledPortDialog<T> extends StyledDialog<T> {
     Map<String, Widget>? overrides,
     FutureOr Function(T result)? onAccept,
   }) : super(
-            body: _portBuilder<T>(
-          port: port,
-          children: children,
-          overrides: overrides,
-          onAccept: onAccept,
-        ));
+          body: _portBuilder<T>(
+            port: port,
+            children: children,
+            overrides: overrides,
+            onAccept: onAccept,
+          ),
+        );
 
   static Widget _portBuilder<T>({
     required Port<T> port,
@@ -45,6 +46,7 @@ class StyledPortDialog<T> extends StyledDialog<T> {
                     port: port,
                     builder: (context, port) {
                       return StyledList.column(
+                        key: ValueKey(port.portValueByName),
                         children: children,
                       );
                     },
