@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 // When setting up the test suite [testingLoggedIn] will determine whether to have the user logged in.
-const testingLoggedIn = true;
+const testingLoggedIn = false;
 
 Future<void> main(List<String> args) async {
   await PondApp.run(
@@ -68,7 +68,7 @@ Future<void> main(List<String> args) async {
         child: StyledText.h1('Not Found!'),
       ),
     ),
-    initialPageGetter: () => HomePage(),
+    initialRouteGetter: () => HomeRoute(),
     onError: (appPondContext, error, stackTrace) {
       if (appPondContext == null) {
         print(error);

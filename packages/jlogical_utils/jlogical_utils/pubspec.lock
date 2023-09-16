@@ -598,14 +598,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  move_to_background:
-    dependency: transitive
-    description:
-      name: move_to_background
-      sha256: "00caad17a6ce149910777131503f43f8ed80025681f94684e3a6a87d979b914c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
   nested:
     dependency: transitive
     description:
@@ -953,30 +945,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  url_launcher:
-    dependency: transitive
-    description:
-      name: url_launcher
-      sha256: "698fa0b4392effdc73e9e184403b627362eb5fbf904483ac9defbb1c2191d809"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.1.8"
-  url_launcher_android:
-    dependency: transitive
-    description:
-      name: url_launcher_android
-      sha256: "3e2f6dfd2c7d9cd123296cab8ef66cfc2c1a13f5845f42c7a0f365690a8a7dd1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.23"
-  url_launcher_ios:
-    dependency: transitive
-    description:
-      name: url_launcher_ios
-      sha256: bb328b24d3bccc20bdf1024a0990ac4f869d57663660de9c936fb8c043edefe3
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.18"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -985,14 +953,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.5"
-  url_launcher_macos:
-    dependency: transitive
-    description:
-      name: url_launcher_macos
-      sha256: "41988b55570df53b3dd2a7fc90c76756a963de6a8c5f8e113330cb35992e2094"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.2"
   url_launcher_platform_interface:
     dependency: transitive
     description:
@@ -1017,14 +977,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.6"
-  url_strategy:
-    dependency: transitive
-    description:
-      name: url_strategy
-      sha256: "42b68b42a9864c4d710401add17ad06e28f1c1d5500c93b98c431f6b0ea4ab87"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   utils:
     dependency: "direct main"
     description:
@@ -1055,14 +1007,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
-  vrouter:
-    dependency: transitive
-    description:
-      name: vrouter
-      sha256: "5eff3c2f1371c9e11c50334522b35a31e6d42290273d022e944544d4e177cea0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.1"
   watcher:
     dependency: transitive
     description:

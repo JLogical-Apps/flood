@@ -6,13 +6,11 @@ import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
-class DropDebugRepositoryPage extends AppPage<DropDebugRepositoryPage> {
-  late final hashProperty = field<int>(name: 'hash').required();
-
+class DropDebugRepositoryPage extends AppPage<DropDebugRepositoryRoute> {
   @override
-  Widget build(BuildContext context) {
-    final repository =
-        context.dropCoreComponent.repositories.firstWhere((repository) => repository.hashCode == hashProperty.value);
+  Widget onBuild(BuildContext context, DropDebugRepositoryRoute route) {
+    final repository = context.dropCoreComponent.repositories
+        .firstWhere((repository) => repository.hashCode == route.hashProperty.value);
     final entitiesModel = useFutureModel(() => repository.executeQuery(Query.fromAll().paginate(pageSize: 50)));
 
     return PaginatedQueryModelBuilder(
@@ -49,10 +47,14 @@ class DropDebugRepositoryPage extends AppPage<DropDebugRepositoryPage> {
       },
     );
   }
+}
+
+class DropDebugRepositoryRoute with IsRoute<DropDebugRepositoryRoute> {
+  late final hashProperty = field<int>(name: 'hash').required();
 
   @override
-  DropDebugRepositoryPage copy() {
-    return DropDebugRepositoryPage();
+  DropDebugRepositoryRoute copy() {
+    return DropDebugRepositoryRoute();
   }
 
   @override

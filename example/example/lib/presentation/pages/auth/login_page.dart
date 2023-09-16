@@ -1,16 +1,12 @@
-import 'dart:async';
-
 import 'package:example/presentation/pages/auth/signup_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class LoginPage extends AppPage {
-  late final redirectPathProperty = field<String>(name: 'redirect');
-
+class LoginPage extends AppPage<LoginRoute> {
   @override
-  Widget build(BuildContext context) {
+  Widget onBuild(BuildContext context, LoginRoute route) {
     final loginPort = useMemoized(() => Port.of({
           'email': PortField.string().withDisplayName('Email').isNotBlank().isEmail(),
           'password': PortField.string().withDisplayName('Password').isNotBlank().isPassword(),
@@ -37,7 +33,7 @@ class LoginPage extends AppPage {
 
                   try {
                     await context.find<AuthCoreComponent>().login(data['email'], data['password']);
-                    context.warpTo(HomePage());
+                    context.warpTo(HomeRoute());
                   } catch (e, stackTrace) {
                     final errorText = e.as<LoginFailure>()?.displayText ?? e.toString();
                     loginPort.setError(name: 'email', error: errorText);
@@ -48,7 +44,7 @@ class LoginPage extends AppPage {
               StyledButton.strong(
                 labelText: 'Sign Up',
                 onPressed: () async {
-                  await context.push(SignupPage()
+                  await context.push(SignupRoute()
                     ..initialEmailProperty.set(loginPort['email'])
                     ..initialPasswordProperty.set(loginPort['password']));
                 },
@@ -59,11 +55,10 @@ class LoginPage extends AppPage {
       ),
     );
   }
+}
 
-  @override
-  AppPage copy() {
-    return LoginPage();
-  }
+class LoginRoute with IsRoute<LoginRoute> {
+  late final redirectPathProperty = field<String>(name: 'redirect');
 
   @override
   PathDefinition get pathDefinition => PathDefinition.string('login');
@@ -72,17 +67,7 @@ class LoginPage extends AppPage {
   List<RouteProperty> get queryProperties => [redirectPathProperty];
 
   @override
-  FutureOr<Uri?> redirectTo(BuildContext context, Uri currentUri) async {
-    final loggedInUser = context.appPondContext.find<AuthCoreComponent>().loggedInUserId;
-    if (loggedInUser != null) {
-      if (redirectPathProperty.value != null) {
-        return Uri.parse(redirectPathProperty.value!);
-      } else {
-        final homePage = HomePage();
-        return homePage.uri;
-      }
-    }
-
-    return null;
+  LoginRoute copy() {
+    return LoginRoute();
   }
 }

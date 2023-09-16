@@ -7,12 +7,9 @@ import 'package:share_plus/share_plus.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
-class LogDebugPage extends AppPage {
+class LogDebugPage extends AppPage<LogDebugRoute> {
   @override
-  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('logs');
-
-  @override
-  Widget build(BuildContext context) {
+  Widget onBuild(BuildContext context, LogDebugRoute route) {
     final logsModel = useFutureModel(() => context.getLogs());
     final logs = logsModel.getOrNull();
 
@@ -54,9 +51,14 @@ class LogDebugPage extends AppPage {
       ),
     );
   }
+}
+
+class LogDebugRoute with IsRoute<LogDebugRoute> {
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('logs');
 
   @override
-  AppPage copy() {
-    return LogDebugPage();
+  LogDebugRoute copy() {
+    return LogDebugRoute();
   }
 }

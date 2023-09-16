@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/utils/budget_utils.dart';
 import 'package:example_core/features/budget/budget.dart';
 import 'package:example_core/features/budget/budget_entity.dart';
@@ -10,20 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class SignupPage extends AppPage {
-  late final redirectPathProperty = field<String>(name: 'redirect');
-  late final initialEmailProperty = field<String>(name: 'email');
-  late final initialPasswordProperty = field<String>(name: 'pass');
-
+class SignupPage extends AppPage<SignupRoute> {
   @override
-  Widget build(BuildContext context) {
+  Widget onBuild(BuildContext context, SignupRoute route) {
     final signupPort = useMemoized(() => Port.of({
           'name': PortField.string().withDisplayName('Name').isNotBlank(),
-          'email': PortField.string(initialValue: initialEmailProperty.value)
+          'email': PortField.string(initialValue: route.initialEmailProperty.value)
               .withDisplayName('Email')
               .isNotBlank()
               .isEmail(),
-          'password': PortField.string(initialValue: initialPasswordProperty.value)
+          'password': PortField.string(initialValue: route.initialPasswordProperty.value)
               .withDisplayName('Password')
               .isNotBlank()
               .isPassword(),
@@ -72,7 +65,7 @@ class SignupPage extends AppPage {
                     ..ownerProperty.set(userId),
                 );
 
-                await context.pushBudgetPage(budgetEntity.id!);
+                await context.pushBudgetRoute(budgetEntity.id!);
               } catch (e, stackTrace) {
                 final errorText = e.as<SignupFailure>()?.displayText ?? e.toString();
                 signupPort.setError(name: 'email', error: errorText);
@@ -84,11 +77,12 @@ class SignupPage extends AppPage {
       ),
     );
   }
+}
 
-  @override
-  AppPage copy() {
-    return SignupPage();
-  }
+class SignupRoute with IsRoute<SignupRoute> {
+  late final redirectPathProperty = field<String>(name: 'redirect');
+  late final initialEmailProperty = field<String>(name: 'email');
+  late final initialPasswordProperty = field<String>(name: 'pass');
 
   @override
   PathDefinition get pathDefinition => PathDefinition.string('signup');
@@ -101,17 +95,7 @@ class SignupPage extends AppPage {
       ];
 
   @override
-  FutureOr<Uri?> redirectTo(BuildContext context, Uri currentUri) async {
-    final loggedInUser = context.appPondContext.find<AuthCoreComponent>().loggedInUserId;
-    if (loggedInUser != null) {
-      if (redirectPathProperty.value != null) {
-        return Uri.parse(redirectPathProperty.value!);
-      } else {
-        final homePage = HomePage();
-        return homePage.uri;
-      }
-    }
-
-    return null;
+  SignupRoute copy() {
+    return SignupRoute();
   }
 }

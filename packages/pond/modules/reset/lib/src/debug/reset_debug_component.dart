@@ -1,12 +1,12 @@
 import 'package:debug/debug.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:pond/pond.dart';
 import 'package:reset/src/debug/reset_debug_page.dart';
 import 'package:style/style.dart';
 
 class ResetDebugComponent with IsDebugPageComponent {
   @override
-  AppPage<AppPage> get appPage => ResetDebugPage();
+  Route get route => ResetDebugRoute();
 
   @override
   String get name => 'Reset';

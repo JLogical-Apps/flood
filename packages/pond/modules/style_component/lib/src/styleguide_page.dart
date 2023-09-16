@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
-class StyleguidePage extends AppPage {
-  StyleguidePage({super.key});
-
+class StyleguidePage extends AppPage<StyleguideRoute> {
   @override
-  PathDefinition get pathDefinition => PathDefinition.string('_styleguide');
-
-  @override
-  AppPage copy() {
-    return StyleguidePage();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget onBuild(BuildContext context, StyleguideRoute route) {
     return StyledPage(
       titleText: 'Styleguide',
       body: StyleguideWidget(
         styleguide: context.style().getStyleguide(),
       ),
     );
+  }
+}
+
+class StyleguideRoute with IsRoute<StyleguideRoute> {
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('_styleguide');
+
+  @override
+  StyleguideRoute copy() {
+    return StyleguideRoute();
   }
 }

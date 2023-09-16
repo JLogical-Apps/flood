@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
+import 'package:path_core/path_core.dart';
 import 'package:pond/src/app/component/app_pond_component_additional_setup.dart';
 import 'package:pond/src/app/component/app_pond_page_context.dart';
 import 'package:pond/src/app/context/app_pond_context.dart';
@@ -19,7 +20,7 @@ abstract class AppPondComponent {
     AppPondPageContext pageContext,
   );
 
-  List<AppPage> get pages;
+  Map<Route, AppPage> get pages;
 }
 
 extension AppPondComponentExtension on AppPondComponent {
@@ -71,7 +72,7 @@ mixin IsAppPondComponent implements AppPondComponent {
   }
 
   @override
-  List<AppPage> get pages => [];
+  Map<Route, AppPage> get pages => {};
 }
 
 abstract class AppPondComponentWrapper implements AppPondComponent {
@@ -104,5 +105,5 @@ mixin IsAppPondComponentWrapper implements AppPondComponentWrapper {
   }
 
   @override
-  List<AppPage> get pages => appPondComponent.pages;
+  Map<Route, AppPage> get pages => appPondComponent.pages;
 }

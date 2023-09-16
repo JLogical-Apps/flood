@@ -4,16 +4,11 @@ import 'package:example_core/features/envelope/envelope_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class ArchivedEnvelopesPage extends AppPage<ArchivedEnvelopesPage> {
-  late final budgetIdProperty = field<String>(name: 'budgetId').required();
-
+class ArchivedEnvelopesPage extends AppPage<ArchivedEnvelopesRoute> {
   @override
-  PathDefinition get pathDefinition => PathDefinition.string('archived').property(budgetIdProperty);
-
-  @override
-  Widget build(BuildContext context) {
-    final archivedEnvelopesModel =
-        useQuery(EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: budgetIdProperty.value, isArchived: true).paginate());
+  Widget onBuild(BuildContext context, ArchivedEnvelopesRoute route) {
+    final archivedEnvelopesModel = useQuery(
+        EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: route.budgetIdProperty.value, isArchived: true).paginate());
     return StyledPage(
       titleText: 'Archived Envelopes',
       body: PaginatedQueryModelBuilder(
@@ -24,7 +19,7 @@ class ArchivedEnvelopesPage extends AppPage<ArchivedEnvelopesPage> {
                 .map((entity) => EnvelopeCard(
                       envelope: entity.value,
                       onPressed: () async {
-                        context.push(EnvelopePage()..idProperty.set(entity.id!));
+                        context.push(EnvelopeRoute()..idProperty.set(entity.id!));
                       },
                     ))
                 .toList(),
@@ -34,9 +29,16 @@ class ArchivedEnvelopesPage extends AppPage<ArchivedEnvelopesPage> {
       ),
     );
   }
+}
+
+class ArchivedEnvelopesRoute with IsRoute<ArchivedEnvelopesRoute> {
+  late final budgetIdProperty = field<String>(name: 'budgetId').required();
 
   @override
-  ArchivedEnvelopesPage copy() {
-    return ArchivedEnvelopesPage();
+  PathDefinition get pathDefinition => PathDefinition.string('archived').property(budgetIdProperty);
+
+  @override
+  ArchivedEnvelopesRoute copy() {
+    return ArchivedEnvelopesRoute();
   }
 }

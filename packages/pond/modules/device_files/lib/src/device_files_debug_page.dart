@@ -9,12 +9,9 @@ import 'package:port_core/port_core.dart';
 import 'package:port_style/port_style.dart';
 import 'package:style/style.dart';
 
-class DeviceFilesDebugPage extends AppPage {
+class DeviceFilesDebugPage extends AppPage<DeviceFilesDebugRoute> {
   @override
-  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('device_files');
-
-  @override
-  Widget build(BuildContext context) {
+  Widget onBuild(BuildContext context, DeviceFilesDebugRoute route) {
     final pathState = useState<String>('.');
     final filesModel = useFutureModel(
       () async {
@@ -140,11 +137,6 @@ class DeviceFilesDebugPage extends AppPage {
     );
   }
 
-  @override
-  AppPage copy() {
-    return DeviceFilesDebugPage();
-  }
-
   Widget fileCard(CrossFile file, {required Function() onPressed}) {
     return StyledCard(
       titleText: basename(file.path),
@@ -159,5 +151,15 @@ class DeviceFilesDebugPage extends AppPage {
       leadingIcon: Icons.folder,
       onPressed: onPressed,
     );
+  }
+}
+
+class DeviceFilesDebugRoute with IsRoute<DeviceFilesDebugRoute> {
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('device_files');
+
+  @override
+  DeviceFilesDebugRoute copy() {
+    return DeviceFilesDebugRoute();
   }
 }

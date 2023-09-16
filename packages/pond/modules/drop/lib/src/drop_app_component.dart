@@ -3,7 +3,7 @@ import 'package:drop/src/debug/drop_debug_component.dart';
 import 'package:drop/src/debug/drop_debug_page.dart';
 import 'package:drop/src/debug/drop_debug_repository_page.dart';
 import 'package:drop_core/drop_core.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
@@ -12,10 +12,10 @@ class DropAppComponent with IsAppPondComponent, IsDebugDialogComponent, IsDebugP
   static const queriesRunField = 'queriesRun';
 
   @override
-  List<AppPage<AppPage>> get pages => [
-        DropDebugPage(),
-        DropDebugRepositoryPage(),
-      ];
+  Map<Route, AppPage> get pages => {
+        DropDebugRoute(): DropDebugPage(),
+        DropDebugRepositoryRoute(): DropDebugRepositoryPage(),
+      };
 
   @override
   Widget renderDebug(BuildContext context, DebugDialogContext debugContext) {

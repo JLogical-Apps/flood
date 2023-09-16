@@ -2,7 +2,7 @@ import 'package:debug/src/dialog/debug_dialog_component.dart';
 import 'package:debug/src/dialog/debug_dialog_context.dart';
 import 'package:debug/src/page/debug_page.dart';
 import 'package:debug/src/page/debug_page_component.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pond/pond.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +26,9 @@ class DebugAppComponent with IsAppPondComponent {
   }
 
   @override
-  List<AppPage> get pages => [DebugPage()];
+  Map<Route, AppPage> get pages => {
+        DebugRoute(): DebugPage(),
+      };
 
   @override
   Widget wrapPage(AppPondContext context, Widget page, AppPondPageContext pageContext) {

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
-import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/pages/envelope/archived_envelopes_page.dart';
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/pages/transaction/add_transactions_page.dart';
@@ -20,21 +19,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class BudgetPage extends AppPage {
-  late final budgetIdProperty = field<String>(name: 'budgetId').required();
-
+class BudgetPage extends AppPage<BudgetRoute> {
   @override
-  PathDefinition get pathDefinition => PathDefinition.string('budget').property(budgetIdProperty);
-
-  @override
-  Widget build(BuildContext context) {
-    final budgetModel = useEntityOrNull<BudgetEntity>(budgetIdProperty.value);
-    final envelopesModel =
-        useQuery(EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: budgetIdProperty.value, isArchived: false).all());
-    final traysModel = useQuery(TrayEntity.getBudgetTraysQuery(budgetId: budgetIdProperty.value).all());
+  Widget onBuild(BuildContext context, BudgetRoute route) {
+    final budgetModel = useEntityOrNull<BudgetEntity>(route.budgetIdProperty.value);
+    final envelopesModel = useQuery(
+        EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: route.budgetIdProperty.value, isArchived: false).all());
+    final traysModel = useQuery(TrayEntity.getBudgetTraysQuery(budgetId: route.budgetIdProperty.value).all());
 
     final transactionsModel =
-        useQuery(BudgetTransactionEntity.getBudgetTransactionsQuery(budgetId: budgetIdProperty.value).paginate());
+        useQuery(BudgetTransactionEntity.getBudgetTransactionsQuery(budgetId: route.budgetIdProperty.value).paginate());
 
     final totalCents = envelopesModel.getOrNull()?.mapIfNonNull(
         (envelopeEntities) => envelopeEntities.sumByInt((entity) => entity.value.amountCentsProperty.value));
@@ -59,7 +53,7 @@ class BudgetPage extends AppPage {
             StyledButton(
               iconData: Icons.face,
               onPressed: () async {
-                context.push(ProfilePage());
+                context.push(ProfileRoute());
               },
             ),
           ],
@@ -74,7 +68,7 @@ class BudgetPage extends AppPage {
                       labelText: 'Add Transactions',
                       iconData: Icons.attach_money,
                       onPressed: () async {
-                        await context.push(AddTransactionsPage()..budgetIdProperty.set(budgetIdProperty.value));
+                        await context.push(AddTransactionsRoute()..budgetIdProperty.set(route.budgetIdProperty.value));
                       },
                     ),
                     StyledCard(
@@ -104,8 +98,8 @@ class BudgetPage extends AppPage {
                           color: Colors.green,
                           onPerform: (_) async {
                             await context.showStyledDialog(StyledPortDialog(
-                              port:
-                                  (Tray()..budgetProperty.set(budgetIdProperty.value)).asPort(context.corePondContext),
+                              port: (Tray()..budgetProperty.set(route.budgetIdProperty.value))
+                                  .asPort(context.corePondContext),
                               titleText: 'Create Tray',
                               onAccept: (Tray result) async {
                                 await context.dropCoreComponent.updateEntity(TrayEntity()..value = result);
@@ -119,7 +113,7 @@ class BudgetPage extends AppPage {
                           iconData: Icons.archive,
                           color: Colors.blue,
                           onPerform: (context) {
-                            context.push(ArchivedEnvelopesPage()..budgetIdProperty.set(budgetIdProperty.value));
+                            context.push(ArchivedEnvelopesRoute()..budgetIdProperty.set(route.budgetIdProperty.value));
                           },
                         ),
                       ],
@@ -140,13 +134,13 @@ class BudgetPage extends AppPage {
                                 ...trayEntities.map((trayEntity) => TrayCard(
                                       trayEntity: trayEntity,
                                       onEnvelopePressed: (envelopeEntity) =>
-                                          context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!)),
+                                          context.push(EnvelopeRoute()..idProperty.set(envelopeEntity.id!)),
                                     )),
                                 ...nonTrayedEnvelopes
                                     .map((envelopeEntity) => EnvelopeCard(
                                           envelope: envelopeEntity.value,
                                           onPressed: () =>
-                                              context.push(EnvelopePage()..idProperty.set(envelopeEntity.id!)),
+                                              context.push(EnvelopeRoute()..idProperty.set(envelopeEntity.id!)),
                                         ))
                                     .toList(),
                               ],
@@ -220,20 +214,16 @@ class BudgetPage extends AppPage {
       },
     );
   }
+}
+
+class BudgetRoute with IsRoute<BudgetRoute> {
+  late final budgetIdProperty = field<String>(name: 'budgetId').required();
 
   @override
-  AppPage copy() {
-    return BudgetPage();
-  }
+  PathDefinition get pathDefinition => PathDefinition.string('budget').property(budgetIdProperty);
 
   @override
-  FutureOr<Uri?> redirectTo(BuildContext context, Uri currentUri) async {
-    final loggedInUser = context.appPondContext.find<AuthCoreComponent>().loggedInUserId;
-    if (loggedInUser == null) {
-      final loginPage = LoginPage()..redirectPathProperty.set(currentUri.toString());
-      return loginPage.uri;
-    }
-
-    return null;
+  BudgetRoute copy() {
+    return BudgetRoute();
   }
 }

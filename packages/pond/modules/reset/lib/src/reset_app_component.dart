@@ -7,9 +7,9 @@ class ResetAppComponent with IsAppPondComponent, IsDebugPageComponentWrapper {
   static const queriesRunField = 'queriesRun';
 
   @override
-  List<AppPage<AppPage>> get pages => [
-        ResetDebugPage(),
-      ];
+  Map<Route, AppPage> get pages => {
+        ResetDebugRoute(): ResetDebugPage(),
+      };
 
   @override
   DebugPageComponent get debugPageComponent => ResetDebugComponent();

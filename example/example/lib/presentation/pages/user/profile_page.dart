@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/utils/budget_utils.dart';
 import 'package:example/presentation/widget/budget/budget_card.dart';
 import 'package:example_core/features/budget/budget.dart';
@@ -10,12 +7,9 @@ import 'package:example_core/features/user/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class ProfilePage extends AppPage {
+class ProfilePage extends AppPage<ProfileRoute> {
   @override
-  PathDefinition get pathDefinition => PathDefinition.string('profile');
-
-  @override
-  Widget build(BuildContext context) {
+  Widget onBuild(BuildContext context, ProfileRoute route) {
     final loggedInUserId = useLoggedInUserId();
     final loggedInUserModel = useEntityOrNull<UserEntity>(loggedInUserId);
     final budgetsModel = useQuery(Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all());
@@ -87,7 +81,7 @@ class ProfilePage extends AppPage {
                                 .map((budgetEntity) => BudgetEntityCard(
                                       budgetId: budgetEntity.id!,
                                       onPressed: () async {
-                                        await context.pushBudgetPage(budgetEntity.id!);
+                                        await context.pushBudgetRoute(budgetEntity.id!);
                                       },
                                     ))
                                 .toList(),
@@ -101,20 +95,14 @@ class ProfilePage extends AppPage {
           );
         });
   }
+}
+
+class ProfileRoute with IsRoute<ProfileRoute> {
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('profile');
 
   @override
-  AppPage copy() {
-    return ProfilePage();
-  }
-
-  @override
-  FutureOr<Uri?> redirectTo(BuildContext context, Uri currentUri) async {
-    final loggedInUser = context.appPondContext.find<AuthCoreComponent>().loggedInUserId;
-    if (loggedInUser == null) {
-      final loginPage = LoginPage()..redirectPathProperty.set(currentUri.toString());
-      return loginPage.uri;
-    }
-
-    return null;
+  ProfileRoute copy() {
+    return ProfileRoute();
   }
 }

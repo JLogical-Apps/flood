@@ -1,37 +1,53 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
+import 'package:path_core/path_core.dart';
 import 'package:pond/src/app/context/app_pond_context_build_context_extensions.dart';
 import 'package:pond/src/app/navigation/navigation_app_component.dart';
-import 'package:pond/src/app/page/app_page.dart';
 
 extension NavigationBuildContextExtensions on BuildContext {
   NavigationAppComponent get _navigationComponent => appPondContext.find<NavigationAppComponent>();
 
-  String get url {
-    return _navigationComponent.getUrl(this);
+  String get location {
+    return _navigationComponent.location;
   }
 
   Uri get uri {
-    return _navigationComponent.getUri(this);
+    return _navigationComponent.uri;
   }
 
-  void warpTo(AppPage page) {
-    _navigationComponent.warpTo(this, page);
-  }
-
-  void warpToLocation(String location) {
-    _navigationComponent.warpToLocation(this, location);
-  }
-
-  Future<T?> push<T>(AppPage page) {
-    return _navigationComponent.push<T>(this, page);
+  Future<T?> push<T>(Route route) {
+    return _navigationComponent.push<T>(route);
   }
 
   Future<T?> pushLocation<T>(String location) {
-    return _navigationComponent.pushLocation(this, location);
+    return _navigationComponent.pushLocation(location);
   }
 
-  Future<T> pushReplacement<T>(AppPage page) {
-    return _navigationComponent.pushReplacement<T>(this, page);
+  Future<T?> pushUri<T>(Uri uri) {
+    return _navigationComponent.pushUri(uri);
+  }
+
+  Future<void> pushReplacement(Route route) {
+    return _navigationComponent.pushReplacement(route);
+  }
+
+  Future<void> pushReplacementUri(Uri uri) {
+    return _navigationComponent.pushReplacementUri(uri);
+  }
+
+  Future<void> pushReplacementLocation(String location) {
+    return _navigationComponent.pushReplacementLocation(location);
+  }
+
+  Future<void> warpTo(Route route) {
+    return _navigationComponent.warpTo(route);
+  }
+
+  Future<void> warpToUri(Uri uri) {
+    return _navigationComponent.warpToUri(uri);
+  }
+
+  Future<void> warpToLocation(String location) {
+    return _navigationComponent.warpToLocation(location);
   }
 
   void pop<T>([T? result]) {

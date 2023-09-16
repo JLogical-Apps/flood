@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
-import 'package:example/presentation/pages/auth/login_page.dart';
-import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
@@ -20,16 +18,14 @@ import 'package:example_core/features/tray/tray_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class EnvelopePage extends AppPage {
-  late final idProperty = field<String>(name: 'id').required();
-
+class EnvelopePage extends AppPage<EnvelopeRoute> {
   @override
-  Widget build(BuildContext context) {
-    final envelopeModel = useEntityOrNull<EnvelopeEntity>(idProperty.value);
+  Widget onBuild(BuildContext context, EnvelopeRoute route) {
+    final envelopeModel = useEntityOrNull<EnvelopeEntity>(route.idProperty.value);
     final envelopeEntity = envelopeModel.getOrNull();
 
     final envelopeTransactionsModel =
-        useQuery(BudgetTransactionEntity.getEnvelopeTransactionsQuery(envelopeId: idProperty.value).paginate());
+        useQuery(BudgetTransactionEntity.getEnvelopeTransactionsQuery(envelopeId: route.idProperty.value).paginate());
 
     final trayModel = useQueryOrNull(
         envelopeEntity?.value.trayProperty.value?.mapIfNonNull((trayId) => Query.getByIdOrNull<TrayEntity>(trayId)));
@@ -335,28 +331,16 @@ class EnvelopePage extends AppPage {
       },
     );
   }
+}
+
+class EnvelopeRoute with IsRoute<EnvelopeRoute> {
+  late final idProperty = field<String>(name: 'id').required();
 
   @override
   PathDefinition get pathDefinition => PathDefinition.string('envelope').property(idProperty);
 
   @override
-  AppPage copy() {
-    return EnvelopePage();
-  }
-
-  @override
-  AppPage? getParent() {
-    return HomePage();
-  }
-
-  @override
-  FutureOr<Uri?> redirectTo(BuildContext context, Uri currentUri) async {
-    final loggedInUser = context.appPondContext.find<AuthCoreComponent>().loggedInUserId;
-    if (loggedInUser == null) {
-      final loginPage = LoginPage()..redirectPathProperty.set(currentUri.toString());
-      return loginPage.uri;
-    }
-
-    return null;
+  EnvelopeRoute copy() {
+    return EnvelopeRoute();
   }
 }

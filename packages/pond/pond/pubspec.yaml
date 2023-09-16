@@ -15,7 +15,6 @@ dependencies:
   collection: ^1.16.0
   flutter_hooks: ^0.18.5+1
   provider: ^6.0.5
-  vrouter: ^1.2.1
 
   path_core:
     git:

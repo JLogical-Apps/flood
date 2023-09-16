@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:pond/pond.dart';
 
 abstract class DebugPageComponent {
@@ -8,7 +8,7 @@ abstract class DebugPageComponent {
 
   Widget get icon;
 
-  AppPage get appPage;
+  Route get route;
 }
 
 mixin IsDebugPageComponent implements DebugPageComponent {}
@@ -28,5 +28,5 @@ mixin IsDebugPageComponentWrapper implements DebugPageComponentWrapper {
   Widget get icon => debugPageComponent.icon;
 
   @override
-  AppPage get appPage => debugPageComponent.appPage;
+  Route get route => debugPageComponent.route;
 }

@@ -1,5 +1,5 @@
 import 'package:debug/debug.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:log/src/log_debug_page.dart';
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
@@ -15,8 +15,10 @@ class LogAppComponent with IsAppPondComponent, IsDebugPageComponent {
   Widget get icon => StyledIcon(Icons.event_note_outlined);
 
   @override
-  AppPage get appPage => LogDebugPage();
+  Route get route => LogDebugRoute();
 
   @override
-  List<AppPage> get pages => [LogDebugPage()];
+  Map<Route, AppPage> get pages => {
+        LogDebugRoute(): LogDebugPage(),
+      };
 }

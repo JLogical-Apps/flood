@@ -3,9 +3,9 @@ import 'package:pond/pond.dart';
 import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
-class ResetDebugPage extends AppPage<ResetDebugPage> {
+class ResetDebugPage extends AppPage<ResetDebugRoute> {
   @override
-  Widget build(BuildContext context) {
+  Widget onBuild(BuildContext context, ResetDebugRoute route) {
     return StyledPage(
       titleText: 'Reset',
       body: StyledList.column.centered.scrollable.withScrollbar(
@@ -23,12 +23,14 @@ class ResetDebugPage extends AppPage<ResetDebugPage> {
       ),
     );
   }
+}
 
-  @override
-  ResetDebugPage copy() {
-    return ResetDebugPage();
-  }
-
+class ResetDebugRoute with IsRoute<ResetDebugRoute> {
   @override
   PathDefinition get pathDefinition => PathDefinition.string('_debug').string('reset');
+
+  @override
+  ResetDebugRoute copy() {
+    return ResetDebugRoute();
+  }
 }

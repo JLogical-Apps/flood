@@ -1,4 +1,5 @@
 import 'package:path_core/src/path_definition.dart';
+import 'package:path_core/src/path_definition_segment.dart';
 import 'package:path_core/src/property/field_route_property.dart';
 import 'package:path_core/src/property/route_property.dart';
 import 'package:utils_core/utils_core.dart';
@@ -55,4 +56,25 @@ extension RouteExtensions<R extends Route<dynamic>> on Route<R> {
 mixin IsRoute<R extends Route<dynamic>> implements Route<R> {
   @override
   List<RouteProperty> get queryProperties => [];
+
+  @override
+  List<PathDefinitionSegment> get segments => pathDefinition.segments;
+}
+
+abstract class RouteWrapper<R extends Route<dynamic>> implements Route<R> {
+  Route<R> get route;
+}
+
+mixin IsRouteWrapper<R extends Route<dynamic>> implements RouteWrapper<R> {
+  @override
+  List<RouteProperty> get queryProperties => route.queryProperties;
+
+  @override
+  R copy() => route.copy();
+
+  @override
+  PathDefinition get pathDefinition => route.pathDefinition;
+
+  @override
+  List<PathDefinitionSegment> get segments => route.segments;
 }

@@ -19,18 +19,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class AddTransactionsPage extends AppPage<AddTransactionsPage> {
-  late final budgetIdProperty = field<String>(name: 'budgetId').required();
-
+class AddTransactionsPage extends AppPage<AddTransactionsRoute> {
   @override
-  PathDefinition get pathDefinition => PathDefinition.string('addTransactions').property(budgetIdProperty);
+  Widget onBuild(BuildContext context, AddTransactionsRoute route) {
+    final budgetModel = useEntityOrNull<BudgetEntity>(route.budgetIdProperty.value);
 
-  @override
-  Widget build(BuildContext context) {
-    final budgetModel = useEntityOrNull<BudgetEntity>(budgetIdProperty.value);
-
-    final envelopesModel =
-        useQuery(EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: budgetIdProperty.value, isArchived: false).all());
+    final envelopesModel = useQuery(
+        EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: route.budgetIdProperty.value, isArchived: false).all());
 
     final transactionGeneratorsState = useState<List<TransactionGenerator>>([]);
 
@@ -62,7 +57,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
                   iconData: Icons.attach_money,
                   onPressed: () async {
                     final budgetEntity = (await budgetModel.getOrLoad()) ??
-                        (throw Exception('Cannot load budget! [${budgetIdProperty.value}]'));
+                        (throw Exception('Cannot load budget! [${route.budgetIdProperty.value}]'));
 
                     final transactionGenerator = await context.showStyledDialog(StyledPortDialog(
                         titleText: 'Add Income',
@@ -77,7 +72,7 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
                         ).map((resultByName, port) => IncomeTransactionGenerator(
                               incomeCents: resultByName['incomeCents'] as int,
                               transactionDate: resultByName['transactionDate'] as DateTime,
-                              budgetId: budgetIdProperty.value,
+                              budgetId: route.budgetIdProperty.value,
                               budget: budgetEntity.value,
                               dropCoreContext: context.dropCoreComponent,
                             ))));
@@ -274,9 +269,16 @@ class AddTransactionsPage extends AppPage<AddTransactionsPage> {
       ),
     );
   }
+}
+
+class AddTransactionsRoute with IsRoute<AddTransactionsRoute> {
+  late final budgetIdProperty = field<String>(name: 'budgetId').required();
 
   @override
-  AddTransactionsPage copy() {
-    return AddTransactionsPage();
+  PathDefinition get pathDefinition => PathDefinition.string('addTransactions').property(budgetIdProperty);
+
+  @override
+  AddTransactionsRoute copy() {
+    return AddTransactionsRoute();
   }
 }

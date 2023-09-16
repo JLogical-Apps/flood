@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
-class DebugPage extends AppPage {
+class DebugPage extends AppPage<DebugRoute> {
   @override
-  Widget build(BuildContext context) {
+  Widget onBuild(BuildContext context, DebugRoute route) {
     final debugPageComponents = context.appPondContext.appComponents.whereType<DebugPageComponent>().toList();
     return StyledPage(
       titleText: 'Debug',
@@ -15,18 +15,20 @@ class DebugPage extends AppPage {
                   titleText: debugPageComponent.name,
                   bodyText: debugPageComponent.description,
                   leading: debugPageComponent.icon,
-                  onPressed: () => context.push(debugPageComponent.appPage),
+                  onPressed: () => context.push(debugPageComponent.route),
                 ))
             .toList(),
       ),
     );
   }
+}
 
-  @override
-  AppPage copy() {
-    return DebugPage();
-  }
-
+class DebugRoute with IsRoute<DebugRoute> {
   @override
   PathDefinition get pathDefinition => PathDefinition.string('_debug');
+
+  @override
+  DebugRoute copy() {
+    return DebugRoute();
+  }
 }

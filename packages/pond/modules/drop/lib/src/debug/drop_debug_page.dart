@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
-class DropDebugPage extends AppPage<DropDebugPage> {
+class DropDebugPage extends AppPage<DropDebugRoute> {
   @override
-  Widget build(BuildContext context) {
+  Widget onBuild(BuildContext context, DropDebugRoute route) {
     final repositories = context.dropCoreComponent.repositories.toList();
 
     return StyledPage(
@@ -17,17 +17,19 @@ class DropDebugPage extends AppPage<DropDebugPage> {
             titleText: '${repository.runtimeType}',
             bodyText: repository.handledTypes.map((type) => type.name).join(', '),
             onPressed: () {
-              context.push(DropDebugRepositoryPage()..hashProperty.set(repository.hashCode));
+              context.push(DropDebugRepositoryRoute()..hashProperty.set(repository.hashCode));
             },
           );
         }).toList(),
       ),
     );
   }
+}
 
+class DropDebugRoute with IsRoute<DropDebugRoute> {
   @override
-  DropDebugPage copy() {
-    return DropDebugPage();
+  DropDebugRoute copy() {
+    return DropDebugRoute();
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:path_core/path_core.dart';
 import 'package:pond/src/app/component/app_pond_component.dart';
 import 'package:pond/src/app/context/locator/app_pond_component_locator_wrapper.dart';
 import 'package:pond/src/app/page/app_page.dart';
@@ -19,8 +20,10 @@ class AppPondContext with IsLocatorWrapper<AppPondComponent> {
     }
   }
 
-  List<AppPage> getPages() {
-    return appComponents.expand((component) => component.pages).toList();
+  Map<Route, AppPage> getPages() {
+    return {
+      for (final appComponent in appComponents) ...appComponent.pages.cast<Route, AppPage>(),
+    };
   }
 
   @override

@@ -1,12 +1,12 @@
 import 'package:debug/debug.dart';
 import 'package:drop/src/debug/drop_debug_page.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
 class DropDebugComponent with IsDebugPageComponent {
   @override
-  AppPage<AppPage> get appPage => DropDebugPage();
+  Route get route => DropDebugRoute();
 
   @override
   String get name => 'Drop';

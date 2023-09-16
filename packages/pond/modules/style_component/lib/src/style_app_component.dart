@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 import 'package:style_component/src/styleguide_page.dart';
@@ -17,7 +17,7 @@ class StyleAppComponent with IsAppPondComponent {
   }
 
   @override
-  List<AppPage> get pages => [
-        StyleguidePage(),
-      ];
+  Map<Route, AppPage> get pages => {
+        StyleguideRoute(): StyleguidePage(),
+      };
 }

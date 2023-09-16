@@ -1,27 +1,13 @@
-import 'dart:async';
-
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:path_core/path_core.dart';
 
-abstract class AppPage<A extends AppPage<dynamic>> extends HookWidget with IsRoute<A>, IsPathDefinitionWrapper {
-  const AppPage({super.key});
+abstract class AppPage<R extends Route> {
+  Widget onBuild(BuildContext context, R route);
+}
 
-  AppPage? getParent() {
-    return null;
-  }
-
-  FutureOr<Uri?> redirectTo(BuildContext context, Uri currentUri) {
-    return null;
-  }
-
-  List<AppPage> getParentChain() {
-    final pages = <AppPage>[this];
-    AppPage current = this;
-    while (current.getParent() != null) {
-      current = current.getParent()!;
-      pages.add(current);
-    }
-    return pages;
+extension AppPageExtensions<R extends Route> on AppPage<R> {
+  Widget build(BuildContext context, R route) {
+    return HookBuilder(builder: (_) => onBuild(context, route));
   }
 }

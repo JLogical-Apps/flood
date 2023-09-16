@@ -10,14 +10,14 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 class ValetPagesAppPondComponent with IsAppPondComponent {
   @override
-  List<AppPage> get pages => [
-        LoginPage(),
-        SignupPage(),
-        HomePage(),
-        ProfilePage(),
-        BudgetPage(),
-        ArchivedEnvelopesPage(),
-        AddTransactionsPage(),
-        EnvelopePage(),
-      ];
+  Map<Route, AppPage> get pages => {
+        LoginRoute(): LoginPage(),
+        SignupRoute(): SignupPage(),
+        HomeRoute(): HomePage(),
+        ProfileRoute(): ProfilePage(),
+        BudgetRoute(): BudgetPage(),
+        ArchivedEnvelopesRoute(): ArchivedEnvelopesPage(),
+        AddTransactionsRoute(): AddTransactionsPage(),
+        EnvelopeRoute(): EnvelopePage(),
+      };
 }

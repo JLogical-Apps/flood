@@ -60,7 +60,7 @@ class UrlBarAppComponent with IsAppPondComponent {
                               height: 100,
                               child: GestureDetector(
                                 onLongPress: () {
-                                  locationValue.value = context.url;
+                                  locationValue.value = context.location;
                                   isExpandedState.value = true;
                                 },
                               ),

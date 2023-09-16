@@ -1,6 +1,6 @@
 import 'package:debug/debug.dart';
 import 'package:device_files/src/device_files_debug_page.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Route;
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
@@ -15,8 +15,10 @@ class DeviceFilesAppComponent with IsAppPondComponent, IsDebugPageComponent {
   Widget get icon => StyledIcon(Icons.file_copy);
 
   @override
-  AppPage get appPage => DeviceFilesDebugPage();
+  Route get route => DeviceFilesDebugRoute();
 
   @override
-  List<AppPage> get pages => [DeviceFilesDebugPage()];
+  Map<Route, AppPage> get pages => {
+        DeviceFilesDebugRoute(): DeviceFilesDebugPage(),
+      };
 }

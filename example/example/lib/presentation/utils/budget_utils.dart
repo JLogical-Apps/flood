@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 extension BudgetBuildContextExtension on BuildContext {
-  Future<void> pushBudgetPage(String budgetId) async {
+  Future<void> pushBudgetRoute(String budgetId) async {
     await dropCoreComponent.updateEntity(
       await SettingsEntity.getSettings(dropCoreComponent),
       (Settings settings) => settings.budgetProperty.set(budgetId),
     );
 
-    warpTo(BudgetPage()..budgetIdProperty.set(budgetId));
+    warpTo(BudgetRoute()..budgetIdProperty.set(budgetId));
   }
 }

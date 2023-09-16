@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Route;
+import 'package:path_core/path_core.dart';
 import 'package:pond/src/app/component/app_pond_component.dart';
 import 'package:pond/src/app/context/app_pond_context.dart';
 import 'package:pond/src/app/page/app_page.dart';
@@ -14,7 +15,7 @@ class AppPondComponentAdditionalSetup with IsAppPondComponentWrapper {
   final FutureOr Function(AppPondContext context)? onBeforeLoad;
   final FutureOr Function(AppPondContext context)? onAfterLoad;
   final Widget Function(AppPondContext context, Widget app)? appWrapper;
-  final List<AppPage> additionalPages;
+  final Map<Route, AppPage> additionalPages;
 
   AppPondComponentAdditionalSetup({
     required this.appPondComponent,
@@ -22,7 +23,7 @@ class AppPondComponentAdditionalSetup with IsAppPondComponentWrapper {
     this.onAfterRegister,
     this.onBeforeLoad,
     this.onAfterLoad,
-    this.additionalPages = const [],
+    this.additionalPages = const {},
     this.appWrapper,
   });
 
@@ -46,5 +47,5 @@ class AppPondComponentAdditionalSetup with IsAppPondComponentWrapper {
   }
 
   @override
-  List<AppPage> get pages => appPondComponent.pages + additionalPages;
+  Map<Route, AppPage> get pages => {...appPondComponent.pages, ...additionalPages};
 }
