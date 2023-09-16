@@ -10,6 +10,7 @@ import 'package:pond/src/app/context/app_pond_context.dart';
 import 'package:pond/src/app/navigation/navigation_build_context_extensions.dart';
 import 'package:pond/src/app/page/app_page.dart';
 import 'package:provider/provider.dart';
+import 'package:url_strategy/url_strategy.dart';
 import 'package:utils/utils.dart';
 
 const splashRoute = '/_splash';
@@ -41,6 +42,7 @@ class PondApp extends HookWidget {
     AppPondContext? appPondContext;
     await runZonedGuarded(
       () async {
+        setPathUrlStrategy();
         WidgetsFlutterBinding.ensureInitialized();
 
         appPondContext = await appPondContextGetter();
