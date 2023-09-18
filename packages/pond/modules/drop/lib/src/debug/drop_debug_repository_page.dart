@@ -6,7 +6,7 @@ import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
-class DropDebugRepositoryPage extends AppPage<DropDebugRepositoryRoute> {
+class DropDebugRepositoryPage with IsAppPage<DropDebugRepositoryRoute> {
   @override
   Widget onBuild(BuildContext context, DropDebugRepositoryRoute route) {
     final repository = context.dropCoreComponent.repositories

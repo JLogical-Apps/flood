@@ -7,7 +7,7 @@ import 'package:example_core/features/user/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class ProfilePage extends AppPage<ProfileRoute> {
+class ProfilePage with IsAppPage<ProfileRoute> {
   @override
   Widget onBuild(BuildContext context, ProfileRoute route) {
     final loggedInUserId = useLoggedInUserId();

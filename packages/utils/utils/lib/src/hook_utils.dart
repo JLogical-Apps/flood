@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils/utils.dart';
@@ -23,8 +22,8 @@ class Value<T> {
   set value(T value) => valueSetter(value);
 }
 
-AsyncSnapshot<T> useMemoizedFuture<T>(Future<T> Function() future) {
-  return useFuture(useMemoized(future));
+FutureValue<T> useMemoizedFuture<T>(Future<T> Function() future) {
+  return useValueStream(useMemoized(() => future().asValueStream()));
 }
 
 T useValueStream<T>(ValueStream<T> valueStream) {

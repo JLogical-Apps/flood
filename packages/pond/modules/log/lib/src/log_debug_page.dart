@@ -7,7 +7,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
-class LogDebugPage extends AppPage<LogDebugRoute> {
+class LogDebugPage with IsAppPage<LogDebugRoute> {
   @override
   Widget onBuild(BuildContext context, LogDebugRoute route) {
     final logsModel = useFutureModel(() => context.getLogs());

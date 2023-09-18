@@ -3,7 +3,7 @@ import 'package:pond/pond.dart';
 import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
-class ResetDebugPage extends AppPage<ResetDebugRoute> {
+class ResetDebugPage with IsAppPage<ResetDebugRoute> {
   @override
   Widget onBuild(BuildContext context, ResetDebugRoute route) {
     return StyledPage(

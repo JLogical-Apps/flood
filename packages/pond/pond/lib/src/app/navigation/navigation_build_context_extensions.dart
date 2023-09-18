@@ -14,15 +14,15 @@ extension NavigationBuildContextExtensions on BuildContext {
     return _navigationComponent.uri;
   }
 
-  Future<T?> push<T>(Route route) {
-    return _navigationComponent.push<T>(route);
+  Future<void> push(Route route) {
+    return _navigationComponent.push(route);
   }
 
-  Future<T?> pushLocation<T>(String location) {
+  Future<void> pushLocation(String location) {
     return _navigationComponent.pushLocation(location);
   }
 
-  Future<T?> pushUri<T>(Uri uri) {
+  Future<void> pushUri(Uri uri) {
     return _navigationComponent.pushUri(uri);
   }
 
@@ -50,7 +50,7 @@ extension NavigationBuildContextExtensions on BuildContext {
     return _navigationComponent.warpToLocation(location);
   }
 
-  void pop<T>([T? result]) {
-    return _navigationComponent.pop(result);
+  void pop() {
+    return _navigationComponent.pop();
   }
 }

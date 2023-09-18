@@ -69,14 +69,6 @@ Future<void> main(List<String> args) async {
       ),
     ),
     initialRouteGetter: () => HomeRoute(),
-    onError: (appPondContext, error, stackTrace) {
-      if (appPondContext == null) {
-        print(error);
-        print(stackTrace);
-      } else {
-        appPondContext.find<LogCoreComponent>().logError(error, stackTrace);
-      }
-    },
   );
 }
 

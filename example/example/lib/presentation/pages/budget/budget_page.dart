@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class BudgetPage extends AppPage<BudgetRoute> {
+class BudgetPage with IsAppPage<BudgetRoute> {
   @override
   Widget onBuild(BuildContext context, BudgetRoute route) {
     final budgetModel = useEntityOrNull<BudgetEntity>(route.budgetIdProperty.value);

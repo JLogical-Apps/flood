@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
-class DebugPage extends AppPage<DebugRoute> {
+class DebugPage with IsAppPage<DebugRoute> {
   @override
   Widget onBuild(BuildContext context, DebugRoute route) {
     final debugPageComponents = context.appPondContext.appComponents.whereType<DebugPageComponent>().toList();

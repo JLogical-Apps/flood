@@ -1,48 +1,47 @@
 import 'package:pond/pond.dart';
-import 'package:utils/utils.dart';
 
 class NavigationAppComponent with IsAppPondComponent {
-  String get location => PondApp.navigatorKey.currentState!.currentPath!;
+  Uri get uri => PondApp.location;
 
-  Uri get uri => Uri.parse(location);
+  String get location => uri.toString();
 
-  Future<T?> push<T>(Route route) async {
-    return pushLocation(route.uri.toString());
+  Future<void> pushUri(Uri uri) {
+    return PondApp.router.pushUri(uri);
   }
 
-  Future<T?> pushUri<T>(Uri uri) async {
-    return pushLocation<T>(uri.toString());
+  Future<void> push(Route route) {
+    return pushUri(route.uri);
   }
 
-  Future<T?> pushLocation<T>(String location) async {
-    return await PondApp.navigatorKey.currentState!.pushNamed(location);
+  Future<void> pushLocation(String location) {
+    return pushUri(Uri.parse(location));
   }
 
-  Future<void> pushReplacement(Route route) async {
-    await pushReplacementUri(route.uri);
+  Future<void> pushReplacementUri(Uri uri) {
+    return PondApp.router.pushReplacementUri(uri);
   }
 
-  Future<void> pushReplacementUri(Uri uri) async {
-    await pushReplacementLocation(uri.toString());
+  Future<void> pushReplacement(Route route) {
+    return pushReplacementUri(route.uri);
   }
 
-  Future<void> pushReplacementLocation(String location) async {
-    await PondApp.navigatorKey.currentState!.pushReplacementNamed(location);
+  Future<void> pushReplacementLocation(String location) {
+    return pushReplacementUri(Uri.parse(location));
   }
 
-  Future<void> warpTo(Route route) async {
-    await warpToUri(route.uri);
+  Future<void> warpToUri(Uri uri) {
+    return PondApp.router.warpToUri(uri);
   }
 
-  Future<void> warpToUri(Uri uri) async {
-    await warpToLocation(uri.toString());
+  Future<void> warpTo(Route route) {
+    return warpToUri(route.uri);
   }
 
-  Future<void> warpToLocation(String location) async {
-    await PondApp.navigatorKey.currentState!.pushNamedAndRemoveUntil(location, (route) => false);
+  Future<void> warpToLocation(String location) {
+    return warpToUri(Uri.parse(location));
   }
 
-  void pop<T>([T? result]) {
-    return PondApp.navigatorKey.currentState!.pop(result);
+  void pop() {
+    return PondApp.router.pop();
   }
 }

@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Route;
-import 'package:flutter/material.dart' as flutter;
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:log/log.dart';
 import 'package:path_core/path_core.dart';
 import 'package:pond/src/app/component/app_pond_page_context.dart';
 import 'package:pond/src/app/context/app_pond_context.dart';
@@ -11,24 +13,24 @@ import 'package:pond/src/app/navigation/navigation_build_context_extensions.dart
 import 'package:pond/src/app/page/app_page.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
-import 'package:utils/utils.dart';
 
 const splashRoute = '/_splash';
 const redirectParam = 'redirect';
 
 class PondApp extends HookWidget {
-  static GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  static Uri location = Uri.parse('_splash');
+  static late PondRouterDelegate router;
 
   final AppPondContext appPondContext;
   final Route Function() initialRouteGetter;
-  final Widget splashPage;
+  final Widget loadingPage;
   final Widget notFoundPage;
 
   PondApp({
     super.key,
     required this.appPondContext,
     required this.initialRouteGetter,
-    required this.splashPage,
+    required this.loadingPage,
     required this.notFoundPage,
   });
 
@@ -37,7 +39,6 @@ class PondApp extends HookWidget {
     required Route Function() initialRouteGetter,
     required Widget splashPage,
     required Widget notFoundPage,
-    Function(AppPondContext? appPondContext, Object error, StackTrace stackTrace)? onError,
   }) async {
     AppPondContext? appPondContext;
     await runZonedGuarded(
@@ -50,130 +51,66 @@ class PondApp extends HookWidget {
         runApp(PondApp(
           appPondContext: appPondContext!,
           initialRouteGetter: initialRouteGetter,
-          splashPage: splashPage,
+          loadingPage: splashPage,
           notFoundPage: notFoundPage,
         ));
       },
       (Object error, StackTrace stackTrace) {
-        onError?.call(appPondContext, error, stackTrace);
+        if (appPondContext != null) {
+          appPondContext!.logError(error, stackTrace);
+        } else {
+          print(error);
+          print(stackTrace);
+        }
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final isAppContextLoadedValue = useMutable(() => false);
-
-    return wrapApp(
-      pondApp: this,
-      appContext: appPondContext,
-      child: Builder(
-        builder: (context) {
-          return MaterialApp(
-            navigatorKey: navigatorKey,
-            onGenerateRoute: (route) => _getRouteFromPath(
-              route.name!,
-              isAppContextLoaded: isAppContextLoadedValue.value,
-              onAppContextLoaded: (_) => isAppContextLoadedValue.value = true,
-            ),
-            onGenerateInitialRoutes: (route) => [
-              _getRouteFromPath(
-                route,
-                isAppContextLoaded: isAppContextLoadedValue.value,
-                onAppContextLoaded: (_) => isAppContextLoadedValue.value = true,
+    return HookBuilder(builder: (context) {
+      final routerConfig = useMemoized(() => RouterConfig(
+            routerDelegate: PondRouterDelegate(app: this),
+            routeInformationParser: _PondRouteInformationParser(),
+            routeInformationProvider: PlatformRouteInformationProvider(
+              initialRouteInformation: RouteInformation(
+                uri: Uri.parse(WidgetsBinding.instance.platformDispatcher.defaultRouteName),
               ),
-            ],
-            debugShowCheckedModeBanner: false,
-          );
-        },
-      ),
-    );
-  }
-
-  flutter.Route _getRouteFromPath(
-    String path, {
-    required bool isAppContextLoaded,
-    required Function(BuildContext context) onAppContextLoaded,
-  }) {
-    return MaterialPageRoute(
-      builder: (context) => wrapPage(
-        appContext: appPondContext,
-        child: _getPageFromPath(
-          context,
-          path: path,
-          isAppContextLoaded: isAppContextLoaded,
-          onAppContextLoaded: onAppContextLoaded,
+            ),
+          ));
+      return wrapApp(
+        child: MaterialApp.router(
+          routerConfig: routerConfig,
+          debugShowCheckedModeBanner: false,
         ),
-        uri: Uri.parse(path),
-      ),
-      settings: RouteSettings(name: path),
-    );
-  }
-
-  Widget _getPageFromPath(
-    BuildContext context, {
-    required String path,
-    required bool isAppContextLoaded,
-    required Function(BuildContext context) onAppContextLoaded,
-  }) {
-    final uri = Uri.parse(path);
-
-    if (!isAppContextLoaded) {
-      return SplashPage(
-        appPondContext: appPondContext,
-        onFinishedLoading: (context) {
-          onAppContextLoaded(context);
-          context.pushReplacementUri(uri);
-        },
-        splashPage: splashPage,
       );
-    }
-
-    final matchingPageEntry =
-        appPondContext.getPages().entries.firstWhereOrNull((entry) => entry.key.matches(uri.toString()));
-    if (matchingPageEntry == null) {
-      return notFoundPage;
-    }
-
-    final (matchingRoute, matchingPage) = (matchingPageEntry.key, matchingPageEntry.value);
-    final routeInstance = matchingRoute.fromPath(uri.toString()) as Route;
-
-    return matchingPage.build(context, routeInstance);
+    });
   }
 
   void navigateHome(BuildContext context) {
     context.push(initialRouteGetter());
   }
 
-  static Widget wrapApp({
-    required PondApp pondApp,
-    required AppPondContext appContext,
-    required Widget child,
-  }) {
-    for (final appComponent in appContext.appComponents) {
-      child = appComponent.wrapApp(appContext, child);
+  Widget wrapApp({required Widget child}) {
+    for (final appComponent in appPondContext.appComponents) {
+      child = appComponent.wrapApp(appPondContext, child);
     }
 
     return Provider<PondApp>(
-      create: (_) => pondApp,
+      create: (_) => this,
       child: Provider<AppPondContext>(
-        create: (_) => appContext,
+        create: (_) => appPondContext,
         child: child,
       ),
     );
   }
 
-  static Widget wrapPage({
-    required AppPondContext? appContext,
+  Widget wrapPage({
     required Widget child,
     required Uri uri,
   }) {
-    if (appContext == null) {
-      return child;
-    }
-
-    for (final appComponent in appContext.appComponents) {
-      child = appComponent.wrapPage(appContext, child, AppPondPageContext(uri: uri));
+    for (final appComponent in appPondContext.appComponents) {
+      child = appComponent.wrapPage(appPondContext, child, AppPondPageContext(uri: uri));
     }
 
     return child;
@@ -183,13 +120,13 @@ class PondApp extends HookWidget {
 class SplashPage extends HookWidget {
   final AppPondContext appPondContext;
   final void Function(BuildContext buildContext) onFinishedLoading;
-  final Widget splashPage;
+  final Widget loadingPage;
 
   const SplashPage({
     super.key,
     required this.appPondContext,
     required this.onFinishedLoading,
-    required this.splashPage,
+    required this.loadingPage,
   });
 
   @override
@@ -199,25 +136,116 @@ class SplashPage extends HookWidget {
           onFinishedLoading(context);
         }());
 
-    return splashPage;
+    return loadingPage;
   }
 }
 
-class MultiRoute extends PageRouteBuilder {
-  final List<flutter.Route> routes;
+class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNotifier, PopNavigatorRouterDelegateMixin {
+  final PondApp app;
 
-  MultiRoute({required this.routes})
-      : super(
-          pageBuilder: (_, __, ___) => Container(),
-          transitionDuration: Duration.zero,
-          transitionsBuilder: (_, __, ___, child) => child,
-        );
+  List<MaterialPage> _pages = [];
+
+  bool _isAppPondContextLoaded = false;
 
   @override
-  TickerFuture didPush() {
-    for (final route in routes) {
-      Navigator.of(navigator!.context).push(route);
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
+  PondRouterDelegate({required this.app}) {
+    PondApp.router = this;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      key: navigatorKey,
+      pages: _pages,
+      onPopPage: (route, result) {
+        if (!route.didPop(result)) {
+          return false;
+        }
+
+        pop();
+        _update();
+
+        return true;
+      },
+    );
+  }
+
+  @override
+  Future<void> setNewRoutePath(RouteInformation configuration) async {
+    warpToUri(configuration.uri);
+  }
+
+  Future<void> pushUri(Uri uri) async {
+    _pages = _pages + [_getPageFromUri(uri)];
+    _update();
+  }
+
+  Future<void> pushReplacementUri(Uri uri) async {
+    _pages.removeLast();
+    _pages = _pages + [_getPageFromUri(uri)];
+    _update();
+  }
+
+  Future<void> warpToUri(Uri uri) async {
+    _pages = [_getPageFromUri(uri)];
+    _update();
+  }
+
+  void pop() async {
+    _pages.removeLast();
+    _update();
+  }
+
+  void _update() {
+    final page = _pages.last;
+    final uri = Uri.parse(page.name!);
+
+    app.appPondContext.log('Navigating to $uri');
+
+    SystemNavigator.routeInformationUpdated(uri: uri);
+    notifyListeners();
+  }
+
+  MaterialPage _getPageFromUri(Uri uri) {
+    return MaterialPage(
+      child: app.wrapPage(child: _getAppPageFromUri(uri), uri: uri),
+      name: uri.toString(),
+    );
+  }
+
+  Widget _getAppPageFromUri(Uri uri) {
+    if (!_isAppPondContextLoaded) {
+      return SplashPage(
+        appPondContext: app.appPondContext,
+        onFinishedLoading: (context) {
+          _isAppPondContextLoaded = true;
+          context.warpToUri(uri);
+        },
+        loadingPage: app.loadingPage,
+      );
     }
-    return super.didPush();
+
+    final matchingPageEntry =
+        app.appPondContext.getPages().entries.firstWhereOrNull((entry) => entry.key.matches(uri.toString()));
+    if (matchingPageEntry == null) {
+      return app.notFoundPage;
+    }
+
+    final (matchingRoute, matchingPage) = (matchingPageEntry.key, matchingPageEntry.value);
+    final routeInstance = matchingRoute.fromPath(uri.toString()) as Route;
+
+    return Builder(builder: (context) => matchingPage.build(context, routeInstance));
+  }
+}
+
+class _PondRouteInformationParser extends RouteInformationParser<RouteInformation> {
+  @override
+  Future<RouteInformation> parseRouteInformationWithDependencies(
+    RouteInformation routeInformation,
+    BuildContext context,
+  ) {
+    return SynchronousFuture(routeInformation);
   }
 }

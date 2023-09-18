@@ -9,7 +9,7 @@ import 'package:port_core/port_core.dart';
 import 'package:port_style/port_style.dart';
 import 'package:style/style.dart';
 
-class DeviceFilesDebugPage extends AppPage<DeviceFilesDebugRoute> {
+class DeviceFilesDebugPage with IsAppPage<DeviceFilesDebugRoute> {
   @override
   Widget onBuild(BuildContext context, DeviceFilesDebugRoute route) {
     final pathState = useState<String>('.');

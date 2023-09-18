@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class SignupPage extends AppPage<SignupRoute> {
+class SignupPage with IsAppPage<SignupRoute> {
   @override
   Widget onBuild(BuildContext context, SignupRoute route) {
     final signupPort = useMemoized(() => Port.of({

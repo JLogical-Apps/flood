@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
-class DropDebugPage extends AppPage<DropDebugRoute> {
+class DropDebugPage with IsAppPage<DropDebugRoute> {
   @override
   Widget onBuild(BuildContext context, DropDebugRoute route) {
     final repositories = context.dropCoreComponent.repositories.toList();

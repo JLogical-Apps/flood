@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
-class StyleguidePage extends AppPage<StyleguideRoute> {
+class StyleguidePage with IsAppPage<StyleguideRoute> {
   @override
   Widget onBuild(BuildContext context, StyleguideRoute route) {
     return StyledPage(
