@@ -1,11 +1,12 @@
 import 'package:example/presentation/pages/auth/signup_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
+import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class LoginPage with IsAppPageWrapper<LoginRoute> {
   @override
-  AppPage<LoginRoute> get appPage => AppPage(
+  AppPage<LoginRoute> get appPage => AppPage<LoginRoute>(
         builder: (context, route) {
           final loginPort = useMemoized(() => Port.of({
                 'email': PortField.string().withDisplayName('Email').isNotBlank().isEmail(),
@@ -55,7 +56,7 @@ class LoginPage with IsAppPageWrapper<LoginRoute> {
             ),
           );
         },
-      );
+      ).onlyIfNotLoggedIn();
 }
 
 class LoginRoute with IsRoute<LoginRoute> {

@@ -156,13 +156,13 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
   }
 
   Future<void> pushUri(Uri uri) async {
-    _pages = _pages + [_getPageFromUri(uri)];
+    _pages = _pages + [await _getPageFromUri(uri)];
     _update();
   }
 
   Future<void> pushReplacementUri(Uri uri) async {
     _pages.removeLast();
-    _pages = _pages + [_getPageFromUri(uri)];
+    _pages = _pages + [await _getPageFromUri(uri)];
     _update();
   }
 
@@ -186,49 +186,59 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
     notifyListeners();
   }
 
-  MaterialPage _getPageFromUri(Uri uri) {
+  Future<MaterialPage> _getPageFromUri(Uri uri) async {
+    final (child, uriResult) = await _getAppPageFromUri(uri);
     return MaterialPage(
-      child: app.wrapPage(child: _getAppPageFromUri(uri), uri: uri),
-      name: uri.toString(),
+      child: app.wrapPage(child: child, uri: uriResult),
+      name: uriResult.toString(),
     );
   }
 
   Future<List<MaterialPage>> _getPageChainFromUri(Uri uri) async {
     final uriChain = await _getParentUriChain(uri);
-    return uriChain.map((uri) => _getPageFromUri(uri)).toList();
+    return Future.wait(uriChain.map((uri) => _getPageFromUri(uri)));
   }
 
-  Widget _getAppPageFromUri(Uri uri) {
+  Future<(Widget, Uri)> _getAppPageFromUri(Uri uri) async {
+    (Widget, Uri) buildWithoutRedirect(Widget child) {
+      return (child, uri);
+    }
+
     if (!_isAppPondContextLoaded) {
-      return Builder(builder: (context) {
+      return buildWithoutRedirect(Builder(builder: (context) {
         return SplashPage(
           appPondContext: app.appPondContext,
           onFinishedLoading: () => _isAppPondContextLoaded = true,
           loadingPage: app.loadingPage,
         ).build(context, SplashRoute()..redirectProperty.set(uri.toString()));
-      });
+      }));
     }
 
     if (uri.path == splashRoute) {
-      return Builder(builder: (context) {
+      return buildWithoutRedirect(Builder(builder: (context) {
         return SplashPage(
           appPondContext: app.appPondContext,
           onFinishedLoading: () => _isAppPondContextLoaded = true,
           loadingPage: app.loadingPage,
         ).build(context, SplashRoute().fromPath(uri.toString()));
-      });
+      }));
     }
 
     final matchingPageEntry =
         app.appPondContext.getPages().entries.firstWhereOrNull((entry) => entry.key.matches(uri.toString()));
     if (matchingPageEntry == null) {
-      return app.notFoundPage;
+      return buildWithoutRedirect(app.notFoundPage);
     }
 
     final (matchingRoute, matchingPage) = (matchingPageEntry.key, matchingPageEntry.value);
     final routeInstance = matchingRoute.fromPath(uri.toString()) as Route;
 
-    return Builder(builder: (context) => matchingPage.build(context, routeInstance));
+    final redirectUri = await matchingPage.getRedirect(app.appPondContext, routeInstance);
+    if (redirectUri != null) {
+      return await _getAppPageFromUri(redirectUri);
+    }
+
+    return buildWithoutRedirect(Builder(builder: (context) => matchingPage.build(context, routeInstance)));
   }
 
   Future<List<Uri>> _getParentUriChain(Uri uri) async {

@@ -10,6 +10,8 @@ abstract class AppPage<R extends Route> {
 
   FutureOr<Route?> getParent(AppPondContext context, R route);
 
+  FutureOr<Uri?> getRedirect(AppPondContext context, R route);
+
   factory AppPage({required Widget Function(BuildContext context, R route) builder}) {
     return _AppPageImpl(builder: builder);
   }
@@ -26,11 +28,20 @@ extension AppPageExtensions<R extends Route> on AppPage<R> {
   AppPage<R> withParent(FutureOr<Route?> Function(AppPondContext context, R route) parentGetter) {
     return AppPageAdditional(appPage: this, parentGetter: parentGetter);
   }
+
+  AppPage<R> withRedirect(FutureOr<Uri?> Function(AppPondContext context, R route) redirectGetter) {
+    return AppPageAdditional(appPage: this, redirectGetter: redirectGetter);
+  }
 }
 
 mixin IsAppPage<R extends Route> implements AppPage<R> {
   @override
   FutureOr<Route?> getParent(AppPondContext context, R route) {
+    return null;
+  }
+
+  @override
+  FutureOr<Uri?> getRedirect(AppPondContext context, R route) {
     return null;
   }
 }
@@ -56,4 +67,7 @@ mixin IsAppPageWrapper<R extends Route> implements AppPageWrapper<R> {
 
   @override
   FutureOr<Route?> getParent(AppPondContext context, R route) => appPage.getParent(context, route);
+
+  @override
+  FutureOr<Uri?> getRedirect(AppPondContext context, route) => appPage.getRedirect(context, route);
 }

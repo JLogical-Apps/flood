@@ -3,16 +3,18 @@ import 'package:example/presentation/pages/user/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class HomePage with IsAppPage<HomeRoute> {
+class HomePage with IsAppPageWrapper<HomeRoute> {
   @override
-  Widget onBuild(BuildContext context, HomeRoute route) {
-    final loggedInUserId = useLoggedInUserIdOrNull();
-    if (loggedInUserId == null) {
-      return LoginPage().build(context, LoginRoute());
-    } else {
-      return ProfilePage().build(context, ProfileRoute());
-    }
-  }
+  AppPage<HomeRoute> get appPage => AppPage<HomeRoute>(
+        builder: (context, route) => Container(),
+      ).withRedirect((context, route) {
+        final loggedInUserId = context.find<AuthCoreComponent>().loggedInUserId;
+        if (loggedInUserId == null) {
+          return LoginRoute().uri;
+        } else {
+          return ProfileRoute().uri;
+        }
+      });
 }
 
 class HomeRoute with IsRoute<HomeRoute> {
