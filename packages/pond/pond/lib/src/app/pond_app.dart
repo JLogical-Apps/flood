@@ -11,14 +11,14 @@ import 'package:pond/src/app/component/app_pond_page_context.dart';
 import 'package:pond/src/app/context/app_pond_context.dart';
 import 'package:pond/src/app/navigation/navigation_build_context_extensions.dart';
 import 'package:pond/src/app/page/app_page.dart';
+import 'package:pond/src/app/page/splash_page.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 const splashRoute = '/_splash';
-const redirectParam = 'redirect';
 
 class PondApp extends HookWidget {
-  static Uri location = Uri.parse('_splash');
+  static Uri location = Uri.parse(splashRoute);
   static late PondRouterDelegate router;
 
   final AppPondContext appPondContext;
@@ -117,29 +117,6 @@ class PondApp extends HookWidget {
   }
 }
 
-class SplashPage extends HookWidget {
-  final AppPondContext appPondContext;
-  final void Function(BuildContext buildContext) onFinishedLoading;
-  final Widget loadingPage;
-
-  const SplashPage({
-    super.key,
-    required this.appPondContext,
-    required this.onFinishedLoading,
-    required this.loadingPage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    useMemoized(() => () async {
-          await appPondContext.load();
-          onFinishedLoading(context);
-        }());
-
-    return loadingPage;
-  }
-}
-
 class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final PondApp app;
 
@@ -174,6 +151,7 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
 
   @override
   Future<void> setNewRoutePath(RouteInformation configuration) async {
+    _pages = [MaterialPage(child: app.loadingPage)];
     warpToUri(configuration.uri);
   }
 
@@ -189,7 +167,7 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
   }
 
   Future<void> warpToUri(Uri uri) async {
-    _pages = [_getPageFromUri(uri)];
+    _pages = await _getPageChainFromUri(uri);
     _update();
   }
 
@@ -215,16 +193,30 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
     );
   }
 
+  Future<List<MaterialPage>> _getPageChainFromUri(Uri uri) async {
+    final uriChain = await _getParentUriChain(uri);
+    return uriChain.map((uri) => _getPageFromUri(uri)).toList();
+  }
+
   Widget _getAppPageFromUri(Uri uri) {
     if (!_isAppPondContextLoaded) {
-      return SplashPage(
-        appPondContext: app.appPondContext,
-        onFinishedLoading: (context) {
-          _isAppPondContextLoaded = true;
-          context.warpToUri(uri);
-        },
-        loadingPage: app.loadingPage,
-      );
+      return Builder(builder: (context) {
+        return SplashPage(
+          appPondContext: app.appPondContext,
+          onFinishedLoading: () => _isAppPondContextLoaded = true,
+          loadingPage: app.loadingPage,
+        ).build(context, SplashRoute()..redirectProperty.set(uri.toString()));
+      });
+    }
+
+    if (uri.path == splashRoute) {
+      return Builder(builder: (context) {
+        return SplashPage(
+          appPondContext: app.appPondContext,
+          onFinishedLoading: () => _isAppPondContextLoaded = true,
+          loadingPage: app.loadingPage,
+        ).build(context, SplashRoute().fromPath(uri.toString()));
+      });
     }
 
     final matchingPageEntry =
@@ -237,6 +229,37 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
     final routeInstance = matchingRoute.fromPath(uri.toString()) as Route;
 
     return Builder(builder: (context) => matchingPage.build(context, routeInstance));
+  }
+
+  Future<List<Uri>> _getParentUriChain(Uri uri) async {
+    if (!_isAppPondContextLoaded) {
+      return [(SplashRoute()..redirectProperty.set(uri.toString())).uri];
+    }
+    if (uri.path == splashRoute) {
+      return [uri];
+    }
+
+    final uris = [uri];
+    while (true) {
+      final currentUri = uris.first;
+      final matchingPageEntry =
+          app.appPondContext.getPages().entries.firstWhereOrNull((entry) => entry.key.matches(currentUri.toString()));
+      if (matchingPageEntry == null) {
+        throw Exception('Could not find page [$currentUri]');
+      }
+
+      final (matchingRoute, matchingPage) = (matchingPageEntry.key, matchingPageEntry.value);
+      final routeInstance = matchingRoute.fromPath(currentUri.toString()) as Route;
+
+      final parentRoute = await matchingPage.getParent(app.appPondContext, routeInstance);
+      if (parentRoute == null) {
+        break;
+      }
+
+      uris.insert(0, parentRoute.uri);
+    }
+
+    return uris;
   }
 }
 
