@@ -18,7 +18,7 @@ import 'package:url_strategy/url_strategy.dart';
 const splashRoute = '/_splash';
 
 class PondApp extends HookWidget {
-  static Uri location = Uri.parse(splashRoute);
+  static Uri currentUri = Uri.parse(splashRoute);
   static late PondRouterDelegate router;
 
   final AppPondContext appPondContext;

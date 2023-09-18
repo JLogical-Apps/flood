@@ -74,7 +74,6 @@ Future<void> main(List<String> args) async {
 
 Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async {
   final appPondContext = AppPondContext(corePondContext: corePondContext);
-  await appPondContext.register(NavigationAppComponent());
   await appPondContext.register(DebugAppComponent());
   await appPondContext.register(LogAppComponent());
   await appPondContext.register(DeviceFilesAppComponent());

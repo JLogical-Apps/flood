@@ -1,56 +1,49 @@
 import 'package:flutter/material.dart' hide Route;
 import 'package:path_core/path_core.dart';
-import 'package:pond/src/app/context/app_pond_context_build_context_extensions.dart';
-import 'package:pond/src/app/navigation/navigation_app_component.dart';
+import 'package:pond/src/app/pond_app.dart';
 
 extension NavigationBuildContextExtensions on BuildContext {
-  NavigationAppComponent get _navigationComponent => appPondContext.find<NavigationAppComponent>();
+  Uri get uri => PondApp.currentUri;
 
-  String get location {
-    return _navigationComponent.location;
-  }
+  String get location => uri.toString();
 
-  Uri get uri {
-    return _navigationComponent.uri;
+  Future<void> pushUri(Uri uri) {
+    return PondApp.router.pushUri(uri);
   }
 
   Future<void> push(Route route) {
-    return _navigationComponent.push(route);
+    return pushUri(route.uri);
   }
 
   Future<void> pushLocation(String location) {
-    return _navigationComponent.pushLocation(location);
-  }
-
-  Future<void> pushUri(Uri uri) {
-    return _navigationComponent.pushUri(uri);
-  }
-
-  Future<void> pushReplacement(Route route) {
-    return _navigationComponent.pushReplacement(route);
+    return pushUri(Uri.parse(location));
   }
 
   Future<void> pushReplacementUri(Uri uri) {
-    return _navigationComponent.pushReplacementUri(uri);
+    return PondApp.router.pushReplacementUri(uri);
+  }
+
+  Future<void> pushReplacement(Route route) {
+    return pushReplacementUri(route.uri);
   }
 
   Future<void> pushReplacementLocation(String location) {
-    return _navigationComponent.pushReplacementLocation(location);
-  }
-
-  Future<void> warpTo(Route route) {
-    return _navigationComponent.warpTo(route);
+    return pushReplacementUri(Uri.parse(location));
   }
 
   Future<void> warpToUri(Uri uri) {
-    return _navigationComponent.warpToUri(uri);
+    return PondApp.router.warpToUri(uri);
+  }
+
+  Future<void> warpTo(Route route) {
+    return warpToUri(route.uri);
   }
 
   Future<void> warpToLocation(String location) {
-    return _navigationComponent.warpToLocation(location);
+    return warpToUri(Uri.parse(location));
   }
 
   void pop() {
-    return _navigationComponent.pop();
+    return PondApp.router.pop();
   }
 }
