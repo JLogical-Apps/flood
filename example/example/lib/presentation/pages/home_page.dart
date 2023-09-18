@@ -1,13 +1,10 @@
 import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/pages/user/profile_page.dart';
-import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class HomePage with IsAppPageWrapper<HomeRoute> {
   @override
-  AppPage<HomeRoute> get appPage => AppPage<HomeRoute>(
-        builder: (context, route) => Container(),
-      ).withRedirect((context, route) {
+  AppPage<HomeRoute> get appPage => AppPage<HomeRoute>().withRedirect((context, route) {
         final loggedInUserId = context.find<AuthCoreComponent>().loggedInUserId;
         if (loggedInUserId == null) {
           return LoginRoute().uri;

@@ -5,6 +5,7 @@ import 'package:example/presentation/pages/envelope/archived_envelopes_page.dart
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/pages/transaction/add_transactions_page.dart';
 import 'package:example/presentation/pages/user/profile_page.dart';
+import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example/presentation/widget/envelope/envelope_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
@@ -19,7 +20,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class BudgetPage with IsAppPage<BudgetRoute> {
+class BudgetPage with IsAppPageWrapper<BudgetRoute> {
+  @override
+  AppPage<BudgetRoute> get appPage => AppPage<BudgetRoute>().onlyIfLoggedIn();
+
   @override
   Widget onBuild(BuildContext context, BudgetRoute route) {
     final budgetModel = useEntityOrNull<BudgetEntity>(route.budgetIdProperty.value);

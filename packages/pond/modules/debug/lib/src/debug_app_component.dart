@@ -21,6 +21,7 @@ class DebugAppComponent with IsAppPondComponent {
 
   @override
   Future onLoad(AppPondContext context) async {
+    print('loading!!');
     debugDialogComponents.addAll(context.appComponents.whereType<DebugDialogComponent>());
     debugPageComponents.addAll(context.appComponents.whereType<DebugPageComponent>());
   }
@@ -41,7 +42,7 @@ class DebugAppComponent with IsAppPondComponent {
       create: (_) => DebugDialogContext(),
       child: HookBuilder(
         builder: (context) {
-          final debugDialogContext = Provider.of<DebugDialogContext>(context, listen: false);
+          final debugDialogContext = context.read<DebugDialogContext>();
           useValueStream(debugDialogContext.dataX);
 
           final showDebug = useState<bool>(false);
@@ -52,7 +53,7 @@ class DebugAppComponent with IsAppPondComponent {
               if (showDebug.value)
                 Positioned.fill(
                   child: StyledContainer(
-                    color: Colors.green.withOpacity(0.3),
+                    color: context.style().colorPalette.background.strong.withOpacity(0.3),
                     child: SafeArea(
                       child: StyledList.column.withScrollbar.centered(
                         children: [

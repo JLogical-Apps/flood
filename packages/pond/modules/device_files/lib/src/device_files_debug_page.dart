@@ -1,3 +1,4 @@
+import 'package:debug/debug.dart';
 import 'package:environment/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -9,7 +10,10 @@ import 'package:port_core/port_core.dart';
 import 'package:port_style/port_style.dart';
 import 'package:style/style.dart';
 
-class DeviceFilesDebugPage with IsAppPage<DeviceFilesDebugRoute> {
+class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
+  @override
+  AppPage<DeviceFilesDebugRoute> get appPage => AppPage<DeviceFilesDebugRoute>().withDebugParent();
+
   @override
   Widget onBuild(BuildContext context, DeviceFilesDebugRoute route) {
     final pathState = useState<String>('.');

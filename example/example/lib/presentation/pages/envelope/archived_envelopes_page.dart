@@ -1,10 +1,17 @@
+import 'package:example/presentation/pages/budget/budget_page.dart';
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
+import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example/presentation/widget/envelope/envelope_card.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class ArchivedEnvelopesPage with IsAppPage<ArchivedEnvelopesRoute> {
+class ArchivedEnvelopesPage with IsAppPageWrapper<ArchivedEnvelopesRoute> {
+  @override
+  AppPage<ArchivedEnvelopesRoute> get appPage => AppPage<ArchivedEnvelopesRoute>()
+      .onlyIfLoggedIn()
+      .withParent((context, route) => BudgetRoute()..budgetIdProperty.set(route.budgetIdProperty.value));
+
   @override
   Widget onBuild(BuildContext context, ArchivedEnvelopesRoute route) {
     final archivedEnvelopesModel = useQuery(

@@ -12,7 +12,7 @@ abstract class AppPage<R extends Route> {
 
   FutureOr<Uri?> getRedirect(AppPondContext context, R route);
 
-  factory AppPage({required Widget Function(BuildContext context, R route) builder}) {
+  factory AppPage({Widget Function(BuildContext context, R route)? builder}) {
     return _AppPageImpl(builder: builder);
   }
 }
@@ -47,13 +47,13 @@ mixin IsAppPage<R extends Route> implements AppPage<R> {
 }
 
 class _AppPageImpl<R extends Route> with IsAppPage<R> {
-  final Widget Function(BuildContext context, R route) builder;
+  final Widget Function(BuildContext context, R route)? builder;
 
   _AppPageImpl({required this.builder});
 
   @override
   Widget onBuild(BuildContext context, R route) {
-    return builder(context, route);
+    return builder?.call(context, route) ?? Container();
   }
 }
 

@@ -5,7 +5,7 @@ import 'package:pond/src/app/context/app_pond_context.dart';
 import 'package:pond/src/app/navigation/navigation_build_context_extensions.dart';
 import 'package:pond/src/app/page/app_page.dart';
 
-class SplashPage with IsAppPageWrapper<SplashRoute> {
+class SplashPage with IsAppPage<SplashRoute> {
   final AppPondContext appPondContext;
   final Widget loadingPage;
   final Function() onFinishedLoading;
@@ -17,17 +17,15 @@ class SplashPage with IsAppPageWrapper<SplashRoute> {
   });
 
   @override
-  AppPage<SplashRoute> get appPage => AppPage<SplashRoute>(
-        builder: (context, route) {
-          useMemoized(() => () async {
-                await appPondContext.load();
-                onFinishedLoading();
-                context.warpToLocation(route.redirectProperty.value ?? '/');
-              }());
+  Widget onBuild(BuildContext context, SplashRoute route) {
+    useMemoized(() => () async {
+          await appPondContext.load();
+          onFinishedLoading();
+          context.warpToLocation(route.redirectProperty.value ?? '/');
+        }());
 
-          return loadingPage;
-        },
-      );
+    return loadingPage;
+  }
 }
 
 class SplashRoute with IsRoute<SplashRoute> {

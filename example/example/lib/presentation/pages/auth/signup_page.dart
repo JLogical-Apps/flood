@@ -1,4 +1,6 @@
+import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/utils/budget_utils.dart';
+import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example_core/features/budget/budget.dart';
 import 'package:example_core/features/budget/budget_entity.dart';
 import 'package:example_core/features/user/user.dart';
@@ -7,7 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
-class SignupPage with IsAppPage<SignupRoute> {
+class SignupPage with IsAppPageWrapper<SignupRoute> {
+  @override
+  AppPage<SignupRoute> get appPage =>
+      AppPage<SignupRoute>().onlyIfNotLoggedIn().withParent((context, route) => LoginRoute());
+
   @override
   Widget onBuild(BuildContext context, SignupRoute route) {
     final signupPort = useMemoized(() => Port.of({

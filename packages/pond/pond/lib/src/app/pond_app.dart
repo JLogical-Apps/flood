@@ -204,16 +204,6 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
       return (child, uri);
     }
 
-    if (!_isAppPondContextLoaded) {
-      return buildWithoutRedirect(Builder(builder: (context) {
-        return SplashPage(
-          appPondContext: app.appPondContext,
-          onFinishedLoading: () => _isAppPondContextLoaded = true,
-          loadingPage: app.loadingPage,
-        ).build(context, SplashRoute()..redirectProperty.set(uri.toString()));
-      }));
-    }
-
     if (uri.path == splashRoute) {
       return buildWithoutRedirect(Builder(builder: (context) {
         return SplashPage(

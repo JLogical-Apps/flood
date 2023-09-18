@@ -1,3 +1,4 @@
+import 'package:debug/debug.dart';
 import 'package:flutter/material.dart';
 import 'package:intersperse/intersperse.dart';
 import 'package:log/log.dart';
@@ -7,7 +8,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
-class LogDebugPage with IsAppPage<LogDebugRoute> {
+class LogDebugPage with IsAppPageWrapper<LogDebugRoute> {
+  @override
+  AppPage<LogDebugRoute> get appPage => AppPage<LogDebugRoute>().withDebugParent();
+
   @override
   Widget onBuild(BuildContext context, LogDebugRoute route) {
     final logsModel = useFutureModel(() => context.getLogs());

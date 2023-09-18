@@ -1,9 +1,13 @@
+import 'package:debug/debug.dart';
 import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
-class ResetDebugPage with IsAppPage<ResetDebugRoute> {
+class ResetDebugPage with IsAppPageWrapper<ResetDebugRoute> {
+  @override
+  AppPage<ResetDebugRoute> get appPage => AppPage<ResetDebugRoute>().withDebugParent();
+
   @override
   Widget onBuild(BuildContext context, ResetDebugRoute route) {
     return StyledPage(
