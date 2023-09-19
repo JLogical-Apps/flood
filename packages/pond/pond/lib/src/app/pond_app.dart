@@ -14,6 +14,7 @@ import 'package:pond/src/app/page/app_page.dart';
 import 'package:pond/src/app/page/splash_page.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'package:utils/utils.dart';
 
 const splashRoute = '/_splash';
 
@@ -172,7 +173,7 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
   }
 
   void pop() async {
-    _pages.removeLast();
+    _pages = _pages.copy()..removeLast();
     _update();
   }
 
