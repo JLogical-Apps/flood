@@ -5,6 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+class LoginRoute with IsRoute<LoginRoute> {
+  late final redirectPathProperty = field<String>(name: 'redirect');
+
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('login');
+
+  @override
+  List<RouteProperty> get queryProperties => [redirectPathProperty];
+
+  @override
+  LoginRoute copy() {
+    return LoginRoute();
+  }
+}
+
 class LoginPage with IsAppPageWrapper<LoginRoute> {
   @override
   AppPage<LoginRoute> get appPage => AppPage<LoginRoute>().onlyIfNotLoggedIn();
@@ -58,20 +73,5 @@ class LoginPage with IsAppPageWrapper<LoginRoute> {
         ],
       ),
     );
-  }
-}
-
-class LoginRoute with IsRoute<LoginRoute> {
-  late final redirectPathProperty = field<String>(name: 'redirect');
-
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('login');
-
-  @override
-  List<RouteProperty> get queryProperties => [redirectPathProperty];
-
-  @override
-  LoginRoute copy() {
-    return LoginRoute();
   }
 }

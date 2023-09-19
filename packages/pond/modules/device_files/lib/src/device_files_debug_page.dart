@@ -10,6 +10,16 @@ import 'package:port_core/port_core.dart';
 import 'package:port_style/port_style.dart';
 import 'package:style/style.dart';
 
+class DeviceFilesDebugRoute with IsRoute<DeviceFilesDebugRoute> {
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('device_files');
+
+  @override
+  DeviceFilesDebugRoute copy() {
+    return DeviceFilesDebugRoute();
+  }
+}
+
 class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
   @override
   AppPage<DeviceFilesDebugRoute> get appPage => AppPage<DeviceFilesDebugRoute>().withDebugParent();
@@ -155,15 +165,5 @@ class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
       leadingIcon: Icons.folder,
       onPressed: onPressed,
     );
-  }
-}
-
-class DeviceFilesDebugRoute with IsRoute<DeviceFilesDebugRoute> {
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('device_files');
-
-  @override
-  DeviceFilesDebugRoute copy() {
-    return DeviceFilesDebugRoute();
   }
 }

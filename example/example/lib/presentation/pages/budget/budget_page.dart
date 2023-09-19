@@ -20,6 +20,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+class BudgetRoute with IsRoute<BudgetRoute> {
+  late final budgetIdProperty = field<String>(name: 'budgetId').required();
+
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('budget').property(budgetIdProperty);
+
+  @override
+  BudgetRoute copy() {
+    return BudgetRoute();
+  }
+}
+
 class BudgetPage with IsAppPageWrapper<BudgetRoute> {
   @override
   AppPage<BudgetRoute> get appPage => AppPage<BudgetRoute>().onlyIfLoggedIn();
@@ -217,17 +229,5 @@ class BudgetPage with IsAppPageWrapper<BudgetRoute> {
         );
       },
     );
-  }
-}
-
-class BudgetRoute with IsRoute<BudgetRoute> {
-  late final budgetIdProperty = field<String>(name: 'budgetId').required();
-
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('budget').property(budgetIdProperty);
-
-  @override
-  BudgetRoute copy() {
-    return BudgetRoute();
   }
 }

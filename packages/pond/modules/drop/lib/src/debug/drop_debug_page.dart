@@ -4,6 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
+class DropDebugRoute with IsRoute<DropDebugRoute> {
+  @override
+  DropDebugRoute copy() {
+    return DropDebugRoute();
+  }
+
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('drop');
+}
+
 class DropDebugPage with IsAppPageWrapper<DropDebugRoute> {
   @override
   AppPage<DropDebugRoute> get appPage => AppPage<DropDebugRoute>();
@@ -27,14 +37,4 @@ class DropDebugPage with IsAppPageWrapper<DropDebugRoute> {
       ),
     );
   }
-}
-
-class DropDebugRoute with IsRoute<DropDebugRoute> {
-  @override
-  DropDebugRoute copy() {
-    return DropDebugRoute();
-  }
-
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('drop');
 }

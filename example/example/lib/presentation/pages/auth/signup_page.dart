@@ -9,6 +9,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+class SignupRoute with IsRoute<SignupRoute> {
+  late final redirectPathProperty = field<String>(name: 'redirect');
+  late final initialEmailProperty = field<String>(name: 'email');
+  late final initialPasswordProperty = field<String>(name: 'pass');
+
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('signup');
+
+  @override
+  List<RouteProperty> get queryProperties => [
+        redirectPathProperty,
+        initialEmailProperty,
+        initialPasswordProperty,
+      ];
+
+  @override
+  SignupRoute copy() {
+    return SignupRoute();
+  }
+}
+
 class SignupPage with IsAppPageWrapper<SignupRoute> {
   @override
   AppPage<SignupRoute> get appPage =>
@@ -82,26 +103,5 @@ class SignupPage with IsAppPageWrapper<SignupRoute> {
         ],
       ),
     );
-  }
-}
-
-class SignupRoute with IsRoute<SignupRoute> {
-  late final redirectPathProperty = field<String>(name: 'redirect');
-  late final initialEmailProperty = field<String>(name: 'email');
-  late final initialPasswordProperty = field<String>(name: 'pass');
-
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('signup');
-
-  @override
-  List<RouteProperty> get queryProperties => [
-        redirectPathProperty,
-        initialEmailProperty,
-        initialPasswordProperty,
-      ];
-
-  @override
-  SignupRoute copy() {
-    return SignupRoute();
   }
 }

@@ -8,6 +8,16 @@ import 'package:share_plus/share_plus.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
+class LogDebugRoute with IsRoute<LogDebugRoute> {
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('logs');
+
+  @override
+  LogDebugRoute copy() {
+    return LogDebugRoute();
+  }
+}
+
 class LogDebugPage with IsAppPageWrapper<LogDebugRoute> {
   @override
   AppPage<LogDebugRoute> get appPage => AppPage<LogDebugRoute>().withDebugParent();
@@ -54,15 +64,5 @@ class LogDebugPage with IsAppPageWrapper<LogDebugRoute> {
         },
       ),
     );
-  }
-}
-
-class LogDebugRoute with IsRoute<LogDebugRoute> {
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('logs');
-
-  @override
-  LogDebugRoute copy() {
-    return LogDebugRoute();
   }
 }

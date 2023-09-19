@@ -9,6 +9,16 @@ import 'package:example_core/features/user/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+class ProfileRoute with IsRoute<ProfileRoute> {
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('profile');
+
+  @override
+  ProfileRoute copy() {
+    return ProfileRoute();
+  }
+}
+
 class ProfilePage with IsAppPageWrapper<ProfileRoute> {
   @override
   AppPage<ProfileRoute> get appPage => AppPage<ProfileRoute>().onlyIfLoggedIn();
@@ -111,15 +121,5 @@ class ProfilePage with IsAppPageWrapper<ProfileRoute> {
             ),
           );
         });
-  }
-}
-
-class ProfileRoute with IsRoute<ProfileRoute> {
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('profile');
-
-  @override
-  ProfileRoute copy() {
-    return ProfileRoute();
   }
 }

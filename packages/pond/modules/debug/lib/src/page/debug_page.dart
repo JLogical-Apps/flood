@@ -3,6 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 
+class DebugRoute with IsRoute<DebugRoute> {
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('_debug');
+
+  @override
+  DebugRoute copy() {
+    return DebugRoute();
+  }
+}
+
 class DebugPage with IsAppPage<DebugRoute> {
   @override
   Widget onBuild(BuildContext context, DebugRoute route) {
@@ -20,15 +30,5 @@ class DebugPage with IsAppPage<DebugRoute> {
             .toList(),
       ),
     );
-  }
-}
-
-class DebugRoute with IsRoute<DebugRoute> {
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('_debug');
-
-  @override
-  DebugRoute copy() {
-    return DebugRoute();
   }
 }

@@ -7,6 +7,19 @@ import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
+class DropDebugRepositoryRoute with IsRoute<DropDebugRepositoryRoute> {
+  late final hashProperty = field<int>(name: 'hash').required();
+
+  @override
+  DropDebugRepositoryRoute copy() {
+    return DropDebugRepositoryRoute();
+  }
+
+  @override
+  PathDefinition get pathDefinition =>
+      PathDefinition.string('_debug').string('drop').string('repository').property(hashProperty);
+}
+
 class DropDebugRepositoryPage with IsAppPageWrapper<DropDebugRepositoryRoute> {
   @override
   AppPage<DropDebugRepositoryRoute> get appPage => AppPage<DropDebugRepositoryRoute>().withDebugParent();
@@ -51,17 +64,4 @@ class DropDebugRepositoryPage with IsAppPageWrapper<DropDebugRepositoryRoute> {
       },
     );
   }
-}
-
-class DropDebugRepositoryRoute with IsRoute<DropDebugRepositoryRoute> {
-  late final hashProperty = field<int>(name: 'hash').required();
-
-  @override
-  DropDebugRepositoryRoute copy() {
-    return DropDebugRepositoryRoute();
-  }
-
-  @override
-  PathDefinition get pathDefinition =>
-      PathDefinition.string('_debug').string('drop').string('repository').property(hashProperty);
 }

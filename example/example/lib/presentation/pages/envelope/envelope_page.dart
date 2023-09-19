@@ -20,6 +20,18 @@ import 'package:example_core/features/tray/tray_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+class EnvelopeRoute with IsRoute<EnvelopeRoute> {
+  late final idProperty = field<String>(name: 'id').required();
+
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('envelope').property(idProperty);
+
+  @override
+  EnvelopeRoute copy() {
+    return EnvelopeRoute();
+  }
+}
+
 class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
   @override
   AppPage<EnvelopeRoute> get appPage => AppPage<EnvelopeRoute>().onlyIfLoggedIn().withParent((context, route) async {
@@ -340,17 +352,5 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
         );
       },
     );
-  }
-}
-
-class EnvelopeRoute with IsRoute<EnvelopeRoute> {
-  late final idProperty = field<String>(name: 'id').required();
-
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('envelope').property(idProperty);
-
-  @override
-  EnvelopeRoute copy() {
-    return EnvelopeRoute();
   }
 }

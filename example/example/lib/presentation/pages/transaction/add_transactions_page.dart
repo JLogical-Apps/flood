@@ -21,6 +21,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+class AddTransactionsRoute with IsRoute<AddTransactionsRoute> {
+  late final budgetIdProperty = field<String>(name: 'budgetId').required();
+
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('addTransactions').property(budgetIdProperty);
+
+  @override
+  AddTransactionsRoute copy() {
+    return AddTransactionsRoute();
+  }
+}
+
 class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
   @override
   AppPage<AddTransactionsRoute> get appPage => AppPage<AddTransactionsRoute>()
@@ -275,17 +287,5 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
         ],
       ),
     );
-  }
-}
-
-class AddTransactionsRoute with IsRoute<AddTransactionsRoute> {
-  late final budgetIdProperty = field<String>(name: 'budgetId').required();
-
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('addTransactions').property(budgetIdProperty);
-
-  @override
-  AddTransactionsRoute copy() {
-    return AddTransactionsRoute();
   }
 }

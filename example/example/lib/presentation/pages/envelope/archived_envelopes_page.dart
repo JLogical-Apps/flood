@@ -6,6 +6,18 @@ import 'package:example_core/features/envelope/envelope_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
+class ArchivedEnvelopesRoute with IsRoute<ArchivedEnvelopesRoute> {
+  late final budgetIdProperty = field<String>(name: 'budgetId').required();
+
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('archived').property(budgetIdProperty);
+
+  @override
+  ArchivedEnvelopesRoute copy() {
+    return ArchivedEnvelopesRoute();
+  }
+}
+
 class ArchivedEnvelopesPage with IsAppPageWrapper<ArchivedEnvelopesRoute> {
   @override
   AppPage<ArchivedEnvelopesRoute> get appPage => AppPage<ArchivedEnvelopesRoute>()
@@ -35,17 +47,5 @@ class ArchivedEnvelopesPage with IsAppPageWrapper<ArchivedEnvelopesRoute> {
         },
       ),
     );
-  }
-}
-
-class ArchivedEnvelopesRoute with IsRoute<ArchivedEnvelopesRoute> {
-  late final budgetIdProperty = field<String>(name: 'budgetId').required();
-
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('archived').property(budgetIdProperty);
-
-  @override
-  ArchivedEnvelopesRoute copy() {
-    return ArchivedEnvelopesRoute();
   }
 }

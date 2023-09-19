@@ -4,6 +4,16 @@ import 'package:pond/pond.dart';
 import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
+class ResetDebugRoute with IsRoute<ResetDebugRoute> {
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('reset');
+
+  @override
+  ResetDebugRoute copy() {
+    return ResetDebugRoute();
+  }
+}
+
 class ResetDebugPage with IsAppPageWrapper<ResetDebugRoute> {
   @override
   AppPage<ResetDebugRoute> get appPage => AppPage<ResetDebugRoute>().withDebugParent();
@@ -26,15 +36,5 @@ class ResetDebugPage with IsAppPageWrapper<ResetDebugRoute> {
         ],
       ),
     );
-  }
-}
-
-class ResetDebugRoute with IsRoute<ResetDebugRoute> {
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('reset');
-
-  @override
-  ResetDebugRoute copy() {
-    return ResetDebugRoute();
   }
 }
