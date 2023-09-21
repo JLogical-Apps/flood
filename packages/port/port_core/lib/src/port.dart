@@ -65,7 +65,11 @@ mixin IsPort<T> implements Port<T> {}
 class _PortImpl with IsPort<Map<String, dynamic>> {
   final BehaviorSubject<Map<String, PortField>> _portFieldByNameX;
 
-  _PortImpl(Map<String, PortField> valueByName) : _portFieldByNameX = BehaviorSubject.seeded(valueByName);
+  _PortImpl(Map<String, PortField> valueByName) : _portFieldByNameX = BehaviorSubject.seeded(valueByName) {
+    for (final portField in valueByName.values) {
+      portField.registerToPort(this);
+    }
+  }
 
   Map<String, PortField> get portFieldByName => _portFieldByNameX.value;
 
@@ -91,7 +95,7 @@ class _PortImpl with IsPort<Map<String, dynamic>> {
       final name = portFieldByNameEntry.key;
       final portField = portFieldByNameEntry.value;
 
-      final error = await portField.validate(portField.createValidationContext(this));
+      final error = await portField.validate(portField.createValidationContext());
       final newField = portField.copyWithError(error);
       setPortField(name: name, portField: newField);
 
@@ -105,7 +109,7 @@ class _PortImpl with IsPort<Map<String, dynamic>> {
     }
 
     final submitValueByNameEntries = await Future.wait(portFieldByName
-        .mapToIterable((name, portField) async => MapEntry(name, await portField.submit(this, portField.getOrNull()))));
+        .mapToIterable((name, portField) async => MapEntry(name, await portField.submit(portField.getOrNull()))));
     return PortSubmitResult(data: submitValueByNameEntries.toMap());
   }
 }

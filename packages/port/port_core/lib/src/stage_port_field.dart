@@ -54,7 +54,7 @@ class StagePortField<E, T> with IsPortFieldWrapper<StageValue<E, T>, T?> {
       displayNameMapper: displayNameMapper,
       submitRawMapper: submitRawMapper,
       error: error,
-    );
+    )..port = port;
   }
 
   StageValue<E, T> getStageValue(E newValue) {

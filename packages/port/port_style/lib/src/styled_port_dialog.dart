@@ -46,7 +46,6 @@ class StyledPortDialog<T> extends StyledDialog<T> {
                     port: port,
                     builder: (context, port) {
                       return StyledList.column(
-                        key: ValueKey(port.portValueByName),
                         children: children,
                       );
                     },

@@ -61,7 +61,7 @@ void main() {
       'email': PortField.string().isNotBlank().isEmail(),
     });
     final port = Port.of({
-      'contact': PortField.port(port: contactPort),
+      'contact': PortField.embedded(port: contactPort),
     });
 
     expect(port['contact'] as Port, contactPort);

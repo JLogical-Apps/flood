@@ -17,12 +17,12 @@ class FallbackPortField<T, S> with IsPortFieldWrapper<T, S> {
   }
 
   @override
-  S submitRaw(Port port, T value) {
+  S submitRaw(T value) {
     return (isEmpty(value) ? fallbackGetter(port) : value) as S;
   }
 
   @override
-  FutureOr<S> submit(Port port, T value) {
+  FutureOr<S> submit(T value) {
     return (isEmpty(value) ? fallbackGetter(port) : value) as S;
   }
 

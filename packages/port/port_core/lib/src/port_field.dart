@@ -21,9 +21,11 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
 
   dynamic get error;
 
-  S submitRaw(Port port, T value);
+  late Port port;
 
-  FutureOr<S> submit(Port port, T value);
+  S submitRaw(T value);
+
+  FutureOr<S> submit(T value);
 
   PortField<T, S> copyWith({required T value, required dynamic error});
 
@@ -31,7 +33,7 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
 
   Type get submitType;
 
-  PortFieldValidatorContext createValidationContext(Port port);
+  PortFieldValidatorContext createValidationContext();
 
   factory PortField({
     required T value,
@@ -91,7 +93,7 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
     );
   }
 
-  static PortField<Port<T>, T> port<T>({required Port<T> port}) {
+  static PortField<Port<T>, T> embedded<T>({required Port<T> port}) {
     return PortField(
       value: port,
       submitMapper: (port) async => (await port.submit()).data,
@@ -107,6 +109,10 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
 }
 
 extension PortFieldExtensions<T, S> on PortField<T, S> {
+  void registerToPort(Port port) {
+    this.port = port;
+  }
+
   T? getOrNull() => error == null ? value : null;
 
   PortField<T, S> copyWithValue(T value) => copyWith(value: value, error: error);
@@ -208,6 +214,9 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
   final dynamic error;
 
   @override
+  late Port port;
+
+  @override
   final Validator<PortFieldValidatorContext, String> validator;
 
   final S Function(T value)? submitRawMapper;
@@ -220,15 +229,20 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
     required this.validator,
     required this.submitRawMapper,
     required this.submitMapper,
-  });
+    Port? port,
+  }) {
+    if (port != null) {
+      this.port = port;
+    }
+  }
 
   @override
-  S submitRaw(Port port, T value) {
+  S submitRaw(T value) {
     return submitRawMapper?.mapIfNonNull((mapper) => mapper(value)) ?? (value as S);
   }
 
   @override
-  Future<S> submit(Port port, T value) async {
+  Future<S> submit(T value) async {
     return submitMapper?.mapIfNonNull((mapper) async => await mapper(value)) ?? (value as S);
   }
 
@@ -240,11 +254,12 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
       validator: validator,
       submitRawMapper: submitRawMapper,
       submitMapper: submitMapper,
+      port: port,
     );
   }
 
   @override
-  PortFieldValidatorContext createValidationContext(Port port) {
+  PortFieldValidatorContext createValidationContext() {
     return PortFieldValidatorContext(value: value, port: port);
   }
 }
@@ -295,10 +310,16 @@ mixin IsPortFieldWrapper<T, S> implements PortFieldWrapper<T, S> {
   dynamic get error => portField.error;
 
   @override
-  FutureOr<S> submit(Port port, T value) => portField.submit(port, value);
+  Port get port => portField.port;
 
   @override
-  S submitRaw(Port port, T value) => portField.submitRaw(port, value);
+  set port(Port port) => portField.port = port;
+
+  @override
+  FutureOr<S> submit(T value) => portField.submit(value);
+
+  @override
+  S submitRaw(T value) => portField.submitRaw(value);
 
   @override
   Validator<PortFieldValidatorContext, String> get validator => portField.validator;
@@ -315,7 +336,7 @@ mixin IsPortFieldWrapper<T, S> implements PortFieldWrapper<T, S> {
   Type get submitType => portField.submitType;
 
   @override
-  PortFieldValidatorContext createValidationContext(Port port) {
+  PortFieldValidatorContext createValidationContext() {
     return PortFieldValidatorContext(value: value, port: port);
   }
 }

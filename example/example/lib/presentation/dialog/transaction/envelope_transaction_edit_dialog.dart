@@ -23,7 +23,7 @@ class EnvelopeTransactionEditDialog {
       ],
     );
     rawPort = Port.of({
-      'transaction': PortField.port(port: basePort),
+      'transaction': PortField.embedded(port: basePort),
       'transactionType': PortField.option(
         options: EnvelopeTransactionType.values,
         initialValue: EnvelopeTransactionType.payment,
