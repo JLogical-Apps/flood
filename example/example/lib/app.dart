@@ -58,7 +58,7 @@ Future<void> main(List<String> args) async {
                 );
               },
             ))),
-    splashPage: StyledPage(
+    loadingPage: StyledPage(
       body: Center(
         child: StyledLoadingIndicator(),
       ),

@@ -20,6 +20,7 @@ const splashRoute = '/_splash';
 
 class PondApp extends HookWidget {
   static late PondRouterDelegate router;
+
   static Uri get currentUri => Uri.parse(router._pages.last.name!);
 
   final AppPondContext appPondContext;
@@ -38,7 +39,7 @@ class PondApp extends HookWidget {
   static Future<void> run({
     required FutureOr<AppPondContext> Function() appPondContextGetter,
     required Route Function() initialRouteGetter,
-    required Widget splashPage,
+    required Widget loadingPage,
     required Widget notFoundPage,
   }) async {
     AppPondContext? appPondContext;
@@ -52,7 +53,7 @@ class PondApp extends HookWidget {
         runApp(PondApp(
           appPondContext: appPondContext!,
           initialRouteGetter: initialRouteGetter,
-          loadingPage: splashPage,
+          loadingPage: loadingPage,
           notFoundPage: notFoundPage,
         ));
       },
