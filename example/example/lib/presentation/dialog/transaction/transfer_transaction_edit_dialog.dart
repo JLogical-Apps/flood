@@ -21,9 +21,8 @@ class TransferTransactionEditDialog {
         .get(context.dropCoreComponent);
     envelopeEntities.removeWhere((entity) => entity == sourceEnvelopeEntity);
 
-    late Port<Map<String, dynamic>> rawPort;
     final basePort = transferTransaction.asPort(context.corePondContext);
-    rawPort = Port.of({
+    final rawPort = Port.of({
       'transaction': PortField.embedded(port: basePort),
       'targetEnvelope': PortField.option<EnvelopeEntity?, String>(
         options: [

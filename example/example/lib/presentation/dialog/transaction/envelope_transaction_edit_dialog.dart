@@ -38,7 +38,12 @@ class EnvelopeTransactionEditDialog {
         return transactionResult;
       }),
       children: [
-        StyledObjectPortBuilder(port: basePort),
+        PortBuilder(
+          port: rawPort,
+          builder: (context, port) {
+            return StyledObjectPortBuilder(port: basePort);
+          },
+        ),
         StyledDivider.subtle(),
         StyledRadioPortField<EnvelopeTransactionType>(
           fieldName: 'transactionType',
