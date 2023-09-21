@@ -9,8 +9,8 @@ class DateTimePortFieldBuilderModifier extends PortFieldBuilderModifier {
   Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
     return StyledDateTimeFieldPortField(
       fieldName: fieldName,
-      labelText: portField.findDisplayNameOrNull(port),
-      hintText: portField.findHintOrNull(port)?.toString(),
+      labelText: portField.findDisplayNameOrNull(),
+      hintText: portField.findHintOrNull()?.toString(),
     );
   }
 

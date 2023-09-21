@@ -97,9 +97,9 @@ void main() {
       'gender': PortField.option(initialValue: 'M', options: ['M', 'F']).withDisplayName('Gender'),
     });
 
-    expect(contactPort.getFieldByName('phone').findDisplayNameOrNull(contactPort), 'Phone');
-    expect(contactPort.getFieldByName('email').findDisplayNameOrNull(contactPort), 'Email');
-    expect(contactPort.getFieldByName('gender').findDisplayNameOrNull(contactPort), 'Gender');
+    expect(contactPort.getFieldByName('phone').findDisplayNameOrNull(), 'Phone');
+    expect(contactPort.getFieldByName('email').findDisplayNameOrNull(), 'Email');
+    expect(contactPort.getFieldByName('gender').findDisplayNameOrNull(), 'Gender');
   });
 
   test('multiline fields', () {
@@ -117,7 +117,7 @@ void main() {
       'name': PortField.string().withFallback('John'),
     });
 
-    expect(contactPort.getFieldByName('name').findHintOrNull(contactPort), 'John');
+    expect(contactPort.getFieldByName('name').findHintOrNull(), 'John');
     expect(
       await contactPort.submit(),
       isA<PortSubmitResult<Map<String, dynamic>>>().having((source) => source.data['name'], 'name', 'John'),

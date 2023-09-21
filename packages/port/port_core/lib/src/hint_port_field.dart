@@ -9,7 +9,7 @@ class HintPortField<T, S> with IsPortFieldWrapper<T, S> {
 
   HintPortField({required this.portField, required this.hintGetter});
 
-  T? getHint(Port port) {
+  T? getHint() {
     return hintGetter(port);
   }
 

@@ -8,7 +8,7 @@ class OptionsPortFieldBuilderModifier extends PortFieldBuilderModifier {
   Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
     return StyledOptionPortField(
       fieldName: fieldName,
-      labelText: portField.findDisplayNameOrNull(port),
+      labelText: portField.findDisplayNameOrNull(),
     );
   }
 

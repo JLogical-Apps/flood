@@ -9,9 +9,9 @@ class StringPortFieldBuilderModifier extends PortFieldBuilderModifier {
   Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
     return StyledTextFieldPortField(
       fieldName: fieldName,
-      labelText: portField.findDisplayNameOrNull(port),
+      labelText: portField.findDisplayNameOrNull(),
       maxLines: portField.findIsMultiline() ? 3 : 1,
-      hintText: portField.findHintOrNull(port)?.toString(),
+      hintText: portField.findHintOrNull()?.toString(),
       obscureText: portField.findIsSecret(),
     );
   }

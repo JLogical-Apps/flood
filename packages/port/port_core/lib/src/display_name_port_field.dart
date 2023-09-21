@@ -9,7 +9,7 @@ class DisplayNamePortField<T, S> with IsPortFieldWrapper<T, S> {
 
   DisplayNamePortField({required this.portField, required this.displayNameGetter});
 
-  String? getDisplayName(Port port) {
+  String? getDisplayName() {
     return displayNameGetter(port);
   }
 

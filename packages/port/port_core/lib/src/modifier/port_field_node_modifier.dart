@@ -20,11 +20,11 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return null;
   }
 
-  String? getDisplayNameOrNull(Port port, T portField) {
+  String? getDisplayNameOrNull(T portField) {
     return null;
   }
 
-  dynamic getHintOrNull(Port port, T portField) {
+  dynamic getHintOrNull(T portField) {
     return null;
   }
 

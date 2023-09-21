@@ -12,7 +12,7 @@ class FallbackPortField<T, S> with IsPortFieldWrapper<T, S> {
 
   FallbackPortField({required this.portField, required this.fallbackGetter});
 
-  T getFallback(Port port) {
+  T getFallback() {
     return fallbackGetter(port);
   }
 

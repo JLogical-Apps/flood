@@ -9,8 +9,8 @@ class DoublePortFieldBuilderModifier extends PortFieldBuilderModifier {
   Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
     return StyledDoubleFieldPortField(
       fieldName: fieldName,
-      labelText: portField.findDisplayNameOrNull(port),
-      hintText: (portField.findHintOrNull(port) as Object?)?.as<double>()?.formatIntOrDouble(),
+      labelText: portField.findDisplayNameOrNull(),
+      hintText: (portField.findHintOrNull() as Object?)?.as<double>()?.formatIntOrDouble(),
     );
   }
 

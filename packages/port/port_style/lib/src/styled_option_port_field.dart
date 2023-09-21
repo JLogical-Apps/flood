@@ -33,7 +33,7 @@ class StyledOptionPortField<T> extends HookWidget {
             field.findOptionsOrNull() ?? (throw Exception('Could not find options for port field [$field]'));
         return StyledOptionField<T>(
           value: value,
-          labelText: label == null ? (labelText ?? field.findDisplayNameOrNull(port)) : null,
+          labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
           errorText: error?.toString(),
           enabled: enabled,

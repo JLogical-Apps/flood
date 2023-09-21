@@ -63,7 +63,7 @@ void main() {
 
     final user = Data3();
     final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data3.nameField).findDisplayNameOrNull(userPort), 'Name');
+    expect(userPort.getFieldByName(Data3.nameField).findDisplayNameOrNull(), 'Name');
   });
 
   test('Port for multiline fields.', () async {
@@ -116,14 +116,14 @@ void main() {
 
     final user = Data6();
     final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(userPort), 'John');
-    expect(userPort.getFieldByName(Data6.lastNameField).findHintOrNull(userPort), 'Doe');
-    expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(userPort), 'John Doe');
-    expect(userPort.getFieldByName(Data6.errorField).findHintOrNull(userPort), isNull);
+    expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(), 'John');
+    expect(userPort.getFieldByName(Data6.lastNameField).findHintOrNull(), 'Doe');
+    expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(), 'John Doe');
+    expect(userPort.getFieldByName(Data6.errorField).findHintOrNull(), isNull);
 
     userPort[Data6.firstNameField] = 'Jill';
-    expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(userPort), 'John');
-    expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(userPort), 'Jill Doe');
+    expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(), 'John');
+    expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(), 'Jill Doe');
   });
 
   test('Port for default fields.', () async {

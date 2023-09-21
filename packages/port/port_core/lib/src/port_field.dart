@@ -173,12 +173,12 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
     return PortFieldNodeModifier.getModifierOrNull(this)?.getOptionsOrNull(this);
   }
 
-  String? findDisplayNameOrNull(Port port) {
-    return PortFieldNodeModifier.getModifierOrNull(this)?.getDisplayNameOrNull(port, this);
+  String? findDisplayNameOrNull() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.getDisplayNameOrNull(this);
   }
 
-  T? findHintOrNull(Port port) {
-    return PortFieldNodeModifier.getModifierOrNull(this)?.getHintOrNull(port, this);
+  T? findHintOrNull() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.getHintOrNull(this);
   }
 
   bool findIsMultiline() {
