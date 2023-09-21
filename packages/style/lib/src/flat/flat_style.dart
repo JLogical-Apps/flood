@@ -164,7 +164,7 @@ This is a `code block`.
       )),
       enableDrag: false,
       backgroundColor: Colors.transparent,
-      builder: (_) {
+      builder: (context) {
         return SingleChildScrollView(
           child: Padding(
             padding: MediaQuery.of(context).viewInsets,

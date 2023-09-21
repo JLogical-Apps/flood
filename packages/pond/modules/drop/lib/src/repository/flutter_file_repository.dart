@@ -70,9 +70,14 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
 
   Future<State> getStateFromFile(CrossFile file) async {
     return await filePool.withResource(() async {
-      final rawJson = await file.readAsString();
-      final state = statePersister.inflate(rawJson);
-      return state;
+      try {
+        final rawJson = await file.readAsString();
+        final state = statePersister.inflate(rawJson);
+        return state;
+      } catch (e) {
+        print('Error loading ${file.path}');
+        rethrow;
+      }
     });
   }
 }

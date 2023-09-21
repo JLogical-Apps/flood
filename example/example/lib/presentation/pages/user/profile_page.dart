@@ -25,13 +25,13 @@ class ProfilePage with IsAppPageWrapper<ProfileRoute> {
 
   @override
   Widget onBuild(BuildContext context, ProfileRoute route) {
-    final loggedInUserId = useLoggedInUserId();
+    final loggedInUserId = useLoggedInUserIdOrNull();
     final loggedInUserModel = useEntityOrNull<UserEntity>(loggedInUserId);
     final budgetsModel = useQuery(Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all());
     return ModelBuilder.page(
         model: loggedInUserModel,
         builder: (UserEntity? userEntity) {
-          if (userEntity == null) {
+          if (loggedInUserId == null || userEntity == null) {
             return StyledLoadingPage();
           }
 

@@ -21,7 +21,6 @@ class DebugAppComponent with IsAppPondComponent {
 
   @override
   Future onLoad(AppPondContext context) async {
-    print('loading!!');
     debugDialogComponents.addAll(context.appComponents.whereType<DebugDialogComponent>());
     debugPageComponents.addAll(context.appComponents.whereType<DebugPageComponent>());
   }
