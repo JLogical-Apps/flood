@@ -70,7 +70,7 @@ mixin IsAuthServiceWrapper implements AuthServiceWrapper {
   Future<void> logout() => authService.logout();
 
   @override
-  ValueStream<FutureValue<String?>> get userIdX => authService.userIdX;
+  late ValueStream<FutureValue<String?>> userIdX = authService.userIdX;
 
   late CorePondContext _context;
 

@@ -144,7 +144,6 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
         }
 
         pop();
-        _update();
 
         return true;
       },
@@ -191,6 +190,7 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
   Future<MaterialPage> _getPageFromUri(Uri uri) async {
     final (child, uriResult) = await _getAppPageFromUri(uri);
     return MaterialPage(
+      key: ValueKey(uriResult.toString()),
       child: app.wrapPage(child: child, uri: uriResult),
       name: uriResult.toString(),
     );
@@ -210,6 +210,7 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
       return buildWithoutRedirect(Builder(builder: (context) {
         return SplashPage(
           appPondContext: app.appPondContext,
+          isDoneLoading: _isAppPondContextLoaded,
           onFinishedLoading: () => _isAppPondContextLoaded = true,
           loadingPage: app.loadingPage,
         ).build(context, SplashRoute().fromPath(uri.toString()));
