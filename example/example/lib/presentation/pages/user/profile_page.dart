@@ -27,7 +27,8 @@ class ProfilePage with IsAppPageWrapper<ProfileRoute> {
   Widget onBuild(BuildContext context, ProfileRoute route) {
     final loggedInUserId = useLoggedInUserIdOrNull();
     final loggedInUserModel = useEntityOrNull<UserEntity>(loggedInUserId);
-    final budgetsModel = useQuery(Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(loggedInUserId).all());
+    final budgetsModel = useQueryOrNull(
+        loggedInUserId?.mapIfNonNull((value) => BudgetEntity.getBudgetsQuery(userId: loggedInUserId).all()));
     return ModelBuilder.page(
         model: loggedInUserModel,
         builder: (UserEntity? userEntity) {
@@ -81,7 +82,10 @@ class ProfilePage with IsAppPageWrapper<ProfileRoute> {
                 ),
                 ModelBuilder(
                     model: budgetsModel,
-                    builder: (List<BudgetEntity> budgetEntities) {
+                    builder: (List<BudgetEntity>? budgetEntities) {
+                      if (budgetEntities == null) {
+                        return StyledLoadingIndicator();
+                      }
                       return StyledCard(
                         titleText: 'Budgets',
                         leadingIcon: Icons.folder,

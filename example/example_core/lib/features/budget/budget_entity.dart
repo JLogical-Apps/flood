@@ -5,7 +5,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class BudgetEntity extends Entity<Budget> {
   static Query<BudgetEntity> getBudgetsQuery({required String userId}) {
-    return Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(userId);
+    return Query.from<BudgetEntity>().where(Budget.ownerField).isEqualTo(userId).orderByAscending(Budget.nameField);
   }
 
   Future<B> updateAddTransaction<B extends BudgetTransactionEntity>(
