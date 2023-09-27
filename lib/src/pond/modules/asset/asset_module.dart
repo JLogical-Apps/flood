@@ -31,17 +31,21 @@ class AssetModule extends AppModule {
     );
   }
 
-  void saveAssetToCache(Asset asset) {
+  void saveAssetToCache(Asset asset, {AssetProvider? assetProvider}) {
+    assetProvider ??= this.assetProvider;
+
     final id = asset.id!;
-    _getAssetCacheFromProvider(assetProvider).putIfAbsent(id, () => assetProvider.getModelById(id)).setLoaded(asset);
+    _getAssetCacheFromProvider(assetProvider).putIfAbsent(id, () => assetProvider!.getModelById(id)).setLoaded(asset);
   }
 
-  Future<void> deleteAsset(String id) async {
+  Future<void> deleteAsset(String id, {AssetProvider? assetProvider}) async {
+    assetProvider ??= this.assetProvider;
     _getAssetCacheFromProvider(assetProvider).get(id)?.setLoaded(null);
     await assetProvider.getDataSource(id).delete();
   }
 
-  Future<Asset> uploadAsset(Asset asset) async {
+  Future<Asset> uploadAsset(Asset asset, {AssetProvider? assetProvider}) async {
+    assetProvider ??= this.assetProvider;
     final uploadedAsset = await assetProvider.upload(asset);
     final id = uploadedAsset.id!;
 
