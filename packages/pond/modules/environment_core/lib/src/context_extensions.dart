@@ -8,7 +8,9 @@ import 'package:pond_core/pond_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 extension EnvironmentCoreContextExtensions on CorePondContext {
-  EnvironmentConfig get environmentConfig => locate<EnvironmentConfigCoreComponent>().environmentConfig;
+  EnvironmentConfigCoreComponent get environmentCoreComponent => locate<EnvironmentConfigCoreComponent>();
+
+  EnvironmentConfig get environmentConfig => environmentCoreComponent.environmentConfig;
 
   BuildType get buildType => locate<EnvironmentConfigCoreComponent>().buildType;
 

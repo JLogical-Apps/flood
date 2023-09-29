@@ -77,3 +77,15 @@ extension FutureStreamExtensions<T> on Future<T> {
     return subject;
   }
 }
+
+extension ListStreamExtensions<T> on List<Stream<T>> {
+  Stream<R> combineLatest<R>(R Function(List<T> values) combiner) {
+    return Rx.combineLatest(this, combiner);
+  }
+}
+
+extension FutureValueStreamExtensions<T> on Stream<FutureValue<T>> {
+  Stream<T> whereLoaded() {
+    return whereType<LoadedFutureValue<T>>().map((value) => value.data);
+  }
+}

@@ -568,6 +568,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.0"
+  messaging_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/messaging_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   meta:
     dependency: transitive
     description:
@@ -985,6 +992,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
+  user_device_token_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/user_device_token_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   utils:
     dependency: "direct main"
     description:

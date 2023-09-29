@@ -9,8 +9,6 @@ import 'package:example/presentation/port/transfer_transaction_styled_port_overr
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/valet_pages_pond_component.dart';
 import 'package:example/testing.dart';
-import 'package:example_core/features/user/user.dart';
-import 'package:example_core/features/user/user_entity.dart';
 import 'package:example_core/pond.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
@@ -23,40 +21,25 @@ Future<void> main(List<String> args) async {
     appPondContextGetter: () =>
         buildLateAsync<AppPondContext>((appPondContextGetter) async => await getAppPondContext(await getCorePondContext(
               environmentConfig: EnvironmentConfig.static.flutterAssets(),
-              additionalCoreComponents: (context) => [
+              additionalCoreComponents: [
                 FirebaseCoreComponent(app: DefaultFirebaseOptions.currentPlatform),
               ],
               repositoryImplementations: [
                 FlutterFileRepositoryImplementation(),
                 FirebaseCloudRepositoryImplementation(),
               ],
+              messagingService: MessagingService.static.environmental((environment) {
+                final environmentType = environment.environment;
+                if (environmentType == EnvironmentType.static.testing ||
+                    environmentType == EnvironmentType.static.device) {
+                  return MessagingService.static.local(refreshDuration: Duration(minutes: 5));
+                }
+
+                return MessagingService.static.firebase;
+              }),
               authServiceImplementations: [
                 FirebaseAuthServiceImplementation(),
               ],
-              onAfterLogin: (context, userId) async {
-                final token = appPondContextGetter().find<FirebaseMessagingAppComponent>().token;
-
-                final userEntity = await Query.getByIdOrNull<UserEntity>(userId).get(context.dropCoreComponent);
-                if (userEntity == null) {
-                  return;
-                }
-
-                await context.dropCoreComponent.updateEntity(
-                  userEntity,
-                  (User user) => user..deviceTokenProperty.set(token),
-                );
-              },
-              onBeforeLogout: (context, userId) async {
-                final userEntity = await Query.getByIdOrNull<UserEntity>(userId).get(context.dropCoreComponent);
-                if (userEntity == null) {
-                  return;
-                }
-
-                await context.dropCoreComponent.updateEntity(
-                  userEntity,
-                  (User user) => user..deviceTokenProperty.set(null),
-                );
-              },
             ))),
     loadingPage: StyledPage(
       body: Center(
@@ -90,24 +73,6 @@ Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async 
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(UrlBarAppComponent());
   await appPondContext.register(EnvironmentBannerAppComponent());
-  await appPondContext.register(FirebaseMessagingAppComponent(
-    onTokenGenerated: (token) async {
-      final loggedInUserId = appPondContext.find<AuthCoreComponent>().loggedInUserId;
-      if (loggedInUserId == null) {
-        return;
-      }
-
-      final userEntity = await Query.getByIdOrNull<UserEntity>(loggedInUserId).get(corePondContext.dropCoreComponent);
-      if (userEntity == null) {
-        return;
-      }
-
-      await corePondContext.dropCoreComponent.updateEntity(
-        userEntity,
-        (User user) => user..deviceTokenProperty.set(token),
-      );
-    },
-  ));
   await appPondContext.register(TestingSetupAppComponent(onSetup: () async {
     if (testingLoggedIn) {
       await setupTesting(corePondContext);

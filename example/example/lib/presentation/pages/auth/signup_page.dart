@@ -77,12 +77,14 @@ class SignupPage with IsAppPageWrapper<SignupRoute> {
 
               try {
                 final userId = await context.find<AuthCoreComponent>().signup(data['email'], data['password']);
+                final deviceToken = context.find<MessagingCoreComponent>().deviceToken;
 
                 await context.dropCoreComponent.updateEntity(
                   UserEntity()..id = userId,
                   (User user) => user
                     ..emailProperty.set(data['email'])
-                    ..nameProperty.set(data['name']),
+                    ..nameProperty.set(data['name'])
+                    ..deviceTokenProperty.set(deviceToken),
                 );
 
                 final budgetEntity = await context.dropCoreComponent.updateEntity(
