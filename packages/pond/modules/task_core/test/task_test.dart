@@ -5,38 +5,33 @@ import 'package:test/test.dart';
 void main() {
   test('local task runner', () async {
     final taskRunner = TaskRunner.static.local;
+    final echoTask = Task(name: 'echo', runner: (EchoRoute route) => route.echoField.value);
     expect(
       await taskRunner.run(
-          EchoTask(),
-          TaskRequest(
-            path: Uri(pathSegments: ['echo', 'Hello World!']).toString(),
-          )),
+        echoTask,
+        EchoRoute()..echoField.set('Hello World!'),
+      ),
       'Hello World!',
     );
 
     expect(
-      await (EchoTask()..echoField.set('Hey!')).executeOn(taskRunner: taskRunner),
+      await echoTask.executeOn(
+        taskRunner: taskRunner,
+        route: EchoRoute()..echoField.set('Hey!'),
+      ),
       'Hey!',
     );
   });
 }
 
-class EchoTask with IsTask<EchoTask, String>, IsRoute<EchoTask>, IsPathDefinitionWrapper {
+class EchoRoute with IsRoute<EchoRoute> {
   late final echoField = field<String>(name: 'input').required();
 
   @override
   PathDefinition get pathDefinition => PathDefinition.string('echo').property(echoField);
 
   @override
-  EchoTask copy() {
-    return EchoTask();
-  }
-
-  @override
-  String get name => 'echo';
-
-  @override
-  Future<String> onRun() async {
-    return echoField.value;
+  EchoRoute copy() {
+    return EchoRoute();
   }
 }

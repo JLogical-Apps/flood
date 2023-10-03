@@ -5,7 +5,9 @@ import 'package:jlogical_utils_cli/jlogical_utils_cli.dart';
 
 Future<void> main(List<String> args) async {
   final corePondContext = await getCorePondContext(
-      environmentConfig: EnvironmentConfig.static.fileAssets(projectDirectory: Directory.current.parent / 'example'));
+    environmentConfig: EnvironmentConfig.static.fileAssets(projectDirectory: Directory.current.parent / 'example'),
+    messagingService: MessagingService.static.blank,
+  );
   final automatePondContext = AutomatePondContext(corePondContext: corePondContext);
 
   await automatePondContext.register(AppIconAutomateComponent(
@@ -14,7 +16,7 @@ Future<void> main(List<String> args) async {
     padding: 80,
   ));
   await automatePondContext.register(OpsAutomateComponent(environments: {
-    EnvironmentType.static.qa: OpsEnvironment.static.firebaseEmulator,
+    EnvironmentType.static.qa: OpsEnvironment.static.appwriteLocal,
     EnvironmentType.static.staging: OpsEnvironment.static.firebase,
     EnvironmentType.static.production: OpsEnvironment.static.firebase,
   }));

@@ -1,16 +1,35 @@
+import 'dart:async';
+
 import 'package:path_core/path_core.dart';
 import 'package:task_core/src/task/task_runner.dart';
 
-abstract class Task<T extends Task<dynamic, O>, O> with IsRoute<T>, IsPathDefinitionWrapper {
+abstract class Task<R extends Route, T> {
   String get name;
 
-  Future<O> onRun();
+  Future<T> onRun(R route);
+
+  factory Task({required String name, required FutureOr<T> Function(R route) runner}) =>
+      _TaskImpl(name: name, runner: runner);
 }
 
-mixin IsTask<T extends Task<dynamic, O>, O> implements Task<T, O> {}
+mixin IsTask<R extends Route, T> implements Task<R, T> {}
 
-extension TaskExtensions<T extends Task<dynamic, O>, O> on Task<T, O> {
-  Future<O> executeOn({required TaskRunner taskRunner}) {
-    return taskRunner.runTask(this);
+extension TaskExtensions<R extends Route, T> on Task<R, T> {
+  Future<T> executeOn({required R route, required TaskRunner taskRunner}) {
+    return taskRunner.run(this, route);
+  }
+}
+
+class _TaskImpl<R extends Route, T> with IsTask<R, T> {
+  @override
+  final String name;
+
+  final FutureOr<T> Function(R route) runner;
+
+  _TaskImpl({required this.name, required this.runner});
+
+  @override
+  Future<T> onRun(R route) async {
+    return await runner(route);
   }
 }

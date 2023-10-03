@@ -152,6 +152,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.3"
+  cron:
+    dependency: transitive
+    description:
+      name: cron
+      sha256: d98aa8cdad0cccdb6b098e6a1fb89339c180d8a229145fa4cd8c6fc538f0e35f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.1"
   crypto:
     dependency: transitive
     description:
@@ -476,6 +484,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
+  path_core:
+    dependency: "direct main"
+    description:
+      path: "../../../path_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   persistence_core:
     dependency: "direct main"
     description:
@@ -705,6 +720,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  task_core:
+    dependency: "direct main"
+    description:
+      path: "../task_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   term_glyph:
     dependency: transitive
     description:
