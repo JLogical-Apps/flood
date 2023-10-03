@@ -32,6 +32,7 @@ class SplashPage extends HookWidget {
         } catch (e, stack) {
           logError(e, stack: stack);
           error.value = e.toString();
+          rethrow;
         }
       }();
     });
