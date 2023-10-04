@@ -10,3 +10,6 @@ version: 3.0.0
 
 dependencies:
   lints: ^2.0.0
+
+dev_dependencies:
+  melos: ^3.1.1
