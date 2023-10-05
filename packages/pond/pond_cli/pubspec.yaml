@@ -17,6 +17,7 @@ dependencies:
   lumberdash: ^3.0.0
   path: ^1.8.0
   process_run: ^0.12.5+2
+  xcodeproj: ^0.2.3
 
   persistence_core:
     git:

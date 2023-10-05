@@ -15,4 +15,6 @@ extension StringExtensions on String {
   String withIndent(int spaces) {
     return split('\n').map((line) => (' ' * spaces) + line).join('\n');
   }
+
+  String get withoutAnsiEscapeCodes => replaceAll(RegExp(r'\x1B\[[0-?]*[ -/]*[@-~]'), '');
 }

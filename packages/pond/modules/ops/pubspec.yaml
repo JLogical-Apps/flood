@@ -10,6 +10,7 @@ version: 0.0.1
 
 dependencies:
   collection: ^1.16.0
+  dart_appwrite: ^10.0.0
 
   drop_core:
     git:

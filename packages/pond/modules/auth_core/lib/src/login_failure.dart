@@ -8,6 +8,8 @@ abstract class LoginFailure {
   static LoginFailure userNotFound() => UserNotFoundLoginFailure();
 
   static LoginFailure wrongPassword() => WrongPasswordLoginFailure();
+
+  static LoginFailure passwordResetRequired() => PasswordResetRequiredLoginFailure();
 }
 
 class InvalidEmailLoginFailure implements LoginFailure {
@@ -28,4 +30,9 @@ class UserNotFoundLoginFailure implements LoginFailure {
 class WrongPasswordLoginFailure implements LoginFailure {
   @override
   String get displayText => 'Cannot find account with this email and password!';
+}
+
+class PasswordResetRequiredLoginFailure implements LoginFailure {
+  @override
+  String get displayText => 'You must reset your password!';
 }

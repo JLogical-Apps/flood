@@ -1,5 +1,5 @@
 import 'package:environment_core/environment_core.dart';
-import 'package:ops/src/firebase_ops_utils.dart';
+import 'package:ops/src/firebase/firebase_ops_utils.dart';
 import 'package:ops/src/ops_environment.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';

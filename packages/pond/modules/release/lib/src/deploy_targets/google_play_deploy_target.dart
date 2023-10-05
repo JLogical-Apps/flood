@@ -15,7 +15,7 @@ class GooglePlayDeployTarget with IsDeployTarget {
 
   @override
   Future onDeploy(AutomateCommandContext context, ReleasePlatform platform) async {
-    final identifier = await getIdentifier(context);
+    final identifier = await context.getAndroidIdentifier();
 
     final jsonKeyFile = await createGooglePlayApiKeyFile(
       context,
@@ -43,13 +43,6 @@ class GooglePlayDeployTarget with IsDeployTarget {
       '--skip_upload_images '
       '--skip_upload_screenshots ',
     );
-  }
-
-  Future<String> getIdentifier(AutomateCommandContext context) async {
-    final buildGradleFile = context.appDirectory / 'android' / 'app' - 'build.gradle';
-    final buildGradle = await DataSource.static.file(buildGradleFile).get();
-    final applicationId = RegExp(r'applicationId\s+"([^"]+)"').firstMatch(buildGradle);
-    return applicationId?.group(1) ?? (throw Exception('Could not determine applicationId from build.gradle.'));
   }
 
   Future<File> createGooglePlayApiKeyFile(AutomateCommandContext context, {required String apiKeyEncoded}) async {

@@ -19,6 +19,11 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "v3.0"
       path: packages/pond/modules/actions
+  appwrite_app:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "v3.0"
+      path: packages/pond/modules/appwrite_app
   auth:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git

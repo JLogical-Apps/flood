@@ -1,9 +1,11 @@
+import 'dart:io';
+
+import 'package:collection/collection.dart';
 import 'package:environment_core/environment_core.dart';
+import 'package:ops/src/appwrite/appwrite_platform.dart';
 import 'package:ops/src/ops_environment.dart';
-import 'package:path_core/path_core.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
-import 'package:task_core/task_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
@@ -44,25 +46,15 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
 
   @override
   Future<void> onDeploy(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
-    final outputDirectory = context.coreDirectory / 'tool' / 'output';
+    await context.appwriteOutputDirectory.ensureCreated();
 
     final projectId = await _getProjectId(context, environmentType: environmentType);
-    final apiKey = await _getApiKey(context, environmentType: environmentType);
 
-    await context.run(
-      'appwrite client --endpoint http://localhost/v1 --projectId $projectId --key $apiKey',
-      workingDirectory: outputDirectory,
-    );
+    await context.appwriteTerminal.run('appwrite login', interactable: true);
 
-    final tasks = [
-      Task(name: 'find-project', runner: (Route route) => route.pathDefinition),
-    ];
+    await _updatePlatforms(context, projectId: projectId);
 
-    for (final task in tasks) {
-      await context.run('echo ${task.name}');
-    }
-
-    await DataSource.static.directory(outputDirectory).delete();
+    await DataSource.static.directory(context.appwriteOutputDirectory).delete();
   }
 
   @override
@@ -71,10 +63,7 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
       throw Exception('Ensure docker is installed and running!');
     }
 
-    await context.coreProject.run(
-      'docker compose stop',
-      workingDirectory: context.fileSystem.coreDirectory / 'appwrite',
-    );
+    await context.appwriteTerminal.run('docker compose stop');
   }
 
   Future<void> _installConfigFiles(AutomateCommandContext context) async {
@@ -126,11 +115,44 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     );
   }
 
-  Future<String> _getApiKey(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
-    return await context.getHiddenStateOrElse(
-      'appwrite/${environmentType.name}/apiKey',
-      () => context.input(
-          'Input your Appwrite API Key. To do this, go to your project settings, View API keys, create an API key, give it access to all scopes, then paste in the API Key Secret.'),
-    );
+  Future<List<AppwritePlatform>> _getPlatforms(AutomateCommandContext context, {required String projectId}) async {
+    final output = await context.appwriteTerminal.run('appwrite projects listPlatforms --projectId $projectId');
+
+    return output
+        .split('\n')
+        .where((line) => line.contains('│'))
+        .skip(1)
+        .map((line) => line.withoutAnsiEscapeCodes)
+        .map((line) {
+      final values = line.split('│').map((e) => e.trim()).toList();
+      return AppwritePlatform(
+        id: values[0],
+        name: values[3],
+        type: values[4],
+        key: values[5],
+      );
+    }).toList();
   }
+
+  Future<void> _updatePlatforms(AutomateCommandContext context, {required String projectId}) async {
+    final desiredKeyByType = {
+      'flutter-android': await context.getAndroidIdentifier(),
+      'flutter-ios': await context.getIosIdentifier(),
+      'flutter-web': 'localhost',
+    };
+    final existingPlatforms = await _getPlatforms(context, projectId: projectId);
+
+    for (final (type, key) in desiredKeyByType.entryRecords) {
+      if (existingPlatforms.none((platform) => type == platform.type && key == platform.key)) {
+        await context.appwriteTerminal
+            .run('appwrite projects createPlatform --projectId $projectId --type $type --name $key --key $key');
+      }
+    }
+  }
+}
+
+extension on AutomateCommandContext {
+  Directory get appwriteOutputDirectory => coreDirectory / 'appwrite' / 'output';
+
+  Terminal get appwriteTerminal => terminal.withWorkingDirectory(appwriteOutputDirectory);
 }

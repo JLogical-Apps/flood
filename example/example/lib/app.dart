@@ -23,10 +23,14 @@ Future<void> main(List<String> args) async {
               environmentConfig: EnvironmentConfig.static.flutterAssets(),
               additionalCoreComponents: [
                 FirebaseCoreComponent(app: DefaultFirebaseOptions.currentPlatform),
+                AppwriteCoreComponent(
+                  config: AppwriteConfig.localhost(projectId: '651b48116fc13fcb79be'),
+                ),
               ],
               repositoryImplementations: [
                 FlutterFileRepositoryImplementation(),
-                FirebaseCloudRepositoryImplementation(),
+                // FirebaseCloudRepositoryImplementation(),
+                AppwriteCloudRepositoryImplementation(),
               ],
               messagingService: MessagingService.static.environmental((environment) {
                 final environmentType = environment.environment;
@@ -38,7 +42,8 @@ Future<void> main(List<String> args) async {
                 return MessagingService.static.firebase;
               }),
               authServiceImplementations: [
-                FirebaseAuthServiceImplementation(),
+                AppwriteAuthServiceImplementation(),
+                // FirebaseAuthServiceImplementation(),
               ],
             ))),
     loadingPage: StyledPage(

@@ -1,7 +1,7 @@
 import 'package:environment_core/environment_core.dart';
-import 'package:ops/src/appwrite_local_ops_environment.dart';
-import 'package:ops/src/firebase_emulator_ops_environment.dart';
-import 'package:ops/src/firebase_ops_environment.dart';
+import 'package:ops/src/appwrite/appwrite_local_ops_environment.dart';
+import 'package:ops/src/firebase/firebase_emulator_ops_environment.dart';
+import 'package:ops/src/firebase/firebase_ops_environment.dart';
 import 'package:pond_cli/pond_cli.dart';
 
 abstract class OpsEnvironment {

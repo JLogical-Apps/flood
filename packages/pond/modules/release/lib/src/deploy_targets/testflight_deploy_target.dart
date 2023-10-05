@@ -6,12 +6,11 @@ import 'package:pond_cli/pond_cli.dart';
 import 'package:release/src/deploy_target.dart';
 import 'package:release/src/release_platform.dart';
 import 'package:utils_core/utils_core.dart';
-import 'package:xcodeproj/xcodeproj.dart';
 
 class TestflightDeployTarget with IsDeployTarget {
   @override
   Future onPreBuild(AutomateCommandContext context, ReleasePlatform platform) async {
-    final identifier = getIdentifier(context);
+    final identifier = await context.getIosIdentifier();
 
     final apiKeyFile = await createApiKeyFile(
       context,
@@ -38,7 +37,7 @@ class TestflightDeployTarget with IsDeployTarget {
 
   @override
   Future onDeploy(AutomateCommandContext context, ReleasePlatform platform) async {
-    final identifier = getIdentifier(context);
+    final identifier = await context.getIosIdentifier();
 
     final apiKeyFile = await createApiKeyFile(
       context,
@@ -67,15 +66,6 @@ class TestflightDeployTarget with IsDeployTarget {
         'MATCH_PASSWORD': matchPassword,
       },
     );
-  }
-
-  String getIdentifier(AutomateCommandContext context) {
-    final xcodeFile = context.fileSystem.appDirectory / 'ios' - 'Runner.xcodeproj';
-    final xcodeProject = XCodeProj(xcodeFile.path);
-
-    final target = xcodeProject.targets.first;
-    final buildConfiguration = target.buildConfigurationList!.buildConfigurations.first;
-    return buildConfiguration.buildSettings['PRODUCT_BUNDLE_IDENTIFIER']!;
   }
 
   Future<String> getApiKeyEncoded(AutomateCommandContext context) async {

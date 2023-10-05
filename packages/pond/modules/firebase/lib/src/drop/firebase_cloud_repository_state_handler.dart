@@ -37,7 +37,7 @@ class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
       json.remove(State.typeField);
     }
 
-    await doc.set(json);
+    await doc.set(json, SetOptions(merge: true));
 
     return state;
   }

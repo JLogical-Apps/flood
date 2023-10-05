@@ -118,6 +118,8 @@ extension MapExtensions<K, V> on Map<K, V> {
   bool isA<RK, RV>() {
     return keys.every((key) => key is RK) && values.every((value) => value is RV);
   }
+
+  Iterable<(K, V)> get entryRecords => mapToIterable((key, value) => (key, value));
 }
 
 extension JsonExtensions on Map<String, dynamic> {
