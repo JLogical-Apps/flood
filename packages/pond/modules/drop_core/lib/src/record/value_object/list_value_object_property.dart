@@ -10,7 +10,20 @@ class ListValueObjectProperty<T, L> with IsValueObjectProperty<List<T>, List<T>,
   @override
   List<T> value;
 
-  ListValueObjectProperty({required this.property, List<T>? value}) : value = value ?? [];
+  final Type valueType;
+
+  final Type listType;
+
+  ListValueObjectProperty({required this.property, List<T>? value})
+      : value = value ?? [],
+        valueType = T,
+        listType = List<T>;
+
+  @override
+  Type get getterType => listType;
+
+  @override
+  Type get setterType => listType;
 
   @override
   String get name => property.name;

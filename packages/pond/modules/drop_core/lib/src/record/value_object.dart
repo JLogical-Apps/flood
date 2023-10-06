@@ -78,7 +78,7 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
       ValueObjectProperty.reference<E>(name: name);
 
   ComputedValueObjectProperty<T, dynamic> computed<T>({required String name, required T Function() computation}) =>
-      ValueObjectProperty.computed(name: name, computation: computation);
+      ValueObjectProperty.computed<T>(name: name, computation: computation);
 
   CreationTimeProperty creationTime() => ValueObjectProperty.creationTime();
 }

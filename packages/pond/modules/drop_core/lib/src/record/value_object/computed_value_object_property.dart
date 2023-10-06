@@ -7,7 +7,15 @@ class ComputedValueObjectProperty<T, L> with IsValueObjectProperty<T, void, L, C
 
   final T Function() computation;
 
-  ComputedValueObjectProperty({required this.name, required this.computation});
+  @override
+  final Type getterType;
+
+  @override
+  final Type setterType;
+
+  ComputedValueObjectProperty({required this.name, required this.computation})
+      : getterType = T,
+        setterType = T;
 
   @override
   State modifyState(State state) {
@@ -21,6 +29,9 @@ class ComputedValueObjectProperty<T, L> with IsValueObjectProperty<T, void, L, C
 
   @override
   T get value => computation();
+
+  @override
+  T? get valueOrNull => guard(() => computation());
 
   @override
   ComputedValueObjectProperty<T, L> copy() {

@@ -40,9 +40,7 @@ abstract class AppwriteQueryRequestReducer<QR extends QueryRequest<dynamic, T>, 
   State getStateFromDocument(Document doc) {
     final json = doc.data;
     json[State.idField] = doc.$id;
-    if (inferredType != null) {
-      json[State.typeField] = inferredType!;
-    }
+    json[State.typeField] = json.containsKey('t_type') ? json.remove('t_type') : inferredType;
 
     return statePersister.inflate(json);
   }

@@ -11,7 +11,17 @@ class MapValueObjectProperty<K, V, L>
   @override
   Map<K, V> value;
 
-  MapValueObjectProperty({required this.property, Map<K, V>? value}) : value = value ?? {};
+  final Type mapType;
+
+  MapValueObjectProperty({required this.property, Map<K, V>? value})
+      : value = value ?? {},
+        mapType = Map<K, V>;
+
+  @override
+  Type get getterType => mapType;
+
+  @override
+  Type get setterType => mapType;
 
   @override
   String get name => property.name;

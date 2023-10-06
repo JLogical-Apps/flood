@@ -33,9 +33,15 @@ import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
+typedef SimpleValueObjectProperty<T> = ValueObjectProperty<T, dynamic, dynamic, ValueObjectProperty>;
+
 abstract class ValueObjectProperty<G, S, L, V extends ValueObjectProperty<dynamic, dynamic, dynamic, dynamic>>
     implements ValueObjectBehavior {
   String get name;
+
+  Type get getterType;
+
+  Type get setterType;
 
   G get value;
 
@@ -96,12 +102,6 @@ mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements V
 }
 
 extension ValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
-  Type get getterType => G;
-
-  Type get setterType => S;
-
-  Type get loadType => L;
-
   ValidatorValueObjectProperty<G, S, L> withValidator(Validator<G, String> validator) {
     return ValidatorValueObjectProperty(property: this, validator: validator);
   }
@@ -223,6 +223,12 @@ mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, 
     implements ValueObjectPropertyWrapper<G, S, L, V> {
   @override
   String get name => property.name;
+
+  @override
+  Type get getterType => property.getterType;
+
+  @override
+  Type get setterType => property.setterType;
 
   @override
   G get value => property.value;

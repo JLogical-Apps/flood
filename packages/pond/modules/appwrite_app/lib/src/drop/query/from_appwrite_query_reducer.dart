@@ -38,6 +38,6 @@ class FromAppwriteQueryReducer extends AppwriteQueryReducer<FromQuery> {
     final typeNames = types.map((type) => type.name).toList();
 
     return AppwriteQuery(databases: databases, collectionId: rootPath)
-        .withQuery(appwrite.Query.equal(State.typeField, typeNames));
+        .withQuery(appwrite.Query.equal('t_type', typeNames));
   }
 }

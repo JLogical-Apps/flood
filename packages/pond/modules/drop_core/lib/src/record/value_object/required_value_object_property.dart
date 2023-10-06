@@ -9,7 +9,14 @@ import 'package:utils_core/utils_core.dart';
 class RequiredValueObjectProperty<T, S, L> with IsValueObjectProperty<T, S, L, RequiredValueObjectProperty<T, S, L>> {
   final ValueObjectProperty<T?, S?, L, dynamic> property;
 
-  RequiredValueObjectProperty({required this.property});
+  @override
+  final Type getterType;
+  @override
+  final Type setterType;
+
+  RequiredValueObjectProperty({required this.property})
+      : getterType = T,
+        setterType = S;
 
   @override
   State modifyState(State state) {

@@ -12,6 +12,12 @@ class IsNotBlankValueObjectProperty<L> with IsValueObjectProperty<String, String
   IsNotBlankValueObjectProperty({required this.property});
 
   @override
+  Type get getterType => String;
+
+  @override
+  Type get setterType => String;
+
+  @override
   State modifyState(State state) {
     return property.modifyState(state);
   }

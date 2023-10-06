@@ -9,7 +9,13 @@ class FallbackReplacementValueObjectProperty<T, L>
 
   final T Function() fallbackReplacement;
 
-  FallbackReplacementValueObjectProperty({required this.property, required this.fallbackReplacement});
+  @override
+  final Type getterType;
+
+  @override
+  Type get setterType => property.setterType;
+
+  FallbackReplacementValueObjectProperty({required this.property, required this.fallbackReplacement}) : getterType = T;
 
   @override
   State modifyState(State state) {

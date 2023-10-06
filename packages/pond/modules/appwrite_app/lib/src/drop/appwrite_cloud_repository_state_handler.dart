@@ -5,6 +5,7 @@ import 'package:appwrite_app/src/util/core_pond_context_extensions.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:log_core/log_core.dart';
 import 'package:type/type.dart';
+import 'package:utils/utils.dart';
 
 class AppwriteCloudRepositoryStateHandler with IsRepositoryStateHandler {
   final AppwriteCloudRepository repository;
@@ -35,6 +36,29 @@ class AppwriteCloudRepositoryStateHandler with IsRepositoryStateHandler {
 
     if (state.type == inferredType) {
       json.remove(State.typeField);
+    } else {
+      json['t_type'] = json.remove(State.typeField);
+    }
+
+    final existingDocument = await guardAsync(() => databases.getDocument(
+          databaseId: AppwriteCloudRepository.defaultDatabaseId,
+          collectionId: repository.rootPath,
+          documentId: state.id!,
+        ));
+    if (existingDocument == null) {
+      await databases.createDocument(
+        documentId: state.id!,
+        collectionId: repository.rootPath,
+        databaseId: AppwriteCloudRepository.defaultDatabaseId,
+        data: json,
+      );
+    } else {
+      await databases.updateDocument(
+        documentId: state.id!,
+        collectionId: repository.rootPath,
+        databaseId: AppwriteCloudRepository.defaultDatabaseId,
+        data: json,
+      );
     }
 
     await databases.updateDocument(
