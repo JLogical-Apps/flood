@@ -46,12 +46,16 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
       await _installAppwriteCli(context);
     }
 
-    await _installConfigFiles(context);
+    if (!await _hasConfigFiles(context)) {
+      await _installConfigFiles(context);
+    }
 
-    await context.coreProject.run(
-      'docker compose up -d --remove-orphans',
-      workingDirectory: context.coreDirectory / 'appwrite',
-    );
+    await context.confirmAndExecutePlan(Plan([
+      PlanItem.static.run(
+        'docker compose up -d --remove-orphans',
+        workingDirectory: context.appwriteDirectory,
+      ),
+    ]));
   }
 
   @override
@@ -75,7 +79,14 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
       throw Exception('Ensure docker is installed and running!');
     }
 
-    await context.appwriteTerminal.run('docker compose stop');
+    await context.confirmAndExecutePlan(Plan([
+      PlanItem.static.run('docker compose stop', workingDirectory: context.appwriteDirectory),
+    ]));
+  }
+
+  Future<bool> _hasConfigFiles(AutomateCommandContext context) async {
+    return await DataSource.static.file(context.coreDirectory / 'appwrite' - 'docker-compose.yml').exists() &&
+        await DataSource.static.file(context.coreDirectory / 'appwrite' - '.env').exists();
   }
 
   Future<void> _installConfigFiles(AutomateCommandContext context) async {
@@ -162,12 +173,15 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     };
     final existingPlatforms = await _getPlatforms(context, projectId: projectId);
 
-    for (final (type, key) in desiredKeyByType.entryRecords) {
-      if (existingPlatforms.none((platform) => type == platform.type && key == platform.key)) {
-        await context.appwriteTerminal
-            .run('appwrite projects createPlatform --projectId $projectId --type $type --name $key --key $key');
-      }
-    }
+    final commands = desiredKeyByType
+        .where((type, key) => existingPlatforms.none((platform) => type == platform.type && key == platform.key))
+        .mapToIterable((type, key) => PlanItem.static.run(
+              'appwrite projects createPlatform --projectId $projectId --type $type --name $key --key $key',
+              workingDirectory: context.appwriteOutputDirectory,
+            ))
+        .toList();
+
+    await context.confirmAndExecutePlan(Plan(commands));
   }
 
   Future<void> _updateAppwriteJson(AutomateCommandContext context, {required Client client}) async {
@@ -176,23 +190,31 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     final existingCollections = (await databases.listCollections(databaseId: _databaseId)).collections;
     final newCollections = await _getCollections(context);
 
+    final commands = <PlanItem>[];
+
     for (final collection in newCollections) {
-      await _updateOrCreateCollection(
+      commands.addAll(await _updateOrCreateCollectionPlanItems(
         context,
         databases: databases,
         collection: collection,
         existingCollections: existingCollections,
-      );
+      ));
     }
 
     final deletedCollections = existingCollections
         .where((collection) => newCollections.none((collection) => collection.$id == collection.$id));
     for (final deletedCollection in deletedCollections) {
-      await _deleteCollection(context, databases: databases, collection: deletedCollection);
+      commands.addAll(await _deleteCollectionPlanItems(
+        context,
+        databases: databases,
+        collection: deletedCollection,
+      ));
     }
+
+    await context.confirmAndExecutePlan(Plan(commands));
   }
 
-  Future<void> _updateOrCreateCollection(
+  Future<List<PlanItem>> _updateOrCreateCollectionPlanItems(
     AutomateCommandContext context, {
     required Databases databases,
     required Collection collection,
@@ -201,9 +223,9 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     final existingCollection =
         existingCollections.firstWhereOrNull((existingCollection) => existingCollection.$id == collection.$id);
     if (existingCollection == null) {
-      await _createCollection(context, databases: databases, collection: collection);
+      return await _createCollectionPlanItems(context, databases: databases, collection: collection);
     } else {
-      await _updateCollection(
+      return await _updateCollectionPlanItems(
         context,
         databases: databases,
         collection: collection,
@@ -212,26 +234,39 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     }
   }
 
-  Future<void> _createCollection(
+  Future<List<PlanItem>> _createCollectionPlanItems(
     AutomateCommandContext context, {
     required Databases databases,
     required Collection collection,
   }) async {
-    context.log('Creating Collection [${collection.$id}]');
-    await databases.createCollection(
-      databaseId: collection.databaseId,
-      collectionId: collection.$id,
-      name: collection.name,
-      permissions: collection.$permissions.cast<String>(),
-      enabled: collection.enabled,
-      documentSecurity: collection.documentSecurity,
+    final createCollectionPlanItem = PlanItem.static.execute(
+      'Create Collection [${collection.$id}]',
+      (context) async => await databases.createCollection(
+        databaseId: collection.databaseId,
+        collectionId: collection.$id,
+        name: collection.name,
+        permissions: collection.$permissions.cast<String>(),
+        enabled: collection.enabled,
+        documentSecurity: collection.documentSecurity,
+      ),
     );
+
+    final attributePlanItems = <PlanItem>[];
     for (final attribute in collection.attributes) {
-      await _updateOrCreateAttribute(context, databases: databases, collection: collection, attribute: attribute);
+      final planItem = await _updateOrCreateAttributePlanItem(context,
+          databases: databases, collection: collection, attribute: attribute);
+      if (planItem != null) {
+        attributePlanItems.add(planItem);
+      }
     }
+
+    return [
+      createCollectionPlanItem,
+      ...attributePlanItems,
+    ];
   }
 
-  Future<void> _updateOrCreateAttribute(
+  Future<PlanItem?> _updateOrCreateAttributePlanItem(
     AutomateCommandContext context, {
     required Databases databases,
     required Collection collection,
@@ -244,9 +279,14 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
         ));
 
     if (existingAttribute == null) {
-      await _createAttribute(context, databases: databases, collection: collection, attribute: attribute);
+      return await _createAttributePlanItem(
+        context,
+        databases: databases,
+        collection: collection,
+        attribute: attribute,
+      );
     } else {
-      await _updateAttribute(
+      return await _updateAttributePlanItem(
         context,
         databases: databases,
         collection: collection,
@@ -256,14 +296,12 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     }
   }
 
-  Future<void> _createAttribute(
+  Future<PlanItem> _createAttributePlanItem(
     AutomateCommandContext context, {
     required Databases databases,
     required Collection collection,
     required dynamic attribute,
   }) async {
-    context.log('  Creating Attribute [${attribute['key']}]');
-
     final createAttributeFunctionByType = {
       'boolean': (attribute) => databases.createBooleanAttribute(
             databaseId: _databaseId,
@@ -303,17 +341,26 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
           ),
     };
 
-    await createAttributeFunctionByType[attribute['type']]!(attribute);
+    return PlanItem.static.execute(
+      '  Create attribute [${attribute['key']}]',
+      (context) => createAttributeFunctionByType[attribute['type']]!(attribute),
+    );
   }
 
-  Future<void> _updateAttribute(
+  Future<PlanItem?> _updateAttributePlanItem(
     AutomateCommandContext context, {
     required Databases databases,
     required Collection collection,
     required dynamic attribute,
     required dynamic existingAttribute,
   }) async {
-    context.log('  Updating Attribute [${attribute['key']}]');
+    if (_areAttributesEqual(attribute, existingAttribute)) {
+      return null;
+    }
+
+    print(attribute);
+    print(existingAttribute);
+
     final updateAttributeFunctionByType = {
       'boolean': (attribute) => databases.updateBooleanAttribute(
             databaseId: _databaseId,
@@ -356,57 +403,100 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
           ),
     };
 
-    await updateAttributeFunctionByType[attribute['type']]!(attribute);
+    return PlanItem.static.execute(
+      '  Update Attribute [${attribute['key']}]',
+      (context) => updateAttributeFunctionByType[attribute['type']]!(attribute),
+    );
   }
 
-  Future<void> _updateCollection(
+  bool _areAttributesEqual(dynamic a, dynamic b) {
+    return a['type'] == b['type'] && a['key'] == b['key'] && a['required'] == b['required'];
+  }
+
+  Future<List<PlanItem>> _updateCollectionPlanItems(
     AutomateCommandContext context, {
     required Databases databases,
     required Collection collection,
     required Collection existingCollection,
   }) async {
-    context.log('Updating Collection [${collection.$id}]');
-    await databases.updateCollection(
-      databaseId: collection.databaseId,
-      collectionId: collection.$id,
-      name: collection.name,
-      permissions: collection.$permissions.cast<String>(),
-      enabled: collection.enabled,
-      documentSecurity: collection.documentSecurity,
-    );
+    final attributePlanItems = <PlanItem>[];
     for (final attribute in collection.attributes) {
-      await _updateOrCreateAttribute(context, databases: databases, collection: collection, attribute: attribute);
+      final planItem = await _updateOrCreateAttributePlanItem(context,
+          databases: databases, collection: collection, attribute: attribute);
+      if (planItem != null) {
+        attributePlanItems.add(planItem);
+      }
     }
+
     final unusedAttributes = existingCollection.attributes
         .where((existingAttribute) =>
             collection.attributes.none((attribute) => attribute['key'] == existingAttribute['key']))
         .toList();
     for (final unusedAttribute in unusedAttributes) {
-      await _deleteAttribute(context, databases: databases, collection: collection, attribute: unusedAttribute);
+      final planItem = await _deleteAttributePlanItem(context,
+          databases: databases, collection: collection, attribute: unusedAttribute);
+      if (planItem != null) {
+        attributePlanItems.add(planItem);
+      }
     }
+
+    final updateCollectionPlanItem =
+        !_areCollectionsEqual(collection, existingCollection) || attributePlanItems.isNotEmpty
+            ? PlanItem.static.execute(
+                'Update Collection [${collection.$id}]',
+                (context) async => await databases.updateCollection(
+                  databaseId: collection.databaseId,
+                  collectionId: collection.$id,
+                  name: collection.name,
+                  permissions: collection.$permissions.cast<String>(),
+                  enabled: collection.enabled,
+                  documentSecurity: collection.documentSecurity,
+                ),
+              )
+            : null;
+
+    return [
+      if (updateCollectionPlanItem != null) updateCollectionPlanItem,
+      ...attributePlanItems,
+    ];
   }
 
-  Future<void> _deleteAttribute(
+  bool _areCollectionsEqual(Collection a, Collection b) {
+    return a.$id == b.$id &&
+        a.name == b.name &&
+        DeepCollectionEquality().equals(a.$permissions, b.$permissions) &&
+        a.enabled == b.enabled &&
+        a.documentSecurity == b.documentSecurity;
+  }
+
+  Future<PlanItem?> _deleteAttributePlanItem(
     AutomateCommandContext context, {
     required Databases databases,
     required Collection collection,
     required dynamic attribute,
   }) async {
-    context.log('  Deleting Attribute [${attribute['key']}]');
-    await databases.deleteAttribute(
-      databaseId: _databaseId,
-      collectionId: collection.$id,
-      key: attribute['key'],
+    return PlanItem.static.execute(
+      '  Delete Attribute [${attribute['key']}',
+      (context) => databases.deleteAttribute(
+        databaseId: _databaseId,
+        collectionId: collection.$id,
+        key: attribute['key'],
+      ),
     );
   }
 
-  Future<void> _deleteCollection(
+  Future<List<PlanItem>> _deleteCollectionPlanItems(
     AutomateCommandContext context, {
     required Databases databases,
     required Collection collection,
   }) async {
     context.log('Deleting Collection [${collection.$id}]');
-    await databases.deleteCollection(databaseId: _databaseId, collectionId: collection.$id);
+    return [
+      PlanItem.static.execute(
+        'Delete Collection [${collection.$id}]',
+        (context) => databases.deleteCollection(databaseId: _databaseId, collectionId: collection.$id),
+      )
+    ];
   }
 
   Future<List<Collection>> _getCollections(AutomateCommandContext context) async {
@@ -507,7 +597,9 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
 }
 
 extension on AutomateCommandContext {
-  Directory get appwriteOutputDirectory => coreDirectory / 'appwrite' / 'output';
+  Directory get appwriteDirectory => coreDirectory / 'appwrite';
+
+  Directory get appwriteOutputDirectory => appwriteDirectory / 'output';
 
   Terminal get appwriteTerminal => terminal.withWorkingDirectory(appwriteOutputDirectory);
 

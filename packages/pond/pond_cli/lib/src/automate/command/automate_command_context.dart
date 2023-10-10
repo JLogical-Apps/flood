@@ -6,6 +6,7 @@ import 'package:pond_cli/src/automate/command/path/automate_path.dart';
 import 'package:pond_cli/src/automate/context/automate_pond_context.dart';
 import 'package:pond_cli/src/automate/project/project.dart';
 import 'package:pond_cli/src/automate/util/file_system/automate_file_system.dart';
+import 'package:pond_cli/src/automate/util/plan/plan.dart';
 import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -80,6 +81,26 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
     for (final file in tempFiles) {
       file.deleteSync();
     }
+  }
+
+  Future<bool> confirmAndExecutePlan(Plan plan) async {
+    if (plan.items.isEmpty) {
+      return true;
+    }
+
+    if (!await plan.canExecute(this)) {
+      return true;
+    }
+
+    this.print('Preparing to execute plan...');
+    await plan.preview(this);
+    final shouldExecute = confirm('Would you like to execute this plan?');
+    if (shouldExecute) {
+      await plan.execute(this);
+      return true;
+    }
+
+    return false;
   }
 
   late final File stateFile = coreDirectory / 'tool' - 'state.yaml';

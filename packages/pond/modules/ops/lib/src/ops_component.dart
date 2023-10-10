@@ -54,10 +54,6 @@ class DeployCommand extends AutomateCommand<DeployCommand> {
       }
     }
 
-    if (!context.coreProject.confirm('Are you sure you want to deploy to [${environmentType.name}]?')) {
-      return;
-    }
-
     await opsEnvironment.deploy(context, environmentType: environmentType);
   }
 
@@ -103,10 +99,6 @@ class DeleteCommand extends AutomateCommand<DeleteCommand> {
     if (!exists) {
       context.coreProject
           .warning('Ops environment for [${environmentType.name}] does not exist, so nothing will be deleted.');
-      return;
-    }
-
-    if (!context.coreProject.confirm('Are you sure you want to delete [${environmentType.name}]?')) {
       return;
     }
 
