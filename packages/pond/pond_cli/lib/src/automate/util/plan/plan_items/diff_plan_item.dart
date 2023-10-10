@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:diffutil_dart/diffutil.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/src/automate/command/automate_command_context.dart';
@@ -25,7 +26,8 @@ class DiffPlanItem with IsPlanItem {
       newValue.split('\n'),
       detectMoves: false,
     );
-    for (final update in diffResult.getUpdatesWithData()) {
+    final updates = diffResult.getUpdatesWithData().sorted((a, b) => getPosition(a).compareTo(getPosition(b)));
+    for (final update in updates) {
       update.when(
         insert: (position, data) {
           context.print('+ [$position]: $data');
@@ -52,5 +54,14 @@ class DiffPlanItem with IsPlanItem {
   @override
   Future<void> onExecute(AutomateCommandContext context) async {
     // Do nothing.
+  }
+
+  int getPosition(DataDiffUpdate update) {
+    return update.when(
+      insert: (position, _) => position,
+      remove: (position, _) => position,
+      change: (position, _, __) => position,
+      move: (position, _, __) => position,
+    );
   }
 }

@@ -46,7 +46,19 @@ class FirebaseEmulatorOpsEnvironment with IsOpsEnvironment {
 
   @override
   Future<void> onDeploy(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
+    final firestoreRulesFile = context.firebaseDirectory - 'firestore.rules';
+    final firestoreRulesSource = DataSource.static.file(firestoreRulesFile);
+    final oldFirestoreRules = (await firestoreRulesSource.getOrNull()) ?? '';
+
     final firestoreRules = FirebaseOpsUtils.generateFirestoreRules(context.automateContext.corePondContext);
-    await DataSource.static.file(context.firebaseDirectory - 'firestore.rules').set(firestoreRules);
+    await firestoreRulesSource.set(firestoreRules);
+
+    await context.confirmAndExecutePlan(Plan([
+      PlanItem.static.diff(previousValue: oldFirestoreRules, file: firestoreRulesFile),
+      PlanItem.static.run(
+        'firebase deploy --only firestore:rules',
+        workingDirectory: context.firebaseDirectory,
+      ),
+    ]));
   }
 }

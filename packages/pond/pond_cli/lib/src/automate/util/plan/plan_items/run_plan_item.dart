@@ -21,6 +21,6 @@ class RunPlanItem with IsPlanItem {
 
   @override
   Future<void> onExecute(AutomateCommandContext context) async {
-    context.run(command, workingDirectory: workingDirectory);
+    context.run(command, workingDirectory: workingDirectory, interactable: true);
   }
 }

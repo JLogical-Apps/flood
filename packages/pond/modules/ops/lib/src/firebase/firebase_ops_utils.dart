@@ -81,17 +81,10 @@ class FirebaseOpsUtils {
     AutomateCommandContext context, {
     required EnvironmentType environmentType,
   }) async {
-    final shouldInit =
-        context.coreProject.confirm('A firebase project has not been initialized. Would you like to initialize one?');
-    if (!shouldInit) {
-      throw Exception('No Firebase project initialized!');
-    }
-
-    await context.coreProject.run(
+    await context.confirmAndExecutePlan(Plan.run(
       'firebase init',
       workingDirectory: context.firebaseDirectory,
-      interactable: true,
-    );
+    ));
 
     final projectId = await getCurrentlyUsedProjectId(context);
     await updateEnvironmentProject(context, environmentType: environmentType, projectId: projectId);
