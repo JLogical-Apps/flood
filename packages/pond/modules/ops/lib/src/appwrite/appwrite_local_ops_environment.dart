@@ -476,7 +476,7 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     required dynamic attribute,
   }) async {
     return PlanItem.static.execute(
-      '  Delete Attribute [${attribute['key']}',
+      '  Delete Attribute [${attribute['key']}]',
       (context) => databases.deleteAttribute(
         databaseId: _databaseId,
         collectionId: collection.$id,
