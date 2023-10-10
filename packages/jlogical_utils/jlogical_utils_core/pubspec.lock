@@ -8,6 +8,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  appwrite_core:
+    dependency: "direct main"
+    description:
+      path: "../../pond/modules/appwrite_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   async:
     dependency: transitive
     description:

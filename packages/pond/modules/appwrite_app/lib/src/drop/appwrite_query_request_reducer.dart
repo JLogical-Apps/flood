@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:appwrite/models.dart';
 import 'package:appwrite_app/src/drop/appwrite_query.dart';
 import 'package:appwrite_app/src/drop/appwrite_timestamp_state_persister_modifier.dart';
+import 'package:appwrite_core/appwrite_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:type/type.dart';
 import 'package:utils/utils.dart';
@@ -40,7 +41,7 @@ abstract class AppwriteQueryRequestReducer<QR extends QueryRequest<dynamic, T>, 
   State getStateFromDocument(Document doc) {
     final json = doc.data;
     json[State.idField] = doc.$id;
-    json[State.typeField] = json.containsKey('t_type') ? json.remove('t_type') : inferredType;
+    json[State.typeField] = json.containsKey(AppwriteConsts.typeKey) ? json.remove(AppwriteConsts.typeKey) : inferredType;
 
     return statePersister.inflate(json);
   }

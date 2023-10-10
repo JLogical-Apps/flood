@@ -1,8 +1,12 @@
 import 'dart:io';
 
+import 'package:appwrite_core/appwrite_core.dart';
 import 'package:collection/collection.dart';
+import 'package:dart_appwrite/dart_appwrite.dart';
+import 'package:dart_appwrite/models.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:environment_core/environment_core.dart';
+import 'package:log_core/log_core.dart';
 import 'package:ops/src/appwrite/appwrite_platform.dart';
 import 'package:ops/src/appwrite/behavior/appwrite_attribute_behavior_modifier.dart';
 import 'package:ops/src/ops_environment.dart';
@@ -55,11 +59,14 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     await context.appwriteOutputDirectory.ensureCreated();
 
     final projectId = await _getProjectId(context, environmentType: environmentType);
+    final apiKey = await _getApiKey(context, environmentType: environmentType);
+
+    final client = Client(endPoint: 'https://localhost/v1', selfSigned: true).setProject(projectId).setKey(apiKey);
 
     await context.appwriteTerminal.run('appwrite login', interactable: true);
 
     await _updatePlatforms(context, projectId: projectId);
-    await _updateAppwriteJson(context, projectId: projectId);
+    await _updateAppwriteJson(context, client: client);
   }
 
   @override
@@ -120,6 +127,14 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     );
   }
 
+  Future<String> _getApiKey(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
+    return await context.getHiddenStateOrElse(
+      'appwrite/${environmentType.name}/apiKey',
+      () => context.input(
+          'Input your Appwrite Project API Key. To do this, go to your project page > Settings > View API Keys > Create API Key. Give it any name and no expiration date. Give it all scopes. Copy the API Key Secret and paste it here.'),
+    );
+  }
+
   Future<List<AppwritePlatform>> _getPlatforms(AutomateCommandContext context, {required String projectId}) async {
     final output = await context.appwriteTerminal.run('appwrite projects listPlatforms --projectId $projectId');
 
@@ -155,44 +170,253 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     }
   }
 
-  Future<void> _updateAppwriteJson(AutomateCommandContext context, {required String projectId}) async {
-    final appwriteJson = {
-      'projectId': projectId,
-      'projectName': 'Flood',
-      'functions': [],
-      'databases': await _getDatabaseJsons(),
-      'collections': await _getCollectionJsons(context),
+  Future<void> _updateAppwriteJson(AutomateCommandContext context, {required Client client}) async {
+    final databases = Databases(client);
+
+    final existingCollections = (await databases.listCollections(databaseId: _databaseId)).collections;
+    final newCollections = await _getCollections(context);
+
+    for (final collection in newCollections) {
+      await _updateOrCreateCollection(
+        context,
+        databases: databases,
+        collection: collection,
+        existingCollections: existingCollections,
+      );
+    }
+
+    final deletedCollections = existingCollections
+        .where((collection) => newCollections.none((collection) => collection.$id == collection.$id));
+    for (final deletedCollection in deletedCollections) {
+      await _deleteCollection(context, databases: databases, collection: deletedCollection);
+    }
+  }
+
+  Future<void> _updateOrCreateCollection(
+    AutomateCommandContext context, {
+    required Databases databases,
+    required Collection collection,
+    required List<Collection> existingCollections,
+  }) async {
+    final existingCollection =
+        existingCollections.firstWhereOrNull((existingCollection) => existingCollection.$id == collection.$id);
+    if (existingCollection == null) {
+      await _createCollection(context, databases: databases, collection: collection);
+    } else {
+      await _updateCollection(
+        context,
+        databases: databases,
+        collection: collection,
+        existingCollection: existingCollection,
+      );
+    }
+  }
+
+  Future<void> _createCollection(
+    AutomateCommandContext context, {
+    required Databases databases,
+    required Collection collection,
+  }) async {
+    context.log('Creating Collection [${collection.$id}]');
+    await databases.createCollection(
+      databaseId: collection.databaseId,
+      collectionId: collection.$id,
+      name: collection.name,
+      permissions: collection.$permissions.cast<String>(),
+      enabled: collection.enabled,
+      documentSecurity: collection.documentSecurity,
+    );
+    for (final attribute in collection.attributes) {
+      await _updateOrCreateAttribute(context, databases: databases, collection: collection, attribute: attribute);
+    }
+  }
+
+  Future<void> _updateOrCreateAttribute(
+    AutomateCommandContext context, {
+    required Databases databases,
+    required Collection collection,
+    required dynamic attribute,
+  }) async {
+    final existingAttribute = await guardAsync(() => databases.getAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+        ));
+
+    if (existingAttribute == null) {
+      await _createAttribute(context, databases: databases, collection: collection, attribute: attribute);
+    } else {
+      await _updateAttribute(
+        context,
+        databases: databases,
+        collection: collection,
+        attribute: attribute,
+        existingAttribute: existingAttribute,
+      );
+    }
+  }
+
+  Future<void> _createAttribute(
+    AutomateCommandContext context, {
+    required Databases databases,
+    required Collection collection,
+    required dynamic attribute,
+  }) async {
+    context.log('  Creating Attribute [${attribute['key']}]');
+
+    final createAttributeFunctionByType = {
+      'boolean': (attribute) => databases.createBooleanAttribute(
+            databaseId: _databaseId,
+            collectionId: collection.$id,
+            key: attribute['key'],
+            xrequired: attribute['required'],
+            array: attribute['array'],
+          ),
+      'datetime': (attribute) => databases.createDatetimeAttribute(
+            databaseId: _databaseId,
+            collectionId: collection.$id,
+            key: attribute['key'],
+            xrequired: attribute['required'],
+            array: attribute['array'],
+          ),
+      'double': (attribute) => databases.createFloatAttribute(
+            databaseId: _databaseId,
+            collectionId: collection.$id,
+            key: attribute['key'],
+            xrequired: attribute['required'],
+            array: attribute['array'],
+          ),
+      'integer': (attribute) => databases.createIntegerAttribute(
+            databaseId: _databaseId,
+            collectionId: collection.$id,
+            key: attribute['key'],
+            xrequired: attribute['required'],
+            array: attribute['array'],
+          ),
+      'string': (attribute) => databases.createStringAttribute(
+            databaseId: _databaseId,
+            collectionId: collection.$id,
+            key: attribute['key'],
+            size: attribute['size'],
+            xrequired: attribute['required'],
+            array: attribute['array'],
+          ),
     };
 
-    final appwriteJsonFile = context.appwriteOutputDirectory - 'appwrite.json';
-    await DataSource.static.file(appwriteJsonFile).mapJson().set(appwriteJson);
-
-    await context.appwriteTerminal.run('appwrite deploy collection --all --yes');
+    await createAttributeFunctionByType[attribute['type']]!(attribute);
   }
 
-  Future<List<Map<String, dynamic>>> _getDatabaseJsons() async {
-    return [
-      {
-        '\$id': _databaseId,
-        'name': 'Default',
-        '\$createdAt': DateTime.now().toIso8601String(),
-        '\$updatedAt': DateTime.now().toIso8601String(),
-        'enabled': true,
-      },
-    ];
+  Future<void> _updateAttribute(
+    AutomateCommandContext context, {
+    required Databases databases,
+    required Collection collection,
+    required dynamic attribute,
+    required dynamic existingAttribute,
+  }) async {
+    context.log('  Updating Attribute [${attribute['key']}]');
+    final updateAttributeFunctionByType = {
+      'boolean': (attribute) => databases.updateBooleanAttribute(
+            databaseId: _databaseId,
+            collectionId: collection.$id,
+            key: attribute['key'],
+            xrequired: attribute['required'],
+            xdefault: null,
+          ),
+      'datetime': (attribute) => databases.updateDatetimeAttribute(
+            databaseId: _databaseId,
+            collectionId: collection.$id,
+            key: attribute['key'],
+            xrequired: attribute['required'],
+            xdefault: null,
+          ),
+      'double': (attribute) => databases.updateFloatAttribute(
+            databaseId: _databaseId,
+            collectionId: collection.$id,
+            key: attribute['key'],
+            xrequired: attribute['required'],
+            xdefault: null,
+            min: attribute['min'] ?? -double.maxFinite,
+            max: attribute['max'] ?? double.maxFinite,
+          ),
+      'integer': (attribute) => databases.updateIntegerAttribute(
+            databaseId: _databaseId,
+            collectionId: collection.$id,
+            key: attribute['key'],
+            xrequired: attribute['required'],
+            xdefault: null,
+            min: attribute['min'] ?? minInteger,
+            max: attribute['max'] ?? maxInteger,
+          ),
+      'string': (attribute) => databases.updateStringAttribute(
+            databaseId: _databaseId,
+            collectionId: collection.$id,
+            key: attribute['key'],
+            xrequired: attribute['required'],
+            xdefault: null,
+          ),
+    };
+
+    await updateAttributeFunctionByType[attribute['type']]!(attribute);
   }
 
-  Future<List<Map<String, dynamic>>> _getCollectionJsons(AutomateCommandContext context) async {
+  Future<void> _updateCollection(
+    AutomateCommandContext context, {
+    required Databases databases,
+    required Collection collection,
+    required Collection existingCollection,
+  }) async {
+    context.log('Updating Collection [${collection.$id}]');
+    await databases.updateCollection(
+      databaseId: collection.databaseId,
+      collectionId: collection.$id,
+      name: collection.name,
+      permissions: collection.$permissions.cast<String>(),
+      enabled: collection.enabled,
+      documentSecurity: collection.documentSecurity,
+    );
+    for (final attribute in collection.attributes) {
+      await _updateOrCreateAttribute(context, databases: databases, collection: collection, attribute: attribute);
+    }
+    final unusedAttributes = existingCollection.attributes
+        .where((existingAttribute) =>
+            collection.attributes.none((attribute) => attribute['key'] == existingAttribute['key']))
+        .toList();
+    for (final unusedAttribute in unusedAttributes) {
+      await _deleteAttribute(context, databases: databases, collection: collection, attribute: unusedAttribute);
+    }
+  }
+
+  Future<void> _deleteAttribute(
+    AutomateCommandContext context, {
+    required Databases databases,
+    required Collection collection,
+    required dynamic attribute,
+  }) async {
+    context.log('  Deleting Attribute [${attribute['key']}]');
+    await databases.deleteAttribute(
+      databaseId: _databaseId,
+      collectionId: collection.$id,
+      key: attribute['key'],
+    );
+  }
+
+  Future<void> _deleteCollection(
+    AutomateCommandContext context, {
+    required Databases databases,
+    required Collection collection,
+  }) async {
+    context.log('Deleting Collection [${collection.$id}]');
+    await databases.deleteCollection(databaseId: _databaseId, collectionId: collection.$id);
+  }
+
+  Future<List<Collection>> _getCollections(AutomateCommandContext context) async {
     final dropContext = context.automateContext.corePondContext.dropCoreComponent;
     final repositories = dropContext.repositories;
 
-    return repositories
-        .map((repository) => _getCollectionJson(context, repository: repository))
-        .whereNonNull()
-        .toList();
+    return repositories.map((repository) => _getCollection(context, repository: repository)).whereNonNull().toList();
   }
 
-  Map<String, dynamic>? _getCollectionJson(AutomateCommandContext context, {required Repository repository}) {
+  Collection? _getCollection(AutomateCommandContext context, {required Repository repository}) {
     final securityModifier = RepositorySecurityModifier.getModifierOrNull(repository);
     if (securityModifier == null) {
       return null;
@@ -203,7 +427,7 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
       return null;
     }
 
-    return {
+    return Collection.fromMap({
       '\$id': securityModifier.getPath(repository),
       '\$permissions': [
         'create("any")',
@@ -217,7 +441,7 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
       'documentSecurity': false,
       'attributes': _getAttributesJson(context, repository: repository),
       'indexes': [],
-    };
+    });
   }
 
   List<Map<String, dynamic>> _getAttributesJson(AutomateCommandContext context, {required Repository repository}) {
@@ -257,7 +481,7 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
             'required': behaviorModifier.isRequired(property),
             'array': behaviorModifier.isArray(property),
             if (behaviorModifier.getSize(property) != null) 'size': behaviorModifier.getSize(property),
-            'default': null,
+            _databaseId: null,
           };
         })
         .whereNonNull()
@@ -265,13 +489,13 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
 
     final typeJson = hasAbstractParent
         ? {
-            'key': 't_type',
+            'key': AppwriteConsts.typeKey,
             'type': 'string',
             'status': 'available',
             'required': true,
             'array': false,
             'size': 256, // Types should not be larger than 256 characters.
-            'default': null,
+            _databaseId: null,
           }
         : null;
 
@@ -286,4 +510,8 @@ extension on AutomateCommandContext {
   Directory get appwriteOutputDirectory => coreDirectory / 'appwrite' / 'output';
 
   Terminal get appwriteTerminal => terminal.withWorkingDirectory(appwriteOutputDirectory);
+
+  Future<void> log(dynamic log) {
+    return automateContext.corePondContext.log(log);
+  }
 }

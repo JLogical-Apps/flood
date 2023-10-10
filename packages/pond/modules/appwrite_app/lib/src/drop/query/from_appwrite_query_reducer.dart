@@ -3,6 +3,7 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite_app/src/drop/appwrite_query.dart';
 import 'package:appwrite_app/src/drop/appwrite_query_reducer.dart';
 import 'package:appwrite_app/src/util/core_pond_context_extensions.dart';
+import 'package:appwrite_core/appwrite_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:type/type.dart';
 
@@ -38,6 +39,6 @@ class FromAppwriteQueryReducer extends AppwriteQueryReducer<FromQuery> {
     final typeNames = types.map((type) => type.name).toList();
 
     return AppwriteQuery(databases: databases, collectionId: rootPath)
-        .withQuery(appwrite.Query.equal('t_type', typeNames));
+        .withQuery(appwrite.Query.equal(AppwriteConsts.typeKey, typeNames));
   }
 }

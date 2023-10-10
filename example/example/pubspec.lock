@@ -69,6 +69,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  appwrite_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/pond/modules/appwrite_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   archive:
     dependency: transitive
     description:

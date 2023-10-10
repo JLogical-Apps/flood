@@ -1,6 +1,6 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:ops/src/appwrite/behavior/appwrite_attribute_behavior_modifier.dart';
-import 'package:ops/src/appwrite/util/appwrite_consts.dart';
+import 'package:appwrite_core/appwrite_core.dart';
 
 class ListFieldBehaviorModifier extends AppwriteAttributeBehaviorModifier<SimpleValueObjectProperty<List>> {
   @override

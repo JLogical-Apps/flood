@@ -2,6 +2,7 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite_app/src/drop/appwrite_cloud_repository.dart';
 import 'package:appwrite_app/src/drop/appwrite_timestamp_state_persister_modifier.dart';
 import 'package:appwrite_app/src/util/core_pond_context_extensions.dart';
+import 'package:appwrite_core/appwrite_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:log_core/log_core.dart';
 import 'package:type/type.dart';
@@ -37,7 +38,7 @@ class AppwriteCloudRepositoryStateHandler with IsRepositoryStateHandler {
     if (state.type == inferredType) {
       json.remove(State.typeField);
     } else {
-      json['t_type'] = json.remove(State.typeField);
+      json[AppwriteConsts.typeKey] = json.remove(State.typeField);
     }
 
     final existingDocument = await guardAsync(() => databases.getDocument(

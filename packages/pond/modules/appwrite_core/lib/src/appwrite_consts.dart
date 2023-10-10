@@ -7,4 +7,6 @@ class AppwriteConsts {
 
   // https://github.com/utopia-php/database/blob/main/src/Database/Adapter/SQL.php#L912C16-L912C21
   static final int varcharSize = 16381;
+
+  static final String typeKey = 't_type';
 }

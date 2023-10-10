@@ -6,4 +6,5 @@ export 'src/build_late.dart';
 export 'src/patterns/patterns.dart';
 export 'src/stream/export.dart';
 export 'src/type/type_utils.dart';
+export 'src/type/numeric_utils.dart';
 export 'src/validation/export.dart';
