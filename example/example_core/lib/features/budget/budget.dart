@@ -10,7 +10,7 @@ class Budget extends ValueObject {
   late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank();
 
   static const ownerField = 'owner';
-  late final ownerProperty = reference<UserEntity>(name: ownerField).required();
+  late final ownerProperty = reference<UserEntity>(name: ownerField).required().indexed();
 
   @override
   late final List<ValueObjectBehavior> behaviors = [

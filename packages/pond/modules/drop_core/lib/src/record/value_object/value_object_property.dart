@@ -14,6 +14,7 @@ import 'package:drop_core/src/record/value_object/fallback_value_object_property
 import 'package:drop_core/src/record/value_object/fallback_without_replacement_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/hidden_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/indexed_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/is_email_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/is_not_blank_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/list_value_object_property.dart';
@@ -128,6 +129,10 @@ extension ValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty> 
 
   HiddenValueObjectProperty<G, S, L> hidden([bool Function()? isHiddenGetter]) {
     return HiddenValueObjectProperty(property: this, isHiddenGetter: isHiddenGetter);
+  }
+
+  IndexedValueObjectProperty<G, S, L> indexed([bool Function()? isIndexedGetter]) {
+    return IndexedValueObjectProperty(property: this, isIndexedGetter: isIndexedGetter);
   }
 }
 

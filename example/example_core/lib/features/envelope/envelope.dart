@@ -11,7 +11,7 @@ class Envelope extends ValueObject {
   late final descriptionProperty = field<String>(name: descriptionField).withDisplayName('Description').multiline();
 
   static const budgetField = 'budget';
-  late final budgetProperty = reference<BudgetEntity>(name: budgetField).required();
+  late final budgetProperty = reference<BudgetEntity>(name: budgetField).required().indexed();
 
   static const amountCentsField = 'amount';
   late final amountCentsProperty =
@@ -25,10 +25,10 @@ class Envelope extends ValueObject {
       field<int>(name: colorField).withDisplayName('Color').color().withFallback(() => 0xffffffff);
 
   static const archivedField = 'archived';
-  late final archivedProperty = field<bool>(name: archivedField).hidden().withFallback(() => false);
+  late final archivedProperty = field<bool>(name: archivedField).hidden().withFallback(() => false).indexed();
 
   static const trayField = 'tray';
-  late final trayProperty = reference<TrayEntity>(name: trayField);
+  late final trayProperty = reference<TrayEntity>(name: trayField).indexed();
 
   @override
   late final List<ValueObjectBehavior> behaviors = [

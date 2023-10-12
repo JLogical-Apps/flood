@@ -4,6 +4,7 @@ import 'package:ops/src/appwrite/behavior/behavior_modifiers/date_time_field_beh
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/double_field_behavior_modifier.dart';
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/fallback_property_behavior_modifier.dart';
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/fallback_replacement_property_behavior_modifier.dart';
+import 'package:ops/src/appwrite/behavior/behavior_modifiers/indexed_property_behavior_modifier.dart';
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/int_field_behavior_modifier.dart';
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/is_not_blank_property_behavior_modifier.dart';
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/list_field_behavior_modifier.dart';
@@ -24,6 +25,10 @@ abstract class AppwriteAttributeBehaviorModifier<T extends ValueObjectBehavior>
     return false;
   }
 
+  bool isIndexed(T behavior) {
+    return false;
+  }
+
   bool isArray(T behavior) {
     return false;
   }
@@ -40,6 +45,7 @@ abstract class AppwriteAttributeBehaviorModifier<T extends ValueObjectBehavior>
       FallbackReplacementPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       RequiredPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       IsNotBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      IndexedPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       MultilinePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       WrapperPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       ReferenceFieldBehaviorModifier(),

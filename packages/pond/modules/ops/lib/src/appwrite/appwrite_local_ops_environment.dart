@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:appwrite_core/appwrite_core.dart';
@@ -70,7 +71,7 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     await context.appwriteTerminal.run('appwrite login', interactable: true);
 
     await _updatePlatforms(context, projectId: projectId);
-    await _updateAppwriteJson(context, client: client);
+    await _updateAppwriteAttributes(context, client: client);
   }
 
   @override
@@ -184,7 +185,7 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     await context.confirmAndExecutePlan(Plan(commands));
   }
 
-  Future<void> _updateAppwriteJson(AutomateCommandContext context, {required Client client}) async {
+  Future<void> _updateAppwriteAttributes(AutomateCommandContext context, {required Client client}) async {
     final databases = Databases(client);
 
     final existingCollections = (await databases.listCollections(databaseId: _databaseId)).collections;
@@ -193,11 +194,13 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     final commands = <PlanItem>[];
 
     for (final collection in newCollections) {
-      commands.addAll(await _updateOrCreateCollectionPlanItems(
+      final existingCollection =
+          existingCollections.firstWhereOrNull((existingCollection) => existingCollection.$id == collection.$id);
+      commands.addAll(await _updateCollectionPlanItems(
         context,
         databases: databases,
         collection: collection,
-        existingCollections: existingCollections,
+        existingCollection: existingCollection,
       ));
     }
 
@@ -214,251 +217,290 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     await context.confirmAndExecutePlan(Plan(commands));
   }
 
-  Future<List<PlanItem>> _updateOrCreateCollectionPlanItems(
+  Future<List<PlanItem>> _updateCollectionPlanItems(
     AutomateCommandContext context, {
     required Databases databases,
     required Collection collection,
-    required List<Collection> existingCollections,
+    required Collection? existingCollection,
   }) async {
-    final existingCollection =
-        existingCollections.firstWhereOrNull((existingCollection) => existingCollection.$id == collection.$id);
-    if (existingCollection == null) {
-      return await _createCollectionPlanItems(context, databases: databases, collection: collection);
-    } else {
-      return await _updateCollectionPlanItems(
-        context,
-        databases: databases,
-        collection: collection,
-        existingCollection: existingCollection,
-      );
-    }
-  }
-
-  Future<List<PlanItem>> _createCollectionPlanItems(
-    AutomateCommandContext context, {
-    required Databases databases,
-    required Collection collection,
-  }) async {
-    final createCollectionPlanItem = PlanItem.static.execute(
-      'Create Collection [${collection.$id}]',
-      (context) async => await databases.createCollection(
-        databaseId: collection.databaseId,
-        collectionId: collection.$id,
-        name: collection.name,
-        permissions: collection.$permissions.cast<String>(),
-        enabled: collection.enabled,
-        documentSecurity: collection.documentSecurity,
-      ),
-    );
-
-    final attributePlanItems = <PlanItem>[];
+    final collectionPlanItems = <PlanItem>[];
     for (final attribute in collection.attributes) {
-      final planItem = await _updateOrCreateAttributePlanItem(context,
-          databases: databases, collection: collection, attribute: attribute);
-      if (planItem != null) {
-        attributePlanItems.add(planItem);
-      }
-    }
+      final existingAttribute = await guardAsync(() => databases.getAttribute(
+            databaseId: _databaseId,
+            collectionId: collection.$id,
+            key: attribute['key'],
+          ));
 
-    return [
-      createCollectionPlanItem,
-      ...attributePlanItems,
-    ];
-  }
-
-  Future<PlanItem?> _updateOrCreateAttributePlanItem(
-    AutomateCommandContext context, {
-    required Databases databases,
-    required Collection collection,
-    required dynamic attribute,
-  }) async {
-    final existingAttribute = await guardAsync(() => databases.getAttribute(
-          databaseId: _databaseId,
-          collectionId: collection.$id,
-          key: attribute['key'],
-        ));
-
-    if (existingAttribute == null) {
-      return await _createAttributePlanItem(
-        context,
-        databases: databases,
-        collection: collection,
-        attribute: attribute,
-      );
-    } else {
-      return await _updateAttributePlanItem(
+      collectionPlanItems.addAll(await _updateAttributePlanItem(
         context,
         databases: databases,
         collection: collection,
         attribute: attribute,
         existingAttribute: existingAttribute,
-      );
-    }
-  }
-
-  Future<PlanItem> _createAttributePlanItem(
-    AutomateCommandContext context, {
-    required Databases databases,
-    required Collection collection,
-    required dynamic attribute,
-  }) async {
-    final createAttributeFunctionByType = {
-      'boolean': (attribute) => databases.createBooleanAttribute(
-            databaseId: _databaseId,
-            collectionId: collection.$id,
-            key: attribute['key'],
-            xrequired: attribute['required'],
-            array: attribute['array'],
-          ),
-      'datetime': (attribute) => databases.createDatetimeAttribute(
-            databaseId: _databaseId,
-            collectionId: collection.$id,
-            key: attribute['key'],
-            xrequired: attribute['required'],
-            array: attribute['array'],
-          ),
-      'double': (attribute) => databases.createFloatAttribute(
-            databaseId: _databaseId,
-            collectionId: collection.$id,
-            key: attribute['key'],
-            xrequired: attribute['required'],
-            array: attribute['array'],
-          ),
-      'integer': (attribute) => databases.createIntegerAttribute(
-            databaseId: _databaseId,
-            collectionId: collection.$id,
-            key: attribute['key'],
-            xrequired: attribute['required'],
-            array: attribute['array'],
-          ),
-      'string': (attribute) => databases.createStringAttribute(
-            databaseId: _databaseId,
-            collectionId: collection.$id,
-            key: attribute['key'],
-            size: attribute['size'],
-            xrequired: attribute['required'],
-            array: attribute['array'],
-          ),
-    };
-
-    return PlanItem.static.execute(
-      '  Create attribute [${attribute['key']}]',
-      (context) => createAttributeFunctionByType[attribute['type']]!(attribute),
-    );
-  }
-
-  Future<PlanItem?> _updateAttributePlanItem(
-    AutomateCommandContext context, {
-    required Databases databases,
-    required Collection collection,
-    required dynamic attribute,
-    required dynamic existingAttribute,
-  }) async {
-    if (_areAttributesEqual(attribute, existingAttribute)) {
-      return null;
+      ));
     }
 
-    print(attribute);
-    print(existingAttribute);
-
-    final updateAttributeFunctionByType = {
-      'boolean': (attribute) => databases.updateBooleanAttribute(
-            databaseId: _databaseId,
-            collectionId: collection.$id,
-            key: attribute['key'],
-            xrequired: attribute['required'],
-            xdefault: null,
-          ),
-      'datetime': (attribute) => databases.updateDatetimeAttribute(
-            databaseId: _databaseId,
-            collectionId: collection.$id,
-            key: attribute['key'],
-            xrequired: attribute['required'],
-            xdefault: null,
-          ),
-      'double': (attribute) => databases.updateFloatAttribute(
-            databaseId: _databaseId,
-            collectionId: collection.$id,
-            key: attribute['key'],
-            xrequired: attribute['required'],
-            xdefault: null,
-            min: attribute['min'] ?? -double.maxFinite,
-            max: attribute['max'] ?? double.maxFinite,
-          ),
-      'integer': (attribute) => databases.updateIntegerAttribute(
-            databaseId: _databaseId,
-            collectionId: collection.$id,
-            key: attribute['key'],
-            xrequired: attribute['required'],
-            xdefault: null,
-            min: attribute['min'] ?? minInteger,
-            max: attribute['max'] ?? maxInteger,
-          ),
-      'string': (attribute) => databases.updateStringAttribute(
-            databaseId: _databaseId,
-            collectionId: collection.$id,
-            key: attribute['key'],
-            xrequired: attribute['required'],
-            xdefault: null,
-          ),
-    };
-
-    return PlanItem.static.execute(
-      '  Update Attribute [${attribute['key']}]',
-      (context) => updateAttributeFunctionByType[attribute['type']]!(attribute),
-    );
-  }
-
-  bool _areAttributesEqual(dynamic a, dynamic b) {
-    return a['type'] == b['type'] && a['key'] == b['key'] && a['required'] == b['required'];
-  }
-
-  Future<List<PlanItem>> _updateCollectionPlanItems(
-    AutomateCommandContext context, {
-    required Databases databases,
-    required Collection collection,
-    required Collection existingCollection,
-  }) async {
-    final attributePlanItems = <PlanItem>[];
-    for (final attribute in collection.attributes) {
-      final planItem = await _updateOrCreateAttributePlanItem(context,
-          databases: databases, collection: collection, attribute: attribute);
-      if (planItem != null) {
-        attributePlanItems.add(planItem);
-      }
-    }
-
-    final unusedAttributes = existingCollection.attributes
+    final existingAttributes = existingCollection?.attributes ?? [];
+    final unusedAttributes = existingAttributes
         .where((existingAttribute) =>
             collection.attributes.none((attribute) => attribute['key'] == existingAttribute['key']))
         .toList();
     for (final unusedAttribute in unusedAttributes) {
-      final planItem = await _deleteAttributePlanItem(context,
-          databases: databases, collection: collection, attribute: unusedAttribute);
-      if (planItem != null) {
-        attributePlanItems.add(planItem);
-      }
+      final planItem = _deleteAttributePlanItem(
+        context,
+        databases: databases,
+        collection: collection,
+        attribute: unusedAttribute,
+      );
+      collectionPlanItems.add(planItem);
     }
 
-    final updateCollectionPlanItem =
-        !_areCollectionsEqual(collection, existingCollection) || attributePlanItems.isNotEmpty
-            ? PlanItem.static.execute(
-                'Update Collection [${collection.$id}]',
-                (context) async => await databases.updateCollection(
-                  databaseId: collection.databaseId,
-                  collectionId: collection.$id,
-                  name: collection.name,
-                  permissions: collection.$permissions.cast<String>(),
-                  enabled: collection.enabled,
-                  documentSecurity: collection.documentSecurity,
-                ),
-              )
-            : null;
+    final existingIndexes = existingCollection?.indexes ?? [];
+    final newIndexes = collection.indexes
+        .where((index) => existingIndexes
+            .none((existingIndex) => DeepCollectionEquality().equals(index.attributes, existingIndex.attributes)))
+        .toList();
+    for (final newIndex in newIndexes) {
+      final planItem = _createIndexPlanItem(databases: databases, collection: collection, index: newIndex);
+      collectionPlanItems.add(planItem);
+    }
+
+    final unusedIndexes = existingIndexes
+        .where((existingIndex) => collection.indexes
+            .none((index) => DeepCollectionEquality().equals(index.attributes, existingIndex.attributes)))
+        .toList();
+    for (final unusedIndex in unusedIndexes) {
+      final planItem = await _deleteIndexPlanItem(
+        context,
+        databases: databases,
+        collection: collection,
+        index: unusedIndex,
+      );
+      collectionPlanItems.add(planItem);
+    }
+
+    final updateCollectionPlanItem = existingCollection == null ||
+            !_areCollectionsEqual(collection, existingCollection) ||
+            collectionPlanItems.isNotEmpty
+        ? PlanItem.static.execute(
+            'Update Collection [${collection.$id}]',
+            (context) async {
+              context.log('Updating Collection [${collection.$id}]');
+              await databases.updateCollection(
+                databaseId: collection.databaseId,
+                collectionId: collection.$id,
+                name: collection.name,
+                permissions: collection.$permissions.cast<String>(),
+                enabled: collection.enabled,
+                documentSecurity: collection.documentSecurity,
+              );
+            },
+          )
+        : null;
 
     return [
       if (updateCollectionPlanItem != null) updateCollectionPlanItem,
-      ...attributePlanItems,
+      ...collectionPlanItems,
     ];
+  }
+
+  Future<void> _createAttribute({
+    required Databases databases,
+    required Collection collection,
+    required Map<String, dynamic> attribute,
+  }) async {
+    final attributeType = attribute['type'];
+    switch (attributeType) {
+      case 'boolean':
+        await databases.createBooleanAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+          xrequired: attribute['required'],
+          array: attribute['array'],
+        );
+      case 'datetime':
+        await databases.createDatetimeAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+          xrequired: attribute['required'],
+          array: attribute['array'],
+        );
+      case 'double':
+        await databases.createFloatAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+          xrequired: attribute['required'],
+          array: attribute['array'],
+        );
+      case 'integer':
+        await databases.createIntegerAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+          xrequired: attribute['required'],
+          array: attribute['array'],
+        );
+      case 'string':
+        await databases.createStringAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+          size: attribute['size'],
+          xrequired: attribute['required'],
+          array: attribute['array'],
+        );
+    }
+  }
+
+  Future<void> _updateAttribute({
+    required Databases databases,
+    required Collection collection,
+    required Map<String, dynamic> attribute,
+  }) async {
+    final attributeType = attribute['type'];
+    switch (attributeType) {
+      case 'boolean':
+        await databases.updateBooleanAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+          xrequired: attribute['required'],
+          xdefault: null,
+        );
+      case 'datetime':
+        await databases.updateDatetimeAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+          xrequired: attribute['required'],
+          xdefault: null,
+        );
+      case 'double':
+        await databases.updateFloatAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+          xrequired: attribute['required'],
+          xdefault: null,
+          min: attribute['min'] ?? -double.maxFinite,
+          max: attribute['max'] ?? double.maxFinite,
+        );
+      case 'integer':
+        await databases.updateIntegerAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+          xrequired: attribute['required'],
+          xdefault: null,
+          min: attribute['min'] ?? minInteger,
+          max: attribute['max'] ?? maxInteger,
+        );
+      case 'string':
+        await databases.updateStringAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+          xrequired: attribute['required'],
+          xdefault: null,
+        );
+    }
+  }
+
+  Future<List<PlanItem>> _updateAttributePlanItem(
+    AutomateCommandContext context, {
+    required Databases databases,
+    required Collection collection,
+    required Map<String, dynamic> attribute,
+    required Map<String, dynamic>? existingAttribute,
+  }) async {
+    final isSizeDifferent = existingAttribute != null &&
+        _areAttributesEqual(attribute, existingAttribute) &&
+        attribute['size'] != existingAttribute['size'];
+    if (isSizeDifferent) {
+      return [
+        _deleteAttributePlanItem(context, databases: databases, collection: collection, attribute: attribute),
+        _createAttributePlanItem(databases: databases, collection: collection, attribute: attribute),
+      ];
+    }
+
+    if (existingAttribute != null && _areAttributesEqual(attribute, existingAttribute)) {
+      return [];
+    }
+
+    if (existingAttribute == null) {
+      return [_createAttributePlanItem(databases: databases, collection: collection, attribute: attribute)];
+    } else {
+      return [
+        PlanItem.static.execute(
+          '  Update Attribute [${attribute['key']}]',
+          (context) async {
+            context.log('Updating Attribute [${attribute['key']}]');
+            await _updateAttribute(databases: databases, collection: collection, attribute: attribute);
+          },
+        ),
+      ];
+    }
+  }
+
+  PlanItem _createAttributePlanItem({
+    required Databases databases,
+    required Collection collection,
+    required Map<String, dynamic> attribute,
+  }) {
+    return PlanItem.static.execute(
+      '  Create Attribute [${attribute['key']}]',
+      (context) async {
+        context.log('Creating Attribute [${attribute['key']}]');
+        await _createAttribute(databases: databases, collection: collection, attribute: attribute);
+      },
+    );
+  }
+
+  PlanItem _createIndexPlanItem({
+    required Databases databases,
+    required Collection collection,
+    required Index index,
+  }) {
+    return PlanItem.static.execute(
+      '  Create Index [${index.key}]',
+      (context) async {
+        context.log('Creating Index [${index.key}]');
+        await databases.createIndex(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: index.key,
+          type: index.type,
+          attributes: index.attributes.cast<String>(),
+          orders: index.orders?.cast<String>(),
+        );
+      },
+    );
+  }
+
+  Future<PlanItem> _deleteIndexPlanItem(
+    AutomateCommandContext context, {
+    required Databases databases,
+    required Collection collection,
+    required Index index,
+  }) async {
+    return PlanItem.static.execute(
+      '  Delete Index [${index.key}]',
+      (context) async {
+        context.log('Deleting Index [${index.key}]');
+        await databases.deleteIndex(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: index.key,
+        );
+      },
+    );
+  }
+
+  bool _areAttributesEqual(Map<String, dynamic> a, Map<String, dynamic> b) {
+    return a['type'] == b['type'] && a['key'] == b['key'] && a['required'] == b['required'];
   }
 
   bool _areCollectionsEqual(Collection a, Collection b) {
@@ -469,19 +511,22 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
         a.documentSecurity == b.documentSecurity;
   }
 
-  Future<PlanItem?> _deleteAttributePlanItem(
+  PlanItem _deleteAttributePlanItem(
     AutomateCommandContext context, {
     required Databases databases,
     required Collection collection,
     required dynamic attribute,
-  }) async {
+  }) {
     return PlanItem.static.execute(
       '  Delete Attribute [${attribute['key']}]',
-      (context) => databases.deleteAttribute(
-        databaseId: _databaseId,
-        collectionId: collection.$id,
-        key: attribute['key'],
-      ),
+      (context) async {
+        context.log('Deleting Attribute [${attribute['key']}]');
+        await databases.deleteAttribute(
+          databaseId: _databaseId,
+          collectionId: collection.$id,
+          key: attribute['key'],
+        );
+      },
     );
   }
 
@@ -494,7 +539,10 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     return [
       PlanItem.static.execute(
         'Delete Collection [${collection.$id}]',
-        (context) => databases.deleteCollection(databaseId: _databaseId, collectionId: collection.$id),
+        (context) async {
+          context.log('Deleting Collection [${collection.$id}]');
+          await databases.deleteCollection(databaseId: _databaseId, collectionId: collection.$id);
+        },
       )
     ];
   }
@@ -530,7 +578,7 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
       'enabled': true,
       'documentSecurity': false,
       'attributes': _getAttributesJson(context, repository: repository),
-      'indexes': [],
+      'indexes': _getIndexesJson(context, repository: repository),
     });
   }
 
@@ -538,11 +586,25 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     return repository.handledTypes
         .expand((entityRuntimeType) => [entityRuntimeType, ...entityRuntimeType.getConcreteDescendants()]
             .where((runtimeType) => runtimeType.isConcrete)
-            .map((runtimeType) => _getEntityAttributesJson(context,
-                entity: runtimeType.createInstance(), hasAbstractParent: entityRuntimeType.isAbstract)))
+            .map((runtimeType) => _getEntityAttributesJson(
+                  context,
+                  entity: runtimeType.createInstance(),
+                  hasAbstractParent: entityRuntimeType.isAbstract,
+                )))
         .expand((attributes) => attributes)
         .groupListsBy((attribute) => attribute['key'] as String)
         .mapToIterable((key, attribute) => attribute.first)
+        .toList();
+  }
+
+  List<Map<String, dynamic>> _getIndexesJson(AutomateCommandContext context, {required Repository repository}) {
+    return repository.handledTypes
+        .expand((entityRuntimeType) => [entityRuntimeType, ...entityRuntimeType.getConcreteDescendants()]
+            .where((runtimeType) => runtimeType.isConcrete)
+            .map((runtimeType) => _getEntityIndexesJson(context, entity: runtimeType.createInstance())))
+        .expand((indexes) => indexes)
+        .groupListsBy((index) => index['key'] as String)
+        .mapToIterable((key, index) => index.first)
         .toList();
   }
 
@@ -568,7 +630,7 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
             'key': property.name,
             'type': behaviorModifier.getType(property),
             'status': 'available',
-            'required': behaviorModifier.isRequired(property),
+            'required': hasAbstractParent ? false : behaviorModifier.isRequired(property),
             'array': behaviorModifier.isArray(property),
             if (behaviorModifier.getSize(property) != null) 'size': behaviorModifier.getSize(property),
             _databaseId: null,
@@ -593,6 +655,36 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
       if (typeJson != null) typeJson,
       ...behaviorJsons,
     ];
+  }
+
+  List<Map<String, dynamic>> _getEntityIndexesJson(
+    AutomateCommandContext context, {
+    required Entity entity,
+  }) {
+    final dropContext = context.automateContext.corePondContext.dropCoreComponent;
+
+    final valueObjectRuntimeType = dropContext.getRuntimeTypeRuntime(entity.valueObjectType);
+    final valueObject = valueObjectRuntimeType.createInstance() as ValueObject;
+
+    final indexJsons = valueObject.behaviors
+        .whereType<ValueObjectProperty>()
+        .map((property) {
+          final behaviorModifier = AppwriteAttributeBehaviorModifier.getBehaviorModifierOrNull(property);
+          if (behaviorModifier == null || !behaviorModifier.isIndexed(property)) {
+            return null;
+          }
+
+          return {
+            'key': property.name,
+            'type': 'key',
+            'attributes': [property.name],
+            'orders': [],
+          };
+        })
+        .whereNonNull()
+        .toList();
+
+    return indexJsons;
   }
 }
 

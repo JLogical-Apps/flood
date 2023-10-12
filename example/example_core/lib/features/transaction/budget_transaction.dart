@@ -9,10 +9,10 @@ abstract class BudgetTransaction extends ValueObject {
   late final affectedEnvelopesProperty = computed<List<String>>(
     name: affectedEnvelopesField,
     computation: () => affectedEnvelopeIds,
-  );
+  ).indexed();
 
   static const budgetField = 'budget';
-  late final budgetProperty = reference<BudgetEntity>(name: budgetField).required();
+  late final budgetProperty = reference<BudgetEntity>(name: budgetField).required().indexed();
 
   static const transactionDateField = 'transactionDate';
   late final transactionDateProperty = field<Timestamp>(name: transactionDateField)
@@ -21,7 +21,8 @@ abstract class BudgetTransaction extends ValueObject {
       .withDisplayName('Transaction Date')
       .withFallbackReplacement(() => Timestamp.now())
       .withDefault(() => Timestamp.now())
-      .requiredOnEdit();
+      .requiredOnEdit()
+      .indexed();
 
   List<String> get affectedEnvelopeIds;
 

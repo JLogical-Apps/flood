@@ -9,7 +9,7 @@ class Tray extends ValueObject {
   late final descriptionProperty = field<String>(name: descriptionField).withDisplayName('Description').multiline();
 
   static const budgetField = 'budget';
-  late final budgetProperty = reference<BudgetEntity>(name: budgetField).required();
+  late final budgetProperty = reference<BudgetEntity>(name: budgetField).required().indexed();
 
   static const colorField = 'color';
   late final colorProperty =
