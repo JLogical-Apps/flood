@@ -1,6 +1,8 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite_app/src/drop/appwrite_cloud_repository.dart';
+import 'package:appwrite_app/src/drop/appwrite_map_state_persister_modifier.dart';
 import 'package:appwrite_app/src/drop/appwrite_timestamp_state_persister_modifier.dart';
+import 'package:appwrite_app/src/drop/appwrite_value_object_state_persister_modifier.dart';
 import 'package:appwrite_app/src/util/core_pond_context_extensions.dart';
 import 'package:appwrite_core/appwrite_core.dart';
 import 'package:drop_core/drop_core.dart';
@@ -23,6 +25,11 @@ class AppwriteCloudRepositoryStateHandler with IsRepositoryStateHandler {
   static StatePersister<Map<String, dynamic>> getStatePersister(DropCoreContext context) => StatePersister.json(
         context: context,
         extraStatePersisterModifiers: [
+          AppwriteValueObjectStatePersisterModifier(
+            context,
+            persister: (state) => getStatePersister(context).persist(state),
+          ),
+          AppwriteMapStatePersisterModifier(),
           AppwriteTimestampStatePersisterModifier(),
         ],
       );

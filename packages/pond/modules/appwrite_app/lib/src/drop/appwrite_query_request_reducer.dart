@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:appwrite/models.dart';
+import 'package:appwrite_app/src/drop/appwrite_map_state_persister_modifier.dart';
 import 'package:appwrite_app/src/drop/appwrite_query.dart';
 import 'package:appwrite_app/src/drop/appwrite_timestamp_state_persister_modifier.dart';
+import 'package:appwrite_app/src/drop/appwrite_value_object_state_persister_modifier.dart';
 import 'package:appwrite_core/appwrite_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:type/type.dart';
@@ -12,12 +14,17 @@ abstract class AppwriteQueryRequestReducer<QR extends QueryRequest<dynamic, T>, 
   final DropCoreContext dropContext;
   final RuntimeType? inferredType;
 
-  late StatePersister<Map<String, dynamic>> statePersister = StatePersister.json(
-    context: dropContext,
-    extraStatePersisterModifiers: [
-      AppwriteTimestampStatePersisterModifier(),
-    ],
-  );
+  static StatePersister<Map<String, dynamic>> getStatePersister(DropCoreContext context) => StatePersister.json(
+        context: context,
+        extraStatePersisterModifiers: [
+          AppwriteValueObjectStatePersisterModifier(
+            context,
+            persister: (state) => getStatePersister(context).persist(state),
+          ),
+          AppwriteMapStatePersisterModifier(),
+          AppwriteTimestampStatePersisterModifier(),
+        ],
+      );
 
   AppwriteQueryRequestReducer({required this.dropContext, required this.inferredType});
 
@@ -41,8 +48,9 @@ abstract class AppwriteQueryRequestReducer<QR extends QueryRequest<dynamic, T>, 
   State getStateFromDocument(Document doc) {
     final json = doc.data;
     json[State.idField] = doc.$id;
-    json[State.typeField] = json.containsKey(AppwriteConsts.typeKey) ? json.remove(AppwriteConsts.typeKey) : inferredType;
+    json[State.typeField] =
+        json.containsKey(AppwriteConsts.typeKey) ? json.remove(AppwriteConsts.typeKey) : inferredType;
 
-    return statePersister.inflate(json);
+    return getStatePersister(dropContext).inflate(json);
   }
 }
