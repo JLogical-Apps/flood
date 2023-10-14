@@ -56,6 +56,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
+  auth_core:
+    dependency: "direct overridden"
+    description:
+      path: "../auth_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   basic_utils:
     dependency: transitive
     description:

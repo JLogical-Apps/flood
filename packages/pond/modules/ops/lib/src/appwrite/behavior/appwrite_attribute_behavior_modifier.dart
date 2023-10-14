@@ -8,6 +8,7 @@ import 'package:ops/src/appwrite/behavior/behavior_modifiers/indexed_property_be
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/int_field_behavior_modifier.dart';
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/is_not_blank_property_behavior_modifier.dart';
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/list_field_behavior_modifier.dart';
+import 'package:ops/src/appwrite/behavior/behavior_modifiers/map_field_behavior_modifier.dart';
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/multiline_property_behavior_modifier.dart';
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/reference_field_behavior_modifier.dart';
 import 'package:ops/src/appwrite/behavior/behavior_modifiers/required_property_behavior_modifier.dart';
@@ -40,7 +41,6 @@ abstract class AppwriteAttributeBehaviorModifier<T extends ValueObjectBehavior>
   static final ModifierResolver<AppwriteAttributeBehaviorModifier, ValueObjectBehavior> behaviorModifierResolver =
       Resolver.fromModifiers(
     [
-      ValueObjectFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       FallbackPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       FallbackReplacementPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       RequiredPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
@@ -48,6 +48,8 @@ abstract class AppwriteAttributeBehaviorModifier<T extends ValueObjectBehavior>
       IndexedPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       MultilinePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       WrapperPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      ValueObjectFieldBehaviorModifier(),
+      MapFieldBehaviorModifier(),
       ReferenceFieldBehaviorModifier(),
       StringFieldBehaviorModifier(),
       IntFieldBehaviorModifier(),

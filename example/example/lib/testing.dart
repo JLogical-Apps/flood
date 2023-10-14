@@ -22,10 +22,10 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
   final authComponent = corePondContext.locate<AuthCoreComponent>();
   final dropComponent = corePondContext.locate<DropCoreComponent>();
 
-  final userId = await authComponent.signup('test@test.com', 'password');
+  final account = await authComponent.signup('test@test.com', 'password');
 
   final userEntity = await dropComponent.updateEntity(
-    UserEntity()..id = userId,
+    UserEntity()..id = account.accountId,
     (User user) => user
       ..nameProperty.set('John Doe')
       ..emailProperty.set('test@test.com'),

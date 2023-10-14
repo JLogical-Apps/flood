@@ -8,16 +8,18 @@ import 'package:style/src/styleguide.dart';
 class FlatStyleLoadingIndicatorRenderer with IsTypedStyleRenderer<StyledLoadingIndicator> {
   @override
   Widget renderTyped(BuildContext context, StyledLoadingIndicator component) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: 30,
-        maxHeight: 30,
-      ),
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: CircularProgressIndicator(
-          color: context.colorPalette().foreground.strong,
-          strokeWidth: 3,
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 30,
+          maxHeight: 30,
+        ),
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: CircularProgressIndicator(
+            color: context.colorPalette().foreground.strong,
+            strokeWidth: 3,
+          ),
         ),
       ),
     );

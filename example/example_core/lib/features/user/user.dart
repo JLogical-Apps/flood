@@ -7,9 +7,6 @@ class User extends ValueObject {
   static const emailField = 'email';
   late final emailProperty = field<String>(name: emailField).withDisplayName('Email').hidden().isEmail().isNotBlank();
 
-  static const adminField = 'admin';
-  late final adminProperty = field<bool>(name: adminField).hidden().withFallbackWithoutReplacement(() => false);
-
   static const deviceTokenField = 'deviceToken';
   late final deviceTokenProperty = field<String>(name: deviceTokenField).hidden();
 
@@ -17,7 +14,6 @@ class User extends ValueObject {
   late final List<ValueObjectBehavior> behaviors = [
     nameProperty,
     emailProperty,
-    adminProperty,
     deviceTokenProperty,
     creationTime(),
   ];

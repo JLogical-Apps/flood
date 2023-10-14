@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:actions_core/actions_core.dart';
+import 'package:auth_core/auth_core.dart';
 import 'package:collection/collection.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
@@ -12,14 +13,14 @@ import 'package:utils_core/utils_core.dart';
 
 class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositoryListWrapper {
   final List<RepositoryImplementation> repositoryImplementations;
-  final ValueStream<String?> authenticatedUserIdX;
+  final ValueStream<Account?> loggedInAccountX;
 
   bool _ignoreSecurity = false;
 
   bool get ignoreSecurity => _ignoreSecurity;
 
-  DropCoreComponent({this.repositoryImplementations = const [], ValueStream<String?>? authenticatedUserIdX})
-      : authenticatedUserIdX = authenticatedUserIdX ?? BehaviorSubject.seeded(null);
+  DropCoreComponent({this.repositoryImplementations = const [], ValueStream<Account?>? loggedInAccountX})
+      : loggedInAccountX = loggedInAccountX ?? BehaviorSubject.seeded(null);
 
   @override
   List<CorePondComponentBehavior> get behaviors => [

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:actions_core/actions_core.dart';
+import 'package:auth_core/auth_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -12,74 +13,74 @@ void main() {
   test('security rules for authenticated users.', () async {
     final documentRepository =
         DocumentRepository().withSecurity(RepositorySecurity.public().withWrite(Permission.authenticated));
-    final authenticatedUserIdX = BehaviorSubject<String?>.seeded(null);
+    final loggedInAccountX = BehaviorSubject<Account?>.seeded(null);
 
     final corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
     await corePondContext.register(ActionCoreComponent());
     await corePondContext.register(DropCoreComponent(
-      authenticatedUserIdX: authenticatedUserIdX,
+      loggedInAccountX: loggedInAccountX,
     ));
     await corePondContext.register(documentRepository);
 
     // Test create
     final documentEntity = await expectFailsWithoutAuth(
       () => documentRepository.updateEntity(DocumentEntity()..set(Document())),
-      authenticatedUserIdX,
+      loggedInAccountX,
     );
 
     // Test update
     await expectFailsWithoutAuth(
       () => documentRepository.updateEntity(documentEntity, (document) => Document()),
-      authenticatedUserIdX,
+      loggedInAccountX,
     );
 
     // Test delete
     await expectFailsWithoutAuth(
       () => documentRepository.delete(documentEntity),
-      authenticatedUserIdX,
+      loggedInAccountX,
     );
 
     // Test read
     await expectPassesWithoutAuth(
       () => documentRepository.executeQuery(Query.fromAll().all()),
-      authenticatedUserIdX,
+      loggedInAccountX,
     );
   });
 
   test('security rules for all users.', () async {
     final documentRepository = DocumentRepository().withSecurity(RepositorySecurity.public());
-    final authenticatedUserIdX = BehaviorSubject<String?>.seeded(null);
+    final loggedInAccountX = BehaviorSubject<Account?>.seeded(null);
 
     final corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
     await corePondContext.register(DropCoreComponent(
-      authenticatedUserIdX: authenticatedUserIdX,
+      loggedInAccountX: loggedInAccountX,
     ));
     await corePondContext.register(documentRepository);
 
     // Test create
     final documentEntity = await expectPassesWithoutAuth(
       () => documentRepository.updateEntity(DocumentEntity()..set(Document())),
-      authenticatedUserIdX,
+      loggedInAccountX,
     );
 
     // Test update
     await expectPassesWithoutAuth(
       () => documentRepository.updateEntity(documentEntity, (document) => Document()),
-      authenticatedUserIdX,
+      loggedInAccountX,
     );
 
     // Test delete
     await expectPassesWithoutAuth(
       () => documentRepository.delete(documentEntity),
-      authenticatedUserIdX,
+      loggedInAccountX,
     );
 
     // Test read
     await expectPassesWithoutAuth(
       () => documentRepository.executeQuery(Query.fromAll().all()),
-      authenticatedUserIdX,
+      loggedInAccountX,
     );
   });
 
@@ -88,12 +89,12 @@ void main() {
       read: Permission.none,
       write: Permission.none,
     ));
-    final authenticatedUserIdX = BehaviorSubject<String?>.seeded('user1');
+    final loggedInAccountX = BehaviorSubject<Account?>.seeded(Account(accountId: 'user1'));
 
     final corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
     await corePondContext.register(DropCoreComponent(
-      authenticatedUserIdX: authenticatedUserIdX,
+      loggedInAccountX: loggedInAccountX,
     ));
     await corePondContext.register(documentRepository);
 
@@ -113,22 +114,22 @@ void main() {
   test('security rules for admin users.', () async {
     final documentRepository = DocumentRepository().withSecurity(RepositorySecurity.readWrite(
       read: Permission.all,
-      write: Permission.isAdmin(userEntityType: UserEntity, adminField: User.adminField),
+      write: Permission.admin,
     ));
-    final authenticatedUserIdX = BehaviorSubject<String?>.seeded('user1');
+    final loggedInAccountX = BehaviorSubject<Account?>.seeded(Account(accountId: 'user1'));
 
     final corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
     await corePondContext.register(ActionCoreComponent());
     await corePondContext.register(DropCoreComponent(
-      authenticatedUserIdX: authenticatedUserIdX,
+      loggedInAccountX: loggedInAccountX,
     ));
     await corePondContext.register(documentRepository);
     await corePondContext.register(UserRepository());
 
     await corePondContext.dropCoreComponent.updateEntity(UserEntity()
       ..id = 'admin'
-      ..set(User()..adminProperty.set(true)));
+      ..set(User()));
 
     // Test create
     expect(
@@ -144,7 +145,7 @@ void main() {
 
     // Allow previous [expect] to run before changing to admin user.
     await Future(() {});
-    authenticatedUserIdX.value = 'admin';
+    loggedInAccountX.value = Account(accountId: 'admin', isAdmin: true);
 
     // Test create
     expect(
@@ -158,44 +159,13 @@ void main() {
       returnsNormally,
     );
   });
-
-  test('security rules for unmodifiable fields.', () async {
-    final userRepository = UserRepository().withSecurity(RepositorySecurity(
-      read: Permission.all,
-      create: Permission.unmodifiable(User.adminField),
-      update: Permission.unmodifiable(User.adminField),
-      delete: Permission.isAdmin(userEntityType: UserEntity, adminField: User.adminField),
-    ));
-
-    final corePondContext = CorePondContext();
-    await corePondContext.register(TypeCoreComponent());
-    await corePondContext.register(ActionCoreComponent());
-    await corePondContext.register(DropCoreComponent(
-      authenticatedUserIdX: BehaviorSubject.seeded(null),
-    ));
-    await corePondContext.register(userRepository);
-
-    final userEntity = await corePondContext.dropCoreComponent.updateEntity(UserEntity()
-      ..id = 'admin'
-      ..set(User()));
-
-    expect(
-      () => userRepository.updateEntity(userEntity, (User user) => user..adminProperty.set(true)),
-      throwsA(isA<Exception>()),
-    );
-
-    expect(
-      () => userRepository.updateEntity(UserEntity()..set(User()..adminProperty.set(false))),
-      throwsA(isA<Exception>()),
-    );
-  });
 }
 
 Future<T> expectFailsWithoutAuth<T>(
   FutureOr<T> Function() function,
-  BehaviorSubject<String?> authenticatedUserIdX,
+  BehaviorSubject<Account?> loggedInAccountX,
 ) async {
-  authenticatedUserIdX.value = null;
+  loggedInAccountX.value = null;
 
   final completer = Completer();
   expect(
@@ -211,15 +181,15 @@ Future<T> expectFailsWithoutAuth<T>(
 
   await completer.future;
 
-  authenticatedUserIdX.value = 'user1';
+  loggedInAccountX.value = Account(accountId: 'user1');
   return await function();
 }
 
 Future<T> expectPassesWithoutAuth<T>(
   FutureOr<T> Function() function,
-  BehaviorSubject<String?> authenticatedUserIdX,
+  BehaviorSubject<Account?> loggedInAccountX,
 ) async {
-  authenticatedUserIdX.value = null;
+  loggedInAccountX.value = null;
 
   final completer = Completer();
   expect(
@@ -235,7 +205,7 @@ Future<T> expectPassesWithoutAuth<T>(
 
   await completer.future;
 
-  authenticatedUserIdX.value = 'user1';
+  loggedInAccountX.value = Account(accountId: 'user1');
 
   return await function();
 }
@@ -254,13 +224,7 @@ class DocumentRepository with IsRepositoryWrapper {
   ).memory();
 }
 
-class User extends ValueObject {
-  static const adminField = 'admin';
-  late final adminProperty = field<bool>(name: adminField).withFallbackWithoutReplacement(() => false);
-
-  @override
-  List<ValueObjectBehavior> get behaviors => [adminProperty];
-}
+class User extends ValueObject {}
 
 class UserEntity extends Entity<User> {}
 

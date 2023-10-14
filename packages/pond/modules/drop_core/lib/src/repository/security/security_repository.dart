@@ -1,5 +1,5 @@
+import 'package:auth_core/auth_core.dart';
 import 'package:drop_core/drop_core.dart';
-import 'package:drop_core/src/state/state_change.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -36,14 +36,14 @@ class SecurityQueryExecutor with IsRepositoryQueryExecutorWrapper {
 
   DropCoreComponent get context => securityRepository.context.dropCoreComponent;
 
-  String? get authenticatedUserId => context.authenticatedUserIdX.value;
+  Account? get loggedInAccount => context.loggedInAccountX.value;
 
   Future<bool> passesReadPermission() async {
     if (context.ignoreSecurity) {
       return true;
     }
 
-    return await repositorySecurity.read.passes(context, authenticatedUserId: authenticatedUserId, stateChange: null);
+    return await repositorySecurity.read.passes(context, loggedInAccount: loggedInAccount);
   }
 
   @override
@@ -88,18 +88,16 @@ class SecurityStateHandler with IsRepositoryStateHandlerWrapper {
 
   DropCoreComponent get context => securityRepository.context.dropCoreComponent;
 
-  String? get authenticatedUserId => context.authenticatedUserIdX.value;
+  Account? get loggedInAccount => context.loggedInAccountX.value;
 
   @override
   Future<State> onUpdate(State state) async {
-    final stateChange = await getStateChange(state);
-
     if (state.isNew) {
-      if (!await passesPermission(repositorySecurity.create, stateChange: stateChange)) {
+      if (!await passesPermission(repositorySecurity.create)) {
         throw Exception('Invalid permissions to create [$state]!');
       }
     } else {
-      if (!await passesPermission(repositorySecurity.update, stateChange: stateChange)) {
+      if (!await passesPermission(repositorySecurity.update)) {
         throw Exception('Invalid permissions to update [$state]!');
       }
     }
@@ -116,21 +114,11 @@ class SecurityStateHandler with IsRepositoryStateHandlerWrapper {
     return await stateHandler.delete(state);
   }
 
-  Future<bool> passesPermission(Permission permission, {StateChange? stateChange}) async {
+  Future<bool> passesPermission(Permission permission) async {
     if (context.ignoreSecurity) {
       return true;
     }
 
-    return await permission.passes(context, authenticatedUserId: authenticatedUserId, stateChange: stateChange);
-  }
-
-  Future<StateChange> getStateChange(State state) async {
-    if (state.id == null) {
-      return StateChange(oldState: null, newState: state);
-    }
-
-    final oldEntity = await securityRepository.executeQuery(Query.getByIdOrNullRuntime(state.type!.type, state.id!));
-    final oldState = oldEntity?.value.getState(context);
-    return StateChange(oldState: oldState, newState: state);
+    return await permission.passes(context, loggedInAccount: loggedInAccount);
   }
 }

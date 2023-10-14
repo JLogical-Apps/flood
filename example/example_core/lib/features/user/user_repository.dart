@@ -11,8 +11,8 @@ class UserRepository with IsRepositoryWrapper {
     valueObjectTypeName: 'User',
   ).adapting('user').withSecurity(RepositorySecurity(
         read: Permission.authenticated,
-        create: Permission.authenticated & Permission.unmodifiable(User.adminField),
-        update: Permission.authenticated & Permission.unmodifiable(User.adminField),
-        delete: Permission.isAdmin(userEntityType: UserEntity, adminField: User.adminField),
+        create: Permission.authenticated,
+        update: Permission.authenticated,
+        delete: Permission.admin,
       ));
 }

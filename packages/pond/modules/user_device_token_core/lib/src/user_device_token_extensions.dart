@@ -7,7 +7,7 @@ import 'package:utils_core/utils_core.dart';
 extension UserDeviceTokenAuthServiceExtensions on AuthService {
   AuthService withUserDeviceTokenListener() {
     return withListener(
-      onAfterLogin: (userId) async {
+      onAfterLogin: (account) async {
         final userDeviceTokenCoreComponent = context.locate<UserDeviceTokenCoreComponent>();
         final messagingComponent = context.locate<MessagingCoreComponent>();
 
@@ -16,9 +16,9 @@ extension UserDeviceTokenAuthServiceExtensions on AuthService {
           return;
         }
 
-        await userDeviceTokenCoreComponent.registerDevice(context.dropCoreComponent, userId, deviceToken);
+        await userDeviceTokenCoreComponent.registerDevice(context.dropCoreComponent, account.accountId, deviceToken);
       },
-      onBeforeLogout: (userId) async {
+      onBeforeLogout: (account) async {
         final userDeviceTokenCoreComponent = context.locate<UserDeviceTokenCoreComponent>();
         final messagingComponent = context.locate<MessagingCoreComponent>();
 
@@ -27,7 +27,7 @@ extension UserDeviceTokenAuthServiceExtensions on AuthService {
           return;
         }
 
-        await userDeviceTokenCoreComponent.removeDeviceToken(context.dropCoreComponent, userId, deviceToken);
+        await userDeviceTokenCoreComponent.removeDeviceToken(context.dropCoreComponent, account.accountId, deviceToken);
       },
     );
   }

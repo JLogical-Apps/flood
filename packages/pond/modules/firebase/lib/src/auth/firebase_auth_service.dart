@@ -7,16 +7,38 @@ import 'package:utils/utils.dart';
 class FirebaseAuthService with IsAuthService, IsCorePondComponent {
   late final FirebaseAuth auth = FirebaseAuth.instance;
 
-  late final BehaviorSubject<FutureValue<String?>> _userIdX =
-      BehaviorSubject.seeded(FutureValue.loaded(auth.currentUser?.uid));
+  late final BehaviorSubject<FutureValue<Account?>> _accountX = BehaviorSubject.seeded(FutureValue.empty());
 
   @override
-  Future<String> login(String email, String password) async {
+  List<CorePondComponentBehavior> get behaviors => [
+        CorePondComponentBehavior(
+          onLoad: (context, _) async {
+            final user = auth.currentUser;
+            if (user == null) {
+              _accountX.value = FutureValue.loaded(null);
+              return;
+            }
+
+            _accountX.value = FutureValue.loaded(Account(
+              accountId: user.uid,
+              isAdmin: await user.isAdmin(),
+            ));
+          },
+        ),
+      ];
+
+  @override
+  Future<Account> login(String email, String password) async {
     try {
       final credentials = await auth.signInWithEmailAndPassword(email: email, password: password);
-      final userId = credentials.user!.uid;
-      _userIdX.value = FutureValue.loaded(userId);
-      return userId;
+      final user = credentials.user!;
+
+      final account = Account(
+        accountId: user.uid,
+        isAdmin: await user.isAdmin(),
+      );
+      _accountX.value = FutureValue.loaded(account);
+      return account;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'invalid-email':
@@ -34,12 +56,17 @@ class FirebaseAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
-  Future<String> signup(String email, String password) async {
+  Future<Account> signup(String email, String password) async {
     try {
       final credential = await auth.createUserWithEmailAndPassword(email: email, password: password);
-      final userId = credential.user!.uid;
-      _userIdX.value = FutureValue.loaded(userId);
-      return userId;
+      final user = credential.user!;
+
+      final account = Account(
+        accountId: user.uid,
+        isAdmin: await user.isAdmin(),
+      );
+      _accountX.value = FutureValue.loaded(account);
+      return account;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'email-already-in-use':
@@ -59,9 +86,17 @@ class FirebaseAuthService with IsAuthService, IsCorePondComponent {
   @override
   Future<void> logout() async {
     await auth.signOut();
-    _userIdX.value = FutureValue.loaded(null);
+    _accountX.value = FutureValue.loaded(null);
   }
 
   @override
-  ValueStream<FutureValue<String?>> get userIdX => _userIdX;
+  ValueStream<FutureValue<Account?>> get accountX => _accountX;
+}
+
+extension on User {
+  Future<bool> isAdmin() async {
+    final token = await getIdTokenResult();
+    final claims = token.claims ?? {};
+    return claims['admin'] == true;
+  }
 }

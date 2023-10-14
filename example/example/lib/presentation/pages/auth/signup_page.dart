@@ -76,11 +76,11 @@ class SignupPage with IsAppPageWrapper<SignupRoute> {
               final data = result.data;
 
               try {
-                final userId = await context.find<AuthCoreComponent>().signup(data['email'], data['password']);
+                final account = await context.find<AuthCoreComponent>().signup(data['email'], data['password']);
                 final deviceToken = context.find<MessagingCoreComponent>().deviceToken;
 
                 await context.dropCoreComponent.updateEntity(
-                  UserEntity()..id = userId,
+                  UserEntity()..id = account.accountId,
                   (User user) => user
                     ..emailProperty.set(data['email'])
                     ..nameProperty.set(data['name'])
@@ -91,7 +91,7 @@ class SignupPage with IsAppPageWrapper<SignupRoute> {
                   BudgetEntity(),
                   (Budget budget) => budget
                     ..nameProperty.set('Personal')
-                    ..ownerProperty.set(userId),
+                    ..ownerProperty.set(account.accountId),
                 );
 
                 await context.pushBudgetRoute(budgetEntity.id!);

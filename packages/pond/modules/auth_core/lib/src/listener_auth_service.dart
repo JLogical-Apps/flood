@@ -8,8 +8,8 @@ class ListenerAuthService with IsAuthServiceWrapper {
   @override
   final AuthService authService;
 
-  final FutureOr Function(String userId)? onAfterLogin;
-  final FutureOr Function(String userId)? onBeforeLogout;
+  final FutureOr Function(Account account)? onAfterLogin;
+  final FutureOr Function(Account account)? onBeforeLogout;
 
   ListenerAuthService({required this.authService, this.onAfterLogin, this.onBeforeLogout});
 
@@ -19,10 +19,10 @@ class ListenerAuthService with IsAuthServiceWrapper {
       [
         CorePondComponentBehavior(
           onLoad: (context, component) async {
-            authService.userIdX.listen((maybeUserId) async {
-              final userId = maybeUserId.getOrNull();
-              if (userId != null) {
-                await onAfterLogin?.call(userId);
+            authService.accountX.listen((maybeAccount) async {
+              final account = maybeAccount.getOrNull();
+              if (account != null) {
+                await onAfterLogin?.call(account);
               }
             });
           },
@@ -30,23 +30,23 @@ class ListenerAuthService with IsAuthServiceWrapper {
       ];
 
   @override
-  Future<String> login(String email, String password) async {
-    final userId = await authService.login(email, password);
-    await onAfterLogin?.call(userId);
-    return userId;
+  Future<Account> login(String email, String password) async {
+    final account = await authService.login(email, password);
+    await onAfterLogin?.call(account);
+    return account;
   }
 
   @override
-  Future<String> signup(String email, String password) async {
-    final userId = await authService.signup(email, password);
-    await onAfterLogin?.call(userId);
-    return userId;
+  Future<Account> signup(String email, String password) async {
+    final account = await authService.signup(email, password);
+    await onAfterLogin?.call(account);
+    return account;
   }
 
   @override
   Future<void> logout() async {
-    if (loggedInUserId != null) {
-      await onBeforeLogout?.call(loggedInUserId!);
+    if (loggedInAccount != null) {
+      await onBeforeLogout?.call(loggedInAccount!);
     }
 
     await authService.logout();

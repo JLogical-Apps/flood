@@ -1,4 +1,5 @@
 import 'package:actions_core/actions_core.dart';
+import 'package:auth_core/src/account.dart';
 import 'package:auth_core/src/auth_service.dart';
 import 'package:auth_core/src/auth_service_implementation.dart';
 import 'package:collection/collection.dart';
@@ -39,12 +40,12 @@ class AuthCoreComponent with IsAuthServiceWrapper {
   );
 
   @override
-  Future<String> login(String email, String password) async {
+  Future<Account> login(String email, String password) async {
     return await context.run(loginAction, LoginParameters(email: email, password: password));
   }
 
   @override
-  Future<String> signup(String email, String password) async {
+  Future<Account> signup(String email, String password) async {
     return await context.run(signupAction, SignupParameters(email: email, password: password));
   }
 

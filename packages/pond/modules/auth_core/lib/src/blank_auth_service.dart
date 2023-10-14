@@ -1,3 +1,4 @@
+import 'package:auth_core/src/account.dart';
 import 'package:auth_core/src/auth_service.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -8,7 +9,7 @@ class BlankAuthService with IsAuthService, IsCorePondComponent {
   List<CorePondComponentBehavior> get behaviors => [];
 
   @override
-  Future<String> login(String email, String password) {
+  Future<Account> login(String email, String password) {
     throw UnimplementedError();
   }
 
@@ -18,10 +19,10 @@ class BlankAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
-  Future<String> signup(String email, String password) {
+  Future<Account> signup(String email, String password) {
     throw UnimplementedError();
   }
 
   @override
-  ValueStream<FutureValue<String?>> get userIdX => BehaviorSubject.seeded(FutureValue.loaded(null));
+  ValueStream<FutureValue<Account?>> get accountX => BehaviorSubject.seeded(FutureValue.loaded(null));
 }

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:drop_core/drop_core.dart';
 import 'package:environment_core/environment_core.dart';
-import 'package:ops/src/permission/permission_text_modifier.dart';
+import 'package:ops/src/firebase/permission/permission_text_modifier.dart';
 import 'package:ops/src/repository_security/repository_security_modifier.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:pond_core/pond_core.dart';

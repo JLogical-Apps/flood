@@ -1,6 +1,8 @@
+import 'package:auth_core/src/account.dart';
 import 'package:auth_core/src/auth_service.dart';
 import 'package:auth_core/src/login_failure.dart';
 import 'package:auth_core/src/signup_failure.dart';
+import 'package:collection/collection.dart';
 import 'package:environment_core/environment_core.dart';
 import 'package:equatable/equatable.dart';
 import 'package:persistence_core/persistence_core.dart';
@@ -12,16 +14,14 @@ import 'package:uuid/uuid.dart';
 class FileAuthService with IsAuthService, IsCorePondComponent {
   CrossDirectory get authDirectory => context.fileSystem.storageDirectory / 'auth';
 
-  DataSource<String?>? _loggedInUserIdDataSource;
   late DataSource<String?> loggedInUserIdDataSource =
-      _loggedInUserIdDataSource ??= DataSource.static.crossFile(authDirectory - 'logged_in_user_token.txt').map(
+      DataSource.static.crossFile(authDirectory - 'logged_in_user_token.txt').map(
             getMapper: (string) => string.nullIfBlank,
             setMapper: (string) => string ?? '',
           );
 
-  DataSource<Map<LoginToken, String>?>? _registeredUsersDataSource;
-  late DataSource<Map<LoginToken, String>?> registeredUsersDataSource =
-      _registeredUsersDataSource ??= DataSource.static.crossFile(authDirectory - 'registered_users.json').mapJson().map(
+  late DataSource<Map<LoginToken, Account>?> registeredAccountsDataSource =
+      DataSource.static.crossFile(authDirectory - 'registered_users.json').mapJson().map(
             getMapper: (json) {
               final registeredUsers = json['registeredUsers'] as Map<String, dynamic>;
               return registeredUsers.map((email, data) => MapEntry(
@@ -29,84 +29,93 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
                       email: email,
                       password: data['password'],
                     ),
-                    data['userId'] as String,
+                    Account(
+                      accountId: data['userId'] as String,
+                      isAdmin: (data['admin'] as bool?) ?? false,
+                    ),
                   ));
             },
             setMapper: (registeredUsers) => {
-              'registeredUsers': (registeredUsers ?? {}).map((loginToken, userId) => MapEntry(
+              'registeredUsers': (registeredUsers ?? {}).map((loginToken, account) => MapEntry(
                     loginToken.email,
                     {
-                      'userId': userId,
+                      'userId': account.accountId,
                       'password': loginToken.password,
+                      'admin': account.isAdmin,
                     },
                   ))
             },
           );
 
-  final BehaviorSubject<FutureValue<String?>> _userIdX = BehaviorSubject.seeded(FutureValue.empty());
+  final BehaviorSubject<FutureValue<Account?>> _accountX = BehaviorSubject.seeded(FutureValue.empty());
 
   @override
   late final List<CorePondComponentBehavior> behaviors = [
     CorePondComponentBehavior(
       onRegister: (context, _) async {
         final userId = await loggedInUserIdDataSource.getOrNull();
-        _userIdX.value = FutureValue.loaded(userId);
+        final registeredAccounts = await registeredAccountsDataSource.getOrNull() ?? {};
+        final account = registeredAccounts.values.firstWhereOrNull((account) => account.accountId == userId);
+        _accountX.value = FutureValue.loaded(account);
       },
       onReset: (context, __) async {
         await loggedInUserIdDataSource.delete();
-        await registeredUsersDataSource.delete();
+        await registeredAccountsDataSource.delete();
       },
     ),
   ];
 
   @override
-  Future<String> login(String email, String password) async {
+  Future<Account> login(String email, String password) async {
     final loginToken = LoginToken(email: email, password: password);
 
-    final registeredUsers = await registeredUsersDataSource.getOrNull() ?? {};
-    final userId = registeredUsers[loginToken];
-    if (userId == null) {
+    final registeredUsers = await registeredAccountsDataSource.getOrNull() ?? {};
+    final account = registeredUsers[loginToken];
+    if (account == null) {
       throw LoginFailure.userNotFound();
     }
 
-    await loggedInUserIdDataSource.set(userId);
-    _userIdX.value = FutureValue.loaded(userId);
+    await loggedInUserIdDataSource.set(account.accountId);
+    _accountX.value = FutureValue.loaded(account);
 
-    return userId;
+    return account;
   }
 
   @override
-  Future<String> signup(String email, String password) async {
+  Future<Account> signup(String email, String password) async {
     final loginToken = LoginToken(email: email, password: password);
 
-    final registeredUsers = await registeredUsersDataSource.getOrNull() ?? {};
-    final existingUser = registeredUsers[loginToken];
+    final registeredAccounts = await registeredAccountsDataSource.getOrNull() ?? {};
+    final existingUser = registeredAccounts[loginToken];
     if (existingUser != null) {
       throw SignupFailure.emailAlreadyUsed();
     }
 
-    final userId = Uuid().v4();
+    final account = Account(
+      accountId: Uuid().v4(),
+      isAdmin: false,
+    );
 
-    registeredUsers[loginToken] = userId;
+    registeredAccounts[loginToken] = account;
 
     await Future.wait([
-      registeredUsersDataSource.set(registeredUsers),
-      loggedInUserIdDataSource.set(userId),
+      registeredAccountsDataSource.set(registeredAccounts),
+      loggedInUserIdDataSource.set(account.accountId),
     ]);
 
-    _userIdX.value = FutureValue.loaded(userId);
+    _accountX.value = FutureValue.loaded(account);
 
-    return userId;
+    return account;
   }
 
   @override
   Future<void> logout() async {
     await loggedInUserIdDataSource.delete();
-    _userIdX.value = FutureValue.loaded(null);
+    _accountX.value = FutureValue.loaded(null);
   }
 
   @override
-  ValueStream<FutureValue<String?>> get userIdX => _userIdX;
+  ValueStream<FutureValue<Account?>> get accountX => _accountX;
 }
 
 /// Token used to simulate logging in. Only used for local testing purposes.

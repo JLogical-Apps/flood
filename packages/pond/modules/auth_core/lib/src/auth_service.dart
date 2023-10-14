@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auth_core/src/account.dart';
 import 'package:auth_core/src/adapting_auth_service.dart';
 import 'package:auth_core/src/cloud_auth_service.dart';
 import 'package:auth_core/src/file_auth_service.dart';
@@ -10,23 +11,28 @@ import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class AuthService with IsCorePondComponent {
-  Future<String> login(String email, String password);
+  Future<Account> login(String email, String password);
 
-  Future<String> signup(String email, String password);
+  Future<Account> signup(String email, String password);
 
   Future<void> logout();
 
-  ValueStream<FutureValue<String?>> get userIdX;
+  ValueStream<FutureValue<Account?>> get accountX;
 
   static AuthServiceStatic get static => AuthServiceStatic();
 }
 
 extension AuthServiceExtension on AuthService {
+  Account? get loggedInAccount => accountX.value.getOrNull();
+
+  ValueStream<FutureValue<String?>> get userIdX =>
+      accountX.mapWithValue((account) => account.map((account) => account?.accountId));
+
   String? get loggedInUserId => userIdX.value.getOrNull();
 
   AuthService withListener({
-    FutureOr Function(String userId)? onAfterLogin,
-    FutureOr Function(String userId)? onBeforeLogout,
+    FutureOr Function(Account account)? onAfterLogin,
+    FutureOr Function(Account account)? onBeforeLogout,
   }) =>
       ListenerAuthService(
         authService: this,
@@ -61,16 +67,16 @@ abstract class AuthServiceWrapper implements AuthService {
 
 mixin IsAuthServiceWrapper implements AuthServiceWrapper {
   @override
-  Future<String> login(String email, String password) => authService.login(email, password);
+  Future<Account> login(String email, String password) => authService.login(email, password);
 
   @override
-  Future<String> signup(String email, String password) => authService.signup(email, password);
+  Future<Account> signup(String email, String password) => authService.signup(email, password);
 
   @override
   Future<void> logout() => authService.logout();
 
   @override
-  late ValueStream<FutureValue<String?>> userIdX = authService.userIdX;
+  late ValueStream<FutureValue<Account?>> accountX = authService.accountX;
 
   late CorePondContext _context;
 

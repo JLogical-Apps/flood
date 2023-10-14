@@ -3,13 +3,14 @@ import 'dart:io';
 
 import 'package:appwrite_core/appwrite_core.dart';
 import 'package:collection/collection.dart';
-import 'package:dart_appwrite/dart_appwrite.dart';
+import 'package:dart_appwrite/dart_appwrite.dart' hide Permission;
 import 'package:dart_appwrite/models.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:environment_core/environment_core.dart';
 import 'package:log_core/log_core.dart';
 import 'package:ops/src/appwrite/appwrite_platform.dart';
 import 'package:ops/src/appwrite/behavior/appwrite_attribute_behavior_modifier.dart';
+import 'package:ops/src/appwrite/permission/permission_text_modifier.dart';
 import 'package:ops/src/ops_environment.dart';
 import 'package:ops/src/repository_security/repository_security_modifier.dart';
 import 'package:persistence_core/persistence_core.dart';
@@ -555,6 +556,8 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
   }
 
   Collection? _getCollection(AutomateCommandContext context, {required Repository repository}) {
+    final dropContext = context.automateContext.corePondContext.dropCoreComponent;
+
     final securityModifier = RepositorySecurityModifier.getModifierOrNull(repository);
     if (securityModifier == null) {
       return null;
@@ -565,14 +568,25 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
       return null;
     }
 
+    final security = securityModifier.getSecurity(repository) ?? RepositorySecurity.none();
+
+    List<String> getPermissionTexts({required String action, required Permission permission}) =>
+        PermissionTextModifier.getModifier(permission)
+            .getPermissions(dropContext, permission)
+            .map((permissionText) => '$action("$permissionText")')
+            .toList();
+
     return Collection.fromMap({
       '\$id': securityModifier.getPath(repository),
-      '\$permissions': [
-        'create("any")',
-        'read("any")',
-        'update("any")',
-        'delete("any")',
-      ],
+      '\$permissions': {
+        'read': security.read,
+        'create': security.create,
+        'update': security.update,
+        'delete': security.delete,
+      }
+          .mapToIterable((action, permission) => getPermissionTexts(action: action, permission: permission))
+          .expand((list) => list)
+          .toList(),
       'databaseId': _databaseId,
       'name': securityModifier.getPath(repository),
       'enabled': true,

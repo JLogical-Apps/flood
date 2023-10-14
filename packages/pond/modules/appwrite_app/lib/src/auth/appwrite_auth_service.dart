@@ -1,4 +1,5 @@
-import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/appwrite.dart' hide Account;
+import 'package:appwrite/appwrite.dart' as appwrite;
 import 'package:appwrite_app/src/util/core_pond_context_extensions.dart';
 import 'package:auth_core/auth_core.dart';
 import 'package:pond_core/pond_core.dart';
@@ -6,9 +7,9 @@ import 'package:rxdart/rxdart.dart';
 import 'package:utils/utils.dart';
 
 class AppwriteAuthService with IsAuthService, IsCorePondComponent {
-  late final BehaviorSubject<FutureValue<String?>> _userIdX = BehaviorSubject.seeded(FutureValue.loading());
+  late final BehaviorSubject<FutureValue<Account?>> _accountX = BehaviorSubject.seeded(FutureValue.loading());
 
-  Account get account => context.appwriteCoreComponent.account;
+  appwrite.Account get account => context.appwriteCoreComponent.account;
 
   @override
   List<CorePondComponentBehavior> get behaviors => [
@@ -16,21 +17,30 @@ class AppwriteAuthService with IsAuthService, IsCorePondComponent {
           onLoad: (context, _) async {
             try {
               final user = await account.get();
-              _userIdX.value = FutureValue.loaded(user.$id);
-            } catch (e) {
-              FutureValue.loaded(null);
+              _accountX.value = FutureValue.loaded(Account(
+                accountId: user.$id,
+                isAdmin: user.labels.contains('admin'),
+              ));
+            } catch (error, stackTrace) {
+              _accountX.value = FutureValue.error(error, stackTrace);
             }
           },
         ),
       ];
 
   @override
-  Future<String> login(String email, String password) async {
+  Future<Account> login(String email, String password) async {
     try {
-      final session = await account.createEmailSession(email: email, password: password);
-      final userId = session.userId;
-      _userIdX.value = FutureValue.loaded(userId);
-      return userId;
+      await account.createEmailSession(email: email, password: password);
+
+      final user = await account.get();
+
+      final loggedInAccount = Account(
+        accountId: user.$id,
+        isAdmin: user.labels.contains('admin'),
+      );
+      _accountX.value = FutureValue.loaded(loggedInAccount);
+      return loggedInAccount;
     } on AppwriteException catch (e) {
       switch (e.type) {
         case 'user_invalid_credentials':
@@ -48,13 +58,18 @@ class AppwriteAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
-  Future<String> signup(String email, String password) async {
+  Future<Account> signup(String email, String password) async {
     try {
-      await account.create(userId: ID.unique(), email: email, password: password);
-      final session = await account.createEmailSession(email: email, password: password);
-      final userId = session.userId;
-      _userIdX.value = FutureValue.loaded(userId);
-      return userId;
+      final user = await account.create(userId: ID.unique(), email: email, password: password);
+      await account.createEmailSession(email: email, password: password);
+
+      final loggedInAccount = Account(
+        accountId: user.$id,
+        isAdmin: user.labels.contains('admin'),
+      );
+
+      _accountX.value = FutureValue.loaded(loggedInAccount);
+      return loggedInAccount;
     } on AppwriteException catch (e) {
       switch (e.type) {
         case 'user_invalid_credentials':
@@ -71,9 +86,9 @@ class AppwriteAuthService with IsAuthService, IsCorePondComponent {
   @override
   Future<void> logout() async {
     await account.deleteSessions();
-    _userIdX.value = FutureValue.loaded(null);
+    _accountX.value = FutureValue.loaded(null);
   }
 
   @override
-  ValueStream<FutureValue<String?>> get userIdX => _userIdX;
+  ValueStream<FutureValue<Account?>> get accountX => _accountX;
 }
