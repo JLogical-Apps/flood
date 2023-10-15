@@ -27,9 +27,11 @@ class AppwriteCloudRepositoryStateHandler with IsRepositoryStateHandler {
         extraStatePersisterModifiers: [
           AppwriteValueObjectStatePersisterModifier(
             context,
-            persister: (state) => getStatePersister(context).persist(state),
+            statePersisterGetter: () => getStatePersister(context),
           ),
-          AppwriteMapStatePersisterModifier(),
+          AppwriteMapStatePersisterModifier(
+            statePersisterGetter: () => getStatePersister(context),
+          ),
           AppwriteTimestampStatePersisterModifier(),
         ],
       );

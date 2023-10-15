@@ -3,9 +3,9 @@ import 'package:utils/utils.dart';
 
 class AppwriteValueObjectStatePersisterModifier extends StatePersisterModifier {
   final DropCoreContext context;
-  final Map<String, dynamic> Function(State state) persister;
+  final StatePersister<Map<String, dynamic>> Function() statePersisterGetter;
 
-  AppwriteValueObjectStatePersisterModifier(this.context, {required this.persister});
+  AppwriteValueObjectStatePersisterModifier(this.context, {required this.statePersisterGetter});
 
   @override
   Map<String, dynamic> persist(Map<String, dynamic> data) {
@@ -13,7 +13,7 @@ class AppwriteValueObjectStatePersisterModifier extends StatePersisterModifier {
       (key, value) => value is ValueObject,
       (key, value) {
         final state = (value as ValueObject).getState(context);
-        return persister(state);
+        return statePersisterGetter().persist(state);
       },
     ).cast<String, dynamic>();
   }
