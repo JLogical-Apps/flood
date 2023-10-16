@@ -5,3 +5,6 @@ firebase:
     project_id: jlogical-utils
   production:
     project_id: pond-automation-1
+appwrite:
+  staging:
+    webDomain: https://www.valetbudget.app

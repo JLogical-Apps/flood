@@ -17,8 +17,8 @@ Future<void> main(List<String> args) async {
   ));
   await automatePondContext.register(OpsAutomateComponent(environments: {
     EnvironmentType.static.qa: OpsEnvironment.static.appwriteLocal,
-    EnvironmentType.static.staging: OpsEnvironment.static.firebase,
-    EnvironmentType.static.production: OpsEnvironment.static.firebase,
+    EnvironmentType.static.staging: OpsEnvironment.static.appwrite,
+    EnvironmentType.static.production: OpsEnvironment.static.appwrite,
   }));
   await automatePondContext.register(ReleaseAutomateComponent(pipelines: {
     ReleaseEnvironmentType.beta: Pipeline.defaultDeploy({
