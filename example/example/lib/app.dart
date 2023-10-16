@@ -29,7 +29,6 @@ Future<void> main(List<String> args) async {
               ],
               repositoryImplementations: [
                 FlutterFileRepositoryImplementation(),
-                // FirebaseCloudRepositoryImplementation(),
                 AppwriteCloudRepositoryImplementation(),
               ],
               messagingService: MessagingService.static.environmental((environment) {
@@ -43,7 +42,6 @@ Future<void> main(List<String> args) async {
               }),
               authServiceImplementations: [
                 AppwriteAuthServiceImplementation(),
-                // FirebaseAuthServiceImplementation(),
               ],
             ))),
     loadingPage: StyledPage(
