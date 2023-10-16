@@ -144,7 +144,7 @@ class AppwriteOpsUtils {
           'Create Default Database',
           (context) => databases.create(
                 databaseId: _databaseId,
-                name: 'Name',
+                name: 'Default',
               )),
     ]));
   }
@@ -560,8 +560,10 @@ class AppwriteOpsUtils {
     });
   }
 
-  static List<Map<String, dynamic>> _getAttributesJson(AutomateCommandContext context,
-      {required Repository repository}) {
+  static List<Map<String, dynamic>> _getAttributesJson(
+    AutomateCommandContext context, {
+    required Repository repository,
+  }) {
     return repository.handledTypes
         .expand((entityRuntimeType) => [entityRuntimeType, ...entityRuntimeType.getConcreteDescendants()]
             .where((runtimeType) => runtimeType.isConcrete)
@@ -649,18 +651,29 @@ class AppwriteOpsUtils {
         .whereType<ValueObjectProperty>()
         .map((property) {
           final behaviorModifier = AppwriteAttributeBehaviorModifier.getBehaviorModifierOrNull(property);
-          if (behaviorModifier == null || !behaviorModifier.isIndexed(property)) {
+          if (behaviorModifier == null) {
             return null;
           }
 
-          return {
-            'key': property.name,
-            'type': 'key',
-            'attributes': [property.name],
-            'orders': [],
-          };
+          return [
+            if (behaviorModifier.isIndexed(property))
+              {
+                'key': property.name,
+                'type': 'key',
+                'attributes': [property.name],
+                'orders': [],
+              },
+            if (behaviorModifier.isArray(property))
+              {
+                'key': property.name,
+                'type': 'fulltext',
+                'attributes': [property.name],
+                'orders': [],
+              },
+          ];
         })
         .whereNonNull()
+        .expand((list) => list)
         .toList();
 
     return indexJsons;

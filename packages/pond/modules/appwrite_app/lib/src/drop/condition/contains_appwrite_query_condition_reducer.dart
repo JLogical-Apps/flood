@@ -6,6 +6,6 @@ import 'package:drop_core/drop_core.dart';
 class ContainsAppwriteQueryConditionReducer extends AppwriteQueryConditionReducer<ContainsQueryCondition> {
   @override
   AppwriteQuery reduce(ContainsQueryCondition condition, AppwriteQuery currentAppwriteQuery) {
-    return currentAppwriteQuery.withQuery(appwrite.Query.equal(condition.stateField, condition.value));
+    return currentAppwriteQuery.withQuery(appwrite.Query.search(condition.stateField, condition.value));
   }
 }
