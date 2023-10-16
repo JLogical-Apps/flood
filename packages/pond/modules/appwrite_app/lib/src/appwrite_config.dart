@@ -8,4 +8,8 @@ class AppwriteConfig {
   AppwriteConfig.localhost({required this.projectId})
       : endpoint = 'http://localhost/v1',
         selfSigned = true;
+
+  AppwriteConfig.cloud({required this.projectId})
+      : endpoint = 'https://cloud.appwrite.io/v1',
+        selfSigned = false;
 }

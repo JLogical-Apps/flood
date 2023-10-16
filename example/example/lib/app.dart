@@ -18,32 +18,36 @@ const testingLoggedIn = true;
 
 Future<void> main(List<String> args) async {
   await PondApp.run(
-    appPondContextGetter: () =>
-        buildLateAsync<AppPondContext>((appPondContextGetter) async => await getAppPondContext(await getCorePondContext(
-              environmentConfig: EnvironmentConfig.static.flutterAssets(),
-              additionalCoreComponents: [
-                FirebaseCoreComponent(app: DefaultFirebaseOptions.currentPlatform),
-                AppwriteCoreComponent(
-                  config: AppwriteConfig.localhost(projectId: '651b48116fc13fcb79be'),
-                ),
-              ],
-              repositoryImplementations: [
-                FlutterFileRepositoryImplementation(),
-                AppwriteCloudRepositoryImplementation(),
-              ],
-              messagingService: MessagingService.static.environmental((environment) {
-                final environmentType = environment.environment;
-                if (environmentType == EnvironmentType.static.testing ||
-                    environmentType == EnvironmentType.static.device) {
-                  return MessagingService.static.local(refreshDuration: Duration(minutes: 5));
-                }
+    appPondContextGetter: () async => await getAppPondContext(await getCorePondContext(
+      environmentConfig: EnvironmentConfig.static.flutterAssets(),
+      additionalCoreComponents: (corePondContext) => [
+        FirebaseCoreComponent(app: DefaultFirebaseOptions.currentPlatform),
+        AppwriteCoreComponent(config: corePondContext.environmental((type) {
+          if (type == EnvironmentType.static.qa) {
+            return AppwriteConfig.localhost(projectId: '651b48116fc13fcb79be');
+          } else if (type == EnvironmentType.static.staging) {
+            return AppwriteConfig.cloud(projectId: '6409e66ed830e72e8f8d');
+          }
 
-                return MessagingService.static.firebase;
-              }),
-              authServiceImplementations: [
-                AppwriteAuthServiceImplementation(),
-              ],
-            ))),
+          throw Exception('Cannot find Appwrite Config for environment [$type]');
+        })),
+      ],
+      repositoryImplementations: [
+        FlutterFileRepositoryImplementation(),
+        AppwriteCloudRepositoryImplementation(),
+      ],
+      messagingService: MessagingService.static.environmental((environment) {
+        final environmentType = environment.environment;
+        if (environmentType == EnvironmentType.static.testing || environmentType == EnvironmentType.static.device) {
+          return MessagingService.static.local(refreshDuration: Duration(minutes: 5));
+        }
+
+        return MessagingService.static.firebase;
+      }),
+      authServiceImplementations: [
+        AppwriteAuthServiceImplementation(),
+      ],
+    )),
     loadingPage: StyledPage(
       body: Center(
         child: StyledLoadingIndicator(),

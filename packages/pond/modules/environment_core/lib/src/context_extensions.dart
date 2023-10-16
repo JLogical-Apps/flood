@@ -19,4 +19,8 @@ extension EnvironmentCoreContextExtensions on CorePondContext {
   EnvironmentType get environment => locate<EnvironmentConfigCoreComponent>().environment;
 
   FileSystem get fileSystem => locate<EnvironmentConfigCoreComponent>().fileSystem;
+
+  T environmental<T>(T Function(EnvironmentType type) getter) {
+    return getter(environment);
+  }
 }

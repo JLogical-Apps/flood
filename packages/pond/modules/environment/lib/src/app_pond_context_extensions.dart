@@ -9,4 +9,8 @@ extension EnvironmentAppPondContextExtensions on AppPondContext {
   Platform get platform => find<EnvironmentConfigCoreComponent>().platform;
 
   EnvironmentType get environment => find<EnvironmentConfigCoreComponent>().environment;
+
+  T environmental<T>(T Function(EnvironmentType type) getter) {
+    return getter(environment);
+  }
 }
