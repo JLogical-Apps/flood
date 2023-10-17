@@ -42,7 +42,7 @@ class ShellTerminal with IsTerminal {
 
   @override
   String input(String prompt, {String? hintText, String? initialText}) {
-    return Input(prompt: prompt, defaultValue: hintText, initialText: initialText ?? '').interact();
+    return dcli.ask(prompt, defaultValue: initialText);
   }
 
   @override
