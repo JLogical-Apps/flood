@@ -5,6 +5,7 @@ import 'package:jlogical_utils/src/pond/query/derived/first_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/contains_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/predicate/equals_query_predicate.dart';
 import 'package:jlogical_utils/src/pond/query/request/all_query_request.dart';
+import 'package:jlogical_utils/src/pond/query/request/count_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/first_or_null_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/paginate_query_request.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
@@ -141,6 +142,10 @@ abstract class Query<R extends Record> extends Equatable {
 
   AllQueryRequest<R> all() {
     return AllQueryRequest<R>(query: this);
+  }
+
+  CountQueryRequest<R> count() {
+    return CountQueryRequest(query: this);
   }
 
   FirstOrNullQueryRequest<R> firstOrNull({bool orderMatters: true}) {

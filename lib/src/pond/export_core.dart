@@ -66,7 +66,6 @@ export 'schema/field/schema_field.dart';
 export 'schema/schema.dart';
 export 'schema/schema_migrator.dart';
 export 'schema/with_schema_migration_initializer.dart';
-export 'schema/with_schema_migration_initializer.dart';
 export 'state/state.dart';
 export 'state/stateful.dart';
 export 'type_state_serializers/bool_type_state_serializer.dart';

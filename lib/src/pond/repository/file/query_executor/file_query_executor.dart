@@ -9,6 +9,7 @@ import 'package:jlogical_utils/src/pond/record/record.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/query/file_order_by_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/query/file_where_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/query/file_without_cache_query_reducer.dart';
+import 'package:jlogical_utils/src/pond/repository/file/query_executor/reducer/request/file_count_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
 import '../../../query/reducer/entity_inflater.dart';
@@ -45,6 +46,7 @@ class FileQueryExecutor with WithResolverQueryExecutor<Iterable<State>> implemen
       getQueryRequestReducers<R extends Record>() => [
             FileAllQueryRequestReducer<R>(entityInflater: entityInflater),
             FileAllRawQueryRequestReducer<R>(),
+            FileCountQueryRequestReducer<R>(),
             FileFirstOrNullQueryRequestReducer<R>(entityInflater: entityInflater),
             FilePaginateQueryRequestReducer<R>(
               entityInflater: entityInflater,

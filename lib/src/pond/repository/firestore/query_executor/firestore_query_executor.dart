@@ -6,6 +6,7 @@ import 'package:jlogical_utils/src/pond/query/reducer/entity_inflater.dart';
 import 'package:jlogical_utils/src/pond/query/reducer/query/abstract_query_reducer.dart';
 import 'package:jlogical_utils/src/pond/query/request/query_request.dart';
 import 'package:jlogical_utils/src/pond/record/record.dart';
+import 'package:jlogical_utils/src/pond/repository/firestore/query_executor/reducer/request/firestore_count_query_request_reducer.dart';
 
 import '../../../query/request/result/query_pagination_result_controller.dart';
 import 'reducer/query/firestore_from_query_reducer.dart';
@@ -64,6 +65,7 @@ class FirestoreQueryExecutor with WithResolverQueryExecutor<firestore.Query> imp
               typeNameFromUnionTypeValueGetter: getTypeNameFromUnionTypeValue,
               inferredType: inferredType,
             ),
+            FirestoreCountQueryRequestReducer<R>(),
             FirestoreFirstOrNullQueryRequestReducer<R>(
               unionTypeFieldName: unionTypeFieldName,
               typeNameFromUnionTypeValueGetter: getTypeNameFromUnionTypeValue,

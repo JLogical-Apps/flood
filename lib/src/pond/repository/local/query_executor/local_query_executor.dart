@@ -11,6 +11,7 @@ import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/abstract_local_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_all_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_all_raw_query_request_reducer.dart';
+import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_count_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/repository/local/query_executor/reducer/request/local_paginate_query_request_reducer.dart';
 import 'package:jlogical_utils/src/pond/state/state.dart';
 
@@ -43,6 +44,7 @@ class LocalQueryExecutor with WithSyncResolverQueryExecutor<Iterable<State>> imp
       getSyncQueryRequestReducers<R extends Record>() => [
             LocalAllQueryRequestReducer<R>(entityInflater: entityInflater),
             LocalAllRawQueryRequestReducer<R>(),
+            LocalCountQueryRequestReducer<R>(),
             LocalFirstOrNullQueryRequestReducer<R>(entityInflater: entityInflater),
             LocalPaginateQueryRequestReducer<R>(
               entityInflater: entityInflater,
