@@ -20,32 +20,32 @@ dependencies:
   debug:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "v3.0"
+      ref: "v3.1"
       path: packages/pond/modules/debug
   log_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "v3.0"
+      ref: "v3.1"
       path: packages/pond/modules/log_core
   model:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "v3.0"
+      ref: "v3.1"
       path: packages/model/model
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "v3.0"
+      ref: "v3.1"
       path: packages/pond/pond
   style:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "v3.0"
+      ref: "v3.1"
       path: packages/style
   utils:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "v3.0"
+      ref: "v3.1"
       path: packages/utils/utils
 
 dev_dependencies:
