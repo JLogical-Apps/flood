@@ -13,7 +13,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 Future<CorePondContext> getCorePondContext({
   EnvironmentConfig? environmentConfig,
   List<CorePondComponent> Function(CorePondContext context)? additionalCoreComponents,
-  List<RepositoryImplementation> repositoryImplementations = const [],
+  List<RepositoryImplementation> Function(CorePondContext context)? repositoryImplementations,
   List<AuthServiceImplementation> authServiceImplementations = const [],
   MessagingService? messagingService,
 }) async {
@@ -35,7 +35,7 @@ Future<CorePondContext> getCorePondContext({
     authServiceImplementations: authServiceImplementations,
   ));
   await corePondContext.register(DropCoreComponent(
-    repositoryImplementations: repositoryImplementations,
+    repositoryImplementations: repositoryImplementations?.call(corePondContext) ?? [],
     loggedInAccountX:
         corePondContext.locate<AuthCoreComponent>().accountX.mapWithValue((maybeUserIdX) => maybeUserIdX.getOrNull()),
   ));

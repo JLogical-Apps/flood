@@ -4,6 +4,14 @@ abstract class EnvironmentType {
   static EnvironmentTypeStatic static = EnvironmentTypeStatic();
 }
 
+extension EnvironmentTypeExtensions on EnvironmentType {
+  bool get isOnline => [
+        EnvironmentType.static.qa,
+        EnvironmentType.static.staging,
+        EnvironmentType.static.production,
+      ].contains(this);
+}
+
 class EnvironmentTypeStatic {
   final TestingEnvironmentType testing = TestingEnvironmentType();
   final DeviceEnvironmentType device = DeviceEnvironmentType();
