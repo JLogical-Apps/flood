@@ -53,10 +53,6 @@ class ModelBuilder<T> extends HookWidget {
   }
 
   static Widget _styledErrorPage(dynamic error, StackTrace stackTrace) {
-    return StyledPage(
-      body: Center(
-        child: StyledText.body.error('$error\n$stackTrace'),
-      ),
-    );
+    return StyledErrorPage(error: error, stackTrace: stackTrace);
   }
 }

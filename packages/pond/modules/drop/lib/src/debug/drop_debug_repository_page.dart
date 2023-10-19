@@ -30,7 +30,7 @@ class DropDebugRepositoryPage with IsAppPageWrapper<DropDebugRepositoryRoute> {
         .firstWhere((repository) => repository.hashCode == route.hashProperty.value);
     final entitiesModel = useFutureModel(() => repository.executeQuery(Query.fromAll().paginate(pageSize: 50)));
 
-    return PaginatedQueryModelBuilder(
+    return PaginatedQueryModelBuilder.page(
       paginatedQueryModel: entitiesModel,
       builder: (List<Entity> entities, Future Function()? loadMore) {
         return StyledPage(

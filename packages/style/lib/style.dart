@@ -20,6 +20,7 @@ export 'src/components/message/styled_message.dart';
 export 'src/components/misc/styled_divider.dart';
 export 'src/components/misc/styled_icon.dart';
 export 'src/components/misc/styled_loading_indicator.dart';
+export 'src/components/page/styled_error_page.dart';
 export 'src/components/page/styled_loading_page.dart';
 export 'src/components/page/styled_page.dart';
 export 'src/components/text/styled_markdown.dart';
