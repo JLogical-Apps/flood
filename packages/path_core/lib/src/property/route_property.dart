@@ -7,11 +7,9 @@ abstract class RouteProperty<G, S> {
 
   void set(S value);
 
-  void fromValue(String rawValue);
+  void fromValue(dynamic rawValue);
 
   void validate();
-
-  String? toQueryParameter();
 }
 
 extension NullableRoutePropertyExtensions<G, S> on RouteProperty<G?, S?> {
@@ -37,17 +35,12 @@ mixin IsRoutePropertyWrapper<G, S> implements RoutePropertyWrapper<G, S> {
   get value => routeProperty.value;
 
   @override
-  void fromValue(String rawValue) {
+  void fromValue(dynamic rawValue) {
     routeProperty.fromValue(rawValue);
   }
 
   @override
   void validate() {
     routeProperty.validate();
-  }
-
-  @override
-  String? toQueryParameter() {
-    return routeProperty.toQueryParameter();
   }
 }

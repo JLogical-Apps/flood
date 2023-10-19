@@ -109,10 +109,10 @@ class PondApp extends HookWidget {
 
   Widget wrapPage({
     required Widget child,
-    required Uri uri,
+    required RouteData routeData,
   }) {
     for (final appComponent in appPondContext.appComponents) {
-      child = appComponent.wrapPage(appPondContext, child, AppPondPageContext(uri: uri));
+      child = appComponent.wrapPage(appPondContext, child, AppPondPageContext(routeData: routeData));
     }
 
     return child;
@@ -156,19 +156,19 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
     warpToUri(configuration.uri);
   }
 
-  Future<void> pushUri(Uri uri) async {
-    _pages = _pages + [await _getPageFromUri(uri)];
+  Future<void> pushUri(Uri uri, {Map<String, dynamic> hiddenState = const {}}) async {
+    _pages = _pages + [await _getPageFromRouteData(RouteData.uri(uri, hiddenState: hiddenState))];
     _update();
   }
 
-  Future<void> pushReplacementUri(Uri uri) async {
+  Future<void> pushReplacementUri(Uri uri, {Map<String, dynamic> hiddenState = const {}}) async {
     _pages.removeLast();
-    _pages = _pages + [await _getPageFromUri(uri)];
+    _pages = _pages + [await _getPageFromRouteData(RouteData.uri(uri, hiddenState: hiddenState))];
     _update();
   }
 
-  Future<void> warpToUri(Uri uri) async {
-    _pages = await _getPageChainFromUri(uri);
+  Future<void> warpToUri(Uri uri, {Map<String, dynamic> hiddenState = const {}}) async {
+    _pages = await _getPageChainFromRouteData(RouteData.uri(uri, hiddenState: hiddenState));
     _update();
   }
 
@@ -187,24 +187,26 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
     notifyListeners();
   }
 
-  Future<MaterialPage> _getPageFromUri(Uri uri) async {
-    final (child, uriResult) = await _getAppPageFromUri(uri);
+  Future<MaterialPage> _getPageFromRouteData(RouteData routeData) async {
+    final (child, routeDataResult) = await _getAppPageFromRouteData(routeData);
     return MaterialPage(
-      key: ValueKey(uriResult.toString()),
-      child: app.wrapPage(child: child, uri: uriResult),
-      name: uriResult.toString(),
+      key: ValueKey(routeDataResult.toString()),
+      child: app.wrapPage(child: child, routeData: routeDataResult),
+      name: routeDataResult.uri.toString(),
     );
   }
 
-  Future<List<MaterialPage>> _getPageChainFromUri(Uri uri) async {
-    final uriChain = await _getParentUriChain(uri);
-    return Future.wait(uriChain.map((uri) => _getPageFromUri(uri)));
+  Future<List<MaterialPage>> _getPageChainFromRouteData(RouteData routeData) async {
+    final routeDataChain = await _getParentRouteDataChain(routeData);
+    return Future.wait(routeDataChain.map((routeData) => _getPageFromRouteData(routeData)));
   }
 
-  Future<(Widget, Uri)> _getAppPageFromUri(Uri uri) async {
-    (Widget, Uri) buildWithoutRedirect(Widget child) {
-      return (child, uri);
+  Future<(Widget, RouteData)> _getAppPageFromRouteData(RouteData routeData) async {
+    (Widget, RouteData) buildWithoutRedirect(Widget child) {
+      return (child, routeData);
     }
+
+    final uri = routeData.uri;
 
     if (uri.path == splashRoute) {
       return buildWithoutRedirect(Builder(builder: (context) {
@@ -213,56 +215,60 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
           isDoneLoading: _isAppPondContextLoaded,
           onFinishedLoading: () => _isAppPondContextLoaded = true,
           loadingPage: app.loadingPage,
-        ).build(context, SplashRoute().fromPath(uri.toString()));
+        ).build(context, SplashRoute().fromUri(uri));
       }));
     }
 
     final matchingPageEntry =
-        app.appPondContext.getPages().entries.firstWhereOrNull((entry) => entry.key.matches(uri.toString()));
+        app.appPondContext.getPages().entries.firstWhereOrNull((entry) => entry.key.matchesPath(uri.toString()));
     if (matchingPageEntry == null) {
       return buildWithoutRedirect(app.notFoundPage);
     }
 
     final (matchingRoute, matchingPage) = (matchingPageEntry.key, matchingPageEntry.value);
-    final routeInstance = matchingRoute.fromPath(uri.toString()) as Route;
+    final routeInstance = matchingRoute.fromRouteData(routeData) as Route;
 
-    final redirectUri = await matchingPage.getRedirect(app.appPondContext, routeInstance);
-    if (redirectUri != null) {
-      return await _getAppPageFromUri(redirectUri);
+    final redirectRouteData = await matchingPage.getRedirect(app.appPondContext, routeInstance);
+    if (redirectRouteData != null) {
+      return await _getAppPageFromRouteData(redirectRouteData);
     }
 
     return buildWithoutRedirect(Builder(builder: (context) => matchingPage.build(context, routeInstance)));
   }
 
-  Future<List<Uri>> _getParentUriChain(Uri uri) async {
+  Future<List<RouteData>> _getParentRouteDataChain(RouteData routeData) async {
+    final uri = routeData.uri;
+
     if (!_isAppPondContextLoaded) {
-      return [(SplashRoute()..redirectProperty.set(uri.toString())).uri];
+      return [(SplashRoute()..redirectProperty.set(uri.toString())).routeData];
     }
     if (uri.path == splashRoute) {
-      return [uri];
+      return [RouteData.uri(uri)];
     }
 
-    final uris = [uri];
+    final routeDatas = [routeData];
     while (true) {
-      final currentUri = uris.first;
-      final matchingPageEntry =
-          app.appPondContext.getPages().entries.firstWhereOrNull((entry) => entry.key.matches(currentUri.toString()));
+      final currentRouteData = routeDatas.first;
+      final matchingPageEntry = app.appPondContext
+          .getPages()
+          .entries
+          .firstWhereOrNull((entry) => entry.key.matchesRouteData(currentRouteData));
       if (matchingPageEntry == null) {
-        throw Exception('Could not find page [$currentUri]');
+        throw Exception('Could not find page [$currentRouteData]');
       }
 
       final (matchingRoute, matchingPage) = (matchingPageEntry.key, matchingPageEntry.value);
-      final routeInstance = matchingRoute.fromPath(currentUri.toString()) as Route;
+      final routeInstance = matchingRoute.fromRouteData(currentRouteData) as Route;
 
       final parentRoute = await matchingPage.getParent(app.appPondContext, routeInstance);
       if (parentRoute == null) {
         break;
       }
 
-      uris.insert(0, parentRoute.uri);
+      routeDatas.insert(0, parentRoute.routeData);
     }
 
-    return uris;
+    return routeDatas;
   }
 }
 

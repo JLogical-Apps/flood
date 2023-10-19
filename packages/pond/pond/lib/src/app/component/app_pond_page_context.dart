@@ -1,5 +1,7 @@
-class AppPondPageContext {
-  final Uri uri;
+import 'package:path_core/path_core.dart';
 
-  AppPondPageContext({required this.uri});
+class AppPondPageContext {
+  final RouteData routeData;
+
+  AppPondPageContext({required this.routeData});
 }

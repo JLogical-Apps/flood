@@ -7,7 +7,7 @@ extension RedirectAppPageExtensions<R extends Route> on AppPage<R> {
     return withRedirect((context, route) async {
       final loggedInUserId = context.find<AuthCoreComponent>().loggedInUserId;
       if (loggedInUserId == null) {
-        return LoginRoute().uri;
+        return LoginRoute().routeData;
       }
 
       return null;
@@ -18,7 +18,7 @@ extension RedirectAppPageExtensions<R extends Route> on AppPage<R> {
     return withRedirect((context, route) async {
       final loggedInUserId = context.find<AuthCoreComponent>().loggedInUserId;
       if (loggedInUserId != null) {
-        return HomeRoute().uri;
+        return HomeRoute().routeData;
       }
 
       return null;

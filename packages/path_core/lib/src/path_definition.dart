@@ -3,7 +3,6 @@ import 'package:path_core/src/property/route_property.dart';
 import 'package:path_core/src/segment/route_property_path_definition_segment.dart';
 import 'package:path_core/src/segment/string_path_definition_segment.dart';
 import 'package:path_core/src/segment/wildcard_path_definition_segment.dart';
-import 'package:utils_core/utils_core.dart';
 
 abstract class PathDefinition {
   static PathDefinition home = PathDefinition(segments: []);
@@ -26,12 +25,16 @@ abstract class PathDefinition {
 }
 
 extension PathDefinitionExtensions on PathDefinition {
-  bool matches(String path) {
-    final uri = guard(() => Uri.parse(path));
+  bool matchesPath(String path) {
+    final uri = Uri.tryParse(path);
     if (uri == null) {
       return false;
     }
 
+    return matchesUri(uri);
+  }
+
+  bool matchesUri(Uri uri) {
     if (uri.pathSegments.length != segments.length) {
       return false;
     }

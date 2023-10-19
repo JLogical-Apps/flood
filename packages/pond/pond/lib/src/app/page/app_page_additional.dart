@@ -9,7 +9,7 @@ class AppPageAdditional<R extends Route> with IsAppPageWrapper<R> {
   final AppPage<R> appPage;
 
   FutureOr<Route?> Function(AppPondContext context, R route)? parentGetter;
-  FutureOr<Uri?> Function(AppPondContext context, R route)? redirectGetter;
+  FutureOr<RouteData?> Function(AppPondContext context, R route)? redirectGetter;
 
   AppPageAdditional({
     required this.appPage,
@@ -27,7 +27,7 @@ class AppPageAdditional<R extends Route> with IsAppPageWrapper<R> {
   }
 
   @override
-  Future<Uri?> getRedirect(AppPondContext context, R route) async {
+  Future<RouteData?> getRedirect(AppPondContext context, R route) async {
     final parentRedirect = await super.getRedirect(context, route);
     if (parentRedirect != null) {
       return parentRedirect;

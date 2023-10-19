@@ -21,20 +21,20 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
         final loggedInUser = context.find<AuthCoreComponent>().loggedInUserId;
         if (loggedInUser == null) {
           final loginPage = LoginRoute()..redirectPathProperty.set(route.uri.toString());
-          return loginPage.uri;
+          return loginPage.routeData;
         }
 
         final settingsEntity = await SettingsEntity.getSettings(context.dropCoreComponent);
         final budgetId = settingsEntity.value.budgetProperty.value;
         if (budgetId == null) {
-          return ProfileRoute().uri;
+          return ProfileRoute().routeData;
         }
 
         final budgetEntity = await Query.getByIdOrNull<BudgetEntity>(budgetId).get(context.dropCoreComponent);
         if (budgetEntity == null) {
-          return ProfileRoute().uri;
+          return ProfileRoute().routeData;
         }
 
-        return (BudgetRoute()..budgetIdProperty.set(budgetId)).uri;
+        return (BudgetRoute()..budgetIdProperty.set(budgetId)).routeData;
       });
 }

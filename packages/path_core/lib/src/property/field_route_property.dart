@@ -14,12 +14,7 @@ class FieldRouteProperty<T> with IsRouteProperty<T?, T?> {
   FieldRouteProperty({required this.name});
 
   @override
-  void fromValue(String rawValue) {
-    value = coerce<T>(rawValue);
-  }
-
-  @override
-  String? toQueryParameter() {
-    return coerce<String?>(value);
+  void fromValue(dynamic rawValue) {
+    value = coerceOrNull<T>(rawValue);
   }
 }

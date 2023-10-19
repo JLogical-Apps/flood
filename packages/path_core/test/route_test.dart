@@ -4,13 +4,20 @@ import 'package:test/test.dart';
 void main() {
   test('budget route', () async {
     final routeDefinition = BudgetRoute();
-    expect(routeDefinition.matches('/budget/asdf'), isTrue);
-    expect(routeDefinition.matches('/budget/'), isTrue);
-    expect(routeDefinition.matches('/budget'), isFalse);
+    expect(routeDefinition.matchesPath('/budget/asdf'), isTrue);
+    expect(routeDefinition.matchesPath('/budget/'), isTrue);
+    expect(routeDefinition.matchesPath('/budget'), isFalse);
 
-    final route = routeDefinition.fromPath('/budget/asdf');
+    var route = routeDefinition.fromPath('/budget/asdf');
     expect(route.budgetIdProperty.value, 'asdf');
     expect(route.uri, Uri(path: '/budget/asdf'));
+
+    route = routeDefinition.fromRouteData(RouteData.path(
+      '/budget/asdf',
+      hiddenState: {'user': 'john'},
+    ));
+    expect(route.uri, Uri(path: '/budget/asdf'));
+    expect(route.userProperty.value, 'john');
 
     expect(() => routeDefinition.fromPath('/budget'), throwsA(isA<Exception>()));
   });
@@ -39,10 +46,10 @@ void main() {
 
   test('envelope route', () async {
     final routeDefinition = EnvelopeRoute();
-    expect(routeDefinition.matches('/envelope/asdf?budgetId=123'), isTrue);
-    expect(routeDefinition.matches('/envelope/asdf'), isTrue);
-    expect(routeDefinition.matches('/envelope'), isFalse);
-    expect(routeDefinition.matches('/envelope?budgetId=123'), isFalse);
+    expect(routeDefinition.matchesPath('/envelope/asdf?budgetId=123'), isTrue);
+    expect(routeDefinition.matchesPath('/envelope/asdf'), isTrue);
+    expect(routeDefinition.matchesPath('/envelope'), isFalse);
+    expect(routeDefinition.matchesPath('/envelope?budgetId=123'), isFalse);
 
     var route = routeDefinition.fromPath('/envelope/envelope?budgetId=budgetId');
     expect(route.envelopeIdProperty.value, 'envelope');
@@ -59,21 +66,46 @@ void main() {
     expect(() => routeDefinition.fromPath('/envelope/asdf'), throwsA(isA<Exception>()));
     expect(() => routeDefinition.fromPath('/envelope?budgetId=123'), throwsA(isA<Exception>()));
   });
+
+  test('login route', () async {
+    final routeDefinition = LoginRoute();
+    expect(routeDefinition.matchesPath('/login'), isTrue);
+    expect(routeDefinition.matchesPath('/login/test'), isFalse);
+
+    final route = routeDefinition.fromRouteData(RouteData.path(
+      '/login',
+      hiddenState: {'username': 'john', 'password': 'pass'},
+    ));
+
+    expect(route.usernameProperty.value, 'john');
+    expect(route.passwordProperty.value, 'pass');
+    expect(route.uri, Uri(path: '/login'));
+
+    expect(() => routeDefinition.fromRouteData(RouteData.path('/login')), throwsA(isA<Exception>()));
+    expect(
+      () => routeDefinition.fromRouteData(RouteData.path('/login', hiddenState: {'username': null})),
+      throwsA(isA<Exception>()),
+    );
+  });
 }
 
-class BudgetRoute with IsRoute<BudgetRoute>, IsPathDefinitionWrapper {
-  late final budgetIdProperty = field<String>(name: ':id').required();
+class BudgetRoute with IsRoute<BudgetRoute> {
+  late final budgetIdProperty = field<String>(name: 'id').required();
+  late final userProperty = field<String>(name: 'user');
+
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('budget').property(budgetIdProperty);
+
+  @override
+  List<RouteProperty> get hiddenProperties => [userProperty];
 
   @override
   BudgetRoute copy() {
     return BudgetRoute();
   }
-
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('budget').property(budgetIdProperty);
 }
 
-class EnvelopeRoute with IsRoute<EnvelopeRoute>, IsPathDefinitionWrapper {
+class EnvelopeRoute with IsRoute<EnvelopeRoute> {
   late final envelopeIdProperty = field<String>(name: 'id').required();
   late final budgetIdProperty = field<String>(name: 'budgetId').required();
   late final trayIdProperty = field<String>(name: 'trayId');
@@ -87,5 +119,21 @@ class EnvelopeRoute with IsRoute<EnvelopeRoute>, IsPathDefinitionWrapper {
   @override
   EnvelopeRoute copy() {
     return EnvelopeRoute();
+  }
+}
+
+class LoginRoute with IsRoute<LoginRoute> {
+  late final usernameProperty = field<String>(name: 'username').required();
+  late final passwordProperty = field<String>(name: 'password').required();
+
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('login');
+
+  @override
+  List<RouteProperty> get hiddenProperties => [usernameProperty, passwordProperty];
+
+  @override
+  LoginRoute copy() {
+    return LoginRoute();
   }
 }

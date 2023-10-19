@@ -32,7 +32,7 @@ class DebugAppComponent with IsAppPondComponent {
 
   @override
   Widget wrapPage(AppPondContext context, Widget page, AppPondPageContext pageContext) {
-    if (pageContext.uri.queryParameters['_debug'] != 'true') {
+    if (pageContext.routeData.uri.queryParameters['_debug'] != 'true') {
       return page;
     }
 

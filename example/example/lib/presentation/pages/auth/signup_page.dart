@@ -18,8 +18,10 @@ class SignupRoute with IsRoute<SignupRoute> {
   PathDefinition get pathDefinition => PathDefinition.string('signup');
 
   @override
-  List<RouteProperty> get queryProperties => [
-        redirectPathProperty,
+  List<RouteProperty> get queryProperties => [redirectPathProperty];
+
+  @override
+  List<RouteProperty> get hiddenProperties => [
         initialEmailProperty,
         initialPasswordProperty,
       ];

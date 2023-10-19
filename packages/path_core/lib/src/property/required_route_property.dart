@@ -15,7 +15,7 @@ class RequiredRouteProperty<G, S> with IsRouteProperty<G, S> {
   void set(S value) => parent.set(value);
 
   @override
-  void fromValue(String rawValue) {
+  void fromValue(dynamic rawValue) {
     parent.fromValue(rawValue);
   }
 
@@ -25,10 +25,5 @@ class RequiredRouteProperty<G, S> with IsRouteProperty<G, S> {
       throw Exception('Required but not found! [$name]');
     }
     parent.validate();
-  }
-
-  @override
-  String? toQueryParameter() {
-    return parent.toQueryParameter();
   }
 }

@@ -7,40 +7,40 @@ extension NavigationBuildContextExtensions on BuildContext {
 
   String get location => uri.toString();
 
-  Future<void> pushUri(Uri uri) {
-    return PondApp.router.pushUri(uri);
+  Future<void> pushUri(Uri uri, {Map<String, dynamic> hiddenState = const {}}) {
+    return PondApp.router.pushUri(uri, hiddenState: hiddenState);
   }
 
   Future<void> push(Route route) {
-    return pushUri(route.uri);
+    return pushUri(route.uri, hiddenState: route.hiddenState);
   }
 
-  Future<void> pushLocation(String location) {
-    return pushUri(Uri.parse(location));
+  Future<void> pushLocation(String location, {Map<String, dynamic> hiddenState = const {}}) {
+    return pushUri(Uri.parse(location), hiddenState: hiddenState);
   }
 
-  Future<void> pushReplacementUri(Uri uri) {
-    return PondApp.router.pushReplacementUri(uri);
+  Future<void> pushReplacementUri(Uri uri, {Map<String, dynamic> hiddenState = const {}}) {
+    return PondApp.router.pushReplacementUri(uri, hiddenState: hiddenState);
   }
 
   Future<void> pushReplacement(Route route) {
-    return pushReplacementUri(route.uri);
+    return pushReplacementUri(route.uri, hiddenState: route.hiddenState);
   }
 
-  Future<void> pushReplacementLocation(String location) {
-    return pushReplacementUri(Uri.parse(location));
+  Future<void> pushReplacementLocation(String location, {Map<String, dynamic> hiddenState = const {}}) {
+    return pushReplacementUri(Uri.parse(location), hiddenState: hiddenState);
   }
 
-  Future<void> warpToUri(Uri uri) {
-    return PondApp.router.warpToUri(uri);
+  Future<void> warpToUri(Uri uri, {Map<String, dynamic> hiddenState = const {}}) {
+    return PondApp.router.warpToUri(uri, hiddenState: hiddenState);
   }
 
   Future<void> warpTo(Route route) {
-    return warpToUri(route.uri);
+    return warpToUri(route.uri, hiddenState: route.hiddenState);
   }
 
-  Future<void> warpToLocation(String location) {
-    return warpToUri(Uri.parse(location));
+  Future<void> warpToLocation(String location, {Map<String, dynamic> hiddenState = const {}}) {
+    return warpToUri(Uri.parse(location), hiddenState: hiddenState);
   }
 
   void pop() {
