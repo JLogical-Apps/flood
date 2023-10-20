@@ -11,6 +11,7 @@ version: 0.0.1
 dependencies:
   collection: ^1.16.0
   equatable: 2.0.5
+  path: ^1.8.0
 
   persistence_core:
     git:

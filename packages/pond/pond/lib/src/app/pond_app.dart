@@ -125,6 +125,7 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
   List<MaterialPage> _pages = [];
 
   bool _isAppPondContextLoaded = false;
+  bool _hasAppPondContextStartedLoading = false;
 
   @override
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -212,7 +213,8 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
       return buildWithoutRedirect(Builder(builder: (context) {
         return SplashPage(
           appPondContext: app.appPondContext,
-          isDoneLoading: _isAppPondContextLoaded,
+          hasStartedLoading: _hasAppPondContextStartedLoading,
+          onStartedLoading: () => _hasAppPondContextStartedLoading = true,
           onFinishedLoading: () => _isAppPondContextLoaded = true,
           loadingPage: app.loadingPage,
         ).build(context, SplashRoute().fromUri(uri));

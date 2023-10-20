@@ -12,6 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  collection: ^1.16.0
+  flutter_hooks: ^0.18.5+1
   intersperse: ^2.0.0
   share_plus: ^7.0.2
 

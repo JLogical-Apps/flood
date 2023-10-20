@@ -39,14 +39,6 @@ extension IterableExtensions<T> on Iterable<T> {
     }).whereType<R>();
   }
 
-  T? get firstOrNull {
-    return isEmpty ? null : first;
-  }
-
-  T? get lastOrNull {
-    return isEmpty ? null : last;
-  }
-
   Map<K, V> mapToMap<K, V>(MapEntry<K, V> Function(T value) mapper) {
     return map(mapper).toMap();
   }

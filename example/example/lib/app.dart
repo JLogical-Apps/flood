@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 // When setting up the test suite [testingLoggedIn] will determine whether to have the user logged in.
-const testingLoggedIn = false;
+const testingLoggedIn = true;
 
 Future<void> main(List<String> args) async {
   await PondApp.run(
@@ -54,6 +54,7 @@ Future<AppPondContext> buildAppPondContext() async {
     messagingService: (corePondContext) => corePondContext.environment.isOnline
         ? MessagingService.static.firebase
         : MessagingService.static.local(refreshDuration: Duration(minutes: 5)),
+    loggerService: (corePondContext) => LoggerService.static.console.withFileLogHistory(corePondContext.fileSystem.tempDirectory / 'logs'),
   );
 
   final appPondContext = AppPondContext(corePondContext: corePondContext);

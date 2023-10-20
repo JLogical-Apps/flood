@@ -23,24 +23,28 @@ class SplashRoute with IsRoute<SplashRoute> {
 class SplashPage with IsAppPage<SplashRoute> {
   final AppPondContext appPondContext;
   final Widget loadingPage;
-  final bool isDoneLoading;
+  final bool hasStartedLoading;
+  final Function() onStartedLoading;
   final Function() onFinishedLoading;
 
   const SplashPage({
     required this.appPondContext,
     required this.loadingPage,
-    required this.isDoneLoading,
+    required this.hasStartedLoading,
+    required this.onStartedLoading,
     required this.onFinishedLoading,
   });
 
   @override
   Widget onBuild(BuildContext context, SplashRoute route) {
     useMemoized(() => () async {
-          if (isDoneLoading) {
+          if (hasStartedLoading) {
             return;
           }
+          onStartedLoading();
           await appPondContext.load();
           onFinishedLoading();
+
           context.warpToLocation(route.redirectProperty.value ?? '/');
         }());
 

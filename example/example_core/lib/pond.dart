@@ -16,6 +16,7 @@ Future<CorePondContext> getCorePondContext({
   List<RepositoryImplementation> Function(CorePondContext context)? repositoryImplementations,
   List<AuthServiceImplementation> Function(CorePondContext context)? authServiceImplementations,
   MessagingService? Function(CorePondContext context)? messagingService,
+  LoggerService? Function(CorePondContext context)? loggerService,
 }) async {
   environmentConfig ??= EnvironmentConfig.static.memory();
 
@@ -28,7 +29,9 @@ Future<CorePondContext> getCorePondContext({
     await corePondContext.register(coreComponent);
   }
 
-  await corePondContext.register(LogCoreComponent.console());
+  await corePondContext.register(LogCoreComponent(
+    loggerService: loggerService?.call(corePondContext) ?? LoggerService.static.console,
+  ));
 
   await corePondContext.register(AuthCoreComponent(
     authService: AuthService.static.adapting(),
