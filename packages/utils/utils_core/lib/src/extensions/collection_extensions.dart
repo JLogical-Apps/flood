@@ -1,3 +1,5 @@
+import 'dart:async';
+
 extension IterableExtensions<T> on Iterable<T> {
   /// Returns the sum of the elements of the iterable based on a property of the items in the list.
   num sumBy(num Function(T element) f) {
@@ -120,6 +122,16 @@ extension MapExtensions<K, V> on Map<K, V> {
   }
 
   Iterable<(K, V)> get entryRecords => mapToIterable((key, value) => (key, value));
+
+  Future<V> putIfAbsentAsync(K key, FutureOr<V> Function() ifAbsent) async {
+    if (containsKey(key)) {
+      return this[key] as V;
+    }
+
+    final value = await ifAbsent();
+    this[key] = value;
+    return value;
+  }
 }
 
 extension JsonExtensions on Map<String, dynamic> {

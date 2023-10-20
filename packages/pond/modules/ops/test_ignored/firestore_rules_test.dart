@@ -1,5 +1,5 @@
 import 'package:drop_core/drop_core.dart';
-import 'package:ops/src/firebase/firebase_ops_utils.dart';
+import 'package:ops/src/firebase/firebase_security_rules_generator.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
 import 'package:type_core/type_core.dart';
@@ -13,7 +13,7 @@ void main() {
     await corePondContext.register(UserRepository());
     await corePondContext.register(DocumentRepository());
 
-    final firestoreRules = FirebaseOpsUtils.generateFirestoreRules(corePondContext);
+    final firestoreRules = FirebaseSecurityRulesGenerator().generateFirestoreRules(corePondContext);
     expect(firestoreRules, '''\
 rules_version = '2';
 service cloud.firestore {

@@ -1,8 +1,7 @@
 {
   "projects": {
-    "default": "pond-automation-1",
-    "staging": "jlogical-utils",
-    "production": "pond-automation-1"
+    "qa": "pond-automation-1",
+    "staging": "pond-automation-1"
   },
   "targets": {},
   "etags": {}

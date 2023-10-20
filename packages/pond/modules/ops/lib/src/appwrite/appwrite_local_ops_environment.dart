@@ -40,12 +40,10 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
       await _installConfigFiles(context);
     }
 
-    await context.confirmAndExecutePlan(Plan([
-      PlanItem.static.run(
-        'docker compose up -d --remove-orphans',
-        workingDirectory: context.appwriteDirectory,
-      ),
-    ]));
+    await context.confirmAndExecutePlan(Plan.run(
+      'docker compose up -d --remove-orphans',
+      workingDirectory: context.appwriteDirectory,
+    ));
   }
 
   @override
@@ -74,9 +72,7 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
       throw Exception('Ensure docker is installed and running!');
     }
 
-    await context.confirmAndExecutePlan(Plan([
-      PlanItem.static.run('docker compose stop', workingDirectory: context.appwriteDirectory),
-    ]));
+    await context.confirmAndExecutePlan(Plan.run('docker compose stop', workingDirectory: context.appwriteDirectory));
   }
 
   Future<bool> _hasConfigFiles(AutomateCommandContext context) async {

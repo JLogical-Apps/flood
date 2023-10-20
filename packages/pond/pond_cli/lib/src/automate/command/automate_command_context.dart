@@ -92,7 +92,8 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
       return;
     }
 
-    this.print('Preparing to execute plan...');
+    final planDescription = plan.name != null ? ': ${plan.name}' : '...';
+    this.print('Preparing to execute plan$planDescription');
     await plan.preview(this);
     final shouldExecute = confirm('Would you like to execute this plan?');
     if (!shouldExecute) {

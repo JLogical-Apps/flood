@@ -16,7 +16,7 @@ import 'package:flutter/foundation.dart'
 /// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
-    if (kIsWeb) { 
+    if (kIsWeb) {
       return web;
     }
     switch (defaultTargetPlatform) {
@@ -53,6 +53,7 @@ class DefaultFirebaseOptions {
     projectId: 'pond-automation-1',
     authDomain: 'pond-automation-1.firebaseapp.com',
     storageBucket: 'pond-automation-1.appspot.com',
+    measurementId: 'G-YM12W5HFLE',
   );
 
   static const FirebaseOptions android = FirebaseOptions(

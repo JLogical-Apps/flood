@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:release/src/deploy_target.dart';
 import 'package:release/src/pipeline_step.dart';
+import 'package:release/src/release_component.dart';
 import 'package:release/src/release_platform.dart';
 
 class BuildPipelineStep with IsPipelineStep {
@@ -15,6 +16,12 @@ class BuildPipelineStep with IsPipelineStep {
 
   @override
   Future execute(AutomateCommandContext context, List<ReleasePlatform> platforms) async {
+    final releaseComponent = context.automateContext.find<ReleaseAutomateComponent>();
+
+    for (final preBuildStep in releaseComponent.preBuildSteps) {
+      await preBuildStep.execute(context, platforms);
+    }
+
     await doForEachDeployTarget(
       context,
       platforms,
@@ -30,6 +37,10 @@ class BuildPipelineStep with IsPipelineStep {
       platforms,
       (deployTarget, platform) => deployTarget.postBuild(context, platform),
     );
+
+    for (final postBuildStep in releaseComponent.postBuildSteps) {
+      await postBuildStep.execute(context, platforms);
+    }
   }
 
   Future<void> doForEachDeployTarget(

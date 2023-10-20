@@ -1,0 +1,51 @@
+name: firebase_ops
+description: Automate components to help with Firebase.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  collection: ^1.16.0
+
+  environment_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "v3.0"
+      path: packages/pond/modules/environment_core
+  persistence_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "v3.0"
+      path: packages/pond/modules/persistence_core
+  pond_cli:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "v3.0"
+      path: packages/pond/pond_cli
+  pond_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "v3.0"
+      path: packages/pond/pond_core
+  release:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "v3.0"
+      path: packages/pond/modules/release
+  utils_core:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "v3.0"
+      path: packages/utils/utils_core
+dev_dependencies:
+  lints: ^2.0.0
+  test: 1.24.6
+dependency_overrides: # Needed because of [dcli] and [interact]
+  intl: 0.18.0
+  win32: 4.1.0
+  path: 1.8.3
+  js: 0.6.5

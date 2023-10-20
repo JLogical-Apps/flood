@@ -20,7 +20,7 @@ mixin IsAutomatePondComponent implements AutomatePondComponent {
   Future onLoad(AutomatePondContext context) async {}
 
   @override
-  List<AutomateCommand> get commands;
+  List<AutomateCommand> get commands => [];
 }
 
 abstract class AutomatePondComponentWrapper implements AutomatePondComponent {

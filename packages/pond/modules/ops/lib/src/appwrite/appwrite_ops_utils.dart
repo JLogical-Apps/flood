@@ -139,14 +139,10 @@ class AppwriteOpsUtils {
       return;
     }
 
-    await context.confirmAndExecutePlan(Plan([
-      PlanItem.static.execute(
-          'Create Default Database',
-          (context) => databases.create(
-                databaseId: _databaseId,
-                name: 'Default',
-              )),
-    ]));
+    await context.confirmAndExecutePlan(Plan.execute(
+      'Create Default Database',
+      (context) => databases.create(databaseId: _databaseId, name: 'Default'),
+    ));
   }
 
   static Future<List<PlanItem>> _updateCollectionPlanItems(

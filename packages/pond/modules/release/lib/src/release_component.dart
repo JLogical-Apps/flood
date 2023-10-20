@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:release/src/pipeline.dart';
+import 'package:release/src/pipeline_step.dart';
 import 'package:release/src/release_environment_type.dart';
 import 'package:release/src/release_platform.dart';
 
@@ -8,12 +9,29 @@ class ReleaseAutomateComponent with IsAutomatePondComponent {
   final Map<ReleaseEnvironmentType, Pipeline> pipelines;
   final List<ReleasePlatform>? platforms;
 
-  ReleaseAutomateComponent({required this.pipelines, this.platforms});
+  final List<PipelineStep> preBuildSteps;
+  final List<PipelineStep> postBuildSteps;
+
+  ReleaseAutomateComponent({
+    required this.pipelines,
+    this.platforms,
+    List<PipelineStep>? preBuildSteps,
+    List<PipelineStep>? postBuildSteps,
+  })  : preBuildSteps = preBuildSteps ?? [],
+        postBuildSteps = postBuildSteps ?? [];
 
   @override
   List<AutomateCommand> get commands => [
         ReleaseCommand(pipelines: pipelines, platforms: platforms),
       ];
+
+  void addPreBuildStep(PipelineStep step) {
+    preBuildSteps.add(step);
+  }
+
+  void addPostBuildStep(PipelineStep step) {
+    postBuildSteps.add(step);
+  }
 }
 
 class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
