@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:debug/debug.dart';
 import 'package:environment/environment.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +27,8 @@ class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
 
   @override
   Widget onBuild(BuildContext context, DeviceFilesDebugRoute route) {
-    final pathState = useState<String>('.');
     final rootDirectoryState = useState<RootDirectory>(RootDirectory.storage);
+    final pathState = useState<String>('.');
 
     final filesModel = useFutureModel(
       () async {
@@ -37,7 +38,7 @@ class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
         }
 
         final files = (await directory.listOrNull()) ?? [];
-        return files..sort((a, b) => a.path.toLowerCase().compareTo(b.path.toLowerCase()));
+        return files.sortedBy((file) => file.path.toLowerCase());
       },
       [rootDirectoryState.value, pathState.value],
     );
@@ -110,6 +111,28 @@ class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
                         },
                       ));
                     },
+                  ),
+                if (fileContents != null)
+                  StyledMenuButton(
+                    actions: [
+                      ActionItem(
+                        titleText: 'Delete',
+                        descriptionText: 'Delete this file.',
+                        iconData: Icons.delete,
+                        color: Colors.red,
+                        onPerform: (context) async {
+                          await context.showStyledDialog(StyledDialog.yesNo(
+                            titleText: 'Confirm Delete',
+                            bodyText: 'Are you sure you want to delete this file? This cannot be undone.',
+                            onAccept: () async {
+                              final file = rootDirectoryState.value.getDirectory(context) - pathState.value;
+                              await file.delete();
+                              pathState.value = dirname(pathState.value);
+                            },
+                          ));
+                        },
+                      ),
+                    ],
                   ),
               ],
             ),
