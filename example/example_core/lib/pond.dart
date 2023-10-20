@@ -40,7 +40,7 @@ Future<CorePondContext> getCorePondContext({
         corePondContext.locate<AuthCoreComponent>().accountX.mapWithValue((maybeUserIdX) => maybeUserIdX.getOrNull()),
   ));
   await corePondContext.register(MessagingCoreComponent(
-    messagingService: messagingService?.call(corePondContext) ?? MessagingService.static.local(),
+    messagingService: messagingService?.call(corePondContext) ?? MessagingService.static.blank,
   ));
   await corePondContext.register(UserDeviceTokenCoreComponent(
     onRegisterDeviceToken: (dropContext, userId, deviceToken) async {
