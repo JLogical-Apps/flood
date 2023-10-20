@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:log_core/src/console_logger_service.dart';
+import 'package:log_core/src/listener_handler_logger_service.dart';
+import 'package:log_core/src/log_listener.dart';
+
 abstract class LoggerService {
   Future<void> log(dynamic message);
 
@@ -15,6 +19,18 @@ abstract class LoggerService {
     required FutureOr<String> Function(dynamic error, StackTrace stackTrace) onLogError,
   }) {
     return _LoggerServiceImpl(onLog: onLog, onLogWarning: onLogWarning, onLogError: onLogError);
+  }
+
+  static final LoggerServiceStatic static = LoggerServiceStatic();
+}
+
+class LoggerServiceStatic {
+  LoggerService get console => ConsoleLoggerService();
+}
+
+extension LoggerServiceExtensions on LoggerService {
+  LoggerService withListenersHandler(List<LogListener> listeners) {
+    return ListenerHandlerLoggerService(loggerService: this, listeners: listeners);
   }
 }
 

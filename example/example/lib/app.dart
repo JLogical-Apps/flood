@@ -48,9 +48,9 @@ Future<AppPondContext> buildAppPondContext() async {
     ],
     repositoryImplementations: (corePondContext) => [
       FlutterFileRepositoryImplementation(),
-      AppwriteCloudRepositoryImplementation(),
+      FirebaseCloudRepositoryImplementation(),
     ],
-    authServiceImplementations: (corePondContext) => [AppwriteAuthServiceImplementation()],
+    authServiceImplementations: (corePondContext) => [FirebaseAuthServiceImplementation()],
     messagingService: (corePondContext) => corePondContext.environment.isOnline
         ? MessagingService.static.firebase
         : MessagingService.static.local(refreshDuration: Duration(minutes: 5)),
@@ -64,6 +64,7 @@ Future<AppPondContext> buildAppPondContext() async {
   await appPondContext.register(AuthAppComponent());
   await appPondContext.register(DropAppComponent());
   await appPondContext.register(ResetAppComponent());
+  await appPondContext.register(FirebaseCrashlyticsAppComponent());
   await appPondContext.register(PortStyleAppComponent(overrides: [
     EnvelopeStyledPortOverride(context: appPondContext),
     EnvelopeTransactionStyledPortOverride(context: appPondContext),
