@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:environment_core/environment_core.dart';
 import 'package:messaging_core/src/blank_messaging_service.dart';
 import 'package:messaging_core/src/data_message.dart';
-import 'package:messaging_core/src/environmental_messaging_service.dart';
 import 'package:messaging_core/src/listener_messaging_service.dart';
 import 'package:messaging_core/src/log_messaging_service.dart';
 import 'package:messaging_core/src/notification_message.dart';
@@ -63,10 +61,6 @@ class MessagingServiceStatic {
 
   MessagingService local({Duration? refreshDuration}) =>
       blank.withRandomDeviceToken(refreshDuration: refreshDuration).log();
-
-  MessagingService environmental(MessagingService? Function(EnvironmentConfigCoreComponent environment) messagingServiceGetter) {
-    return EnvironmentalMessagingService(messagingServiceGetter: messagingServiceGetter);
-  }
 }
 
 mixin IsMessagingService implements MessagingService {}

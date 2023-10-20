@@ -14,8 +14,8 @@ Future<CorePondContext> getCorePondContext({
   EnvironmentConfig? environmentConfig,
   List<CorePondComponent> Function(CorePondContext context)? additionalCoreComponents,
   List<RepositoryImplementation> Function(CorePondContext context)? repositoryImplementations,
-  List<AuthServiceImplementation> authServiceImplementations = const [],
-  MessagingService? messagingService,
+  List<AuthServiceImplementation> Function(CorePondContext context)? authServiceImplementations,
+  MessagingService? Function(CorePondContext context)? messagingService,
 }) async {
   environmentConfig ??= EnvironmentConfig.static.memory();
 
@@ -31,8 +31,8 @@ Future<CorePondContext> getCorePondContext({
   await corePondContext.register(LogCoreComponent.console());
 
   await corePondContext.register(AuthCoreComponent(
-    authService: AuthService.static.adapting().withUserDeviceTokenListener(),
-    authServiceImplementations: authServiceImplementations,
+    authService: AuthService.static.adapting(),
+    authServiceImplementations: authServiceImplementations?.call(corePondContext) ?? [],
   ));
   await corePondContext.register(DropCoreComponent(
     repositoryImplementations: repositoryImplementations?.call(corePondContext) ?? [],
@@ -40,7 +40,7 @@ Future<CorePondContext> getCorePondContext({
         corePondContext.locate<AuthCoreComponent>().accountX.mapWithValue((maybeUserIdX) => maybeUserIdX.getOrNull()),
   ));
   await corePondContext.register(MessagingCoreComponent(
-    messagingService: messagingService ?? MessagingService.static.local(),
+    messagingService: messagingService?.call(corePondContext) ?? MessagingService.static.local(),
   ));
   await corePondContext.register(UserDeviceTokenCoreComponent(
     onRegisterDeviceToken: (dropContext, userId, deviceToken) async {

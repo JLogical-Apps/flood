@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:actions_core/actions_core.dart';
 import 'package:auth_core/src/account.dart';
+import 'package:auth_core/src/auth_listener.dart';
 import 'package:auth_core/src/auth_service.dart';
 import 'package:auth_core/src/auth_service_implementation.dart';
 import 'package:collection/collection.dart';
@@ -10,8 +13,26 @@ class AuthCoreComponent with IsAuthServiceWrapper {
   final AuthService authService;
 
   final List<AuthServiceImplementation> authServiceImplementations;
+  final List<AuthListener> authListeners;
 
-  AuthCoreComponent({required this.authService, this.authServiceImplementations = const []});
+  AuthCoreComponent._({
+    required AuthService authService,
+    this.authServiceImplementations = const [],
+    required this.authListeners,
+  }) : authService = authService.withListenersHandler(authListeners);
+
+  factory AuthCoreComponent({
+    required AuthService authService,
+    List<AuthServiceImplementation> authServiceImplementations = const [],
+    List<AuthListener>? authListeners,
+  }) {
+    authListeners ??= [];
+    return AuthCoreComponent._(
+      authService: authService,
+      authServiceImplementations: authServiceImplementations,
+      authListeners: authListeners,
+    );
+  }
 
   @override
   List<CorePondComponentBehavior> get behaviors =>
@@ -23,6 +44,13 @@ class AuthCoreComponent with IsAuthServiceWrapper {
           },
         ),
       ];
+
+  void addListener({
+    FutureOr Function(Account account)? onBeforeLogout,
+    FutureOr Function(Account account)? onAfterLogin,
+  }) {
+    authListeners.add(AuthListener(onBeforeLogout: onBeforeLogout, onAfterLogin: onAfterLogin));
+  }
 
   late final loginAction = Action(
     name: 'Login',

@@ -6,7 +6,7 @@ import 'package:jlogical_utils_cli/jlogical_utils_cli.dart';
 Future<void> main(List<String> args) async {
   final corePondContext = await getCorePondContext(
     environmentConfig: EnvironmentConfig.static.fileAssets(projectDirectory: Directory.current.parent / 'example'),
-    messagingService: MessagingService.static.blank,
+    messagingService: (_) => MessagingService.static.blank,
   );
   final automatePondContext = AutomatePondContext(corePondContext: corePondContext);
 

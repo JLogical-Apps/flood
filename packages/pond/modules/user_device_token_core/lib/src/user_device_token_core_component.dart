@@ -23,6 +23,33 @@ class UserDeviceTokenCoreComponent with IsCorePondComponent {
             final dropComponent = context.locate<DropCoreComponent>();
             final messagingComponent = context.locate<MessagingCoreComponent>();
 
+            authComponent.addListener(
+              onAfterLogin: (account) async {
+                final userDeviceTokenCoreComponent = context.locate<UserDeviceTokenCoreComponent>();
+                final messagingComponent = context.locate<MessagingCoreComponent>();
+
+                final deviceToken = messagingComponent.deviceToken;
+                if (deviceToken == null) {
+                  return;
+                }
+
+                await userDeviceTokenCoreComponent.registerDevice(
+                    context.dropCoreComponent, account.accountId, deviceToken);
+              },
+              onBeforeLogout: (account) async {
+                final userDeviceTokenCoreComponent = context.locate<UserDeviceTokenCoreComponent>();
+                final messagingComponent = context.locate<MessagingCoreComponent>();
+
+                final deviceToken = messagingComponent.deviceToken;
+                if (deviceToken == null) {
+                  return;
+                }
+
+                await userDeviceTokenCoreComponent.removeDeviceToken(
+                    context.dropCoreComponent, account.accountId, deviceToken);
+              },
+            );
+
             String? lastDeviceToken;
             messagingComponent.deviceTokenX.whereLoaded().listen((newDeviceToken) {
               final userId = authComponent.loggedInUserId;

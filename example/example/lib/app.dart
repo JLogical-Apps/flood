@@ -18,43 +18,8 @@ const testingLoggedIn = false;
 
 Future<void> main(List<String> args) async {
   await PondApp.run(
-    appPondContextGetter: () async => await getAppPondContext(await getCorePondContext(
-      environmentConfig: EnvironmentConfig.static.flutterAssets(),
-      additionalCoreComponents: (corePondContext) => [
-        if (corePondContext.environment.isOnline) ...[
-          FirebaseCoreComponent(app: DefaultFirebaseOptions.currentPlatform),
-          AppwriteCoreComponent(config: corePondContext.environmental((type) {
-            if (type == EnvironmentType.static.qa) {
-              return AppwriteConfig.localhost(projectId: '651b48116fc13fcb79be');
-            } else if (type == EnvironmentType.static.staging) {
-              return AppwriteConfig.cloud(projectId: '6409e66ed830e72e8f8d');
-            }
-
-            throw Exception('Cannot find Appwrite Config for environment [$type]');
-          })),
-        ]
-      ],
-      repositoryImplementations: (context) => [
-        FlutterFileRepositoryImplementation(),
-        AppwriteCloudRepositoryImplementation(),
-      ],
-      messagingService: MessagingService.static.environmental((environment) {
-        final environmentType = environment.environment;
-        if (environmentType == EnvironmentType.static.testing || environmentType == EnvironmentType.static.device) {
-          return MessagingService.static.local(refreshDuration: Duration(minutes: 5));
-        }
-
-        return MessagingService.static.firebase;
-      }),
-      authServiceImplementations: [
-        AppwriteAuthServiceImplementation(),
-      ],
-    )),
-    loadingPage: StyledPage(
-      body: Center(
-        child: StyledLoadingIndicator(),
-      ),
-    ),
+    appPondContextGetter: buildAppPondContext,
+    loadingPage: StyledLoadingPage(),
     notFoundPage: StyledPage(
       body: Center(
         child: StyledText.h1('Not Found!'),
@@ -64,7 +29,33 @@ Future<void> main(List<String> args) async {
   );
 }
 
-Future<AppPondContext> getAppPondContext(CorePondContext corePondContext) async {
+Future<AppPondContext> buildAppPondContext() async {
+  final corePondContext = await getCorePondContext(
+    environmentConfig: EnvironmentConfig.static.flutterAssets(),
+    additionalCoreComponents: (corePondContext) => [
+      if (corePondContext.environment.isOnline) ...[
+        FirebaseCoreComponent(app: DefaultFirebaseOptions.currentPlatform),
+        AppwriteCoreComponent(config: corePondContext.environmental((type) {
+          if (type == EnvironmentType.static.qa) {
+            return AppwriteConfig.localhost(projectId: '651b48116fc13fcb79be');
+          } else if (type == EnvironmentType.static.staging) {
+            return AppwriteConfig.cloud(projectId: '6409e66ed830e72e8f8d');
+          }
+
+          throw Exception('Cannot find Appwrite Config for environment [$type]');
+        })),
+      ]
+    ],
+    repositoryImplementations: (corePondContext) => [
+      FlutterFileRepositoryImplementation(),
+      AppwriteCloudRepositoryImplementation(),
+    ],
+    authServiceImplementations: (corePondContext) => [AppwriteAuthServiceImplementation()],
+    messagingService: (corePondContext) => corePondContext.environment.isOnline
+        ? MessagingService.static.firebase
+        : MessagingService.static.local(refreshDuration: Duration(minutes: 5)),
+  );
+
   final appPondContext = AppPondContext(corePondContext: corePondContext);
   await appPondContext.register(DebugAppComponent());
   await appPondContext.register(LogAppComponent());
