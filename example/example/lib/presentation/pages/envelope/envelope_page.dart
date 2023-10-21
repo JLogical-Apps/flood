@@ -62,7 +62,7 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
         final envelope = envelopeEntity.value;
         final envelopeRule = envelope.ruleProperty.value;
         final envelopeRuleCardWrapper = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
-        return StyledPage(
+        return StyledPage.refreshable(
           title: StyledText.h2.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
           onRefresh: () async {
             await Future.wait([
@@ -254,101 +254,98 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
                 },
               ),
           ],
-          body: StyledList.column.centered.withScrollbar(
-            children: [
-              StyledText.h4.withColor(getCentsColor(envelope.amountCentsProperty.value))(
-                  envelope.amountCentsProperty.value.formatCentsAsCurrency()),
-              StyledList.row.centered.scrollable(
-                children: [
-                  if (envelope.archivedProperty.value)
-                    StyledChip(
-                      labelText: 'Archived',
-                      iconData: Icons.archive,
-                      backgroundColor: Colors.blue,
-                    ),
-                  ModelBuilder(
-                    model: trayModel,
-                    builder: (TrayEntity? trayEntity) {
-                      if (trayEntity == null) {
-                        return Container();
-                      }
-                      final trayColor = Color(trayEntity.value.colorProperty.value);
-                      return StyledChip.subtle(
-                        icon: StyledIcon(
-                          Icons.inbox,
-                          color: trayColor,
-                        ),
-                        label: StyledText.body.withColor(trayColor)(trayEntity.value.nameProperty.value),
-                      );
-                    },
+          children: [
+            StyledText.h4.withColor(getCentsColor(envelope.amountCentsProperty.value))(
+                envelope.amountCentsProperty.value.formatCentsAsCurrency()),
+            StyledList.row.centered.scrollable(
+              children: [
+                if (envelope.archivedProperty.value)
+                  StyledChip(
+                    labelText: 'Archived',
+                    iconData: Icons.archive,
+                    backgroundColor: Colors.blue,
                   ),
-                ],
-              ),
-              StyledCard.subtle(
-                titleText: envelopeRule?.getDisplayName() ?? 'None',
-                leading: envelopeRuleCardWrapper.getIcon(envelopeRule),
-                body: envelopeRuleCardWrapper.getDescription(envelopeRule),
-              ),
-              if (envelope.descriptionProperty.value?.isNotBlank == true)
-                StyledText.body.italics(envelope.descriptionProperty.value!),
-              StyledDivider(),
-              StyledButton.strong(
-                labelText: 'Create Transaction',
-                iconData: Icons.add,
-                onPressed: () async {
-                  await EnvelopeTransactionEditDialog.show(
-                    context,
-                    titleText: 'Create Transaction',
-                    envelopeTransaction: (EnvelopeTransaction()
-                      ..envelopeProperty.set(envelopeEntity.id!)
-                      ..budgetProperty.set(envelope.budgetProperty.value)),
-                    onAccept: (EnvelopeTransaction envelopeTransaction) async {
-                      final budgetEntity = await envelope.budgetProperty.load(context.dropCoreComponent) ??
-                          (throw Exception('Cannot find budget [${envelope.budgetProperty.value}]'));
+                ModelBuilder(
+                  model: trayModel,
+                  builder: (TrayEntity? trayEntity) {
+                    if (trayEntity == null) {
+                      return Container();
+                    }
+                    final trayColor = Color(trayEntity.value.colorProperty.value);
+                    return StyledChip.subtle(
+                      icon: StyledIcon(
+                        Icons.inbox,
+                        color: trayColor,
+                      ),
+                      label: StyledText.body.withColor(trayColor)(trayEntity.value.nameProperty.value),
+                    );
+                  },
+                ),
+              ],
+            ),
+            StyledCard.subtle(
+              titleText: envelopeRule?.getDisplayName() ?? 'None',
+              leading: envelopeRuleCardWrapper.getIcon(envelopeRule),
+              body: envelopeRuleCardWrapper.getDescription(envelopeRule),
+            ),
+            if (envelope.descriptionProperty.value?.isNotBlank == true)
+              StyledText.body.italics(envelope.descriptionProperty.value!),
+            StyledDivider(),
+            StyledButton.strong(
+              labelText: 'Create Transaction',
+              iconData: Icons.add,
+              onPressed: () async {
+                await EnvelopeTransactionEditDialog.show(
+                  context,
+                  titleText: 'Create Transaction',
+                  envelopeTransaction: (EnvelopeTransaction()
+                    ..envelopeProperty.set(envelopeEntity.id!)
+                    ..budgetProperty.set(envelope.budgetProperty.value)),
+                  onAccept: (EnvelopeTransaction envelopeTransaction) async {
+                    final budgetEntity = await envelope.budgetProperty.load(context.dropCoreComponent) ??
+                        (throw Exception('Cannot find budget [${envelope.budgetProperty.value}]'));
 
-                      await budgetEntity.updateAddTransaction(
-                        context.dropCoreComponent,
-                        transactionEntity: EnvelopeTransactionEntity()..value = envelopeTransaction,
-                      );
-                    },
-                  );
-                },
-              ),
-              PaginatedQueryModelBuilder(
-                paginatedQueryModel: envelopeTransactionsModel,
-                builder: (List<BudgetTransactionEntity> envelopeTransactionEntities, Future Function()? loadNext) {
-                  return StyledList.column.withMinChildSize(150)(
-                    children: envelopeTransactionEntities
-                        .map((entity) => TransactionCard(
-                              budgetTransaction: entity.value,
-                              transactionViewContext: TransactionViewContext.envelope(envelopeId: envelopeEntity.id!),
-                              actions: [
-                                ActionItem(
-                                  titleText: 'Delete',
-                                  descriptionText: 'Delete this transaction.',
-                                  iconData: Icons.delete,
-                                  color: Colors.red,
-                                  onPerform: (context) async {
-                                    await context.showStyledDialog(StyledDialog.yesNo(
-                                      titleText: 'Confirm Delete',
-                                      bodyText:
-                                          'Are you sure you want to delete this transaction? You cannot undo this.',
-                                      onAccept: () async {
-                                        await context.dropCoreComponent.delete(entity);
-                                        Navigator.of(context).pop();
-                                      },
-                                    ));
-                                  },
-                                ),
-                              ],
-                            ))
-                        .toList(),
-                    ifEmptyText: 'There are no transactions in this envelope!',
-                  );
-                },
-              ),
-            ],
-          ),
+                    await budgetEntity.updateAddTransaction(
+                      context.dropCoreComponent,
+                      transactionEntity: EnvelopeTransactionEntity()..value = envelopeTransaction,
+                    );
+                  },
+                );
+              },
+            ),
+            PaginatedQueryModelBuilder(
+              paginatedQueryModel: envelopeTransactionsModel,
+              builder: (List<BudgetTransactionEntity> envelopeTransactionEntities, Future Function()? loadNext) {
+                return StyledList.column.withMinChildSize(150)(
+                  children: envelopeTransactionEntities
+                      .map((entity) => TransactionCard(
+                            budgetTransaction: entity.value,
+                            transactionViewContext: TransactionViewContext.envelope(envelopeId: envelopeEntity.id!),
+                            actions: [
+                              ActionItem(
+                                titleText: 'Delete',
+                                descriptionText: 'Delete this transaction.',
+                                iconData: Icons.delete,
+                                color: Colors.red,
+                                onPerform: (context) async {
+                                  await context.showStyledDialog(StyledDialog.yesNo(
+                                    titleText: 'Confirm Delete',
+                                    bodyText: 'Are you sure you want to delete this transaction? You cannot undo this.',
+                                    onAccept: () async {
+                                      await context.dropCoreComponent.delete(entity);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ));
+                                },
+                              ),
+                            ],
+                          ))
+                      .toList(),
+                  ifEmptyText: 'There are no transactions in this envelope!',
+                );
+              },
+            ),
+          ],
         );
       },
     );

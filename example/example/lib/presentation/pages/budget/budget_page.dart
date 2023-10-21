@@ -57,7 +57,7 @@ class BudgetPage with IsAppPageWrapper<BudgetRoute> {
         }
 
         final budget = budgetEntity.value;
-        return StyledPage(
+        return StyledPage.refreshable(
           onRefresh: () => Future.wait([
             budgetModel.load(),
             envelopesModel.load(),

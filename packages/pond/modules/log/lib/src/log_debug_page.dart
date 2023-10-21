@@ -55,7 +55,7 @@ class LogDebugPage with IsAppPageWrapper<LogDebugRoute> {
         model: logHistoriesModel,
         builder: (List<LogHistory> logHistories) {
           final (timeCreated, logs) = loadedLogHistoryState.value ?? (null, null);
-          return StyledPage(
+          return StyledPage.refreshable(
             titleText: 'Logs',
             onRefresh: () => logHistoriesModel.load(),
             actions: [
@@ -74,30 +74,28 @@ class LogDebugPage with IsAppPageWrapper<LogDebugRoute> {
                       );
                     }),
             ],
-            body: StyledList.column.withScrollbar(
-              children: [
-                StyledList.row.withScrollbar(
-                  children: logHistories
-                      .mapIndexed((i, logHistory) => LogHistoryCard(
-                            history: logHistory,
-                            isSelected:
-                                selectedLogHistory.value == null ? i == 0 : selectedLogHistory.value == logHistory,
-                            onPressed: () => selectedLogHistory.value = logHistory,
-                          ))
-                      .toList(),
-                ),
-                if (logs != null)
-                  ...logs.map<Widget>((log) {
-                    if (log.startsWith('[WARNING]')) {
-                      return StyledText.body.withColor(Colors.orange)(log);
-                    }
-                    if (log.startsWith('[ERROR]')) {
-                      return StyledText.body.error(log);
-                    }
-                    return StyledText.body(log);
-                  }).intersperse(StyledDivider()),
-              ],
-            ),
+            children: [
+              StyledList.row.withScrollbar(
+                children: logHistories
+                    .mapIndexed((i, logHistory) => LogHistoryCard(
+                          history: logHistory,
+                          isSelected:
+                              selectedLogHistory.value == null ? i == 0 : selectedLogHistory.value == logHistory,
+                          onPressed: () => selectedLogHistory.value = logHistory,
+                        ))
+                    .toList(),
+              ),
+              if (logs != null)
+                ...logs.map<Widget>((log) {
+                  if (log.startsWith('[WARNING]')) {
+                    return StyledText.body.withColor(Colors.orange)(log);
+                  }
+                  if (log.startsWith('[ERROR]')) {
+                    return StyledText.body.error(log);
+                  }
+                  return StyledText.body(log);
+                }).intersperse(StyledDivider()),
+            ],
           );
         });
   }
