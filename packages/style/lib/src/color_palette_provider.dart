@@ -11,6 +11,7 @@ class ColorPaletteProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
+      key: ValueKey(colorPalette),
       create: (_) => colorPalette,
       child: child,
     );
