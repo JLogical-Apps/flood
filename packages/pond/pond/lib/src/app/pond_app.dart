@@ -191,7 +191,7 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
   Future<MaterialPage> _getPageFromRouteData(RouteData routeData) async {
     final (child, routeDataResult) = await _getAppPageFromRouteData(routeData);
     return MaterialPage(
-      key: ValueKey(routeDataResult.toString()),
+      key: UniqueKey(),
       child: app.wrapPage(child: child, routeData: routeDataResult),
       name: routeDataResult.uri.toString(),
     );
