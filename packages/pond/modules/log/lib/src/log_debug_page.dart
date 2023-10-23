@@ -68,7 +68,7 @@ class LogDebugPage with IsAppPageWrapper<LogDebugRoute> {
                     onPerform: (context) async {
                       final box = context.findRenderObject() as RenderBox?;
                       await Share.share(
-                        logs!.join('\n'),
+                        logs!.join('\n---\n'),
                         subject: 'Logs ${timeCreated.format()}',
                         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
                       );
