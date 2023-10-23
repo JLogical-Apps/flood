@@ -1,4 +1,4 @@
-import 'package:port_core/port_core.dart';
+import 'package:port_core/src/port_field.dart';
 import 'package:port_core/src/port_field_validator_context.dart';
 import 'package:utils_core/utils_core.dart';
 

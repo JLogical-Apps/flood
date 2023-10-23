@@ -191,6 +191,41 @@ extension ValueObjectValueObjectPropertyExtensions<G extends ValueObject?, S ext
   }
 }
 
+extension NullableNumValueObjectPropertyExtensions<G extends num?, S extends num?, L, V extends ValueObjectProperty>
+    on ValueObjectProperty<G, S, L, V> {
+  ValidatorValueObjectProperty<G, S, L> isGreaterThan(num number) {
+    return withValidator(Validator.isGreaterThan(number).cast<G>());
+  }
+
+  ValidatorValueObjectProperty<G, S, L> isLessThan(num number) {
+    return withValidator(Validator.isLessThan(number).cast<G>());
+  }
+
+  ValidatorValueObjectProperty<G, S, L> isGreaterThanOrEqualTo(num number) {
+    return withValidator(Validator.isGreaterThanOrEqualTo(number).cast<G>());
+  }
+
+  ValidatorValueObjectProperty<G, S, L> isLessThanOrEqualTo(num number) {
+    return withValidator(Validator.isLessThanOrEqualTo(number).cast<G>());
+  }
+
+  ValidatorValueObjectProperty<G, S, L> isPositive() {
+    return withValidator(Validator.isPositive().cast<G>());
+  }
+
+  ValidatorValueObjectProperty<G, S, L> isNegative() {
+    return withValidator(Validator.isNegative().cast<G>());
+  }
+
+  ValidatorValueObjectProperty<G, S, L> isNonPositive() {
+    return withValidator(Validator.isNonPositive().cast<G>());
+  }
+
+  ValidatorValueObjectProperty<G, S, L> isNonNegative() {
+    return withValidator(Validator.isNonNegative().cast<G>());
+  }
+}
+
 extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int?, L, V extends ValueObjectProperty>
     on ValueObjectProperty<G, S, L, V> {
   CurrencyValueObjectProperty<G, S, L> currency([bool isCurrency = true]) {

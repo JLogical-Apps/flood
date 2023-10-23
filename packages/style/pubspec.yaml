@@ -25,7 +25,7 @@ dependencies:
   utils:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "v3.0"
+      ref: "master"
       path: packages/utils/utils
 
 dev_dependencies:

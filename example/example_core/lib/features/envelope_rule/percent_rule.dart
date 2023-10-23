@@ -4,7 +4,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 abstract class PercentRule extends EnvelopeRule {
   static const percentField = 'percent';
-  late final percentProperty = field<double>(name: percentField).withDisplayName('Percent (%)').required();
+  late final percentProperty = field<double>(name: percentField).withDisplayName('Percent (%)').required().isPositive();
 
   /// The maximum number of cents before requesting stops.
   /// If [null], then doesn't stop requesting cents.
@@ -14,7 +14,7 @@ abstract class PercentRule extends EnvelopeRule {
       .currency()
       .hidden(() => isMaximumCentsHidden)
       .requiredOnEdit(!isMaximumCentsHidden)
-      .withValidator(Validator.isNonNegative().cast<int?>());
+      .isNonNegative();
 
   bool get isMaximumCentsHidden => true;
 

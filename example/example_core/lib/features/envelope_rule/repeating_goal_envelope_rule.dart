@@ -10,11 +10,8 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
   static const rulePriority = FirstfruitEnvelopeRule.rulePriority + 1;
 
   static const goalCentsField = 'goalCents';
-  late final goalCentsProperty = field<int>(name: goalCentsField)
-      .withDisplayName('Goal (\$)')
-      .currency()
-      .required()
-      .withValidator(Validator.isPositive().cast<int>());
+  late final goalCentsProperty =
+      field<int>(name: goalCentsField).withDisplayName('Goal (\$)').currency().required().isPositive();
 
   /// The remaining amount of cents needed before the goal is completed.
   /// Will never be negative.
@@ -22,7 +19,8 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
   late final remainingGoalCentsProperty = field<int>(name: remainingGoalCentsField)
       .withDisplayName('Remaining (\$)')
       .currency()
-      .withFallbackReplacement(() => goalCentsProperty.value);
+      .withFallbackReplacement(() => goalCentsProperty.value)
+      .isNonNegative();
 
   static const timeRuleField = 'timeRule';
   late final timeRuleProperty = field<TimeRule>(name: timeRuleField)

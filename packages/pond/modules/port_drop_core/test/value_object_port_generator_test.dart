@@ -196,6 +196,24 @@ void main() {
     result = await userPort.submit();
     expect(result.isValid, isTrue);
   });
+
+  test('Port for validator field.', () async {
+    corePondContext.locate<TypeCoreComponent>().register(Data11.new, name: 'Data11');
+
+    final user = Data11();
+    final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+
+    var result = await userPort.submit();
+    expect(result.isValid, isTrue);
+
+    userPort[Data11.numberField] = -10;
+    result = await userPort.submit();
+    expect(result.isValid, isFalse);
+
+    userPort[Data11.numberField] = 10;
+    result = await userPort.submit();
+    expect(result.isValid, isTrue);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -316,4 +334,12 @@ class Data10 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [emailProperty];
+}
+
+class Data11 extends ValueObject {
+  static const numberField = 'number';
+  late final numberProperty = field<int>(name: numberField).isPositive();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [numberProperty];
 }

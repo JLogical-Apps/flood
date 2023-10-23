@@ -19,17 +19,17 @@ dependencies:
   port_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "v3.0"
+      ref: "master"
       path: packages/port/port_core
   style:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "v3.0"
+      ref: "master"
       path: packages/style
   utils:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "v3.0"
+      ref: "master"
       path: packages/utils/utils
 dev_dependencies:
   lints: ^2.0.0

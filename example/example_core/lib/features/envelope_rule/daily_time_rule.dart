@@ -7,7 +7,7 @@ class DailyTimeRule extends TimeRule {
       .withDisplayName('Period (Days)')
       .required()
       .withDefault(() => 7)
-      .withValidator(Validator.isPositive().cast<int>());
+      .isPositive();
 
   @override
   late final List<ValueObjectBehavior> behaviors = [

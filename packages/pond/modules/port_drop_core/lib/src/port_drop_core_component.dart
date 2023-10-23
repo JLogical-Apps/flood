@@ -23,6 +23,7 @@ import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior
 import 'package:port_drop_core/src/behavior_modifiers/stage_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/string_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/timestamp_field_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/validator_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/wrapper_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier_context.dart';
@@ -63,6 +64,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       CurrencyPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       ColorPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       OnlyDatePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      ValidatorPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       WrapperPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
     ],
   );

@@ -285,8 +285,8 @@ class Data10 extends ValueObject {
 }
 
 class Data11 extends ValueObject {
-  late final amountProperty = field<int>(name: 'amount').required().withValidator(Validator.isPositive().cast<int>());
-  late final emailProperty = field<String>(name: 'email').required().withValidator(Validator.isEmail().cast<String>());
+  late final amountProperty = field<int>(name: 'amount').required().isPositive();
+  late final emailProperty = field<String>(name: 'email').required().isEmail();
 
   @override
   List<ValueObjectBehavior> get behaviors => [amountProperty, emailProperty];
