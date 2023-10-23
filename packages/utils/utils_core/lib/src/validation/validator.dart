@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:utils_core/src/extensions/string_extensions.dart';
 import 'package:utils_core/src/validation/compound_validator.dart';
+import 'package:utils_core/src/validation/map_error_validator.dart';
 import 'package:utils_core/src/validation/map_value_validator.dart';
 
 abstract class Validator<T, E> {
@@ -42,7 +43,7 @@ abstract class Validator<T, E> {
         return null;
       });
 
-  static Validator<num?, String> isGreaterThan(num number) => Validator((data) {
+  static Validator<T, String> isGreaterThan<T extends num?>(num number) => Validator((data) {
         if (data == null) {
           return null;
         }
@@ -54,7 +55,7 @@ abstract class Validator<T, E> {
         return null;
       });
 
-  static Validator<num?, String> isLessThan(num number) => Validator((data) {
+  static Validator<T, String> isLessThan<T extends num?>(num number) => Validator((data) {
         if (data == null) {
           return null;
         }
@@ -66,7 +67,7 @@ abstract class Validator<T, E> {
         return null;
       });
 
-  static Validator<num?, String> isGreaterThanOrEqualTo(num number) => Validator((data) {
+  static Validator<T, String> isGreaterThanOrEqualTo<T extends num?>(num number) => Validator((data) {
         if (data == null) {
           return null;
         }
@@ -78,7 +79,7 @@ abstract class Validator<T, E> {
         return null;
       });
 
-  static Validator<num?, String> isLessThanOrEqualTo(num number) => Validator((data) {
+  static Validator<T, String> isLessThanOrEqualTo<T extends num?>(num number) => Validator((data) {
         if (data == null) {
           return null;
         }
@@ -90,13 +91,13 @@ abstract class Validator<T, E> {
         return null;
       });
 
-  static Validator<num?, String> isPositive() => isGreaterThan(0);
+  static Validator<T, String> isPositive<T extends num?>() => isGreaterThan<T>(0);
 
-  static Validator<num?, String> isNegative() => isLessThan(0);
+  static Validator<T, String> isNegative<T extends num?>() => isLessThan<T>(0);
 
-  static Validator<num?, String> isNonNegative() => isGreaterThanOrEqualTo(0);
+  static Validator<T, String> isNonNegative<T extends num?>() => isGreaterThanOrEqualTo<T>(0);
 
-  static Validator<num?, String> isNonPositive() => isLessThanOrEqualTo(0);
+  static Validator<T, String> isNonPositive<T extends num?>() => isLessThanOrEqualTo<T>(0);
 
   static Validator<String?, String> isNotBlank() => Validator((data) {
         if (data == null || data.isBlank) {
@@ -169,6 +170,10 @@ extension ValidatorExtensions<T, E> on Validator<T, E> {
 
   Validator<T2, E> cast<T2>() {
     return map<T2>((value) => value as T);
+  }
+
+  Validator<T, E2> mapError<E2>(E2 Function(E error) errorMapper) {
+    return MapErrorValidator(validator: this, errorMapper: errorMapper);
   }
 }
 

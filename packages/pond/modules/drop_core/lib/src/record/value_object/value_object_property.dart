@@ -194,35 +194,36 @@ extension ValueObjectValueObjectPropertyExtensions<G extends ValueObject?, S ext
 extension NullableNumValueObjectPropertyExtensions<G extends num?, S extends num?, L, V extends ValueObjectProperty>
     on ValueObjectProperty<G, S, L, V> {
   ValidatorValueObjectProperty<G, S, L> isGreaterThan(num number) {
-    return withValidator(Validator.isGreaterThan(number).cast<G>());
+    return withValidator(Validator.isGreaterThan<G>(number).mapError((_) => 'Must be greater than [$number]!'));
   }
 
   ValidatorValueObjectProperty<G, S, L> isLessThan(num number) {
-    return withValidator(Validator.isLessThan(number).cast<G>());
+    return withValidator(Validator.isLessThan<G>(number).mapError((_) => 'Must be less than [$number]!'));
   }
 
   ValidatorValueObjectProperty<G, S, L> isGreaterThanOrEqualTo(num number) {
-    return withValidator(Validator.isGreaterThanOrEqualTo(number).cast<G>());
+    return withValidator(
+        Validator.isGreaterThanOrEqualTo<G>(number).mapError((_) => 'Must be greater than or equal to [$number]!'));
   }
 
   ValidatorValueObjectProperty<G, S, L> isLessThanOrEqualTo(num number) {
-    return withValidator(Validator.isLessThanOrEqualTo(number).cast<G>());
+    return withValidator(Validator.isLessThanOrEqualTo<G>(number).mapError((_) => 'Must be less than [$number]!'));
   }
 
   ValidatorValueObjectProperty<G, S, L> isPositive() {
-    return withValidator(Validator.isPositive().cast<G>());
+    return withValidator(Validator.isPositive<G>().mapError((_) => 'Must be positive!'));
   }
 
   ValidatorValueObjectProperty<G, S, L> isNegative() {
-    return withValidator(Validator.isNegative().cast<G>());
+    return withValidator(Validator.isNegative<G>().mapError((_) => 'Must be negative!'));
   }
 
   ValidatorValueObjectProperty<G, S, L> isNonPositive() {
-    return withValidator(Validator.isNonPositive().cast<G>());
+    return withValidator(Validator.isNonPositive<G>().mapError((_) => 'Cannot be positive!'));
   }
 
   ValidatorValueObjectProperty<G, S, L> isNonNegative() {
-    return withValidator(Validator.isNonNegative().cast<G>());
+    return withValidator(Validator.isNonNegative<G>().mapError((_) => 'Cannot be negative!'));
   }
 }
 
