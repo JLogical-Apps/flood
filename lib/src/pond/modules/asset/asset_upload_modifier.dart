@@ -22,19 +22,20 @@ class AssetUploadModifier {
   static AssetUploadModifier compressImages({int maxDimension = 512}) {
     return AssetUploadModifier(
       uploadModifier: (asset) async {
-        if (!asset.isImage) {
+        if (!asset.isImage || asset.mimeType == 'image/gif') {
           return asset;
         }
 
         final compressedBytes = await compute(
-          (Uint8List data) => _compressImages(data, maxDimension: maxDimension),
+          (Uint8List data) => _compressImage(data, maxDimension: maxDimension),
           asset.value,
         );
         if (compressedBytes == null) {
           return asset;
         }
 
-        print('Compressing image from ${asset.value.length / 1000 / 1000}MB to ${compressedBytes.length / 1000 / 1000}MB');
+        print(
+            'Compressing image from ${asset.value.length / 1000 / 1000}MB to ${compressedBytes.length / 1000 / 1000}MB');
 
         return asset.copyWith(value: Uint8List.fromList(compressedBytes));
       },
@@ -44,7 +45,6 @@ class AssetUploadModifier {
   static AssetUploadModifier blockLargeUploads({int maxSizeMegabytes = 25}) {
     return AssetUploadModifier(
       exceptionGetter: (asset) async {
-        print('New Asset is ${asset.value.length / 1000 / 1000}MB');
         if (asset.value.length > maxSizeMegabytes * 1000 * 1000) {
           return 'This asset is too large! Make sure it is less than ${maxSizeMegabytes}MB';
         }
@@ -55,7 +55,7 @@ class AssetUploadModifier {
   }
 }
 
-Future<Uint8List?> _compressImages(Uint8List bytes, {required int maxDimension}) async {
+Future<Uint8List?> _compressImage(Uint8List bytes, {required int maxDimension}) async {
   var img = image.decodeImage(bytes);
   if (img == null) {
     return null;
