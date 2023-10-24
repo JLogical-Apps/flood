@@ -26,16 +26,16 @@ class FirebaseModule extends AppModule {
 
     if (forceInitialize || AppContext.global.environment.index >= Environment.qa.index) {
       await Firebase.initializeApp(options: app);
+
+      FlutterError.onError = (errorDetails) {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      };
+
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
     }
-
-    FlutterError.onError = (errorDetails) {
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-    };
-
-    PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      return true;
-    };
 
     final host = isEmulator ? '10.0.2.2' : 'localhost';
 

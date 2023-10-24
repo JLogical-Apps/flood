@@ -1,3 +1,5 @@
+import 'package:jlogical_utils/src/pond/modules/asset/asset_upload_modifier.dart';
+
 import '../../../model/export_core.dart';
 import '../../../patterns/export_core.dart';
 import '../../context/app_context.dart';
@@ -8,10 +10,11 @@ import 'asset_provider.dart';
 
 class AssetModule extends AppModule {
   final AssetProvider assetProvider;
+  final List<AssetUploadModifier> assetUploadModifiers;
 
   final Map<AssetProvider, Cache<String, Model<Asset?>>> _assetCacheByProvider = {};
 
-  AssetModule({required this.assetProvider});
+  AssetModule({required this.assetProvider, this.assetUploadModifiers = const []});
 
   @override
   void onRegister(AppRegistration registration) {
@@ -44,8 +47,30 @@ class AssetModule extends AppModule {
     await assetProvider.getDataSource(id).delete();
   }
 
+  Future<Asset> getModifiedAsset(Asset asset) async {
+    for (final uploadModifier in assetUploadModifiers) {
+      asset = await uploadModifier.getModifiedAsset(asset);
+    }
+    return asset;
+  }
+
+  Future<String?> getAssetUploadException(Asset asset) async {
+    asset = await getModifiedAsset(asset);
+
+    for (final assetUploadModifier in assetUploadModifiers) {
+      final exception = await assetUploadModifier.getException(asset);
+      if (exception != null) {
+        return exception;
+      }
+    }
+    return null;
+  }
+
   Future<Asset> uploadAsset(Asset asset, {AssetProvider? assetProvider}) async {
     assetProvider ??= this.assetProvider;
+
+    asset = await getModifiedAsset(asset);
+
     final uploadedAsset = await assetProvider.upload(asset);
     final id = uploadedAsset.id!;
 

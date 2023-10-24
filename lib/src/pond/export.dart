@@ -9,6 +9,7 @@ export 'modules/asset/asset_hooks.dart';
 export 'modules/asset/asset_metadata.dart';
 export 'modules/asset/asset_module.dart';
 export 'modules/asset/asset_provider.dart';
+export 'modules/asset/asset_upload_modifier.dart';
 export 'modules/asset/default_asset_provider.dart';
 export 'modules/asset/file/file_asset_provider.dart';
 export 'modules/asset/firebase/firebase_storage_asset_provider.dart';

@@ -641,12 +641,12 @@ PODS:
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
   - Cache (6.0.0)
-  - cloud_firestore (4.1.0):
+  - cloud_firestore (4.11.0):
     - Firebase/Firestore (= 10.15.0)
     - firebase_core
     - Flutter
     - nanopb (< 2.30910.0, >= 2.30908.0)
-  - cloud_functions (4.0.5):
+  - cloud_functions (4.5.1):
     - Firebase/Functions (= 10.15.0)
     - firebase_core
     - Flutter
@@ -675,26 +675,26 @@ PODS:
   - Firebase/Storage (10.15.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 10.15.0)
-  - firebase_analytics (10.0.6):
+  - firebase_analytics (10.6.1):
     - Firebase/Analytics (= 10.15.0)
     - firebase_core
     - Flutter
-  - firebase_auth (4.1.3):
+  - firebase_auth (4.11.1):
     - Firebase/Auth (= 10.15.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.16.0):
+  - firebase_core (2.19.0):
     - Firebase/CoreOnly (= 10.15.0)
     - Flutter
-  - firebase_crashlytics (3.3.6):
+  - firebase_crashlytics (3.4.1):
     - Firebase/Crashlytics (= 10.15.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (14.1.1):
+  - firebase_messaging (14.7.1):
     - Firebase/Messaging (= 10.15.0)
     - firebase_core
     - Flutter
-  - firebase_storage (11.0.6):
+  - firebase_storage (11.3.1):
     - Firebase/Storage (= 10.15.0)
     - firebase_core
     - Flutter
@@ -919,8 +919,9 @@ PODS:
     - nanopb/encode (= 2.30909.0)
   - nanopb/decode (2.30909.0)
   - nanopb/encode (2.30909.0)
-  - path_provider_ios (0.0.1):
+  - path_provider_foundation (0.0.1):
     - Flutter
+    - FlutterMacOS
   - PINCache (3.0.3):
     - PINCache/Arc-exception-safe (= 3.0.3)
     - PINCache/Core (= 3.0.3)
@@ -935,15 +936,17 @@ PODS:
   - RecaptchaInterop (100.0.0)
   - share_plus (0.0.1):
     - Flutter
-  - shared_preferences_ios (0.0.1):
+  - shared_preferences_foundation (0.0.1):
     - Flutter
-  - sqflite (0.0.2):
+    - FlutterMacOS
+  - sqflite (0.0.3):
     - Flutter
     - FMDB (>= 2.7.5)
   - url_launcher_ios (0.0.1):
     - Flutter
   - video_player_avfoundation (0.0.1):
     - Flutter
+    - FlutterMacOS
   - wakelock (0.0.1):
     - Flutter
 
@@ -961,12 +964,12 @@ DEPENDENCIES:
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
-  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
-  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
-  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
+  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
 SPEC REPOS:
@@ -1035,18 +1038,18 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
-  path_provider_ios:
-    :path: ".symlinks/plugins/path_provider_ios/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
-  shared_preferences_ios:
-    :path: ".symlinks/plugins/shared_preferences_ios/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
-    :path: ".symlinks/plugins/video_player_avfoundation/ios"
+    :path: ".symlinks/plugins/video_player_avfoundation/darwin"
   wakelock:
     :path: ".symlinks/plugins/wakelock/ios"
 
@@ -1055,15 +1058,15 @@ SPEC CHECKSUMS:
   better_player: 2406bfe8175203c7a46fa15f9d778d73b12e1646
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   Cache: 4ca7e00363fca5455f26534e5607634c820ffc2d
-  cloud_firestore: 70b568987e994835ab84932733a1f3947c0cea75
-  cloud_functions: e5824b1f3e68505d29ae6dc7cea66e40344b0435
+  cloud_firestore: 0b05c34e8b36cde7026bed89616962c4e03aa307
+  cloud_functions: 018d3139e424e921e1c8ed433827869cc280d043
   Firebase: 66043bd4579e5b73811f96829c694c7af8d67435
-  firebase_analytics: ff6ae0c8e2fffbd5ccd5a75aaf1e47faa44cf1c7
-  firebase_auth: 45fcbd7198d37d68fec1eed40ecacf94c10faec2
-  firebase_core: 77172d0a9d8d19d07606e24406e4c2fc14d3265b
-  firebase_crashlytics: 4365238d33a7a43164f1049f892365de4aee999f
-  firebase_messaging: c7d70cbbfa8387f405e97fcf3f69bdf42f7ffc09
-  firebase_storage: bf07fc5808b5008e7c203b47decfff9a064bc32a
+  firebase_analytics: 8b63b894ac3be5ced6a9a4614174754b03377c2f
+  firebase_auth: a2eb49575626e0c8ee369d5983e67d793e272515
+  firebase_core: fd674fcc642742ef7289acea60bd21a1a021bd98
+  firebase_crashlytics: 22dcddd1039445d697779785abe25dfcdd3bca02
+  firebase_messaging: 4f6c9f2920785b409108c8b5f1f8cdaf89d8def2
+  firebase_storage: d3dc64db1b536de4c1fe422bb5351e45e86187c3
   FirebaseAnalytics: 47cef43728f81a839cf1306576bdd77ffa2eac7e
   FirebaseAppCheckInterop: a8c555b1c2db1d9445e6c3a08a848167ddb7eb51
   FirebaseAuth: a55ec5f7f8a5b1c2dd750235c1bb419bfb642445
@@ -1095,17 +1098,17 @@ SPEC CHECKSUMS:
   image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
   leveldb-library: f03246171cce0484482ec291f88b6d563699ee06
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
-  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
+  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
   PINOperation: 00c935935f1e8cf0d1e2d6b542e75b88fc3e5e20
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   PromisesSwift: 28dca69a9c40779916ac2d6985a0192a5cb4a265
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
-  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
-  sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
-  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
-  video_player_avfoundation: e489aac24ef5cf7af82702979ed16f2a5ef84cff
+  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
+  sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
+  url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
+  video_player_avfoundation: 8563f13d8fc8b2c29dc2d09e60b660e4e8128837
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
 PODFILE CHECKSUM: 4043e54b1e3a386c4b82e68af7b843c2fd4289f8

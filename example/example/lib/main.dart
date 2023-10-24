@@ -133,7 +133,13 @@ class HomePage extends StatelessWidget {
     appContext
       ..register(await FirebaseModule.create(app: DefaultFirebaseOptions.currentPlatform))
       ..register(DebugModule())
-      ..register(AssetModule(assetProvider: AdaptingAssetProvider().assetProvider))
+      ..register(AssetModule(
+        assetProvider: AdaptingAssetProvider().assetProvider,
+        assetUploadModifiers: [
+          AssetUploadModifier.compressImages(maxDimension: 512),
+          AssetUploadModifier.blockLargeUploads(),
+        ],
+      ))
       ..register(DefaultAnalyticsModule())
       ..register(BudgetRepository())
       ..register(BudgetDraftRepository())
