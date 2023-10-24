@@ -64,7 +64,14 @@ class PondBudgetPage extends HookWidget {
                       }
 
                       final newBudget = Budget()..copyFrom(budget);
-                      await newBudget.imagesProperty.uploadNewAsset(asset);
+                      try {
+                        await newBudget.imagesProperty.uploadNewAsset(asset);
+                      } catch (e) {
+                        context
+                            .style()
+                            .showMessage(context: context, message: StyledMessage.error(messageText: e.toString()));
+                        return;
+                      }
 
                       budgetEntity.value = newBudget;
                       await budgetEntity.save();
@@ -73,7 +80,7 @@ class PondBudgetPage extends HookWidget {
                   ActionItem(
                     name: 'Upload Image',
                     onPerform: () async {
-                      final asset = await ImageAssetPicker.pickImageFromGallery();
+                      var asset = await ImageAssetPicker.pickImageFromGallery();
                       if (asset == null) {
                         return;
                       }
@@ -81,7 +88,16 @@ class PondBudgetPage extends HookWidget {
                       isLoading.value = true;
 
                       final newBudget = Budget()..copyFrom(budget);
-                      await newBudget.imagesProperty.uploadNewAsset(asset);
+
+                      try {
+                        await newBudget.imagesProperty.uploadNewAsset(asset);
+                      } catch (e) {
+                        context
+                            .style()
+                            .showMessage(context: context, message: StyledMessage.error(messageText: e.toString()));
+                        isLoading.value = false;
+                        return;
+                      }
 
                       budgetEntity.value = newBudget;
                       await budgetEntity.save();

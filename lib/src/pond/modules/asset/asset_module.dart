@@ -70,6 +70,10 @@ class AssetModule extends AppModule {
     assetProvider ??= this.assetProvider;
 
     asset = await getModifiedAsset(asset);
+    final exception = await getAssetUploadException(asset);
+    if (exception != null) {
+      throw exception;
+    }
 
     final uploadedAsset = await assetProvider.upload(asset);
     final id = uploadedAsset.id!;

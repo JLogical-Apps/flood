@@ -89,7 +89,14 @@ class PondHomePage extends HookWidget {
                       }
 
                       final user = userEntity.value;
-                      await user.profilePictureProperty.uploadNewAssetAndSet(asset);
+                      try {
+                        await user.profilePictureProperty.uploadNewAssetAndSet(asset);
+                      } catch (e) {
+                        context
+                            .style()
+                            .showMessage(context: context, message: StyledMessage.error(messageText: e.toString()));
+                        return;
+                      }
 
                       userEntity.value = user;
                       await userEntity.save();
