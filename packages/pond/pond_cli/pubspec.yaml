@@ -11,14 +11,24 @@ version: 0.0.1
 dependencies:
   collection: ^1.16.0
   colorize_lumberdash: ^3.0.0
-  dcli: 3.0.2
+  dcli:
+    git:
+      url: git@github.com:Linkadi98/dcli.git
+      ref: 922bb02830458f065750909dbf40fa785e59c5d5
+      path: dcli
   diffutil_dart: ^4.0.0
   equatable: ^2.0.5
-  interact: ^2.2.0
+  interact:
+    git:
+      url: git@github.com:Linkadi98/interact.git
+      ref: e180aa04146a78fadb11ecc93347321b5b2382cc
   lumberdash: ^3.0.0
   path: ^1.8.0
   process_run: ^0.12.5+2
-  xcodeproj: ^0.2.3
+  xcodeproj:
+    git:
+      url: git@github.com:jaboyc/xcodeproj.git
+      ref: "master"
 
   persistence_core:
     git:
@@ -38,8 +48,3 @@ dependencies:
 dev_dependencies:
   lints: ^2.0.0
   test: 1.24.6
-dependency_overrides: # Needed because of [dcli] and [interact]
-  intl: 0.18.0
-  win32: 4.1.0
-  path: 1.8.3
-  js: 0.6.5
