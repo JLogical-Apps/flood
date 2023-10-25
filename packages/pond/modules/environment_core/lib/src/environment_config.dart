@@ -7,6 +7,7 @@ import 'package:environment_core/src/collapsed_environment_config.dart';
 import 'package:environment_core/src/data_source_environment_config.dart';
 import 'package:environment_core/src/environment_type.dart';
 import 'package:environment_core/src/environment_type_environment_config.dart';
+import 'package:environment_core/src/environment_variables_environment_config.dart';
 import 'package:environment_core/src/environmental_environment_config.dart';
 import 'package:environment_core/src/file_asset_environment_config.dart';
 import 'package:environment_core/src/file_system.dart';
@@ -45,6 +46,8 @@ class EnvironmentConfigStatic {
 
   FileAssetEnvironmentConfig fileAssets({Directory? projectDirectory}) =>
       FileAssetEnvironmentConfig(projectDirectory: projectDirectory);
+
+  EnvironmentVariablesEnvironmentConfig environmentVariables() => EnvironmentVariablesEnvironmentConfig();
 
   EnvironmentConfig testing() =>
       memory().withEnvironmentType(EnvironmentType.static.testing).withFileSystemGetter(() => FileSystem.io(

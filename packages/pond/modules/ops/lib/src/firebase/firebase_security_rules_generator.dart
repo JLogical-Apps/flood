@@ -42,7 +42,7 @@ ${firestorePermissions.withIndent(2)}
         .join('\n');
 
     return '''\
-rules_version = '2';     
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {

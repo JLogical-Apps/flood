@@ -15,9 +15,15 @@ Future<void> main(List<String> args) async {
     padding: 80,
   ));
   await automatePondContext.register(OpsAutomateComponent(environments: {
-    EnvironmentType.static.qa: OpsEnvironment.static.appwriteLocal,
-    EnvironmentType.static.staging: OpsEnvironment.static.appwrite,
-    EnvironmentType.static.production: OpsEnvironment.static.appwrite,
+    EnvironmentType.static.qa: OpsEnvironment.static.appwriteLocal(
+      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'tool' - 'server.dart',
+    ),
+    EnvironmentType.static.staging: OpsEnvironment.static.appwrite(
+      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'tool' - 'server.dart',
+    ),
+    EnvironmentType.static.production: OpsEnvironment.static.appwrite(
+      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'tool' - 'server.dart',
+    ),
   }));
   await automatePondContext.register(ReleaseAutomateComponent(pipelines: {
     ReleaseEnvironmentType.beta: Pipeline.defaultDeploy({

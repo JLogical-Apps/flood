@@ -1,27 +1,28 @@
 import 'dart:io';
 
 import 'package:persistence_core/src/data_source.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:watcher/watcher.dart';
 
-class DirectoryDataSource extends DataSource<List<FileSystemEntity>?> {
+class DirectoryDataSource extends DataSource<Directory> {
   final Directory directory;
 
   DirectoryDataSource({required this.directory});
 
   @override
-  Stream<List<FileSystemEntity>?>? getXOrNull() async* {
-    yield await getOrNull();
+  Stream<Directory>? getXOrNull() async* {
+    yield (await getOrNull()) ?? directory;
 
-    yield* DirectoryWatcher(directory.path).events.asyncMap((_) => getOrNull());
+    yield* DirectoryWatcher(directory.path).events.asyncMap((_) => getOrNull()).whereNotNull();
   }
 
   @override
-  Future<List<FileSystemEntity>?> getOrNull() async {
+  Future<Directory?> getOrNull() async {
     if (!await exists()) {
       return null;
     }
 
-    return directory.listSync().toList();
+    return directory;
   }
 
   @override
@@ -30,7 +31,7 @@ class DirectoryDataSource extends DataSource<List<FileSystemEntity>?> {
   }
 
   @override
-  Future<void> set(List<FileSystemEntity>? data) async {
+  Future<void> set(Directory data) async {
     throw Exception('Cannot set the data for a DirectoryDataSource!');
   }
 

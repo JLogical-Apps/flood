@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:appwrite_core/appwrite_core.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_appwrite/dart_appwrite.dart' hide Permission;
-import 'package:dart_appwrite/models.dart';
+import 'package:dart_appwrite/models.dart' hide File;
 import 'package:drop_core/drop_core.dart';
 import 'package:environment_core/environment_core.dart';
 import 'package:log_core/log_core.dart';
@@ -11,7 +11,10 @@ import 'package:ops/src/appwrite/appwrite_platform.dart';
 import 'package:ops/src/appwrite/behavior/appwrite_attribute_behavior_modifier.dart';
 import 'package:ops/src/appwrite/permission/permission_text_modifier.dart';
 import 'package:ops/src/repository_security/repository_security_modifier.dart';
+import 'package:path_core/path_core.dart';
+import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
+import 'package:task_core/task_core.dart';
 import 'package:type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -131,6 +134,92 @@ class AppwriteOpsUtils {
     }
 
     await context.confirmAndExecutePlan(Plan(commands));
+  }
+
+  static Future<void> deployFunctions(
+    AutomateCommandContext context, {
+    required Client client,
+    required File functionTemplate,
+  }) async {
+    final taskCoreComponent = context.automateContext.findOrNull<TaskCoreComponent>();
+    if (taskCoreComponent == null) {
+      return;
+    }
+
+    final functions = Functions(client);
+    for (final (route, _) in taskCoreComponent.tasks.entryRecords) {
+      final routePath = route.uri.toString();
+      final functionId = routePath.replaceAll('/', '_').replaceFirst('_', '');
+
+      final function = await guardAsync(() => functions.get(functionId: functionId));
+      if (function == null) {
+        await context.confirmAndExecutePlan(Plan.execute(
+          'Create Function [$functionId]',
+          (context) => functions.create(
+            functionId: functionId,
+            name: routePath,
+            runtime: 'dart-3.0',
+            enabled: true,
+            logging: true,
+            commands: 'dart pub get',
+            entrypoint: 'lib/main.dart',
+          ),
+        ));
+      }
+
+      final archive = await DataSource.static
+          .directory(context.coreDirectory / 'tool' / 'output' / 'functions' / 'functions')
+          .mapTar(ignorePatterns: [
+            RegExp('\\.packages/.*'),
+            RegExp('\\.dart_tool/.*'),
+            RegExp('appwrite/.*'),
+            RegExp('firebase/.*'),
+            RegExp('build/.*'),
+          ])
+          .mapGzip()
+          .get();
+
+      await DataSource.static.rawFile(context.appwriteOutputDirectory - 'functions.tar.gz').set(archive);
+
+      await context.confirmAndExecutePlan(Plan.execute(
+        'Create Deployment [$functionId]',
+        (context) async {
+          var deployment = await functions.createDeployment(
+            functionId: functionId,
+            code: InputFile.fromBytes(
+              bytes: archive,
+              filename: 'functions.tar.gz',
+            ),
+            activate: true,
+          );
+
+          deployment =
+              await _deploymentStatusX(functions: functions, deployment: deployment, functionId: functionId).last;
+          if (deployment.status == 'failed') {
+            throw Exception('Deployment failed after ${deployment.buildTime}s of building.\n${deployment.buildLogs}');
+          }
+
+          await functions.updateDeployment(functionId: functionId, deploymentId: deployment.$id);
+        },
+      ));
+    }
+  }
+
+  static Stream<Deployment> _deploymentStatusX({
+    required Functions functions,
+    required Deployment deployment,
+    required String functionId,
+  }) async* {
+    while (true) {
+      deployment = await functions.getDeployment(functionId: functionId, deploymentId: deployment.$id);
+      yield deployment;
+
+      if (deployment.status == 'ready' || deployment.status == 'failed') {
+        break;
+      }
+
+      await Future.delayed(Duration(seconds: 1));
+    }
   }
 
   static Future<void> _createDatabaseIfNotExists(AutomateCommandContext context, {required Databases databases}) async {

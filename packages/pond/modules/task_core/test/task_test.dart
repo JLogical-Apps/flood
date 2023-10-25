@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 void main() {
   test('local task runner', () async {
     final taskRunner = TaskRunner.static.local;
-    final echoTask = Task(name: 'echo', runner: (EchoRoute route) => route.echoField.value);
+    final echoTask = Task(runner: (EchoRoute route) => route.echoField.value);
     expect(
       await taskRunner.run(
         echoTask,

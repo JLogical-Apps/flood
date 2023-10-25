@@ -24,6 +24,7 @@ class FileAssetEnvironmentConfig with IsEnvironmentConfigWrapper {
 
       return EnvironmentConfig.static.collapsed([
         EnvironmentConfig.static.yamlFile(projectDirectory - 'assets/config.overrides.yaml'),
+        EnvironmentConfig.static.environmentVariables(),
         if (isRelease) EnvironmentConfig.static.yamlFile(projectDirectory - 'assets/config.release.yaml'),
         if (isWeb) EnvironmentConfig.static.yamlFile(projectDirectory - 'assets/config.web.yaml'),
         if (type == EnvironmentType.static.testing)

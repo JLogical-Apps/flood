@@ -1,16 +1,15 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:persistence_core/src/data_source.dart';
 import 'package:utils_core/utils_core.dart';
 
-class RawFileDataSource extends DataSource<Uint8List> {
+class RawFileDataSource extends DataSource<List<int>> {
   final File file;
 
   RawFileDataSource({required this.file});
 
   @override
-  Stream<Uint8List>? getXOrNull() async* {
+  Stream<List<int>>? getXOrNull() async* {
     if (!await exists()) {
       return;
     }
@@ -19,7 +18,7 @@ class RawFileDataSource extends DataSource<Uint8List> {
   }
 
   @override
-  Future<Uint8List?> getOrNull() async {
+  Future<List<int>?> getOrNull() async {
     if (!await exists()) {
       return null;
     }
@@ -33,7 +32,7 @@ class RawFileDataSource extends DataSource<Uint8List> {
   }
 
   @override
-  Future<void> set(Uint8List data) async {
+  Future<void> set(List<int> data) async {
     await file.ensureCreated();
     await file.writeAsBytes(data);
   }

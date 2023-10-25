@@ -22,6 +22,8 @@ abstract class MapperDataSource<T, T2> with IsDataSource<T2> {
     required FutureOr<void> Function()? deleteMapper,
   }) =>
       _MapperDataSourceImpl(
+        existsMapper: existsMapper,
+        deleteMapper: deleteMapper,
         dataSource: dataSource,
         getMapper: getMapper,
         setMapper: setMapper,

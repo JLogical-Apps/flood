@@ -54,7 +54,9 @@ Future<AppPondContext> buildAppPondContext() async {
     messagingService: (corePondContext) => corePondContext.environment.isOnline
         ? MessagingService.static.firebase
         : MessagingService.static.local(refreshDuration: Duration(minutes: 5)),
-    loggerService: (corePondContext) => LoggerService.static.console.withFileLogHistory(corePondContext.fileSystem.tempDirectory / 'logs'),
+    loggerService: (corePondContext) => corePondContext.environment.isOnline
+        ? LoggerService.static.console.withFileLogHistory(corePondContext.fileSystem.tempDirectory / 'logs')
+        : LoggerService.static.console,
   );
 
   final appPondContext = AppPondContext(corePondContext: corePondContext);

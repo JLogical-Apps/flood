@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:archive/archive_io.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:persistence_core/src/cross_directory_data_source.dart';
 import 'package:persistence_core/src/cross_file_data_source.dart';
@@ -11,6 +12,7 @@ import 'package:persistence_core/src/mapper_data_source.dart';
 import 'package:persistence_core/src/memory_data_source.dart';
 import 'package:persistence_core/src/raw_cross_file_data_source.dart';
 import 'package:persistence_core/src/raw_file_data_source.dart';
+import 'package:persistence_core/src/utils/create_archive.dart';
 import 'package:persistence_core/src/yaml_data_source.dart';
 
 abstract class DataSource<T> {
@@ -109,6 +111,19 @@ extension StringDataSourceExtensions on DataSource<String> {
   YamlDataSource mapYaml() => YamlDataSource(sourceDataSource: this);
 
   JsonDataSource mapJson() => JsonDataSource(sourceDataSource: this);
+}
+
+extension DirectoryDataSourceExtensions on DataSource<Directory> {
+  DataSource<List<int>> mapTar({List<Pattern> ignorePatterns = const []}) => mapGet(
+        (directory) => TarEncoder().encode(directory.createArchive(ignorePatterns: ignorePatterns)),
+      );
+}
+
+extension RawDataSourceExtensions on DataSource<List<int>> {
+  DataSource<List<int>> mapGzip() => map(
+        getMapper: (data) => GZipEncoder().encode(data)!,
+        setMapper: (data) => GZipDecoder().decodeBytes(data),
+      );
 }
 
 mixin IsDataSource<T> implements DataSource<T> {

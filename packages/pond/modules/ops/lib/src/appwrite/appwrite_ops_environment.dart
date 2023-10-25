@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dart_appwrite/dart_appwrite.dart' hide Permission;
 import 'package:environment_core/environment_core.dart';
@@ -8,6 +9,10 @@ import 'package:pond_cli/pond_cli.dart';
 import 'package:utils_core/utils_core.dart';
 
 class AppwriteOpsEnvironment with IsOpsEnvironment {
+  final File Function(Directory coreDirectory)? serverFileTemplateGetter;
+
+  AppwriteOpsEnvironment({this.serverFileTemplateGetter});
+
   @override
   Future<bool> exists(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     return true;

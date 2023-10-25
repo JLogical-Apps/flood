@@ -20,7 +20,13 @@ class Plan {
     FutureOr Function(AutomateCommandContext context) onExecute, {
     FutureOr<bool> Function(AutomateCommandContext context)? onCanExecute,
     this.name,
-  }) : items = [PlanItem.static.execute(actionName, (context) => null)];
+  }) : items = [
+          PlanItem.static.execute(
+            actionName,
+            onExecute,
+            onCanExecute: onCanExecute,
+          ),
+        ];
 
   Future<void> preview(AutomateCommandContext context) async {
     for (final item in items) {

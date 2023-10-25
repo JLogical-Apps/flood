@@ -8,6 +8,7 @@ import 'package:example_core/features/tray/tray_repository.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:example_core/features/user/user_repository.dart';
+import 'package:example_core/test_task.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 Future<CorePondContext> getCorePondContext({
@@ -18,12 +19,16 @@ Future<CorePondContext> getCorePondContext({
   MessagingService? Function(CorePondContext context)? messagingService,
   LoggerService? Function(CorePondContext context)? loggerService,
 }) async {
-  environmentConfig ??= EnvironmentConfig.static.memory();
+  environmentConfig ??= EnvironmentConfig.static.environmentVariables();
 
   final corePondContext = CorePondContext();
 
   await corePondContext.register(TypeCoreComponent());
   await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
+  await corePondContext.register(TaskCoreComponent(
+    taskRunner: TaskRunner.static.local,
+    tasks: {TestTaskRoute(): TestTask()},
+  ));
 
   for (final coreComponent in additionalCoreComponents?.call(corePondContext) ?? []) {
     await corePondContext.register(coreComponent);

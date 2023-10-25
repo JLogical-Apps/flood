@@ -15,6 +15,14 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  archive:
+    dependency: transitive
+    description:
+      name: archive
+      sha256: "7e0d52067d05f2e0324268097ba723b71cb41ac8a6a2b24d1edf9c536b987b03"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.6"
   async:
     dependency: transitive
     description:
@@ -46,6 +54,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.2"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      sha256: "0f08b14755d163f6e2134cb58222dd25ea2a2ee8a195e53983d57c075324d592"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
   cron:
     dependency: transitive
     description:
@@ -58,10 +74,10 @@ packages:
     dependency: transitive
     description:
       name: crypto
-      sha256: aa274aa7774f8964e4f4f38cc994db7b6158dd36e9187aaceaddc994b35c6c67
+      sha256: ff625774173754681d66daaf4a448684fb04b78f902da9cb3d308c19cc5e8bab
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.2"
+    version: "3.0.3"
   directed_graph:
     dependency: transitive
     description:
@@ -124,6 +140,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.0"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.7"
   json2yaml:
     dependency: transitive
     description:
@@ -199,6 +223,14 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: "7c1e5f0d23c9016c5bbd8b1473d0d3fb3fc851b876046039509e18e0c7485f2c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.3"
   pond_core:
     dependency: "direct main"
     description:

@@ -17,8 +17,6 @@ class LogCoreComponent with IsCorePondComponent, IsLoggerServiceWrapper {
     return LogCoreComponent._(loggerService: loggerService.withListenersHandler(listeners), listeners: listeners);
   }
 
-  factory LogCoreComponent.console() => LogCoreComponent(loggerService: LoggerService.static.console);
-
   void addListener({
     FutureOr Function(dynamic log)? onLog,
     FutureOr Function(dynamic log)? onLogWarning,

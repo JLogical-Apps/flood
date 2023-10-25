@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dart_appwrite/dart_appwrite.dart' hide Permission;
 import 'package:environment_core/environment_core.dart';
@@ -9,6 +10,10 @@ import 'package:pond_cli/pond_cli.dart';
 import 'package:utils_core/utils_core.dart';
 
 class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
+  final File Function(Directory coreDirectory)? serverFileTemplateGetter;
+
+  AppwriteLocalOpsEnvironment({this.serverFileTemplateGetter});
+
   @override
   Future<bool> exists(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     if (!await _isDockerInstalled(context)) {
@@ -60,10 +65,15 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     final client = Client(endPoint: 'https://localhost/v1', selfSigned: true).setProject(projectId).setKey(apiKey);
 
     await context.appwriteTerminal.run('appwrite client --endpoint http://localhost/v1');
-    await context.appwriteTerminal.run('appwrite login', interactable: true);
+    // await context.appwriteTerminal.run('appwrite login', interactable: true);
 
-    await AppwriteOpsUtils.updatePlatforms(context, projectId: projectId, webDomain: 'localhost');
-    await AppwriteOpsUtils.updateAppwriteAttributes(context, client: client);
+    // await AppwriteOpsUtils.updatePlatforms(context, projectId: projectId, webDomain: 'localhost');
+    // await AppwriteOpsUtils.updateAppwriteAttributes(context, client: client);
+
+    final serverFileTemplate = serverFileTemplateGetter?.call(context.coreDirectory);
+    if (serverFileTemplate != null) {
+      await AppwriteOpsUtils.deployFunctions(context, client: client, functionTemplate: serverFileTemplate);
+    }
   }
 
   @override

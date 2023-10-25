@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:environment_core/environment_core.dart';
 import 'package:ops/src/appwrite/appwrite_local_ops_environment.dart';
 import 'package:ops/src/appwrite/appwrite_ops_environment.dart';
@@ -18,9 +20,11 @@ abstract class OpsEnvironment {
 }
 
 class OpsEnvironmentStatic {
-  AppwriteLocalOpsEnvironment get appwriteLocal => AppwriteLocalOpsEnvironment();
+  AppwriteLocalOpsEnvironment appwriteLocal({File Function(Directory coreDirectory)? serverFileTemplateGetter}) =>
+      AppwriteLocalOpsEnvironment(serverFileTemplateGetter: serverFileTemplateGetter);
 
-  AppwriteOpsEnvironment get appwrite => AppwriteOpsEnvironment();
+  AppwriteOpsEnvironment appwrite({File Function(Directory coreDirectory)? serverFileTemplateGetter}) =>
+      AppwriteOpsEnvironment(serverFileTemplateGetter: serverFileTemplateGetter);
 
   FirebaseEmulatorOpsEnvironment get firebaseEmulator => FirebaseEmulatorOpsEnvironment();
 
