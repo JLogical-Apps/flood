@@ -20,7 +20,7 @@ dependencies:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "master"
-      path: packages/pond/modules/persistence_core
+      path: packages/persistence/persistence_core
   pond_cli:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
