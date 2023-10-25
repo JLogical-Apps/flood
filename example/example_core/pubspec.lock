@@ -28,10 +28,10 @@ packages:
     dependency: transitive
     description:
       name: ansicolor
-      sha256: "607f8fa9786f392043f169898923e6c59b4518242b68b8862eb8a8b7d9c30b4a"
+      sha256: "8bf17a8ff6ea17499e40a2d2542c2f481cd7615760c6d34065cb22bfd22e6880"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   app_icon:
     dependency: "direct overridden"
     description:
@@ -193,10 +193,10 @@ packages:
     dependency: transitive
     description:
       name: csv
-      sha256: "016b31a51a913744a0a1655c74ff13c9379e1200e246a03d96c81c5d9ed297b5"
+      sha256: "142bdf2b24f4a49e35a0fc4398f21d861c4c0f9015e8054dcacd0bb8e23ee27d"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.2"
+    version: "5.1.0"
   dart_appwrite:
     dependency: transitive
     description:
@@ -208,26 +208,20 @@ packages:
   dart_console:
     dependency: transitive
     description:
-      name: dart_console
-      sha256: dfa4b63eb4382325ff975fdb6b7a0db8303bb5809ee5cb4516b44153844742ed
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
-  dart_console2:
-    dependency: transitive
-    description:
-      name: dart_console2
-      sha256: "300833ffdd8c465d454cb5007c7f29d28ac8246af5abd922f8c490e1e87c894f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
+      path: "."
+      ref: main
+      resolved-ref: fd58d4db89e2ff567cff39b59615fcd72828f285
+      url: "https://github.com/Linkadi98/dart_console.git"
+    source: git
+    version: "1.1.2"
   dcli:
     dependency: transitive
     description:
-      name: dcli
-      sha256: f9d71f1ec4977744f1a7b1e92bf9382588070ae3b1794a071f15c0972e7fb50d
-      url: "https://pub.dev"
-    source: hosted
+      path: dcli
+      ref: "922bb02830458f065750909dbf40fa785e59c5d5"
+      resolved-ref: "922bb02830458f065750909dbf40fa785e59c5d5"
+      url: "git@github.com:Linkadi98/dcli.git"
+    source: git
     version: "3.0.2"
   dcli_core:
     dependency: transitive
@@ -314,11 +308,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  flutter:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -331,10 +320,10 @@ packages:
     dependency: transitive
     description:
       name: functional_data
-      sha256: "950f886463a7531a3b77904e0eb89e8e06dda78c4e3f5a84686445a2290cce18"
+      sha256: aefdec4365452283b2a7cf420a3169654d51d3e9553069a22d76680d7a9d7c3d
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.1"
   glob:
     dependency: transitive
     description:
@@ -387,10 +376,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: a72242c9a0ffb65d03de1b7113bc4e189686fc07c7147b8b41811d0dd0e0d9bf
+      sha256: "028f61960d56f26414eb616b48b04eb37d700cbe477b7fb09bf1d7ce57fd9271"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.17"
+    version: "4.1.3"
   ini:
     dependency: transitive
     description:
@@ -402,19 +391,20 @@ packages:
   interact:
     dependency: transitive
     description:
-      name: interact
-      sha256: b1abf79334bec42e58496a054cb7ee7ca74da6181f6a1fb6b134f1aa22bc4080
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: e180aa04146a78fadb11ecc93347321b5b2382cc
+      resolved-ref: e180aa04146a78fadb11ecc93347321b5b2382cc
+      url: "git@github.com:Linkadi98/interact.git"
+    source: git
     version: "2.2.0"
   intl:
     dependency: "direct main"
     description:
       name: intl
-      sha256: a3715e3bc90294e971cb7dc063fbf3cd9ee0ebf8604ffeafabd9e6f16abbdbe6
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.18.0"
+    version: "0.18.1"
   io:
     dependency: transitive
     description:
@@ -438,13 +428,13 @@ packages:
     source: path
     version: "0.0.1"
   js:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: js
-      sha256: "5528c2f391ededb7775ec1daa69e65a2d61276f7552de2b5f7b8d34ee9fd4ab7"
+      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.5"
+    version: "0.6.7"
   json2yaml:
     dependency: transitive
     description:
@@ -508,14 +498,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.12.16"
-  material_color_utilities:
-    dependency: transitive
-    description:
-      name: material_color_utilities
-      sha256: "9528f2f296073ff54cb9fee677df673ace1218163c3bc7628093e7eed5203d41"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.0"
   messaging_core:
     dependency: "direct overridden"
     description:
@@ -546,14 +528,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  nested:
-    dependency: transitive
-    description:
-      name: nested
-      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   node_preamble:
     dependency: transitive
     description:
@@ -578,7 +552,7 @@ packages:
     source: hosted
     version: "2.1.0"
   path:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: path
       sha256: "8829d8a55c13fc0e37127c29fedf290c102f4e40ae94ada574091fe0ff96c917"
@@ -652,7 +626,7 @@ packages:
     source: path
     version: "0.0.1"
   posix:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: posix
       sha256: "3ad26924254fd2354b0e2b95fc8b45ac392ad87434f8e64807b3a1ac077f2256"
@@ -667,14 +641,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.12.5+3"
-  provider:
-    dependency: "direct main"
-    description:
-      name: provider
-      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.5"
   pub_semver:
     dependency: transitive
     description:
@@ -786,18 +752,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  sky_engine:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.99"
   snapshot:
     dependency: transitive
     description:
-      name: snapshot
-      sha256: "04a7910492987d00ca8c6767297ed773e6e206d0fc1ce7365a3cddf6847e92b5"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "5055a63325774deecfd6bac53c51e7b08e999c22"
+      resolved-ref: "5055a63325774deecfd6bac53c51e7b08e999c22"
+      url: "git@github.com:SKnoedler/snapshot.git"
+    source: git
     version: "0.2.5"
   source_map_stack_trace:
     dependency: transitive
@@ -978,14 +940,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
-  vector_math:
-    dependency: transitive
-    description:
-      name: vector_math
-      sha256: "80b3257d1492ce4d091729e3a67a60407d227c27241d6927be0130c98e741803"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.4"
   version:
     dependency: transitive
     description:
@@ -1010,14 +964,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  web:
-    dependency: transitive
-    description:
-      name: web
-      sha256: dc8ccd225a2005c1be616fe02951e2e342092edf968cf0844220383757ef8f10
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.4-beta"
   web_socket_channel:
     dependency: transitive
     description:
@@ -1035,20 +981,21 @@ packages:
     source: hosted
     version: "1.2.0"
   win32:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: win32
-      sha256: e96ad5947e8f23a94c59ad752ab183eeadb2964818a750d409812621b9b0045d
+      sha256: "350a11abd2d1d97e0cc7a28a81b781c08002aa2864d9e3f192ca0ffa18b06ed3"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.0"
+    version: "5.0.9"
   xcodeproj:
     dependency: transitive
     description:
-      name: xcodeproj
-      sha256: "9c1652d6fd1519e195f356b378e27bf68b7dd454e03a5ae499f4a934b0f22d09"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: "95c8b54b18223a49cb2d99c5a81577ed993f24c3"
+      url: "git@github.com:jaboyc/xcodeproj.git"
+    source: git
     version: "0.2.3"
   xml:
     dependency: transitive
@@ -1067,5 +1014,4 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.1.0-185.0.dev <4.0.0"
-  flutter: ">=1.16.0"
+  dart: ">=3.0.0 <4.0.0"

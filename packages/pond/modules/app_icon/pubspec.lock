@@ -53,10 +53,10 @@ packages:
     dependency: transitive
     description:
       name: basic_utils
-      sha256: "9d3dcb8eaba8b1578a720c23988e98fde2ef21da40ae34e9e8f6fe84cee86a65"
+      sha256: "8815477fcf58499e42326bd858e391442425fa57db9a45e48e15224c62049262"
       url: "https://pub.dev"
     source: hosted
-    version: "5.5.1"
+    version: "5.5.4"
   boolean_selector:
     dependency: transitive
     description:
@@ -164,26 +164,20 @@ packages:
   dart_console:
     dependency: transitive
     description:
-      name: dart_console
-      sha256: cfbaeb901f23f3c838a6e70bf15c747b83bf53884bb850d1536c8512dc5005b3
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: main
+      resolved-ref: fd58d4db89e2ff567cff39b59615fcd72828f285
+      url: "https://github.com/Linkadi98/dart_console.git"
+    source: git
     version: "1.1.2"
-  dart_console2:
-    dependency: transitive
-    description:
-      name: dart_console2
-      sha256: "300833ffdd8c465d454cb5007c7f29d28ac8246af5abd922f8c490e1e87c894f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   dcli:
     dependency: transitive
     description:
-      name: dcli
-      sha256: f9d71f1ec4977744f1a7b1e92bf9382588070ae3b1794a071f15c0972e7fb50d
-      url: "https://pub.dev"
-    source: hosted
+      path: dcli
+      ref: "922bb02830458f065750909dbf40fa785e59c5d5"
+      resolved-ref: "922bb02830458f065750909dbf40fa785e59c5d5"
+      url: "git@github.com:Linkadi98/dcli.git"
+    source: git
     version: "3.0.2"
   dcli_core:
     dependency: transitive
@@ -269,10 +263,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: "6aa2946395183537c8b880962d935877325d6a09a2867c3970c05c0fed6ac482"
+      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.5"
+    version: "0.13.6"
   http_multi_server:
     dependency: transitive
     description:
@@ -308,19 +302,20 @@ packages:
   interact:
     dependency: transitive
     description:
-      name: interact
-      sha256: b1abf79334bec42e58496a054cb7ee7ca74da6181f6a1fb6b134f1aa22bc4080
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: e180aa04146a78fadb11ecc93347321b5b2382cc
+      resolved-ref: e180aa04146a78fadb11ecc93347321b5b2382cc
+      url: "git@github.com:Linkadi98/interact.git"
+    source: git
     version: "2.2.0"
   intl:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: intl
-      sha256: a3715e3bc90294e971cb7dc063fbf3cd9ee0ebf8604ffeafabd9e6f16abbdbe6
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.18.0"
+    version: "0.18.1"
   io:
     dependency: transitive
     description:
@@ -330,13 +325,13 @@ packages:
     source: hosted
     version: "1.0.4"
   js:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: js
-      sha256: "5528c2f391ededb7775ec1daa69e65a2d61276f7552de2b5f7b8d34ee9fd4ab7"
+      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.5"
+    version: "0.6.7"
   json2yaml:
     dependency: transitive
     description:
@@ -349,10 +344,10 @@ packages:
     dependency: transitive
     description:
       name: json_annotation
-      sha256: c33da08e136c3df0190bd5bbe51ae1df4a7d96e7954d1d7249fea2968a72d317
+      sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
       url: "https://pub.dev"
     source: hosted
-    version: "4.8.0"
+    version: "4.8.1"
   lints:
     dependency: "direct dev"
     description:
@@ -418,7 +413,7 @@ packages:
     source: hosted
     version: "2.1.0"
   path:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: path
       sha256: "8829d8a55c13fc0e37127c29fedf290c102f4e40ae94ada574091fe0ff96c917"
@@ -585,10 +580,11 @@ packages:
   snapshot:
     dependency: transitive
     description:
-      name: snapshot
-      sha256: "04a7910492987d00ca8c6767297ed773e6e206d0fc1ce7365a3cddf6847e92b5"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "5055a63325774deecfd6bac53c51e7b08e999c22"
+      resolved-ref: "5055a63325774deecfd6bac53c51e7b08e999c22"
+      url: "git@github.com:SKnoedler/snapshot.git"
+    source: git
     version: "0.2.5"
   source_map_stack_trace:
     dependency: transitive
@@ -774,20 +770,21 @@ packages:
     source: hosted
     version: "1.2.0"
   win32:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: win32
-      sha256: e96ad5947e8f23a94c59ad752ab183eeadb2964818a750d409812621b9b0045d
+      sha256: "350a11abd2d1d97e0cc7a28a81b781c08002aa2864d9e3f192ca0ffa18b06ed3"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.0"
+    version: "5.0.9"
   xcodeproj:
     dependency: transitive
     description:
-      name: xcodeproj
-      sha256: "9c1652d6fd1519e195f356b378e27bf68b7dd454e03a5ae499f4a934b0f22d09"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: "95c8b54b18223a49cb2d99c5a81577ed993f24c3"
+      url: "git@github.com:jaboyc/xcodeproj.git"
+    source: git
     version: "0.2.3"
   xml:
     dependency: transitive
