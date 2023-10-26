@@ -29,11 +29,11 @@ class AppwriteBackendContext {
 
   dynamic ok(dynamic response) {
     context.log(response);
-    return context.send('$response');
+    return context.res.send('$response');
   }
 
   dynamic error(dynamic response) {
     context.error(response);
-    return context.send('$response');
+    return context.res.send('$response');
   }
 }
