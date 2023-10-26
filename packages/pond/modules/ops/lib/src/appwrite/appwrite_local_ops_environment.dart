@@ -69,10 +69,10 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
     final client = Client(endPoint: 'https://localhost/v1', selfSigned: true).setProject(projectId).setKey(apiKey);
 
     await context.appwriteTerminal.run('appwrite client --endpoint http://localhost/v1');
-    // await context.appwriteTerminal.run('appwrite login', interactable: true);
+    await context.appwriteTerminal.run('appwrite login', interactable: true);
 
-    // await AppwriteOpsUtils.updatePlatforms(context, projectId: projectId, webDomain: 'localhost');
-    // await AppwriteOpsUtils.updateAppwriteAttributes(context, client: client);
+    await AppwriteOpsUtils.updatePlatforms(context, projectId: projectId, webDomain: 'localhost');
+    await AppwriteOpsUtils.updateAppwriteAttributes(context, client: client);
 
     final serverFileTemplate = serverFileTemplateGetter?.call(context.coreDirectory);
     if (serverFileTemplate != null) {
