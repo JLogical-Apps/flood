@@ -1,5 +1,6 @@
 export 'src/path_definition.dart';
 export 'src/path_definition_segment.dart';
+export 'src/property/field_route_property.dart';
 export 'src/property/route_property.dart';
 export 'src/route.dart';
 export 'src/route_data.dart';

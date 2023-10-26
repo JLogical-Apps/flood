@@ -153,7 +153,7 @@ class AppwriteOpsUtils {
     await _deployFunction(
       context,
       functions: functions,
-      functionId: 'flood-tasks',
+      functionId: AppwriteConsts.taskFunctionName,
       functionName: 'Flood Tasks',
       functionTemplate: functionTemplate,
       ignorePatterns: ignorePatterns,

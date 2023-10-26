@@ -9,6 +9,7 @@ class AppwriteCoreComponent with IsCorePondComponent {
 
   late final Account account = Account(client);
   late final Databases databases = Databases(client);
+  late final Functions functions = Functions(client);
 
   AppwriteCoreComponent({required this.config});
 

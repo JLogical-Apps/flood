@@ -13,7 +13,13 @@ class TaskCoreComponent with IsCorePondComponent, IsTaskRunnerWrapper {
 
   TaskCoreComponent({required this.taskRunner, Map<Route, Task>? tasks, List<Trigger>? triggers})
       : tasks = tasks ?? {},
-        triggers = triggers ?? [];
+        triggers = [] {
+    if (triggers != null) {
+      for (var trigger in triggers) {
+        registerTrigger(trigger);
+      }
+    }
+  }
 
   void registerTask({required Route route, required Task task}) {
     tasks[route] = task;

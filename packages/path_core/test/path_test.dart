@@ -1,5 +1,4 @@
 import 'package:path_core/path_core.dart';
-import 'package:path_core/src/property/field_route_property.dart';
 import 'package:test/test.dart';
 
 void main() {

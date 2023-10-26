@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:path_core/path_core.dart';
 import 'package:task_core/src/task/local/local_task_runner.dart';
 import 'package:task_core/src/task/task.dart';
@@ -9,6 +11,15 @@ abstract class TaskRunner {
   Future onRegisterTrigger(Trigger trigger);
 
   static final TaskRunnerStatic static = TaskRunnerStatic();
+
+  factory TaskRunner({
+    required FutureOr<O> Function<T extends Task<R, O>, R extends Route, O>(T task, R route) runner,
+    FutureOr Function(Trigger trigger)? triggerRegisterer,
+  }) =>
+      _TaskRunnerImpl(
+        runner: runner,
+        triggerRegisterer: triggerRegisterer,
+      );
 }
 
 class TaskRunnerStatic {
@@ -16,7 +27,7 @@ class TaskRunnerStatic {
 }
 
 extension TaskRunnerExtensions on TaskRunner {
-  Future<O> run<T extends Task<R, O>, R extends Route, O>(T task, R route) {
+  Future<O> runTask<T extends Task<R, O>, R extends Route, O>(T task, R route) {
     return onRun(task, route);
   }
 
@@ -24,6 +35,23 @@ extension TaskRunnerExtensions on TaskRunner {
 }
 
 mixin IsTaskRunner implements TaskRunner {}
+
+class _TaskRunnerImpl with IsTaskRunner {
+  final FutureOr<O> Function<T extends Task<R, O>, R extends Route, O>(T task, R route) runner;
+  final FutureOr Function(Trigger trigger)? triggerRegisterer;
+
+  _TaskRunnerImpl({required this.runner, this.triggerRegisterer});
+
+  @override
+  Future<O> onRun<T extends Task<R, O>, R extends Route, O>(T task, R route) async {
+    return await runner(task, route);
+  }
+
+  @override
+  Future onRegisterTrigger(Trigger trigger) async {
+    await triggerRegisterer?.call(trigger);
+  }
+}
 
 abstract class TaskRunnerWrapper implements TaskRunner {
   TaskRunner get taskRunner;
@@ -34,7 +62,5 @@ mixin IsTaskRunnerWrapper implements TaskRunnerWrapper {
   Future<O> onRun<T extends Task<R, O>, R extends Route, O>(T task, R route) => taskRunner.onRun(task, route);
 
   @override
-  Future onRegisterTrigger(Trigger trigger) {
-    return taskRunner.onRegisterTrigger(trigger);
-  }
+  Future onRegisterTrigger(Trigger trigger) => taskRunner.onRegisterTrigger(trigger);
 }

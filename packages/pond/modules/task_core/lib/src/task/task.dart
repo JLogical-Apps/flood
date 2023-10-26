@@ -13,7 +13,7 @@ mixin IsTask<R extends Route, T> implements Task<R, T> {}
 
 extension TaskExtensions<R extends Route, T> on Task<R, T> {
   Future<T> executeOn({required R route, required TaskRunner taskRunner}) {
-    return taskRunner.run(this, route);
+    return taskRunner.runTask(this, route);
   }
 }
 

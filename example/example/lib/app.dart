@@ -48,9 +48,11 @@ Future<AppPondContext> buildAppPondContext() async {
     ],
     repositoryImplementations: (corePondContext) => [
       FlutterFileRepositoryImplementation(),
-      FirebaseCloudRepositoryImplementation(),
+      AppwriteCloudRepositoryImplementation(),
     ],
-    authServiceImplementations: (corePondContext) => [FirebaseAuthServiceImplementation()],
+    authServiceImplementations: (corePondContext) => [AppwriteAuthServiceImplementation()],
+    taskRunner: (corePondContext) =>
+        corePondContext.environment.isOnline ? TaskRunner.static.appwrite(corePondContext) : TaskRunner.static.local,
     messagingService: (corePondContext) => corePondContext.environment.isOnline
         ? MessagingService.static.firebase
         : MessagingService.static.local(refreshDuration: Duration(minutes: 5)),

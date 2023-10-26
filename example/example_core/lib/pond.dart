@@ -18,6 +18,7 @@ Future<CorePondContext> getCorePondContext({
   List<AuthServiceImplementation> Function(CorePondContext context)? authServiceImplementations,
   MessagingService? Function(CorePondContext context)? messagingService,
   LoggerService? Function(CorePondContext context)? loggerService,
+  TaskRunner? Function(CorePondContext context)? taskRunner,
 }) async {
   environmentConfig ??= EnvironmentConfig.static.environmentVariables();
 
@@ -26,7 +27,7 @@ Future<CorePondContext> getCorePondContext({
   await corePondContext.register(TypeCoreComponent());
   await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
   await corePondContext.register(TaskCoreComponent(
-    taskRunner: TaskRunner.static.local,
+    taskRunner: taskRunner?.call(corePondContext) ?? TaskRunner.static.local,
     tasks: {GreetTaskRoute(): GreetTask()},
     triggers: [
       Trigger.static.cron(

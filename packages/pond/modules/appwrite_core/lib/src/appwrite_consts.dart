@@ -9,4 +9,6 @@ class AppwriteConsts {
   static final int varcharSize = 16381;
 
   static final String typeKey = 't_type';
+
+  static final String taskFunctionName = 'flood-tasks';
 }
