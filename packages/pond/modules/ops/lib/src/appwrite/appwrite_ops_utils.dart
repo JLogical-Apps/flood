@@ -168,6 +168,9 @@ class AppwriteOpsUtils {
         functionTemplate: functionTemplate,
         ignorePatterns: ignorePatterns,
         schedule: AppwriteTriggerModifier.getModifier(trigger).getSchedule(trigger),
+        environmentVariables: {
+          'TRIGGER_NAME': trigger.name,
+        },
       );
     }
   }
@@ -180,6 +183,7 @@ class AppwriteOpsUtils {
     required File functionTemplate,
     List<Pattern> ignorePatterns = const [],
     String? schedule,
+    Map<String, dynamic> environmentVariables = const {},
   }) async {
     final entryPoint = path.relative(functionTemplate.path, from: context.coreDirectory.path);
 
@@ -190,9 +194,10 @@ class AppwriteOpsUtils {
       functionName: functionName,
       entryPoint: entryPoint,
       schedule: schedule,
+      environmentVariables: environmentVariables,
     );
 
-    await context.confirmAndExecutePlan(Plan.execute(
+    await context.maybeConfirmAndExecutePlan(Plan.execute(
       'Create Deployment [${function.$id}]',
       (context) async {
         final archive = await DataSource.static
@@ -235,6 +240,7 @@ class AppwriteOpsUtils {
     required String functionName,
     required String entryPoint,
     String? schedule,
+    Map<String, dynamic> environmentVariables = const {},
   }) async {
     var function = await guardAsync(() => functions.get(functionId: functionId));
     if (function == null) {
@@ -263,6 +269,10 @@ class AppwriteOpsUtils {
 
           await functions.createVariable(functionId: functionId, key: 'SSH_KEY', value: sshKeyFile);
           await functions.createVariable(functionId: functionId, key: 'SSH_HOSTS', value: sshKnownHosts);
+
+          for (final (name, value) in environmentVariables.entryRecords) {
+            await functions.createVariable(functionId: functionId, key: name, value: value);
+          }
         },
       ));
     }

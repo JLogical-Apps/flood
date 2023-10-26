@@ -83,13 +83,13 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
     }
   }
 
-  Future<void> confirmAndExecutePlan(Plan plan) async {
+  Future<bool> maybeConfirmAndExecutePlan(Plan plan) async {
     if (plan.items.isEmpty) {
-      return;
+      return true;
     }
 
     if (!await plan.canExecute(this)) {
-      return;
+      return true;
     }
 
     final planDescription = plan.name != null ? ': ${plan.name}' : '...';
@@ -97,10 +97,18 @@ class AutomateCommandContext with IsAutomateFileSystemWrapper, IsTerminalWrapper
     await plan.preview(this);
     final shouldExecute = confirm('Would you like to execute this plan?');
     if (!shouldExecute) {
-      throw Exception('Rejected plan!');
+      return false;
     }
 
     await plan.execute(this);
+    return true;
+  }
+
+  Future<void> confirmAndExecutePlan(Plan plan) async {
+    final didExecute = await maybeConfirmAndExecutePlan(plan);
+    if (!didExecute) {
+      throw Exception('Plan rejected!');
+    }
   }
 
   late final File stateFile = coreDirectory / 'tool' - 'state.yaml';
