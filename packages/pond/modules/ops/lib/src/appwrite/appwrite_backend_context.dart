@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class AppwriteBackendContext {
   final dynamic context;
 
@@ -7,9 +5,9 @@ class AppwriteBackendContext {
 
   List<int> get bodyRaw => context.req.bodyRaw;
 
-  dynamic get body => json.decode(context.req.body);
+  dynamic get body => context.req.body;
 
-  Map<String, dynamic> get headers => json.decode(context.req.headers);
+  Map<String, dynamic> get headers => context.req.headers;
 
   String get scheme => context.req.scheme;
 
