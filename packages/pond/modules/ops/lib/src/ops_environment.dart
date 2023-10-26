@@ -20,11 +20,23 @@ abstract class OpsEnvironment {
 }
 
 class OpsEnvironmentStatic {
-  AppwriteLocalOpsEnvironment appwriteLocal({File Function(Directory coreDirectory)? serverFileTemplateGetter}) =>
-      AppwriteLocalOpsEnvironment(serverFileTemplateGetter: serverFileTemplateGetter);
+  AppwriteLocalOpsEnvironment appwriteLocal({
+    File Function(Directory coreDirectory)? serverFileTemplateGetter,
+    List<Pattern> ignoreBackendPatterns = const [],
+  }) =>
+      AppwriteLocalOpsEnvironment(
+        serverFileTemplateGetter: serverFileTemplateGetter,
+        ignoreBackendPatterns: ignoreBackendPatterns,
+      );
 
-  AppwriteOpsEnvironment appwrite({File Function(Directory coreDirectory)? serverFileTemplateGetter}) =>
-      AppwriteOpsEnvironment(serverFileTemplateGetter: serverFileTemplateGetter);
+  AppwriteOpsEnvironment appwrite({
+    File Function(Directory coreDirectory)? serverFileTemplateGetter,
+    List<Pattern> ignoreBackendPatterns = const [],
+  }) =>
+      AppwriteOpsEnvironment(
+        serverFileTemplateGetter: serverFileTemplateGetter,
+        ignoreBackendPatterns: ignoreBackendPatterns,
+      );
 
   FirebaseEmulatorOpsEnvironment get firebaseEmulator => FirebaseEmulatorOpsEnvironment();
 

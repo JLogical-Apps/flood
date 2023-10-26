@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:persistence_core/persistence_core.dart';
+import 'package:persistence_core/src/base64_data_source.dart';
 import 'package:persistence_core/src/cross_directory_data_source.dart';
 import 'package:persistence_core/src/cross_file_data_source.dart';
 import 'package:persistence_core/src/directory_data_source.dart';
@@ -111,6 +112,8 @@ extension StringDataSourceExtensions on DataSource<String> {
   YamlDataSource mapYaml() => YamlDataSource(sourceDataSource: this);
 
   JsonDataSource mapJson() => JsonDataSource(sourceDataSource: this);
+
+  Base64DataSource mapBase64() => Base64DataSource(sourceDataSource: this);
 }
 
 extension DirectoryDataSourceExtensions on DataSource<Directory> {

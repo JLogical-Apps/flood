@@ -9,6 +9,14 @@ Future<void> main(List<String> args) async {
   );
   final automatePondContext = AutomatePondContext(corePondContext: corePondContext);
 
+  final ignoreBackendPatterns = [
+    RegExp('.*node_modules/.*'),
+    RegExp('build/.*'),
+    RegExp('firebase/.*'),
+    RegExp('appwrite/.*'),
+    RegExp('tool/.*'),
+  ];
+
   await automatePondContext.register(AppIconAutomateComponent(
     appIconForegroundFileGetter: (root) => root / 'assets' - 'logo_foreground_transparent.png',
     backgroundColor: 0x172434,
@@ -16,13 +24,16 @@ Future<void> main(List<String> args) async {
   ));
   await automatePondContext.register(OpsAutomateComponent(environments: {
     EnvironmentType.static.qa: OpsEnvironment.static.appwriteLocal(
-      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'tool' - 'server.dart',
+      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'lib' - 'backend.dart',
+      ignoreBackendPatterns: ignoreBackendPatterns,
     ),
     EnvironmentType.static.staging: OpsEnvironment.static.appwrite(
-      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'tool' - 'server.dart',
+      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'lib' - 'backend.dart',
+      ignoreBackendPatterns: ignoreBackendPatterns,
     ),
     EnvironmentType.static.production: OpsEnvironment.static.appwrite(
-      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'tool' - 'server.dart',
+      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'lib' - 'backend.dart',
+      ignoreBackendPatterns: ignoreBackendPatterns,
     ),
   }));
   await automatePondContext.register(ReleaseAutomateComponent(pipelines: {

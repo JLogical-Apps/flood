@@ -10,8 +10,9 @@ import 'package:utils_core/utils_core.dart';
 
 class AppwriteOpsEnvironment with IsOpsEnvironment {
   final File Function(Directory coreDirectory)? serverFileTemplateGetter;
+  final List<Pattern> ignoreBackendPatterns;
 
-  AppwriteOpsEnvironment({this.serverFileTemplateGetter});
+  AppwriteOpsEnvironment({this.serverFileTemplateGetter, this.ignoreBackendPatterns = const []});
 
   @override
   Future<bool> exists(AutomateCommandContext context, {required EnvironmentType environmentType}) async {

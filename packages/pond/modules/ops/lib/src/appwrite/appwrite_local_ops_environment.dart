@@ -11,8 +11,12 @@ import 'package:utils_core/utils_core.dart';
 
 class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
   final File Function(Directory coreDirectory)? serverFileTemplateGetter;
+  final List<Pattern> ignoreBackendPatterns;
 
-  AppwriteLocalOpsEnvironment({this.serverFileTemplateGetter});
+  AppwriteLocalOpsEnvironment({
+    this.serverFileTemplateGetter,
+    this.ignoreBackendPatterns = const [],
+  });
 
   @override
   Future<bool> exists(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
@@ -72,7 +76,12 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
 
     final serverFileTemplate = serverFileTemplateGetter?.call(context.coreDirectory);
     if (serverFileTemplate != null) {
-      await AppwriteOpsUtils.deployFunctions(context, client: client, functionTemplate: serverFileTemplate);
+      await AppwriteOpsUtils.deployFunctions(
+        context,
+        client: client,
+        functionTemplate: serverFileTemplate,
+        ignorePatterns: ignoreBackendPatterns,
+      );
     }
   }
 

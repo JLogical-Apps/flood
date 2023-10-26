@@ -11,6 +11,7 @@ import 'package:ops/src/appwrite/appwrite_platform.dart';
 import 'package:ops/src/appwrite/behavior/appwrite_attribute_behavior_modifier.dart';
 import 'package:ops/src/appwrite/permission/permission_text_modifier.dart';
 import 'package:ops/src/repository_security/repository_security_modifier.dart';
+import 'package:path/path.dart' as path;
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:task_core/task_core.dart';
@@ -139,41 +140,56 @@ class AppwriteOpsUtils {
     AutomateCommandContext context, {
     required Client client,
     required File functionTemplate,
+    List<Pattern> ignorePatterns = const [],
   }) async {
     final taskCoreComponent = context.automateContext.findOrNull<TaskCoreComponent>();
     if (taskCoreComponent == null) {
       return;
     }
 
-    final functionId = 'flood-task';
+    final functionId = 'flood-tasks';
     final functions = Functions(client);
     final function = await guardAsync(() => functions.get(functionId: functionId));
     if (function == null) {
       await context.confirmAndExecutePlan(Plan.execute(
         'Create Function [$functionId]',
-        (context) => functions.create(
-          functionId: functionId,
-          name: 'Flood Tasks',
-          runtime: 'dart-3.0',
-          enabled: true,
-          logging: true,
-          commands: 'dart pub get',
-          entrypoint: 'lib/server.dart',
-        ),
+        (context) async {
+          final sshKeyFile = await DataSource.static.file(sshDirectory - 'id_ed25519').mapBase64().getOrNull() ??
+              (throw Exception('Make sure your Github SSH key is stored in ~/.ssh/id_ed25519'));
+          final sshKnownHosts = await DataSource.static.file(sshDirectory - 'known_hosts').mapBase64().getOrNull() ??
+              (throw Exception('Make sure your SSH known_hosts is stored in ~/.ssh/known_hosts'));
+
+          await functions.create(
+            functionId: functionId,
+            name: 'Flood Tasks',
+            runtime: 'dart-3.0',
+            enabled: true,
+            logging: true,
+            commands: '''\
+mkdir -p ~/.ssh
+echo "\$SSH_KEY" | base64 -d > ~/.ssh/id_ed25519
+chmod 600 ~/.ssh/id_ed25519
+echo "\$SSH_HOSTS" | base64 -d >> ~/.ssh/known_hosts''',
+            entrypoint: path.relative(functionTemplate.path, from: context.coreDirectory.path),
+          );
+
+          await functions.createVariable(functionId: functionId, key: 'SSH_KEY', value: sshKeyFile);
+          await functions.createVariable(functionId: functionId, key: 'SSH_HOSTS', value: sshKnownHosts);
+        },
       ));
     }
-
-    await context.coreProject.run(
-      'docker run -e OPEN_RUNTIMES_ENTRYPOINT=lib/server.dart --rm --interactive --tty --volume \$PWD:/mnt/code --volume ~/.ssh:/root/.ssh openruntimes/dart:v3-3.0 sh helpers/build.sh',
-    );
-
-    final archiveDataSource = DataSource.static.rawFile(context.coreDirectory - 'code.tar.gz');
-    final archive = await archiveDataSource.get();
-    await archiveDataSource.delete();
 
     await context.confirmAndExecutePlan(Plan.execute(
       'Create Deployment [$functionId]',
       (context) async {
+        final archive = await DataSource.static
+            .directory(context.coreDirectory)
+            .mapTar(ignorePatterns: ignorePatterns)
+            .mapGzip()
+            .get();
+
+        await DataSource.static.rawFile(context.appwriteOutputDirectory - 'code.tar.gz').set(archive);
+
         var deployment = await functions.createDeployment(
           functionId: functionId,
           code: InputFile.fromBytes(
@@ -181,13 +197,20 @@ class AppwriteOpsUtils {
             filename: 'code.tar.gz',
           ),
           activate: true,
+          entrypoint: path.relative(functionTemplate.path, from: context.coreDirectory.path),
         );
 
-        deployment =
-            await _deploymentStatusX(functions: functions, deployment: deployment, functionId: functionId).last;
+        deployment = await _deploymentStatusX(
+          functions: functions,
+          deployment: deployment,
+          functionId: functionId,
+        ).last;
+
         if (deployment.status == 'failed') {
           throw Exception('Deployment failed after ${deployment.buildTime}s of building.\n${deployment.buildLogs}');
         }
+
+        context.log('Built function in ${deployment.buildTime}s.');
 
         await functions.updateDeployment(functionId: functionId, deploymentId: deployment.$id);
       },
