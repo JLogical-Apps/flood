@@ -27,7 +27,7 @@ Future<CorePondContext> getCorePondContext({
   await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
   await corePondContext.register(TaskCoreComponent(
     taskRunner: TaskRunner.static.local,
-    tasks: {TestTaskRoute(): TestTask()},
+    tasks: {GreetTaskRoute(): GreetTask()},
   ));
 
   for (final coreComponent in additionalCoreComponents?.call(corePondContext) ?? []) {

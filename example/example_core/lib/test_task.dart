@@ -1,18 +1,20 @@
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
-class TestTaskRoute with IsRoute<TestTaskRoute> {
-  @override
-  PathDefinition get pathDefinition => PathDefinition.string('test');
+class GreetTaskRoute with IsRoute<GreetTaskRoute> {
+  late final nameProperty = field<String>(name: 'name').required();
 
   @override
-  TestTaskRoute copy() {
-    return TestTaskRoute();
+  PathDefinition get pathDefinition => PathDefinition.string('greet').property(nameProperty);
+
+  @override
+  GreetTaskRoute copy() {
+    return GreetTaskRoute();
   }
 }
 
-class TestTask with IsTask<TestTaskRoute, String> {
+class GreetTask with IsTask<GreetTaskRoute, String> {
   @override
-  Future<String> onRun(TestTaskRoute route) async {
-    return 'Hello World!';
+  Future<String> onRun(GreetTaskRoute route) async {
+    return 'Hi ${route.nameProperty.value}';
   }
 }
