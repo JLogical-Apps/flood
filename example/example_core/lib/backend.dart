@@ -9,7 +9,7 @@ Future<dynamic> main(final context) async {
     environmentConfig: EnvironmentConfig.static.fileAssets(projectDirectory: Directory.current.parent / 'example'),
     loggerService: (_) => LoggerService.static.appwrite(context),
   );
-  return await AppwriteServe.serve(
+  return await AppwriteBackend.handle(
     corePondContext: corePondContext,
     context: context,
   );

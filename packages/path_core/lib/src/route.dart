@@ -14,6 +14,8 @@ abstract class Route<R extends Route<dynamic>> implements PathDefinitionWrapper 
 }
 
 extension RouteExtensions<R extends Route<dynamic>> on Route<R> {
+  String get pathTemplate => pathDefinition.template;
+
   Uri get uri {
     final queryParameters = queryProperties
         .mapToMap((queryProperty) => MapEntry(
@@ -22,7 +24,7 @@ extension RouteExtensions<R extends Route<dynamic>> on Route<R> {
             ))
         .where((name, value) => value != null);
     return Uri(
-      path: '/${segments.map((segment) => Uri.encodeComponent(segment.toSegmentPart())).join('/')}',
+      path: '/${segments.map((segment) => Uri.encodeComponent(segment.segmentPart)).join('/')}',
       queryParameters: queryParameters.isEmpty ? null : queryParameters,
     );
   }

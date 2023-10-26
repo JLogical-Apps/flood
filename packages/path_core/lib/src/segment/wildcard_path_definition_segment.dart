@@ -14,7 +14,8 @@ class WildcardPathDefinitionSegment with IsPathDefinitionSegment {
   }
 
   @override
-  String toSegmentPart() {
-    return matchedText;
-  }
+  String get segmentPart => matchedText;
+
+  @override
+  String get templatePart => '*';
 }

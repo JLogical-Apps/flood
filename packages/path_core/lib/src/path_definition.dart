@@ -25,6 +25,10 @@ abstract class PathDefinition {
 }
 
 extension PathDefinitionExtensions on PathDefinition {
+  String get template {
+    return '/${segments.map((segment) => segment.templatePart).join('/')}';
+  }
+
   bool matchesPath(String path) {
     final uri = Uri.tryParse(path);
     if (uri == null) {

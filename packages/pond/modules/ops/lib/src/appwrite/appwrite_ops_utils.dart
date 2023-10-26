@@ -10,6 +10,7 @@ import 'package:log_core/log_core.dart';
 import 'package:ops/src/appwrite/appwrite_platform.dart';
 import 'package:ops/src/appwrite/behavior/appwrite_attribute_behavior_modifier.dart';
 import 'package:ops/src/appwrite/permission/permission_text_modifier.dart';
+import 'package:ops/src/appwrite/trigger/appwrite_trigger_modifier.dart';
 import 'package:ops/src/repository_security/repository_security_modifier.dart';
 import 'package:path/path.dart' as path;
 import 'package:persistence_core/persistence_core.dart';
@@ -157,6 +158,18 @@ class AppwriteOpsUtils {
       functionTemplate: functionTemplate,
       ignorePatterns: ignorePatterns,
     );
+
+    for (final trigger in taskCoreComponent.triggers) {
+      await _deployFunction(
+        context,
+        functions: functions,
+        functionId: trigger.name,
+        functionName: 'Trigger [${trigger.name}]',
+        functionTemplate: functionTemplate,
+        ignorePatterns: ignorePatterns,
+        schedule: AppwriteTriggerModifier.getModifier(trigger).getSchedule(trigger),
+      );
+    }
   }
 
   static Future<void> _deployFunction(
@@ -166,6 +179,7 @@ class AppwriteOpsUtils {
     required String functionName,
     required File functionTemplate,
     List<Pattern> ignorePatterns = const [],
+    String? schedule,
   }) async {
     final entryPoint = path.relative(functionTemplate.path, from: context.coreDirectory.path);
 
@@ -175,6 +189,7 @@ class AppwriteOpsUtils {
       functionId: functionId,
       functionName: functionName,
       entryPoint: entryPoint,
+      schedule: schedule,
     );
 
     await context.confirmAndExecutePlan(Plan.execute(
@@ -219,6 +234,7 @@ class AppwriteOpsUtils {
     required String functionId,
     required String functionName,
     required String entryPoint,
+    String? schedule,
   }) async {
     var function = await guardAsync(() => functions.get(functionId: functionId));
     if (function == null) {
@@ -236,6 +252,7 @@ class AppwriteOpsUtils {
             runtime: 'dart-3.1',
             enabled: true,
             logging: true,
+            schedule: schedule,
             commands: '''\
     mkdir -p ~/.ssh
     echo "\$SSH_KEY" | base64 -d > ~/.ssh/id_ed25519

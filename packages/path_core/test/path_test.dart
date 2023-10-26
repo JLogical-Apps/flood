@@ -1,4 +1,5 @@
 import 'package:path_core/path_core.dart';
+import 'package:path_core/src/property/field_route_property.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -31,5 +32,15 @@ void main() {
     expect(multiDefinition.matchesPath('envelope/5432123'), isTrue);
     expect(multiDefinition.matchesPath('envelope/5432123/'), isFalse);
     expect(multiDefinition.matchesPath('envelope/5432123/123'), isFalse);
+  });
+
+  test('path templates', () {
+    final nameProperty = FieldRouteProperty(name: 'name');
+
+    expect(PathDefinition.string('test').template, '/test');
+    expect(PathDefinition.string('hello').string('world').template, '/hello/world');
+    expect(PathDefinition.string('greet').property(nameProperty).template, '/greet/:name');
+    expect(PathDefinition.string('greet').property(nameProperty).string('test').template, '/greet/:name/test');
+    expect(PathDefinition.string('wildcard').wildcard().template, '/wildcard/*');
   });
 }

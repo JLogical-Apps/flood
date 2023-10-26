@@ -13,9 +13,10 @@ class RoutePropertyPathDefinitionSegment with IsPathDefinitionSegment {
   }
 
   @override
-  String toSegmentPart() {
-    return coerce<String>(property.value);
-  }
+  String get segmentPart => coerce<String>(property.value);
+
+  @override
+  String get templatePart => ':${property.name}';
 
   @override
   void onMatch(String segment) {

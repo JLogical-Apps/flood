@@ -3,7 +3,9 @@ abstract class PathDefinitionSegment {
 
   void onMatch(String segment);
 
-  String toSegmentPart();
+  String get segmentPart;
+
+  String get templatePart;
 }
 
 mixin IsPathDefinitionSegment implements PathDefinitionSegment {

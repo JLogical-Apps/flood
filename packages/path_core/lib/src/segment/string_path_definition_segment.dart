@@ -11,7 +11,8 @@ class StringPathDefinitionSegment with IsPathDefinitionSegment {
   }
 
   @override
-  String toSegmentPart() {
-    return segment;
-  }
+  String get segmentPart => segment;
+
+  @override
+  String get templatePart => segment;
 }

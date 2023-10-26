@@ -28,6 +28,13 @@ Future<CorePondContext> getCorePondContext({
   await corePondContext.register(TaskCoreComponent(
     taskRunner: TaskRunner.static.local,
     tasks: {GreetTaskRoute(): GreetTask()},
+    triggers: [
+      Trigger.static.cron(
+        name: 'my-cron',
+        cron: '* * * * *',
+        runner: (dateTime) => corePondContext.log('Running at ${dateTime.format()}'),
+      ),
+    ],
   ));
 
   for (final coreComponent in additionalCoreComponents?.call(corePondContext) ?? []) {
