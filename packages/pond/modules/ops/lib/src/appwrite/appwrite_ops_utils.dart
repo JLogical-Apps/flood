@@ -162,7 +162,7 @@ class AppwriteOpsUtils {
           await functions.create(
             functionId: functionId,
             name: 'Flood Tasks',
-            runtime: 'dart-3.0',
+            runtime: 'dart-3.1',
             enabled: true,
             logging: true,
             commands: '''\

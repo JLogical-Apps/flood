@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:dart_appwrite/dart_appwrite.dart' hide Permission;
 import 'package:environment_core/environment_core.dart';
 import 'package:ops/src/appwrite/appwrite_ops_utils.dart';
@@ -68,8 +69,16 @@ class AppwriteLocalOpsEnvironment with IsOpsEnvironment {
 
     final client = Client(endPoint: 'https://localhost/v1', selfSigned: true).setProject(projectId).setKey(apiKey);
 
-    await context.appwriteTerminal.run('appwrite client --endpoint http://localhost/v1');
-    await context.appwriteTerminal.run('appwrite login', interactable: true);
+    final debugInfo = await context.appwriteTerminal.run('appwrite client --debug');
+    final currentEndpoint = debugInfo
+        .split('\n')
+        .firstWhereOrNull((line) => line.withoutAnsiEscapeCodes.startsWith('endpoint'))
+        ?.mapIfNonNull((line) => line.withoutAnsiEscapeCodes.split(' : ')[1]);
+
+    if (currentEndpoint != 'http://localhost/v1') {
+      await context.appwriteTerminal.run('appwrite client --endpoint http://localhost/v1');
+      await context.appwriteTerminal.run('appwrite login', interactable: true);
+    }
 
     await AppwriteOpsUtils.updatePlatforms(context, projectId: projectId, webDomain: 'localhost');
     await AppwriteOpsUtils.updateAppwriteAttributes(context, client: client);
