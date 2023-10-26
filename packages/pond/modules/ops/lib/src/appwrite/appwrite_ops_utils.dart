@@ -147,9 +147,80 @@ class AppwriteOpsUtils {
       return;
     }
 
-    final functionId = 'flood-tasks';
     final functions = Functions(client);
-    final function = await guardAsync(() => functions.get(functionId: functionId));
+
+    await _deployFunction(
+      context,
+      functions: functions,
+      functionId: 'flood-tasks',
+      functionName: 'Flood Tasks',
+      functionTemplate: functionTemplate,
+      ignorePatterns: ignorePatterns,
+    );
+  }
+
+  static Future<void> _deployFunction(
+    AutomateCommandContext context, {
+    required Functions functions,
+    required String functionId,
+    required String functionName,
+    required File functionTemplate,
+    List<Pattern> ignorePatterns = const [],
+  }) async {
+    final entryPoint = path.relative(functionTemplate.path, from: context.coreDirectory.path);
+
+    final function = await _getOrCreateFunction(
+      context,
+      functions: functions,
+      functionId: functionId,
+      functionName: functionName,
+      entryPoint: entryPoint,
+    );
+
+    await context.confirmAndExecutePlan(Plan.execute(
+      'Create Deployment [${function.$id}]',
+      (context) async {
+        final archive = await DataSource.static
+            .directory(context.coreDirectory)
+            .mapTar(ignorePatterns: ignorePatterns)
+            .mapGzip()
+            .get();
+
+        var deployment = await functions.createDeployment(
+          functionId: function.$id,
+          code: InputFile.fromBytes(
+            bytes: archive,
+            filename: 'code.tar.gz',
+          ),
+          activate: true,
+          entrypoint: entryPoint,
+        );
+
+        deployment = await _deploymentStatusX(
+          functions: functions,
+          deployment: deployment,
+          functionId: function.$id,
+        ).last;
+
+        if (deployment.status == 'failed') {
+          throw Exception('Deployment failed after ${deployment.buildTime}s of building.\n${deployment.buildLogs}');
+        }
+
+        context.log('Built function in ${deployment.buildTime}s.');
+
+        await functions.updateDeployment(functionId: function.$id, deploymentId: deployment.$id);
+      },
+    ));
+  }
+
+  static Future<Func> _getOrCreateFunction(
+    AutomateCommandContext context, {
+    required Functions functions,
+    required String functionId,
+    required String functionName,
+    required String entryPoint,
+  }) async {
+    var function = await guardAsync(() => functions.get(functionId: functionId));
     if (function == null) {
       await context.confirmAndExecutePlan(Plan.execute(
         'Create Function [$functionId]',
@@ -159,18 +230,18 @@ class AppwriteOpsUtils {
           final sshKnownHosts = await DataSource.static.file(sshDirectory - 'known_hosts').mapBase64().getOrNull() ??
               (throw Exception('Make sure your SSH known_hosts is stored in ~/.ssh/known_hosts'));
 
-          await functions.create(
+          function = await functions.create(
             functionId: functionId,
-            name: 'Flood Tasks',
+            name: functionName,
             runtime: 'dart-3.1',
             enabled: true,
             logging: true,
             commands: '''\
-mkdir -p ~/.ssh
-echo "\$SSH_KEY" | base64 -d > ~/.ssh/id_ed25519
-chmod 600 ~/.ssh/id_ed25519
-echo "\$SSH_HOSTS" | base64 -d >> ~/.ssh/known_hosts''',
-            entrypoint: path.relative(functionTemplate.path, from: context.coreDirectory.path),
+    mkdir -p ~/.ssh
+    echo "\$SSH_KEY" | base64 -d > ~/.ssh/id_ed25519
+    chmod 600 ~/.ssh/id_ed25519
+    echo "\$SSH_HOSTS" | base64 -d >> ~/.ssh/known_hosts''',
+            entrypoint: entryPoint,
           );
 
           await functions.createVariable(functionId: functionId, key: 'SSH_KEY', value: sshKeyFile);
@@ -179,42 +250,7 @@ echo "\$SSH_HOSTS" | base64 -d >> ~/.ssh/known_hosts''',
       ));
     }
 
-    await context.confirmAndExecutePlan(Plan.execute(
-      'Create Deployment [$functionId]',
-      (context) async {
-        final archive = await DataSource.static
-            .directory(context.coreDirectory)
-            .mapTar(ignorePatterns: ignorePatterns)
-            .mapGzip()
-            .get();
-
-        await DataSource.static.rawFile(context.appwriteOutputDirectory - 'code.tar.gz').set(archive);
-
-        var deployment = await functions.createDeployment(
-          functionId: functionId,
-          code: InputFile.fromBytes(
-            bytes: archive,
-            filename: 'code.tar.gz',
-          ),
-          activate: true,
-          entrypoint: path.relative(functionTemplate.path, from: context.coreDirectory.path),
-        );
-
-        deployment = await _deploymentStatusX(
-          functions: functions,
-          deployment: deployment,
-          functionId: functionId,
-        ).last;
-
-        if (deployment.status == 'failed') {
-          throw Exception('Deployment failed after ${deployment.buildTime}s of building.\n${deployment.buildLogs}');
-        }
-
-        context.log('Built function in ${deployment.buildTime}s.');
-
-        await functions.updateDeployment(functionId: functionId, deploymentId: deployment.$id);
-      },
-    ));
+    return function!;
   }
 
   static Stream<Deployment> _deploymentStatusX({
