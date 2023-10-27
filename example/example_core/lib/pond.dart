@@ -27,7 +27,7 @@ Future<CorePondContext> getCorePondContext({
   await corePondContext.register(TypeCoreComponent());
   await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
   await corePondContext.register(TaskCoreComponent(
-    taskRunner: taskRunner?.call(corePondContext) ?? TaskRunner.static.local,
+    taskRunner: taskRunner?.call(corePondContext) ?? TaskRunner.static.none,
     tasks: {GreetTaskRoute(): GreetTask()},
     triggers: [
       Trigger.static.cron(

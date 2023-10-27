@@ -23,6 +23,11 @@ abstract class TaskRunner {
 }
 
 class TaskRunnerStatic {
+  TaskRunner get none => TaskRunner(
+        runner: <T extends Task<R, O>, R extends Route, O>(task, route) =>
+            throw Exception('This environment cannot run tasks!'),
+      );
+
   TaskRunner get local => LocalTaskRunner();
 }
 

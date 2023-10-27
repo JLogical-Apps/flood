@@ -15,6 +15,6 @@ class GreetTaskRoute with IsRoute<GreetTaskRoute> {
 class GreetTask with IsTask<GreetTaskRoute, String> {
   @override
   Future<String> onRun(GreetTaskRoute route) async {
-    return 'Hi ${route.nameProperty.value}';
+    return 'Hello ${route.nameProperty.value}';
   }
 }

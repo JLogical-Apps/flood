@@ -259,6 +259,7 @@ class AppwriteOpsUtils {
             enabled: true,
             logging: true,
             schedule: schedule,
+            execute: ['users'],
             commands: '''\
     mkdir -p ~/.ssh
     echo "\$SSH_KEY" | base64 -d > ~/.ssh/id_ed25519
