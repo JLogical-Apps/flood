@@ -9,6 +9,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "62.0.0"
+  actions_core:
+    dependency: "direct overridden"
+    description:
+      path: "../actions_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   analyzer:
     dependency: transitive
     description:
@@ -41,6 +48,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
+  auth_core:
+    dependency: "direct main"
+    description:
+      path: "../auth_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -81,6 +95,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.2"
+  cron:
+    dependency: transitive
+    description:
+      name: cron
+      sha256: d98aa8cdad0cccdb6b098e6a1fb89339c180d8a229145fa4cd8c6fc538f0e35f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.1"
   crypto:
     dependency: transitive
     description:
@@ -89,6 +111,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  dart_appwrite:
+    dependency: "direct main"
+    description:
+      name: dart_appwrite
+      sha256: a43972ea7868b3811af513810e2fb20b0208ab70d09e195fb8d9c0b8f7c4524f
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.0.0"
   dart_internal:
     dependency: transitive
     description:
@@ -97,6 +127,21 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.9"
+  directed_graph:
+    dependency: transitive
+    description:
+      name: directed_graph
+      sha256: "82061c9ce3ac74d9c4c173fb03daac515d503a0f9f77c0010a872f8c344a4f03"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.9"
+  drop_core:
+    dependency: "direct main"
+    description:
+      path: "../drop_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   environment_core:
     dependency: "direct main"
     description:
@@ -112,6 +157,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.5"
+  exception_templates:
+    dependency: transitive
+    description:
+      name: exception_templates
+      sha256: e9303fd16ecdb845a14b397cb93476f807dd2b4706f5ee44f708dbc95c256c33
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.4"
   file:
     dependency: transitive
     description:
@@ -144,6 +197,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  graphs:
+    dependency: transitive
+    description:
+      name: graphs
+      sha256: aedc5a15e78fc65a6e23bcd927f24c64dd995062bcd1ca6eda65a3cff92a4d19
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.1"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      sha256: "4c3f04bfb64d3efd508d06b41b825542f08122d30bda4933fb95c069d22a4fa3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   http_multi_server:
     dependency: transitive
     description:
@@ -192,6 +261,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  lazy_memo:
+    dependency: transitive
+    description:
+      name: lazy_memo
+      sha256: ca4be412d65726f79a30ba6e40b7056f1dbefbb35ec42913365b3f3e86d49279
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.9"
   lints:
     dependency: "direct dev"
     description:
@@ -200,6 +277,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  log_core:
+    dependency: "direct main"
+    description:
+      path: "../log_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   logging:
     dependency: transitive
     description:
@@ -232,6 +316,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  model_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../../model/model_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   node_preamble:
     dependency: transitive
     description:
@@ -256,6 +347,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
+  path_core:
+    dependency: "direct main"
+    description:
+      path: "../../../path_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   persistence_core:
     dependency: "direct main"
     description:
@@ -294,6 +392,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.3"
+  quote_buffer:
+    dependency: transitive
+    description:
+      name: quote_buffer
+      sha256: a9eefd3ddc63bb310ffbc855b6ebe0363d925235485bc5778e28c492b1224b31
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.5"
   rxdart:
     dependency: "direct main"
     description:
@@ -382,6 +488,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  task_core:
+    dependency: "direct main"
+    description:
+      path: "../task_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   term_glyph:
     dependency: transitive
     description:
@@ -414,6 +527,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.6"
+  type:
+    dependency: "direct main"
+    description:
+      path: "../../../type"
+      relative: true
+    source: path
+    version: "0.0.1"
+  type_core:
+    dependency: "direct overridden"
+    description:
+      path: "../type_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   typed_data:
     dependency: transitive
     description:
@@ -457,10 +584,10 @@ packages:
     dependency: transitive
     description:
       name: web_socket_channel
-      sha256: ca49c0bc209c687b887f30527fb6a9d80040b072cc2990f34b9bec3e7663101b
+      sha256: d88238e5eac9a42bb43ca4e721edba3c08c6354d4a53063afaa568516217621b
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.4.0"
   webkit_inspection_protocol:
     dependency: transitive
     description:

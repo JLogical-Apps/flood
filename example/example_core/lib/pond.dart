@@ -33,7 +33,10 @@ Future<CorePondContext> getCorePondContext({
       Trigger.static.cron(
         name: 'my-cron',
         cron: '* * * * *',
-        runner: (dateTime) => corePondContext.log('Running at ${dateTime.format()}'),
+        runner: (dateTime) async {
+          final users = await Query.from<UserEntity>().all().get(corePondContext.dropCoreComponent);
+          corePondContext.log(users);
+        },
       ),
     ],
   ));
