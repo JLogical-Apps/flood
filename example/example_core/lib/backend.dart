@@ -12,16 +12,14 @@ Future<dynamic> main(final context) async {
     repositoryImplementations: (_) => [
       AppwriteCloudRepositoryImplementation(),
     ],
-    additionalCoreComponents: (corePondContext) => [
-      AppwriteCoreComponent(config: corePondContext.environmental((type) {
-        if (type == EnvironmentType.static.qa) {
-          return AppwriteConfig.localhost(projectId: '651b48116fc13fcb79be');
-        } else if (type == EnvironmentType.static.staging) {
-          return AppwriteConfig.cloud(projectId: '6409e66ed830e72e8f8d');
-        }
-
-        throw Exception('Cannot find Appwrite Config for environment [$type]');
-      })),
+    additionalCoreComponents: (corePondContext) async => [
+      AppwriteCoreComponent(
+        config: AppwriteConfig(
+          projectId: await corePondContext.environmentCoreComponent.get(AppwriteConsts.projectIdFunctionEnv),
+          endpoint: await corePondContext.environmentCoreComponent.get(AppwriteConsts.endpointFunctionEnv),
+          selfSigned: await corePondContext.environmentCoreComponent.get(AppwriteConsts.selfSignedFunctionEnv),
+        ),
+      ),
     ],
   );
   return await AppwriteBackend.handle(

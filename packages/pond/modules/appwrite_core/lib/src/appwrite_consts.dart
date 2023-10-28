@@ -11,4 +11,8 @@ class AppwriteConsts {
   static final String typeKey = 't_type';
 
   static final String taskFunctionName = 'flood-tasks';
+
+  static final String projectIdFunctionEnv = 'APPWRITE_PROJECT_ID';
+  static final String endpointFunctionEnv = 'APPWRITE_ENDPOINT';
+  static final String selfSignedFunctionEnv = 'APPWRITE_SELF_SIGNED';
 }

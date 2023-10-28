@@ -13,7 +13,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 Future<CorePondContext> getCorePondContext({
   EnvironmentConfig? environmentConfig,
-  List<CorePondComponent> Function(CorePondContext context)? additionalCoreComponents,
+  FutureOr<List<CorePondComponent>> Function(CorePondContext context)? additionalCoreComponents,
   List<RepositoryImplementation> Function(CorePondContext context)? repositoryImplementations,
   List<AuthServiceImplementation> Function(CorePondContext context)? authServiceImplementations,
   MessagingService? Function(CorePondContext context)? messagingService,
@@ -41,7 +41,7 @@ Future<CorePondContext> getCorePondContext({
     ],
   ));
 
-  for (final coreComponent in additionalCoreComponents?.call(corePondContext) ?? []) {
+  for (final coreComponent in await additionalCoreComponents?.call(corePondContext) ?? []) {
     await corePondContext.register(coreComponent);
   }
 

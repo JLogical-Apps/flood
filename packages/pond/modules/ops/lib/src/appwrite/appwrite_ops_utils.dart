@@ -246,6 +246,10 @@ class AppwriteOpsUtils {
       await context.confirmAndExecutePlan(Plan.execute(
         'Create Function [$functionId]',
         (context) async {
+          final appwriteCoreComponent = context.automateContext.corePondContext.locateOrNull<AppwriteCoreComponent>() ??
+              (throw Exception('An AppwriteCoreComponent is required to deploy functions!'));
+          final appwriteConfig = appwriteCoreComponent.config;
+
           final sshKeyFile = await DataSource.static.file(sshDirectory - 'id_ed25519').mapBase64().getOrNull() ??
               (throw Exception('Make sure your Github SSH key is stored in ~/.ssh/id_ed25519'));
           final sshKnownHosts = await DataSource.static.file(sshDirectory - 'known_hosts').mapBase64().getOrNull() ??
@@ -269,6 +273,21 @@ class AppwriteOpsUtils {
 
           await functions.createVariable(functionId: functionId, key: 'SSH_KEY', value: sshKeyFile);
           await functions.createVariable(functionId: functionId, key: 'SSH_HOSTS', value: sshKnownHosts);
+          await functions.createVariable(
+            functionId: functionId,
+            key: AppwriteConsts.projectIdFunctionEnv,
+            value: appwriteConfig.projectId,
+          );
+          await functions.createVariable(
+            functionId: functionId,
+            key: AppwriteConsts.endpointFunctionEnv,
+            value: appwriteConfig.endpoint,
+          );
+          await functions.createVariable(
+            functionId: functionId,
+            key: AppwriteConsts.selfSignedFunctionEnv,
+            value: appwriteConfig.selfSigned.toString(),
+          );
 
           for (final (name, value) in environmentVariables.entryRecords) {
             await functions.createVariable(functionId: functionId, key: name, value: value);
