@@ -7,6 +7,9 @@ T coerce<T>(dynamic value) {
   if ((T == double || T == typeOf<double?>()) && value is String) {
     return double.parse(value) as T;
   }
+  if ((T == bool || T == typeOf<bool?>()) && value is String) {
+    return bool.parse(value) as T;
+  }
   if (T == String || T == typeOf<String?>()) {
     return value.toString() as T;
   }
@@ -20,6 +23,9 @@ T? coerceOrNull<T>(dynamic value) {
   }
   if ((T == double || T == typeOf<double?>()) && value is String) {
     return double.parse(value) as T;
+  }
+  if ((T == bool || T == typeOf<bool?>()) && value is String) {
+    return bool.parse(value) as T;
   }
 
   if (T == String) {

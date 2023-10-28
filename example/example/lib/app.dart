@@ -35,15 +35,6 @@ Future<AppPondContext> buildAppPondContext() async {
     additionalCoreComponents: (corePondContext) => [
       if (corePondContext.environment.isOnline) ...[
         FirebaseCoreComponent(app: DefaultFirebaseOptions.currentPlatform),
-        AppwriteCoreComponent(config: corePondContext.environmental((type) {
-          if (type == EnvironmentType.static.qa) {
-            return AppwriteConfig.localhost(projectId: '651b48116fc13fcb79be');
-          } else if (type == EnvironmentType.static.staging) {
-            return AppwriteConfig.cloud(projectId: '6409e66ed830e72e8f8d');
-          }
-
-          throw Exception('Cannot find Appwrite Config for environment [$type]');
-        })),
       ]
     ],
     repositoryImplementations: (corePondContext) => [
