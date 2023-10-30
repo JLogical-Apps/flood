@@ -1,5 +1,5 @@
-import 'package:appwrite_core/src/appwrite_config.dart';
 import 'package:appwrite_core/appwrite_implementation.dart';
+import 'package:appwrite_core/src/appwrite_config.dart';
 import 'package:pond_core/pond_core.dart';
 
 class AppwriteCoreComponent with IsCorePondComponent {
@@ -19,7 +19,7 @@ class AppwriteCoreComponent with IsCorePondComponent {
           client = Client()
               .setEndpoint(config.endpoint)
               .setProject(config.projectId)
-              .setSelfSigned(status: config.selfSigned);
+              .setSelfSigned(status: config.selfSigned ?? false);
         }),
       ];
 }

@@ -14,16 +14,19 @@ Future<dynamic> main(final context) async {
     ],
     additionalCoreComponents: (corePondContext) async => [
       AppwriteCoreComponent(
-        config: AppwriteConfig(
-          projectId: await corePondContext.environmentCoreComponent.get(AppwriteConsts.projectIdFunctionEnv),
+        config: AppwriteConfig.apiKey(
           endpoint: await corePondContext.environmentCoreComponent.get(AppwriteConsts.endpointFunctionEnv),
-          selfSigned: await corePondContext.environmentCoreComponent.get(AppwriteConsts.selfSignedFunctionEnv),
+          projectId: await corePondContext.environmentCoreComponent.get(AppwriteConsts.projectIdFunctionEnv),
+          apiKey: await corePondContext.environmentCoreComponent.get(AppwriteConsts.apiKeyFunctionEnv),
         ),
       ),
     ],
   );
-  return await AppwriteBackend.handle(
-    corePondContext: corePondContext,
-    context: context,
-  );
+
+  await corePondContext.load();
+
+  await corePondContext.dropCoreComponent.runWithoutSecurity(() => AppwriteBackend.handle(
+        corePondContext: corePondContext,
+        context: context,
+      ));
 }

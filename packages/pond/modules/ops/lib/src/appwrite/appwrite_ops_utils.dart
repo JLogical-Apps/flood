@@ -138,6 +138,7 @@ class AppwriteOpsUtils {
 
   static Future<void> deployFunctions(
     AutomateCommandContext context, {
+    required EnvironmentType environmentType,
     required Client client,
     required File functionTemplate,
     List<Pattern> ignorePatterns = const [],
@@ -151,6 +152,7 @@ class AppwriteOpsUtils {
 
     await _deployFunction(
       context,
+      environmentType: environmentType,
       functions: functions,
       functionId: AppwriteConsts.taskFunctionName,
       functionName: 'Flood Tasks',
@@ -161,6 +163,7 @@ class AppwriteOpsUtils {
     for (final trigger in taskCoreComponent.triggers) {
       await _deployFunction(
         context,
+        environmentType: environmentType,
         functions: functions,
         functionId: trigger.name,
         functionName: 'Trigger [${trigger.name}]',
@@ -176,6 +179,7 @@ class AppwriteOpsUtils {
 
   static Future<void> _deployFunction(
     AutomateCommandContext context, {
+    required EnvironmentType environmentType,
     required Functions functions,
     required String functionId,
     required String functionName,
@@ -188,6 +192,7 @@ class AppwriteOpsUtils {
 
     final function = await _getOrCreateFunction(
       context,
+      environmentType: environmentType,
       functions: functions,
       functionId: functionId,
       functionName: functionName,
@@ -234,6 +239,7 @@ class AppwriteOpsUtils {
 
   static Future<Func> _getOrCreateFunction(
     AutomateCommandContext context, {
+    required EnvironmentType environmentType,
     required Functions functions,
     required String functionId,
     required String functionName,
@@ -241,62 +247,101 @@ class AppwriteOpsUtils {
     String? schedule,
     Map<String, dynamic> environmentVariables = const {},
   }) async {
+    final appwriteCoreComponent = context.automateContext.corePondContext.locateOrNull<AppwriteCoreComponent>() ??
+        (throw Exception('An AppwriteCoreComponent is required to deploy functions!'));
+    final appwriteConfig = appwriteCoreComponent.config;
+
+    final sshKeyFile = await DataSource.static.file(sshDirectory - 'id_ed25519').mapBase64().getOrNull() ??
+        (throw Exception('Make sure your Github SSH key is stored in ~/.ssh/id_ed25519'));
+    final sshKnownHosts = await DataSource.static.file(sshDirectory - 'known_hosts').mapBase64().getOrNull() ??
+        (throw Exception('Make sure your SSH known_hosts is stored in ~/.ssh/known_hosts'));
+
+    final functionPlanItems = <PlanItem>[];
+
+    functionPlanItems.addAll(await _updateFunctionVariables(
+      context,
+      functions: functions,
+      functionId: functionId,
+      environmentVariables: {
+        ...environmentVariables,
+        'SSH_KEY': sshKeyFile,
+        'SSH_HOSTS': sshKnownHosts,
+        AppwriteConsts.projectIdFunctionEnv: appwriteConfig.projectId,
+        AppwriteConsts.apiKeyFunctionEnv: await getApiKey(context, environmentType: environmentType),
+      },
+    ));
+
     var function = await guardAsync(() => functions.get(functionId: functionId));
     if (function == null) {
-      await context.confirmAndExecutePlan(Plan.execute(
-        'Create Function [$functionId]',
-        (context) async {
-          final appwriteCoreComponent = context.automateContext.corePondContext.locateOrNull<AppwriteCoreComponent>() ??
-              (throw Exception('An AppwriteCoreComponent is required to deploy functions!'));
-          final appwriteConfig = appwriteCoreComponent.config;
-
-          final sshKeyFile = await DataSource.static.file(sshDirectory - 'id_ed25519').mapBase64().getOrNull() ??
-              (throw Exception('Make sure your Github SSH key is stored in ~/.ssh/id_ed25519'));
-          final sshKnownHosts = await DataSource.static.file(sshDirectory - 'known_hosts').mapBase64().getOrNull() ??
-              (throw Exception('Make sure your SSH known_hosts is stored in ~/.ssh/known_hosts'));
-
-          function = await functions.create(
-            functionId: functionId,
-            name: functionName,
-            runtime: 'dart-3.1',
-            enabled: true,
-            logging: true,
-            schedule: schedule,
-            execute: ['users'],
-            commands: '''\
+      functionPlanItems.insert(
+          0,
+          PlanItem.static.execute(
+            'Create Function [$functionId]',
+            (context) async {
+              function = await functions.create(
+                functionId: functionId,
+                name: functionName,
+                runtime: 'dart-3.1',
+                enabled: true,
+                logging: true,
+                schedule: schedule,
+                execute: ['users'],
+                commands: '''\
     mkdir -p ~/.ssh
     echo "\$SSH_KEY" | base64 -d > ~/.ssh/id_ed25519
     chmod 600 ~/.ssh/id_ed25519
     echo "\$SSH_HOSTS" | base64 -d >> ~/.ssh/known_hosts''',
-            entrypoint: entryPoint,
-          );
-
-          await functions.createVariable(functionId: functionId, key: 'SSH_KEY', value: sshKeyFile);
-          await functions.createVariable(functionId: functionId, key: 'SSH_HOSTS', value: sshKnownHosts);
-          await functions.createVariable(
-            functionId: functionId,
-            key: AppwriteConsts.projectIdFunctionEnv,
-            value: appwriteConfig.projectId,
-          );
-          await functions.createVariable(
-            functionId: functionId,
-            key: AppwriteConsts.endpointFunctionEnv,
-            value: appwriteConfig.endpoint,
-          );
-          await functions.createVariable(
-            functionId: functionId,
-            key: AppwriteConsts.selfSignedFunctionEnv,
-            value: appwriteConfig.selfSigned.toString(),
-          );
-
-          for (final (name, value) in environmentVariables.entryRecords) {
-            await functions.createVariable(functionId: functionId, key: name, value: value);
-          }
-        },
-      ));
+                entrypoint: entryPoint,
+              );
+            },
+          ));
+    } else if (functionPlanItems.isNotEmpty) {
+      functionPlanItems.insert(
+        0,
+        PlanItem.static.execute('Update Function [$functionId]', (context) {}),
+      );
     }
 
+    await context.confirmAndExecutePlan(Plan(functionPlanItems));
+
     return function!;
+  }
+
+  static Future<List<PlanItem>> _updateFunctionVariables(
+    AutomateCommandContext context, {
+    required Functions functions,
+    required String functionId,
+    Map<String, dynamic> environmentVariables = const {},
+  }) async {
+    final existingVariables =
+        await guardAsync(() async => (await functions.listVariables(functionId: functionId)).variables) ?? [];
+    final variablePlanItems = <PlanItem>[];
+
+    for (final (key, rawValue) in environmentVariables.entryRecords) {
+      final value = coerce<String>(rawValue);
+      final existingVariable = existingVariables.firstWhereOrNull((variable) => variable.key == key);
+
+      if (existingVariable == null) {
+        variablePlanItems.add(PlanItem.static.execute(
+            '  Create Variable [$key]',
+            (context) => functions.createVariable(
+                  functionId: functionId,
+                  key: key,
+                  value: value,
+                )));
+      } else if (existingVariable.value != value) {
+        variablePlanItems.add(PlanItem.static.execute(
+            '  Update Variable [$key]',
+            (context) => functions.updateVariable(
+                  functionId: functionId,
+                  variableId: existingVariable.$id,
+                  key: key,
+                  value: value,
+                )));
+      }
+    }
+
+    return variablePlanItems;
   }
 
   static Stream<Deployment> _deploymentStatusX({

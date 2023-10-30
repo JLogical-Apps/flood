@@ -56,6 +56,7 @@ class AppwriteOpsEnvironment with IsOpsEnvironment {
     if (serverFileTemplate != null) {
       await AppwriteOpsUtils.deployFunctions(
         context,
+        environmentType: environmentType,
         client: client,
         functionTemplate: serverFileTemplate,
         ignorePatterns: ignoreBackendPatterns,
