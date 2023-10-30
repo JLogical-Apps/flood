@@ -16,5 +16,5 @@ class AppwriteConfig {
         selfSigned = false,
         apiKey = null;
 
-  AppwriteConfig.apiKey({required this.projectId, required this.apiKey, required this.endpoint}) : selfSigned = null;
+  AppwriteConfig.apiKey({required this.projectId, required this.apiKey, required this.endpoint}) : selfSigned = true;
 }

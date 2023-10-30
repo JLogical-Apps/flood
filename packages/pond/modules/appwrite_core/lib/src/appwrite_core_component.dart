@@ -19,8 +19,10 @@ class AppwriteCoreComponent with IsCorePondComponent {
           client = Client()
               .setEndpoint(config.endpoint)
               .setProject(config.projectId)
-              .setKey(config.apiKey)
               .setSelfSigned(status: config.selfSigned ?? false);
+          if (config.apiKey != null) {
+            client.setKey(config.apiKey);
+          }
         }),
       ];
 }
