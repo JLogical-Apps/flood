@@ -12,7 +12,9 @@ class AppwriteConsts {
 
   static final String taskFunctionName = 'flood-tasks';
 
-  static final String projectIdFunctionEnv = 'APPWRITE_PROJECT_ID';
+  // https://appwrite.io/docs/products/functions/development#:~:text=the%20running%20function.-,APPWRITE_FUNCTION_PROJECT_ID,-The%20project%20ID
+  static final String projectIdFunctionEnv = 'APPWRITE_FUNCTION_PROJECT_ID';
+
   static final String apiKeyFunctionEnv = 'APPWRITE_API_KEY';
-  static final String endpointFunctionEnv = 'APPWRITE_FUNCTION_PROJECT_ID';
+  static final String endpointFunctionEnv = 'APPWRITE_ENDPOINT';
 }

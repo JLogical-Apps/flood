@@ -266,7 +266,7 @@ class AppwriteOpsUtils {
         ...environmentVariables,
         'SSH_KEY': sshKeyFile,
         'SSH_HOSTS': sshKnownHosts,
-        AppwriteConsts.projectIdFunctionEnv: appwriteConfig.projectId,
+        AppwriteConsts.endpointFunctionEnv: appwriteConfig.endpoint,
         AppwriteConsts.apiKeyFunctionEnv: await getApiKey(context, environmentType: environmentType),
       },
     ));
