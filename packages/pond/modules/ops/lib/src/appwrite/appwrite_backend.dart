@@ -11,18 +11,22 @@ class AppwriteBackend {
   static Future<dynamic> handle({required CorePondContext corePondContext, required dynamic context}) async {
     final backendContext = AppwriteBackendContext(context: context);
 
-    final triggerName = await corePondContext.environmentCoreComponent.getOrNull('TRIGGER_NAME');
-    if (triggerName != null) {
-      return await _handleTrigger(
-        corePondContext: corePondContext,
-        backendContext: backendContext,
-        triggerName: triggerName,
-      );
-    } else {
-      return await _handleRequest(
-        corePondContext: corePondContext,
-        backendContext: backendContext,
-      );
+    try {
+      final triggerName = await corePondContext.environmentCoreComponent.getOrNull('TRIGGER_NAME');
+      if (triggerName != null) {
+        return await _handleTrigger(
+          corePondContext: corePondContext,
+          backendContext: backendContext,
+          triggerName: triggerName,
+        );
+      } else {
+        return await _handleRequest(
+          corePondContext: corePondContext,
+          backendContext: backendContext,
+        );
+      }
+    } catch (e) {
+      return backendContext.error(e.toString());
     }
   }
 

@@ -36,7 +36,6 @@ Future<CorePondContext> getCorePondContext({
         runner: (dateTime) async {
           final users = await Query.from<UserEntity>().all().get(corePondContext.dropCoreComponent);
           corePondContext.log(users);
-          return users;
         },
       ),
     ],
