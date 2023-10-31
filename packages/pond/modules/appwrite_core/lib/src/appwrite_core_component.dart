@@ -21,7 +21,8 @@ class AppwriteCoreComponent with IsCorePondComponent {
               .setProject(config.projectId)
               .setSelfSigned(status: config.selfSigned ?? false);
           if (config.apiKey != null) {
-            client.setKey(config.apiKey);
+            // Flutter version does not have `setKey` so set it to `dynamic` so Flutter can still compile.
+            (client as dynamic).setKey(config.apiKey);
           }
         }),
       ];
