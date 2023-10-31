@@ -1,10 +1,11 @@
+import 'package:appwrite_core/appwrite_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:ops/src/appwrite/behavior/appwrite_attribute_behavior_modifier.dart';
-import 'package:appwrite_core/appwrite_core.dart';
 
-class ListFieldBehaviorModifier extends AppwriteAttributeBehaviorModifier<SimpleValueObjectProperty<List>> {
+class ListFieldBehaviorModifier
+    extends AppwriteAttributeBehaviorModifier<ValueObjectProperty<List, dynamic, dynamic, dynamic>> {
   @override
-  String getType(SimpleValueObjectProperty<List> behavior) {
+  String getType(ValueObjectProperty<List, dynamic, dynamic, dynamic> behavior) {
     return {
           List<String>: 'string',
           List<bool>: 'boolean',
@@ -17,7 +18,7 @@ class ListFieldBehaviorModifier extends AppwriteAttributeBehaviorModifier<Simple
   }
 
   @override
-  int? getSize(SimpleValueObjectProperty<List> behavior) {
+  int? getSize(ValueObjectProperty<List, dynamic, dynamic, dynamic> behavior) {
     if (behavior.getterType == List<String>) {
       return AppwriteConsts.mediumTextSize;
     }
@@ -26,7 +27,7 @@ class ListFieldBehaviorModifier extends AppwriteAttributeBehaviorModifier<Simple
   }
 
   @override
-  bool isArray(SimpleValueObjectProperty<List> behavior) {
+  bool isArray(ValueObjectProperty<List, dynamic, dynamic, dynamic> behavior) {
     return true;
   }
 }

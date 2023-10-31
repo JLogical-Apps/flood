@@ -413,8 +413,9 @@ class AppwriteOpsUtils {
 
     final existingIndexes = existingCollection?.indexes ?? [];
     final newIndexes = collection.indexes
-        .where((index) => existingIndexes
-            .none((existingIndex) => DeepCollectionEquality().equals(index.attributes, existingIndex.attributes)))
+        .where((index) => existingIndexes.none((existingIndex) =>
+            DeepCollectionEquality().equals(index.attributes, existingIndex.attributes) &&
+            index.key == existingIndex.key))
         .toList();
     for (final newIndex in newIndexes) {
       final planItem = _createIndexPlanItem(databases: databases, collection: collection, index: newIndex);
@@ -654,7 +655,7 @@ class AppwriteOpsUtils {
     required Index index,
   }) {
     return PlanItem.static.execute(
-      '  Create Index [${index.key}]',
+      '  Create Index [${index.key}] (${index.type})',
       (context) async {
         context.log('Creating Index [${index.key}]');
         await databases.createIndex(
@@ -808,7 +809,7 @@ class AppwriteOpsUtils {
             .where((runtimeType) => runtimeType.isConcrete)
             .map((runtimeType) => _getEntityIndexesJson(context, entity: runtimeType.createInstance())))
         .expand((indexes) => indexes)
-        .groupListsBy((index) => index['key'] as String)
+        .groupListsBy((index) => (index['key'] as String, index['type'] as String))
         .mapToIterable((key, index) => index.first)
         .toList();
   }
@@ -889,7 +890,7 @@ class AppwriteOpsUtils {
               },
             if (behaviorModifier.isArray(property))
               {
-                'key': property.name,
+                'key': '${property.name}_fulltext',
                 'type': 'fulltext',
                 'attributes': [property.name],
                 'orders': [],
