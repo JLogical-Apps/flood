@@ -315,33 +315,43 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
             ),
             PaginatedQueryModelBuilder(
               paginatedQueryModel: envelopeTransactionsModel,
-              builder: (List<BudgetTransactionEntity> envelopeTransactionEntities, Future Function()? loadNext) {
-                return StyledList.column.withMinChildSize(150)(
-                  children: envelopeTransactionEntities
-                      .map((entity) => TransactionCard(
-                            budgetTransaction: entity.value,
-                            transactionViewContext: TransactionViewContext.envelope(envelopeId: envelopeEntity.id!),
-                            actions: [
-                              ActionItem(
-                                titleText: 'Delete',
-                                descriptionText: 'Delete this transaction.',
-                                iconData: Icons.delete,
-                                color: Colors.red,
-                                onPerform: (context) async {
-                                  await context.showStyledDialog(StyledDialog.yesNo(
-                                    titleText: 'Confirm Delete',
-                                    bodyText: 'Are you sure you want to delete this transaction? You cannot undo this.',
-                                    onAccept: () async {
-                                      await context.dropCoreComponent.delete(entity);
-                                      Navigator.of(context).pop();
+              builder: (List<BudgetTransactionEntity> envelopeTransactionEntities, Future Function()? loadMore) {
+                return StyledList.column.centered(
+                  children: [
+                    StyledList.column.withMinChildSize(150)(
+                      children: envelopeTransactionEntities
+                          .map((entity) => TransactionCard(
+                                budgetTransaction: entity.value,
+                                transactionViewContext: TransactionViewContext.envelope(envelopeId: envelopeEntity.id!),
+                                actions: [
+                                  ActionItem(
+                                    titleText: 'Delete',
+                                    descriptionText: 'Delete this transaction.',
+                                    iconData: Icons.delete,
+                                    color: Colors.red,
+                                    onPerform: (context) async {
+                                      await context.showStyledDialog(StyledDialog.yesNo(
+                                        titleText: 'Confirm Delete',
+                                        bodyText:
+                                            'Are you sure you want to delete this transaction? You cannot undo this.',
+                                        onAccept: () async {
+                                          await context.dropCoreComponent.delete(entity);
+                                          Navigator.of(context).pop();
+                                        },
+                                      ));
                                     },
-                                  ));
-                                },
-                              ),
-                            ],
-                          ))
-                      .toList(),
-                  ifEmptyText: 'There are no transactions in this envelope!',
+                                  ),
+                                ],
+                              ))
+                          .toList(),
+                      ifEmptyText: 'There are no transactions in this envelope!',
+                    ),
+                    if (loadMore != null)
+                      StyledButton.strong(
+                        labelText: 'Load More',
+                        onPressed: loadMore,
+                      ),
+                  ],
                 );
               },
             ),
