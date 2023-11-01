@@ -1,6 +1,6 @@
 import 'package:appwrite/appwrite.dart' as appwrite;
-import 'package:appwrite_core/appwrite_core.dart';
-import 'package:appwrite_core/appwrite_implementation.dart' hide Account;
+import 'package:appwrite/appwrite.dart' hide Account;
+import 'package:appwrite_app/src/util/appwrite_core_component_extensions.dart';
 import 'package:auth_core/auth_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -9,7 +9,7 @@ import 'package:utils/utils.dart';
 class AppwriteAuthService with IsAuthService, IsCorePondComponent {
   late final BehaviorSubject<FutureValue<Account?>> _accountX = BehaviorSubject.seeded(FutureValue.loading());
 
-  late final appwrite.Account account = appwrite.Account((context.appwriteCoreComponent.client) as appwrite.Client);
+  late final appwrite.Account account = appwrite.Account(context.client);
 
   @override
   List<CorePondComponentBehavior> get behaviors => [

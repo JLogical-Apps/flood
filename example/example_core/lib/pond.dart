@@ -26,6 +26,11 @@ Future<CorePondContext> getCorePondContext({
 
   await corePondContext.register(TypeCoreComponent());
   await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
+
+  for (final coreComponent in await additionalCoreComponents?.call(corePondContext) ?? []) {
+    await corePondContext.register(coreComponent);
+  }
+
   await corePondContext.register(TaskCoreComponent(
     taskRunner: taskRunner?.call(corePondContext) ?? TaskRunner.static.none,
     tasks: {GreetTaskRoute(): GreetTask()},
@@ -40,10 +45,6 @@ Future<CorePondContext> getCorePondContext({
       ),
     ],
   ));
-
-  for (final coreComponent in await additionalCoreComponents?.call(corePondContext) ?? []) {
-    await corePondContext.register(coreComponent);
-  }
 
   await corePondContext.register(LogCoreComponent(
     loggerService: loggerService?.call(corePondContext) ?? LoggerService.static.console,

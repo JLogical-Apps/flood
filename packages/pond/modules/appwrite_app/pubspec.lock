@@ -509,7 +509,7 @@ packages:
     source: hosted
     version: "1.8.3"
   path_core:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../../../path_core"
       relative: true
