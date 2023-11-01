@@ -11,7 +11,7 @@ class FirebaseCrashlyticsAppComponent with IsAppPondComponent {
     final firebaseComponent = context.findOrNull<FirebaseCoreComponent>();
     final shouldInitialize = firebaseComponent != null && firebaseComponent.shouldInitialize(context.environment);
 
-    if (shouldInitialize) {
+    if (shouldInitialize && context.corePondContext.environmentCoreComponent.buildType == BuildType.release) {
       context.find<LogCoreComponent>().addListener(
             onLog: (message) => FirebaseCrashlytics.instance.log(message),
             onLogWarning: (message) => FirebaseCrashlytics.instance.log('[WARNING] $message'),

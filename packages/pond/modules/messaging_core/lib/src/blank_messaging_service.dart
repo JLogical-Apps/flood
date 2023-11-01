@@ -8,7 +8,7 @@ class BlankMessagingService with IsCorePondComponent, IsMessagingService {
   Stream<DataMessage> get dataMessageX => BehaviorSubject();
 
   @override
-  ValueStream<FutureValue<String?>> get deviceTokenX => BehaviorSubject();
+  ValueStream<FutureValue<String?>> get deviceTokenX => BehaviorSubject.seeded(FutureValue.empty());
 
   @override
   Stream<NotificationMessage> get notificationMessageX => BehaviorSubject();

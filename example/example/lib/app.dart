@@ -53,9 +53,6 @@ Future<AppPondContext> buildAppPondContext() async {
     authServiceImplementations: (corePondContext) => [AppwriteAuthServiceImplementation()],
     taskRunner: (corePondContext) =>
         corePondContext.environment.isOnline ? TaskRunner.static.appwrite(corePondContext) : TaskRunner.static.local,
-    messagingService: (corePondContext) => corePondContext.environment.isOnline
-        ? MessagingService.static.firebase
-        : MessagingService.static.local(refreshDuration: Duration(minutes: 5)),
     loggerService: (corePondContext) => corePondContext.environment.isOnline
         ? LoggerService.static.console.withFileLogHistory(corePondContext.fileSystem.tempDirectory / 'logs')
         : LoggerService.static.console,
