@@ -12,92 +12,92 @@ dependencies:
   actions_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/actions_core
   appwrite_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/appwrite_core
   auth_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/auth_core
   drop_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/drop_core
   environment_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/environment_core
   log_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/log_core
   model_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/model/model_core
   messaging_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/messaging_core
   path_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/path_core
   persistence_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/persistence/persistence_core
   pond_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/pond_core
   port_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/port/port_core
   port_drop_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/port_drop_core
   task_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/task_core
   type:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/type
   type_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/type_core
   user_device_token_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/user_device_token_core
   utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/utils/utils_core
 dev_dependencies:
   lints: ^2.0.0

@@ -12,27 +12,32 @@ dependencies:
   jlogical_utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/jlogical_utils/jlogical_utils_core
   app_icon:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/app_icon
   ops:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/ops
   pond_cli:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/pond_cli
   release:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/release
 dev_dependencies:
   lints: ^2.0.0
+dependency_overrides: # Needed because of [dcli] and [interact]
+  intl: 0.18.0
+  win32: 4.1.0
+  path: 1.8.3
+  js: 0.6.5

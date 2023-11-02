@@ -12,7 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  collection: ^1.16.0
   flutter_hooks: ^0.18.5+1
   intersperse: ^2.0.0
   path: ^1.8.2
@@ -20,47 +19,47 @@ dependencies:
   debug:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/debug
   environment:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/environment
   model:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/model/model
   persistence_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/persistence/persistence_core
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/pond
   port_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/port/port_core
   port_style:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/port/port_style
   style:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/style
   utils:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/utils/utils
 
 dev_dependencies:

@@ -11,46 +11,48 @@ version: 0.0.1
 dependencies:
   collection: ^1.16.0
   version: ^3.0.0
-  xcodeproj:
-    git:
-      url: git@github.com:jaboyc/xcodeproj.git
-      ref: "master"
+  xcodeproj: ^0.2.3
 
   drop_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/drop_core
   environment_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/environment_core
   persistence_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/persistence/persistence_core
   pond_cli:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/pond_cli
   pond_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/pond_core
   type_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/type_core
   utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/utils/utils_core
 dev_dependencies:
   lints: ^2.0.0
   test: 1.24.6
+dependency_overrides: # Needed because of [dcli] and [interact]
+  intl: 0.18.0
+  win32: 4.1.0
+  path: 1.8.3
+  js: 0.6.5

@@ -18,57 +18,57 @@ dependencies:
   pool: ^1.5.1
   provider: ^6.0.5
   rxdart: ^0.27.5
-  uuid: ^3.0.7
+  uuid: ^3.0.6
 
   debug:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/debug
   drop_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/drop_core
   environment:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/environment
   model:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/model/model
   persistence:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/persistence/persistence
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/pond
   style:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/style
   type:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/type
   type_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/pond/modules/type_core
   utils:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/utils/utils
 dev_dependencies:
   flutter_test:
