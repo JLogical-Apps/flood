@@ -47,16 +47,16 @@ extension AuthServiceExtension on AuthService {
 }
 
 class AuthServiceStatic {
-  MemoryAuthService memory() {
-    return MemoryAuthService();
+  MemoryAuthService memory({bool isAdmin = false}) {
+    return MemoryAuthService(isAdmin: isAdmin);
   }
 
   FileAuthService file() {
     return FileAuthService();
   }
 
-  AdaptingAuthService adapting() {
-    return AdaptingAuthService();
+  AdaptingAuthService adapting({bool memoryIsAdmin = false}) {
+    return AdaptingAuthService(memoryIsAdmin: memoryIsAdmin);
   }
 
   CloudAuthService cloud() {
