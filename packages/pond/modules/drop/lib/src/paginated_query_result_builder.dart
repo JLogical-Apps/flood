@@ -12,11 +12,13 @@ class PaginatedQueryResultBuilder<T> extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemsModel =
-        useMemoized(() => Model.fromValueStream(queryResult.pageX.asyncMapWithValue<FutureValue<List<T>>>(
-              (page) async => FutureValue.loaded(await page.getItems()),
-              initialValue: FutureValue.loading(),
-            )));
+    final itemsModel = useMemoized(
+      () => Model.fromValueStream(queryResult.pageX.asyncMapWithValue<FutureValue<List<T>>>(
+        (page) async => FutureValue.loaded(await page.getItems()),
+        initialValue: FutureValue.loading(),
+      )),
+      [queryResult],
+    );
 
     return ModelBuilder(
       model: itemsModel,
