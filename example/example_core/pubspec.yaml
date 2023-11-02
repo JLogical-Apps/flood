@@ -11,12 +11,12 @@ dependencies:
   jlogical_utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/jlogical_utils/jlogical_utils_core
   jlogical_utils_cli:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.1"
       path: packages/jlogical_utils/jlogical_utils_cli
 dev_dependencies:
   lints: ^2.0.0
