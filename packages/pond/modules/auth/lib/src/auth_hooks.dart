@@ -3,8 +3,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:pond/pond.dart';
 import 'package:utils/utils.dart';
 
+Account? useLoggedInUserAccountOrNull() {
+  return useValueStream(useMemoized(() => useAppPondContext().find<AuthCoreComponent>().accountX)).getOrNull();
+}
+
+Account useLoggedInUserAccount() {
+  return useLoggedInUserAccountOrNull() ?? (throw Exception('Could not get logged in user account!'));
+}
+
 String? useLoggedInUserIdOrNull() {
-  return useValueStream(useMemoized(() => useAppPondContext().find<AuthCoreComponent>().userIdX)).getOrNull();
+  return useLoggedInUserAccountOrNull()?.accountId;
 }
 
 String useLoggedInUserId() {
