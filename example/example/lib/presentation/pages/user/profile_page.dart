@@ -6,7 +6,6 @@ import 'package:example_core/features/budget/budget.dart';
 import 'package:example_core/features/budget/budget_entity.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
-import 'package:example_core/test_task.dart';
 import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
@@ -40,14 +39,6 @@ class ProfilePage with IsAppPageWrapper<ProfileRoute> {
           return StyledPage(
             titleText: 'Profile',
             actions: [
-              ActionItem(
-                titleText: 'Greet',
-                onPerform: (_) async {
-                  final greeting = await context.corePondContext
-                      .runTask(GreetTaskRoute()..nameProperty.set(userEntity.value.nameProperty.value));
-                  print(greeting);
-                },
-              ),
               ActionItem(
                 titleText: 'Logout',
                 descriptionText: 'Log out of your account.',
