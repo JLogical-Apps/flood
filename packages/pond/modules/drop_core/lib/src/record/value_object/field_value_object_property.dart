@@ -25,7 +25,7 @@ class FieldValueObjectProperty<T, L> with IsValueObjectProperty<T?, T?, L, Field
   @override
   void fromState(State state) {
     try {
-      value = state[name] as T?;
+      value = coerce<T?>(state[name]);
     } catch (e) {
       throw Exception('Could not set value of [$name] to [${state[name]}] due to:\n$e');
     }
