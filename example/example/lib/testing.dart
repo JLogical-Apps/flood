@@ -150,7 +150,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
     for (var i = 0; i < 100; i++)
       EnvelopeTransaction()
-        ..nameProperty.set('Transation $i')
+        ..nameProperty.set('Transaction $i')
         ..amountCentsProperty.set(-i * 100)
         ..envelopeProperty.set('Emergency Savings')
         ..budgetProperty.set(budgetEntity.id!)

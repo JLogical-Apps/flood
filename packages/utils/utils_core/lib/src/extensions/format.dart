@@ -56,6 +56,11 @@ extension NumberParseUtil on String {
 
 /// Extension methods for formatting DateTimes.
 extension DateFormatUtil on DateTime {
+  String formatWith(DateFormat Function(DateFormat dateFormat) dateFormatGetter) {
+    final dateFormat = dateFormatGetter(DateFormat());
+    return dateFormat.format(this);
+  }
+
   String format({bool showDate = true, bool showTime = true}) {
     var dateFormat = DateFormat();
     if (showDate) {

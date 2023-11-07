@@ -1,4 +1,5 @@
 import 'package:example/presentation/style.dart';
+import 'package:example/presentation/widget/date/date_chip.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
 import 'package:example_core/features/envelope/envelope.dart';
@@ -24,13 +25,13 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
           ?.mapIfNonNull((entity) => entity.value);
 
       return StyledCard(
+        leading: DateChip(date: transaction.transactionDateProperty.value.time),
         title: _getTitle(
           transactionViewContext: transactionViewContext,
           transaction: transaction,
           fromEnvelope: fromEnvelope,
           toEnvelope: toEnvelope,
         ),
-        bodyText: [transaction.transactionDateProperty.value.time.format(showTime: false)].join(' - '),
         onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
       );
     });
