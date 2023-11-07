@@ -12,6 +12,8 @@ Future<void> main(List<String> args) async {
           return AppwriteConfig.localhost(projectId: '651b48116fc13fcb79be');
         } else if (type == EnvironmentType.static.staging) {
           return AppwriteConfig.cloud(projectId: '6409e66ed830e72e8f8d');
+        } else if (type == EnvironmentType.static.production) {
+          return AppwriteConfig.cloud(projectId: 'valet');
         }
 
         throw Exception('Cannot find Appwrite Config for environment [$type]');

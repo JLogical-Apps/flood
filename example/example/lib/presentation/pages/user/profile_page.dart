@@ -65,8 +65,8 @@ class ProfilePage with IsAppPageWrapper<ProfileRoute> {
                         await context.showStyledDialog(StyledPortDialog(
                           titleText: 'Edit Details',
                           port: userEntity.value.asPort(context.corePondContext),
-                          onAccept: (User user) {
-                            context.dropCoreComponent.updateEntity(userEntity..set(user));
+                          onAccept: (User user) async {
+                            await context.dropCoreComponent.updateEntity(userEntity..set(user));
                           },
                         ));
                       },

@@ -10,13 +10,13 @@ dependencies:
   meta: ^1.8.0
   jlogical_utils_core:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      url: "git@github.com:jaboyc/jlogical_utils.git"
+      ref: master
       path: packages/jlogical_utils/jlogical_utils_core
   jlogical_utils_cli:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      url: "git@github.com:jaboyc/jlogical_utils.git"
+      ref: master
       path: packages/jlogical_utils/jlogical_utils_cli
 dev_dependencies:
   lints: ^2.0.0

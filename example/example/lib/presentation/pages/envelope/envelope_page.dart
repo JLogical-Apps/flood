@@ -4,6 +4,7 @@ import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
 import 'package:example/presentation/pages/budget/budget_page.dart';
+import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
@@ -36,7 +37,11 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
   @override
   AppPage<EnvelopeRoute> get appPage => AppPage<EnvelopeRoute>().onlyIfLoggedIn().withParent((context, route) async {
         final envelopeEntity =
-            await Query.getById<EnvelopeEntity>(route.idProperty.value).get(context.dropCoreComponent);
+            await Query.getByIdOrNull<EnvelopeEntity>(route.idProperty.value).get(context.dropCoreComponent);
+
+        if (envelopeEntity == null) {
+          return HomeRoute();
+        }
 
         return BudgetRoute()..budgetIdProperty.set(envelopeEntity.value.budgetProperty.value);
       });
@@ -56,7 +61,7 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
       model: envelopeModel,
       builder: (EnvelopeEntity? envelopeEntity) {
         if (envelopeEntity == null) {
-          return StyledLoadingPage();
+          return StyledErrorPage(error: 'Could not find envelope!');
         }
 
         final envelope = envelopeEntity.value;

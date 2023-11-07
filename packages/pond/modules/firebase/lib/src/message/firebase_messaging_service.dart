@@ -29,7 +29,8 @@ class FirebaseMessagingService with IsMessagingService, IsCorePondComponent {
               return;
             }
 
-            if (!firebaseCoreComponent.shouldInitialize(context.environment)) {
+            if (!firebaseCoreComponent.shouldInitialize(context.environment) ||
+                context.environmentCoreComponent.platform != Platform.mobile) {
               return;
             }
 
