@@ -5,11 +5,21 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class EnvelopeEntity extends Entity<Envelope> {
   static Query<EnvelopeEntity> getBudgetEnvelopesQuery({required String budgetId, required bool? isArchived}) {
-    var query = Query.from<EnvelopeEntity>().where(Envelope.budgetField).isEqualTo(budgetId);
+    Query<EnvelopeEntity> query = Query.from<EnvelopeEntity>()
+        .where(Envelope.budgetField)
+        .isEqualTo(budgetId)
+        .orderByAscending(Envelope.nameField);
     if (isArchived != null) {
       query = query.where(Envelope.archivedField).isEqualTo(isArchived);
     }
     return query;
+  }
+
+  static Query<EnvelopeEntity> getTrayEnvelopesQuery({required String trayId}) {
+    return Query.from<EnvelopeEntity>()
+        .where(Envelope.trayField)
+        .isEqualTo(trayId)
+        .orderByAscending(Envelope.nameField);
   }
 
   @override

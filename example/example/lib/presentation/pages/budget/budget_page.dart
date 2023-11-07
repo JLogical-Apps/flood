@@ -17,7 +17,6 @@ import 'package:example_core/features/transaction/budget_transaction_entity.dart
 import 'package:example_core/features/tray/tray.dart';
 import 'package:example_core/features/tray/tray_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class BudgetRoute with IsRoute<BudgetRoute> {
@@ -87,7 +86,7 @@ class BudgetPage with IsAppPageWrapper<BudgetRoute> {
                         await context.push(AddTransactionsRoute()..budgetIdProperty.set(route.budgetIdProperty.value));
                       },
                     ),
-                    StyledCard(
+                    StyledCard.subtle(
                       titleText: 'Envelopes',
                       leadingIcon: Icons.mail,
                       actions: [
@@ -134,18 +133,15 @@ class BudgetPage with IsAppPageWrapper<BudgetRoute> {
                         ),
                       ],
                       children: [
-                        HookBuilder(
-                          builder: (BuildContext context) {
-                            final envelopeEntities = useModel(envelopesModel).getOrNull();
-                            final trayEntities = useModel(traysModel).getOrNull();
-                            if (envelopeEntities == null || trayEntities == null) {
-                              return StyledLoadingIndicator();
-                            }
+                        ModelBuilder(
+                          model: Model.union([envelopesModel, traysModel]),
+                          builder: (List values) {
+                            final [List<EnvelopeEntity> envelopeEntities, List<TrayEntity> trayEntities] = values;
+                            final nonTrayedEnvelopes = envelopeEntities
+                                .where((entity) => entity.value.trayProperty.value == null)
+                                .toList();
 
-                            final nonTrayedEnvelopes =
-                                envelopeEntities.where((entity) => entity.value.trayProperty.value == null).toList();
-
-                            return StyledList.column.withMinChildSize(150)(
+                            return StyledList.column.withMinChildSize(225)(
                               children: [
                                 ...trayEntities.map((trayEntity) => TrayCard(
                                       trayEntity: trayEntity,
@@ -175,7 +171,7 @@ class BudgetPage with IsAppPageWrapper<BudgetRoute> {
                 icon: Icons.swap_horiz,
                 child: StyledList.column.scrollable.withScrollbar(
                   children: [
-                    StyledCard(
+                    StyledCard.subtle(
                       titleText: 'Transactions',
                       leadingIcon: Icons.swap_horiz,
                       children: [

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
@@ -106,7 +107,7 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
                     );
                   },
                 ),
-                StyledCard(
+                StyledCard.subtle(
                   titleText: 'Envelopes',
                   bodyText: 'Add a transaction to an envelope by tapping it.',
                   leadingIcon: Icons.mail,
@@ -114,7 +115,9 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
                     ModelBuilder(
                       model: envelopesModel,
                       builder: (List<EnvelopeEntity> envelopeEntities) {
-                        return StyledList.column.withMinChildSize(250).centered(
+                        envelopeEntities = envelopeEntities
+                            .sortedBy((entity) => entity.value.ruleProperty.value?.priority ?? double.infinity);
+                        return StyledList.column.withMinChildSize(350).centered(
                               children: envelopeEntities
                                   .map((entity) => _buildEnvelopeSelectCard(
                                         context,
@@ -136,7 +139,7 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
                     ),
                   ],
                 ),
-                StyledCard(
+                StyledCard.subtle(
                   titleText: 'Transactions',
                   bodyText: 'View the transactions in this batch.',
                   leadingIcon: Icons.mail,

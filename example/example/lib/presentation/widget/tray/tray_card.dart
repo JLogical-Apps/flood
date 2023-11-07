@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:example/presentation/widget/envelope/envelope_card.dart';
-import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
 import 'package:example_core/features/tray/tray.dart';
 import 'package:example_core/features/tray/tray_entity.dart';
@@ -21,12 +20,7 @@ class TrayCard extends HookWidget {
   Widget build(BuildContext context) {
     final tray = trayEntity.value;
 
-    final envelopesModel = useQuery(
-        EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: tray.budgetProperty.value, isArchived: false)
-            .where(Envelope.trayField)
-            .isEqualTo(trayEntity.id!)
-            .all());
-    final envelopeEntities = envelopesModel.getOrNull();
+    final envelopesModel = useQuery(EnvelopeEntity.getTrayEnvelopesQuery(trayId: trayEntity.id!).all());
 
     return StyledCard.subtle(
       title: StyledText.h6.withColor(Color(tray.colorProperty.value))(tray.nameProperty.value),
@@ -63,20 +57,19 @@ class TrayCard extends HookWidget {
             }),
       ],
       children: [
-        if (envelopeEntities != null && envelopeEntities.isNotEmpty)
-          ModelBuilder(
-            model: envelopesModel,
-            builder: (List<EnvelopeEntity> envelopeEntities) {
-              return StyledList.column(
-                children: envelopeEntities
-                    .map((envelopeEntity) => EnvelopeCard(
-                          envelope: envelopeEntity.value,
-                          onPressed: onEnvelopePressed == null ? null : () => onEnvelopePressed!(envelopeEntity),
-                        ))
-                    .toList(),
-              );
-            },
-          ),
+        ModelBuilder(
+          model: envelopesModel,
+          builder: (List<EnvelopeEntity> envelopeEntities) {
+            return StyledList.column(
+              children: envelopeEntities
+                  .map((envelopeEntity) => EnvelopeCard(
+                        envelope: envelopeEntity.value,
+                        onPressed: onEnvelopePressed == null ? null : () => onEnvelopePressed!(envelopeEntity),
+                      ))
+                  .toList(),
+            );
+          },
+        ),
       ],
     );
   }

@@ -32,7 +32,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
   );
 
   final budgetEntity = await dropComponent.updateEntity(
-    BudgetEntity(),
+    BudgetEntity()..id = 'budget',
     (Budget budget) => budget
       ..nameProperty.set('Budget')
       ..ownerProperty.set(userEntity.id!),
@@ -69,6 +69,46 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
         ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 4))))),
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Mortgage')
+      ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+        ..goalCentsProperty.set(3000 * 100)
+        ..timeRuleProperty.set(MonthlyTimeRule())
+        ..remainingGoalCentsProperty.set(3000 * 100)
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6))))),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Jake Personal')
+      ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+        ..goalCentsProperty.set(50 * 100)
+        ..timeRuleProperty.set(MonthlyTimeRule())
+        ..remainingGoalCentsProperty.set(50 * 100)
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6))))),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Subscriptions')
+      ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+        ..goalCentsProperty.set(30 * 100)
+        ..timeRuleProperty.set(MonthlyTimeRule())
+        ..remainingGoalCentsProperty.set(30 * 100)
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6))))),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Health Insurance')
+      ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+        ..goalCentsProperty.set(8 * 100)
+        ..timeRuleProperty.set(MonthlyTimeRule())
+        ..remainingGoalCentsProperty.set(8 * 100)
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6))))),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Car Maintennance')
+      ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+        ..goalCentsProperty.set(12 * 100)
+        ..timeRuleProperty.set(MonthlyTimeRule())
+        ..remainingGoalCentsProperty.set(12 * 100)
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6))))),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Emergency Savings')
       ..ruleProperty.set(TargetGoalEnvelopeRule()
         ..percentProperty.set(20)
@@ -77,6 +117,10 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Savings')
       ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(100)),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Vacation')
+      ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(10)),
   ];
 
   await Future.wait(envelopes

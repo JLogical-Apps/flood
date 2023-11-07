@@ -323,7 +323,7 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
               builder: (List<BudgetTransactionEntity> envelopeTransactionEntities, Future Function()? loadMore) {
                 return StyledList.column.centered(
                   children: [
-                    StyledList.column.withMinChildSize(150)(
+                    StyledList.column.withMinChildSize(250)(
                       children: envelopeTransactionEntities
                           .map((entity) => TransactionCard(
                                 budgetTransaction: entity.value,
