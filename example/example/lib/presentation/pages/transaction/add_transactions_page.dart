@@ -11,7 +11,7 @@ import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
-import 'package:example_core/features/budget/budget_entity.dart';
+import 'package:example_core/features/budget/budget.dart';
 import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
 import 'package:example_core/features/transaction/budget_transaction.dart';
@@ -40,33 +40,39 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
       .onlyIfLoggedIn()
       .withParent((context, route) => BudgetRoute()..budgetIdProperty.set(route.budgetIdProperty.value));
 
+  (List<BudgetTransaction>, Map<String, Envelope>) _applyTransactionGenerators({
+    required DropCoreContext dropCoreContext,
+    required Map<String, Envelope> envelopeById,
+    required List<TransactionGenerator> transactionGenerators,
+  }) {
+    final transactions = <BudgetTransaction>[];
+    for (final transactionGenerator in transactionGenerators) {
+      final newTransaction = transactionGenerator.generate(envelopeById);
+      transactions.add(newTransaction);
+      envelopeById = Budget.addTransactions(dropCoreContext, envelopeById: envelopeById, transactions: [newTransaction])
+          .modifiedEnvelopeById;
+    }
+
+    return (transactions, envelopeById);
+  }
+
   @override
   Widget onBuild(BuildContext context, AddTransactionsRoute route) {
-    final budgetModel = useEntityOrNull<BudgetEntity>(route.budgetIdProperty.value);
-
     final envelopesModel = useQuery(
         EnvelopeEntity.getBudgetEnvelopesQuery(budgetId: route.budgetIdProperty.value, isArchived: false).all());
 
     final transactionGeneratorsState = useState<List<TransactionGenerator>>([]);
 
     return ModelBuilder.page(
-        model: Model.union([budgetModel, envelopesModel]),
-        builder: (values) {
-          final [BudgetEntity? budgetEntity, List<EnvelopeEntity> envelopeEntities] = values;
-          final budget = budgetEntity?.value;
-
+        model: envelopesModel,
+        builder: (List<EnvelopeEntity> envelopeEntities) {
           final envelopeById = envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value));
 
-          final transactions = transactionGeneratorsState.value
-              .map((transactionGenerator) => transactionGenerator.generate(envelopeById))
-              .toList();
-          final modifiedEnvelopeById = budget
-              ?.addTransactions(
-                context.dropCoreComponent,
-                envelopeById: envelopeEntities.mapToMap((entity) => MapEntry(entity.id!, entity.value)),
-                transactions: transactions,
-              )
-              .modifiedEnvelopeById;
+          final (transactions, modifiedEnvelopeById) = _applyTransactionGenerators(
+            dropCoreContext: context.dropCoreComponent,
+            envelopeById: envelopeById,
+            transactionGenerators: transactionGeneratorsState.value,
+          );
 
           return StyledPage(
             titleText: 'Add Transactions',
@@ -76,9 +82,6 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
                   labelText: 'Add Income',
                   iconData: Icons.attach_money,
                   onPressed: () async {
-                    final budgetEntity = (await budgetModel.getOrLoad()) ??
-                        (throw Exception('Cannot load budget! [${route.budgetIdProperty.value}]'));
-
                     final transactionGenerator = await context.showStyledDialog(StyledPortDialog(
                         titleText: 'Add Income',
                         port: Port.of(
@@ -93,7 +96,6 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
                               incomeCents: resultByName['incomeCents'] as int,
                               transactionDate: resultByName['transactionDate'] as DateTime,
                               budgetId: route.budgetIdProperty.value,
-                              budget: budgetEntity.value,
                               dropCoreContext: context.dropCoreComponent,
                             ))));
 
@@ -174,10 +176,6 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
                   onPressed: transactions.isEmpty
                       ? null
                       : () async {
-                          if (modifiedEnvelopeById == null) {
-                            return;
-                          }
-
                           for (final transaction in transactions) {
                             final budgetTransactionEntity = BudgetTransactionEntity
                                 .constructEntityFromTransactionTypeRuntime(transaction.runtimeType)

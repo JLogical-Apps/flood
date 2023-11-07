@@ -32,7 +32,7 @@ class Budget extends ValueObject {
   /// Notes:
   /// * If a round requested more than the remaining cents, distribute the remaining cents based on the proportion of
   ///   the amount that group of envelopes requested it for.
-  BudgetChange addIncome(
+  static BudgetChange addIncome(
     DropCoreContext context, {
     required int incomeCents,
     required Map<String, Envelope> envelopeById,
@@ -136,7 +136,7 @@ class Budget extends ValueObject {
     return BudgetChange(modifiedEnvelopeById: modifiedEnvelopeById);
   }
 
-  BudgetChange addTransactions(
+  static BudgetChange addTransactions(
     DropCoreContext context, {
     required Map<String, Envelope> envelopeById,
     required List<BudgetTransaction> transactions,

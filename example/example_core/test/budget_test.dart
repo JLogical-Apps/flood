@@ -262,7 +262,7 @@ void main() {
         ..budgetProperty.set(budgetId),
     ];
 
-    final budgetChange = Budget().addTransactions(
+    final budgetChange = Budget.addTransactions(
       pondContext.dropCoreComponent,
       envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
       transactions: [
@@ -562,7 +562,7 @@ void expectBudgetChange({
   required int incomeCents,
   required Map<String, int> expectedCentsByEnvelopeName,
 }) {
-  final budgetChange = Budget().addIncome(
+  final budgetChange = Budget.addIncome(
     context.dropCoreComponent,
     incomeCents: incomeCents,
     envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),

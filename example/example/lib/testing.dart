@@ -172,7 +172,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 1)))),
   ];
 
-  final budgetChange = budgetEntity.value.addTransactions(
+  final budgetChange = Budget.addTransactions(
     dropComponent,
     envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
     transactions: transactions,
