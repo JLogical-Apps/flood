@@ -15,8 +15,13 @@ import 'package:utils/utils.dart';
 class FlatStyleChipRenderer with IsTypedStyleRenderer<StyledChip> {
   @override
   Widget renderTyped(BuildContext context, StyledChip component) {
-    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body.bold(text));
-    final icon = component.icon ?? component.iconData?.mapIfNonNull((iconData) => StyledIcon(iconData));
+    final label = component.label ??
+        component.labelText?.mapIfNonNull((text) => StyledText.body.bold.withColor(component.foregroundColor)(text));
+    final icon = component.icon ??
+        component.iconData?.mapIfNonNull((iconData) => StyledIcon(
+              iconData,
+              color: component.foregroundColor,
+            ));
     final backgroundColorPalette =
         component.backgroundColor?.mapIfNonNull((color) => context.style().getColorPaletteFromBackground(color)) ??
             context.colorPalette().background.getByEmphasis(component.emphasis);
@@ -52,6 +57,7 @@ class FlatStyleChipRenderer with IsTypedStyleRenderer<StyledChip> {
               Opacity(
                 opacity: loadingState.value ? 0 : 1,
                 child: StyledList.row.centered(
+                  itemPadding: EdgeInsets.all(3),
                   children: [
                     if (icon != null) icon,
                     if (label != null) label,

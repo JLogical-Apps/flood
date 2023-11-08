@@ -93,6 +93,30 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
                   );
                 },
               ),
+            if (!envelope.lockedProperty.value)
+              ActionItem(
+                titleText: 'Lock',
+                descriptionText: 'Locks this envelope from automatically receiving income.',
+                color: Colors.orange,
+                iconData: Icons.lock_outline_rounded,
+                onPerform: (context) => context.showStyledDialog(StyledDialog.yesNo(
+                  titleText: 'Confirm Lock',
+                  bodyText: 'Are you sure you want to lock this envelope?',
+                  onAccept: () => envelopeEntity.lock(context.dropCoreComponent),
+                )),
+              ),
+            if (envelope.lockedProperty.value)
+              ActionItem(
+                titleText: 'Unlock',
+                descriptionText: 'Unlocks this envelope, which allows it to automatically receive income.',
+                color: Colors.orange,
+                iconData: Icons.lock_open,
+                onPerform: (context) => context.showStyledDialog(StyledDialog.yesNo(
+                  titleText: 'Confirm Unlock',
+                  bodyText: 'Are you sure you want to unlock this envelope?',
+                  onAccept: () => envelopeEntity.unlock(context.dropCoreComponent),
+                )),
+              ),
             if (!envelope.archivedProperty.value)
               ActionItem(
                 titleText: 'Transfer',
@@ -264,11 +288,17 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
                 envelope.amountCentsProperty.value.formatCentsAsCurrency()),
             StyledList.row.centered.scrollable(
               children: [
+                if (envelope.lockedProperty.value)
+                  StyledChip.subtle(
+                    labelText: 'Locked',
+                    iconData: Icons.lock_outline,
+                    foregroundColor: Colors.grey,
+                  ),
                 if (envelope.archivedProperty.value)
-                  StyledChip(
+                  StyledChip.subtle(
                     labelText: 'Archived',
                     iconData: Icons.archive,
-                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.blue,
                   ),
                 ModelBuilder(
                   model: trayModel,
@@ -278,11 +308,9 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
                     }
                     final trayColor = Color(trayEntity.value.colorProperty.value);
                     return StyledChip.subtle(
-                      icon: StyledIcon(
-                        Icons.inbox,
-                        color: trayColor,
-                      ),
-                      label: StyledText.body.withColor(trayColor)(trayEntity.value.nameProperty.value),
+                      iconData: Icons.inbox,
+                      labelText: trayEntity.value.nameProperty.value,
+                      foregroundColor: trayColor,
                     );
                   },
                 ),

@@ -13,10 +13,11 @@ class EnvelopeChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final envelopeRuleCardModifier = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
     final envelopeColor = Color(envelope.colorProperty.value);
-    return StyledChip.subtle(
+    return StyledChip(
       label: StyledText.body.withColor(envelopeColor)(envelope.nameProperty.value),
-      icon: envelopeRuleCardModifier.getIcon(envelope.ruleProperty.value, color: envelopeColor),
+      icon: envelopeRuleCardModifier.getIcon(envelope.ruleProperty.value, color: envelopeColor, size: 16),
       onPressed: onPressed,
+      foregroundColor: envelopeColor,
     );
   }
 }

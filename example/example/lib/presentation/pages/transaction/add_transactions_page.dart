@@ -211,7 +211,7 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
     return existingGenerators;
   }
 
-  StyledCard _buildEnvelopeSelectCard(
+  Widget _buildEnvelopeSelectCard(
     BuildContext context, {
     required EnvelopeEntity envelopeEntity,
     required Map<String, Envelope>? modifiedEnvelopeById,
@@ -225,7 +225,16 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
         newEnvelope == null ? 0 : newEnvelope.amountCentsProperty.value - envelope.amountCentsProperty.value;
 
     return StyledCard(
-      title: StyledText.h6.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
+      title: StyledList.row(
+        children: [
+          if (envelope.lockedProperty.value)
+            StyledIcon(
+              Icons.lock_outline,
+              color: Colors.grey,
+            ),
+          StyledText.h6.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
+        ],
+      ),
       leading:
           envelopeCardModification.getIcon(envelope.ruleProperty.value, color: Color(envelope.colorProperty.value)),
       actions: [

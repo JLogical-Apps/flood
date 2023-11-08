@@ -27,6 +27,9 @@ class Envelope extends ValueObject {
   static const archivedField = 'archived';
   late final archivedProperty = field<bool>(name: archivedField).hidden().withFallback(() => false).indexed();
 
+  static const lockedField = 'locked';
+  late final lockedProperty = field<bool>(name: lockedField).hidden().withFallback(() => false);
+
   static const trayField = 'tray';
   late final trayProperty = reference<TrayEntity>(name: trayField).indexed();
 
@@ -39,6 +42,7 @@ class Envelope extends ValueObject {
     ruleProperty,
     colorProperty,
     archivedProperty,
+    lockedProperty,
     trayProperty,
     creationTime(),
   ];

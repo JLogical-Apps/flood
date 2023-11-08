@@ -31,7 +31,7 @@ class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTr
                 children: [
                   StyledText.h6.strong(transaction.nameProperty.value),
                   if (transactionViewContext is BudgetTransactionViewContext && envelopeEntity != null) ...[
-                    StyledText.h6(' from '),
+                    StyledText.h6(transaction.amountCentsProperty.value <= 0 ? ' from ' : ' to '),
                     EnvelopeChip(
                       envelope: envelopeEntity.value,
                       onPressed: () => context.push(EnvelopeRoute()..idProperty.set(envelopeEntity.id!)),

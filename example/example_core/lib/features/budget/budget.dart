@@ -47,6 +47,7 @@ class Budget extends ValueObject {
 
     // A map that maps priorities with a map of (envelope ids -> envelopes) of that priority.
     final envelopesMapByPriority = envelopeById.entries
+        .where((entry) => !entry.value.lockedProperty.value)
         .where((entry) => entry.value.ruleProperty.value != null)
         .groupListsBy((entry) => entry.value.ruleProperty.value!.priority)
         .map((priority, idToEnvelopeEntries) => MapEntry(priority, Map.fromEntries(idToEnvelopeEntries)));
@@ -115,6 +116,7 @@ class Budget extends ValueObject {
 
     final lastPriority = envelopePriorities.last;
     final lastRoundEnvelopeById = envelopeById.entries
+        .where((entry) => !entry.value.lockedProperty.value)
         .where((entry) => entry.value.ruleProperty.value != null)
         .where((entry) => entry.value.ruleProperty.value!.priority == lastPriority)
         .mapToMap((id, envelope) => MapEntry(

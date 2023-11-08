@@ -26,4 +26,20 @@ class EnvelopeEntity extends Entity<Envelope> {
   FutureOr onAfterInitalize(DropCoreContext context) async {
     await value.onInitialize(context);
   }
+
+  Future<void> unlock(DropCoreContext context) async {
+    if (!value.lockedProperty.value) {
+      throw Exception('Cannot unlock an envelope that is already unlocked!');
+    }
+
+    await context.updateEntity(this, (Envelope envelope) => envelope..lockedProperty.set(false));
+  }
+
+  Future<void> lock(DropCoreContext context) async {
+    if (value.lockedProperty.value) {
+      throw Exception('Cannot lock an envelope that is already locked!');
+    }
+
+    await context.updateEntity(this, (Envelope envelope) => envelope..lockedProperty.set(true));
+  }
 }

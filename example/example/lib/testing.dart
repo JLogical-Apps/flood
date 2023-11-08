@@ -54,8 +54,15 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10)),
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Woodworking')
+      ..colorProperty.set(Colors.orange.value)
+      ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(10))
+      ..archivedProperty.set(true),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Car')
       ..trayProperty.set(trayEntity.id!)
+      ..lockedProperty.set(true)
       ..colorProperty.set(Colors.orange.value)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(100 * 100)
@@ -159,13 +166,12 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       ..envelopeProperty.set('Emergency Savings')
       ..budgetProperty.set(budgetEntity.id!)
       ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
-    for (var i = 0; i < 100; i++)
-      EnvelopeTransaction()
-        ..nameProperty.set('Transaction $i')
-        ..amountCentsProperty.set(-i * 100)
-        ..envelopeProperty.set('Emergency Savings')
-        ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: i + 2)))),
+    EnvelopeTransaction()
+      ..nameProperty.set('Plumber')
+      ..amountCentsProperty.set(30 * 100)
+      ..envelopeProperty.set('Emergency Savings')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 2)))),
     TransferTransaction()
       ..amountCentsProperty.set(20 * 100)
       ..fromEnvelopeProperty.set('Savings')

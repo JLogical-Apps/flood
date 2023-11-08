@@ -77,6 +77,7 @@ class StyledStagePortField<E, T> extends HookWidget {
             ),
             if (containerWidgets.isNotEmpty)
               StyledContainer(
+                padding: EdgeInsets.all(4),
                 child: StyledList.column(children: containerWidgets),
               ),
           ],

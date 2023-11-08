@@ -1,6 +1,7 @@
 import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/date/date_chip.dart';
+import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
@@ -18,12 +19,15 @@ class IncomeTransactionCardModifier extends TransactionCardModifier<IncomeTransa
   }) {
     return Builder(
       builder: (context) {
+        final incomeCents = _getIncomeCents(
+              incomeTransaction: transaction,
+              transactionViewContext: transactionViewContext,
+            ) ??
+            0;
         return StyledCard(
           leading: DateChip(date: transaction.transactionDateProperty.value.time),
-          title: StyledText.h6.withColor(transaction.totalCents >= 0 ? Colors.green : Colors.red)(_getTitleText(
-            transactionViewContext: transactionViewContext,
-            incomeTransaction: transaction,
-          )),
+          titleText: 'Income',
+          trailing: StyledText.body.withColor(getCentsColor(incomeCents))(incomeCents.formatCentsAsCurrency()),
           onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
         );
       },
@@ -64,9 +68,14 @@ class IncomeTransactionCardModifier extends TransactionCardModifier<IncomeTransa
                       return StyledLoadingIndicator();
                     }
 
+                    final envelope = envelopeEntity.value;
+                    final envelopeRule = envelope.ruleProperty.value;
+                    final envelopeRuleCardModifier = EnvelopeRuleCardModifier.getModifier(envelopeRule);
+                    final envelopeColor = Color(envelope.colorProperty.value);
+
                     return StyledCard(
-                      title: StyledText.h6.withColor(Color(envelopeEntity.value.colorProperty.value))(
-                          envelopeEntity.value.nameProperty.value),
+                      title: StyledText.h6.withColor(envelopeColor)(envelope.nameProperty.value),
+                      leading: envelopeRuleCardModifier.getIcon(envelopeRule, color: envelopeColor),
                       body: StyledText.body.withColor(getCentsColor(cents))(cents.formatCentsAsCurrency()),
                       onPressed: () => context.push(EnvelopeRoute()..idProperty.set(envelopeEntity.id!)),
                     );
@@ -80,14 +89,14 @@ class IncomeTransactionCardModifier extends TransactionCardModifier<IncomeTransa
     );
   }
 
-  String _getTitleText({
+  int? _getIncomeCents({
     required TransactionViewContext transactionViewContext,
     required IncomeTransaction incomeTransaction,
   }) {
     if (transactionViewContext is BudgetTransactionViewContext) {
-      return 'Income: ${incomeTransaction.totalCents.formatCentsAsCurrency()}';
+      return incomeTransaction.totalCents;
     } else if (transactionViewContext is EnvelopeTransactionViewContext) {
-      return 'Income: ${incomeTransaction.centsByEnvelopeIdProperty.value[transactionViewContext.envelopeId]?.formatCentsAsCurrency() ?? '?'}';
+      return incomeTransaction.centsByEnvelopeIdProperty.value[transactionViewContext.envelopeId];
     }
 
     throw Exception('Unhandled transaction view context');

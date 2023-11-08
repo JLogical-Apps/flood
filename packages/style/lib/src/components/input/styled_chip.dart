@@ -11,6 +11,7 @@ class StyledChip extends StyleComponent {
 
   final Function()? onPressed;
 
+  final Color? foregroundColor;
   final Color? backgroundColor;
 
   final Emphasis emphasis;
@@ -21,6 +22,7 @@ class StyledChip extends StyleComponent {
     this.icon,
     this.iconData,
     this.onPressed,
+    this.foregroundColor,
     this.backgroundColor,
     this.emphasis = Emphasis.regular,
   });
@@ -30,6 +32,7 @@ class StyledChip extends StyleComponent {
     this.labelText,
     this.icon,
     this.iconData,
+    this.foregroundColor,
     this.backgroundColor,
     this.onPressed,
   }) : emphasis = Emphasis.subtle;
@@ -39,6 +42,7 @@ class StyledChip extends StyleComponent {
     this.labelText,
     this.icon,
     this.iconData,
+    this.foregroundColor,
     this.backgroundColor,
     this.onPressed,
   }) : emphasis = Emphasis.strong;
