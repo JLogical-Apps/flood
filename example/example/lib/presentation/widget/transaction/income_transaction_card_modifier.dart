@@ -1,3 +1,4 @@
+import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/date/date_chip.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
@@ -51,20 +52,25 @@ class IncomeTransactionCardModifier extends TransactionCardModifier<IncomeTransa
                 ],
               ),
               ...envelopeEntityModels.map((model) {
-                final entity = model.getOrNull();
-                if (entity == null) {
-                  return StyledLoadingIndicator();
-                }
+                return ModelBuilder(
+                  model: model,
+                  builder: (EnvelopeEntity? envelopeEntity) {
+                    if (envelopeEntity == null) {
+                      return StyledLoadingIndicator();
+                    }
 
-                final cents = transaction.centsByEnvelopeIdProperty.value[entity.id!];
-                if (cents == null) {
-                  return StyledLoadingIndicator();
-                }
+                    final cents = transaction.centsByEnvelopeIdProperty.value[envelopeEntity.id!];
+                    if (cents == null) {
+                      return StyledLoadingIndicator();
+                    }
 
-                return StyledCard.subtle(
-                  title:
-                      StyledText.h6.withColor(Color(entity.value.colorProperty.value))(entity.value.nameProperty.value),
-                  body: StyledText.body.withColor(getCentsColor(cents))(cents.formatCentsAsCurrency()),
+                    return StyledCard(
+                      title: StyledText.h6.withColor(Color(envelopeEntity.value.colorProperty.value))(
+                          envelopeEntity.value.nameProperty.value),
+                      body: StyledText.body.withColor(getCentsColor(cents))(cents.formatCentsAsCurrency()),
+                      onPressed: () => context.push(EnvelopeRoute()..idProperty.set(envelopeEntity.id!)),
+                    );
+                  },
                 );
               }),
             ],

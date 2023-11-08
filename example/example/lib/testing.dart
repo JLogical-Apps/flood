@@ -16,6 +16,7 @@ import 'package:example_core/features/tray/tray.dart';
 import 'package:example_core/features/tray/tray_entity.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
+import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 Future<void> setupTesting(CorePondContext corePondContext) async {
@@ -42,17 +43,20 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       TrayEntity(),
       (Tray tray) => tray
         ..nameProperty.set('Repeating')
-        ..budgetProperty.set(budgetEntity.id!));
+        ..budgetProperty.set(budgetEntity.id!)
+        ..colorProperty.set(Colors.blue.value));
 
   final envelopes = [
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Tithe')
+      ..colorProperty.set(Colors.blue.value)
       ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10)),
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Car')
       ..trayProperty.set(trayEntity.id!)
+      ..colorProperty.set(Colors.orange.value)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(100 * 100)
         ..timeRuleProperty.set(MonthlyTimeRule())
@@ -62,6 +66,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Eating Out')
       ..trayProperty.set(trayEntity.id!)
+      ..colorProperty.set(Colors.green.value)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(40 * 100)
         ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(7))
@@ -70,6 +75,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Mortgage')
+      ..colorProperty.set(Colors.red.value)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(3000 * 100)
         ..timeRuleProperty.set(MonthlyTimeRule())
@@ -78,6 +84,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Jake Personal')
+      ..colorProperty.set(Colors.pink.value)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(50 * 100)
         ..timeRuleProperty.set(MonthlyTimeRule())
@@ -86,6 +93,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Subscriptions')
+      ..colorProperty.set(Colors.orange.value)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(30 * 100)
         ..timeRuleProperty.set(MonthlyTimeRule())
@@ -94,6 +102,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Health Insurance')
+      ..colorProperty.set(Colors.blue.value)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(8 * 100)
         ..timeRuleProperty.set(MonthlyTimeRule())
@@ -102,6 +111,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Car Maintennance')
+      ..colorProperty.set(Colors.orange.value)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(12 * 100)
         ..timeRuleProperty.set(MonthlyTimeRule())
@@ -110,6 +120,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Emergency Savings')
+      ..colorProperty.set(Colors.lightGreen.value)
       ..ruleProperty.set(TargetGoalEnvelopeRule()
         ..percentProperty.set(20)
         ..maximumCentsProperty.set(1000 * 100)),
@@ -154,7 +165,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
         ..amountCentsProperty.set(-i * 100)
         ..envelopeProperty.set('Emergency Savings')
         ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
+        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: i + 2)))),
     TransferTransaction()
       ..amountCentsProperty.set(20 * 100)
       ..fromEnvelopeProperty.set('Savings')

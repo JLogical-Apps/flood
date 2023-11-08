@@ -37,17 +37,21 @@ class FlatStyleChipRenderer with IsTypedStyleRenderer<StyledChip> {
 
     return IntrinsicWidth(
       child: RawChip(
+        padding: EdgeInsets.all(8),
+        labelPadding: EdgeInsets.zero,
         side: BorderSide(
           color: backgroundColorPalette.background.regular,
           width: 1,
         ),
+        materialTapTargetSize: MaterialTapTargetSize.padded,
+        visualDensity: VisualDensity.compact,
         label: ColorPaletteProvider(
           colorPalette: backgroundColorPalette,
           child: Stack(
             children: [
               Opacity(
                 opacity: loadingState.value ? 0 : 1,
-                child: StyledList.row(
+                child: StyledList.row.centered(
                   children: [
                     if (icon != null) icon,
                     if (label != null) label,

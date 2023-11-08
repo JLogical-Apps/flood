@@ -1,8 +1,9 @@
+import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/date/date_chip.dart';
+import 'package:example/presentation/widget/envelope/envelope_chip.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
-import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
 import 'package:example_core/features/transaction/transfer_transaction.dart';
 import 'package:flutter/material.dart';
@@ -17,24 +18,74 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
     List<ActionItem> actions = const [],
   }) {
     return HookBuilder(builder: (context) {
-      final fromEnvelope = useEntityOrNull<EnvelopeEntity>(transaction.fromEnvelopeProperty.value)
-          .getOrNull()
-          ?.mapIfNonNull((entity) => entity.value);
-      final toEnvelope = useEntityOrNull<EnvelopeEntity>(transaction.toEnvelopeProperty.value)
-          .getOrNull()
-          ?.mapIfNonNull((entity) => entity.value);
+      final fromEnvelopeModel = useEntityOrNull<EnvelopeEntity>(transaction.fromEnvelopeProperty.value);
+      final toEnvelopeModel = useEntityOrNull<EnvelopeEntity>(transaction.toEnvelopeProperty.value);
 
-      return StyledCard(
-        leading: DateChip(date: transaction.transactionDateProperty.value.time),
-        title: _getTitle(
-          transactionViewContext: transactionViewContext,
-          transaction: transaction,
-          fromEnvelope: fromEnvelope,
-          toEnvelope: toEnvelope,
-        ),
-        onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
-      );
+      return ModelBuilder(
+          model: Model.union([fromEnvelopeModel, toEnvelopeModel]),
+          builder: (List values) {
+            final [EnvelopeEntity? fromEnvelopeEntity, EnvelopeEntity? toEnvelopeEntity] = values;
+
+            return StyledCard(
+              leading: DateChip(date: transaction.transactionDateProperty.value.time),
+              title: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: buildTitle(
+                  context,
+                  transaction: transaction,
+                  transactionViewContext: transactionViewContext,
+                  fromEnvelopeEntity: fromEnvelopeEntity,
+                  toEnvelopeEntity: toEnvelopeEntity,
+                ),
+              ),
+              onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
+            );
+          });
     });
+  }
+
+  List<Widget> buildTitle(
+    BuildContext context, {
+    required TransferTransaction transaction,
+    required TransactionViewContext transactionViewContext,
+    required EnvelopeEntity? fromEnvelopeEntity,
+    required EnvelopeEntity? toEnvelopeEntity,
+  }) {
+    if (transactionViewContext is BudgetTransactionViewContext) {
+      return [
+        StyledText.h6
+            .withColor(Colors.blue)('Transfer ${transaction.amountCentsProperty.value.formatCentsAsCurrency()} from '),
+        if (fromEnvelopeEntity == null) StyledText.h6('...'),
+        if (fromEnvelopeEntity != null)
+          EnvelopeChip(
+            envelope: fromEnvelopeEntity.value,
+            onPressed: () => context.push(EnvelopeRoute()..idProperty.set(fromEnvelopeEntity.id!)),
+          ),
+        StyledText.h6.withColor(Colors.blue)(' to '),
+        if (toEnvelopeEntity == null) StyledText.h6('...'),
+        if (toEnvelopeEntity != null)
+          EnvelopeChip(
+            envelope: toEnvelopeEntity.value,
+            onPressed: () => context.push(EnvelopeRoute()..idProperty.set(toEnvelopeEntity.id!)),
+          ),
+      ];
+    }
+    if (transactionViewContext is EnvelopeTransactionViewContext) {
+      final isFrom = transaction.fromEnvelopeProperty.value == transactionViewContext.envelopeId;
+      final cents = isFrom ? -transaction.amountCentsProperty.value : transaction.amountCentsProperty.value;
+      final otherEnvelopeEntity = isFrom ? toEnvelopeEntity : fromEnvelopeEntity;
+      return [
+        StyledText.h6.withColor(getCentsColor(cents))(
+            'Transfer ${transaction.amountCentsProperty.value.formatCentsAsCurrency()} ${isFrom ? 'from' : 'to'} '),
+        if (otherEnvelopeEntity != null)
+          EnvelopeChip(
+            envelope: otherEnvelopeEntity.value,
+            onPressed: () => context.push(EnvelopeRoute()..idProperty.set(otherEnvelopeEntity.id!)),
+          ),
+      ];
+    }
+
+    throw UnimplementedError();
   }
 
   StyledDialog buildDialog({
@@ -71,27 +122,5 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
         },
       ),
     );
-  }
-
-  Widget _getTitle({
-    required TransactionViewContext transactionViewContext,
-    required TransferTransaction transaction,
-    required Envelope? fromEnvelope,
-    required Envelope? toEnvelope,
-  }) {
-    if (transactionViewContext is BudgetTransactionViewContext) {
-      return StyledText.h6.withColor(Colors.blue)(
-          'Transfer ${transaction.amountCentsProperty.value.formatCentsAsCurrency()} from ${fromEnvelope?.nameProperty.value ?? '?'} to ${toEnvelope?.nameProperty.value ?? '?'}');
-    }
-    if (transactionViewContext is EnvelopeTransactionViewContext) {
-      final isFrom = transaction.fromEnvelopeProperty.value == transactionViewContext.envelopeId;
-      final cents = isFrom ? -transaction.amountCentsProperty.value : transaction.amountCentsProperty.value;
-      final text = isFrom
-          ? 'Transfer ${transaction.amountCentsProperty.value.formatCentsAsCurrency()} to ${toEnvelope?.nameProperty.value ?? '?'}'
-          : 'Transfer ${transaction.amountCentsProperty.value.formatCentsAsCurrency()} from ${fromEnvelope?.nameProperty.value ?? '?'}';
-      return StyledText.h6.withColor(getCentsColor(cents))(text);
-    }
-
-    throw Exception('Unhandled transfer card type.');
   }
 }

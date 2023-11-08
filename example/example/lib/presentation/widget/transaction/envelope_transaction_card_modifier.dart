@@ -1,8 +1,9 @@
+import 'package:example/presentation/pages/envelope/envelope_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/widget/date/date_chip.dart';
+import 'package:example/presentation/widget/envelope/envelope_chip.dart';
 import 'package:example/presentation/widget/transaction/transaction_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
-import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
 import 'package:example_core/features/transaction/envelope_transaction.dart';
 import 'package:flutter/material.dart';
@@ -18,20 +19,30 @@ class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTr
   }) {
     final cents = transaction.amountCentsProperty.value;
     return HookBuilder(builder: (context) {
-      final envelope = useEntityOrNull<EnvelopeEntity>(transaction.envelopeProperty.value)
-          .getOrNull()
-          ?.mapIfNonNull((entity) => entity.value);
+      final envelopeModel = useEntityOrNull<EnvelopeEntity>(transaction.envelopeProperty.value);
 
-      return StyledCard(
-        leading: DateChip(date: transaction.transactionDateProperty.value.time),
-        title: StyledText.h6.withColor(getCentsColor(cents))(_getTitleText(
-          transactionViewContext: transactionViewContext,
-          envelopeTransaction: transaction,
-          envelope: envelope,
-        )),
-        bodyText: transaction.nameProperty.value,
-        onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
-      );
+      return ModelBuilder(
+          model: envelopeModel,
+          builder: (EnvelopeEntity? envelopeEntity) {
+            return StyledCard(
+              leading: DateChip(date: transaction.transactionDateProperty.value.time),
+              title: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  StyledText.h6.strong(transaction.nameProperty.value),
+                  if (transactionViewContext is BudgetTransactionViewContext && envelopeEntity != null) ...[
+                    StyledText.h6(' from '),
+                    EnvelopeChip(
+                      envelope: envelopeEntity.value,
+                      onPressed: () => context.push(EnvelopeRoute()..idProperty.set(envelopeEntity.id!)),
+                    ),
+                  ]
+                ],
+              ),
+              trailing: StyledText.body.withColor(getCentsColor(cents))(cents.formatCentsAsCurrency()),
+              onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
+            );
+          });
     });
   }
 
@@ -60,20 +71,5 @@ class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTr
         },
       ),
     );
-  }
-
-  String _getTitleText({
-    required TransactionViewContext transactionViewContext,
-    required EnvelopeTransaction envelopeTransaction,
-    required Envelope? envelope,
-  }) {
-    if (transactionViewContext is BudgetTransactionViewContext) {
-      final preposition = envelopeTransaction.amountCentsProperty.value >= 0 ? 'to' : 'from';
-      return '${envelopeTransaction.amountCentsProperty.value.formatCentsAsCurrency()} $preposition ${envelope?.nameProperty.value ?? '?'}';
-    } else if (transactionViewContext is EnvelopeTransactionViewContext) {
-      return envelopeTransaction.amountCentsProperty.value.formatCentsAsCurrency();
-    }
-
-    throw Exception('Unhandled transaction view context!');
   }
 }
