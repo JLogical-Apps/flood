@@ -49,6 +49,7 @@ class StyledTextFieldPortField extends HookWidget {
           obscureText: obscureText,
           onChanged: (text) => port[fieldName] = text,
           maxLines: maxLines ?? (field.findIsMultiline() ? 3 : null),
+          keyboard: field.findIsEmail() ? TextInputType.emailAddress : null,
         );
       },
     );
