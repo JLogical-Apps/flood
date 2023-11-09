@@ -248,10 +248,6 @@ class AppwriteOpsUtils {
     String? schedule,
     Map<String, dynamic> environmentVariables = const {},
   }) async {
-    final appwriteCoreComponent = context.automateContext.corePondContext.locateOrNull<AppwriteCoreComponent>() ??
-        (throw Exception('An AppwriteCoreComponent is required to deploy functions!'));
-    final appwriteConfig = appwriteCoreComponent.config;
-
     final sshKeyFile = await DataSource.static.file(sshDirectory - 'id_ed25519').mapBase64().getOrNull() ??
         (throw Exception('Make sure your Github SSH key is stored in ~/.ssh/id_ed25519'));
     final sshKnownHosts = await DataSource.static.file(sshDirectory - 'known_hosts').mapBase64().getOrNull() ??
@@ -267,7 +263,7 @@ class AppwriteOpsUtils {
         ...environmentVariables,
         'SSH_KEY': sshKeyFile,
         'SSH_HOSTS': sshKnownHosts,
-        AppwriteConsts.endpointFunctionEnv: appwriteConfig.endpoint,
+        AppwriteConsts.endpointFunctionEnv: functions.client.endPoint,
         AppwriteConsts.apiKeyFunctionEnv: await getApiKey(context, environmentType: environmentType),
       },
     ));
