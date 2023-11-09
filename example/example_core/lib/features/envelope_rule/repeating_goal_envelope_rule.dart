@@ -37,6 +37,10 @@ class RepeatingGoalEnvelopeRule extends EnvelopeRule {
       .hidden();
 
   @override
+  double? getProgress(Envelope envelope) =>
+      (1 - (remainingGoalCentsProperty.value / goalCentsProperty.value)).clamp(0, 1);
+
+  @override
   late final List<ValueObjectBehavior> behaviors = [
     ValueObjectBehavior.displayName('Repeating Goal'),
     goalCentsProperty,

@@ -213,3 +213,9 @@ extension IterableEntriesExtensions<K, V> on Iterable<MapEntry<K, V>> {
     return Map.fromEntries(this);
   }
 }
+
+extension MapEntryExtensions<K, V> on MapEntry<K, V> {
+  (K, V) asRecord() {
+    return (key, value);
+  }
+}

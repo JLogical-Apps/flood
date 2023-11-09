@@ -11,6 +11,7 @@ import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
 import 'package:example/presentation/widget/transaction/transaction_card.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
+import 'package:example/presentation/widget/util/percent_indicator.dart';
 import 'package:example_core/features/budget/budget.dart';
 import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
@@ -117,24 +118,40 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
                     ModelBuilder(
                       model: envelopesModel,
                       builder: (List<EnvelopeEntity> envelopeEntities) {
-                        envelopeEntities = envelopeEntities
-                            .sortedBy((entity) => entity.value.ruleProperty.value?.priority ?? double.infinity);
+                        final envelopeEntitiesByRuleEntries = envelopeEntities
+                            .groupListsBy((entity) => entity.value.ruleProperty.value?.runtimeType)
+                            .map((ruleType, envelopeEntities) =>
+                                MapEntry(envelopeEntities.first.value.ruleProperty.value, envelopeEntities))
+                            .entries
+                            .sortedBy(
+                                (entry) => entry.value.first.value.ruleProperty.value?.priority ?? double.infinity)
+                            .toList();
+
                         return StyledList.column.withMinChildSize(350).centered(
-                              children: envelopeEntities
-                                  .map((entity) => _buildEnvelopeSelectCard(
-                                        context,
-                                        envelopeEntity: entity,
-                                        modifiedEnvelopeById: modifiedEnvelopeById,
-                                        onTransactionCreated: (envelopeTransaction) =>
-                                            transactionGeneratorsState.value = _getSortedTransactionGenerators(
-                                          existingGenerators: transactionGeneratorsState.value +
-                                              [
-                                                WrapperTransactionGenerator(transaction: envelopeTransaction),
-                                              ],
-                                          envelopeById: envelopeById,
-                                        ),
-                                      ))
-                                  .toList(),
+                              children: envelopeEntitiesByRuleEntries.map((entry) {
+                                final (rule, envelopeEntities) = entry.asRecord();
+                                final envelopeRuleCardModifier = EnvelopeRuleCardModifier.getModifier(rule);
+
+                                return StyledCard.subtle(
+                                  titleText: rule?.getDisplayName() ?? 'None',
+                                  leading: envelopeRuleCardModifier.getIcon(rule),
+                                  children: envelopeEntities
+                                      .map((entity) => _buildEnvelopeSelectCard(
+                                            context,
+                                            envelopeEntity: entity,
+                                            modifiedEnvelopeById: modifiedEnvelopeById,
+                                            onTransactionCreated: (envelopeTransaction) =>
+                                                transactionGeneratorsState.value = _getSortedTransactionGenerators(
+                                              existingGenerators: transactionGeneratorsState.value +
+                                                  [
+                                                    WrapperTransactionGenerator(transaction: envelopeTransaction),
+                                                  ],
+                                              envelopeById: envelopeById,
+                                            ),
+                                          ))
+                                      .toList(),
+                                );
+                              }).toList(),
                               ifEmptyText: 'You have no envelopes!',
                             );
                       },
@@ -218,84 +235,125 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
     required FutureOr Function(BudgetTransaction) onTransactionCreated,
   }) {
     final envelope = envelopeEntity.value;
-    final envelopeCardModification = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
+    final envelopeColor = Color(envelope.colorProperty.value);
 
     final newEnvelope = modifiedEnvelopeById?[envelopeEntity.id];
     final centDifference =
         newEnvelope == null ? 0 : newEnvelope.amountCentsProperty.value - envelope.amountCentsProperty.value;
 
-    return StyledCard(
-      title: StyledList.row(
-        children: [
-          if (envelope.lockedProperty.value)
-            StyledIcon(
-              Icons.lock_outline,
-              color: Colors.grey,
+    final oldProgress = envelope.ruleProperty.value?.getProgress(envelope);
+    final newProgress = newEnvelope?.ruleProperty.value?.getProgress(newEnvelope) ?? oldProgress;
+
+    return Stack(
+      children: [
+        StyledCard(
+          title: StyledList.row(
+            children: [
+              if (envelope.lockedProperty.value)
+                StyledIcon(
+                  Icons.lock_outline,
+                  color: Colors.grey,
+                ),
+              StyledText.h6.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
+            ],
+          ),
+          actions: [
+            ActionItem(
+              titleText: 'Edit',
+              descriptionText: 'Edit the envelope.',
+              iconData: Icons.edit,
+              color: Colors.orange,
+              onPerform: (context) async {
+                await EnvelopeEditDialog.show(
+                  context,
+                  titleText: 'Edit Envelope',
+                  envelope: envelope,
+                  onAccept: (Envelope result) async {
+                    await context.dropCoreComponent.update(envelopeEntity..value = result);
+                  },
+                );
+              },
             ),
-          StyledText.h6.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
-        ],
-      ),
-      leading:
-          envelopeCardModification.getIcon(envelope.ruleProperty.value, color: Color(envelope.colorProperty.value)),
-      actions: [
-        ActionItem(
-          titleText: 'Edit',
-          descriptionText: 'Edit the envelope.',
-          iconData: Icons.edit,
-          color: Colors.orange,
-          onPerform: (context) async {
-            await EnvelopeEditDialog.show(
+            if (!envelope.lockedProperty.value)
+              ActionItem(
+                titleText: 'Lock',
+                descriptionText: 'Locks this envelope from automatically receiving income.',
+                color: Colors.orange,
+                iconData: Icons.lock_outline_rounded,
+                onPerform: (context) => context.showStyledDialog(StyledDialog.yesNo(
+                  titleText: 'Confirm Lock',
+                  bodyText: 'Are you sure you want to lock this envelope?',
+                  onAccept: () => envelopeEntity.lock(context.dropCoreComponent),
+                )),
+              ),
+            if (envelope.lockedProperty.value)
+              ActionItem(
+                titleText: 'Unlock',
+                descriptionText: 'Unlocks this envelope, which allows it to automatically receive income.',
+                color: Colors.orange,
+                iconData: Icons.lock_open,
+                onPerform: (context) => context.showStyledDialog(StyledDialog.yesNo(
+                  titleText: 'Confirm Unlock',
+                  bodyText: 'Are you sure you want to unlock this envelope?',
+                  onAccept: () => envelopeEntity.unlock(context.dropCoreComponent),
+                )),
+              ),
+            ActionItem(
+              titleText: 'Transfer',
+              descriptionText: 'Transfer money to/from this envelope.',
+              color: Colors.blue,
+              iconData: Icons.swap_horiz,
+              onPerform: (context) async {
+                await TransferTransactionEditDialog.show(
+                  context,
+                  titleText: 'Create Transfer',
+                  sourceEnvelopeEntity: envelopeEntity,
+                  transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
+                  onAccept: (TransferTransaction result) async {
+                    await onTransactionCreated(result);
+                  },
+                );
+              },
+            ),
+          ],
+          onPressed: () async {
+            await EnvelopeTransactionEditDialog.show(
               context,
-              titleText: 'Edit Envelope',
-              envelope: envelope,
-              onAccept: (Envelope result) async {
-                await context.dropCoreComponent.update(envelopeEntity..value = result);
+              titleText: 'Create Transaction',
+              envelopeTransaction: EnvelopeTransaction()
+                ..envelopeProperty.set(envelopeEntity.id!)
+                ..budgetProperty.set(envelope.budgetProperty.value),
+              onAccept: (EnvelopeTransaction envelopeTransaction) async {
+                await onTransactionCreated(envelopeTransaction);
               },
             );
           },
+          body: StyledList.row.scrollable.withScrollbar(
+            itemPadding: EdgeInsets.symmetric(horizontal: 4),
+            children: [
+              StyledText.body(envelope.amountCentsProperty.value.formatCentsAsCurrency()),
+              StyledText.body('+'),
+              StyledText.body.withColor(getCentsColor(centDifference))(centDifference.formatCentsAsCurrency()),
+              StyledIcon(Icons.arrow_right),
+              if (modifiedEnvelopeById == null) StyledLoadingIndicator(),
+              StyledText.body.withColor(getCentsColor(newEnvelope?.amountCentsProperty.value))(
+                  (newEnvelope ?? envelope).amountCentsProperty.value.formatCentsAsCurrency()),
+            ],
+          ),
         ),
-        ActionItem(
-          titleText: 'Transfer',
-          descriptionText: 'Transfer money to/from this envelope.',
-          color: Colors.blue,
-          iconData: Icons.swap_horiz,
-          onPerform: (context) async {
-            await TransferTransactionEditDialog.show(
-              context,
-              titleText: 'Create Transfer',
-              sourceEnvelopeEntity: envelopeEntity,
-              transferTransaction: TransferTransaction()..budgetProperty.set(envelope.budgetProperty.value),
-              onAccept: (TransferTransaction result) async {
-                await onTransactionCreated(result);
+        if (oldProgress != null || newProgress != null)
+          Positioned(
+            bottom: 1,
+            left: 8,
+            right: 8,
+            child: PercentIndicator(
+              percentToColorMap: {
+                if (newProgress != null) newProgress: envelopeColor.withOpacity(0.5),
+                if (oldProgress != null) oldProgress: envelopeColor,
               },
-            );
-          },
-        ),
+            ),
+          ),
       ],
-      onPressed: () async {
-        await EnvelopeTransactionEditDialog.show(
-          context,
-          titleText: 'Create Transaction',
-          envelopeTransaction: EnvelopeTransaction()
-            ..envelopeProperty.set(envelopeEntity.id!)
-            ..budgetProperty.set(envelope.budgetProperty.value),
-          onAccept: (EnvelopeTransaction envelopeTransaction) async {
-            await onTransactionCreated(envelopeTransaction);
-          },
-        );
-      },
-      body: StyledList.row.scrollable.withScrollbar(
-        itemPadding: EdgeInsets.symmetric(horizontal: 4),
-        children: [
-          StyledText.body(envelope.amountCentsProperty.value.formatCentsAsCurrency()),
-          StyledText.body('+'),
-          StyledText.body.withColor(getCentsColor(centDifference))(centDifference.formatCentsAsCurrency()),
-          StyledIcon(Icons.arrow_right),
-          if (modifiedEnvelopeById == null) StyledLoadingIndicator(),
-          StyledText.body.withColor(getCentsColor(newEnvelope?.amountCentsProperty.value))(
-              (newEnvelope ?? envelope).amountCentsProperty.value.formatCentsAsCurrency()),
-        ],
-      ),
     );
   }
 }

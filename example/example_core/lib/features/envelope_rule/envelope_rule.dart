@@ -27,4 +27,8 @@ abstract class EnvelopeRule extends ValueObject {
 
   /// Called when the envelope rule is first initialized or inflated.
   EnvelopeChange? onInitialize(DropCoreContext context) => null;
+
+  /// Returns the progress of this rule as a percent.
+  /// If this rule doesn't have a concept of progress, it returns null.
+  double? getProgress(Envelope envelope) => 0;
 }

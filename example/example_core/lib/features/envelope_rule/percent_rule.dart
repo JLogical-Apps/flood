@@ -41,6 +41,16 @@ abstract class PercentRule extends EnvelopeRule {
   }
 
   @override
+  double? getProgress(Envelope envelope) {
+    final maximumCents = maximumCentsProperty.value;
+    if (maximumCents == null) {
+      return null;
+    }
+
+    return (envelope.amountCentsProperty.value / maximumCents).clamp(0, 1);
+  }
+
+  @override
   late final List<ValueObjectBehavior> behaviors = super.behaviors +
       [
         percentProperty,
