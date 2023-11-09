@@ -150,7 +150,7 @@ class AddTransactionsPage with IsAppPageWrapper<AddTransactionsRoute> {
                       children: transactionGeneratorsState.value
                           .map((transactionGenerator) => TransactionCard(
                                 budgetTransaction: transactionGenerator.generate(envelopeById),
-                                transactionViewContext: TransactionViewContext.budget(),
+                                transactionViewContext: TransactionViewContext.budget(currentCents: null),
                                 actions: [
                                   ActionItem(
                                     titleText: 'Remove',

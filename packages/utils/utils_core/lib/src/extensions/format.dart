@@ -26,6 +26,14 @@ extension IntFormatUtil on int {
     return (this / 100).formatCurrency();
   }
 
+  String formatCentsAsCurrencySigned() {
+    if (this >= 0) {
+      return '+${formatCentsAsCurrency()}';
+    } else {
+      return formatCentsAsCurrency();
+    }
+  }
+
   /// Formats this amount of bytes as a label.
   /// For example, '4900' would be 4.9 GB
   String formatBytesToLabel() {

@@ -29,7 +29,9 @@ class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTr
               title: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  StyledText.h6.strong(transaction.nameProperty.value),
+                  StyledText.h6
+                      .withColor(getCentsColor(transaction.amountCentsProperty.value))
+                      .strong(transaction.nameProperty.value),
                   if (transactionViewContext is BudgetTransactionViewContext && envelopeEntity != null) ...[
                     StyledText.h6(transaction.amountCentsProperty.value <= 0 ? ' from ' : ' to '),
                     EnvelopeChip(
@@ -39,11 +41,30 @@ class EnvelopeTransactionCardModifier extends TransactionCardModifier<EnvelopeTr
                   ]
                 ],
               ),
-              trailing: StyledText.body.withColor(getCentsColor(cents))(cents.formatCentsAsCurrency()),
+              trailing: StyledList.column(
+                children: [
+                  StyledText.body.withColor(getCentsColor(cents))(cents.formatCentsAsCurrencySigned()),
+                  if (transactionViewContext.currentCents != null)
+                    StyledText.body.subtle(transactionViewContext.currentCents!.formatCentsAsCurrency()),
+                ],
+              ),
               onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
             );
           });
     });
+  }
+
+  @override
+  TransactionViewContext getPreviousTransactionViewContext(
+    EnvelopeTransaction transaction,
+    TransactionViewContext transactionViewContext,
+  ) {
+    if (transactionViewContext.currentCents == null) {
+      return transactionViewContext;
+    }
+
+    return transactionViewContext
+        .copyWithCents(transactionViewContext.currentCents! - transaction.amountCentsProperty.value);
   }
 
   StyledDialog buildDialog({required EnvelopeTransaction transaction, List<ActionItem> actions = const []}) {

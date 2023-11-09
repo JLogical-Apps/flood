@@ -237,6 +237,54 @@ void main() {
     );
   });
 
+  test('simple budget with locked envelope', () {
+    const totalIncome = 100 * 100;
+    const budgetId = '';
+
+    expectBudgetChange(
+      context: pondContext,
+      envelopes: [
+        Envelope()
+          ..nameProperty.set('Firstfruit')
+          ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Firstfruit (Locked)')
+          ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10))
+          ..lockedProperty.set(true)
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Repeating')
+          ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+            ..goalCentsProperty.set(10 * 100)
+            ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(3)))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Target')
+          ..ruleProperty.set(TargetGoalEnvelopeRule()
+            ..percentProperty.set(50)
+            ..maximumCentsProperty.set(100 * 100))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Surplus')
+          ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(10))
+          ..budgetProperty.set(budgetId),
+        Envelope()
+          ..nameProperty.set('Surplus (Locked)')
+          ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(10))
+          ..lockedProperty.set(true)
+          ..budgetProperty.set(budgetId),
+      ],
+      incomeCents: totalIncome,
+      expectedCentsByEnvelopeName: {
+        'Firstfruit': totalIncome ~/ 10,
+        'Repeating': 10 * 100,
+        'Target': (100 * 100 - totalIncome ~/ 10 - 10 * 100) ~/ 2,
+        'Surplus': (100 * 100 - totalIncome ~/ 10 - 10 * 100) ~/ 2,
+      },
+    );
+  });
+
   test('multiple transactions budget change example.', () {
     const budgetId = '';
     final envelopes = [

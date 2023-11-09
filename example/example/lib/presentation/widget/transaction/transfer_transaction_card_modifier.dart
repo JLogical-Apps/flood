@@ -26,6 +26,8 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
           builder: (List values) {
             final [EnvelopeEntity? fromEnvelopeEntity, EnvelopeEntity? toEnvelopeEntity] = values;
 
+            final affectedCents = getAffectedCentsInContext(transactionViewContext, transaction: transaction);
+
             return StyledCard(
               leading: DateChip(date: transaction.transactionDateProperty.value.time),
               title: Wrap(
@@ -38,10 +40,46 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
                   toEnvelopeEntity: toEnvelopeEntity,
                 ),
               ),
+              trailing: StyledList.column(
+                children: [
+                  if (affectedCents != null)
+                    StyledText.body
+                        .withColor(getCentsColor(affectedCents))(affectedCents.formatCentsAsCurrencySigned()),
+                  if (transactionViewContext.currentCents != null)
+                    StyledText.body.subtle(transactionViewContext.currentCents!.formatCentsAsCurrency()),
+                ],
+              ),
               onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
             );
           });
     });
+  }
+
+  int? getAffectedCentsInContext(TransactionViewContext context, {required TransferTransaction transaction}) {
+    if (context is! EnvelopeTransactionViewContext) {
+      return null;
+    }
+
+    return transaction.gainedCentsByEnvelopeId[context.envelopeId];
+  }
+
+  @override
+  TransactionViewContext getPreviousTransactionViewContext(
+    TransferTransaction transaction,
+    TransactionViewContext transactionViewContext,
+  ) {
+    if (transactionViewContext.currentCents == null) {
+      return transactionViewContext;
+    }
+
+    if (transactionViewContext is EnvelopeTransactionViewContext) {
+      final envelopeGainedCents = transaction.gainedCentsByEnvelopeId[transactionViewContext.envelopeId] ?? 0;
+      return transactionViewContext.copyWithCents(transactionViewContext.currentCents! - envelopeGainedCents);
+    } else if (transactionViewContext is BudgetTransactionViewContext) {
+      return transactionViewContext;
+    }
+
+    throw UnimplementedError('Unrecognized TransactionViewContext!');
   }
 
   List<Widget> buildTitle(
@@ -75,8 +113,7 @@ class TransferTransactionCardModifier extends TransactionCardModifier<TransferTr
       final cents = isFrom ? -transaction.amountCentsProperty.value : transaction.amountCentsProperty.value;
       final otherEnvelopeEntity = isFrom ? toEnvelopeEntity : fromEnvelopeEntity;
       return [
-        StyledText.h6.withColor(getCentsColor(cents))(
-            'Transfer ${transaction.amountCentsProperty.value.formatCentsAsCurrency()} ${isFrom ? 'from' : 'to'} '),
+        StyledText.h6.withColor(getCentsColor(cents))('Transfer ${isFrom ? 'to' : 'from'} '),
         if (otherEnvelopeEntity != null)
           EnvelopeChip(
             envelope: otherEnvelopeEntity.value,

@@ -13,6 +13,12 @@ abstract class TransactionCardModifier<B extends BudgetTransaction> with IsTyped
     List<ActionItem> actions = const [],
   });
 
+  TransactionViewContext getPreviousTransactionViewContext(
+    B transaction,
+    TransactionViewContext transactionViewContext,
+  ) =>
+      transactionViewContext;
+
   static final transactionCardModifierResolver =
       ModifierResolver<TransactionCardModifier, BudgetTransaction>(modifiers: [
     EnvelopeTransactionCardModifier(),

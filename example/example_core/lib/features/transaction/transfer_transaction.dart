@@ -21,6 +21,11 @@ class TransferTransaction extends BudgetTransaction {
   @override
   List<String> get affectedEnvelopeIds => [fromEnvelopeProperty.value, toEnvelopeProperty.value];
 
+  Map<String, int> get gainedCentsByEnvelopeId => {
+        fromEnvelopeProperty.value: -amountCentsProperty.value,
+        toEnvelopeProperty.value: amountCentsProperty.value,
+      };
+
   @override
   List<ValueObjectBehavior> get behaviors =>
       super.behaviors +

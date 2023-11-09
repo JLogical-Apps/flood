@@ -27,7 +27,13 @@ class IncomeTransactionCardModifier extends TransactionCardModifier<IncomeTransa
         return StyledCard(
           leading: DateChip(date: transaction.transactionDateProperty.value.time),
           titleText: 'Income',
-          trailing: StyledText.body.withColor(getCentsColor(incomeCents))(incomeCents.formatCentsAsCurrency()),
+          trailing: StyledList.column(
+            children: [
+              StyledText.body.withColor(getCentsColor(incomeCents))(incomeCents.formatCentsAsCurrencySigned()),
+              if (transactionViewContext.currentCents != null)
+                StyledText.body.subtle(transactionViewContext.currentCents!.formatCentsAsCurrency()),
+            ],
+          ),
           onPressed: () => context.showStyledDialog(buildDialog(transaction: transaction, actions: actions)),
         );
       },
@@ -87,6 +93,25 @@ class IncomeTransactionCardModifier extends TransactionCardModifier<IncomeTransa
         },
       ),
     );
+  }
+
+  @override
+  TransactionViewContext getPreviousTransactionViewContext(
+    IncomeTransaction transaction,
+    TransactionViewContext transactionViewContext,
+  ) {
+    if (transactionViewContext.currentCents == null) {
+      return transactionViewContext;
+    }
+
+    if (transactionViewContext is EnvelopeTransactionViewContext) {
+      final envelopeGainedCents = transaction.centsByEnvelopeIdProperty.value[transactionViewContext.envelopeId] ?? 0;
+      return transactionViewContext.copyWithCents(transactionViewContext.currentCents! - envelopeGainedCents);
+    } else if (transactionViewContext is BudgetTransactionViewContext) {
+      return transactionViewContext.copyWithCents(transactionViewContext.currentCents! - transaction.totalCents);
+    }
+
+    throw UnimplementedError('Unrecognized TransactionViewContext!');
   }
 
   int? _getIncomeCents({

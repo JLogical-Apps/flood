@@ -8,7 +8,7 @@ import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
-import 'package:example/presentation/widget/transaction/transaction_card.dart';
+import 'package:example/presentation/widget/transaction/transaction_card_list.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
 import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
@@ -351,33 +351,30 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
               builder: (List<BudgetTransactionEntity> envelopeTransactionEntities, Future Function()? loadMore) {
                 return StyledList.column.centered(
                   children: [
-                    StyledList.column.withMinChildSize(250)(
-                      children: envelopeTransactionEntities
-                          .map((entity) => TransactionCard(
-                                budgetTransaction: entity.value,
-                                transactionViewContext: TransactionViewContext.envelope(envelopeId: envelopeEntity.id!),
-                                actions: [
-                                  ActionItem(
-                                    titleText: 'Delete',
-                                    descriptionText: 'Delete this transaction.',
-                                    iconData: Icons.delete,
-                                    color: Colors.red,
-                                    onPerform: (context) async {
-                                      await context.showStyledDialog(StyledDialog.yesNo(
-                                        titleText: 'Confirm Delete',
-                                        bodyText:
-                                            'Are you sure you want to delete this transaction? You cannot undo this.',
-                                        onAccept: () async {
-                                          await context.dropCoreComponent.delete(entity);
-                                          Navigator.of(context).pop();
-                                        },
-                                      ));
-                                    },
-                                  ),
-                                ],
-                              ))
-                          .toList(),
-                      ifEmptyText: 'There are no transactions in this envelope!',
+                    TransactionEntityCardList(
+                      budgetTransactionEntities: envelopeTransactionEntities,
+                      initialTransactionViewContext: TransactionViewContext.envelope(
+                        envelopeId: envelopeEntity.id!,
+                        currentCents: envelope.amountCentsProperty.value,
+                      ),
+                      actionsGetter: (entity) => [
+                        ActionItem(
+                          titleText: 'Delete',
+                          descriptionText: 'Delete this transaction.',
+                          iconData: Icons.delete,
+                          color: Colors.red,
+                          onPerform: (context) async {
+                            await context.showStyledDialog(StyledDialog.yesNo(
+                              titleText: 'Confirm Delete',
+                              bodyText: 'Are you sure you want to delete this transaction? You cannot undo this.',
+                              onAccept: () async {
+                                await context.dropCoreComponent.delete(entity);
+                                Navigator.of(context).pop();
+                              },
+                            ));
+                          },
+                        ),
+                      ],
                     ),
                     if (loadMore != null)
                       StyledButton.strong(
