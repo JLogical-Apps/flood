@@ -375,6 +375,7 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
                           },
                         ),
                       ],
+                      ifEmptyText: 'There are no transactions in this envelope!',
                     ),
                     if (loadMore != null)
                       StyledButton.strong(

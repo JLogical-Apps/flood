@@ -9,12 +9,14 @@ class TransactionEntityCardList extends HookWidget {
   final List<BudgetTransactionEntity> budgetTransactionEntities;
   final TransactionViewContext initialTransactionViewContext;
   final List<ActionItem> Function(BudgetTransactionEntity transactionEntity) actionsGetter;
+  final String? ifEmptyText;
 
   const TransactionEntityCardList({
     super.key,
     required this.budgetTransactionEntities,
     required this.initialTransactionViewContext,
     required this.actionsGetter,
+    this.ifEmptyText,
   });
 
   @override
@@ -25,20 +27,21 @@ class TransactionEntityCardList extends HookWidget {
     for (final budgetTransactionEntity in budgetTransactionEntities) {
       final transactionCardModifier = TransactionCardModifier.getModifier(budgetTransactionEntity.value);
 
-      transactionViewContext = transactionCardModifier.getPreviousTransactionViewContext(
-        budgetTransactionEntity.value,
-        transactionViewContext,
-      );
-
       children.add(transactionCardModifier.buildCard(
         transaction: budgetTransactionEntity.value,
         transactionViewContext: transactionViewContext,
         actions: actionsGetter(budgetTransactionEntity),
       ));
+
+      transactionViewContext = transactionCardModifier.getPreviousTransactionViewContext(
+        budgetTransactionEntity.value,
+        transactionViewContext,
+      );
     }
 
     return StyledList.column(
       children: children,
+      ifEmptyText: ifEmptyText,
     );
   }
 }

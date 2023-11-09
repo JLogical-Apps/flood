@@ -178,7 +178,6 @@ class BudgetPage with IsAppPageWrapper<BudgetRoute> {
                           paginatedQueryModel: transactionsModel,
                           builder: (List<BudgetTransactionEntity> transactionEntities, loadMore) {
                             return StyledList.column(
-                              ifEmptyText: 'There are no transactions in this budget!',
                               children: [
                                 TransactionEntityCardList(
                                   budgetTransactionEntities: transactionEntities,
@@ -203,6 +202,7 @@ class BudgetPage with IsAppPageWrapper<BudgetRoute> {
                                       },
                                     ),
                                   ],
+                                  ifEmptyText: 'There are no transactions in this budget!',
                                 ),
                                 if (loadMore != null)
                                   StyledButton.strong(
