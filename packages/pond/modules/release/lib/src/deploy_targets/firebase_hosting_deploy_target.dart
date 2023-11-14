@@ -17,7 +17,7 @@ class FirebaseHostingDeployTarget with IsDeployTarget {
     await DataSource.static.directory(firebaseHostingDirectory).delete();
     await webBuildDirectory.copyTo(firebaseHostingDirectory);
 
-    final command = channel == null ? 'firebase hosting:deploy' : 'firebase hosting:channel:deploy $channel';
+    final command = channel == null ? 'firebase deploy --only hosting' : 'firebase hosting:channel:deploy $channel';
     await context.run(
       command,
       workingDirectory: context.coreDirectory / 'firebase',
