@@ -1,5 +1,6 @@
 import 'package:log_core/src/log_listener.dart';
 import 'package:log_core/src/logger_service.dart';
+import 'package:utils_core/utils_core.dart';
 
 class ListenerHandlerLoggerService with IsLoggerServiceWrapper {
   @override
@@ -13,7 +14,10 @@ class ListenerHandlerLoggerService with IsLoggerServiceWrapper {
   Future<void> log(dynamic message) async {
     await loggerService.log(message);
     for (final listener in listeners) {
-      await listener.log(message);
+      await guardAsync(
+        () => listener.log(message),
+        onException: (error, stackTrace) => loggerService.logError(error, stackTrace),
+      );
     }
   }
 
@@ -21,7 +25,10 @@ class ListenerHandlerLoggerService with IsLoggerServiceWrapper {
   Future<void> logWarning(dynamic message) async {
     await loggerService.logWarning(message);
     for (final listener in listeners) {
-      await listener.logWarning(message);
+      await guardAsync(
+        () => listener.logWarning(message),
+        onException: (error, stackTrace) => loggerService.logError(error, stackTrace),
+      );
     }
   }
 
@@ -29,7 +36,10 @@ class ListenerHandlerLoggerService with IsLoggerServiceWrapper {
   Future<void> logError(dynamic error, StackTrace stackTrace) async {
     await loggerService.logError(error, stackTrace);
     for (final listener in listeners) {
-      await listener.logError(error, stackTrace);
+      await guardAsync(
+        () => listener.logError(error, stackTrace),
+        onException: (error, stackTrace) => loggerService.logError(error, stackTrace),
+      );
     }
   }
 }

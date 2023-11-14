@@ -4,6 +4,7 @@ import 'package:port_core/src/color_port_field.dart';
 import 'package:port_core/src/currency_port_field.dart';
 import 'package:port_core/src/date_port_field.dart';
 import 'package:port_core/src/display_name_port_field.dart';
+import 'package:port_core/src/email_port_field.dart';
 import 'package:port_core/src/fallback_port_field.dart';
 import 'package:port_core/src/hint_port_field.dart';
 import 'package:port_core/src/map_port_field.dart';
@@ -188,6 +189,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
     return PortFieldNodeModifier.getModifierOrNull(this)?.isMultiline(this) ?? false;
   }
 
+  bool findIsEmail() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.isEmail(this) ?? false;
+  }
+
   bool findIsSecret() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.isSecret(this) ?? false;
   }
@@ -270,7 +275,7 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
 extension StringPortFieldExtensions<S> on PortField<String, S> {
   PortField<String, S> isNotBlank() => withValidator(Validator.isNotBlank().asNonNullable().forPortField());
 
-  PortField<String, S> isEmail() => withValidator(Validator.isEmail().asNonNullable().forPortField());
+  PortField<String, S> isEmail([bool isEmail = true]) => EmailPortField(portField: this, isEmail: isEmail);
 
   PortField<String, S> isSecret([bool isPassword = true]) => SecretPortField(portField: this, isSecret: isPassword);
 

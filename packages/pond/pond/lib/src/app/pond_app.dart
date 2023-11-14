@@ -230,7 +230,10 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
     final (matchingRoute, matchingPage) = (matchingPageEntry.key, matchingPageEntry.value);
     final routeInstance = matchingRoute.fromRouteData(routeData) as Route;
 
-    final redirectRouteData = await matchingPage.getRedirect(app.appPondContext, routeInstance);
+    final redirectRouteData = await guardAsync(
+      () => matchingPage.getRedirect(app.appPondContext, routeInstance),
+      onException: (error, stackTrace) => app.appPondContext.logError(error, stackTrace),
+    );
     if (redirectRouteData != null) {
       return await _getAppPageFromRouteData(redirectRouteData);
     }
@@ -262,7 +265,10 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
       final (matchingRoute, matchingPage) = (matchingPageEntry.key, matchingPageEntry.value);
       final routeInstance = matchingRoute.fromRouteData(currentRouteData) as Route;
 
-      final parentRoute = await matchingPage.getParent(app.appPondContext, routeInstance);
+      final parentRoute = await guardAsync(
+        () => matchingPage.getParent(app.appPondContext, routeInstance),
+        onException: (error, stackTrace) => app.appPondContext.logError(error, stackTrace),
+      );
       if (parentRoute == null) {
         break;
       }

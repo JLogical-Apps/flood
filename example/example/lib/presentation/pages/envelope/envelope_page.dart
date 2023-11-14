@@ -4,10 +4,11 @@ import 'package:example/presentation/dialog/envelope/envelope_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/envelope_transaction_edit_dialog.dart';
 import 'package:example/presentation/dialog/transaction/transfer_transaction_edit_dialog.dart';
 import 'package:example/presentation/pages/budget/budget_page.dart';
+import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example/presentation/widget/envelope_rule/envelope_card_modifier.dart';
-import 'package:example/presentation/widget/transaction/transaction_card.dart';
+import 'package:example/presentation/widget/transaction/transaction_card_list.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
 import 'package:example_core/features/envelope/envelope.dart';
 import 'package:example_core/features/envelope/envelope_entity.dart';
@@ -36,7 +37,11 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
   @override
   AppPage<EnvelopeRoute> get appPage => AppPage<EnvelopeRoute>().onlyIfLoggedIn().withParent((context, route) async {
         final envelopeEntity =
-            await Query.getById<EnvelopeEntity>(route.idProperty.value).get(context.dropCoreComponent);
+            await Query.getByIdOrNull<EnvelopeEntity>(route.idProperty.value).get(context.dropCoreComponent);
+
+        if (envelopeEntity == null) {
+          return HomeRoute();
+        }
 
         return BudgetRoute()..budgetIdProperty.set(envelopeEntity.value.budgetProperty.value);
       });
@@ -56,7 +61,7 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
       model: envelopeModel,
       builder: (EnvelopeEntity? envelopeEntity) {
         if (envelopeEntity == null) {
-          return StyledLoadingPage();
+          return StyledErrorPage(error: 'Could not find envelope!');
         }
 
         final envelope = envelopeEntity.value;
@@ -87,6 +92,30 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
                     },
                   );
                 },
+              ),
+            if (!envelope.lockedProperty.value)
+              ActionItem(
+                titleText: 'Lock',
+                descriptionText: 'Locks this envelope from automatically receiving income.',
+                color: Colors.orange,
+                iconData: Icons.lock_outline_rounded,
+                onPerform: (context) => context.showStyledDialog(StyledDialog.yesNo(
+                  titleText: 'Confirm Lock',
+                  bodyText: 'Are you sure you want to lock this envelope?',
+                  onAccept: () => envelopeEntity.lock(context.dropCoreComponent),
+                )),
+              ),
+            if (envelope.lockedProperty.value)
+              ActionItem(
+                titleText: 'Unlock',
+                descriptionText: 'Unlocks this envelope, which allows it to automatically receive income.',
+                color: Colors.orange,
+                iconData: Icons.lock_open,
+                onPerform: (context) => context.showStyledDialog(StyledDialog.yesNo(
+                  titleText: 'Confirm Unlock',
+                  bodyText: 'Are you sure you want to unlock this envelope?',
+                  onAccept: () => envelopeEntity.unlock(context.dropCoreComponent),
+                )),
               ),
             if (!envelope.archivedProperty.value)
               ActionItem(
@@ -259,11 +288,17 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
                 envelope.amountCentsProperty.value.formatCentsAsCurrency()),
             StyledList.row.centered.scrollable(
               children: [
+                if (envelope.lockedProperty.value)
+                  StyledChip.subtle(
+                    labelText: 'Locked',
+                    iconData: Icons.lock_outline,
+                    foregroundColor: Colors.grey,
+                  ),
                 if (envelope.archivedProperty.value)
-                  StyledChip(
+                  StyledChip.subtle(
                     labelText: 'Archived',
                     iconData: Icons.archive,
-                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.blue,
                   ),
                 ModelBuilder(
                   model: trayModel,
@@ -273,11 +308,9 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
                     }
                     final trayColor = Color(trayEntity.value.colorProperty.value);
                     return StyledChip.subtle(
-                      icon: StyledIcon(
-                        Icons.inbox,
-                        color: trayColor,
-                      ),
-                      label: StyledText.body.withColor(trayColor)(trayEntity.value.nameProperty.value),
+                      iconData: Icons.inbox,
+                      labelText: trayEntity.value.nameProperty.value,
+                      foregroundColor: trayColor,
                     );
                   },
                 ),
@@ -318,32 +351,30 @@ class EnvelopePage with IsAppPageWrapper<EnvelopeRoute> {
               builder: (List<BudgetTransactionEntity> envelopeTransactionEntities, Future Function()? loadMore) {
                 return StyledList.column.centered(
                   children: [
-                    StyledList.column.withMinChildSize(150)(
-                      children: envelopeTransactionEntities
-                          .map((entity) => TransactionCard(
-                                budgetTransaction: entity.value,
-                                transactionViewContext: TransactionViewContext.envelope(envelopeId: envelopeEntity.id!),
-                                actions: [
-                                  ActionItem(
-                                    titleText: 'Delete',
-                                    descriptionText: 'Delete this transaction.',
-                                    iconData: Icons.delete,
-                                    color: Colors.red,
-                                    onPerform: (context) async {
-                                      await context.showStyledDialog(StyledDialog.yesNo(
-                                        titleText: 'Confirm Delete',
-                                        bodyText:
-                                            'Are you sure you want to delete this transaction? You cannot undo this.',
-                                        onAccept: () async {
-                                          await context.dropCoreComponent.delete(entity);
-                                          Navigator.of(context).pop();
-                                        },
-                                      ));
-                                    },
-                                  ),
-                                ],
-                              ))
-                          .toList(),
+                    TransactionEntityCardList(
+                      budgetTransactionEntities: envelopeTransactionEntities,
+                      initialTransactionViewContext: TransactionViewContext.envelope(
+                        envelopeId: envelopeEntity.id!,
+                        currentCents: envelope.amountCentsProperty.value,
+                      ),
+                      actionsGetter: (entity) => [
+                        ActionItem(
+                          titleText: 'Delete',
+                          descriptionText: 'Delete this transaction.',
+                          iconData: Icons.delete,
+                          color: Colors.red,
+                          onPerform: (context) async {
+                            await context.showStyledDialog(StyledDialog.yesNo(
+                              titleText: 'Confirm Delete',
+                              bodyText: 'Are you sure you want to delete this transaction? You cannot undo this.',
+                              onAccept: () async {
+                                await context.dropCoreComponent.delete(entity);
+                                Navigator.of(context).pop();
+                              },
+                            ));
+                          },
+                        ),
+                      ],
                       ifEmptyText: 'There are no transactions in this envelope!',
                     ),
                     if (loadMore != null)

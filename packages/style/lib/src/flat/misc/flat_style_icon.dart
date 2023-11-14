@@ -10,18 +10,41 @@ import 'package:style/src/styleguide.dart';
 class FlatStyleIconRenderer with IsTypedStyleRenderer<StyledIcon> {
   @override
   Widget renderTyped(BuildContext context, StyledIcon component) {
+    var widget = _getRawIcon(component);
+    if (component.backgroundColor != null) {
+      widget = StyledContainer(
+        color: component.backgroundColor,
+        shape: CircleBorder(),
+        child: Padding(
+          padding: const EdgeInsets.all(3),
+          child: widget,
+        ),
+      );
+    }
+    return widget;
+  }
+
+  Widget _getRawIcon(StyledIcon component) {
     final iconData = component.iconData;
     if (iconData.fontFamily == 'MaterialIcons') {
-      return Icon(
-        component.iconData,
-        color: component.color ?? context.colorPalette().foreground.getByEmphasis(component.emphasis),
-        size: component.size ?? 21,
+      return Builder(
+        builder: (context) {
+          return Icon(
+            component.iconData,
+            color: component.color ?? context.colorPalette().foreground.getByEmphasis(component.emphasis),
+            size: component.size ?? 21,
+          );
+        },
       );
     } else {
-      return FaIcon(
-        component.iconData,
-        color: component.color ?? context.colorPalette().foreground.getByEmphasis(component.emphasis),
-        size: component.size ?? 21,
+      return Builder(
+        builder: (context) {
+          return FaIcon(
+            component.iconData,
+            color: component.color ?? context.colorPalette().foreground.getByEmphasis(component.emphasis),
+            size: component.size ?? 21,
+          );
+        },
       );
     }
   }

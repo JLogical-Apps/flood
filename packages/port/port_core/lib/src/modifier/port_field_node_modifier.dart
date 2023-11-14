@@ -4,6 +4,7 @@ import 'package:port_core/src/modifier/color_port_field_modifier.dart';
 import 'package:port_core/src/modifier/currency_port_field_modifier.dart';
 import 'package:port_core/src/modifier/date_port_field_modifier.dart';
 import 'package:port_core/src/modifier/display_name_port_field_modifier.dart';
+import 'package:port_core/src/modifier/email_port_field_modifier.dart';
 import 'package:port_core/src/modifier/fallback_port_field_modifier.dart';
 import 'package:port_core/src/modifier/hint_port_field_modifier.dart';
 import 'package:port_core/src/modifier/map_port_field_node_modifier.dart';
@@ -29,6 +30,10 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
   }
 
   bool isMultiline(T portField) {
+    return false;
+  }
+
+  bool isEmail(T portField) {
     return false;
   }
 
@@ -62,6 +67,7 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     DatePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     DisplayNamePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     MultilinePortFieldNodeModifier(modifierGetter: getModifierOrNull),
+    EmailPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     SecretPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     CurrencyPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     ColorPortFieldNodeModifier(modifierGetter: getModifierOrNull),

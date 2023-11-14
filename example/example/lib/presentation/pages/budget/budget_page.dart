@@ -7,7 +7,7 @@ import 'package:example/presentation/pages/transaction/add_transactions_page.dar
 import 'package:example/presentation/pages/user/profile_page.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example/presentation/widget/envelope/envelope_card.dart';
-import 'package:example/presentation/widget/transaction/transaction_card.dart';
+import 'package:example/presentation/widget/transaction/transaction_card_list.dart';
 import 'package:example/presentation/widget/transaction/transaction_view_context.dart';
 import 'package:example/presentation/widget/tray/tray_card.dart';
 import 'package:example_core/features/budget/budget_entity.dart';
@@ -17,7 +17,6 @@ import 'package:example_core/features/transaction/budget_transaction_entity.dart
 import 'package:example_core/features/tray/tray.dart';
 import 'package:example_core/features/tray/tray_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 class BudgetRoute with IsRoute<BudgetRoute> {
@@ -87,7 +86,7 @@ class BudgetPage with IsAppPageWrapper<BudgetRoute> {
                         await context.push(AddTransactionsRoute()..budgetIdProperty.set(route.budgetIdProperty.value));
                       },
                     ),
-                    StyledCard(
+                    StyledCard.subtle(
                       titleText: 'Envelopes',
                       leadingIcon: Icons.mail,
                       actions: [
@@ -134,18 +133,14 @@ class BudgetPage with IsAppPageWrapper<BudgetRoute> {
                         ),
                       ],
                       children: [
-                        HookBuilder(
-                          builder: (BuildContext context) {
-                            final envelopeEntities = useModel(envelopesModel).getOrNull();
-                            final trayEntities = useModel(traysModel).getOrNull();
-                            if (envelopeEntities == null || trayEntities == null) {
-                              return StyledLoadingIndicator();
-                            }
-
+                        ModelBuilder(
+                          model: Model.union([envelopesModel, traysModel]),
+                          builder: (List values) {
+                            final [List<EnvelopeEntity> envelopeEntities, List<TrayEntity> trayEntities] = values;
                             final nonTrayedEnvelopes =
                                 envelopeEntities.where((entity) => entity.value.trayProperty.value == null).toList();
 
-                            return StyledList.column.withMinChildSize(150)(
+                            return StyledList.column.withMinChildSize(225)(
                               children: [
                                 ...trayEntities.map((trayEntity) => TrayCard(
                                       trayEntity: trayEntity,
@@ -175,7 +170,7 @@ class BudgetPage with IsAppPageWrapper<BudgetRoute> {
                 icon: Icons.swap_horiz,
                 child: StyledList.column.scrollable.withScrollbar(
                   children: [
-                    StyledCard(
+                    StyledCard.subtle(
                       titleText: 'Transactions',
                       leadingIcon: Icons.swap_horiz,
                       children: [
@@ -183,33 +178,32 @@ class BudgetPage with IsAppPageWrapper<BudgetRoute> {
                           paginatedQueryModel: transactionsModel,
                           builder: (List<BudgetTransactionEntity> transactionEntities, loadMore) {
                             return StyledList.column(
-                              ifEmptyText: 'There are no transactions in this budget!',
                               children: [
-                                ...transactionEntities
-                                    .map((entity) => TransactionCard(
-                                          budgetTransaction: entity.value,
-                                          transactionViewContext: TransactionViewContext.budget(),
-                                          actions: [
-                                            ActionItem(
-                                              titleText: 'Delete',
-                                              descriptionText: 'Delete this transaction.',
-                                              iconData: Icons.delete,
-                                              color: Colors.red,
-                                              onPerform: (context) async {
-                                                await context.showStyledDialog(StyledDialog.yesNo(
-                                                  titleText: 'Confirm Delete',
-                                                  bodyText:
-                                                      'Are you sure you want to delete this transaction? You cannot undo this.',
-                                                  onAccept: () async {
-                                                    await context.dropCoreComponent.delete(entity);
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ));
-                                              },
-                                            ),
-                                          ],
-                                        ))
-                                    .toList(),
+                                TransactionEntityCardList(
+                                  budgetTransactionEntities: transactionEntities,
+                                  initialTransactionViewContext:
+                                      TransactionViewContext.budget(currentCents: totalCents),
+                                  actionsGetter: (entity) => [
+                                    ActionItem(
+                                      titleText: 'Delete',
+                                      descriptionText: 'Delete this transaction.',
+                                      iconData: Icons.delete,
+                                      color: Colors.red,
+                                      onPerform: (context) async {
+                                        await context.showStyledDialog(StyledDialog.yesNo(
+                                          titleText: 'Confirm Delete',
+                                          bodyText:
+                                              'Are you sure you want to delete this transaction? You cannot undo this.',
+                                          onAccept: () async {
+                                            await context.dropCoreComponent.delete(entity);
+                                            Navigator.of(context).pop();
+                                          },
+                                        ));
+                                      },
+                                    ),
+                                  ],
+                                  ifEmptyText: 'There are no transactions in this budget!',
+                                ),
                                 if (loadMore != null)
                                   StyledButton.strong(
                                     labelText: 'Load More',

@@ -16,6 +16,7 @@ import 'package:example_core/features/tray/tray.dart';
 import 'package:example_core/features/tray/tray_entity.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
+import 'package:flutter/material.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 Future<void> setupTesting(CorePondContext corePondContext) async {
@@ -32,7 +33,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
   );
 
   final budgetEntity = await dropComponent.updateEntity(
-    BudgetEntity(),
+    BudgetEntity()..id = 'budget',
     (Budget budget) => budget
       ..nameProperty.set('Budget')
       ..ownerProperty.set(userEntity.id!),
@@ -42,17 +43,27 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       TrayEntity(),
       (Tray tray) => tray
         ..nameProperty.set('Repeating')
-        ..budgetProperty.set(budgetEntity.id!));
+        ..budgetProperty.set(budgetEntity.id!)
+        ..colorProperty.set(Colors.blue.value));
 
   final envelopes = [
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Tithe')
+      ..colorProperty.set(Colors.blue.value)
       ..ruleProperty.set(FirstfruitEnvelopeRule()..percentProperty.set(10)),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Woodworking')
+      ..colorProperty.set(Colors.orange.value)
+      ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(10))
+      ..archivedProperty.set(true),
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Car')
       ..trayProperty.set(trayEntity.id!)
+      ..lockedProperty.set(true)
+      ..colorProperty.set(Colors.orange.value)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
         ..goalCentsProperty.set(100 * 100)
         ..timeRuleProperty.set(MonthlyTimeRule())
@@ -62,14 +73,61 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Eating Out')
       ..trayProperty.set(trayEntity.id!)
+      ..colorProperty.set(Colors.green.value)
       ..ruleProperty.set(RepeatingGoalEnvelopeRule()
-        ..goalCentsProperty.set(40 * 100)
+        ..goalCentsProperty.set(80 * 100)
         ..timeRuleProperty.set(DailyTimeRule()..daysProperty.set(7))
         ..remainingGoalCentsProperty.set(40 * 100)
         ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 4))))),
     Envelope()
       ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Mortgage')
+      ..colorProperty.set(Colors.red.value)
+      ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+        ..goalCentsProperty.set(3000 * 100)
+        ..timeRuleProperty.set(MonthlyTimeRule())
+        ..remainingGoalCentsProperty.set(3000 * 100)
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6))))),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Jake Personal')
+      ..colorProperty.set(Colors.pink.value)
+      ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+        ..goalCentsProperty.set(50 * 100)
+        ..timeRuleProperty.set(MonthlyTimeRule())
+        ..remainingGoalCentsProperty.set(50 * 100)
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6))))),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Subscriptions')
+      ..colorProperty.set(Colors.orange.value)
+      ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+        ..goalCentsProperty.set(30 * 100)
+        ..timeRuleProperty.set(MonthlyTimeRule())
+        ..remainingGoalCentsProperty.set(30 * 100)
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6))))),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Health Insurance')
+      ..colorProperty.set(Colors.blue.value)
+      ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+        ..goalCentsProperty.set(8 * 100)
+        ..timeRuleProperty.set(MonthlyTimeRule())
+        ..remainingGoalCentsProperty.set(8 * 100)
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6))))),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Car Maintennance')
+      ..colorProperty.set(Colors.orange.value)
+      ..ruleProperty.set(RepeatingGoalEnvelopeRule()
+        ..goalCentsProperty.set(12 * 100)
+        ..timeRuleProperty.set(MonthlyTimeRule())
+        ..remainingGoalCentsProperty.set(12 * 100)
+        ..lastAppliedDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6))))),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Emergency Savings')
+      ..colorProperty.set(Colors.lightGreen.value)
       ..ruleProperty.set(TargetGoalEnvelopeRule()
         ..percentProperty.set(20)
         ..maximumCentsProperty.set(1000 * 100)),
@@ -77,6 +135,13 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       ..budgetProperty.set(budgetEntity.id!)
       ..nameProperty.set('Savings')
       ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(100)),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Custom'),
+    Envelope()
+      ..budgetProperty.set(budgetEntity.id!)
+      ..nameProperty.set('Vacation')
+      ..ruleProperty.set(SurplusEnvelopeRule()..percentProperty.set(10)),
   ];
 
   await Future.wait(envelopes
@@ -86,49 +151,102 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       .map((entity) => dropComponent.update(entity)));
 
   final transactions = [
+    IncomeTransaction()
+      ..centsByEnvelopeIdProperty.set({
+        'Tithe': 20 * 100,
+        'Car': 40 * 100,
+        'Emergency Savings': 80 * 100,
+        'Savings': 20 * 100,
+        'Eating Out': 20 * 100,
+        'Mortgage': 200 * 100,
+        'Health Insurance': 4 * 100,
+        'Car Maintennance': 10 * 100,
+        'Subscriptions': 4 * 100,
+        'Jake Personal': 5 * 100,
+      })
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now())),
     EnvelopeTransaction()
-      ..nameProperty.set('Payment')
-      ..amountCentsProperty.set(-90 * 100)
+      ..nameProperty.set('Grocery Shopping')
+      ..amountCentsProperty.set(-20 * 100)
+      ..envelopeProperty.set('Eating Out')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 5)))),
+    EnvelopeTransaction()
+      ..nameProperty.set('Monthly Mortgage Payment')
+      ..amountCentsProperty.set(-3000 * 100)
+      ..envelopeProperty.set('Mortgage')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 10)))),
+    EnvelopeTransaction()
+      ..nameProperty.set('Car Fuel')
+      ..amountCentsProperty.set(-60 * 100)
       ..envelopeProperty.set('Car')
       ..budgetProperty.set(budgetEntity.id!)
-      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 7)))),
     EnvelopeTransaction()
-      ..nameProperty.set('Vacation')
-      ..amountCentsProperty.set(-180 * 100)
+      ..nameProperty.set('Health Insurance Premium')
+      ..amountCentsProperty.set(-80 * 100)
+      ..envelopeProperty.set('Health Insurance')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 15)))),
+    EnvelopeTransaction()
+      ..nameProperty.set('Netflix Subscription')
+      ..amountCentsProperty.set(-15 * 100)
+      ..envelopeProperty.set('Subscriptions')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 20)))),
+    TransferTransaction()
+      ..amountCentsProperty.set(50 * 100)
+      ..fromEnvelopeProperty.set('Savings')
+      ..toEnvelopeProperty.set('Vacation')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 6)))),
+    TransferTransaction()
+      ..amountCentsProperty.set(100 * 100)
+      ..fromEnvelopeProperty.set('Savings')
+      ..toEnvelopeProperty.set('Emergency Savings')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 8)))),
+    EnvelopeTransaction()
+      ..nameProperty.set('Woodworking Supplies')
+      ..amountCentsProperty.set(-80 * 100)
+      ..envelopeProperty.set('Woodworking')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 12)))),
+    EnvelopeTransaction()
+      ..nameProperty.set('Date Night')
+      ..amountCentsProperty.set(-25 * 100)
+      ..envelopeProperty.set('Eating Out')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 18)))),
+    EnvelopeTransaction()
+      ..nameProperty.set('Birthday Gift')
+      ..amountCentsProperty.set(-50 * 100)
+      ..envelopeProperty.set('Jake Personal')
+      ..budgetProperty.set(budgetEntity.id!)
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 21)))),
+    EnvelopeTransaction()
+      ..nameProperty.set('Savings Allocation')
+      ..amountCentsProperty.set(200 * 100)
       ..envelopeProperty.set('Savings')
       ..budgetProperty.set(budgetEntity.id!)
-      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 1)))),
     EnvelopeTransaction()
-      ..nameProperty.set('Plumber')
-      ..amountCentsProperty.set(-120 * 100)
+      ..nameProperty.set('Emergency Fund Top-up')
+      ..amountCentsProperty.set(150 * 100)
       ..envelopeProperty.set('Emergency Savings')
       ..budgetProperty.set(budgetEntity.id!)
       ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
-    for (var i = 0; i < 100; i++)
-      EnvelopeTransaction()
-        ..nameProperty.set('Transation $i')
-        ..amountCentsProperty.set(-i * 100)
-        ..envelopeProperty.set('Emergency Savings')
-        ..budgetProperty.set(budgetEntity.id!)
-        ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 3)))),
-    TransferTransaction()
-      ..amountCentsProperty.set(20 * 100)
-      ..fromEnvelopeProperty.set('Savings')
-      ..toEnvelopeProperty.set('Tithe')
+    EnvelopeTransaction()
+      ..nameProperty.set('Vacation Savings')
+      ..amountCentsProperty.set(180 * 100)
+      ..envelopeProperty.set('Vacation')
       ..budgetProperty.set(budgetEntity.id!)
-      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 2)))),
-    IncomeTransaction()
-      ..centsByEnvelopeIdProperty.set({
-        'Tithe': 30 * 100,
-        'Car': 70 * 100,
-        'Emergency Savings': 200 * 100,
-        'Savings': 300 * 100,
-      })
-      ..budgetProperty.set(budgetEntity.id!)
-      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 1)))),
+      ..transactionDateProperty.set(Timestamp.of(DateTime.now().subtract(Duration(days: 7)))),
   ];
 
-  final budgetChange = budgetEntity.value.addTransactions(
+  final budgetChange = Budget.addTransactions(
     dropComponent,
     envelopeById: envelopes.mapToMap((envelope) => MapEntry(envelope.nameProperty.value, envelope)),
     transactions: transactions,

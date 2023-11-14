@@ -19,7 +19,16 @@ class EnvelopeCard extends HookWidget {
     final envelopeRuleCardWrapper = EnvelopeRuleCardModifier.getModifier(envelope.ruleProperty.value);
     return StyledCard(
       leading: envelopeRuleCardWrapper.getIcon(envelope.ruleProperty.value, color: Color(envelope.colorProperty.value)),
-      title: StyledText.h6.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
+      title: StyledList.row(
+        children: [
+          if (envelope.lockedProperty.value)
+            StyledIcon(
+              Icons.lock_outline,
+              color: Colors.grey,
+            ),
+          StyledText.h6.withColor(Color(envelope.colorProperty.value))(envelope.nameProperty.value),
+        ],
+      ),
       body: StyledText.body.withColor(getCentsColor(envelope.amountCentsProperty.value))(
           envelope.amountCentsProperty.value.formatCentsAsCurrency()),
       onPressed: onPressed,

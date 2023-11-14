@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intersperse/intersperse.dart';
@@ -82,7 +84,7 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
     return MasonryGridView.count(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
-      crossAxisCount: MediaQuery.of(context).size.width ~/ list.childMinSize!,
+      crossAxisCount: max(MediaQuery.of(context).size.width ~/ list.childMinSize!, 1),
       mainAxisSpacing: list.itemPadding.vertical,
       crossAxisSpacing: list.itemPadding.horizontal,
       physics: NeverScrollableScrollPhysics(),

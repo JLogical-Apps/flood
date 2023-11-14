@@ -40,6 +40,8 @@ Future<AppPondContext> buildAppPondContext() async {
             return AppwriteConfig.localhost(projectId: '651b48116fc13fcb79be');
           } else if (type == EnvironmentType.static.staging) {
             return AppwriteConfig.cloud(projectId: '6409e66ed830e72e8f8d');
+          } else if (type == EnvironmentType.static.production) {
+            return AppwriteConfig.cloud(projectId: 'valet');
           }
 
           throw Exception('Cannot find Appwrite Config for environment [$type]');
@@ -51,6 +53,8 @@ Future<AppPondContext> buildAppPondContext() async {
       AppwriteCloudRepositoryImplementation(),
     ],
     authServiceImplementations: (corePondContext) => [AppwriteAuthServiceImplementation()],
+    messagingService: (corePondContext) => corePondContext
+        .environmental((type) => type.isOnline ? MessagingService.static.firebase : MessagingService.static.local()),
     taskRunner: (corePondContext) =>
         corePondContext.environment.isOnline ? TaskRunner.static.appwrite(corePondContext) : TaskRunner.static.local,
     loggerService: (corePondContext) => corePondContext.environment.isOnline

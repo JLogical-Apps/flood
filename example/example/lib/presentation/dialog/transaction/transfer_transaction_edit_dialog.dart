@@ -58,11 +58,12 @@ class TransferTransactionEditDialog {
           widgetMapper: (EnvelopeEntity? envelopeEntity) {
             final envelope = envelopeEntity?.value;
             final envelopeRuleModifier = EnvelopeRuleCardModifier.getModifier(envelope?.ruleProperty.value);
+            final color = envelope?.colorProperty.value.mapIfNonNull((color) => Color(color));
             return StyledList.row(
               children: [
-                envelopeRuleModifier.getIcon(envelope?.ruleProperty.value),
+                envelopeRuleModifier.getIcon(envelope?.ruleProperty.value, color: color),
                 Expanded(
-                  child: StyledText.body(envelopeEntity?.value.nameProperty.value ?? 'None'),
+                  child: StyledText.body.withColor(color)(envelopeEntity?.value.nameProperty.value ?? 'None'),
                 ),
               ],
             );

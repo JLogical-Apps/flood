@@ -22,7 +22,7 @@ class StyledContainer extends StyleComponent {
     this.color,
     this.width,
     this.height,
-    this.padding = const EdgeInsets.all(8),
+    this.padding = EdgeInsets.zero,
     this.shape,
     this.border,
   });
@@ -33,7 +33,7 @@ class StyledContainer extends StyleComponent {
     this.color,
     this.width,
     this.height,
-    this.padding = const EdgeInsets.all(8),
+    this.padding = EdgeInsets.zero,
     this.shape,
     this.border,
   }) : emphasis = Emphasis.subtle;
@@ -44,7 +44,7 @@ class StyledContainer extends StyleComponent {
     this.color,
     this.width,
     this.height,
-    this.padding = const EdgeInsets.all(8),
+    this.padding = EdgeInsets.zero,
     this.shape,
     this.border,
   }) : emphasis = Emphasis.strong;

@@ -201,7 +201,7 @@ This is a `code block`.
             : (isDark ? backgroundColor.lighten(10) : backgroundColor.darken(5)))
         : (backgroundColor == this.backgroundColor ? Colors.white : this.backgroundColor);
     final newForeground = isDark ? Colors.white : Colors.black;
-    final newSubtleForeground = isDark ? Color(0xffeeeeee) : Color(0xff111111);
+    final newSubtleForeground = isDark ? Colors.white.withOpacity(0.8) : Colors.black.withOpacity(0.8);
 
     return ColorPalette(
       baseBackground: backgroundColor,

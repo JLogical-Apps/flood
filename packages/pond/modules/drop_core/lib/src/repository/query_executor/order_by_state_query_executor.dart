@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:drop_core/src/query/order_by_query.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_reducer.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -5,7 +6,7 @@ import 'package:drop_core/src/state/state.dart';
 class OrderByStateQueryReducer extends StateQueryReducer<OrderByQuery> {
   @override
   Iterable<State> reduce(OrderByQuery query, Iterable<State> currentStates) {
-    return currentStates.toList()..sort((a, b) => order(query, a, b));
+    return currentStates.sorted((a, b) => order(query, a, b));
   }
 
   int order(OrderByQuery query, State a, State b) {

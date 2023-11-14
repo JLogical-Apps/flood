@@ -21,9 +21,9 @@ class FlatStyleTabsRenderer with IsTypedStyleRenderer<StyledTabs> {
             ),
           ),
           BottomNavigationBar(
-            backgroundColor: context.colorPalette().background.subtle,
+            backgroundColor: context.colorPalette().background.regular,
             selectedItemColor: context.colorPalette().foreground.strong,
-            unselectedItemColor: context.colorPalette().foreground.subtle,
+            unselectedItemColor: context.colorPalette().foreground.regular,
             selectedLabelStyle: context.style().getTextStyle(context, StyledText.body.empty),
             unselectedLabelStyle: context.style().getTextStyle(context, StyledText.body.empty),
             onTap: (index) => pageController.animateToPage(

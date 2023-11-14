@@ -8,3 +8,5 @@ firebase:
 appwrite:
   staging:
     webDomain: https://www.valetbudget.app
+  production:
+    webDomain: https://valet-budget-app.web.app/

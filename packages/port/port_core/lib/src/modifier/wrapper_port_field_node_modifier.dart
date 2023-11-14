@@ -29,6 +29,11 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   }
 
   @override
+  bool isEmail(T portField) {
+    return modifierGetter(portField.portField)?.isEmail(portField.portField) ?? false;
+  }
+
+  @override
   bool isSecret(T portField) {
     return modifierGetter(portField.portField)?.isSecret(portField.portField) ?? false;
   }

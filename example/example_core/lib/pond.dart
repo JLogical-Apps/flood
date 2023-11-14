@@ -8,7 +8,6 @@ import 'package:example_core/features/tray/tray_repository.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:example_core/features/user/user_repository.dart';
-import 'package:example_core/test_task.dart';
 import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 Future<CorePondContext> getCorePondContext({
@@ -33,17 +32,6 @@ Future<CorePondContext> getCorePondContext({
 
   await corePondContext.register(TaskCoreComponent(
     taskRunner: taskRunner?.call(corePondContext) ?? TaskRunner.static.none,
-    tasks: {GreetTaskRoute(): GreetTask()},
-    triggers: [
-      Trigger.static.cron(
-        name: 'my-cron',
-        cron: '* * * * *',
-        runner: (dateTime) async {
-          final users = await Query.from<UserEntity>().all().get(corePondContext.dropCoreComponent);
-          corePondContext.log('Trigger: $users');
-        },
-      ),
-    ],
   ));
 
   await corePondContext.register(LogCoreComponent(

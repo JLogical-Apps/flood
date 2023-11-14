@@ -22,6 +22,11 @@ class SecurityRepository with IsRepositoryWrapper {
         queryExecutor: super.queryExecutor,
         securityRepository: this,
       );
+
+  @override
+  String toString() {
+    return 'SecurityRepository[$repository]';
+  }
 }
 
 class SecurityQueryExecutor with IsRepositoryQueryExecutorWrapper {
