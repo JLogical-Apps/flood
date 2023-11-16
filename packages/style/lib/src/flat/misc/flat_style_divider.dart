@@ -10,7 +10,7 @@ class FlatStyleDividerRenderer with IsTypedStyleRenderer<StyledDivider> {
   @override
   Widget renderTyped(BuildContext context, StyledDivider component) {
     return Divider(
-      thickness: 1.2,
+      thickness: 0.2,
       color: _getColorByEmphasis(context, component.emphasis),
     );
   }
@@ -35,11 +35,11 @@ class FlatStyleDividerRenderer with IsTypedStyleRenderer<StyledDivider> {
   Color _getColorByEmphasis(BuildContext context, Emphasis emphasis) {
     switch (emphasis) {
       case Emphasis.subtle:
-        return context.colorPalette().background.regular;
+        return context.colorPalette().background.subtle;
       case Emphasis.regular:
         return context.colorPalette().foreground.subtle;
       case Emphasis.strong:
-        return context.colorPalette().foreground.strong;
+        return context.colorPalette().background.strong;
     }
   }
 }

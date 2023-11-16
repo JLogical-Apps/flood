@@ -15,6 +15,7 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
       canPop: component.canPop,
       child: Scaffold(
         appBar: AppBar(
+          foregroundColor: context.colorPalette().foreground.regular,
           centerTitle: true,
           title: component.title ?? component.titleText?.mapIfNonNull(StyledText.h2.strong),
           backgroundColor: Colors.transparent,
