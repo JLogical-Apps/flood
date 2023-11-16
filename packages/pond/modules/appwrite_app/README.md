@@ -1,15 +1,10 @@
-# Firebase
+# Appwrite
 
-This package exports a few `CorePondComponent`s to integrate Firebase into your app.
+Contains all the files to integrate with Appwrite.
 
-## FirebaseAuthServiceImplementation
+There are many limitations with Appwrite at the moment:
 
-Pass this as an implementation to `AuthCoreComponent` to implement `AuthService.static.cloud()` using Firebase Auth.
-
-## FirebaseCloudRepositoryImplementation
-
-Pass this as an implementation to `DropCoreComponent` to implement `Repository.cloud()` using Firestore.
-
-## FirebaseMessagingCoreComponent
-
-Uses Firebase Messaging to generate device tokens and listen to remote messages.
+- https://github.com/appwrite/appwrite/issues/2788
+- https://github.com/appwrite/appwrite/issues/909
+- https://github.com/appwrite/appwrite/issues/2490
+- https://github.com/appwrite/appwrite/issues/2838

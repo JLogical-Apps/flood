@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:dart_appwrite/dart_appwrite.dart' as appwrite;
+import 'package:drop_core/drop_core.dart';
 import 'package:ops/src/appwrite/drop/appwrite_cloud_repository.dart';
 import 'package:ops/src/appwrite/drop/appwrite_query.dart';
 import 'package:ops/src/appwrite/drop/appwrite_query_request_reducer.dart';
-import 'package:drop_core/drop_core.dart';
 
 class PaginateStatesAppwriteQueryRequestReducer
     extends AppwriteQueryRequestReducer<PaginateStatesQueryRequest, PaginatedQueryResult<State>> {
@@ -49,7 +49,7 @@ class PaginateStatesAppwriteQueryRequestReducer
     final documents = await query.databases.listDocuments(
       databaseId: AppwriteCloudRepository.defaultDatabaseId,
       collectionId: query.collectionId,
-      queries: query.queries,
+      queries: paginateQuery.queries,
     );
 
     final states = documents.documents.map(getStateFromDocument).toList();
@@ -59,7 +59,7 @@ class PaginateStatesAppwriteQueryRequestReducer
 
     return QueryResultPage(
       items: states,
-      nextPageGetter: documents.total == limit
+      nextPageGetter: states.length == limit
           ? () => _paginate(
                 query: query,
                 lastDocumentId: documents.documents.lastOrNull?.$id,

@@ -27,16 +27,16 @@ class TransactionEntityCardList extends HookWidget {
     for (final budgetTransactionEntity in budgetTransactionEntities) {
       final transactionCardModifier = TransactionCardModifier.getModifier(budgetTransactionEntity.value);
 
+      transactionViewContext = transactionCardModifier.getPreviousTransactionViewContext(
+        budgetTransactionEntity.value,
+        transactionViewContext,
+      );
+
       children.add(transactionCardModifier.buildCard(
         transaction: budgetTransactionEntity.value,
         transactionViewContext: transactionViewContext,
         actions: actionsGetter(budgetTransactionEntity),
       ));
-
-      transactionViewContext = transactionCardModifier.getPreviousTransactionViewContext(
-        budgetTransactionEntity.value,
-        transactionViewContext,
-      );
     }
 
     return StyledList.column(
