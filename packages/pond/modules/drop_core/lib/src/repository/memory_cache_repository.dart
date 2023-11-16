@@ -1,14 +1,7 @@
 import 'dart:async';
 
-import 'package:drop_core/src/context/core_pond_context_extensions.dart';
+import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/query/request/modifier/query_request_modifier.dart';
-import 'package:drop_core/src/query/request/query_request.dart';
-import 'package:drop_core/src/repository/query_executor/state_query_executor.dart';
-import 'package:drop_core/src/repository/repository.dart';
-import 'package:drop_core/src/repository/repository_query_executor.dart';
-import 'package:drop_core/src/repository/repository_state_handler.dart';
-import 'package:drop_core/src/state/persistence/state_persister.dart';
-import 'package:drop_core/src/state/state.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
@@ -51,7 +44,9 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
 
   MemoryCacheRepositoryQueryExecutor({required this.repository});
 
-  late StatePersister<State> statePersister = StatePersister.state(context: repository.context.dropCoreComponent);
+  final Map<QueryRequest, PaginatedQueryResult> paginatedQueryResultByQueryRequest = {};
+
+  late final StatePersister<State> statePersister = StatePersister.state(context: repository.context.dropCoreComponent);
 
   late StateQueryExecutor stateQueryExecutor = StateQueryExecutor.fromStatesX(
     statesX: repository.stateByIdX
@@ -74,6 +69,11 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
 
     if (needsSource) {
       return await fetchSourceAndDeleteStale(queryRequest);
+    }
+
+    final existingPaginatedQueryResult = paginatedQueryResultByQueryRequest[queryRequest];
+    if (existingPaginatedQueryResult != null) {
+      return existingPaginatedQueryResult as T;
     }
 
     return await stateQueryExecutor.executeQuery(queryRequest);
@@ -137,6 +137,10 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       if (!sourceStateIds.contains(cachedStateId)) {
         repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(cachedStateId);
       }
+    }
+
+    if (sourceResult is PaginatedQueryResult) {
+      paginatedQueryResultByQueryRequest[queryRequest] = sourceResult;
     }
 
     completer.complete(sourceResult);
