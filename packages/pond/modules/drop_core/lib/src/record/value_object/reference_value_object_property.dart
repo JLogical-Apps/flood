@@ -32,10 +32,6 @@ class ReferenceValueObjectProperty<E extends Entity>
 
   @override
   State modifyState(State state) {
-    if (value == null) {
-      return state;
-    }
-
     return state.withData(state.data.copy()..set(name, value));
   }
 

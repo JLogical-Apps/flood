@@ -13,7 +13,10 @@ void main() {
     final dropContext = context.locate<DropCoreComponent>()..register<ListData>(ListData.new, name: 'ListData');
 
     final listData = ListData();
-    expect(listData.getState(dropContext).data, {});
+    expect(listData.getState(dropContext).data, {
+      'ints': null,
+      'strings': null,
+    });
 
     listData.intsProperty.value = [1, 2, 3];
     listData.stringsProperty.value = ['one', 'two', 'three'];
@@ -37,7 +40,10 @@ void main() {
     final dropContext = context.locate<DropCoreComponent>()..register<MapData>(MapData.new, name: 'MapData');
 
     final mapData = MapData();
-    expect(mapData.getState(dropContext).data, {});
+    expect(mapData.getState(dropContext).data, {
+      'intById': null,
+      'stringById': null,
+    });
 
     mapData.intByIdProperty.value = {'one': 1, 'two': 2, 'three': 3};
     mapData.stringByIdProperty.value = {'A': 'a', 'B': 'b', 'C': 'c'};

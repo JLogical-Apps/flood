@@ -33,10 +33,6 @@ class FieldValueObjectProperty<T, L> with IsValueObjectProperty<T?, T?, L, Field
 
   @override
   State modifyState(State state) {
-    if (value == null) {
-      return state;
-    }
-
     return state.withData(state.data.copy()..set(name, value));
   }
 

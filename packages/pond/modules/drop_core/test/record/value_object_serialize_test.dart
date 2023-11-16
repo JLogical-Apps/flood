@@ -25,7 +25,11 @@ void main() {
         data.getState(dropContext),
         State(
           type: dropContext.getRuntimeType<Data>(),
-          data: {},
+          data: {
+            'int': null,
+            'bool': null,
+            'string': null,
+          },
         ));
 
     data.intProperty.value = 1;
