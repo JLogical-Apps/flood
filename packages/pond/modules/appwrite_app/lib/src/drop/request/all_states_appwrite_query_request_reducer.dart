@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:appwrite/appwrite.dart' as appwrite;
 import 'package:appwrite_app/src/drop/appwrite_cloud_repository.dart';
 import 'package:appwrite_app/src/drop/appwrite_query.dart';
 import 'package:appwrite_app/src/drop/appwrite_query_request_reducer.dart';
@@ -14,10 +15,15 @@ class AllStatesAppwriteQueryRequestReducer extends AppwriteQueryRequestReducer<A
     AppwriteQuery appwriteQuery, {
     Function(State state)? onStateRetrieved,
   }) async {
+    final queries = [
+      ...appwriteQuery.queries,
+      if (!appwriteQuery.queries.any((query) => query.startsWith('limit'))) appwrite.Query.limit(500),
+    ];
+
     final documents = await appwriteQuery.databases.listDocuments(
       databaseId: AppwriteCloudRepository.defaultDatabaseId,
       collectionId: appwriteQuery.collectionId,
-      queries: appwriteQuery.queries,
+      queries: queries,
     );
 
     final states = documents.documents.map(getStateFromDocument).toList();
