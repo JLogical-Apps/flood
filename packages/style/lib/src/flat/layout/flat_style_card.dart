@@ -35,8 +35,8 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
           ? null
           : RoundedRectangleBorder(
               side: BorderSide(
-                color: context.colorPalette().background.regular,
-                width: 1.5,
+                color: context.colorPalette().foreground.subtle,
+                width: 0.2,
               ),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -75,7 +75,7 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
                   ],
                 ),
               ),
-            if (hasHeader && component.children.isNotEmpty) StyledDivider.subtle(),
+            if (hasHeader && component.children.isNotEmpty) StyledDivider(),
             if (component.children.isNotEmpty) ...[
               Padding(
                 padding: EdgeInsets.all(4),
