@@ -3,7 +3,7 @@ import 'package:pond_core/pond_core.dart';
 import 'package:port_core/port_core.dart';
 import 'package:port_drop_core/port_drop_core.dart';
 import 'package:test/test.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 

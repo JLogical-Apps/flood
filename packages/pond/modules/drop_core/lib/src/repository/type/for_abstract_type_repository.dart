@@ -5,7 +5,7 @@ import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/repository/type/abstract_type_implementation_repository.dart';
 import 'package:pond_core/pond_core.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 

@@ -7,7 +7,7 @@ import 'package:ops/src/appwrite/drop/appwrite_map_state_persister_modifier.dart
 import 'package:ops/src/appwrite/drop/appwrite_query.dart';
 import 'package:ops/src/appwrite/drop/appwrite_timestamp_state_persister_modifier.dart';
 import 'package:ops/src/appwrite/drop/appwrite_value_object_state_persister_modifier.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class AppwriteQueryRequestReducer<QR extends QueryRequest<dynamic, T>, T> extends Modifier<QueryRequest> {

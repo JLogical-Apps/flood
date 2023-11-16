@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as firebase;
 import 'package:drop_core/drop_core.dart';
 import 'package:firebase/src/drop/firebase_query_reducer.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 
 class FromFirebaseQueryReducer extends FirebaseQueryReducer<FromQuery> {
   final DropCoreContext context;

@@ -14,7 +14,7 @@ import 'package:firebase/src/drop/request/paginate_states_firebase_query_request
 import 'package:firebase/src/drop/request/wrapper_firebase_query_request_reducer.dart';
 import 'package:log_core/log_core.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:utils/utils.dart';
 
 class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {

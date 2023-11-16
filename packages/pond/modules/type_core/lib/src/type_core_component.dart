@@ -1,5 +1,5 @@
 import 'package:pond_core/pond_core.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 
 class TypeCoreComponent extends CorePondComponent with IsTypeContextWrapper {
   @override

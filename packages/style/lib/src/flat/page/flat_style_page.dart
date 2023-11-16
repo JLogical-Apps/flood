@@ -11,10 +11,8 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
   Widget renderTyped(BuildContext context, StyledPage component) {
     final colorPalette = context.colorPalette();
 
-    return WillPopScope(
-      onWillPop: () async {
-        return await component.shouldPop?.call() ?? true;
-      },
+    return PopScope(
+      canPop: component.canPop,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,

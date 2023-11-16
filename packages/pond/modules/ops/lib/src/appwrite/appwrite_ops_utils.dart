@@ -16,7 +16,7 @@ import 'package:path/path.dart' as path;
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:task_core/task_core.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 const _databaseId = 'default';

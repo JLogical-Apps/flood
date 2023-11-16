@@ -1,7 +1,7 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:port_core/port_core.dart';
 import 'package:port_drop_core/port_drop_core.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 extension StagePortFieldExtensions on StagePortField<RuntimeType?, dynamic> {

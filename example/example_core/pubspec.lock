@@ -696,6 +696,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  runtime_type:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/type"
+      relative: true
+    source: path
+    version: "0.0.1"
   rxdart:
     dependency: transitive
     description:
@@ -880,13 +887,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  type:
-    dependency: "direct overridden"
-    description:
-      path: "../../packages/type"
-      relative: true
-    source: path
-    version: "0.0.1"
   type_core:
     dependency: "direct overridden"
     description:
@@ -1014,4 +1014,4 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.0.0 <4.0.0"
+  dart: ">=3.2.0 <4.0.0"

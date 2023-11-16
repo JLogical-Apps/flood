@@ -11,7 +11,7 @@ export 'package:persistence_core/persistence_core.dart';
 export 'package:pond_core/pond_core.dart';
 export 'package:port_drop_core/port_drop_core.dart';
 export 'package:task_core/task_core.dart';
-export 'package:type/type.dart';
+export 'package:runtime_type/type.dart';
 export 'package:type_core/type_core.dart';
 export 'package:utils_core/utils_core.dart';
 export 'package:user_device_token_core/user_device_token_core.dart';

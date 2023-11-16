@@ -10,13 +10,11 @@ packages:
     source: hosted
     version: "62.0.0"
   actions_core:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      path: "packages/pond/modules/actions_core"
-      ref: master
-      resolved-ref: "1a1b52f96407aec713ca7a77576b823c7bd9eeea"
-      url: "git@github.com:jaboyc/jlogical_utils.git"
-    source: git
+      path: "../actions_core"
+      relative: true
+    source: path
     version: "0.0.1"
   analyzer:
     dependency: transitive
@@ -53,11 +51,9 @@ packages:
   auth_core:
     dependency: "direct main"
     description:
-      path: "packages/pond/modules/auth_core"
-      ref: master
-      resolved-ref: "1a1b52f96407aec713ca7a77576b823c7bd9eeea"
-      url: "git@github.com:jaboyc/jlogical_utils.git"
-    source: git
+      path: "../auth_core"
+      relative: true
+    source: path
     version: "0.0.1"
   boolean_selector:
     dependency: transitive
@@ -142,11 +138,9 @@ packages:
   drop_core:
     dependency: "direct main"
     description:
-      path: "packages/pond/modules/drop_core"
-      ref: master
-      resolved-ref: "1a1b52f96407aec713ca7a77576b823c7bd9eeea"
-      url: "git@github.com:jaboyc/jlogical_utils.git"
-    source: git
+      path: "../drop_core"
+      relative: true
+    source: path
     version: "0.0.1"
   environment_core:
     dependency: "direct main"
@@ -286,11 +280,9 @@ packages:
   log_core:
     dependency: "direct main"
     description:
-      path: "packages/pond/modules/log_core"
-      ref: master
-      resolved-ref: "1a1b52f96407aec713ca7a77576b823c7bd9eeea"
-      url: "git@github.com:jaboyc/jlogical_utils.git"
-    source: git
+      path: "../log_core"
+      relative: true
+    source: path
     version: "0.0.1"
   logging:
     dependency: transitive
@@ -325,13 +317,11 @@ packages:
     source: hosted
     version: "1.0.4"
   model_core:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      path: "packages/model/model_core"
-      ref: master
-      resolved-ref: "1a1b52f96407aec713ca7a77576b823c7bd9eeea"
-      url: "git@github.com:jaboyc/jlogical_utils.git"
-    source: git
+      path: "../../../model/model_core"
+      relative: true
+    source: path
     version: "0.0.1"
   node_preamble:
     dependency: transitive
@@ -360,11 +350,9 @@ packages:
   path_core:
     dependency: "direct main"
     description:
-      path: "packages/path_core"
-      ref: master
-      resolved-ref: "1a1b52f96407aec713ca7a77576b823c7bd9eeea"
-      url: "git@github.com:jaboyc/jlogical_utils.git"
-    source: git
+      path: "../../../path_core"
+      relative: true
+    source: path
     version: "0.0.1"
   persistence_core:
     dependency: "direct main"
@@ -412,6 +400,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.5"
+  runtime_type:
+    dependency: "direct main"
+    description:
+      path: "../../../type"
+      relative: true
+    source: path
+    version: "0.0.1"
   rxdart:
     dependency: "direct main"
     description:
@@ -503,11 +498,9 @@ packages:
   task_core:
     dependency: "direct main"
     description:
-      path: "packages/pond/modules/task_core"
-      ref: master
-      resolved-ref: "1a1b52f96407aec713ca7a77576b823c7bd9eeea"
-      url: "git@github.com:jaboyc/jlogical_utils.git"
-    source: git
+      path: "../task_core"
+      relative: true
+    source: path
     version: "0.0.1"
   term_glyph:
     dependency: transitive
@@ -541,23 +534,12 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.6"
-  type:
-    dependency: "direct main"
-    description:
-      path: "packages/type"
-      ref: master
-      resolved-ref: "1a1b52f96407aec713ca7a77576b823c7bd9eeea"
-      url: "git@github.com:jaboyc/jlogical_utils.git"
-    source: git
-    version: "0.0.1"
   type_core:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      path: "packages/pond/modules/type_core"
-      ref: master
-      resolved-ref: "1a1b52f96407aec713ca7a77576b823c7bd9eeea"
-      url: "git@github.com:jaboyc/jlogical_utils.git"
-    source: git
+      path: "../type_core"
+      relative: true
+    source: path
     version: "0.0.1"
   typed_data:
     dependency: transitive
@@ -623,4 +605,4 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.0.0 <3.3.0"
+  dart: ">=3.2.0 <3.3.0"

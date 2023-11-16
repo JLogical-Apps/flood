@@ -4,7 +4,7 @@ description: Contains Appwrite-related components.
 publish_to: "none"
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.2.0 <4.0.0"
 
 version: 0.0.1
 
@@ -66,7 +66,7 @@ dependencies:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "master"
       path: packages/pond/modules/task_core
-  type:
+  runtime_type:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
       ref: "master"

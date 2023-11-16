@@ -20,7 +20,7 @@ class StyledPage extends StyleComponent {
 
   final FutureOr Function()? onRefresh;
 
-  final FutureOr<bool> Function()? shouldPop;
+  final bool canPop;
 
   final EdgeInsets innerPadding;
 
@@ -30,7 +30,7 @@ class StyledPage extends StyleComponent {
     required this.body,
     this.actionWidgets = const [],
     this.actions = const [],
-    this.shouldPop,
+    this.canPop = true,
     this.innerPadding = const EdgeInsets.all(4),
   }) : onRefresh = null;
 
@@ -42,7 +42,7 @@ class StyledPage extends StyleComponent {
     this.actionWidgets = const [],
     this.actions = const [],
     required FutureOr Function() this.onRefresh,
-    this.shouldPop,
+    this.canPop = true,
     this.innerPadding = const EdgeInsets.all(4),
   }) : body = _getRefreshableBody(
           body: body,

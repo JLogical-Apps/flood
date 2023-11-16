@@ -10,7 +10,7 @@ import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:equatable/equatable.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrapper<void, String> {

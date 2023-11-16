@@ -1,5 +1,5 @@
 import 'package:drop_core/src/state/persistence/modifiers/state_persister_modifier.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 class RuntimeTypeStatePersisterModifier extends StatePersisterModifier {

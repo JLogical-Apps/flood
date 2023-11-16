@@ -3,7 +3,7 @@ import 'package:drop_core/drop_core.dart';
 import 'package:firebase/src/drop/firebase_cloud_repository.dart';
 import 'package:firebase/src/drop/firebase_timestamp_state_persister_modifier.dart';
 import 'package:log_core/log_core.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 
 class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
   final FirebaseCloudRepository repository;

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart' as firebase;
 import 'package:drop_core/drop_core.dart';
 import 'package:firebase/src/drop/firebase_timestamp_state_persister_modifier.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:utils/utils.dart';
 
 abstract class FirebaseQueryRequestReducer<QR extends QueryRequest<dynamic, T>, T> extends Modifier<QueryRequest> {

@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 
 void main() {
   test('registering and creating an instance of a runtime type.', () {

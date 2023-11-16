@@ -4,7 +4,7 @@ import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
 import 'package:drop_core/src/state/state.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 
 abstract class DropCoreContext implements TypeContextWrapper, Repository {
   List<Repository> get repositories;

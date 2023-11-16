@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:type/src/type_context.dart';
+import 'package:runtime_type/src/type_context.dart';
 import 'package:utils_core/utils_core.dart';
 
 class RuntimeType<T> extends Equatable {

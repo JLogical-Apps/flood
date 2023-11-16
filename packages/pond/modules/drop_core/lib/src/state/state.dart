@@ -1,7 +1,7 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:equatable/equatable.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 class State extends Equatable implements Stateful {

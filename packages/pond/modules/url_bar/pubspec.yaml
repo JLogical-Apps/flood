@@ -4,7 +4,7 @@ description: Flutter module for adding a url bar to navigate throughout the app.
 publish_to: "none"
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.2.0 <4.0.0"
 
 version: 0.0.1
 

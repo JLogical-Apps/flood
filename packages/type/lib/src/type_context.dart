@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:directed_graph/directed_graph.dart';
-import 'package:type/src/runtime_type.dart';
+import 'package:runtime_type/src/runtime_type.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class TypeContext {

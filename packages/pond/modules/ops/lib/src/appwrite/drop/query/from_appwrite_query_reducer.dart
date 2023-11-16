@@ -5,7 +5,7 @@ import 'package:drop_core/drop_core.dart';
 import 'package:ops/src/appwrite/drop/appwrite_query.dart';
 import 'package:ops/src/appwrite/drop/appwrite_query_reducer.dart';
 import 'package:ops/src/appwrite/util/appwrite_core_component_extensions.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 
 class FromAppwriteQueryReducer extends AppwriteQueryReducer<FromQuery> {
   final DropCoreContext context;

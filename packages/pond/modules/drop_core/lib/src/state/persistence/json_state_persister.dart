@@ -5,7 +5,7 @@ import 'package:drop_core/src/state/persistence/modifiers/state_persister_modifi
 import 'package:drop_core/src/state/persistence/modifiers/state_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 
 class JsonStatePersister implements StatePersister<Map<String, dynamic>> {
   final DropCoreContext context;

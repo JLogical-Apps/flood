@@ -14,7 +14,7 @@ import 'package:appwrite_app/src/drop/request/wrapper_appwrite_query_request_red
 import 'package:drop_core/drop_core.dart';
 import 'package:log_core/log_core.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:utils/utils.dart';
 
 class AppwriteCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {

@@ -1,7 +1,7 @@
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:pond_core/pond_core.dart';
-import 'package:type/type.dart';
+import 'package:runtime_type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
