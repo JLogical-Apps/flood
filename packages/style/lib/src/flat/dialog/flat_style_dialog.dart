@@ -31,7 +31,8 @@ class FlatStyleDialogRenderer with IsTypedStyleRenderer<StyledDialog> {
           AppBar(
             title: title,
             centerTitle: true,
-            backgroundColor: context.style().colorPalette.background.regular,
+            foregroundColor: context.colorPalette().foreground.regular,
+            backgroundColor: context.colorPalette().background.regular,
             elevation: 0,
             actions: component.actions.isEmpty
                 ? null
