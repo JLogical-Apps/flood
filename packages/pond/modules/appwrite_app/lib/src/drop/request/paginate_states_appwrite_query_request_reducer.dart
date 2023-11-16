@@ -49,7 +49,7 @@ class PaginateStatesAppwriteQueryRequestReducer
     final documents = await query.databases.listDocuments(
       databaseId: AppwriteCloudRepository.defaultDatabaseId,
       collectionId: query.collectionId,
-      queries: query.queries,
+      queries: paginateQuery.queries,
     );
 
     final states = documents.documents.map(getStateFromDocument).toList();
@@ -59,7 +59,7 @@ class PaginateStatesAppwriteQueryRequestReducer
 
     return QueryResultPage(
       items: states,
-      nextPageGetter: documents.total == limit
+      nextPageGetter: states.length == limit
           ? () => _paginate(
                 query: query,
                 lastDocumentId: documents.documents.lastOrNull?.$id,
