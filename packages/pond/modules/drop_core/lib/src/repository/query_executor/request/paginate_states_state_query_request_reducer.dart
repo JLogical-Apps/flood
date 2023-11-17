@@ -15,7 +15,7 @@ class PaginateStatesStateQueryRequestReducer
     Function(State state)? onStateRetrieved,
   }) {
     return PaginatedQueryResult(
-      page: QueryResultPage.batched(
+      initialPage: QueryResultPage.batched(
         items: states.toList(),
         batchSize: queryRequest.pageSize,
       ),

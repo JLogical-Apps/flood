@@ -5,6 +5,7 @@ import 'package:appwrite_app/src/drop/appwrite_cloud_repository.dart';
 import 'package:appwrite_app/src/drop/appwrite_query.dart';
 import 'package:appwrite_app/src/drop/appwrite_query_request_reducer.dart';
 import 'package:drop_core/drop_core.dart';
+import 'package:log_core/log_core.dart';
 
 class PaginateStatesAppwriteQueryRequestReducer
     extends AppwriteQueryRequestReducer<PaginateStatesQueryRequest, PaginatedQueryResult<State>> {
@@ -17,13 +18,14 @@ class PaginateStatesAppwriteQueryRequestReducer
     Function(State state)? onStateRetrieved,
   }) async {
     final page = await _paginate(
-      query: appwriteQuery,
+      queryRequest: queryRequest,
+      appwriteQuery: appwriteQuery,
       lastDocumentId: null,
       limit: queryRequest.pageSize,
       onStateRetrieved: onStateRetrieved,
     );
 
-    return PaginatedQueryResult(page: page);
+    return PaginatedQueryResult(initialPage: page);
   }
 
   @override
@@ -36,19 +38,22 @@ class PaginateStatesAppwriteQueryRequestReducer
   }
 
   Future<QueryResultPage<State>> _paginate({
-    required AppwriteQuery query,
+    required QueryRequest queryRequest,
+    required AppwriteQuery appwriteQuery,
     required String? lastDocumentId,
     required int limit,
     Function(State state)? onStateRetrieved,
   }) async {
-    var paginateQuery = query.withQuery(appwrite.Query.limit(limit));
+    var paginateQuery = appwriteQuery.withQuery(appwrite.Query.limit(limit));
     if (lastDocumentId != null) {
       paginateQuery = paginateQuery.withQuery(appwrite.Query.cursorAfter(lastDocumentId));
     }
 
-    final documents = await query.databases.listDocuments(
+    dropContext.context.log('Fetching next page in Appwrite: [$queryRequest]');
+
+    final documents = await appwriteQuery.databases.listDocuments(
       databaseId: AppwriteCloudRepository.defaultDatabaseId,
-      collectionId: query.collectionId,
+      collectionId: appwriteQuery.collectionId,
       queries: paginateQuery.queries,
     );
 
@@ -61,7 +66,8 @@ class PaginateStatesAppwriteQueryRequestReducer
       items: states,
       nextPageGetter: states.length == limit
           ? () => _paginate(
-                query: query,
+                queryRequest: queryRequest,
+                appwriteQuery: appwriteQuery,
                 lastDocumentId: documents.documents.lastOrNull?.$id,
                 limit: limit,
                 onStateRetrieved: onStateRetrieved,
