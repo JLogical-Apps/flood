@@ -4,12 +4,13 @@ import 'package:drop_core/drop_core.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PaginatedQueryResult<T> with IsQueryResultPage<T> {
+  final QueryResultPage<T> initialPage;
   final BehaviorSubject<QueryResultPage<T>> pageX;
   final FutureOr Function(QueryResultPage<T> page)? onPageLoaded;
 
   QueryResultPage<T> get page => pageX.value;
 
-  PaginatedQueryResult({required QueryResultPage<T> page, this.onPageLoaded}) : pageX = BehaviorSubject.seeded(page) {
+  PaginatedQueryResult({required this.initialPage, this.onPageLoaded}) : pageX = BehaviorSubject.seeded(initialPage) {
     onPageLoaded?.call(page);
   }
 
@@ -30,8 +31,14 @@ class PaginatedQueryResult<T> with IsQueryResultPage<T> {
     await getNextPage();
   }
 
+  Future<void> reload() async {
+    pageX.value = initialPage;
+    await onPageLoaded?.call(page);
+  }
+
   PaginatedQueryResult<R> map<R>(FutureOr<R> Function(T item) mapper) {
     return PaginatedQueryResult(
-        page: page.withListener(onNextPage: (nextPage) => onPageLoaded?.call(nextPage)).map(mapper));
+      initialPage: page.withListener(onNextPage: (nextPage) => onPageLoaded?.call(nextPage)).map(mapper),
+    );
   }
 }

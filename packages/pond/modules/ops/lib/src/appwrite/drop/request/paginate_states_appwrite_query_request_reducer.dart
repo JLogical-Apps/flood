@@ -23,7 +23,7 @@ class PaginateStatesAppwriteQueryRequestReducer
       onStateRetrieved: onStateRetrieved,
     );
 
-    return PaginatedQueryResult(page: page);
+    return PaginatedQueryResult(initialPage: page);
   }
 
   @override
