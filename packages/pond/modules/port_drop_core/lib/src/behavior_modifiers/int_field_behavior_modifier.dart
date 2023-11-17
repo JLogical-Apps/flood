@@ -14,6 +14,6 @@ class IntFieldBehaviorModifier extends PortGeneratorBehaviorModifier<FieldValueO
     PortGeneratorBehaviorModifierContext context,
   ) {
     final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
-    return {behavior.name: PortField<int?, int?>(value: behavior.value ?? defaultValue)};
+    return {behavior.name: PortField.int(initialValue: behavior.value ?? defaultValue)};
   }
 }
