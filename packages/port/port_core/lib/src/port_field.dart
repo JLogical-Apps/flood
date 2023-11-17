@@ -68,10 +68,14 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
     return PortField(value: initialValue);
   }
 
+  static SimplePortField<dart.bool?> bool({dart.bool? initialValue}) {
+    return PortField(value: initialValue);
+  }
+
   static DatePortField<DateTime?, DateTime?> dateTime({
     DateTime? initialValue,
-    bool isDate = true,
-    bool isTime = true,
+    dart.bool isDate = true,
+    dart.bool isTime = true,
   }) {
     return DatePortField(
       portField: PortField(value: initialValue),

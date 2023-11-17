@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:port/port.dart';
+import 'package:port_style/src/object/bool_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/color_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/currency_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/date_time_port_field_builder_modifier.dart';
@@ -22,6 +23,7 @@ abstract class PortFieldBuilderModifier with IsModifier<PortField> {
     DateTimePortFieldBuilderModifier(),
     DoublePortFieldBuilderModifier(),
     IntPortFieldBuilderModifier(),
+    BoolPortFieldBuilderModifier(),
   ]);
 
   static PortFieldBuilderModifier? getPortFieldBuilderModifier(PortField portField) {
