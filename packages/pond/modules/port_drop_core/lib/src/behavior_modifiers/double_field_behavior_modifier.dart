@@ -14,6 +14,6 @@ class DoubleFieldBehaviorModifier extends PortGeneratorBehaviorModifier<FieldVal
     PortGeneratorBehaviorModifierContext context,
   ) {
     final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
-    return {behavior.name: PortField<double?, double?>(value: behavior.value ?? defaultValue)};
+    return {behavior.name: PortField.double(initialValue: behavior.value ?? defaultValue)};
   }
 }

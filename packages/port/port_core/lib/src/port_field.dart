@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:core' as dart;
+import 'dart:core';
 
 import 'package:port_core/src/color_port_field.dart';
 import 'package:port_core/src/currency_port_field.dart';
@@ -55,7 +57,15 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
       );
 
   static SimplePortField<String> string({String? initialValue}) {
-    return PortField(value: initialValue ?? '', validator: Validator.empty());
+    return PortField(value: initialValue ?? '');
+  }
+
+  static SimplePortField<dart.int?> int({dart.int? initialValue}) {
+    return PortField(value: initialValue);
+  }
+
+  static SimplePortField<dart.double?> double({dart.double? initialValue}) {
+    return PortField(value: initialValue);
   }
 
   static DatePortField<DateTime?, DateTime?> dateTime({
