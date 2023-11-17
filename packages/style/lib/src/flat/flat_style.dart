@@ -11,6 +11,7 @@ import 'package:style/src/components/text/styled_markdown.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/flat/dialog/flat_style_dialog.dart';
 import 'package:style/src/flat/input/flat_style_button.dart';
+import 'package:style/src/flat/input/flat_style_checkbox.dart';
 import 'package:style/src/flat/input/flat_style_chip.dart';
 import 'package:style/src/flat/input/flat_style_color_picker.dart';
 import 'package:style/src/flat/input/flat_style_date_time_field.dart';
@@ -66,6 +67,7 @@ class FlatStyle with IsStyle {
           FlatStyleBodyTextRenderer(),
           FlatStyleButtonTextRenderer(),
           FlatStyleTextFieldRenderer(),
+          FlatStyleCheckboxRenderer(),
           FlatStyleDateFieldRenderer(),
           FlatStyleColorPickerRenderer(),
           FlatStyleButtonRenderer(),
