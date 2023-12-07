@@ -40,7 +40,7 @@ dependencies:
   share:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.2"
       path: packages/pond/modules/share
   style:
     git:
