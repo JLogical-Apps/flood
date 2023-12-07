@@ -22,8 +22,8 @@ class FirstOrNullQueryRequest<E extends Entity> extends MapQueryRequest<E, State
   }
 
   @override
-  String toString() {
-    return '$query | first?';
+  String prettyPrint(DropCoreContext context) {
+    return '${query.prettyPrint(context)} | first?';
   }
 
   @override

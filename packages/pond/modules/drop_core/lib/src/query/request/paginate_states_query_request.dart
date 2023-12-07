@@ -1,3 +1,4 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/pagination/paginated_query_result.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
@@ -13,8 +14,8 @@ class PaginateStatesQueryRequest<E extends Entity> extends QueryRequest<E, Pagin
   PaginateStatesQueryRequest({required this.query, this.pageSize = 20});
 
   @override
-  String toString() {
-    return '$query | paginate';
+  String prettyPrint(DropCoreContext context) {
+    return '${query.prettyPrint(context)} | paginate[$pageSize]';
   }
 
   @override

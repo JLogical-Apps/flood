@@ -1,3 +1,4 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/record/entity.dart';
 
@@ -7,8 +8,8 @@ class LimitQuery<E extends Entity> extends Query<E> {
   LimitQuery({required Query parent, required this.limit}) : super(parent: parent);
 
   @override
-  String toString() {
-    return '$parent | limit $limit';
+  String prettyPrint(DropCoreContext context) {
+    return '${parent!.prettyPrint(context)} | limit $limit';
   }
 
   @override

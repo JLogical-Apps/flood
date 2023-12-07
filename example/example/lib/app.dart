@@ -80,6 +80,7 @@ Future<AppPondContext> buildAppPondContext() async {
   await appPondContext.register(StyleAppComponent(style: style));
   await appPondContext.register(UrlBarAppComponent());
   await appPondContext.register(EnvironmentBannerAppComponent());
+  await appPondContext.register(ShareAppComponent());
   await appPondContext.register(TestingSetupAppComponent(onSetup: () async {
     if (testingLoggedIn) {
       await setupTesting(corePondContext);

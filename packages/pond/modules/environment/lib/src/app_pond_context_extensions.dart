@@ -2,13 +2,15 @@ import 'package:environment_core/environment_core.dart';
 import 'package:pond/pond.dart';
 
 extension EnvironmentAppPondContextExtensions on AppPondContext {
-  EnvironmentConfig get environmentConfig => find<EnvironmentConfigCoreComponent>().environmentConfig;
+  EnvironmentConfigCoreComponent get environmentCoreComponent => find<EnvironmentConfigCoreComponent>();
 
-  BuildType get buildType => find<EnvironmentConfigCoreComponent>().buildType;
+  EnvironmentConfig get environmentConfig => environmentCoreComponent.environmentConfig;
 
-  Platform get platform => find<EnvironmentConfigCoreComponent>().platform;
+  BuildType get buildType => environmentCoreComponent.buildType;
 
-  EnvironmentType get environment => find<EnvironmentConfigCoreComponent>().environment;
+  Platform get platform => environmentCoreComponent.platform;
+
+  EnvironmentType get environment => environmentCoreComponent.environment;
 
   T environmental<T>(T Function(EnvironmentType type) getter) {
     return getter(environment);

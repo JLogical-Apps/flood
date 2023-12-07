@@ -1,3 +1,4 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 
@@ -8,8 +9,8 @@ class WithoutCacheQueryRequest<E extends Entity, T> extends QueryRequestWrapper<
   WithoutCacheQueryRequest({required this.queryRequest});
 
   @override
-  String toString() {
-    return '$queryRequest | without cache';
+  String prettyPrint(DropCoreContext context) {
+    return '${queryRequest.prettyPrint(context)} | without cache';
   }
 
   @override

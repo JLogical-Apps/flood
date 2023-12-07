@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  clipboard:
+    dependency: transitive
+    description:
+      name: clipboard
+      sha256: "2ec38f0e59878008ceca0ab122e4bfde98847f88ef0f83331362ba4521f565a9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.3"
   clock:
     dependency: transitive
     description:
@@ -120,6 +128,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.9"
+  environment:
+    dependency: "direct overridden"
+    description:
+      path: "../environment"
+      relative: true
+    source: path
+    version: "0.0.1"
+  environment_core:
+    dependency: "direct overridden"
+    description:
+      path: "../environment_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   equatable:
     dependency: transitive
     description:
@@ -298,6 +320,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  localstorage:
+    dependency: transitive
+    description:
+      name: localstorage
+      sha256: fdff4f717114e992acfd4045dc4a9ab9b987ca57f020965d63e3eb34089c60d8
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1+4"
   log:
     dependency: "direct overridden"
     description:
@@ -461,6 +491,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  persistence:
+    dependency: "direct overridden"
+    description:
+      path: "../../../persistence/persistence"
+      relative: true
+    source: path
+    version: "0.0.1"
   persistence_core:
     dependency: "direct overridden"
     description:
@@ -590,6 +627,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  share:
+    dependency: "direct overridden"
+    description:
+      path: "../share"
+      relative: true
+    source: path
+    version: "0.0.1"
   share_plus:
     dependency: transitive
     description:

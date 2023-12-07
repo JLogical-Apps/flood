@@ -77,7 +77,7 @@ class AppwriteCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
 
   @override
   Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest, {Function(State state)? onStateRetreived}) async {
-    repository.context.log('Executing query to Appwrite: [$queryRequest]');
+    repository.context.log('Executing query to Appwrite: [${queryRequest.prettyPrint(dropContext)}]');
     final appwriteQuery = reduceQuery(null, queryRequest.query);
     return await getQueryRequestReducerResolver().resolve(queryRequest).reduce(
           queryRequest,
@@ -91,7 +91,7 @@ class AppwriteCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     QueryRequest<dynamic, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
-    repository.context.log('Executing queryX to Appwrite: [$queryRequest]');
+    repository.context.log('Executing queryX to Appwrite: [${queryRequest.prettyPrint(dropContext)}]');
     final appwriteQuery = reduceQuery(null, queryRequest.query);
     return getQueryRequestReducerResolver()
         .resolve(queryRequest)

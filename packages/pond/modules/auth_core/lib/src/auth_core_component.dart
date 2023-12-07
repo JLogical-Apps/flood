@@ -99,6 +99,11 @@ class LoginParameters {
   final String password;
 
   LoginParameters({required this.email, required this.password});
+
+  @override
+  String toString() {
+    return 'LoginParameters($email, ...)';
+  }
 }
 
 class SignupParameters {
@@ -106,4 +111,9 @@ class SignupParameters {
   final String password;
 
   SignupParameters({required this.email, required this.password});
+
+  @override
+  String toString() {
+    return 'SignupParameters($email, ...)';
+  }
 }

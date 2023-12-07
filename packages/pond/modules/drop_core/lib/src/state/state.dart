@@ -84,4 +84,9 @@ class State extends Equatable implements Stateful {
       data: fullData.cast<String, dynamic>(),
     );
   }
+
+  @override
+  String toString() {
+    return 'State($id, $type, $data)';
+  }
 }

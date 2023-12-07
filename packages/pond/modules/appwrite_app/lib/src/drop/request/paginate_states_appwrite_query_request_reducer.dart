@@ -49,7 +49,7 @@ class PaginateStatesAppwriteQueryRequestReducer
       paginateQuery = paginateQuery.withQuery(appwrite.Query.cursorAfter(lastDocumentId));
     }
 
-    dropContext.context.log('Fetching next page in Appwrite: [$queryRequest]');
+    dropContext.context.log('Fetching next page in Appwrite: [${queryRequest.prettyPrint(dropContext)}]');
 
     final documents = await appwriteQuery.databases.listDocuments(
       databaseId: AppwriteCloudRepository.defaultDatabaseId,

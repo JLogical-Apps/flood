@@ -22,8 +22,8 @@ class AllQueryRequest<E extends Entity> extends MapQueryRequest<E, List<State>, 
   }
 
   @override
-  String toString() {
-    return '$query | all';
+  String prettyPrint(DropCoreContext context) {
+    return '${query.prettyPrint(context)} | all';
   }
 
   @override
