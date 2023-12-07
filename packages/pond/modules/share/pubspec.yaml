@@ -1,0 +1,44 @@
+name: share
+description: Flutter utils for sharing content.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  clipboard: ^0.1.3
+  collection: ^1.16.0
+  flutter_hooks: ^0.18.5+1
+  provider: ^6.0.5
+  share_plus: ^7.0.1
+
+  environment:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "master"
+      path: packages/pond/modules/environment
+  pond:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "master"
+      path: packages/pond/pond
+  style:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "master"
+      path: packages/style
+  utils:
+    git:
+      url: git@github.com:jaboyc/jlogical_utils.git
+      ref: "master"
+      path: packages/utils/utils
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^2.0.0

@@ -26,8 +26,8 @@ class PaginatedQueryRequest<E extends Entity>
   }
 
   @override
-  String toString() {
-    return '$query | paginate';
+  String prettyPrint(DropCoreContext context) {
+    return '${query.prettyPrint(context)} | paginate';
   }
 
   @override

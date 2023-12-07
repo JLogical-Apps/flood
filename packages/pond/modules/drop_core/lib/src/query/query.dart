@@ -1,3 +1,4 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/condition/query_condition.dart';
 import 'package:drop_core/src/query/from_query.dart';
 import 'package:drop_core/src/query/limit_query.dart';
@@ -48,6 +49,8 @@ abstract class Query<E extends Entity> with EquatableMixin {
   static FromQuery<Entity> fromAll() {
     return from();
   }
+
+  String prettyPrint(DropCoreContext context);
 }
 
 extension QueryExtensions<E extends Entity> on Query<E> {

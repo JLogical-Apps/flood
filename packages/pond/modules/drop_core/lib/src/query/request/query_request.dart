@@ -13,6 +13,8 @@ import 'package:utils_core/utils_core.dart';
 
 abstract class QueryRequest<E, T> with EquatableMixin {
   Query get query;
+
+  String prettyPrint(DropCoreContext context);
 }
 
 extension QueryRequestExtensions<E extends Entity, T> on QueryRequest<E, T> {

@@ -41,4 +41,9 @@ class _MapQueryRequestImpl<E extends Entity, S, T> extends MapQueryRequest<E, S,
 
   @override
   Query get query => sourceQueryRequest.query;
+
+  @override
+  String prettyPrint(DropCoreContext context) {
+    return '${query.prettyPrint(context)} | mapped';
+  }
 }

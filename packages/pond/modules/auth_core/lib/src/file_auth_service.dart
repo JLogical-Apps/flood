@@ -127,4 +127,9 @@ class LoginToken extends Equatable {
 
   @override
   List<Object?> get props => [email, password];
+
+  @override
+  String toString() {
+    return 'LoginToken($email, ...)';
+  }
 }

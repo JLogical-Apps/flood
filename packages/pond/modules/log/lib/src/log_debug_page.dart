@@ -8,9 +8,8 @@ import 'package:log/src/log_history_card.dart';
 import 'package:log_core/log_core.dart';
 import 'package:model/model.dart';
 import 'package:pond/pond.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:share/share.dart';
 import 'package:style/style.dart';
-import 'package:utils/utils.dart';
 
 class LogDebugRoute with IsRoute<LogDebugRoute> {
   @override
@@ -66,12 +65,10 @@ class LogDebugPage with IsAppPageWrapper<LogDebugRoute> {
                     iconData: Icons.share,
                     color: Colors.blue,
                     onPerform: (context) async {
-                      final box = context.findRenderObject() as RenderBox?;
-                      await Share.share(
-                        logs!.join('\n---\n'),
-                        subject: 'Logs ${timeCreated.format()}',
-                        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-                      );
+                      await context.find<ShareAppComponent>().shareText(
+                            context,
+                            text: logs!.join('\n---\n'),
+                          );
                     }),
             ],
             children: [
