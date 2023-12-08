@@ -12,7 +12,15 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
     final colorPalette = context.colorPalette();
 
     return PopScope(
-      canPop: component.canPop,
+      canPop: component.onShouldPop == null,
+      onPopInvoked: component.onShouldPop == null
+          ? null
+          : (_) async {
+              final shouldPop = await component.onShouldPop!();
+              if (shouldPop) {
+                Navigator.of(context).pop();
+              }
+            },
       child: Scaffold(
         appBar: AppBar(
           foregroundColor: context.colorPalette().foreground.regular,
