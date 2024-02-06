@@ -19,7 +19,6 @@ export 'modules/asset/local_asset_provider.dart';
 export 'modules/asset/video_asset_picker.dart';
 export 'modules/auth/auth_module_hooks.dart';
 export 'modules/auth/default_auth_module.dart';
-export 'modules/auth/default_auth_module.dart';
 export 'modules/config/config_data_source.dart';
 export 'modules/config/config_module.dart';
 export 'modules/core_module.dart';
@@ -43,6 +42,7 @@ export 'modules/syncing/assets/publish_actions/asset_upload_sync_publish_action_
 export 'modules/syncing/assets/syncing_asset_provider.dart';
 export 'modules/syncing/assets/syncing_asset_provider_extensions.dart';
 export 'modules/syncing/publish_actions/sync_publish_action.dart';
+export 'modules/syncing/publish_actions/sync_publish_action_entity.dart';
 export 'modules/syncing/sync_download_action.dart';
 export 'modules/syncing/sync_repository_extensions.dart';
 export 'modules/syncing/syncing_module.dart';
