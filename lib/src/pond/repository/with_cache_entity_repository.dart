@@ -22,7 +22,6 @@ import 'entity_repository.dart';
 
 mixin WithCacheEntityRepository on EntityRepository {
   final Cache<String, State> _stateByIdCache = Cache();
-  final Lock _saveLock = Lock(reentrant: true);
 
   final Map<QueryRequest, Completer<dynamic>> _queryCompleterByQueryRequest = {};
   final Map<Query, QueryPaginationResultController> _sourcePaginationResultControllerByQuery = {};
@@ -46,7 +45,7 @@ mixin WithCacheEntityRepository on EntityRepository {
     log('$repositoryName: Saving id [$id] with [$state]');
 
     _stateByIdCache.save(id, state);
-    await _saveLock.synchronized(() => super.saveState(state));
+    await super.saveState(state);
   }
 
   @override
