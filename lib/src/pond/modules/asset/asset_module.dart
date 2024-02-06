@@ -30,7 +30,7 @@ class AssetModule extends AppModule {
     assetProvider ??= this.assetProvider;
     return _getAssetCacheFromProvider(assetProvider).putIfAbsent(
       id,
-      () => assetProvider!.getModelById(id)..ensureLoadingStarted(),
+      () => assetProvider!.getModelById(id),
     );
   }
 

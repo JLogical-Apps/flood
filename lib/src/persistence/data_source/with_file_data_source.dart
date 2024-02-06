@@ -5,7 +5,7 @@ import 'package:jlogical_utils/src/utils/export_core.dart';
 import 'package:pool/pool.dart';
 
 mixin WithFileDataSource on DataSource<String> {
-  static Pool _filePool = Pool(10);
+  static Pool _filePool = Pool(40);
 
   /// The file this is pointing to.
   File get file;
