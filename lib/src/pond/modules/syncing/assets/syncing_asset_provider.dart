@@ -36,7 +36,11 @@ class SyncingAssetProvider extends AssetProvider {
     if (locate<SyncingModule>().isDisabled) {
       return sourceAssetProvider.getDataSource(id);
     }
-    return _SyncingDataSource(localDataSource: localAssetProvider.getDataSource(id), assetId: id);
+    return _SyncingDataSource(
+      assetId: id,
+      localDataSource: localAssetProvider.getDataSource(id),
+      sourceDataSource: sourceAssetProvider.getDataSource(id),
+    );
   }
 
   @override
@@ -51,11 +55,14 @@ class SyncingAssetProvider extends AssetProvider {
 /// DataSource that enqueues publish actions to the syncing module.
 class _SyncingDataSource extends DataSource<Asset> {
   final DataSource<Asset> localDataSource;
+  final DataSource<Asset> sourceDataSource;
   final String assetId;
+
+  var triedGet = false;
 
   late final SyncingModule syncingModule = locate<SyncingModule>();
 
-  _SyncingDataSource({required this.localDataSource, required this.assetId});
+  _SyncingDataSource({required this.localDataSource, required this.assetId, required this.sourceDataSource});
 
   @override
   Future<void> saveData(Asset data) async {
@@ -72,7 +79,20 @@ class _SyncingDataSource extends DataSource<Asset> {
   }
 
   @override
-  Future<Asset?> getData() {
-    return localDataSource.getData();
+  Future<Asset?> getData() async {
+    if (triedGet) {
+      return await localDataSource.getData();
+    }
+
+    triedGet = true;
+    final data = await localDataSource.getData();
+    if (data == null) {
+      final sourceData = await sourceDataSource.getData();
+      if (sourceData != null) {
+        await saveData(sourceData);
+      }
+      return sourceData;
+    }
+    return null;
   }
 }
