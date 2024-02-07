@@ -86,13 +86,14 @@ class _SyncingDataSource extends DataSource<Asset> {
 
     triedGet = true;
     final data = await localDataSource.getData();
-    if (data == null) {
-      final sourceData = await sourceDataSource.getData();
-      if (sourceData != null) {
-        await saveData(sourceData);
-      }
-      return sourceData;
+    if (data != null) {
+      return data;
     }
-    return null;
+
+    final sourceData = await sourceDataSource.getData();
+    if (sourceData != null) {
+      await saveData(sourceData);
+    }
+    return sourceData;
   }
 }
