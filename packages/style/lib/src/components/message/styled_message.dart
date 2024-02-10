@@ -7,4 +7,6 @@ class StyledMessage {
   final Color? color;
 
   StyledMessage({this.label, this.labelText, this.color});
+
+  StyledMessage.error({this.label, this.labelText}) : color = Colors.red;
 }
