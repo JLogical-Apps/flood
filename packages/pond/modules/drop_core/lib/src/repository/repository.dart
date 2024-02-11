@@ -25,8 +25,8 @@ import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:pond_core/pond_core.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:runtime_type/type.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class Repository implements CorePondComponent, RepositoryStateHandlerWrapper, RepositoryQueryExecutorWrapper {
@@ -81,7 +81,12 @@ extension RepositoryExtension on Repository {
     FutureOr Function(V newValueObject)? updater,
   ]) async {
     final valueObjectType = V == ValueObject ? entity.valueObjectType : V;
-    final newValueObject = context.dropCoreComponent.construct(valueObjectType) as V;
+    var valueObjectRuntimeType = context.dropCoreComponent.getRuntimeTypeRuntime(valueObjectType);
+    if (valueObjectRuntimeType.isAbstract) {
+      valueObjectRuntimeType = context.dropCoreComponent.getRuntimeTypeRuntime(entity.valueObjectType);
+    }
+
+    final newValueObject = valueObjectRuntimeType.createInstance() as V;
 
     if (entity.hasValue) {
       newValueObject.state = entity.value.getState(context.dropCoreComponent);
