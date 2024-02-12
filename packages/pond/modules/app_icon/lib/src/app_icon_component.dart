@@ -71,14 +71,18 @@ class AppIconCommand extends AutomateCommand<AppIconCommand> {
 
   Future<Map<String, dynamic>> _constructConfig(AutomateCommandContext context) async {
     final appIconForegroundFile = appIconForegroundFileGetter(context.appDirectory);
+    final imagePath = (await _constructAppIcon(context, foregroundImageFile: appIconForegroundFile)).absolute.path;
     return {
       'flutter_icons': {
         'android': true,
         'ios': true,
         'remove_alpha_ios': true,
-        'image_path': (await _constructAppIcon(context, foregroundImageFile: appIconForegroundFile)).absolute.path,
+        'image_path': imagePath,
         'adaptive_icon_background': '#${backgroundColor.toRadixString(16)}',
         'adaptive_icon_foreground': appIconForegroundFile.relativePath,
+        'web' : {
+          'generate': true,
+        },
       },
     };
   }
