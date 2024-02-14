@@ -61,7 +61,7 @@ class TestflightDeployTarget with IsDeployTarget {
       '--ipa ${ipaFile.path} '
       '--apple_id $appleId '
       '--team_id $teamId '
-      '--changelog ${releaseNotes ?? ''} ',
+      '--release_notes ${releaseNotes ?? ''} ',
       environment: {
         'MATCH_PASSWORD': matchPassword,
       },
