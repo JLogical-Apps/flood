@@ -48,8 +48,8 @@
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Upload photos to envelopes.</string>
 		<key>NSCameraUsageDescription</key>
-        <string>Take pictures and upload them to budgets.</string>
+		<string>Take pictures and upload them to budgets.</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-</dict>
+		<true/>
+	</dict>
 </plist>

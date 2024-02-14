@@ -47,13 +47,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
-  app_icon:
-    dependency: "direct overridden"
-    description:
-      path: "../../packages/pond/modules/app_icon"
-      relative: true
-    source: path
-    version: "0.0.1"
   appwrite:
     dependency: transitive
     description:
@@ -679,6 +672,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.13"
+  flutter_native_splash:
+    dependency: "direct dev"
+    description:
+      name: flutter_native_splash
+      sha256: "17d9671396fb8ec45ad10f4a975eb8a0f70bedf0fdaf0720b31ea9de6da8c4da"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.7"
   flutter_staggered_grid_view:
     dependency: transitive
     description:
@@ -804,10 +805,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: a72242c9a0ffb65d03de1b7113bc4e189686fc07c7147b8b41811d0dd0e0d9bf
+      sha256: "4c68bfd5ae83e700b5204c1e74451e7bf3cf750e6843c6e158289cf56bda018e"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.17"
+    version: "4.1.7"
   ini:
     dependency: transitive
     description:
@@ -1006,6 +1007,13 @@ packages:
     dependency: "direct overridden"
     description:
       path: "../../packages/model/model_core"
+      relative: true
+    source: path
+    version: "0.0.1"
+  native_setup:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/pond/modules/native_setup"
       relative: true
     source: path
     version: "0.0.1"

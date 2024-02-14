@@ -6,19 +6,6 @@ import 'package:jlogical_utils_cli/jlogical_utils_cli.dart';
 Future<void> main(List<String> args) async {
   final corePondContext = await getCorePondContext(
     environmentConfig: EnvironmentConfig.static.fileAssets(projectDirectory: Directory.current.parent / 'example'),
-    additionalCoreComponents: (corePondContext) => [
-      // AppwriteCoreComponent(config: corePondContext.environmental((type) {
-      //   if (type == EnvironmentType.static.qa) {
-      //     return AppwriteConfig.localhost(projectId: '651b48116fc13fcb79be');
-      //   } else if (type == EnvironmentType.static.staging) {
-      //     return AppwriteConfig.cloud(projectId: '6409e66ed830e72e8f8d');
-      //   } else if (type == EnvironmentType.static.production) {
-      //     return AppwriteConfig.cloud(projectId: 'valet');
-      //   }
-      //
-      //   throw Exception('Cannot find Appwrite Config for environment [$type]');
-      // })),
-    ],
   );
   final automatePondContext = AutomatePondContext(corePondContext: corePondContext);
 
@@ -30,9 +17,9 @@ Future<void> main(List<String> args) async {
     RegExp('tool/.*'),
   ];
 
-  await automatePondContext.register(AppIconAutomateComponent(
-    appIconForegroundFileGetter: (root) => root / 'assets' - 'logo_foreground_transparent.png',
-    backgroundColor: 0x172434,
+  await automatePondContext.register(NativeSetupAutomateComponent(
+    appIconForegroundFileGetter: (root) => root / 'assets' - 'logo_foreground.png',
+    backgroundColor: 0x132434,
     padding: 80,
   ));
   await automatePondContext.register(OpsAutomateComponent(environments: {

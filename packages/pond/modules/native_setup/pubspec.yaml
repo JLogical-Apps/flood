@@ -1,5 +1,5 @@
-name: app_icon
-description: Automate package to set the app icon.
+name: native_setup
+description: Automate package to set the app icon and splash.
 
 publish_to: "none"
 
