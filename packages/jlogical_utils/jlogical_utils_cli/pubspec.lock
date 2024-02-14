@@ -32,13 +32,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  app_icon:
-    dependency: "direct main"
-    description:
-      path: "../../pond/modules/app_icon"
-      relative: true
-    source: path
-    version: "0.0.1"
   appwrite_core:
     dependency: "direct overridden"
     description:
@@ -518,6 +511,13 @@ packages:
     dependency: "direct overridden"
     description:
       path: "../../model/model_core"
+      relative: true
+    source: path
+    version: "0.0.1"
+  native_setup:
+    dependency: "direct main"
+    description:
+      path: "../../pond/modules/native_setup"
       relative: true
     source: path
     version: "0.0.1"

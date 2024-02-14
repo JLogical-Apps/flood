@@ -22,6 +22,7 @@ class Project with IsPackageManagerWrapper, IsTerminalWrapper {
       : packageManager = PubspecPackageManager(
           terminal: terminal ?? ShellTerminal(workingDirectory: directory),
           pubspecFile: directory - 'pubspec.yaml',
+          pubCommand: '$executableRoot pub',
         ),
         terminal = terminal ?? ShellTerminal(workingDirectory: directory);
 

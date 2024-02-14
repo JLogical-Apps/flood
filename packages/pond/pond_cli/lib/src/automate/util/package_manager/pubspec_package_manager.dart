@@ -7,12 +7,12 @@ import 'package:pond_cli/src/automate/util/terminal/terminal.dart';
 class PubspecPackageManager with IsPackageManager {
   final Terminal terminal;
   final File pubspecFile;
-  final String pubGetCommand;
+  final String pubCommand;
 
   PubspecPackageManager({
     required this.terminal,
     required this.pubspecFile,
-    this.pubGetCommand = 'flutter pub get',
+    this.pubCommand = 'flutter pub',
   });
 
   Map<String, dynamic>? _parsedPubspec;
@@ -35,8 +35,8 @@ class PubspecPackageManager with IsPackageManager {
   @override
   Future<void> registerPackage(String packageName, {required bool isDevDependency}) async {
     await terminal.run([
-      'dart pub add ${isDevDependency ? '--dev' : ''} $packageName',
-      pubGetCommand,
+      '$pubCommand add ${isDevDependency ? '--dev' : ''} $packageName',
+      '$pubCommand get',
     ].join('\n'));
 
     _parsedPubspec = null;
