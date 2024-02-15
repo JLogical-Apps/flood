@@ -20,5 +20,5 @@ class BetaReleaseEnvironmentType implements ReleaseEnvironmentType {
 
 class ProductionReleaseEnvironmentType implements ReleaseEnvironmentType {
   @override
-  String get name => 'main';
+  String get name => 'production';
 }
