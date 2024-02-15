@@ -40,6 +40,7 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
 
   late final environmentProperty = field<String>(name: 'environment');
   late final platformsProperty = field<String>(name: 'only');
+  late final buildOnlyProperty = field<bool>(name: 'buildOnly').withFallback(() => false);
 
   ReleaseCommand({required this.pipelines, required this.platforms});
 
@@ -61,6 +62,12 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
         (throw Exception('Could not find pipeline for release environment [${environment.name}]'));
     final platforms = getPlatforms();
 
+    if (buildOnlyProperty.value) {
+      final buildStep = pipeline.pipelineSteps.firstWhere((step) => step.name == 'build');
+      await buildStep.execute(context, platforms);
+      return;
+    }
+
     for (final step in pipeline.pipelineSteps) {
       if (context.path.parameters['skip_${step.name}'] == 'true') {
         print('SKIPPING [${step.name}]\n');
@@ -77,7 +84,7 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
   AutomatePathDefinition get pathDefinition => AutomatePathDefinition.property(environmentProperty);
 
   @override
-  List<AutomateCommandProperty> get parameters => [platformsProperty];
+  List<AutomateCommandProperty> get parameters => [platformsProperty, buildOnlyProperty];
 
   ReleaseEnvironmentType? getEnvironmentOrNull() {
     final releaseTypes = [
