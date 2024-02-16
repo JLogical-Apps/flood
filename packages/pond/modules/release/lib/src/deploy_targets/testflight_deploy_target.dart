@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:release/src/deploy_target.dart';
+import 'package:release/src/deploy_targets/util/apple_api_key_retrieval_method.dart';
 import 'package:release/src/release_context.dart';
 import 'package:release/src/release_platform.dart';
 import 'package:utils_core/utils_core.dart';
@@ -62,7 +63,7 @@ class TestflightDeployTarget with IsDeployTarget {
       '--ipa ${ipaFile.path} '
       '--apple_id $appleId '
       '--team_id $teamId '
-      '--release_notes ${releaseNotes ?? ''} ',
+      '--changelog ${releaseNotes ?? ''} ',
       environment: {
         'MATCH_PASSWORD': matchPassword,
       },
@@ -178,38 +179,4 @@ class TestflightDeployTarget with IsDeployTarget {
       return appleId;
     });
   }
-}
-
-enum ApiKeyRetrievalMethod {
-  p8File('p8 file', _retrieveP8FileApiKey),
-  encoded('encoded api key', _retrieveEncodedApiKey);
-
-  final String displayName;
-  final Future<String> Function(AutomateCommandContext context) onRetrieveEncodedApiKey;
-
-  const ApiKeyRetrievalMethod(this.displayName, this.onRetrieveEncodedApiKey);
-
-  Future<String> retrieveEncodedApiKey(AutomateCommandContext context) {
-    return onRetrieveEncodedApiKey(context);
-  }
-}
-
-Future<String> _retrieveP8FileApiKey(AutomateCommandContext context) async {
-  final p8FileLocation = context.input('What is the path to your p8 file?');
-  if (p8FileLocation.isBlank) {
-    throw Exception('.p8 file not provided!');
-  }
-
-  final p8File = File(p8FileLocation);
-  final contents = await DataSource.static.rawFile(p8File).get();
-  return base64Encode(contents);
-}
-
-Future<String> _retrieveEncodedApiKey(AutomateCommandContext context) async {
-  final encodedP8 = context.input('What is your base64-encoded p8 file?');
-  if (encodedP8.isBlank) {
-    throw Exception('Base64-encoded p8 not provided!');
-  }
-
-  return encodedP8;
 }

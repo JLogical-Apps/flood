@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:pond_cli/pond_cli.dart';
+import 'package:release/src/deploy_target.dart';
+import 'package:release/src/metadata_context.dart';
 import 'package:release/src/pipeline.dart';
 import 'package:release/src/pipeline_step.dart';
 import 'package:release/src/release_context.dart';
@@ -9,6 +13,8 @@ import 'package:release/src/release_platform.dart';
 class ReleaseAutomateComponent with IsAutomatePondComponent {
   final Map<ReleaseEnvironmentType, Pipeline> pipelines;
   final List<ReleasePlatform>? platforms;
+  final Map<ReleasePlatform, DeployTarget> appStoreDeployTargetByPlatform;
+  final Directory Function(AutomateFileSystem fileSystem)? screenshotsDirectoryGetter;
 
   final List<PipelineStep> preBuildSteps;
   final List<PipelineStep> postBuildSteps;
@@ -16,6 +22,8 @@ class ReleaseAutomateComponent with IsAutomatePondComponent {
   ReleaseAutomateComponent({
     required this.pipelines,
     this.platforms,
+    required this.appStoreDeployTargetByPlatform,
+    this.screenshotsDirectoryGetter,
     List<PipelineStep>? preBuildSteps,
     List<PipelineStep>? postBuildSteps,
   })  : preBuildSteps = preBuildSteps ?? [],
@@ -23,7 +31,15 @@ class ReleaseAutomateComponent with IsAutomatePondComponent {
 
   @override
   List<AutomateCommand> get commands => [
-        ReleaseCommand(pipelines: pipelines, platforms: platforms),
+        ReleaseCommand(
+          pipelines: pipelines,
+          platforms: platforms,
+        ),
+        AppStoreCommand(
+          deployTargetByPlatform: appStoreDeployTargetByPlatform,
+          platforms: platforms,
+          screenshotsDirectoryGetter: screenshotsDirectoryGetter,
+        ),
       ];
 
   void addPreBuildStep(PipelineStep step) {
@@ -104,6 +120,75 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
     return getEnvironmentOrNull() ??
         (throw Exception('Cannot find release environment with name [${environmentProperty.value}]'));
   }
+
+  List<ReleasePlatform> getPlatforms() {
+    if (platformsProperty.value == null) {
+      return getDefaultPlatforms();
+    }
+
+    return platformsProperty.value!
+        .split(',')
+        .map((rawPlatform) =>
+            getDefaultPlatforms().firstWhere((platform) => platform.name.toLowerCase() == rawPlatform.toLowerCase()))
+        .toList();
+  }
+
+  List<ReleasePlatform> getDefaultPlatforms() {
+    return platforms ??
+        [
+          ReleasePlatform.android,
+          ReleasePlatform.ios,
+          ReleasePlatform.web,
+        ];
+  }
+}
+
+class AppStoreCommand extends AutomateCommand<AppStoreCommand> {
+  final Map<ReleasePlatform, DeployTarget> deployTargetByPlatform;
+  final List<ReleasePlatform>? platforms;
+  final Directory Function(AutomateFileSystem fileSystem)? screenshotsDirectoryGetter;
+
+  late final platformsProperty = field<String>(name: 'only');
+
+  AppStoreCommand({required this.deployTargetByPlatform, this.platforms, this.screenshotsDirectoryGetter});
+
+  @override
+  String get name => 'app_store';
+
+  @override
+  String get description => 'Updates app stores screenshots.';
+
+  @override
+  AppStoreCommand copy() {
+    return AppStoreCommand(
+      deployTargetByPlatform: deployTargetByPlatform,
+      screenshotsDirectoryGetter: screenshotsDirectoryGetter,
+    );
+  }
+
+  @override
+  Future<void> onRun(AutomateCommandContext context) async {
+    final platforms = getPlatforms();
+
+    final metadataContext = MetadataContext(
+        screenshotsDirectory: screenshotsDirectoryGetter?.call(context.fileSystem) ??
+            (throw Exception('Screenshots directory not provided!')));
+
+    for (final platform in platforms) {
+      final deployTarget = deployTargetByPlatform[platform];
+      if (deployTarget == null) {
+        continue;
+      }
+
+      await deployTarget.syncMetadata(context, metadataContext, platform);
+    }
+  }
+
+  @override
+  AutomatePathDefinition get pathDefinition => AutomatePathDefinition.empty;
+
+  @override
+  List<AutomateCommandProperty> get parameters => [platformsProperty];
 
   List<ReleasePlatform> getPlatforms() {
     if (platformsProperty.value == null) {

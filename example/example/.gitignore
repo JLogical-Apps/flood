@@ -41,3 +41,5 @@ app.*.map.json
 
 # Pond
 config.overrides.yaml
+
+Preview.html

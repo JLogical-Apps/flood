@@ -36,14 +36,25 @@ Future<void> main(List<String> args) async {
       ignoreBackendPatterns: ignoreBackendPatterns,
     ),
   }));
-  await automatePondContext.register(ReleaseAutomateComponent(pipelines: {
-    ReleaseEnvironmentType.beta: Pipeline.defaultDeploy({
-      ReleasePlatform.android: DeployTarget.googlePlay(GooglePlayTrack.internal, isDraft: true),
-      ReleasePlatform.ios: DeployTarget.testflight,
-      ReleasePlatform.web: DeployTarget.firebase(channel: 'beta'),
-    }),
-    ReleaseEnvironmentType.production: Pipeline.defaultDeploy({}),
-  }));
+  await automatePondContext.register(ReleaseAutomateComponent(
+    screenshotsDirectoryGetter: (fileSystem) => fileSystem.appDirectory / 'screenshots',
+    pipelines: {
+      ReleaseEnvironmentType.production: Pipeline.defaultDeploy({
+        ReleasePlatform.android: DeployTarget.googlePlay(GooglePlayTrack.beta),
+        ReleasePlatform.ios: DeployTarget.testflight,
+        ReleasePlatform.web: DeployTarget.firebase(),
+      }),
+      ReleaseEnvironmentType.beta: Pipeline.defaultDeploy({
+        ReleasePlatform.android: DeployTarget.googlePlay(GooglePlayTrack.internal, isDraft: true),
+        ReleasePlatform.ios: DeployTarget.testflight,
+        ReleasePlatform.web: DeployTarget.firebase(channel: 'beta'),
+      }),
+    },
+    appStoreDeployTargetByPlatform: {
+      ReleasePlatform.android: DeployTarget.googlePlay(GooglePlayTrack.beta),
+      ReleasePlatform.ios: DeployTarget.appStore,
+    },
+  ));
 
   await Automate.automate(
     context: automatePondContext,
