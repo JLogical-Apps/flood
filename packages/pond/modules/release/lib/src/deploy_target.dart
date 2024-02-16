@@ -2,13 +2,14 @@ import 'package:pond_cli/pond_cli.dart';
 import 'package:release/release.dart';
 import 'package:release/src/deploy_targets/firebase_hosting_deploy_target.dart';
 import 'package:release/src/deploy_targets/testflight_deploy_target.dart';
+import 'package:release/src/release_context.dart';
 
 abstract class DeployTarget {
-  Future onPreBuild(AutomateCommandContext context, ReleasePlatform platform);
+  Future onPreBuild(AutomateCommandContext context, ReleaseContext releaseContext, ReleasePlatform platform);
 
-  Future onPostBuild(AutomateCommandContext context, ReleasePlatform platform);
+  Future onPostBuild(AutomateCommandContext context, ReleaseContext releaseContext, ReleasePlatform platform);
 
-  Future onDeploy(AutomateCommandContext context, ReleasePlatform platform);
+  Future onDeploy(AutomateCommandContext context, ReleaseContext releaseContext, ReleasePlatform platform);
 
   static final DeployTarget testflight = TestflightDeployTarget();
 
@@ -19,17 +20,20 @@ abstract class DeployTarget {
 }
 
 extension DeployTargetExtensions on DeployTarget {
-  Future preBuild(AutomateCommandContext context, ReleasePlatform platform) => onPreBuild(context, platform);
+  Future preBuild(AutomateCommandContext context, ReleaseContext releaseContext, ReleasePlatform platform) =>
+      onPreBuild(context, releaseContext, platform);
 
-  Future postBuild(AutomateCommandContext context, ReleasePlatform platform) => onPostBuild(context, platform);
+  Future postBuild(AutomateCommandContext context, ReleaseContext releaseContext, ReleasePlatform platform) =>
+      onPostBuild(context, releaseContext, platform);
 
-  Future deploy(AutomateCommandContext context, ReleasePlatform platform) => onDeploy(context, platform);
+  Future deploy(AutomateCommandContext context, ReleaseContext releaseContext, ReleasePlatform platform) =>
+      onDeploy(context, releaseContext, platform);
 }
 
 mixin IsDeployTarget implements DeployTarget {
   @override
-  Future onPreBuild(AutomateCommandContext context, ReleasePlatform platform) async {}
+  Future onPreBuild(AutomateCommandContext context, ReleaseContext releaseContext, ReleasePlatform platform) async {}
 
   @override
-  Future onPostBuild(AutomateCommandContext context, ReleasePlatform platform) async {}
+  Future onPostBuild(AutomateCommandContext context, ReleaseContext releaseContext, ReleasePlatform platform) async {}
 }

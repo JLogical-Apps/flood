@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:release/src/pipeline.dart';
 import 'package:release/src/pipeline_step.dart';
+import 'package:release/src/release_context.dart';
 import 'package:release/src/release_environment_type.dart';
 import 'package:release/src/release_platform.dart';
 
@@ -41,6 +42,7 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
   late final environmentProperty = field<String>(name: 'environment');
   late final platformsProperty = field<String>(name: 'only');
   late final buildOnlyProperty = field<bool>(name: 'buildOnly').withFallback(() => false);
+  late final debugProperty = field<bool>(name: 'debug').withFallback(() => false);
 
   ReleaseCommand({required this.pipelines, required this.platforms});
 
@@ -62,9 +64,11 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
         (throw Exception('Could not find pipeline for release environment [${environment.name}]'));
     final platforms = getPlatforms();
 
+    final releaseContext = ReleaseContext(platforms: platforms, isDebug: debugProperty.value);
+
     if (buildOnlyProperty.value) {
       final buildStep = pipeline.pipelineSteps.firstWhere((step) => step.name == 'build');
-      await buildStep.execute(context, platforms);
+      await buildStep.execute(context, releaseContext);
       return;
     }
 
@@ -75,7 +79,7 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
       }
 
       print('===[${step.name}]===');
-      await step.execute(context, platforms);
+      await step.execute(context, releaseContext);
       print('');
     }
   }
@@ -84,7 +88,7 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
   AutomatePathDefinition get pathDefinition => AutomatePathDefinition.property(environmentProperty);
 
   @override
-  List<AutomateCommandProperty> get parameters => [platformsProperty, buildOnlyProperty];
+  List<AutomateCommandProperty> get parameters => [platformsProperty, buildOnlyProperty, debugProperty];
 
   ReleaseEnvironmentType? getEnvironmentOrNull() {
     final releaseTypes = [

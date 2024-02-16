@@ -4,6 +4,7 @@ import 'package:pond_cli/pond_cli.dart';
 import 'package:release/src/deploy_target.dart';
 import 'package:release/src/pipeline_step.dart';
 import 'package:release/src/release_component.dart';
+import 'package:release/src/release_context.dart';
 import 'package:release/src/release_platform.dart';
 
 class BuildPipelineStep with IsPipelineStep {
@@ -15,40 +16,40 @@ class BuildPipelineStep with IsPipelineStep {
   String get name => 'build';
 
   @override
-  Future execute(AutomateCommandContext context, List<ReleasePlatform> platforms) async {
+  Future execute(AutomateCommandContext context, ReleaseContext releaseContext) async {
     final releaseComponent = context.automateContext.find<ReleaseAutomateComponent>();
 
     for (final preBuildStep in releaseComponent.preBuildSteps) {
-      await preBuildStep.execute(context, platforms);
+      await preBuildStep.execute(context, releaseContext);
     }
 
     await doForEachDeployTarget(
       context,
-      platforms,
-      (deployTarget, platform) => deployTarget.preBuild(context, platform),
+      releaseContext,
+      (deployTarget, platform) => deployTarget.preBuild(context, releaseContext, platform),
     );
 
-    for (final platform in platforms) {
-      await platform.build(context);
+    for (final platform in releaseContext.platforms) {
+      await platform.onBuild(context, releaseContext);
     }
 
     await doForEachDeployTarget(
       context,
-      platforms,
-      (deployTarget, platform) => deployTarget.postBuild(context, platform),
+      releaseContext,
+      (deployTarget, platform) => deployTarget.postBuild(context, releaseContext, platform),
     );
 
     for (final postBuildStep in releaseComponent.postBuildSteps) {
-      await postBuildStep.execute(context, platforms);
+      await postBuildStep.execute(context, releaseContext);
     }
   }
 
   Future<void> doForEachDeployTarget(
     AutomateCommandContext context,
-    List<ReleasePlatform> platforms,
+    ReleaseContext releaseContext,
     FutureOr Function(DeployTarget deployTarget, ReleasePlatform platform) action,
   ) async {
-    for (final platform in platforms) {
+    for (final platform in releaseContext.platforms) {
       final deployTarget = deployTargetByPlatform[platform];
       if (deployTarget == null) {
         continue;
