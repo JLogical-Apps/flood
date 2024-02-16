@@ -1,6 +1,7 @@
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:release/src/pipeline_step.dart';
+import 'package:release/src/release_context.dart';
 import 'package:release/src/release_platform.dart';
 import 'package:utils_core/utils_core.dart';
 import 'package:version/version.dart';
@@ -11,7 +12,7 @@ class VersionPipelineStep with IsPipelineStep {
   String get name => 'version';
 
   @override
-  Future execute(AutomateCommandContext context, List<ReleasePlatform> platforms) async {
+  Future execute(AutomateCommandContext context, ReleaseContext releaseContext) async {
     final pubspecYaml = await context.appProject.pubspecYamlDataSource.get();
     final currentVersionRaw = pubspecYaml['version'];
     final currentVersion = Version.parse(currentVersionRaw);
@@ -22,7 +23,7 @@ class VersionPipelineStep with IsPipelineStep {
     newVersion = newVersion.withBuild(newBuild);
 
     await updatePubspec(context, version: newVersion);
-    if (platforms.contains(ReleasePlatform.ios)) {
+    if (releaseContext.platforms.contains(ReleasePlatform.ios)) {
       await updateXcode(context, version: newVersion);
     }
   }

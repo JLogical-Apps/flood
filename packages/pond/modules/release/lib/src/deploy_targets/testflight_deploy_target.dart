@@ -4,12 +4,13 @@ import 'dart:io';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
 import 'package:release/src/deploy_target.dart';
+import 'package:release/src/release_context.dart';
 import 'package:release/src/release_platform.dart';
 import 'package:utils_core/utils_core.dart';
 
 class TestflightDeployTarget with IsDeployTarget {
   @override
-  Future onPreBuild(AutomateCommandContext context, ReleasePlatform platform) async {
+  Future onPreBuild(AutomateCommandContext context, ReleaseContext releaseContext, ReleasePlatform platform) async {
     final identifier = await context.getIosIdentifier();
 
     final apiKeyFile = await createApiKeyFile(
@@ -24,7 +25,7 @@ class TestflightDeployTarget with IsDeployTarget {
     final matchPassword = await getMatchPassword(context);
 
     await context.appProject.run(
-      'fastlane match appstore '
+      'fastlane match ${releaseContext.isDebug ? 'adhoc' : 'appstore'} '
       '--app_identifier $identifier '
       '--api_key_path ${apiKeyFile.path} '
       '--team_id $teamId '
@@ -36,7 +37,7 @@ class TestflightDeployTarget with IsDeployTarget {
   }
 
   @override
-  Future onDeploy(AutomateCommandContext context, ReleasePlatform platform) async {
+  Future onDeploy(AutomateCommandContext context, ReleaseContext releaseContext, ReleasePlatform platform) async {
     final identifier = await context.getIosIdentifier();
 
     final apiKeyFile = await createApiKeyFile(

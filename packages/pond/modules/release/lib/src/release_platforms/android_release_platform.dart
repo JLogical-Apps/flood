@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
+import 'package:release/src/release_context.dart';
 import 'package:release/src/release_platform.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -11,7 +12,7 @@ class AndroidReleasePlatform implements ReleasePlatform {
   String get name => 'android';
 
   @override
-  Future build(AutomateCommandContext context) async {
+  Future onBuild(AutomateCommandContext context, ReleaseContext releaseContext) async {
     final keystoreFile = await getKeystoreFile(
       context,
       encodedKeystore: await getEncodedKeystore(context),
@@ -24,7 +25,8 @@ class AndroidReleasePlatform implements ReleasePlatform {
       keystoreFile: keystoreFile,
     );
 
-    await context.appProject.run('flutter build appbundle -t lib/app.dart');
+    await context.appProject
+        .run('flutter build ${releaseContext.isDebug ? 'apk --debug' : 'appbundle'} -t lib/app.dart');
 
     await DataSource.static.file(keystoreFile).delete();
     await DataSource.static.file(keyPropertiesFile).delete();
