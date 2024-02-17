@@ -14,6 +14,6 @@ class FirestoreCountQueryRequestReducer<R extends Record>
     required CountQueryRequest<R> queryRequest,
   }) async {
     final s = await accumulation.count().get();
-    return s.count;
+    return s.count ?? (throw Exception('Could not get count!'));
   }
 }
