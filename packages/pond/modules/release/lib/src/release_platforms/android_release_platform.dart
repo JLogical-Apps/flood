@@ -26,7 +26,7 @@ class AndroidReleasePlatform implements ReleasePlatform {
     );
 
     await context.appProject
-        .run('flutter build ${releaseContext.isDebug ? 'apk --debug' : 'appbundle'} -t lib/app.dart');
+        .run('flutter build ${releaseContext.isDebug ? 'apk --debug' : 'appbundle'}');
 
     await DataSource.static.file(keystoreFile).delete();
     await DataSource.static.file(keyPropertiesFile).delete();
