@@ -8,6 +8,6 @@ class WebReleasePlatform implements ReleasePlatform {
 
   @override
   Future onBuild(AutomateCommandContext context, ReleaseContext releaseContext) async {
-    await context.appProject.run('flutter build web -t lib/app.dart');
+    await context.appProject.run('flutter build web');
   }
 }
