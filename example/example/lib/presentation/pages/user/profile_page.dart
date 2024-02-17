@@ -49,6 +49,20 @@ class ProfilePage with IsAppPageWrapper<ProfileRoute> {
                   await context.warpTo(LoginRoute());
                 },
               ),
+              ActionItem(
+                titleText: 'Delete Account',
+                descriptionText: 'Delete your account.',
+                iconData: Icons.delete_forever,
+                color: Colors.red,
+                onPerform: (context) => context.showStyledDialog(StyledDialog.yesNo(
+                  titleText: 'Confirm Delete',
+                  bodyText: 'Are you sure you want to delete your account? You cannot undo this.',
+                  onAccept: () async {
+                    await context.find<AuthCoreComponent>().delete();
+                    await context.warpTo(LoginRoute());
+                  },
+                )),
+              ),
             ],
             body: StyledList.column.scrollable.centered.withScrollbar(
               children: [

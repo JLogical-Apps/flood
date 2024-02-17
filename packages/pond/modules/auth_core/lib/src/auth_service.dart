@@ -19,6 +19,8 @@ abstract class AuthService with IsCorePondComponent {
 
   Future<void> logout();
 
+  Future<void> delete();
+
   ValueStream<FutureValue<Account?>> get accountX;
 
   static AuthServiceStatic get static => AuthServiceStatic();
@@ -79,6 +81,9 @@ mixin IsAuthServiceWrapper implements AuthServiceWrapper {
 
   @override
   Future<void> logout() => authService.logout();
+
+  @override
+  Future<void> delete() => authService.delete();
 
   @override
   late ValueStream<FutureValue<Account?>> accountX = authService.accountX;

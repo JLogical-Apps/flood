@@ -24,5 +24,10 @@ class BlankAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
+  Future<void> delete() {
+    throw UnimplementedError();
+  }
+
+  @override
   ValueStream<FutureValue<Account?>> get accountX => BehaviorSubject.seeded(FutureValue.loaded(null));
 }
