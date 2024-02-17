@@ -1,5 +1,4 @@
-import 'package:auth_core/src/account.dart';
-import 'package:auth_core/src/auth_service.dart';
+import 'package:auth_core/auth_core.dart';
 import 'package:collection/collection.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -26,7 +25,11 @@ class MemoryAuthService with IsAuthService, IsCorePondComponent {
 
     final existingToken = _userTokens.firstWhereOrNull((token) => token.email == email);
     if (existingToken == null) {
-      throw Exception('Email [$email] does not exist!');
+      throw LoginFailure.invalidEmail();
+    }
+
+    if (existingToken.password != password) {
+      throw LoginFailure.wrongPassword();
     }
 
     _accountX.value = Account(accountId: existingToken.userId, isAdmin: existingToken.isAdmin);
@@ -41,7 +44,7 @@ class MemoryAuthService with IsAuthService, IsCorePondComponent {
 
     final existingToken = _userTokens.firstWhereOrNull((token) => token.email == email);
     if (existingToken != null) {
-      throw Exception('Email [$email] already exists!');
+      throw SignupFailure.emailAlreadyUsed();
     }
 
     final id = Uuid().v4();
@@ -54,6 +57,18 @@ class MemoryAuthService with IsAuthService, IsCorePondComponent {
   @override
   Future<void> logout() async {
     _accountX.value = null;
+  }
+
+  @override
+  Future<void> delete() async {
+    final loggedInUserId = this.loggedInUserId;
+    if (loggedInUserId == null) {
+      throw Exception('Cannot delete an account when you are not logged in!');
+    }
+
+    await logout();
+
+    _userTokens.removeWhere((userToken) => userToken.userId == loggedInUserId);
   }
 }
 

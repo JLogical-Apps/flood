@@ -115,6 +115,20 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
+  Future<void> delete() async {
+    final loggedInUserId = this.loggedInUserId;
+    if (loggedInUserId == null) {
+      throw Exception('Cannot delete an account when you are not logged in!');
+    }
+
+    await logout();
+
+    final registeredAccounts = await registeredAccountsDataSource.getOrNull() ?? {};
+    registeredAccounts.removeWhere((loginToken, account) => account.accountId == loggedInUserId);
+    await registeredAccountsDataSource.set(registeredAccounts);
+  }
+
+  @override
   ValueStream<FutureValue<Account?>> get accountX => _accountX;
 }
 

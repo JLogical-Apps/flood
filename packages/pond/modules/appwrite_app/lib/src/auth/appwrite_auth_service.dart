@@ -84,6 +84,11 @@ class AppwriteAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
+  Future<void> delete() async {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> logout() async {
     await account.deleteSessions();
     _accountX.value = FutureValue.loaded(null);

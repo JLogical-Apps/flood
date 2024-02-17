@@ -48,6 +48,7 @@ class FirebaseAuthService with IsAuthService, IsCorePondComponent {
         case 'user-not-found':
           throw LoginFailure.userNotFound();
         case 'wrong-password':
+        case 'invalid-credential':
           throw LoginFailure.wrongPassword();
         default:
           rethrow;
@@ -87,6 +88,18 @@ class FirebaseAuthService with IsAuthService, IsCorePondComponent {
   Future<void> logout() async {
     await auth.signOut();
     _accountX.value = FutureValue.loaded(null);
+  }
+
+  @override
+  Future<void> delete() async {
+    final user = auth.currentUser;
+    if (user == null) {
+      throw Exception('Cannot delete an account when you are not logged in!');
+    }
+
+    await user.delete();
+
+    await logout();
   }
 
   @override
