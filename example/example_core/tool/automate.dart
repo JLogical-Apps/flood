@@ -9,32 +9,15 @@ Future<void> main(List<String> args) async {
   );
   final automatePondContext = AutomatePondContext(corePondContext: corePondContext);
 
-  final ignoreBackendPatterns = [
-    RegExp('.*node_modules/.*'),
-    RegExp('build/.*'),
-    RegExp('firebase/.*'),
-    RegExp('appwrite/.*'),
-    RegExp('tool/.*'),
-  ];
-
   await automatePondContext.register(NativeSetupAutomateComponent(
     appIconForegroundFileGetter: (root) => root / 'assets' - 'logo_foreground.png',
-    backgroundColor: 0x132434,
-    padding: 80,
+    backgroundColor: 0xffffff,
+    padding: 100,
   ));
   await automatePondContext.register(OpsAutomateComponent(environments: {
-    EnvironmentType.static.qa: OpsEnvironment.static.appwriteLocal(
-      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'lib' - 'backend.dart',
-      ignoreBackendPatterns: ignoreBackendPatterns,
-    ),
-    EnvironmentType.static.staging: OpsEnvironment.static.appwrite(
-      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'lib' - 'backend.dart',
-      ignoreBackendPatterns: ignoreBackendPatterns,
-    ),
-    EnvironmentType.static.production: OpsEnvironment.static.appwrite(
-      serverFileTemplateGetter: (coreDirectory) => coreDirectory / 'lib' - 'backend.dart',
-      ignoreBackendPatterns: ignoreBackendPatterns,
-    ),
+    EnvironmentType.static.qa: OpsEnvironment.static.firebaseEmulator,
+    EnvironmentType.static.staging: OpsEnvironment.static.firebase,
+    EnvironmentType.static.production: OpsEnvironment.static.firebase,
   }));
   await automatePondContext.register(ReleaseAutomateComponent(
     screenshotsDirectoryGetter: (fileSystem) => fileSystem.appDirectory / 'screenshots',

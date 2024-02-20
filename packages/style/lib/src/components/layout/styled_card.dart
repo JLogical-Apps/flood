@@ -24,6 +24,7 @@ class StyledCard extends StyleComponent {
   final EdgeInsets padding;
 
   StyledCard({
+    super.key,
     this.emphasis = Emphasis.regular,
     this.title,
     this.titleText,
@@ -43,6 +44,7 @@ class StyledCard extends StyleComponent {
   });
 
   StyledCard.subtle({
+    super.key,
     this.title,
     this.titleText,
     this.body,
@@ -61,6 +63,7 @@ class StyledCard extends StyleComponent {
   }) : emphasis = Emphasis.subtle;
 
   StyledCard.strong({
+    super.key,
     this.title,
     this.titleText,
     this.body,

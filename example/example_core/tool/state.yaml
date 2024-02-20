@@ -2,11 +2,6 @@ firebase:
   qa:
     project_id: pond-automation-1
   staging:
-    project_id: jlogical-utils
+    project_id: pond-automation-1
   production:
     project_id: pond-automation-1
-appwrite:
-  staging:
-    webDomain: https://www.valetbudget.app
-  production:
-    webDomain: https://valet-budget-app.web.app/
