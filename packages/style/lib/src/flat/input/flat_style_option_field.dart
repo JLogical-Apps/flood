@@ -73,6 +73,8 @@ class FlatStyleOptionFieldRenderer with IsTypedStyleRenderer<StyledOptionField> 
               borderSide: BorderSide(color: context.colorPalette().error.subtle),
             ),
             errorText: component.errorText?.nullIfBlank,
+            errorStyle: context.style().getTextStyle(
+                context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
           ),
         ),
       ],
@@ -123,6 +125,7 @@ class FlatStyleOptionFieldRenderer with IsTypedStyleRenderer<StyledOptionField> 
         enabled: false,
       ))
       ..add(StyledContainer.strong(
+        padding: EdgeInsets.all(4),
         child: StyledList.column(
           children: [
             StyledOptionField<String>(

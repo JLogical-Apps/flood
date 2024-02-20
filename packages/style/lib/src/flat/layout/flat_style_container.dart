@@ -57,6 +57,7 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
   void modifyStyleguide(Styleguide styleguide) {
     styleguide.getTabByNameOrCreate('Containers', icon: Icons.layers_outlined).getSectionByNameOrCreate('Container')
       ..add(StyledContainer.subtle(
+        padding: EdgeInsets.all(8),
         onPressed: () {
           print('Hello World!');
         },
@@ -65,37 +66,66 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
             StyledText.h3.centered('Subtle Container'),
             StyledList.row.withScrollbar(
               children: [
-                StyledContainer.subtle(child: StyledText.h3('Subtle Container')),
-                StyledContainer(child: StyledText.h3('Regular Container')),
-                StyledContainer.strong(child: StyledText.h3('Strong Container')),
+                StyledContainer.subtle(
+                  child: StyledText.h3('Subtle Container'),
+                  padding: EdgeInsets.all(8),
+                ),
+                StyledContainer(
+                  child: StyledText.h3('Regular Container'),
+                  padding: EdgeInsets.all(8),
+                ),
+                StyledContainer.strong(
+                  child: StyledText.h3('Strong Container'),
+                  padding: EdgeInsets.all(8),
+                ),
               ],
             ),
           ],
         ),
       ))
       ..add(StyledContainer(
+        padding: EdgeInsets.all(8),
         child: StyledList.column(
           children: [
             StyledText.h3.centered('Regular Container'),
             StyledList.row.withScrollbar(
               children: [
-                StyledContainer.subtle(child: StyledText.h3('Subtle Container')),
-                StyledContainer(child: StyledText.h3('Regular Container')),
-                StyledContainer.strong(child: StyledText.h3('Strong Container')),
+                StyledContainer.subtle(
+                  child: StyledText.h3('Subtle Container'),
+                  padding: EdgeInsets.all(8),
+                ),
+                StyledContainer(
+                  child: StyledText.h3('Regular Container'),
+                  padding: EdgeInsets.all(8),
+                ),
+                StyledContainer.strong(
+                  child: StyledText.h3('Strong Container'),
+                  padding: EdgeInsets.all(8),
+                ),
               ],
             ),
           ],
         ),
       ))
       ..add(StyledContainer.strong(
+        padding: EdgeInsets.all(8),
         child: StyledList.column(
           children: [
             StyledText.h3.centered('Strong Container'),
             StyledList.row.withScrollbar(
               children: [
-                StyledContainer.subtle(child: StyledText.h3('Subtle Container')),
-                StyledContainer(child: StyledText.h3('Regular Container')),
-                StyledContainer.strong(child: StyledText.h3('Strong Container')),
+                StyledContainer.subtle(
+                  child: StyledText.h3('Subtle Container'),
+                  padding: EdgeInsets.all(8),
+                ),
+                StyledContainer(
+                  child: StyledText.h3('Regular Container'),
+                  padding: EdgeInsets.all(8),
+                ),
+                StyledContainer.strong(
+                  child: StyledText.h3('Strong Container'),
+                  padding: EdgeInsets.all(8),
+                ),
               ],
             ),
           ],

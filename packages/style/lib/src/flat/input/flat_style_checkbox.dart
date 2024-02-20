@@ -62,7 +62,7 @@ class FlatStyleCheckboxRenderer with IsTypedStyleRenderer<StyledCheckbox> {
             ),
           ],
         ),
-        if (component.errorText != null) StyledText.body.error(component.errorText!),
+        if (component.errorText != null) StyledText.body.error.bold(component.errorText!),
       ],
     );
   }

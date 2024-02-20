@@ -119,6 +119,7 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
         ],
       ))
       ..add(StyledContainer.strong(
+        padding: EdgeInsets.all(4),
         child: StyledList.row.withScrollbar(
           children: [
             StyledButton.subtle(

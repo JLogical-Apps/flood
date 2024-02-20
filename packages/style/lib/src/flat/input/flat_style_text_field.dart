@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:style/src/color_palette_provider.dart';
 import 'package:style/src/components/input/styled_text_field.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
@@ -17,7 +18,8 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
     final leading = component.leading ?? component.leadingIcon?.mapIfNonNull((icon) => StyledIcon(icon));
 
     final textController = useTextEditingController(text: component.text);
-
+    final textFieldColor =
+        component.enabled ? context.colorPalette().background.regular : context.colorPalette().baseBackground;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,45 +29,51 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
             padding: EdgeInsets.all(4),
             child: label,
           ),
-        TextFormField(
-          controller: textController,
-          onChanged: (text) => component.onChanged?.call(text),
-          onTap: component.onTapped,
-          style: context.style().getTextStyle(context, StyledText.body.empty),
-          cursorColor: context.colorPalette().foreground.regular,
-          readOnly: component.readonly || !component.enabled,
-          obscureText: component.obscureText,
-          maxLines: component.maxLines,
-          keyboardType: component.keyboard,
-          decoration: InputDecoration(
-            hoverColor: context.colorPalette().background.regular,
-            focusColor: context.colorPalette().background.regular.background.regular,
-            fillColor:
-                component.enabled ? context.colorPalette().background.regular : context.colorPalette().baseBackground,
-            prefixIcon: leading,
-            filled: true,
-            hintText: component.hintText,
-            hintStyle: context.style().getTextStyle(
-                context, StyledText.body.italics.withColor(context.colorPalette().foreground.strong).empty),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: component.enabled
-                  ? BorderSide.none
-                  : BorderSide(color: context.colorPalette().background.regular, width: 3),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: context.colorPalette().background.strong),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: context.colorPalette().error.subtle),
-            ),
-            errorText: component.errorText,
-          ),
+        ColorPaletteProvider(
+          colorPalette: context.style().getColorPaletteFromBackground(textFieldColor),
+          child: Builder(builder: (textFieldContext) {
+            return TextFormField(
+              controller: textController,
+              onChanged: (text) => component.onChanged?.call(text),
+              onTap: component.onTapped,
+              style: context.style().getTextStyle(textFieldContext, StyledText.body.empty),
+              cursorColor: textFieldContext.colorPalette().foreground.regular,
+              readOnly: component.readonly || !component.enabled,
+              obscureText: component.obscureText,
+              maxLines: component.maxLines,
+              keyboardType: component.keyboard,
+              decoration: InputDecoration(
+                hoverColor: textFieldContext.colorPalette().background.regular,
+                focusColor: textFieldContext.colorPalette().background.regular.background.regular,
+                fillColor: textFieldColor,
+                prefixIcon: leading,
+                filled: true,
+                hintText: component.hintText,
+                hintStyle: context.style().getTextStyle(textFieldContext,
+                    StyledText.body.italics.withColor(textFieldContext.colorPalette().foreground.strong).empty),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: component.enabled
+                      ? BorderSide(color: textFieldContext.colorPalette().foreground.subtle, width: 0.5)
+                      : BorderSide(color: textFieldContext.colorPalette().background.regular, width: 2),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: textFieldContext.colorPalette().foreground.strong, width: 1.5),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: textFieldContext.colorPalette().error.regular),
+                ),
+                errorText: component.errorText,
+                errorStyle: context.style().getTextStyle(
+                    context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
+              ),
+            );
+          }),
         ),
       ],
     );
@@ -95,6 +103,7 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
         enabled: false,
       ))
       ..add(StyledContainer.strong(
+        padding: EdgeInsets.all(4),
         child: StyledList.column(children: [
           StyledTextField(
             labelText: 'Text Field',

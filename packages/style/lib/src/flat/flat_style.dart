@@ -194,8 +194,8 @@ This is a `code block`.
 
   @override
   ColorPalette getColorPaletteFromBackground(Color backgroundColor) {
-    final isDark = backgroundColor.computeLuminance() < 0.3;
-    final isCloseToPrimary = (backgroundColor - primaryColor) < 30;
+    final isDark = backgroundColor.computeLuminance() < 0.28;
+    final isCloseToPrimary = (backgroundColor - primaryColor) < 280;
 
     final newBackground = isDarkMode
         ? (backgroundColor == Colors.black
@@ -222,7 +222,7 @@ This is a `code block`.
           ? getColorPaletteFromBackground(isDark ? Colors.white : Colors.black)
           : getColorPaletteFromBackground(newSubtleForeground),
       strongErrorColorPaletteGetter: () => getColorPaletteFromBackground(Colors.red.shade700),
-      regularErrorColorPaletteGetter: () => getColorPaletteFromBackground(Colors.red),
+      regularErrorColorPaletteGetter: () => getColorPaletteFromBackground(isDark ? Colors.red : Colors.red.shade700),
       subtleErrorColorPaletteGetter: () => getColorPaletteFromBackground(Colors.red.shade400),
     );
   }

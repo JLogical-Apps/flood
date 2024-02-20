@@ -47,7 +47,7 @@ class FlatStyleRadioFieldRenderer with IsTypedStyleRenderer<StyledRadioField> {
                   ))
               .toList(),
         ),
-        if (component.errorText != null) StyledText.body.error(component.errorText!),
+        if (component.errorText != null) StyledText.body.error.bold(component.errorText!),
       ],
     );
   }
@@ -80,6 +80,7 @@ class FlatStyleRadioFieldRenderer with IsTypedStyleRenderer<StyledRadioField> {
         enabled: false,
       ))
       ..add(StyledContainer.strong(
+        padding: EdgeInsets.all(4),
         child: StyledList.column(
           children: [
             StyledRadioField<String>(
