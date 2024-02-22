@@ -4,7 +4,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 const bool isLight = false;
 
 FlatStyle style = FlatStyle(
-  primaryColor: Color(0xff3394ed),
+  primaryColor: Color(0xff5d8cb6),
   backgroundColor: Color(0xff09090b),
 );
 

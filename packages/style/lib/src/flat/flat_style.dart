@@ -195,7 +195,7 @@ This is a `code block`.
   @override
   ColorPalette getColorPaletteFromBackground(Color backgroundColor) {
     final isDark = backgroundColor.computeLuminance() < 0.28;
-    final isCloseToPrimary = (backgroundColor - primaryColor) < 280;
+    final isCloseToPrimary = (backgroundColor - primaryColor) < 52000;
 
     final newBackground = isDarkMode
         ? (backgroundColor == Colors.black
