@@ -101,6 +101,7 @@ class FlatStyleChipRenderer with IsTypedStyleRenderer<StyledChip> {
         ],
       ))
       ..add(StyledContainer.strong(
+        padding: EdgeInsets.all(4),
         child: StyledList.row.withScrollbar(
           children: [
             StyledChip.subtle(

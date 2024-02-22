@@ -1,8 +1,6 @@
 import 'package:example/presentation/pages/auth/login_page.dart';
-import 'package:example/presentation/utils/budget_utils.dart';
+import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
-import 'package:example_core/features/budget/budget.dart';
-import 'package:example_core/features/budget/budget_entity.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:flutter/material.dart';
@@ -89,14 +87,7 @@ class SignupPage with IsAppPageWrapper<SignupRoute> {
                     ..deviceTokenProperty.set(deviceToken),
                 );
 
-                final budgetEntity = await context.dropCoreComponent.updateEntity(
-                  BudgetEntity(),
-                  (Budget budget) => budget
-                    ..nameProperty.set('Personal')
-                    ..ownerProperty.set(account.accountId),
-                );
-
-                await context.pushBudgetRoute(budgetEntity.id!);
+                await context.push(HomeRoute());
               } catch (e, stackTrace) {
                 final errorText = e.as<SignupFailure>()?.displayText ?? e.toString();
                 signupPort.setError(name: 'email', error: errorText);

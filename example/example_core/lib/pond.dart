@@ -1,10 +1,6 @@
 import 'dart:async';
 
-import 'package:example_core/features/budget/budget_repository.dart';
-import 'package:example_core/features/envelope/envelope_repository.dart';
-import 'package:example_core/features/settings/settings_repository.dart';
-import 'package:example_core/features/transaction/budget_transaction_repository.dart';
-import 'package:example_core/features/tray/tray_repository.dart';
+import 'package:example_core/features/todo/todo_repository.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:example_core/features/user/user_repository.dart';
@@ -73,11 +69,7 @@ Future<CorePondContext> getCorePondContext({
   ));
   await corePondContext.register(PortDropCoreComponent());
   await corePondContext.register(UserRepository());
-  await corePondContext.register(BudgetRepository());
-  await corePondContext.register(EnvelopeRepository());
-  await corePondContext.register(TrayRepository());
-  await corePondContext.register(SettingsRepository());
-  await corePondContext.register(BudgetTransactionRepository());
+  await corePondContext.register(TodoRepository());
   return corePondContext;
 }
 

@@ -97,7 +97,7 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
   void modifyStyleguide(Styleguide styleguide) {
     styleguide.getTabByNameOrCreate('Containers', icon: Icons.layers_outlined).getSectionByNameOrCreate('Cards')
       ..add(StyledCard.subtle(
-        titleText: 'Card Title',
+        titleText: 'Subtle',
         bodyText: 'Card Body',
         leadingIcon: Icons.abc,
         onPressed: () {
@@ -121,7 +121,7 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
         ],
       ))
       ..add(StyledCard(
-        titleText: 'Card Title',
+        titleText: 'Regular',
         bodyText: 'Card Body',
         leadingIcon: Icons.abc,
         children: [
@@ -132,7 +132,7 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
         ],
       ))
       ..add(StyledCard.strong(
-        titleText: 'Card Title',
+        titleText: 'Strong',
         bodyText: 'Card Body',
         leadingIcon: Icons.abc,
         children: [
