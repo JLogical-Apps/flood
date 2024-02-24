@@ -6,6 +6,7 @@ import 'package:release/src/release_platforms/web_release_platform.dart';
 
 abstract class ReleasePlatform {
   String get name;
+  String get title;
 
   Future onBuild(AutomateCommandContext context, ReleaseContext releaseContext);
 
