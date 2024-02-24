@@ -98,6 +98,10 @@ class ReleaseCommand extends AutomateCommand<ReleaseCommand> {
       await step.execute(context, releaseContext);
       print('');
     }
+
+    print(
+      'Release complete! Your app has been successfully deployed to ${platforms.map((platform) => platform.title).join(' and ')}!',
+    );
   }
 
   @override

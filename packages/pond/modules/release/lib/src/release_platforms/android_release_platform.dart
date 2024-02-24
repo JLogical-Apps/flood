@@ -12,6 +12,9 @@ class AndroidReleasePlatform implements ReleasePlatform {
   String get name => 'android';
 
   @override
+  String get title => 'Android';
+
+  @override
   Future onBuild(AutomateCommandContext context, ReleaseContext releaseContext) async {
     final keystoreFile = await getKeystoreFile(
       context,
@@ -25,8 +28,7 @@ class AndroidReleasePlatform implements ReleasePlatform {
       keystoreFile: keystoreFile,
     );
 
-    await context.appProject
-        .run('flutter build ${releaseContext.isDebug ? 'apk --debug' : 'appbundle'}');
+    await context.appProject.run('flutter build ${releaseContext.isDebug ? 'apk --debug' : 'appbundle'}');
 
     await DataSource.static.file(keystoreFile).delete();
     await DataSource.static.file(keyPropertiesFile).delete();

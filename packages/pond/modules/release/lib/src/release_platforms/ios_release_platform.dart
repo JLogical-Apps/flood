@@ -12,6 +12,9 @@ class IosReleasePlatform implements ReleasePlatform {
   String get name => 'ios';
 
   @override
+  String get title => 'iOS';
+
+  @override
   Future onBuild(AutomateCommandContext context, ReleaseContext releaseContext) async {
     final workspace = (context.appDirectory / 'ios' - 'Runner.xcworkspace').path;
     final outputDirectory = (context.appDirectory / 'build' / 'ios').path;

@@ -7,6 +7,9 @@ class WebReleasePlatform implements ReleasePlatform {
   String get name => 'web';
 
   @override
+  String get title => 'the web';
+
+  @override
   Future onBuild(AutomateCommandContext context, ReleaseContext releaseContext) async {
     await context.appProject.run('flutter build web');
   }
