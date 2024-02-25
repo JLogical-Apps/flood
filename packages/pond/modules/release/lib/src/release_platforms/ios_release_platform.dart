@@ -30,6 +30,7 @@ class IosReleasePlatform implements ReleasePlatform {
       '--export_method ${releaseContext.isDebug ? 'ad-hoc' : 'app-store'} '
       '--export_options ${exportOptionsFile.path} '
       '--silent '
+      '--clean '
       '--suppress_xcode_output '
       '${releaseContext.isDebug ? '--skip_profile_detection ' : ''}',
     );
