@@ -19,8 +19,8 @@ class BuildPipelineStep with IsPipelineStep {
   Future execute(AutomateCommandContext context, ReleaseContext releaseContext) async {
     final releaseComponent = context.automateContext.find<ReleaseAutomateComponent>();
 
-    await context.run('flutter clean');
-    await context.run('melos bs');
+    await context.appProject.run('flutter clean');
+    await context.appProject.run('melos bs');
 
     for (final preBuildStep in releaseComponent.preBuildSteps) {
       await preBuildStep.execute(context, releaseContext);
