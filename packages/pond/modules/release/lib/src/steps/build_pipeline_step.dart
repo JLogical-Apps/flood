@@ -6,6 +6,7 @@ import 'package:release/src/pipeline_step.dart';
 import 'package:release/src/release_component.dart';
 import 'package:release/src/release_context.dart';
 import 'package:release/src/release_platform.dart';
+import 'package:utils_core/utils_core.dart';
 
 class BuildPipelineStep with IsPipelineStep {
   final Map<ReleasePlatform, DeployTarget> deployTargetByPlatform;
@@ -21,6 +22,10 @@ class BuildPipelineStep with IsPipelineStep {
 
     await context.appProject.run('flutter clean');
     await context.appProject.run('melos bs');
+    await context.appProject.run(
+      'pod install',
+      workingDirectory: context.appDirectory / 'ios',
+    );
 
     for (final preBuildStep in releaseComponent.preBuildSteps) {
       await preBuildStep.execute(context, releaseContext);
