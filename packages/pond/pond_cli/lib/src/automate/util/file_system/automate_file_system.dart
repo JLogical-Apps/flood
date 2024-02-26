@@ -9,6 +9,8 @@ abstract class AutomateFileSystem {
 
   Future<File> createTempFile(String name);
 
+  File getTempFile(String name);
+
   factory AutomateFileSystem({
     required Directory Function(Directory coreDirectory) appDirectoryGetter,
   }) =>
@@ -42,10 +44,14 @@ class _AutomateFileSystemImpl with IsAutomateFileSystem {
 
   @override
   Future<File> createTempFile(String name) async {
-    final file = coreDirectory / 'tool' / 'output' - name;
+    final file = getTempFile(name);
     await file.ensureCreated();
-
     return file;
+  }
+
+  @override
+  File getTempFile(String name) {
+    return coreDirectory / 'tool' / 'output' - name;
   }
 }
 
@@ -63,5 +69,10 @@ mixin IsAutomateFileSystemWrapper implements AutomateFileSystemWrapper {
   @override
   Future<File> createTempFile(String name) {
     return fileSystem.createTempFile(name);
+  }
+
+  @override
+  File getTempFile(String name) {
+    return fileSystem.getTempFile(name);
   }
 }
