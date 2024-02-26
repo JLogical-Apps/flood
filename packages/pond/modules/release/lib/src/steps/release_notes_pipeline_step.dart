@@ -10,7 +10,8 @@ class ReleaseNotesPipelineStep with IsPipelineStep {
 
   @override
   Future execute(AutomateCommandContext context, ReleaseContext releaseContext) async {
-    final releaseNotesFile = context.appDirectory / 'build' - 'release_notes.txt';
+    final releaseNotesFile = await context.createTempFile('release_notes.txt');
+
     final releaseNotesDataSource = DataSource.static.file(releaseNotesFile);
     final previousReleaseNotes = await releaseNotesDataSource.getOrNull();
 

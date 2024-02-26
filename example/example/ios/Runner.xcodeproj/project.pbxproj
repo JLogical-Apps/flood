@@ -504,7 +504,7 @@
         CLANG_ENABLE_MODULES = YES;
         "CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
         CODE_SIGN_STYLE = Manual;
-        CURRENT_PROJECT_VERSION = 8;
+        CURRENT_PROJECT_VERSION = 9;
         DEVELOPMENT_TEAM = "";
         "DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9D79HMA943;
         ENABLE_BITCODE = NO;
@@ -521,7 +521,7 @@
           "$(inherited)",
           "$(PROJECT_DIR)/Flutter"
         );
-        MARKETING_VERSION = 0.0.7;
+        MARKETING_VERSION = 0.0.10;
         PRODUCT_BUNDLE_IDENTIFIER = com.jlogical.example;
         PRODUCT_NAME = "$(TARGET_NAME)";
         PROVISIONING_PROFILE_SPECIFIER = "";
@@ -647,7 +647,7 @@
         CLANG_ENABLE_MODULES = YES;
         "CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
         CODE_SIGN_STYLE = Manual;
-        CURRENT_PROJECT_VERSION = 8;
+        CURRENT_PROJECT_VERSION = 9;
         DEVELOPMENT_TEAM = "";
         "DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9D79HMA943;
         ENABLE_BITCODE = NO;
@@ -664,7 +664,7 @@
           "$(inherited)",
           "$(PROJECT_DIR)/Flutter"
         );
-        MARKETING_VERSION = 0.0.7;
+        MARKETING_VERSION = 0.0.10;
         PRODUCT_BUNDLE_IDENTIFIER = com.jlogical.example;
         PRODUCT_NAME = "$(TARGET_NAME)";
         PROVISIONING_PROFILE_SPECIFIER = "";
@@ -684,7 +684,7 @@
         CLANG_ENABLE_MODULES = YES;
         "CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
         CODE_SIGN_STYLE = Manual;
-        CURRENT_PROJECT_VERSION = 8;
+        CURRENT_PROJECT_VERSION = 9;
         DEVELOPMENT_TEAM = "";
         "DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9D79HMA943;
         ENABLE_BITCODE = NO;
@@ -701,7 +701,7 @@
           "$(inherited)",
           "$(PROJECT_DIR)/Flutter"
         );
-        MARKETING_VERSION = 0.0.7;
+        MARKETING_VERSION = 0.0.10;
         PRODUCT_BUNDLE_IDENTIFIER = com.jlogical.example;
         PRODUCT_NAME = "$(TARGET_NAME)";
         PROVISIONING_PROFILE_SPECIFIER = "";

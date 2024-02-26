@@ -53,7 +53,7 @@ class TestflightDeployTarget with IsDeployTarget {
     final teamId = await getTeamId(context);
     final ipaFile = context.appDirectory / 'build' / 'ios' - 'Runner.ipa';
 
-    final releaseNotesFile = context.appDirectory / 'build' - 'release_notes.txt';
+    final releaseNotesFile = context.getTempFile('release_notes.txt');
     final releaseNotes = await DataSource.static.file(releaseNotesFile).getOrNull();
 
     await context.appProject.run(
