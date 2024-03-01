@@ -27,7 +27,7 @@ Future<void> main(List<String> args) async {
     ),
     notFoundPage: StyledPage(
       body: Center(
-        child: StyledText.h1('Not Found!'),
+        child: StyledText.fourXl('Not Found!'),
       ),
     ),
     initialPageGetter: () => HomePage(),

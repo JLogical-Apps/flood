@@ -47,5 +47,5 @@ class StyledOptionPortField<T> extends HookWidget {
 }
 
 Widget _defaultMapper<T>(T value) {
-  return StyledText.button(value.toString());
+  return StyledText.body(value.toString());
 }

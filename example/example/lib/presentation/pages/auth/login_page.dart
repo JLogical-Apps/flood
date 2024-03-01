@@ -35,7 +35,7 @@ class LoginPage with IsAppPageWrapper<LoginRoute> {
       body: StyledList.column.centered.withScrollbar(
         children: [
           StyledImage.asset('assets/logo_foreground.png', width: 200, height: 200),
-          StyledText.h1.strong('Welcome to Flood'),
+          StyledText.fourXl.strong('Welcome to Flood'),
           StyledDivider(),
           StyledObjectPortBuilder(port: loginPort),
           StyledList.row.centered.withScrollbar(

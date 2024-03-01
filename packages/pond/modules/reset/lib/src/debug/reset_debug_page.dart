@@ -24,7 +24,7 @@ class ResetDebugPage with IsAppPageWrapper<ResetDebugRoute> {
       titleText: 'Reset',
       body: StyledList.column.centered.scrollable.withScrollbar(
         children: [
-          StyledText.h5('Are you sure you want to reset?'),
+          StyledText.xl('Are you sure you want to reset?'),
           StyledText.body('This will delete Flood files from your device, which will emulate installing the app for the first time.'),
           StyledButton.strong(
             labelText: 'Reset',

@@ -30,3 +30,5 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_lints: ^2.0.1
   flutter_native_splash: ^2.3.7
+dependency_overrides:
+  http: 0.13.5

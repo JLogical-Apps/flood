@@ -88,7 +88,7 @@ class StyledStagePortField<E, T> extends HookWidget {
 }
 
 Widget _defaultValueMapper<E, T>(StagePortField<E, T> stagePortField, E value) {
-  return StyledText.button(value == null ? 'None' : stagePortField.getDisplayName(value) ?? 'None');
+  return StyledText.body(value == null ? 'None' : stagePortField.getDisplayName(value) ?? 'None');
 }
 
 Widget _defaultPortMapper<E, T>(StagePortField<E, T> stagePortField, Port parentPort, String fieldName, Port<T> port) {

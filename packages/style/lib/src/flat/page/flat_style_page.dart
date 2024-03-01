@@ -25,7 +25,7 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
         appBar: AppBar(
           foregroundColor: context.colorPalette().foreground.regular,
           centerTitle: true,
-          title: component.title ?? component.titleText?.mapIfNonNull(StyledText.h2.strong),
+          title: component.title ?? component.titleText?.mapIfNonNull(StyledText.twoXl.strong),
           backgroundColor: Colors.transparent,
           elevation: 0,
           actions: [

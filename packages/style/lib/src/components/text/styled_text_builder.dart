@@ -2,26 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/emphasis.dart';
 
-class StyledTextBuilder<T extends StyledText> {
-  final T Function(
-    String text,
-    Emphasis emphasis,
-    TextAlign? textAlign,
-    FontWeight? fontWeight,
-    FontStyle? fontStyle,
-    Color? color,
-    bool error,
-    EdgeInsets? padding,
-  ) builder;
-
+class StyledTextBuilder {
   Emphasis emphasis = Emphasis.regular;
   TextAlign? textAlign;
+  int? size;
   FontWeight? fontWeight;
   FontStyle? fontStyle;
+  bool? isDisplay;
   Color? color;
   bool isError = false;
-
-  StyledTextBuilder({required this.builder});
 
   StyledTextBuilder get subtle {
     emphasis = Emphasis.subtle;
@@ -33,8 +22,48 @@ class StyledTextBuilder<T extends StyledText> {
     return this;
   }
 
+  StyledTextBuilder get xs {
+    size = 12;
+    return this;
+  }
+
+  StyledTextBuilder get sm {
+    size = 16;
+    return this;
+  }
+
+  StyledTextBuilder get lg {
+    size = 22;
+    return this;
+  }
+
+  StyledTextBuilder get xl {
+    size = 28;
+    return this;
+  }
+
+  StyledTextBuilder get twoXl {
+    size = 48;
+    return this;
+  }
+
+  StyledTextBuilder get fourXl {
+    size = 72;
+    return this;
+  }
+
   StyledTextBuilder get bold {
     fontWeight = FontWeight.w600;
+    return this;
+  }
+
+  StyledTextBuilder get semiBold {
+    fontWeight = FontWeight.w500;
+    return this;
+  }
+
+  StyledTextBuilder get thin {
+    fontWeight = FontWeight.w200;
     return this;
   }
 
@@ -58,6 +87,11 @@ class StyledTextBuilder<T extends StyledText> {
     return this;
   }
 
+  StyledTextBuilder get display {
+    isDisplay = true;
+    return this;
+  }
+
   StyledTextBuilder get error {
     isError = true;
     return this;
@@ -68,11 +102,22 @@ class StyledTextBuilder<T extends StyledText> {
     return this;
   }
 
-  T call(String text, {EdgeInsets? padding}) {
-    return builder(text, emphasis, textAlign, fontWeight, fontStyle, color, isError, padding);
+  StyledText call(String text, {EdgeInsets? padding}) {
+    return StyledText(
+      text,
+      emphasis: emphasis,
+      size: size ?? 18,
+      textAlign: textAlign,
+      fontWeight: fontWeight,
+      fontStyle: fontStyle,
+      isDisplay: isDisplay ?? false,
+      color: color,
+      isError: isError,
+      padding: padding,
+    );
   }
 
-  T get empty {
+  StyledText get empty {
     return call('');
   }
 }

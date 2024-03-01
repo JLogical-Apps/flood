@@ -101,22 +101,22 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
         .add(StyledList.column.withMinChildSize(150)(
           children: [
             StyledContainer.subtle(
-              child: StyledText.h5.centered('1'),
+              child: StyledText.xl.centered('1'),
               width: double.infinity,
               height: 60,
             ),
             StyledContainer(
-              child: StyledText.h5.centered('2'),
+              child: StyledText.xl.centered('2'),
               width: double.infinity,
             ),
             StyledContainer.strong(
-              child: StyledText.h5.centered('3'),
+              child: StyledText.xl.centered('3'),
               width: double.infinity,
               height: 60,
             ),
             StyledContainer(
               color: Colors.blue,
-              child: StyledText.h5.centered('4'),
+              child: StyledText.xl.centered('4'),
               width: double.infinity,
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as flutter;
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intersperse/intersperse.dart';
 import 'package:style/src/color_palette.dart';
 import 'package:style/src/color_palette_provider.dart';
@@ -29,18 +30,11 @@ import 'package:style/src/flat/misc/flat_style_icon.dart';
 import 'package:style/src/flat/misc/flat_style_loading_indicator.dart';
 import 'package:style/src/flat/misc/flat_style_scrollbar.dart';
 import 'package:style/src/flat/page/flat_style_page.dart';
-import 'package:style/src/flat/text/flat_style_body_text.dart';
-import 'package:style/src/flat/text/flat_style_button_text.dart';
-import 'package:style/src/flat/text/flat_style_h1.dart';
-import 'package:style/src/flat/text/flat_style_h2.dart';
-import 'package:style/src/flat/text/flat_style_h3.dart';
-import 'package:style/src/flat/text/flat_style_h4.dart';
-import 'package:style/src/flat/text/flat_style_h5.dart';
-import 'package:style/src/flat/text/flat_style_h6.dart';
+import 'package:style/src/flat/text/flat_style_text.dart';
 import 'package:style/src/style.dart';
+import 'package:style/src/style_build_context_extensions.dart';
 import 'package:style/src/style_component.dart';
 import 'package:style/src/style_renderer.dart';
-import 'package:style/src/styled_text_renderer.dart';
 import 'package:style/src/styleguide.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:utils/utils.dart';
@@ -58,14 +52,7 @@ class FlatStyle with IsStyle {
   })  : renderers = [
           FlatStyleCardRenderer(),
           FlatStyleListRenderer(),
-          FlatStyleH1Renderer(),
-          FlatStyleH2Renderer(),
-          FlatStyleH3Renderer(),
-          FlatStyleH4Renderer(),
-          FlatStyleH5Renderer(),
-          FlatStyleH6Renderer(),
-          FlatStyleBodyTextRenderer(),
-          FlatStyleButtonTextRenderer(),
+          FlatStyleTextRenderer(),
           FlatStyleTextFieldRenderer(),
           FlatStyleCheckboxRenderer(),
           FlatStyleDateFieldRenderer(),
@@ -145,10 +132,16 @@ This is a `code block`.
 
   @override
   TextStyle getTextStyle(BuildContext context, StyledText text) {
-    return renderers
-        .whereType<StyledTextRenderer>()
-        .firstWhere((renderer) => renderer.shouldWrap(text))
-        .getTextStyle(context, text);
+    final baseTextStyle = text.isDisplay ? GoogleFonts.roboto : GoogleFonts.roboto;
+    return baseTextStyle(
+      fontSize: text.size.toDouble(),
+      color: text.isError
+          ? context.colorPalette().error.regular
+          : text.color ?? context.colorPalette().foreground.getByEmphasis(text.emphasis),
+      fontStyle: text.fontStyle,
+      fontWeight: text.fontWeight,
+      height: text.size > 18 ? 1.2 : 1,
+    );
   }
 
   @override
@@ -179,7 +172,7 @@ This is a `code block`.
 
   @override
   Future<void> showMessage(BuildContext context, StyledMessage message) async {
-    final label = message.labelText?.mapIfNonNull((label) => StyledText.h6.centered(label)) ?? message.label;
+    final label = message.labelText?.mapIfNonNull((label) => StyledText.lg.centered(label)) ?? message.label;
     final backgroundColor = message.color ?? primaryColor;
     await ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(

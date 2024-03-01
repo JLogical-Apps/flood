@@ -22,7 +22,7 @@ class FlatStyleMenuButtonRenderer with IsTypedStyleRenderer<StyledMenuButton> {
                 children: component.actions
                     .map((action) => ListTile(
                           title:
-                              action.titleText?.mapIfNonNull((title) => StyledText.h6.withColor(action.color)(title)) ??
+                              action.titleText?.mapIfNonNull((title) => StyledText.lg.withColor(action.color)(title)) ??
                                   action.title,
                           subtitle: action.descriptionText?.mapIfNonNull(
                                   (description) => StyledText.body.withColor(action.color)(description)) ??

@@ -17,7 +17,7 @@ import 'package:utils/utils.dart';
 class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
   @override
   Widget renderTyped(BuildContext context, StyledCard component) {
-    final title = component.titleText?.mapIfNonNull((text) => StyledText.h6.strong(text)) ?? component.title;
+    final title = component.titleText?.mapIfNonNull((text) => StyledText.lg.strong(text)) ?? component.title;
     final body = component.bodyText?.mapIfNonNull((text) => StyledText.body(text)) ?? component.body;
     final leading = component.leadingIcon?.mapIfNonNull((icon) => StyledIcon(icon)) ?? component.leading;
     final trailing = component.trailingIcon?.mapIfNonNull((icon) => StyledIcon(icon)) ?? component.trailing;

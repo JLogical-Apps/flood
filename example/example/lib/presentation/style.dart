@@ -3,17 +3,7 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 const bool isLight = false;
 
-FlatStyle style = FlatStyle(
-  primaryColor: Color(0xff5d8cb6),
-  backgroundColor: Color(0xff09090b),
+Style style = DeltaStyle(
+  primaryColor: Color(0xff9333ea),
+  backgroundColor: isLight ? Color(0xffffffff) : Color(0xff181A20),
 );
-
-Color getCentsColor(int? amountCents) {
-  if (amountCents == null || amountCents == 0) {
-    return Colors.white;
-  }
-  if (amountCents > 0) {
-    return Colors.green;
-  }
-  return Colors.red;
-}

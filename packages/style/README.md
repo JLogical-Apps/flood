@@ -34,7 +34,7 @@ To customize a `Style`, you can add a new `StyleRenderer` to the `Style`. For ex
 
 Adding `StyledText`s is very easy because you can compose their styles without needing to be too verbose.
 
-Use the static `StyledText.{TEXT_TYPE}` constructor as the base of a `StyledText`. For example, `StyledText.body`, `StyledText.button`, or `StyledText.h2`. Then, you can add modifiers, such as `.bold`, `.strong`, `.centered`, or `.error` to modify the `StyledText`. Once you are done with the modifiers, simply add `()` afterwards with the text you want rendered inside. For example, instead of this:
+Use the static `StyledText.{TEXT_TYPE}` constructor as the base of a `StyledText`. For example, `StyledText.body`, `StyledText.body`, or `StyledText.twoXl`. Then, you can add modifiers, such as `.bold`, `.strong`, `.centered`, or `.error` to modify the `StyledText`. Once you are done with the modifiers, simply add `()` afterwards with the text you want rendered inside. For example, instead of this:
 
 ```dart
 Text(

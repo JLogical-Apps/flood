@@ -19,16 +19,19 @@ class StyleguideWidget extends HookWidget {
           .map((page) => StyledTab(
                 titleText: page.name,
                 icon: page.icon,
-                child: StyledList.column.withScrollbar(
-                    children: page.sections
-                        .map<Widget>((section) => StyledList.column(
-                              children: [
-                                StyledText.h2(section.name),
-                                ...section.widgets,
-                              ],
-                            ))
-                        .intersperse(StyledDivider.strong())
-                        .toList()),
+                child: Padding(
+                  padding: EdgeInsets.all(4),
+                  child: StyledList.column.withScrollbar(
+                      children: page.sections
+                          .map<Widget>((section) => StyledList.column(
+                                children: [
+                                  StyledText.lg.bold.display(section.name),
+                                  ...section.widgets,
+                                ],
+                              ))
+                          .intersperse(StyledDivider())
+                          .toList()),
+                ),
               ))
           .toList(),
     );

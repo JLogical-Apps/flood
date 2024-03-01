@@ -55,48 +55,54 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
               },
             ),
           ],
-          body: StyledList.column.withScrollbar.centered(
-            children: [
-              StyledButton.strong(
-                labelText: 'Create Todo',
-                iconData: Icons.add,
-                onPressed: () => context.showStyledDialog(StyledPortDialog(
-                  titleText: 'Create Todo',
-                  port: (Todo()..userProperty.set(loggedInUserId)).asPort(context.corePondContext),
-                  onAccept: (Todo todo) async {
-                    final todoEntity = TodoEntity()..set(todo);
-                    await context.dropCoreComponent.update(todoEntity);
-                  },
-                )),
-              ),
-              ...uncompletedTodos.map((todoEntity) => StyledCard(
-                    key: ValueKey(todoEntity.id),
-                    titleText: todoEntity.value.nameProperty.value,
-                    bodyText: todoEntity.value.descriptionProperty.value,
-                    leading: StyledCheckbox(
-                      value: todoEntity.value.completedProperty.value,
-                      onChanged: (value) async {
-                        await context.dropCoreComponent
-                            .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
-                      },
-                    ),
-                    actions: _getTodoActions(todoEntity),
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            child: StyledList.column.withScrollbar.centered(
+              children: [
+                StyledButton(
+                  labelText: 'Create Todo',
+                  iconData: Icons.add,
+                  onPressed: () => context.showStyledDialog(StyledPortDialog(
+                    titleText: 'Create Todo',
+                    port: (Todo()..userProperty.set(loggedInUserId)).asPort(context.corePondContext),
+                    onAccept: (Todo todo) async {
+                      final todoEntity = TodoEntity()..set(todo);
+                      await context.dropCoreComponent.update(todoEntity);
+                    },
                   )),
-              if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) StyledDivider(),
-              ...completedTodos.map((todoEntity) => StyledCard.subtle(
-                    key: ValueKey(todoEntity.id),
-                    titleText: todoEntity.value.nameProperty.value,
-                    bodyText: todoEntity.value.descriptionProperty.value,
-                    leading: StyledCheckbox(
-                      value: todoEntity.value.completedProperty.value,
-                      onChanged: (value) async {
-                        await context.dropCoreComponent
-                            .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
-                      },
-                    ),
-                    actions: _getTodoActions(todoEntity),
-                  )),
-            ],
+                ),
+                ...uncompletedTodos.map((todoEntity) => StyledCard(
+                      key: ValueKey(todoEntity.id),
+                      titleText: todoEntity.value.nameProperty.value,
+                      bodyText: todoEntity.value.descriptionProperty.value,
+                      leading: StyledCheckbox(
+                        value: todoEntity.value.completedProperty.value,
+                        onChanged: (value) async {
+                          await context.dropCoreComponent
+                              .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
+                        },
+                      ),
+                      actions: _getTodoActions(todoEntity),
+                    )),
+                if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) ...[
+                  StyledDivider(),
+                  StyledText.xl.display.bold('Completed'),
+                ],
+                ...completedTodos.map((todoEntity) => StyledCard(
+                      key: ValueKey(todoEntity.id),
+                      titleText: todoEntity.value.nameProperty.value,
+                      bodyText: todoEntity.value.descriptionProperty.value,
+                      leading: StyledCheckbox(
+                        value: todoEntity.value.completedProperty.value,
+                        onChanged: (value) async {
+                          await context.dropCoreComponent
+                              .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
+                        },
+                      ),
+                      actions: _getTodoActions(todoEntity),
+                    )),
+              ],
+            ),
           ),
         );
       },

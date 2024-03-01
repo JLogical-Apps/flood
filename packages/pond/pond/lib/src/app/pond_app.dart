@@ -24,21 +24,18 @@ class PondApp extends HookWidget {
   static Uri get currentUri => Uri.parse(router._pages.last.name!);
 
   final AppPondContext appPondContext;
-  final Route Function() initialRouteGetter;
   final Widget loadingPage;
   final Widget notFoundPage;
 
   PondApp({
     super.key,
     required this.appPondContext,
-    required this.initialRouteGetter,
     required this.loadingPage,
     required this.notFoundPage,
   });
 
   static Future<void> run({
     required FutureOr<AppPondContext> Function() appPondContextGetter,
-    required Route Function() initialRouteGetter,
     required Widget loadingPage,
     required Widget notFoundPage,
   }) async {
@@ -52,7 +49,6 @@ class PondApp extends HookWidget {
 
         runApp(PondApp(
           appPondContext: appPondContext!,
-          initialRouteGetter: initialRouteGetter,
           loadingPage: loadingPage,
           notFoundPage: notFoundPage,
         ));
@@ -90,7 +86,7 @@ class PondApp extends HookWidget {
   }
 
   void navigateHome(BuildContext context) {
-    context.push(initialRouteGetter());
+    context.pushLocation('/');
   }
 
   Widget wrapApp({required Widget child}) {

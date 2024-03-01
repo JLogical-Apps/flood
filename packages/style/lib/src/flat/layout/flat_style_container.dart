@@ -63,19 +63,19 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
         },
         child: StyledList.column(
           children: [
-            StyledText.h3.centered('Subtle Container'),
+            StyledText.xl.centered('Subtle Container'),
             StyledList.row.withScrollbar(
               children: [
                 StyledContainer.subtle(
-                  child: StyledText.h3('Subtle Container'),
+                  child: StyledText.xl('Subtle Container'),
                   padding: EdgeInsets.all(8),
                 ),
                 StyledContainer(
-                  child: StyledText.h3('Regular Container'),
+                  child: StyledText.xl('Regular Container'),
                   padding: EdgeInsets.all(8),
                 ),
                 StyledContainer.strong(
-                  child: StyledText.h3('Strong Container'),
+                  child: StyledText.xl('Strong Container'),
                   padding: EdgeInsets.all(8),
                 ),
               ],
@@ -87,19 +87,19 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
         padding: EdgeInsets.all(8),
         child: StyledList.column(
           children: [
-            StyledText.h3.centered('Regular Container'),
+            StyledText.xl.centered('Regular Container'),
             StyledList.row.withScrollbar(
               children: [
                 StyledContainer.subtle(
-                  child: StyledText.h3('Subtle Container'),
+                  child: StyledText.xl('Subtle Container'),
                   padding: EdgeInsets.all(8),
                 ),
                 StyledContainer(
-                  child: StyledText.h3('Regular Container'),
+                  child: StyledText.xl('Regular Container'),
                   padding: EdgeInsets.all(8),
                 ),
                 StyledContainer.strong(
-                  child: StyledText.h3('Strong Container'),
+                  child: StyledText.xl('Strong Container'),
                   padding: EdgeInsets.all(8),
                 ),
               ],
@@ -111,19 +111,19 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
         padding: EdgeInsets.all(8),
         child: StyledList.column(
           children: [
-            StyledText.h3.centered('Strong Container'),
+            StyledText.xl.centered('Strong Container'),
             StyledList.row.withScrollbar(
               children: [
                 StyledContainer.subtle(
-                  child: StyledText.h3('Subtle Container'),
+                  child: StyledText.xl('Subtle Container'),
                   padding: EdgeInsets.all(8),
                 ),
                 StyledContainer(
-                  child: StyledText.h3('Regular Container'),
+                  child: StyledText.xl('Regular Container'),
                   padding: EdgeInsets.all(8),
                 ),
                 StyledContainer.strong(
-                  child: StyledText.h3('Strong Container'),
+                  child: StyledText.xl('Strong Container'),
                   padding: EdgeInsets.all(8),
                 ),
               ],

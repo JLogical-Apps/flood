@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:example/firebase_options.dart';
-import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/valet_pages_pond_component.dart';
 import 'package:example/testing.dart';
@@ -18,10 +17,9 @@ Future<void> main(List<String> args) async {
     loadingPage: StyledLoadingPage(),
     notFoundPage: StyledPage(
       body: Center(
-        child: StyledText.h1('Not Found!'),
+        child: StyledText.xl('Not Found!'),
       ),
     ),
-    initialRouteGetter: () => HomeRoute(),
   );
 }
 
