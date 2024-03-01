@@ -21,37 +21,37 @@ dependencies:
   auth_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/pond/modules/auth_core
   debug:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/pond/modules/debug
   drop_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/pond/modules/drop_core
   model:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/model/model
   pond:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/pond/pond
   style:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/style
   utils:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/utils/utils
 dev_dependencies:
   flutter_test:

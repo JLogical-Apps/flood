@@ -17,27 +17,27 @@ dependencies:
   auth_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/pond/modules/auth_core
   drop_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/pond/modules/drop_core
   messaging_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/pond/modules/messaging_core
   pond_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/pond/pond_core
   utils_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/utils/utils_core
 dev_dependencies:
   lints: ^2.0.0

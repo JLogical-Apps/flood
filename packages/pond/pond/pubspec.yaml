@@ -21,22 +21,22 @@ dependencies:
   log:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/pond/modules/log
   path_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/path_core
   pond_core:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/pond/pond_core
   utils:
     git:
       url: git@github.com:jaboyc/jlogical_utils.git
-      ref: "master"
+      ref: "v3.3"
       path: packages/utils/utils
 
 dev_dependencies:
