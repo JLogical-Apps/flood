@@ -26,7 +26,9 @@ class StyledMarkdown extends StatelessWidget {
         h5: style.getTextStyle(context, StyledText.sm.empty),
         h6: style.getTextStyle(context, StyledText.xs.empty),
         code: style.getTextStyle(context, StyledText.body.strong.empty).copyWith(backgroundColor: Colors.transparent),
-        a: style.getTextStyle(context, StyledText.body.strong.empty).copyWith(decoration: TextDecoration.underline),
+        a: style
+            .getTextStyle(context, StyledText.body.strong.empty)
+            .copyWith(decoration: TextDecoration.underline, decorationColor: context.colorPalette().foreground.strong),
       ),
       softLineBreak: true,
       onTapLink: (_, href, __) {

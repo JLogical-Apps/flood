@@ -188,20 +188,22 @@ This is a `code block`.
   @override
   ColorPalette getColorPaletteFromBackground(Color backgroundColor) {
     final isDark = backgroundColor.computeLuminance() < 0.28;
-    final isCloseToPrimary = (backgroundColor - primaryColor) < 52000;
+    final isCloseToPrimary = (backgroundColor - primaryColor) < 22000;
 
     final newBackground = isDarkMode
         ? (backgroundColor == Colors.black
             ? Color(0xff202020)
             : (isDark ? backgroundColor.lighten(10) : backgroundColor.darken(5)))
-        : backgroundColor;
+        : (backgroundColor == Colors.white
+            ? Color(0xfffafafa)
+            : (isDark ? backgroundColor.lighten(10) : backgroundColor.darken(5)));
     final newForeground = isDark ? Colors.white : Colors.black;
     final newSubtleForeground = isDark ? Colors.white.withOpacity(0.6) : Colors.black.withOpacity(0.6);
 
     return ColorPalette(
       baseBackground: backgroundColor,
       strongBackgroundColorPaletteGetter: () => getColorPaletteFromBackground(
-        backgroundColor == primaryColor ? this.backgroundColor : primaryColor,
+        isCloseToPrimary ? this.backgroundColor : primaryColor,
       ),
       regularBackgroundColorPaletteGetter: () => getColorPaletteFromBackground(newBackground),
       subtleBackgroundColorPaletteGetter: () => getColorPaletteFromBackground(backgroundColor),
