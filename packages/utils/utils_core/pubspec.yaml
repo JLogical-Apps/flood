@@ -14,6 +14,7 @@ dependencies:
   filesize: ^2.0.1
   intl: ^0.18.0
   path: ^1.8.2
+  phone_numbers_parser: ^8.2.1
   rxdart: ^0.27.5
   yaml: ^3.1.2
 dev_dependencies:

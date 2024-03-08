@@ -38,11 +38,12 @@ class SignupPage with IsAppPageWrapper<SignupRoute> {
   @override
   Widget onBuild(BuildContext context, SignupRoute route) {
     final signupPort = useMemoized(() => Port.of({
-          'name': PortField.string().withDisplayName('Name').isNotBlank(),
+          'name': PortField.string().withDisplayName('Name').isNotBlank().isName(),
           'email': PortField.string(initialValue: route.initialEmailProperty.value)
               .withDisplayName('Email')
               .isNotBlank()
               .isEmail(),
+          'phone': PortField.string().withDisplayName('Phone').isNotBlank().isPhone(),
           'password': PortField.string(initialValue: route.initialPasswordProperty.value)
               .withDisplayName('Password')
               .isNotBlank()
@@ -59,7 +60,7 @@ class SignupPage with IsAppPageWrapper<SignupRoute> {
         children: [
           StyledCard(
             titleText: 'Info',
-            bodyText: 'Fill in your information to get started using Valet!',
+            bodyText: 'Fill in your information to get started using Example!',
             leadingIcon: Icons.person,
             children: [
               StyledObjectPortBuilder(port: signupPort),

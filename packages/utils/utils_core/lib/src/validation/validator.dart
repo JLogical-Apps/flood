@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 import 'package:utils_core/src/extensions/string_extensions.dart';
+import 'package:utils_core/src/guard.dart';
 import 'package:utils_core/src/validation/compound_validator.dart';
 import 'package:utils_core/src/validation/map_error_validator.dart';
 import 'package:utils_core/src/validation/map_value_validator.dart';
@@ -114,6 +116,21 @@ abstract class Validator<T, E> {
 
         if (!data.isEmail) {
           return '[$data] must be an email!';
+        }
+
+        return null;
+      });
+
+  static Validator<String?, String> isPhone() => Validator((data) {
+        if (data == null) {
+          return null;
+        }
+
+        final phoneValid = guard(() => PhoneNumber.parse(data).isValid()) ?? false;
+        final usNumberValid = guard(() => PhoneNumber.parse(data, destinationCountry: IsoCode.US).isValid()) ?? false;
+
+        if (!phoneValid && !usNumberValid) {
+          return '[$data] must be a phone number!';
         }
 
         return null;

@@ -43,15 +43,40 @@ class StyledTextFieldPortField extends HookWidget {
           text: text ?? '',
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
+          leadingIcon: leadingIcon,
+          leading: leading,
           errorText: error?.toString(),
           hintText: hintText,
           enabled: enabled,
           obscureText: obscureText,
           onChanged: (text) => port[fieldName] = text,
           maxLines: maxLines ?? (field.findIsMultiline() ? 3 : null),
-          keyboard: field.findIsEmail() ? TextInputType.emailAddress : null,
+          keyboard: getKeyboardType(field),
         );
       },
     );
+  }
+
+  TextInputType? getKeyboardType(PortField field) {
+    if (field.findIsName()) {
+      return TextInputType.name;
+    }
+    if (field.findIsEmail()) {
+      return TextInputType.emailAddress;
+    }
+    if (field.findIsPhone()) {
+      return TextInputType.phone;
+    }
+    if (field.findIsSecret()) {
+      return TextInputType.visiblePassword;
+    }
+    if (field.findIsMultiline()) {
+      return TextInputType.multiline;
+    }
+    if (field.findIsCurrency()) {
+      return TextInputType.numberWithOptions(decimal: true);
+    }
+
+    return null;
   }
 }

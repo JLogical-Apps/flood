@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:style/src/color_palette_provider.dart';
+import 'package:style/src/components/input/styled_button.dart';
 import 'package:style/src/components/input/styled_text_field.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
@@ -14,12 +15,15 @@ import 'package:utils/utils.dart';
 class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
   @override
   Widget renderTyped(BuildContext context, StyledTextField component) {
-    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body(text));
+    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body.display.bold(text));
     final leading = component.leading ?? component.leadingIcon?.mapIfNonNull((icon) => StyledIcon(icon));
 
     final textController = useTextEditingController(text: component.text);
     final textFieldColor =
         component.enabled ? context.colorPalette().background.regular : context.colorPalette().baseBackground;
+
+    final revealSecretState = useState<bool>(false);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,10 +40,10 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
               controller: textController,
               onChanged: (text) => component.onChanged?.call(text),
               onTap: component.onTapped,
-              style: context.style().getTextStyle(textFieldContext, StyledText.body.empty),
+              style: context.style().getTextStyle(textFieldContext, StyledText.body.bold.empty),
               cursorColor: textFieldContext.colorPalette().foreground.regular,
               readOnly: component.readonly || !component.enabled,
-              obscureText: component.obscureText,
+              obscureText: component.obscureText && !revealSecretState.value,
               maxLines: component.maxLines,
               keyboardType: component.keyboard,
               decoration: InputDecoration(
@@ -47,10 +51,20 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                 focusColor: textFieldContext.colorPalette().background.regular.background.regular,
                 fillColor: textFieldColor,
                 prefixIcon: leading,
+                suffixIcon: !component.obscureText || textController.text.isEmpty
+                    ? null
+                    : (revealSecretState.value
+                        ? StyledButton(
+                            iconData: Icons.visibility,
+                            onPressed: () => revealSecretState.value = false,
+                          )
+                        : StyledButton(
+                            iconData: Icons.visibility_off,
+                            onPressed: () => revealSecretState.value = true,
+                          )),
                 filled: true,
                 hintText: component.hintText,
-                hintStyle: context.style().getTextStyle(textFieldContext,
-                    StyledText.body.italics.withColor(textFieldContext.colorPalette().foreground.strong).empty),
+                hintStyle: context.style().getTextStyle(textFieldContext, StyledText.body.thin.empty),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -69,8 +83,9 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                   borderSide: BorderSide(color: textFieldContext.colorPalette().error.regular),
                 ),
                 errorText: component.errorText,
-                errorStyle: context.style().getTextStyle(
-                    context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
+                errorStyle: context
+                    .style()
+                    .getTextStyle(context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
               ),
             );
           }),

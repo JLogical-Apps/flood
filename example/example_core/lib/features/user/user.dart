@@ -2,7 +2,7 @@ import 'package:jlogical_utils_core/jlogical_utils_core.dart';
 
 class User extends ValueObject {
   static const nameField = 'name';
-  late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank();
+  late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank().isName();
 
   static const emailField = 'email';
   late final emailProperty = field<String>(name: emailField).withDisplayName('Email').hidden().isEmail().isNotBlank();

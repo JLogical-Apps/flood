@@ -66,5 +66,22 @@ void main() {
     expect(await isDouble.validate('1'), isNull);
     expect(await isInt.validate('3.14'), isA<String>());
     expect(await isDouble.validate('3.14'), isNull);
+
+    final isPhone = Validator.isPhone();
+    expect(await isPhone.validate('540-456-7890'), isNull);
+    expect(await isPhone.validate('(540) 456-7890'), isNull);
+    expect(await isPhone.validate('5404567890'), isNull);
+    expect(await isPhone.validate('+15404567890'), isNull);
+    expect(await isPhone.validate('+44 20 1234 5678'), isNull);
+    expect(await isPhone.validate('+49-89-636-48018'), isNull);
+    expect(await isPhone.validate('540.456.7890'), isNull);
+    expect(await isPhone.validate('(540)-456-7890'), isNull);
+    expect(await isPhone.validate('540123123'), isA<String>());
+    expect(await isPhone.validate('54045678901'), isA<String>());
+    expect(await isPhone.validate('test@test.com'), isA<String>());
+    expect(await isPhone.validate('abc'), isA<String>());
+    expect(await isPhone.validate('(540)456-7890'), isNull);
+    expect(await isPhone.validate('540-456-789'), isA<String>());
+    expect(await isPhone.validate('54-3456-7890'), isA<String>());
   });
 }

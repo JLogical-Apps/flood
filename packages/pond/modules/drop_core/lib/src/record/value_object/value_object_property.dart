@@ -16,7 +16,9 @@ import 'package:drop_core/src/record/value_object/field_value_object_property.da
 import 'package:drop_core/src/record/value_object/hidden_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/indexed_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/is_email_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/is_name_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/is_not_blank_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/is_phone_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/list_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/map_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/multiline_value_object_property.dart';
@@ -160,8 +162,16 @@ extension NullableStringValueObjectPropertyExtensions<G extends String?, S exten
     return IsNotBlankValueObjectProperty<L>(property: this);
   }
 
+  IsNameValueObjectProperty<G, S, L> isName() {
+    return IsNameValueObjectProperty<G, S, L>(property: this);
+  }
+
   IsEmailValueObjectProperty<G, S, L> isEmail() {
     return IsEmailValueObjectProperty<G, S, L>(property: this);
+  }
+
+  IsPhoneValueObjectProperty<G, S, L> isPhone() {
+    return IsPhoneValueObjectProperty<G, S, L>(property: this);
   }
 
   MultilineValueObjectProperty<G, S, L> multiline([bool isMultiline = true]) {
