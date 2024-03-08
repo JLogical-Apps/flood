@@ -22,17 +22,23 @@ class DeltaStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
               }
             },
       child: Scaffold(
-        appBar: AppBar(
-          foregroundColor: context.colorPalette().foreground.regular,
-          centerTitle: true,
-          title: component.title ?? component.titleText?.mapIfNonNull(StyledText.xl.bold.display),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          actions: [
-            ...component.actionWidgets,
-            if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
-          ],
-        ),
+        appBar: component.title == null &&
+                component.titleText == null &&
+                component.actionWidgets.isEmpty &&
+                component.actions.isEmpty
+            ? null
+            : AppBar(
+                foregroundColor: context.colorPalette().foreground.regular,
+                centerTitle: true,
+                title: component.title ?? component.titleText?.mapIfNonNull(StyledText.xl.bold.display),
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                scrolledUnderElevation: 0,
+                actions: [
+                  ...component.actionWidgets,
+                  if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
+                ],
+              ),
         backgroundColor: colorPalette.baseBackground,
         body: component.body,
       ),
