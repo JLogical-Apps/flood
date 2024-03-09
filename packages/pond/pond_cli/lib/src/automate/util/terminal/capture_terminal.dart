@@ -24,16 +24,6 @@ class CaptureTerminal with IsTerminal {
   }
 
   @override
-  List<T> multiSelect<T>({
-    required String prompt,
-    required List<T> options,
-    required String Function(T value) stringMapper,
-  }) {
-    output.add('multiSelect: $prompt, [${options.map(stringMapper).join(',')}]');
-    return [];
-  }
-
-  @override
   void print(obj) {
     output.add('print: $obj');
   }

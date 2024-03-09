@@ -17,14 +17,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.13.0"
-  ansicolor:
-    dependency: transitive
-    description:
-      name: ansicolor
-      sha256: "607f8fa9786f392043f169898923e6c59b4518242b68b8862eb8a8b7d9c30b4a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   archive:
     dependency: transitive
     description:
@@ -121,14 +113,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.2"
-  colorize_lumberdash:
-    dependency: "direct main"
-    description:
-      name: colorize_lumberdash
-      sha256: "6069ad908445caab046e93738c4f941536b6266076f2998b4ac6c012355eb1ba"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   convert:
     dependency: transitive
     description:
@@ -291,15 +275,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  interact:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: e180aa04146a78fadb11ecc93347321b5b2382cc
-      resolved-ref: e180aa04146a78fadb11ecc93347321b5b2382cc
-      url: "git@github.com:Linkadi98/interact.git"
-    source: git
-    version: "2.2.0"
   intl:
     dependency: transitive
     description:
@@ -356,14 +331,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  lumberdash:
+  mason_logger:
     dependency: "direct main"
     description:
-      name: lumberdash
-      sha256: "1bc3750c094adb7f213a61883ca9878ba052fde52d9974b9039598c651fe096c"
+      name: mason_logger
+      sha256: "0e90e637dcfcb7fb6c30b38e71cd41fa0e4e3df6f1da177f8251ac3f15147e9f"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "0.2.12"
   matcher:
     dependency: transitive
     description:
@@ -683,14 +658,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.6"
-  tint:
-    dependency: transitive
-    description:
-      name: tint
-      sha256: "9652d9a589f4536d5e392cf790263d120474f15da3cf1bee7f1fdb31b4de5f46"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   typed_data:
     dependency: transitive
     description:
@@ -731,13 +698,13 @@ packages:
     source: hosted
     version: "5.0.0"
   vm_service:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: vm_service
-      sha256: c538be99af830f478718b51630ec1b6bee5e74e52c8a802d328d9e71d35d2583
+      sha256: b3d56ff4341b8f182b96aceb2fa20e3dcb336b9f867bc0eafc0de10f1048e957
       url: "https://pub.dev"
     source: hosted
-    version: "11.10.0"
+    version: "13.0.0"
   watcher:
     dependency: transitive
     description:

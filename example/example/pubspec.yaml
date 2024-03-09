@@ -27,8 +27,8 @@ flutter:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^2.0.1
-  flutter_native_splash: ^2.3.7
+  flutter_launcher_icons: ^0.13.1
 dependency_overrides:
   http: 0.13.5
+  vm_service: 13.0.0

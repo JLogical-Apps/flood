@@ -10,7 +10,6 @@ version: 0.0.1
 
 dependencies:
   collection: ^1.16.0
-  colorize_lumberdash: ^3.0.0
   dcli:
     git:
       url: git@github.com:Linkadi98/dcli.git
@@ -18,11 +17,7 @@ dependencies:
       path: dcli
   diffutil_dart: ^4.0.0
   equatable: ^2.0.5
-  interact:
-    git:
-      url: git@github.com:Linkadi98/interact.git
-      ref: e180aa04146a78fadb11ecc93347321b5b2382cc
-  lumberdash: ^3.0.0
+  mason_logger: ^0.2.12
   path: ^1.8.0
   process_run: ^0.12.5+2
   xcodeproj:
@@ -48,3 +43,5 @@ dependencies:
 dev_dependencies:
   lints: ^2.0.0
   test: 1.24.6
+dependency_overrides:
+  vm_service: 13.0.0

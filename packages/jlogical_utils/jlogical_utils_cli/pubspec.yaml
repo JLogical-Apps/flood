@@ -36,3 +36,5 @@ dependencies:
       path: packages/pond/modules/release
 dev_dependencies:
   lints: ^2.0.0
+dependency_overrides:
+  vm_service: 13.0.0

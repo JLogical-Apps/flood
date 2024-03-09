@@ -23,12 +23,6 @@ abstract class Terminal {
     T? initialValue,
   });
 
-  List<T> multiSelect<T>({
-    required String prompt,
-    required List<T> options,
-    required String Function(T value) stringMapper,
-  });
-
   /// Runs the [command] (or multiple commands if split by a `\n`) in [workingDirectory].
   /// If [interactable] is true, then enables user interaction in the [command], such as inputting login credentials for `firebase login`. But, this prevents any output from being returned due to the quirks of [dcli].
   Future<String> run(
@@ -91,18 +85,6 @@ mixin IsTerminalWrapper implements TerminalWrapper {
         options: options,
         stringMapper: stringMapper,
         initialValue: initialValue,
-      );
-
-  @override
-  List<T> multiSelect<T>({
-    required String prompt,
-    required List<T> options,
-    required String Function(T value) stringMapper,
-  }) =>
-      terminal.multiSelect(
-        prompt: prompt,
-        options: options,
-        stringMapper: stringMapper,
       );
 
   @override
