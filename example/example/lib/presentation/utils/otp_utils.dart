@@ -6,7 +6,6 @@ import 'package:jlogical_utils/jlogical_utils.dart';
 
 extension OtpBuildContextExtensions on BuildContext {
   Future<Account?> loginWithPhoneOtp({String? phoneNumber}) async {
-
     phoneNumber ??= await showStyledDialog(StyledPortDialog(
       titleText: 'Login with Phone',
       port: Port.of({
@@ -38,7 +37,7 @@ extension OtpBuildContextExtensions on BuildContext {
               ));
               Navigator.of(context).pop(account);
             } catch (e) {
-              Navigator.of(context).pop(Exception('Unable to verify phone number!'));
+              Navigator.of(context).pop(LoginFailure.otpVerification());
             }
           });
 

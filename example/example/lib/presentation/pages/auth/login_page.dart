@@ -87,9 +87,10 @@ class LoginPage with IsAppPageWrapper<LoginRoute> {
                     if (account != null) {
                       context.warpTo(HomeRoute());
                     }
-                  } catch (error, stackTrace) {
-                    context.logError(error, stackTrace);
-                    otpErrorState.value = 'Unable to verify phone number';
+                  } catch (e, stackTrace) {
+                    final errorText = e.as<LoginFailure>()?.displayText ?? e.toString();
+                    otpErrorState.value = errorText;
+                    context.logError(e, stackTrace);
                   }
                 },
               ),

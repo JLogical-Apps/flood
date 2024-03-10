@@ -76,7 +76,7 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
       requestType = OtpRequestType.retry;
       attempts++;
     } while (attempts < 3);
-    throw Exception('Failed OTP verification');
+    throw LoginFailure.otpVerification();
   }
 
   @override

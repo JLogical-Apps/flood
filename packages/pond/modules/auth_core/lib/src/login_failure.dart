@@ -10,6 +10,8 @@ abstract class LoginFailure {
   static LoginFailure wrongPassword() => WrongPasswordLoginFailure();
 
   static LoginFailure passwordResetRequired() => PasswordResetRequiredLoginFailure();
+
+  static LoginFailure otpVerification() => OtpVerificationLoginFailure();
 }
 
 class InvalidEmailLoginFailure implements LoginFailure {
@@ -35,4 +37,9 @@ class WrongPasswordLoginFailure implements LoginFailure {
 class PasswordResetRequiredLoginFailure implements LoginFailure {
   @override
   String get displayText => 'You must reset your password!';
+}
+
+class OtpVerificationLoginFailure implements LoginFailure {
+  @override
+  String get displayText => 'Unable to verify your one-time passcode!';
 }
