@@ -2,20 +2,24 @@ import 'dart:async';
 
 import 'package:auth_core/src/account.dart';
 import 'package:auth_core/src/adapting_auth_service.dart';
+import 'package:auth_core/src/auth_credentials/auth_credentials.dart';
 import 'package:auth_core/src/auth_listener.dart';
 import 'package:auth_core/src/cloud_auth_service.dart';
 import 'package:auth_core/src/file_auth_service.dart';
 import 'package:auth_core/src/listener_auth_service.dart';
 import 'package:auth_core/src/listener_handler_auth_service.dart';
 import 'package:auth_core/src/memory_auth_service.dart';
+import 'package:auth_core/src/otp/otp_provider.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class AuthService with IsCorePondComponent {
-  Future<Account> login(String email, String password);
+  Future<Account> login(AuthCredentials authCredentials);
 
-  Future<Account> signup(String email, String password);
+  Future<Account> signup(AuthCredentials authCredentials);
+
+  Future<Account> loginWithOtp(OtpProvider otpProvider);
 
   Future<void> logout();
 
@@ -46,6 +50,15 @@ extension AuthServiceExtension on AuthService {
 
   AuthService withListenersHandler(List<AuthListener> authListeners) =>
       ListenerHandlerAuthService(authService: this, authListeners: authListeners);
+
+  Future<Account> loginOrSignup(AuthCredentials credentials) async {
+    final account = await guardAsync(() => login(credentials));
+    if (account != null) {
+      return account;
+    }
+
+    return await signup(credentials);
+  }
 }
 
 class AuthServiceStatic {
@@ -74,10 +87,13 @@ abstract class AuthServiceWrapper implements AuthService {
 
 mixin IsAuthServiceWrapper implements AuthServiceWrapper {
   @override
-  Future<Account> login(String email, String password) => authService.login(email, password);
+  Future<Account> login(AuthCredentials authCredentials) => authService.login(authCredentials);
 
   @override
-  Future<Account> signup(String email, String password) => authService.signup(email, password);
+  Future<Account> loginWithOtp(OtpProvider otpProvider) => authService.loginWithOtp(otpProvider);
+
+  @override
+  Future<Account> signup(AuthCredentials authCredentials) => authService.signup(authCredentials);
 
   @override
   Future<void> logout() => authService.logout();

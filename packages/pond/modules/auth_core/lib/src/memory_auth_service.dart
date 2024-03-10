@@ -1,5 +1,16 @@
-import 'package:auth_core/auth_core.dart';
-import 'package:collection/collection.dart';
+import 'dart:async';
+
+import 'package:auth_core/src/account.dart';
+import 'package:auth_core/src/auth_credentials/auth_credentials.dart';
+import 'package:auth_core/src/auth_service.dart';
+import 'package:auth_core/src/drop/account.dart';
+import 'package:auth_core/src/drop/account_entity.dart';
+import 'package:auth_core/src/drop/account_repository.dart';
+import 'package:auth_core/src/login_failure.dart';
+import 'package:auth_core/src/otp/otp_provider.dart';
+import 'package:auth_core/src/otp/otp_request_type.dart';
+import 'package:auth_core/src/signup_failure.dart';
+import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
@@ -8,50 +19,76 @@ import 'package:uuid/uuid.dart';
 class MemoryAuthService with IsAuthService, IsCorePondComponent {
   final bool isAdmin;
 
-  final List<_UserToken> _userTokens = [];
-
   final BehaviorSubject<Account?> _accountX = BehaviorSubject.seeded(null);
 
   MemoryAuthService({this.isAdmin = false});
 
   @override
+  List<CorePondComponentBehavior> get behaviors => [
+        CorePondComponentBehavior(
+          onRegister: (context, _) async => await context.register(AccountRepository().memory()),
+        ),
+      ];
+
+  @override
   ValueStream<FutureValue<Account?>> get accountX => _accountX.mapWithValue((userId) => FutureValue.loaded(userId));
 
   @override
-  Future<Account> login(String email, String password) async {
+  Future<Account> login(AuthCredentials authCredentials) async {
     if (loggedInUserId != null) {
       throw Exception('Cannot login when already logged in!');
     }
 
-    final existingToken = _userTokens.firstWhereOrNull((token) => token.email == email);
-    if (existingToken == null) {
-      throw LoginFailure.invalidEmail();
+    final accountEntity =
+        await AccountEntity.accountFromCredentialsQuery(authCredentials).firstOrNull().get(context.dropCoreComponent);
+    if (accountEntity == null) {
+      throw LoginFailure.userNotFound();
     }
 
-    if (existingToken.password != password) {
+    final account = accountEntity.value.toAccount();
+    if (!accountEntity.value.authCredentialProperty.value.matches(authCredentials)) {
       throw LoginFailure.wrongPassword();
     }
 
-    _accountX.value = Account(accountId: existingToken.userId, isAdmin: existingToken.isAdmin);
+    _accountX.value = account;
     return _accountX.value!;
   }
 
   @override
-  Future<Account> signup(String email, String password) async {
-    if (loggedInUserId != null) {
-      throw Exception('Cannot login when already logged in!');
-    }
+  Future<Account> loginWithOtp(OtpProvider otpProvider) async {
+    final code = '123456';
+    var requestType = OtpRequestType.initial;
+    var attempts = 0;
+    do {
+      final userCode = await otpProvider.getOtpUserCode(requestType);
+      if (userCode == code) {
+        return await loginOrSignup(otpProvider.generateAuthCredentials());
+      }
+      requestType = OtpRequestType.retry;
+      attempts++;
+    } while (attempts < 3);
+    throw Exception('Failed OTP verification');
+  }
 
-    final existingToken = _userTokens.firstWhereOrNull((token) => token.email == email);
-    if (existingToken != null) {
+  @override
+  Future<Account> signup(AuthCredentials authCredentials) async {
+    final existingAccountEntity =
+        await AccountEntity.accountFromCredentialsQuery(authCredentials).firstOrNull().get(context.dropCoreComponent);
+    if (existingAccountEntity != null) {
       throw SignupFailure.emailAlreadyUsed();
     }
 
-    final id = Uuid().v4();
-    _userTokens.add(_UserToken(userId: id, email: email, password: password, isAdmin: isAdmin));
+    final account = Account(
+      accountId: Uuid().v4(),
+      isAdmin: false,
+    );
 
-    _accountX.value = Account(accountId: id, isAdmin: isAdmin);
-    return _accountX.value!;
+    await context.dropCoreComponent
+        .update(AccountEntity()..set(AccountValueObject.fromAccount(account, authCredentials)));
+
+    _accountX.value = account;
+
+    return account;
   }
 
   @override
@@ -68,20 +105,10 @@ class MemoryAuthService with IsAuthService, IsCorePondComponent {
 
     await logout();
 
-    _userTokens.removeWhere((userToken) => userToken.userId == loggedInUserId);
+    final accountEntity =
+        await AccountEntity.accountFromIdQuery(loggedInUserId).firstOrNull().get(context.dropCoreComponent);
+    if (accountEntity != null) {
+      await context.dropCoreComponent.delete(accountEntity);
+    }
   }
-}
-
-class _UserToken {
-  final String userId;
-  final String email;
-  final String password;
-  final bool isAdmin;
-
-  const _UserToken({
-    required this.userId,
-    required this.email,
-    required this.password,
-    required this.isAdmin,
-  });
 }

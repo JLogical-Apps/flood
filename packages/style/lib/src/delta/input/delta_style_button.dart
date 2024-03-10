@@ -26,9 +26,8 @@ class DeltaStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
                   ? context.colorPalette().foreground.strong
                   : null,
             ));
-    final backgroundColorPalette = component.emphasis == Emphasis.strong
-        ? context.colorPalette().background.strong
-        : context.colorPalette();
+    final backgroundColorPalette =
+        component.emphasis == Emphasis.strong ? context.colorPalette().background.strong : context.colorPalette();
 
     final loadingState = useState<bool>(false);
 
@@ -39,8 +38,11 @@ class DeltaStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
         }
 
         loadingState.value = true;
-        await onPressed();
-        loadingState.value = false;
+        try {
+          await onPressed();
+        } finally {
+          loadingState.value = false;
+        }
       },
     );
 

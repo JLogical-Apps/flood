@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:actions_core/actions_core.dart';
 import 'package:auth_core/src/account.dart';
+import 'package:auth_core/src/auth_credentials/auth_credentials.dart';
 import 'package:auth_core/src/auth_listener.dart';
 import 'package:auth_core/src/auth_service.dart';
 import 'package:auth_core/src/auth_service_implementation.dart';
@@ -54,12 +55,12 @@ class AuthCoreComponent with IsAuthServiceWrapper {
 
   late final loginAction = Action(
     name: 'Login',
-    runner: (LoginParameters parameters) => authService.login(parameters.email, parameters.password),
+    runner: (AuthCredentials credentials) => authService.login(credentials),
   );
 
   late final signupAction = Action(
     name: 'Signup',
-    runner: (SignupParameters parameters) => authService.signup(parameters.email, parameters.password),
+    runner: (AuthCredentials credentials) => authService.signup(credentials),
   );
 
   late final logoutAction = Action(
@@ -68,13 +69,13 @@ class AuthCoreComponent with IsAuthServiceWrapper {
   );
 
   @override
-  Future<Account> login(String email, String password) async {
-    return await context.run(loginAction, LoginParameters(email: email, password: password));
+  Future<Account> login(AuthCredentials authCredentials) async {
+    return await context.run(loginAction, authCredentials);
   }
 
   @override
-  Future<Account> signup(String email, String password) async {
-    return await context.run(signupAction, SignupParameters(email: email, password: password));
+  Future<Account> signup(AuthCredentials authCredentials) async {
+    return await context.run(signupAction, authCredentials);
   }
 
   @override

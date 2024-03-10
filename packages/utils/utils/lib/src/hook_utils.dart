@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils/utils.dart';
@@ -54,4 +56,13 @@ void useListen<T>(Stream<T> stream, [Function(T? value)? valueChanged]) {
 
 void useOneTimeEffect(void Function()? Function() effect) {
   useEffect(effect, [0]);
+}
+
+void useAsyncEffect(FutureOr Function() effect) {
+  useEffect(() {
+    () async {
+      await effect();
+    }();
+    return null;
+  }, []);
 }

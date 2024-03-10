@@ -30,15 +30,15 @@ class ListenerAuthService with IsAuthServiceWrapper {
       ];
 
   @override
-  Future<Account> login(String email, String password) async {
-    final account = await authService.login(email, password);
+  Future<Account> login(AuthCredentials authCredentials) async {
+    final account = await authService.login(authCredentials);
     await onAfterLogin?.call(account);
     return account;
   }
 
   @override
-  Future<Account> signup(String email, String password) async {
-    final account = await authService.signup(email, password);
+  Future<Account> signup(AuthCredentials authCredentials) async {
+    final account = await authService.signup(authCredentials);
     await onAfterLogin?.call(account);
     return account;
   }

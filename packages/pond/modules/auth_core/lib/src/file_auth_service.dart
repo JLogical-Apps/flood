@@ -1,10 +1,15 @@
 import 'package:auth_core/src/account.dart';
+import 'package:auth_core/src/auth_credentials/auth_credentials.dart';
 import 'package:auth_core/src/auth_service.dart';
+import 'package:auth_core/src/drop/account.dart';
+import 'package:auth_core/src/drop/account_entity.dart';
+import 'package:auth_core/src/drop/account_repository.dart';
 import 'package:auth_core/src/login_failure.dart';
+import 'package:auth_core/src/otp/otp_provider.dart';
+import 'package:auth_core/src/otp/otp_request_type.dart';
 import 'package:auth_core/src/signup_failure.dart';
-import 'package:collection/collection.dart';
+import 'package:drop_core/drop_core.dart';
 import 'package:environment_core/environment_core.dart';
-import 'package:equatable/equatable.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -20,59 +25,36 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
             setMapper: (string) => string ?? '',
           );
 
-  late DataSource<Map<LoginToken, Account>?> registeredAccountsDataSource =
-      DataSource.static.crossFile(authDirectory - 'registered_users.json').mapJson().map(
-            getMapper: (json) {
-              final registeredUsers = json['registeredUsers'] as Map<String, dynamic>;
-              return registeredUsers.map((email, data) => MapEntry(
-                    LoginToken(
-                      email: email,
-                      password: data['password'],
-                    ),
-                    Account(
-                      accountId: data['userId'] as String,
-                      isAdmin: (data['admin'] as bool?) ?? false,
-                    ),
-                  ));
-            },
-            setMapper: (registeredUsers) => {
-              'registeredUsers': (registeredUsers ?? {}).map((loginToken, account) => MapEntry(
-                    loginToken.email,
-                    {
-                      'userId': account.accountId,
-                      'password': loginToken.password,
-                      'admin': account.isAdmin,
-                    },
-                  ))
-            },
-          );
-
   final BehaviorSubject<FutureValue<Account?>> _accountX = BehaviorSubject.seeded(FutureValue.empty());
 
   @override
   late final List<CorePondComponentBehavior> behaviors = [
     CorePondComponentBehavior(
       onRegister: (context, _) async {
+        await context.register(AccountRepository().file('_auth'));
         final userId = await loggedInUserIdDataSource.getOrNull();
-        final registeredAccounts = await registeredAccountsDataSource.getOrNull() ?? {};
-        final account = registeredAccounts.values.firstWhereOrNull((account) => account.accountId == userId);
-        _accountX.value = FutureValue.loaded(account);
+        final accountEntity = await Query.from<AccountEntity>()
+            .where(AccountValueObject.accountIdField)
+            .isEqualTo(userId)
+            .firstOrNull()
+            .get(context.dropCoreComponent);
+        _accountX.value = FutureValue.loaded(accountEntity?.value.toAccount());
       },
-      onReset: (context, __) async {
-        await loggedInUserIdDataSource.delete();
-        await registeredAccountsDataSource.delete();
-      },
+      onReset: (context, __) async => await loggedInUserIdDataSource.delete(),
     ),
   ];
 
   @override
-  Future<Account> login(String email, String password) async {
-    final loginToken = LoginToken(email: email, password: password);
-
-    final registeredUsers = await registeredAccountsDataSource.getOrNull() ?? {};
-    final account = registeredUsers[loginToken];
-    if (account == null) {
+  Future<Account> login(AuthCredentials authCredentials) async {
+    final accountEntity =
+        await AccountEntity.accountFromCredentialsQuery(authCredentials).firstOrNull().get(context.dropCoreComponent);
+    if (accountEntity == null) {
       throw LoginFailure.userNotFound();
+    }
+
+    final account = accountEntity.value.toAccount();
+    if (!accountEntity.value.authCredentialProperty.value.matches(authCredentials)) {
+      throw LoginFailure.wrongPassword();
     }
 
     await loggedInUserIdDataSource.set(account.accountId);
@@ -82,12 +64,26 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
-  Future<Account> signup(String email, String password) async {
-    final loginToken = LoginToken(email: email, password: password);
+  Future<Account> loginWithOtp(OtpProvider otpProvider) async {
+    final code = '123456';
+    var requestType = OtpRequestType.initial;
+    var attempts = 0;
+    do {
+      final userCode = await otpProvider.getOtpUserCode(requestType);
+      if (userCode == code) {
+        return await loginOrSignup(otpProvider.generateAuthCredentials());
+      }
+      requestType = OtpRequestType.retry;
+      attempts++;
+    } while (attempts < 3);
+    throw Exception('Failed OTP verification');
+  }
 
-    final registeredAccounts = await registeredAccountsDataSource.getOrNull() ?? {};
-    final existingUser = registeredAccounts[loginToken];
-    if (existingUser != null) {
+  @override
+  Future<Account> signup(AuthCredentials authCredentials) async {
+    final existingAccountEntity =
+        await AccountEntity.accountFromCredentialsQuery(authCredentials).firstOrNull().get(context.dropCoreComponent);
+    if (existingAccountEntity != null) {
       throw SignupFailure.emailAlreadyUsed();
     }
 
@@ -96,10 +92,8 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
       isAdmin: false,
     );
 
-    registeredAccounts[loginToken] = account;
-
     await Future.wait([
-      registeredAccountsDataSource.set(registeredAccounts),
+      context.dropCoreComponent.update(AccountEntity()..set(AccountValueObject.fromAccount(account, authCredentials))),
       loggedInUserIdDataSource.set(account.accountId),
     ]);
 
@@ -123,27 +117,13 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
 
     await logout();
 
-    final registeredAccounts = await registeredAccountsDataSource.getOrNull() ?? {};
-    registeredAccounts.removeWhere((loginToken, account) => account.accountId == loggedInUserId);
-    await registeredAccountsDataSource.set(registeredAccounts);
+    final accountEntity =
+        await AccountEntity.accountFromIdQuery(loggedInUserId).firstOrNull().get(context.dropCoreComponent);
+    if (accountEntity != null) {
+      await context.dropCoreComponent.delete(accountEntity);
+    }
   }
 
   @override
   ValueStream<FutureValue<Account?>> get accountX => _accountX;
-}
-
-/// Token used to simulate logging in. Only used for local testing purposes.
-class LoginToken extends Equatable {
-  final String email;
-  final String password;
-
-  const LoginToken({required this.email, required this.password});
-
-  @override
-  List<Object?> get props => [email, password];
-
-  @override
-  String toString() {
-    return 'LoginToken($email, ...)';
-  }
 }

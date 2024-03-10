@@ -19,7 +19,7 @@ void main() {
     await corePondContext.register(TypeCoreComponent());
     await corePondContext.register(ActionCoreComponent());
     await corePondContext.register(DropCoreComponent(
-      loggedInAccountX: loggedInAccountX,
+      loggedInAccountGetter: () => loggedInAccountX.value,
     ));
     await corePondContext.register(documentRepository);
 
@@ -54,9 +54,7 @@ void main() {
 
     final corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
-    await corePondContext.register(DropCoreComponent(
-      loggedInAccountX: loggedInAccountX,
-    ));
+    await corePondContext.register(DropCoreComponent(loggedInAccountGetter: () => loggedInAccountX.value));
     await corePondContext.register(documentRepository);
 
     // Test create
@@ -93,9 +91,7 @@ void main() {
 
     final corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
-    await corePondContext.register(DropCoreComponent(
-      loggedInAccountX: loggedInAccountX,
-    ));
+    await corePondContext.register(DropCoreComponent(loggedInAccountGetter: () => loggedInAccountX.value));
     await corePondContext.register(documentRepository);
 
     // Test create
@@ -121,9 +117,7 @@ void main() {
     final corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
     await corePondContext.register(ActionCoreComponent());
-    await corePondContext.register(DropCoreComponent(
-      loggedInAccountX: loggedInAccountX,
-    ));
+    await corePondContext.register(DropCoreComponent(loggedInAccountGetter: () => loggedInAccountX.value));
     await corePondContext.register(documentRepository);
     await corePondContext.register(UserRepository());
 

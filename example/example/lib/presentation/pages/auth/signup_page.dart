@@ -43,7 +43,6 @@ class SignupPage with IsAppPageWrapper<SignupRoute> {
               .withDisplayName('Email')
               .isNotBlank()
               .isEmail(),
-          'phone': PortField.string().withDisplayName('Phone').isNotBlank().isPhone(),
           'password': PortField.string(initialValue: route.initialPasswordProperty.value)
               .withDisplayName('Password')
               .isNotBlank()
@@ -77,7 +76,9 @@ class SignupPage with IsAppPageWrapper<SignupRoute> {
               final data = result.data;
 
               try {
-                final account = await context.find<AuthCoreComponent>().signup(data['email'], data['password']);
+                final account = await context
+                    .find<AuthCoreComponent>()
+                    .signup(AuthCredentials.email(email: data['email'], password: data['password']));
                 final deviceToken = context.find<MessagingCoreComponent>().deviceToken;
 
                 await context.dropCoreComponent.updateEntity(
@@ -88,7 +89,7 @@ class SignupPage with IsAppPageWrapper<SignupRoute> {
                     ..deviceTokenProperty.set(deviceToken),
                 );
 
-                await context.push(HomeRoute());
+                await context.warpTo(HomeRoute());
               } catch (e, stackTrace) {
                 final errorText = e.as<SignupFailure>()?.displayText ?? e.toString();
                 signupPort.setError(name: 'email', error: errorText);

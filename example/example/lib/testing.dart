@@ -8,7 +8,7 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
   final authComponent = corePondContext.locate<AuthCoreComponent>();
   final dropComponent = corePondContext.locate<DropCoreComponent>();
 
-  final account = await authComponent.signup('test@test.com', 'password');
+  final account = await authComponent.signup(AuthCredentials.email(email: 'test@test.com', password: 'password'));
 
   final userEntity = await dropComponent.updateEntity(
     UserEntity()..id = account.accountId,

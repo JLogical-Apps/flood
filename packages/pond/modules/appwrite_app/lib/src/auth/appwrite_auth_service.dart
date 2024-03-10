@@ -1,5 +1,6 @@
 import 'package:appwrite/appwrite.dart' as appwrite;
 import 'package:appwrite/appwrite.dart' hide Account;
+import 'package:appwrite/models.dart';
 import 'package:appwrite_app/src/util/appwrite_core_component_extensions.dart';
 import 'package:auth_core/auth_core.dart';
 import 'package:pond_core/pond_core.dart';
@@ -29,9 +30,13 @@ class AppwriteAuthService with IsAuthService, IsCorePondComponent {
       ];
 
   @override
-  Future<Account> login(String email, String password) async {
+  Future<Account> login(AuthCredentials authCredentials) async {
     try {
-      await account.createEmailSession(email: email, password: password);
+      if (authCredentials is EmailAuthCredentials) {
+        await account.createEmailSession(email: authCredentials.email, password: authCredentials.password);
+      } else {
+        throw UnimplementedError();
+      }
 
       final user = await account.get();
 
@@ -58,10 +63,14 @@ class AppwriteAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
-  Future<Account> signup(String email, String password) async {
+  Future<Account> loginWithOtp(OtpProvider otpProvider) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Account> signup(AuthCredentials authCredentials) async {
     try {
-      final user = await account.create(userId: ID.unique(), email: email, password: password);
-      await account.createEmailSession(email: email, password: password);
+      final user = await getUserFromCredentials(authCredentials);
 
       final loggedInAccount = Account(
         accountId: user.$id,
@@ -96,4 +105,14 @@ class AppwriteAuthService with IsAuthService, IsCorePondComponent {
 
   @override
   ValueStream<FutureValue<Account?>> get accountX => _accountX;
+
+  Future<User> getUserFromCredentials(AuthCredentials credentials) async {
+    if (credentials is EmailAuthCredentials) {
+      final user = await account.create(userId: ID.unique(), email: credentials.email, password: credentials.password);
+      await account.createEmailSession(email: credentials.email, password: credentials.password);
+      return user;
+    }
+
+    throw UnimplementedError();
+  }
 }

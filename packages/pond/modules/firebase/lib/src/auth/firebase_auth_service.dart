@@ -28,10 +28,9 @@ class FirebaseAuthService with IsAuthService, IsCorePondComponent {
       ];
 
   @override
-  Future<Account> login(String email, String password) async {
+  Future<Account> login(AuthCredentials credentials) async {
     try {
-      final credentials = await auth.signInWithEmailAndPassword(email: email, password: password);
-      final user = credentials.user!;
+      final user = await getUserFromCredentials(credentials);
 
       final account = Account(
         accountId: user.uid,
@@ -57,10 +56,14 @@ class FirebaseAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
-  Future<Account> signup(String email, String password) async {
+  Future<Account> loginWithOtp(OtpProvider otpProvider) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Account> signup(AuthCredentials authCredentials) async {
     try {
-      final credential = await auth.createUserWithEmailAndPassword(email: email, password: password);
-      final user = credential.user!;
+      final user = await createUserFromCredentials(authCredentials);
 
       final account = Account(
         accountId: user.uid,
@@ -104,6 +107,26 @@ class FirebaseAuthService with IsAuthService, IsCorePondComponent {
 
   @override
   ValueStream<FutureValue<Account?>> get accountX => _accountX;
+
+  Future<User> getUserFromCredentials(AuthCredentials credentials) async {
+    if (credentials is EmailAuthCredentials) {
+      final credential =
+          await auth.signInWithEmailAndPassword(email: credentials.email, password: credentials.password);
+      return credential.user!;
+    }
+
+    throw UnimplementedError();
+  }
+
+  Future<User> createUserFromCredentials(AuthCredentials credentials) async {
+    if (credentials is EmailAuthCredentials) {
+      final credential =
+          await auth.createUserWithEmailAndPassword(email: credentials.email, password: credentials.password);
+      return credential.user!;
+    }
+
+    throw UnimplementedError();
+  }
 }
 
 extension on User {

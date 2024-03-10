@@ -41,7 +41,7 @@ class SecurityQueryExecutor with IsRepositoryQueryExecutorWrapper {
 
   DropCoreComponent get context => securityRepository.context.dropCoreComponent;
 
-  Account? get loggedInAccount => context.loggedInAccountX.value;
+  Account? get loggedInAccount => context.getLoggedInAccount();
 
   Future<bool> passesReadPermission() async {
     if (context.ignoreSecurity) {
@@ -93,7 +93,7 @@ class SecurityStateHandler with IsRepositoryStateHandlerWrapper {
 
   DropCoreComponent get context => securityRepository.context.dropCoreComponent;
 
-  Account? get loggedInAccount => context.loggedInAccountX.value;
+  Account? get loggedInAccount => context.getLoggedInAccount();
 
   @override
   Future<State> onUpdate(State state) async {

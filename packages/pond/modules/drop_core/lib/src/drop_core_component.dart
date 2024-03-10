@@ -6,21 +6,19 @@ import 'package:collection/collection.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
 import 'package:pond_core/pond_core.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:runtime_type/type.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositoryListWrapper {
   final List<RepositoryImplementation> repositoryImplementations;
-  final ValueStream<Account?> loggedInAccountX;
+  final Account? Function()? loggedInAccountGetter;
 
   bool _ignoreSecurity = false;
 
   bool get ignoreSecurity => _ignoreSecurity;
 
-  DropCoreComponent({this.repositoryImplementations = const [], ValueStream<Account?>? loggedInAccountX})
-      : loggedInAccountX = loggedInAccountX ?? BehaviorSubject.seeded(null);
+  DropCoreComponent({this.repositoryImplementations = const [], this.loggedInAccountGetter});
 
   @override
   List<CorePondComponentBehavior> get behaviors => [
@@ -62,6 +60,8 @@ class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositor
     name: 'Delete',
     runner: (State state) => super.onDelete(state),
   );
+
+  Account? getLoggedInAccount() => loggedInAccountGetter?.call();
 
   Repository? getImplementationOrNull(Repository repository) {
     return repositoryImplementations

@@ -1,0 +1,4 @@
+enum OtpRequestType {
+  initial,
+  retry,
+}

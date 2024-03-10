@@ -34,14 +34,13 @@ Future<CorePondContext> getCorePondContext({
     loggerService: loggerService?.call(corePondContext) ?? LoggerService.static.console,
   ));
 
+  await corePondContext.register(DropCoreComponent(
+    repositoryImplementations: repositoryImplementations?.call(corePondContext) ?? [],
+    loggedInAccountGetter: () => corePondContext.locate<AuthCoreComponent>().accountX.value.getOrNull(),
+  ));
   await corePondContext.register(AuthCoreComponent(
     authService: AuthService.static.adapting(),
     authServiceImplementations: authServiceImplementations?.call(corePondContext) ?? [],
-  ));
-  await corePondContext.register(DropCoreComponent(
-    repositoryImplementations: repositoryImplementations?.call(corePondContext) ?? [],
-    loggedInAccountX:
-        corePondContext.locate<AuthCoreComponent>().accountX.mapWithValue((maybeUserIdX) => maybeUserIdX.getOrNull()),
   ));
   await corePondContext.register(MessagingCoreComponent(
     messagingService: messagingService?.call(corePondContext) ?? MessagingService.static.blank,
@@ -78,7 +77,9 @@ Future<CorePondContext> getTestingCorePondContext() async {
     environmentConfig: EnvironmentConfig.static.testing(),
   );
 
-  await corePondContext.locate<AuthCoreComponent>().signup('asdf@asdf.com', 'mypassword');
+  await corePondContext
+      .locate<AuthCoreComponent>()
+      .signup(AuthCredentials.email(email: 'asdf@asdf.com', password: 'mypassword'));
 
   return corePondContext;
 }
