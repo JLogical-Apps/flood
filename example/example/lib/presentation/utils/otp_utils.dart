@@ -5,14 +5,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:jlogical_utils/jlogical_utils.dart';
 
 extension OtpBuildContextExtensions on BuildContext {
-  Future<Account?> loginWithPhoneOtp() async {
-    final result = await showStyledDialog(StyledPortDialog(
+  Future<Account?> loginWithPhoneOtp({String? phoneNumber}) async {
+
+    phoneNumber ??= await showStyledDialog(StyledPortDialog(
       titleText: 'Login with Phone',
       port: Port.of({
         'phone': PortField.string().withDisplayName('Phone').isPhone().isNotBlank(),
-      }),
+      }).map((values, port) => values['phone'] as String),
     ));
-    if (result == null) {
+    if (phoneNumber == null) {
       return null;
     }
 
@@ -28,7 +29,7 @@ extension OtpBuildContextExtensions on BuildContext {
           useAsyncEffect(() async {
             try {
               final account = await authCoreComponent.loginWithOtp(OtpProvider.phone(
-                phoneNumber: result['phone'],
+                phoneNumber: phoneNumber!,
                 smsCodeGetter: (requestType) async {
                   otpRequestTypeState.value = requestType;
                   otpResultCompleter.value = Completer();
