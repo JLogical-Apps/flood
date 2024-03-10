@@ -10,14 +10,6 @@ class FlutterEnvironmentConfigSetup with IsEnvironmentConfigWrapper {
   FlutterEnvironmentConfigSetup({required this.environmentConfig});
 
   @override
-  Future<EnvironmentType> getEnvironmentType() async {
-    if (kReleaseMode) {
-      return EnvironmentType.static.production;
-    }
-    return environmentConfig.getEnvironmentType();
-  }
-
-  @override
   Future<BuildType> getBuildType() async {
     if (kReleaseMode) {
       return BuildType.release;

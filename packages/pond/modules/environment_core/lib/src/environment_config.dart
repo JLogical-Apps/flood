@@ -2,18 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:environment_core/src/build_type.dart';
+import 'package:environment_core/environment_core.dart';
 import 'package:environment_core/src/collapsed_environment_config.dart';
-import 'package:environment_core/src/data_source_environment_config.dart';
-import 'package:environment_core/src/environment_type.dart';
 import 'package:environment_core/src/environment_type_environment_config.dart';
 import 'package:environment_core/src/environment_variables_environment_config.dart';
 import 'package:environment_core/src/environmental_environment_config.dart';
 import 'package:environment_core/src/file_asset_environment_config.dart';
-import 'package:environment_core/src/file_system.dart';
 import 'package:environment_core/src/file_system_environment_config.dart';
-import 'package:environment_core/src/platform.dart';
 import 'package:environment_core/src/recognized_environment_types_environment_config.dart';
+import 'package:environment_core/src/release_build_type_environment_config.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -73,6 +70,11 @@ extension EnvironmentConfigExtensions on EnvironmentConfig {
       environmentConfig: this,
       recognizedEnvironmentTypes: enviromentTypes,
     );
+  }
+
+  ReleaseBuildTypeEnvironmentConfig withReleaseBuildEnvironmentType([EnvironmentType? environmentType]) {
+    environmentType ??= EnvironmentType.static.production;
+    return ReleaseBuildTypeEnvironmentConfig(releaseBuildEnvironmentType: environmentType, environmentConfig: this);
   }
 
   EnvironmentalEnvironmentConfig environmental(

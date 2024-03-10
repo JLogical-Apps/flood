@@ -65,6 +65,8 @@ extension OtpBuildContextExtensions on BuildContext {
     ));
     if (accountOrError is Account) {
       return accountOrError;
+    } else if (accountOrError == null) {
+      return null;
     }
 
     throw accountOrError;
