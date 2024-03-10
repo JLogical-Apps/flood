@@ -100,6 +100,7 @@ class NativeSetupCommand extends AutomateCommand<NativeSetupCommand> {
         'adaptive_icon_foreground': '"$foregroundImagePath"',
         'web': {
           'generate': true,
+          'image_path': '"$foregroundImagePath"',
         },
       },
     };
