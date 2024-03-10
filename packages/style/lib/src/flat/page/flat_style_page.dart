@@ -34,7 +34,7 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
           ],
         ),
         backgroundColor: colorPalette.baseBackground,
-        body: component.body,
+        body: Padding(padding: component.innerPadding, child: component.body),
       ),
     );
   }
