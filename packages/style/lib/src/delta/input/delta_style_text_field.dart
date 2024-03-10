@@ -47,8 +47,9 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
               maxLines: component.maxLines,
               keyboardType: component.keyboard,
               decoration: InputDecoration(
-                hoverColor: textFieldContext.colorPalette().background.regular,
-                focusColor: textFieldContext.colorPalette().background.regular.background.regular,
+                filled: true,
+                hoverColor: Colors.transparent, // https://github.com/flutter/flutter/issues/132373
+                focusColor: context.colorPalette().background.regular,
                 fillColor: textFieldColor,
                 prefixIcon: leading,
                 suffixIcon: !component.obscureText || textController.text.isEmpty
@@ -62,7 +63,6 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                             iconData: Icons.visibility_off,
                             onPressed: () => revealSecretState.value = true,
                           )),
-                filled: true,
                 hintText: component.hintText,
                 hintStyle: context.style().getTextStyle(textFieldContext, StyledText.body.thin.empty),
                 border: OutlineInputBorder(
