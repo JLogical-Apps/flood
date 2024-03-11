@@ -80,7 +80,7 @@ class MemoryAuthService with IsAuthService, IsCorePondComponent {
 
     final account = Account(
       accountId: Uuid().v4(),
-      isAdmin: false,
+      isAdmin: isAdmin,
     );
 
     await context.dropCoreComponent
