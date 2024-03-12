@@ -1,6 +1,6 @@
+import 'package:port_core/port_core.dart';
 import 'package:port_core/src/map_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
-import 'package:port_core/src/port_field.dart';
 
 class MapPortFieldNodeModifier extends PortFieldNodeModifier<MapPortField> {
   final PortFieldNodeModifier? Function(PortField portField) modifierGetter;
@@ -10,6 +10,11 @@ class MapPortFieldNodeModifier extends PortFieldNodeModifier<MapPortField> {
   @override
   List<R>? getOptionsOrNull<R>(MapPortField portField) {
     return modifierGetter(portField.portField)?.getOptionsOrNull(portField.portField);
+  }
+
+  @override
+  AllowedFileTypes? getAllowedFileTypes(MapPortField portField) {
+    return modifierGetter(portField.portField)?.getAllowedFileTypes(portField.portField);
   }
 
   @override
@@ -40,5 +45,25 @@ class MapPortFieldNodeModifier extends PortFieldNodeModifier<MapPortField> {
   @override
   bool isOnlyDate(MapPortField portField) {
     return modifierGetter(portField.portField)?.isOnlyDate(portField.portField) ?? false;
+  }
+
+  @override
+  bool isPhone(MapPortField portField) {
+    return modifierGetter(portField.portField)?.isPhone(portField.portField) ?? false;
+  }
+
+  @override
+  bool isEmail(MapPortField portField) {
+    return modifierGetter(portField.portField)?.isEmail(portField.portField) ?? false;
+  }
+
+  @override
+  bool isName(MapPortField portField) {
+    return modifierGetter(portField.portField)?.isName(portField.portField) ?? false;
+  }
+
+  @override
+  dynamic getHintOrNull(MapPortField portField) {
+    return modifierGetter(portField.portField)?.getHintOrNull(portField.portField);
   }
 }

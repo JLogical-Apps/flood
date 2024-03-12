@@ -39,7 +39,7 @@ Future<CorePondContext> getCorePondContext({
     loggedInAccountGetter: () => corePondContext.locate<AuthCoreComponent>().accountX.value.getOrNull(),
   ));
   await corePondContext.register(AuthCoreComponent(
-    authService: AuthService.static.adapting(),
+    authService: AuthService.static.adapting(memoryIsAdmin: true),
     authServiceImplementations: authServiceImplementations?.call(corePondContext) ?? [],
   ));
   await corePondContext.register(MessagingCoreComponent(

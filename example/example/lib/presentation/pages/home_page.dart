@@ -45,6 +45,23 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
           titleText: 'Todos',
           actions: [
             ActionItem(
+              titleText: 'Import',
+              color: Colors.blue,
+              iconData: Icons.download,
+              descriptionText: 'Import a csv of todos',
+              onPerform: (context) async {
+                await context.showStyledDialog(StyledPortDialog(
+                  port: Port.of({
+                    'file': PortField.file().withDisplayName('CSV File').withAllowedFileTypes(['csv']).isNotNull(),
+                  }).map((values, port) => values['file'] as CrossFile),
+                  titleText: 'Import Todos',
+                  onAccept: (file) async {
+                    print(await file.read());
+                  },
+                ));
+              },
+            ),
+            ActionItem(
               titleText: 'Logout',
               color: Colors.red,
               descriptionText: 'Log out of your account.',
