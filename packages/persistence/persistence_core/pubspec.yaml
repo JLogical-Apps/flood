@@ -11,6 +11,7 @@ version: 0.0.1
 dependencies:
   archive: ^3.4.6
   collection: ^1.16.0
+  csv: ^5.0.2
   json2yaml: ^3.0.0
   path: ^1.8.3
   rxdart: ^0.27.5

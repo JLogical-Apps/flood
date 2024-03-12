@@ -6,6 +6,7 @@ import 'package:persistence_core/persistence_core.dart';
 import 'package:persistence_core/src/base64_data_source.dart';
 import 'package:persistence_core/src/cross_directory_data_source.dart';
 import 'package:persistence_core/src/cross_file_data_source.dart';
+import 'package:persistence_core/src/csv_data_source.dart';
 import 'package:persistence_core/src/directory_data_source.dart';
 import 'package:persistence_core/src/file_data_source.dart';
 import 'package:persistence_core/src/json_data_source.dart';
@@ -112,6 +113,8 @@ extension StringDataSourceExtensions on DataSource<String> {
   YamlDataSource mapYaml() => YamlDataSource(sourceDataSource: this);
 
   JsonDataSource mapJson() => JsonDataSource(sourceDataSource: this);
+
+  CsvDataSource mapCsv() => CsvDataSource(sourceDataSource: this);
 
   Base64DataSource mapBase64() => Base64DataSource(sourceDataSource: this);
 }

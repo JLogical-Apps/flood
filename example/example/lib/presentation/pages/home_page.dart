@@ -56,7 +56,15 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                   }).map((values, port) => values['file'] as CrossFile),
                   titleText: 'Import Todos',
                   onAccept: (file) async {
-                    print(await file.read());
+                    final csv = await DataSource.static.crossFile(file).mapCsv().get();
+                    final todos = csv
+                        .skip(1)
+                        .map((row) => Todo()
+                          ..nameProperty.set(row[0])
+                          ..descriptionProperty.set(row[1])
+                          ..userProperty.set(loggedInUserId))
+                        .toList();
+                    await Future.wait(todos.map((todo) => context.dropCoreComponent.update(TodoEntity()..set(todo))));
                   },
                 ));
               },
