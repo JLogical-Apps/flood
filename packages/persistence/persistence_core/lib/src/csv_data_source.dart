@@ -4,8 +4,9 @@ import 'package:persistence_core/persistence_core.dart';
 
 class CsvDataSource with IsDataSourceWrapper<List<List>> {
   final DataSource<String> sourceDataSource;
+  final bool hasHeaderRow;
 
-  CsvDataSource({required this.sourceDataSource});
+  CsvDataSource({required this.sourceDataSource, required this.hasHeaderRow});
 
   @override
   DataSource<List<List>> get dataSource => sourceDataSource.map(
@@ -14,7 +15,7 @@ class CsvDataSource with IsDataSourceWrapper<List<List>> {
             eols: ['\r\n', '\n'],
             textDelimiters: ['"', "'"],
           ),
-        ).convert(text),
+        ).convert(text).skip(hasHeaderRow ? 1 : 0).toList(),
         setMapper: (csv) => ListToCsvConverter().convert(csv),
       );
 }

@@ -56,9 +56,8 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                   }).map((values, port) => values['file'] as CrossFile),
                   titleText: 'Import Todos',
                   onAccept: (file) async {
-                    final csv = await DataSource.static.crossFile(file).mapCsv().get();
+                    final csv = await DataSource.static.crossFile(file).mapCsv(hasHeaderRow: true).get();
                     final todos = csv
-                        .skip(1)
                         .map((row) => Todo()
                           ..nameProperty.set(row[0])
                           ..descriptionProperty.set(row[1])

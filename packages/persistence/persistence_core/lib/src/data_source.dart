@@ -114,7 +114,10 @@ extension StringDataSourceExtensions on DataSource<String> {
 
   JsonDataSource mapJson() => JsonDataSource(sourceDataSource: this);
 
-  CsvDataSource mapCsv() => CsvDataSource(sourceDataSource: this);
+  CsvDataSource mapCsv({bool? hasHeaderRow}) => CsvDataSource(
+        sourceDataSource: this,
+        hasHeaderRow: hasHeaderRow ?? false,
+      );
 
   Base64DataSource mapBase64() => Base64DataSource(sourceDataSource: this);
 }
