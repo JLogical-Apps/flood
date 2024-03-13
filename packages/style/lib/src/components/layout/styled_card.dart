@@ -18,6 +18,7 @@ class StyledCard extends StyleComponent {
   final IconData? trailingIcon;
   final List<ActionItem> actions;
   final FutureOr Function()? onPressed;
+  final FutureOr Function()? onLongPressed;
   final Color? color;
   final double? width;
   final double? height;
@@ -37,6 +38,7 @@ class StyledCard extends StyleComponent {
     this.trailingIcon,
     this.actions = const [],
     this.onPressed,
+    this.onLongPressed,
     this.color,
     this.width,
     this.height,
@@ -56,6 +58,7 @@ class StyledCard extends StyleComponent {
     this.trailingIcon,
     this.actions = const [],
     this.onPressed,
+    this.onLongPressed,
     this.color,
     this.width,
     this.height,
@@ -75,6 +78,7 @@ class StyledCard extends StyleComponent {
     this.trailingIcon,
     this.actions = const [],
     this.onPressed,
+    this.onLongPressed,
     this.color,
     this.width,
     this.height,

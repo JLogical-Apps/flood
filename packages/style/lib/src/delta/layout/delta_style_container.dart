@@ -24,6 +24,7 @@ class DeltaStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
         shape: component.shape,
         child: InkWell(
           onTap: component.onPressed,
+          onLongPress: component.onLongPressed,
           borderRadius: component.shape == null ? BorderRadius.circular(12) : null,
           customBorder: component.shape,
           child: Container(
@@ -54,10 +55,7 @@ class DeltaStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
     if (container.emphasis == Emphasis.regular) {
       return context.colorPalette();
     } else {
-      return context
-          .colorPalette()
-          .background
-          .getByEmphasis(container.emphasis);
+      return context.colorPalette().background.getByEmphasis(container.emphasis);
     }
   }
 

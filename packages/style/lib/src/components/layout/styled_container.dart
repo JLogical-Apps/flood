@@ -8,6 +8,7 @@ class StyledContainer extends StyleComponent {
   final Emphasis emphasis;
   final Widget? child;
   final FutureOr Function()? onPressed;
+  final FutureOr Function()? onLongPressed;
   final Color? color;
   final double? width;
   final double? height;
@@ -19,6 +20,7 @@ class StyledContainer extends StyleComponent {
     this.emphasis = Emphasis.regular,
     this.child,
     this.onPressed,
+    this.onLongPressed,
     this.color,
     this.width,
     this.height,
@@ -30,6 +32,7 @@ class StyledContainer extends StyleComponent {
   StyledContainer.subtle({
     this.child,
     this.onPressed,
+    this.onLongPressed,
     this.color,
     this.width,
     this.height,
@@ -41,6 +44,7 @@ class StyledContainer extends StyleComponent {
   StyledContainer.strong({
     this.child,
     this.onPressed,
+    this.onLongPressed,
     this.color,
     this.width,
     this.height,

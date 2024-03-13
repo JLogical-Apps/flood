@@ -23,6 +23,7 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
         shape: component.shape,
         child: InkWell(
           onTap: component.onPressed,
+          onLongPress: component.onLongPressed,
           borderRadius: component.shape == null ? BorderRadius.circular(12) : null,
           customBorder: component.shape,
           child: Container(

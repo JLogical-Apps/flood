@@ -29,6 +29,7 @@ class DeltaStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
       width: component.width,
       height: component.height,
       onPressed: component.onPressed,
+      onLongPressed: component.onLongPressed,
       padding: component.padding,
       emphasis: component.emphasis,
       shape: component.emphasis == Emphasis.subtle
