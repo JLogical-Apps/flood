@@ -2,7 +2,7 @@ import 'package:example_core/features/todo/todo.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:flood/flood.dart';
 
 Future<void> setupTesting(CorePondContext corePondContext) async {
   final authComponent = corePondContext.locate<AuthCoreComponent>();

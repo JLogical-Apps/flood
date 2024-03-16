@@ -8,16 +8,16 @@ dependencies:
   collection: ^1.16.0
   intl: ^0.18.0
   meta: ^1.8.0
-  jlogical_utils_core:
+  flood_core:
     git:
-      url: "git@github.com:jaboyc/jlogical_utils.git"
+      url: "git@github.com:JLogical-Apps/flood.git"
       ref: master
-      path: packages/jlogical_utils/jlogical_utils_core
-  jlogical_utils_cli:
+      path: packages/flood/flood_core
+  flood_cli:
     git:
-      url: "git@github.com:jaboyc/jlogical_utils.git"
+      url: "git@github.com:JLogical-Apps/flood.git"
       ref: master
-      path: packages/jlogical_utils/jlogical_utils_cli
+      path: packages/flood/flood_cli
 dev_dependencies:
   lints: ^2.0.0
   test: 1.24.6

@@ -1,10 +1,10 @@
-# JLogical Utils
+# Flood
 
-Composition of utilities to help develop apps for JLogical.
+Framework on Flood to streamline Flutter/Dart development.
 
 ## Example
 
-Look in `example` to see an app that utilizes many of the features in JLogical Utils. Feel free to
+Look in `example` to see an app that utilizes many of the features in Flood. Feel free to
 modify the example app to include anything that would help with testing.
 
 ## Packages
@@ -38,7 +38,7 @@ depends on the `utils_core` package, use this pattern in the `pubspec.yaml` of `
 dependencies:
   utils_core: # Must be the name of the package as defined in its `pubspec.yaml` `name` field. 
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git # Reference the git repository.
+      url: git@github.com:JLogical-Apps/flood.git # Reference the git repository.
       ref: master # Must use master
       path: packages/utils/utils_core # The path of the package 
 ```

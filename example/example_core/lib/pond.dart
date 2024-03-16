@@ -4,7 +4,7 @@ import 'package:example_core/features/todo/todo_repository.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:example_core/features/user/user_repository.dart';
-import 'package:jlogical_utils_core/jlogical_utils_core.dart';
+import 'package:flood_core/flood_core.dart';
 
 Future<CorePondContext> getCorePondContext({
   EnvironmentConfig? environmentConfig,

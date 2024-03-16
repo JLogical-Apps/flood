@@ -1,5 +1,5 @@
-name: jlogical_utils_cli
-description: All cli JLogical utils
+name: flood_cli
+description: CLI Flood utils
 
 publish_to: "none"
 
@@ -9,29 +9,29 @@ environment:
 version: 0.0.1
 
 dependencies:
-  jlogical_utils_core:
+  flood_core:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
-      path: packages/jlogical_utils/jlogical_utils_core
+      path: packages/flood/flood_core
   native_setup:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/native_setup
   ops:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/ops
   pond_cli:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/pond_cli
   release:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/release
 dev_dependencies:

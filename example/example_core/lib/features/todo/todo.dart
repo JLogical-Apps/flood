@@ -1,5 +1,5 @@
 import 'package:example_core/features/user/user_entity.dart';
-import 'package:jlogical_utils_core/jlogical_utils_core.dart';
+import 'package:flood_core/flood_core.dart';
 
 class Todo extends ValueObject {
   static const nameField = 'name';

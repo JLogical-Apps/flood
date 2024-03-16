@@ -8,7 +8,7 @@ export 'package:environment/environment.dart';
 export 'package:environment_banner/environment_banner.dart';
 export 'package:firebase/firebase.dart';
 export 'package:focus_grabber/focus_grabber.dart';
-export 'package:jlogical_utils_core/jlogical_utils_core.dart';
+export 'package:flood_core/flood_core.dart';
 export 'package:log/log.dart';
 export 'package:model/model.dart';
 export 'package:persistence/persistence.dart';

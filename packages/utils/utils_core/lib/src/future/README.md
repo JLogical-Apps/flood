@@ -1,6 +1,6 @@
 # FutureValue
 
-This utility provides a `FutureValue` class. To give credit where credit is due, this is heavily inspired by Remi Rousselet's `freezed` package which has a class with the same name. Instead of depending on that entire package, I rewrote most of the functionality here to be used throughout JLogical Utils.
+This utility provides a `FutureValue` class. To give credit where credit is due, this is heavily inspired by Remi Rousselet's `freezed` package which has a class with the same name. Instead of depending on that entire package, I rewrote most of the functionality here to be used throughout Flood.
 
 A FutureValue holds 1 of 4 states, `empty`, `loading`, `loaded`, and `error`. You can use `FutureValue`s when listening the state of an asynchronous function. For example, this is used heavily in the [Model](../../../../../model/model_core/README.md) package to store information about the state of a Model.
 

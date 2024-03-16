@@ -18,37 +18,37 @@ dependencies:
 
   drop_core:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/drop_core
   environment_core:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/environment_core
   persistence_core:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/persistence/persistence_core
   pond_cli:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/pond_cli
   pond_core:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/pond_core
   type_core:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/type_core
   utils_core:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/utils/utils_core
 dev_dependencies:

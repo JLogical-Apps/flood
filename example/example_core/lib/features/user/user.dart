@@ -1,4 +1,4 @@
-import 'package:jlogical_utils_core/jlogical_utils_core.dart';
+import 'package:flood_core/flood_core.dart';
 
 class User extends ValueObject {
   static const nameField = 'name';

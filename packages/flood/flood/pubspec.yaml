@@ -1,5 +1,5 @@
-name: jlogical_utils
-description: All JLogical utils
+name: flood
+description: Flutter Flood utils.
 
 publish_to: "none"
 
@@ -11,129 +11,129 @@ version: 0.0.1
 dependencies:
   flutter:
     sdk: flutter
-  jlogical_utils_core:
+  flood_core:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
-      path: packages/jlogical_utils/jlogical_utils_core
+      path: packages/flood/flood_core
   actions:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/actions
   appwrite_app:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/appwrite_app
   auth:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/auth
   debug:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/debug
   device_files:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/device_files
   drop:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/drop
   environment:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/environment
   environment_banner:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/environment_banner
   firebase:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/firebase
   focus_grabber:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/focus_grabber
   log:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/log
   model:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/model/model
   persistence:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/persistence/persistence
   pond:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/pond
   port:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/port/port
   port_style:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/port/port_style
   port_style_component:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/port_style_component
   reset:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/reset
   share:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/share
   style:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/style
   style_component:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/style_component
   testing_setup:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/testing_setup
   url_bar:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/pond/modules/url_bar
   utils:
     git:
-      url: git@github.com:jaboyc/jlogical_utils.git
+      url: git@github.com:JLogical-Apps/flood.git
       ref: "v3.3"
       path: packages/utils/utils
 dev_dependencies:
