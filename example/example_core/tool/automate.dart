@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:example_core/pond.dart';
-import 'package:jlogical_utils_cli/jlogical_utils_cli.dart';
+import 'package:flood_cli/flood_cli.dart';
 
 Future<void> main(List<String> args) async {
   final corePondContext = await getCorePondContext(

@@ -1,5 +1,5 @@
 name: example
-description: Example Flutter app using JLogical Utils.
+description: Example Flutter app using Flood.
 publish_to: none
 version: 0.0.10+9
 environment:
@@ -13,11 +13,11 @@ dependencies:
   intl: ^0.18.0
   meta: ^1.8.0
   provider: ^6.0.5
-  jlogical_utils:
+  flood:
     git:
-      url: "git@github.com:jaboyc/jlogical_utils.git"
+      url: "git@github.com:JLogical-Apps/flood.git"
       ref: master
-      path: packages/jlogical_utils/jlogical_utils
+      path: packages/flood/flood
   example_core:
     path: ../example_core
 flutter:

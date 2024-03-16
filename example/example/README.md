@@ -1,8 +1,8 @@
 # example
 
-Example Flutter app using JLogical Utils.
+Example Flutter app using Flood.
 
-This will demonstrate the core functionality of the different packages in `jlogical_utils` in a
+This will demonstrate the core functionality of the different packages in `flood` in a
 Flutter app.
 
 ## Configuration

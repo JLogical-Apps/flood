@@ -1,6 +1,6 @@
 import 'package:example_core/features/todo/todo.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
-import 'package:jlogical_utils_core/jlogical_utils_core.dart';
+import 'package:flood_core/flood_core.dart';
 
 class TodoRepository with IsRepositoryWrapper {
   @override

@@ -5,7 +5,7 @@ import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:flood/flood.dart';
 
 class SignupRoute with IsRoute<SignupRoute> {
   late final redirectPathProperty = field<String>(name: 'redirect');

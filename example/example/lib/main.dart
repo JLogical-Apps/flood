@@ -6,9 +6,9 @@ import 'package:example/presentation/valet_pages_pond_component.dart';
 import 'package:example/testing.dart';
 import 'package:example_core/pond.dart';
 import 'package:flutter/material.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:flood/flood.dart';
 
-// When setting up the test suite [testingLoggedIn] will determine whether to have the user logged in.
+// When setting up the test suite testingLoggedIn] will determine whether to have the user logged in.
 const testingLoggedIn = true;
 
 Future<void> main(List<String> args) async {

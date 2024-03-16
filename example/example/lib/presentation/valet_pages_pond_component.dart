@@ -1,7 +1,7 @@
 import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/pages/auth/signup_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
-import 'package:jlogical_utils/jlogical_utils.dart';
+import 'package:flood/flood.dart';
 
 class ValetPagesAppPondComponent with IsAppPondComponent {
   @override
