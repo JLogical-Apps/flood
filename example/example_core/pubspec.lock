@@ -285,6 +285,20 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  flood_cli:
+    dependency: "direct main"
+    description:
+      path: "../../packages/flood/flood_cli"
+      relative: true
+    source: path
+    version: "0.0.1"
+  flood_core:
+    dependency: "direct main"
+    description:
+      path: "../../packages/flood/flood_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   frontend_server_client:
     dependency: transitive
     description:

@@ -17,3 +17,8 @@ scripts:
       melos exec --fail-fast                                  -- flutter analyze . && \
       melos exec --fail-fast --dir-exists="test" --no-flutter -- flutter test . && \
       melos exec --fail-fast --dir-exists="test" --flutter    -- flutter test .
+  clean_all:
+    name: clean_all
+    description: 'Clean every module'
+    run: |
+      melos exec --fail-fast -- flutter clean

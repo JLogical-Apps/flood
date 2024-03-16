@@ -15,12 +15,12 @@ dependencies:
   pond:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v3.3"
+      ref: "v4.0"
       path: packages/pond/pond
   environment:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v3.3"
+      ref: "v4.0"
       path: packages/pond/modules/environment
 
 dev_dependencies:
