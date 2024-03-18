@@ -1,5 +1,5 @@
 name: example_core
-description: A sample command-line application.
+description: Example core project using Flood.
 version: 0.0.10+9
 publish_to: none
 environment:

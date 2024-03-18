@@ -3,7 +3,7 @@ import 'package:example/presentation/pages/auth/signup_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:flood/flood.dart';
 
-class ValetPagesAppPondComponent with IsAppPondComponent {
+class PagesPondComponent with IsAppPondComponent {
   @override
   Map<Route, AppPage> get pages => {
         LoginRoute(): LoginPage(),

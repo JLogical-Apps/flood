@@ -1,8 +1,9 @@
 import 'package:example/presentation/pages/auth/login_page.dart';
+import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example_core/features/todo/todo.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
-import 'package:flutter/material.dart';
 import 'package:flood/flood.dart';
+import 'package:flutter/material.dart';
 
 class HomeRoute with IsRoute<HomeRoute> {
   @override
@@ -16,15 +17,7 @@ class HomeRoute with IsRoute<HomeRoute> {
 
 class HomePage with IsAppPageWrapper<HomeRoute> {
   @override
-  AppPage<HomeRoute> get appPage => AppPage<HomeRoute>().withRedirect((context, route) async {
-        final loggedInUser = context.find<AuthCoreComponent>().loggedInUserId;
-        if (loggedInUser == null) {
-          final loginPage = LoginRoute()..redirectPathProperty.set(route.uri.toString());
-          return loginPage.routeData;
-        }
-
-        return null;
-      });
+  AppPage<HomeRoute> get appPage => AppPage<HomeRoute>().onlyIfLoggedIn();
 
   @override
   Widget onBuild(BuildContext context, HomeRoute route) {

@@ -8,43 +8,26 @@ import 'package:flood_core/flood_core.dart';
 
 Future<CorePondContext> getCorePondContext({
   EnvironmentConfig? environmentConfig,
-  FutureOr<List<CorePondComponent>> Function(CorePondContext context)? additionalCoreComponents,
+  FutureOr<List<CorePondComponent>> Function(CorePondContext context)? initialCoreComponents,
   List<RepositoryImplementation> Function(CorePondContext context)? repositoryImplementations,
   List<AuthServiceImplementation> Function(CorePondContext context)? authServiceImplementations,
   MessagingService? Function(CorePondContext context)? messagingService,
   LoggerService? Function(CorePondContext context)? loggerService,
   TaskRunner? Function(CorePondContext context)? taskRunner,
 }) async {
-  environmentConfig ??= EnvironmentConfig.static.environmentVariables();
-
   final corePondContext = CorePondContext();
 
-  await corePondContext.register(TypeCoreComponent());
-  await corePondContext.register(EnvironmentConfigCoreComponent(environmentConfig: environmentConfig));
-
-  for (final coreComponent in await additionalCoreComponents?.call(corePondContext) ?? []) {
-    await corePondContext.register(coreComponent);
-  }
-
-  await corePondContext.register(TaskCoreComponent(
-    taskRunner: taskRunner?.call(corePondContext) ?? TaskRunner.static.none,
+  await corePondContext.register(FloodCoreComponent(
+    environmentConfig: environmentConfig,
+    initialCoreComponents: initialCoreComponents,
+    repositoryImplementations: repositoryImplementations,
+    authServiceImplementations: authServiceImplementations,
+    actionWrapper: <P, R>(action) => action.log(context: corePondContext),
+    taskRunner: taskRunner,
+    loggerService: loggerService,
+    messagingService: messagingService,
   ));
 
-  await corePondContext.register(LogCoreComponent(
-    loggerService: loggerService?.call(corePondContext) ?? LoggerService.static.console,
-  ));
-
-  await corePondContext.register(DropCoreComponent(
-    repositoryImplementations: repositoryImplementations?.call(corePondContext) ?? [],
-    loggedInAccountGetter: () => corePondContext.locate<AuthCoreComponent>().accountX.value.getOrNull(),
-  ));
-  await corePondContext.register(AuthCoreComponent(
-    authService: AuthService.static.adapting(memoryIsAdmin: true),
-    authServiceImplementations: authServiceImplementations?.call(corePondContext) ?? [],
-  ));
-  await corePondContext.register(MessagingCoreComponent(
-    messagingService: messagingService?.call(corePondContext) ?? MessagingService.static.blank,
-  ));
   await corePondContext.register(UserDeviceTokenCoreComponent(
     onRegisterDeviceToken: (dropContext, userId, deviceToken) async {
       final userEntity = await Query.getByIdOrNull<UserEntity>(userId).get(dropContext);
@@ -63,10 +46,7 @@ Future<CorePondContext> getCorePondContext({
       await dropContext.updateEntity(userEntity, (User user) => user..deviceTokenProperty.set(null));
     },
   ));
-  await corePondContext.register(ActionCoreComponent(
-    actionWrapper: <P, R>(Action<P, R> action) => action.log(context: corePondContext),
-  ));
-  await corePondContext.register(PortDropCoreComponent());
+
   await corePondContext.register(UserRepository());
   await corePondContext.register(TodoRepository());
   return corePondContext;
