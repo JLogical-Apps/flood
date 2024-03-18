@@ -7,6 +7,7 @@ class FloodCoreComponent with IsCorePondComponent {
   final FutureOr<List<CorePondComponent>> Function(CorePondContext context)? initialCoreComponents;
   final List<RepositoryImplementation> Function(CorePondContext context)? repositoryImplementations;
   final List<AuthServiceImplementation> Function(CorePondContext context)? authServiceImplementations;
+  final AuthService? Function(CorePondContext context)? authService;
   final TaskRunner? Function(CorePondContext context)? taskRunner;
   final LoggerService? Function(CorePondContext context)? loggerService;
   final MessagingService? Function(CorePondContext context)? messagingService;
@@ -17,6 +18,7 @@ class FloodCoreComponent with IsCorePondComponent {
     this.initialCoreComponents,
     this.repositoryImplementations,
     this.authServiceImplementations,
+    this.authService,
     this.taskRunner,
     this.loggerService,
     this.messagingService,
@@ -46,7 +48,7 @@ class FloodCoreComponent with IsCorePondComponent {
             loggedInAccountGetter: () => context.locate<AuthCoreComponent>().accountX.value.getOrNull(),
           ));
           await context.register(AuthCoreComponent(
-            authService: AuthService.static.adapting(memoryIsAdmin: true),
+            authService: authService?.call(context) ?? AuthService.static.memory(),
             authServiceImplementations: authServiceImplementations?.call(context) ?? [],
           ));
           await context.register(MessagingCoreComponent(

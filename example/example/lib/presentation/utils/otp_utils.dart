@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:flood/flood.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flood/flood.dart';
 
 extension OtpBuildContextExtensions on BuildContext {
   Future<Account?> loginWithPhoneOtp({String? phoneNumber}) async {
@@ -44,6 +44,7 @@ extension OtpBuildContextExtensions on BuildContext {
           return StyledList.column(
             children: [
               StyledText.body('Enter the code that was sent to your phone number.'),
+              StyledText.body.subtle('For testing, use `123456` as the code.'),
               if (otpRequestTypeState.value == OtpRequestType.retry)
                 StyledText.body.error('Incorrect code. Try again.'),
               StyledObjectPortBuilder(port: otpPort),

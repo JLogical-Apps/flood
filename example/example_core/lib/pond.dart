@@ -23,6 +23,7 @@ Future<CorePondContext> getCorePondContext({
     repositoryImplementations: repositoryImplementations,
     authServiceImplementations: authServiceImplementations,
     actionWrapper: <P, R>(action) => action.log(context: corePondContext),
+    authService: (context) => AuthService.static.adapting(memoryIsAdmin: true),
     taskRunner: taskRunner,
     loggerService: loggerService,
     messagingService: messagingService,
