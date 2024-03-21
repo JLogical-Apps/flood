@@ -4,4 +4,4 @@ This package exports `NativeSetupAutomateComponent`, which allows you to automat
 
 ## NativeSetupAutomateComponent
 
-Given an `appDirectory`, return a File for your app icon. Customize it with a `backgroundColor` and `padding`. Run `dart tool/automate.dart native_setup` to generate the app icon.
+Given an `appDirectory`, return a File for your app icon. Customize it with a `backgroundColor` and `padding`. Run `dart tool/automate.dart native_setup` to generate the app icon and the native splash screen.
