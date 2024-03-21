@@ -45,7 +45,7 @@ void main() {
         runner: () => hasRun = true,
       ));
 
-    await Automate.automate(context: automateContext, args: [helloWorldCommandName]);
+    await Automate.testAutomate(context: automateContext, args: [helloWorldCommandName]);
 
     expect(hasRun, true);
   });
@@ -54,14 +54,14 @@ void main() {
     final automateContext = AutomatePondContext(corePondContext: CorePondContext())..register(EchoAutomateComponent());
 
     var captureTerminal = Terminal.static.capture;
-    await Automate.automate(
+    await Automate.testAutomate(
       context: automateContext,
       args: [echoCommandName, '"Hello World!"'],
       terminalGetter: (_) => captureTerminal,
     );
 
     captureTerminal = Terminal.static.capture;
-    await Automate.automate(
+    await Automate.testAutomate(
       context: automateContext,
       args: [echoCommandName, '"Hello World!"', 'repeat:3'],
       terminalGetter: (_) => captureTerminal,
@@ -103,7 +103,7 @@ class EchoAutomateCommand extends AutomateCommand<EchoAutomateCommand> {
   @override
   String get description => 'Echoes the input.';
 
-  late final echoField = field<String>(name: 'echo');
+  late final echoField = field<String>(name: 'echo').required();
 
   late final repeatField = field<int>(name: 'repeat').withFallback(() => 1);
 

@@ -43,6 +43,18 @@ class Automate {
     await commandContext.cleanup();
   }
 
+  static Future<void> testAutomate({
+    required AutomatePondContext context,
+    required List<String> args,
+    Terminal Function(Directory coreDirectory)? terminalGetter,
+  }) =>
+      automate(
+        context: context,
+        args: args,
+        appDirectoryGetter: (core) => core, // Just use the core directory as the app directory when testing.
+        terminalGetter: terminalGetter,
+      );
+
   static void _printUsage({required AutomatePondContext context}) async {
     print('===[Automate Usage]===');
     for (final command in context.commands) {
