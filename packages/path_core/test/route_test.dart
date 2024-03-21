@@ -87,6 +87,22 @@ void main() {
       throwsA(isA<Exception>()),
     );
   });
+
+  test('greet route', () async {
+    final routeDefinition = GreetRoute();
+    expect(routeDefinition.matchesPath('/greet'), isFalse);
+    expect(routeDefinition.matchesPath('/greet/John'), isTrue);
+
+    var route = routeDefinition.fromRouteData(RouteData.path('/greet/John'));
+    expect(route.nameProperty.value, 'John');
+    expect(route.repeatProperty.value, 1);
+    expect(route.uri, Uri(path: '/greet/John', queryParameters: {'repeat': '1'}));
+
+    route = routeDefinition.fromRouteData(RouteData.path('/greet/John?repeat=3'));
+    expect(route.nameProperty.value, 'John');
+    expect(route.repeatProperty.value, 3);
+    expect(route.uri, Uri(path: '/greet/John', queryParameters: {'repeat': '3'}));
+  });
 }
 
 class BudgetRoute with IsRoute<BudgetRoute> {
@@ -135,5 +151,21 @@ class LoginRoute with IsRoute<LoginRoute> {
   @override
   LoginRoute copy() {
     return LoginRoute();
+  }
+}
+
+class GreetRoute with IsRoute<GreetRoute> {
+  late final nameProperty = field<String>(name: 'name').required();
+  late final repeatProperty = field<int>(name: 'repeat').withFallback(() => 1);
+
+  @override
+  PathDefinition get pathDefinition => PathDefinition.string('greet').property(nameProperty);
+
+  @override
+  List<RouteProperty> get queryProperties => [repeatProperty];
+
+  @override
+  GreetRoute copy() {
+    return GreetRoute();
   }
 }

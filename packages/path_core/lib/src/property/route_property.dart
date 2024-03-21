@@ -1,3 +1,4 @@
+import 'package:path_core/src/property/fallback_route_property.dart';
 import 'package:path_core/src/property/required_route_property.dart';
 
 abstract class RouteProperty<G, S> {
@@ -15,6 +16,10 @@ abstract class RouteProperty<G, S> {
 extension NullableRoutePropertyExtensions<G, S> on RouteProperty<G?, S?> {
   RequiredRouteProperty<G, S> required() {
     return RequiredRouteProperty<G, S>(parent: this);
+  }
+
+  FallbackRouteProperty<G, S> withFallback(G Function() fallback) {
+    return FallbackRouteProperty<G, S>(parent: this, fallback: fallback);
   }
 }
 
