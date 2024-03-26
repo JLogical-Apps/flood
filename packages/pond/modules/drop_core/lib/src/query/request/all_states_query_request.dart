@@ -17,4 +17,9 @@ class AllStatesQueryRequest<E extends Entity> extends QueryRequest<E, List<State
 
   @override
   List<Object?> get props => [query];
+
+  @override
+  QueryRequest<E, List<State>> copyWith({Query<E>? query}) {
+    return AllStatesQueryRequest(query: query ?? this.query);
+  }
 }

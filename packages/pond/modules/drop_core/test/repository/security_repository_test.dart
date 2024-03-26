@@ -153,6 +153,58 @@ void main() {
       returnsNormally,
     );
   });
+
+  test('security rules for specific users.', () async {
+    const userId = 'user1';
+    final userRepository = UserRepository().withSecurity(RepositorySecurity.readWrite(
+      read: Permission.equals(PermissionField.entityId, PermissionField.loggedInUserId),
+      write: Permission.equals(PermissionField.entityId, PermissionField.loggedInUserId),
+    ));
+    final loggedInAccountX = BehaviorSubject<Account?>.seeded(Account(accountId: userId));
+
+    final corePondContext = CorePondContext();
+    await corePondContext.register(TypeCoreComponent());
+    await corePondContext.register(ActionCoreComponent());
+    await corePondContext.register(DropCoreComponent(loggedInAccountGetter: () => loggedInAccountX.value));
+    await corePondContext.register(userRepository);
+
+    // Test create
+    expect(
+      () => userRepository.updateEntity(UserEntity()
+        ..id = userId
+        ..set(User())),
+      returnsNormally,
+    );
+
+    // Allow previous [expect] to run before changing to admin user.
+    await Future(() {});
+
+    // Test read. Expect to see the one UserEntity.
+    var userEntities = await userRepository.executeQuery(Query.from<UserEntity>().all());
+    expect(
+      userEntities.isNotEmpty,
+      isTrue,
+    );
+
+    // Allow previous [expect] to run before changing to admin user.
+    await Future(() {});
+    loggedInAccountX.value = Account(accountId: 'someOtherUserId');
+
+    // Test create
+    expect(
+      () => userRepository.updateEntity(UserEntity()
+        ..id = 'randomId'
+        ..set(User())),
+      throwsA(isA<Exception>()),
+    );
+
+    // Instead of throwing, permissions should just hide entities they do not have access to.
+    userEntities = await userRepository.executeQuery(Query.from<UserEntity>().all());
+    expect(
+      userEntities.isEmpty,
+      isTrue,
+    );
+  });
 }
 
 Future<T> expectFailsWithoutAuth<T>(

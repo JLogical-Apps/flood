@@ -48,27 +48,44 @@ class SecurityQueryExecutor with IsRepositoryQueryExecutorWrapper {
       return true;
     }
 
-    return await repositorySecurity.read.passes(context, loggedInAccount: loggedInAccount);
+    return repositorySecurity.read.passes(context, loggedInAccount: loggedInAccount);
   }
 
   @override
-  Future<T> onExecuteQuery<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  Future<T> onExecuteQuery<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) async {
     if (!await passesReadPermission()) {
       throw Exception('Invalid permissions to read from [$securityRepository]!');
     }
 
-    return await queryExecutor.executeQuery(queryRequest, onStateRetreived: onStateRetreived);
+    final modifiedQuery = repositorySecurity.read.modifyQuery(
+      context,
+      query: queryRequest.query,
+      loggedInAccount: loggedInAccount,
+    );
+
+    return await queryExecutor.executeQuery(
+      queryRequest.copyWith(query: modifiedQuery),
+      onStateRetreived: onStateRetreived,
+    );
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
-    return queryExecutor.executeQueryX(queryRequest, onStateRetreived: onStateRetreived).asyncMapWithValue(
+    final modifiedQuery = repositorySecurity.read.modifyQuery(
+      context,
+      query: queryRequest.query,
+      loggedInAccount: loggedInAccount,
+    );
+
+    return queryExecutor
+        .executeQueryX(queryRequest.copyWith(query: modifiedQuery), onStateRetreived: onStateRetreived)
+        .asyncMapWithValue(
       (result) async {
         if (!await passesReadPermission()) {
           throw Exception('Invalid permissions to read from [$securityRepository]!');
@@ -98,11 +115,11 @@ class SecurityStateHandler with IsRepositoryStateHandlerWrapper {
   @override
   Future<State> onUpdate(State state) async {
     if (state.isNew) {
-      if (!await passesPermission(repositorySecurity.create)) {
+      if (!await passesPermission(permission: repositorySecurity.create, state: state)) {
         throw Exception('Invalid permissions to create [$state]!');
       }
     } else {
-      if (!await passesPermission(repositorySecurity.update)) {
+      if (!await passesPermission(permission: repositorySecurity.update, state: state)) {
         throw Exception('Invalid permissions to update [$state]!');
       }
     }
@@ -112,18 +129,18 @@ class SecurityStateHandler with IsRepositoryStateHandlerWrapper {
 
   @override
   Future<State> onDelete(State state) async {
-    if (!await passesPermission(repositorySecurity.delete)) {
+    if (!await passesPermission(permission: repositorySecurity.delete, state: state)) {
       throw Exception('Invalid permissions to delete [$state]!');
     }
 
     return await stateHandler.delete(state);
   }
 
-  Future<bool> passesPermission(Permission permission) async {
+  Future<bool> passesPermission({required Permission permission, required State state}) async {
     if (context.ignoreSecurity) {
       return true;
     }
 
-    return await permission.passes(context, loggedInAccount: loggedInAccount);
+    return permission.passesState(context, state: state, loggedInAccount: loggedInAccount);
   }
 }

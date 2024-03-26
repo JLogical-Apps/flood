@@ -55,8 +55,8 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   );
 
   @override
-  Future<T> onExecuteQuery<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  Future<T> onExecuteQuery<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) async {
     final isNewlyRunQuery = repository.queriesRun.add(queryRequest);
@@ -75,7 +75,7 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       var existingPaginatedQueryResult = paginatedQueryResultByQueryRequest[queryRequest];
       if (existingPaginatedQueryResult == null) {
         existingPaginatedQueryResult =
-            await repository.repository.executeQuery(queryRequest as QueryRequest<dynamic, PaginatedQueryResult>);
+            await repository.repository.executeQuery(queryRequest as QueryRequest<E, PaginatedQueryResult>);
         paginatedQueryResultByQueryRequest[queryRequest] = existingPaginatedQueryResult;
       }
 
@@ -86,8 +86,8 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
     final isNewlyRunQuery = repository.queriesRun.add(queryRequest);
@@ -114,8 +114,8 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     );
   }
 
-  FutureValue<T> getInitialValue<T>({
-    required QueryRequest<dynamic, T> queryRequest,
+  FutureValue<T> getInitialValue<E extends Entity, T>({
+    required QueryRequest<E, T> queryRequest,
     required bool isNewlyRunQuery,
   }) {
     if (isNewlyRunQuery) {
@@ -132,7 +132,7 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     }
   }
 
-  Future<T> fetchSourceAndDeleteStale<T>(QueryRequest<dynamic, T> queryRequest) async {
+  Future<T> fetchSourceAndDeleteStale<E extends Entity, T>(QueryRequest<E, T> queryRequest) async {
     final completer = Completer();
     _completerByLoadingQueryRequestX.value = completerByLoadingQueryRequest.copy()..set(queryRequest, completer);
 

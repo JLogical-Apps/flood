@@ -20,4 +20,9 @@ class PaginateStatesQueryRequest<E extends Entity> extends QueryRequest<E, Pagin
 
   @override
   List<Object?> get props => [query, pageSize];
+
+  @override
+  QueryRequest<E, PaginatedQueryResult<State>> copyWith({Query<E>? query}) {
+    return PaginateStatesQueryRequest(query: query ?? this.query, pageSize: pageSize);
+  }
 }

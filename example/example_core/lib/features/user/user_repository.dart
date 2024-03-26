@@ -10,9 +10,9 @@ class UserRepository with IsRepositoryWrapper {
     entityTypeName: 'UserEntity',
     valueObjectTypeName: 'User',
   ).adapting('user').withSecurity(RepositorySecurity(
-        read: Permission.authenticated,
-        create: Permission.authenticated,
-        update: Permission.authenticated,
+        read: Permission.admin | Permission.equals(PermissionField.entityId, PermissionField.loggedInUserId),
+        create: Permission.admin | Permission.equals(PermissionField.entityId, PermissionField.loggedInUserId),
+        update: Permission.admin | Permission.equals(PermissionField.entityId, PermissionField.loggedInUserId),
         delete: Permission.admin,
       ));
 }

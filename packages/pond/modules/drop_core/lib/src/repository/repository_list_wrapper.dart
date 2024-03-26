@@ -9,8 +9,8 @@ import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:pond_core/pond_core.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:runtime_type/type.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class RepositoryListWrapper implements Repository {
@@ -51,15 +51,15 @@ mixin IsRepositoryListWrapper implements RepositoryListWrapper {
   StatePersister get statePersister => stateHandler.statePersister;
 
   @override
-  Future<T> onExecuteQuery<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  Future<T> onExecuteQuery<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQuery(queryRequest, onStateRetreived: onStateRetreived);
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQueryX(queryRequest, onStateRetreived: onStateRetreived);
@@ -99,8 +99,8 @@ class _RepositoryListQueryExecutor implements RepositoryQueryExecutor {
   _RepositoryListQueryExecutor({required this.repositories});
 
   @override
-  Future<T> onExecuteQuery<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  Future<T> onExecuteQuery<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
     return findRepositoryToHandleQuery(queryRequest).executeQuery(
@@ -110,8 +110,8 @@ class _RepositoryListQueryExecutor implements RepositoryQueryExecutor {
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
     return findRepositoryToHandleQuery(queryRequest).executeQueryX(

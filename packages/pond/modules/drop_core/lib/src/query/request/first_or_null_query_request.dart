@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/map_query_request.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
@@ -28,4 +29,9 @@ class FirstOrNullQueryRequest<E extends Entity> extends MapQueryRequest<E, State
 
   @override
   List<Object?> get props => [sourceQueryRequest];
+
+  @override
+  QueryRequest<E, E?> copyWith({Query<E>? query}) {
+    return FirstOrNullQueryRequest(sourceQueryRequest: sourceQueryRequest.copyWith(query: query));
+  }
 }

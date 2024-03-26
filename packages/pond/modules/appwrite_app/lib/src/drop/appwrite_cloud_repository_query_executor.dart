@@ -13,8 +13,8 @@ import 'package:appwrite_app/src/drop/request/paginate_states_appwrite_query_req
 import 'package:appwrite_app/src/drop/request/wrapper_appwrite_query_request_reducer.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:log_core/log_core.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:runtime_type/type.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:utils/utils.dart';
 
 class AppwriteCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
@@ -76,7 +76,10 @@ class AppwriteCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       ]);
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest, {Function(State state)? onStateRetreived}) async {
+  Future<T> onExecuteQuery<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) async {
     repository.context.log('Executing query to Appwrite: [${queryRequest.prettyPrint(dropContext)}]');
     final appwriteQuery = reduceQuery(null, queryRequest.query);
     return await getQueryRequestReducerResolver().resolve(queryRequest).reduce(
@@ -87,8 +90,8 @@ class AppwriteCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
     repository.context.log('Executing queryX to Appwrite: [${queryRequest.prettyPrint(dropContext)}]');
@@ -108,8 +111,8 @@ class AppwriteCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
         .reduce(query, queryParent == null ? appwriteQuery : reduceQuery(appwriteQuery, queryParent));
   }
 
-  Future<T> resolveForQueryRequest<T>(
-    QueryRequest<dynamic, T> queryRequest,
+  Future<T> resolveForQueryRequest<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest,
     AppwriteQuery appwriteQuery, {
     Function(State state)? onStateRetreived,
   }) async {
@@ -120,8 +123,8 @@ class AppwriteCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
         );
   }
 
-  Stream<T> resolveForQueryRequestX<T>(
-    QueryRequest<dynamic, T> queryRequest,
+  Stream<T> resolveForQueryRequestX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest,
     AppwriteQuery appwriteQuery, {
     Function(State state)? onStateRetreived,
   }) {

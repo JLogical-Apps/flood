@@ -17,4 +17,9 @@ class FirstOrNullStateQueryRequest<E extends Entity> extends QueryRequest<E, Sta
 
   @override
   List<Object?> get props => [query];
+
+  @override
+  QueryRequest<E, State?> copyWith({Query<E>? query}) {
+    return FirstOrNullStateQueryRequest(query: query ?? this.query);
+  }
 }

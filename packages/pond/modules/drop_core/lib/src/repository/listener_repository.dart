@@ -1,4 +1,5 @@
 import 'package:drop_core/src/query/request/query_request.dart';
+import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -23,8 +24,8 @@ class ListenerRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   ListenerRepositoryQueryExecutor({required this.repository});
 
   @override
-  Future<T> onExecuteQuery<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  Future<T> onExecuteQuery<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) async {
     return await repository.repository.executeQuery(
@@ -37,8 +38,8 @@ class ListenerRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
     return repository.repository.executeQueryX(

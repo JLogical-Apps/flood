@@ -20,7 +20,7 @@ abstract class MapQueryRequest<E extends Entity, S, T> extends QueryRequest<E, T
   FutureOr<T> doMap(DropCoreContext context, S source);
 
   @override
-  Query get query => sourceQueryRequest.query;
+  Query<E> get query => sourceQueryRequest.query;
 }
 
 class _MapQueryRequestImpl<E extends Entity, S, T> extends MapQueryRequest<E, S, T> {
@@ -40,10 +40,15 @@ class _MapQueryRequestImpl<E extends Entity, S, T> extends MapQueryRequest<E, S,
   List<Object?> get props => [sourceQueryRequest, mapper];
 
   @override
-  Query get query => sourceQueryRequest.query;
+  Query<E> get query => sourceQueryRequest.query;
 
   @override
   String prettyPrint(DropCoreContext context) {
     return '${query.prettyPrint(context)} | mapped';
+  }
+
+  @override
+  QueryRequest<E, T> copyWith({Query<E>? query}) {
+    return _MapQueryRequestImpl(sourceQueryRequest: sourceQueryRequest.copyWith(query: query), mapper: mapper);
   }
 }

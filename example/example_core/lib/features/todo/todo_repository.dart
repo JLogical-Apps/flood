@@ -9,10 +9,8 @@ class TodoRepository with IsRepositoryWrapper {
     Todo.new,
     entityTypeName: 'TodoEntity',
     valueObjectTypeName: 'Todo',
-  ).adapting('todo').withSecurity(RepositorySecurity(
-        read: Permission.authenticated,
-        create: Permission.authenticated,
-        update: Permission.authenticated,
-        delete: Permission.authenticated,
+  ).adapting('todo').withSecurity(RepositorySecurity.all(
+        Permission.admin |
+            Permission.equals(PermissionField.propertyName(Todo.userField), PermissionField.loggedInUserId),
       ));
 }

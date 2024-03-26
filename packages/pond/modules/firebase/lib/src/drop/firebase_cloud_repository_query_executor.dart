@@ -13,8 +13,8 @@ import 'package:firebase/src/drop/request/map_firebase_query_request_reducer.dar
 import 'package:firebase/src/drop/request/paginate_states_firebase_query_request_reducer.dart';
 import 'package:firebase/src/drop/request/wrapper_firebase_query_request_reducer.dart';
 import 'package:log_core/log_core.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:runtime_type/type.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:utils/utils.dart';
 
 class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
@@ -76,7 +76,10 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       ]);
 
   @override
-  Future<T> onExecuteQuery<T>(QueryRequest<dynamic, T> queryRequest, {Function(State state)? onStateRetreived}) async {
+  Future<T> onExecuteQuery<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
+    Function(State state)? onStateRetreived,
+  }) async {
     repository.context.log('Executing query to Firebase: [${queryRequest.prettyPrint(dropContext)}]');
     final firestoreQuery = reduceQuery(null, queryRequest.query);
     return await getQueryRequestReducerResolver().resolve(queryRequest).reduce(
@@ -87,8 +90,8 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
     repository.context.log('Executing queryX to Firebase: [${queryRequest.prettyPrint(dropContext)}]');
@@ -108,8 +111,8 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
         .reduce(query, queryParent == null ? firestoreQuery : reduceQuery(firestoreQuery, queryParent));
   }
 
-  Future<T> resolveForQueryRequest<T>(
-    QueryRequest<dynamic, T> queryRequest,
+  Future<T> resolveForQueryRequest<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest,
     firebase.Query firestoreQuery, {
     Function(State state)? onStateRetreived,
   }) async {
@@ -120,8 +123,8 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
         );
   }
 
-  Stream<T> resolveForQueryRequestX<T>(
-    QueryRequest<dynamic, T> queryRequest,
+  Stream<T> resolveForQueryRequestX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest,
     firebase.Query firestoreQuery, {
     Function(State state)? onStateRetreived,
   }) {

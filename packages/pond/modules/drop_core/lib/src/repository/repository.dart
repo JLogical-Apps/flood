@@ -182,15 +182,15 @@ mixin IsRepository implements Repository, IsRepositoryStateHandlerWrapper, IsRep
   StatePersister get statePersister => stateHandler.statePersister;
 
   @override
-  Future<T> onExecuteQuery<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  Future<T> onExecuteQuery<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQuery(queryRequest, onStateRetreived: onStateRetreived);
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQueryX(queryRequest, onStateRetreived: onStateRetreived);
@@ -243,15 +243,15 @@ mixin IsRepositoryWrapper implements RepositoryWrapper, RepositoryStateHandlerWr
   StatePersister get statePersister => stateHandler.statePersister;
 
   @override
-  Future<T> onExecuteQuery<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  Future<T> onExecuteQuery<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQuery(queryRequest, onStateRetreived: onStateRetreived);
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQueryX(queryRequest, onStateRetreived: onStateRetreived);

@@ -1,4 +1,5 @@
 import 'package:drop_core/drop_core.dart';
+import 'package:ops/src/firebase/permission/permission_context.dart';
 import 'package:ops/src/firebase/permission/permission_text_modifier.dart';
 import 'package:ops/src/repository_security/repository_security_modifier.dart';
 import 'package:pond_core/pond_core.dart';
@@ -8,8 +9,9 @@ class FirebaseSecurityRulesGenerator {
   String generateFirestoreRules(CorePondContext context) {
     final repositories = context.dropCoreComponent.repositories;
 
-    String getPermissionText(Permission permission) {
-      return PermissionTextModifier.getModifier(permission).getText(context.dropCoreComponent, permission);
+    String getPermissionText(PermissionContext permissionContext, Permission permission) {
+      return PermissionTextModifier.getModifier(permission)
+          .getText(context.dropCoreComponent, permissionContext, permission);
     }
 
     final repositoryRules = repositories
@@ -31,7 +33,10 @@ class FirebaseSecurityRulesGenerator {
             'create': security.create,
             'update': security.update,
             'delete': security.delete,
-          }.mapToIterable((action, permission) => 'allow $action: if ${getPermissionText(permission)};').join('\n');
+          }
+              .mapToIterable((action, permission) =>
+                  'allow $action: if ${getPermissionText(getPermissionContext(action), permission)};')
+              .join('\n');
 
           return '''\
 match /$path/{id} {
@@ -51,5 +56,17 @@ service cloud.firestore {
 ${repositoryRules.withIndent(4)}
   }
 }''';
+  }
+
+  PermissionContext getPermissionContext(String action) {
+    if (action == 'read') {
+      return PermissionContext.read;
+    } else if (action == 'create' || action == 'update') {
+      return PermissionContext.write;
+    } else if (action == 'delete') {
+      return PermissionContext.delete;
+    }
+
+    throw UnimplementedError();
   }
 }

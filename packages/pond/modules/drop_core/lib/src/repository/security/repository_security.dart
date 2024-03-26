@@ -14,11 +14,13 @@ class RepositorySecurity {
         update = write,
         delete = write;
 
-  RepositorySecurity.public() : this.readWrite(read: Permission.all, write: Permission.all);
+  RepositorySecurity.all(Permission permission) : this.readWrite(read: permission, write: permission);
 
-  RepositorySecurity.authenticated() : this.readWrite(read: Permission.authenticated, write: Permission.authenticated);
+  RepositorySecurity.public() : this.all(Permission.all);
 
-  RepositorySecurity.none() : this.readWrite(read: Permission.none, write: Permission.none);
+  RepositorySecurity.authenticated() : this.all(Permission.authenticated);
+
+  RepositorySecurity.none() : this.all(Permission.none);
 
   RepositorySecurity copyWith({Permission? read, Permission? create, Permission? update, Permission? delete}) {
     return RepositorySecurity(

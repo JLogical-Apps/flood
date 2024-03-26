@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
+import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/query_executor/from_state_query_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/limit_state_query_executor.dart';
 import 'package:drop_core/src/repository/query_executor/order_by_state_query_executor.dart';
@@ -56,7 +57,7 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
         PaginateStatesStateQueryRequestReducer(dropContext: dropContext),
         WrapperStateQueryRequestReducer(
           dropContext: dropContext,
-          queryRequestResolver: <T>(qr, states, onStateRetrieved) => resolveForQueryRequest(
+          queryRequestResolver: <E extends Entity, T>(qr, states, onStateRetrieved) => resolveForQueryRequest(
             qr,
             states,
             onStateRetreived: onStateRetrieved,
@@ -65,8 +66,8 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
       ]);
 
   @override
-  Future<T> onExecuteQuery<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  Future<T> onExecuteQuery<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) async {
     return await executeOnStates(
@@ -77,8 +78,8 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
   }
 
   @override
-  ValueStream<FutureValue<T>> onExecuteQueryX<T>(
-    QueryRequest<dynamic, T> queryRequest, {
+  ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest, {
     Function(State state)? onStateRetreived,
   }) {
     return maybeStatesX.asyncMapWithValue(
@@ -96,21 +97,21 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
     return maybeStatesX.value.getOrNull()!;
   }
 
-  Future<T> executeOnStates<T>(
-    QueryRequest<dynamic, T> queryRequest,
+  Future<T> executeOnStates<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest,
     List<State> states, {
     Function(State state)? onStateRetreived,
   }) async {
     final reducedStates = reduceStates(states, queryRequest.query);
-    return await resolveForQueryRequest<T>(
+    return await resolveForQueryRequest<E, T>(
       queryRequest,
       reducedStates,
       onStateRetreived: onStateRetreived,
     );
   }
 
-  Future<T> resolveForQueryRequest<T>(
-    QueryRequest<dynamic, T> queryRequest,
+  Future<T> resolveForQueryRequest<E extends Entity, T>(
+    QueryRequest<E, T> queryRequest,
     Iterable<State> states, {
     Function(State state)? onStateRetreived,
   }) async {

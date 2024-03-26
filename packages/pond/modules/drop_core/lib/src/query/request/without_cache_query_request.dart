@@ -1,4 +1,5 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 
@@ -15,4 +16,9 @@ class WithoutCacheQueryRequest<E extends Entity, T> extends QueryRequestWrapper<
 
   @override
   List<Object?> get props => queryRequest.props + ['withoutCache'];
+
+  @override
+  QueryRequest<E, T> copyWith({Query<E>? query}) {
+    return queryRequest.copyWith(query: query);
+  }
 }

@@ -39,7 +39,7 @@ Model<T?> useQueryOrNull<T>(QueryRequest<Entity, T>? queryRequest) {
   return queryModel;
 }
 
-Model<T> useQuery<T>(QueryRequest<Entity, T> queryRequest) {
+Model<T> useQuery<E extends Entity, T>(QueryRequest<E, T> queryRequest) {
   final context = useContext();
   final debugDialogContext = Provider.of<DebugDialogContext?>(context, listen: false);
   final dropCoreContext = useDropCoreContext();

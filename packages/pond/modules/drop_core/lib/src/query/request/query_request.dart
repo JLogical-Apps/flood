@@ -11,10 +11,12 @@ import 'package:model_core/model_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
-abstract class QueryRequest<E, T> with EquatableMixin {
-  Query get query;
+abstract class QueryRequest<E extends Entity, T> with EquatableMixin {
+  Query<E> get query;
 
   String prettyPrint(DropCoreContext context);
+
+  QueryRequest<E, T> copyWith({Query<E>? query});
 }
 
 extension QueryRequestExtensions<E extends Entity, T> on QueryRequest<E, T> {
@@ -51,7 +53,7 @@ abstract class QueryRequestWrapper<E extends Entity, T> extends QueryRequest<E, 
   QueryRequest<E, T> get queryRequest;
 
   @override
-  Query<Entity> get query => queryRequest.query;
+  Query<E> get query => queryRequest.query;
 
   @override
   bool? get stringify => true;
