@@ -16,7 +16,7 @@ import 'package:utils/utils.dart';
 class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
   @override
   Widget renderTyped(BuildContext context, StyledButton component) {
-    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body.bold(text));
+    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body.bold.display(text));
     final icon = component.icon ?? component.iconData?.mapIfNonNull((iconData) => StyledIcon(iconData));
     final backgroundColorPalette = context.colorPalette().background.getByEmphasis(component.emphasis);
 

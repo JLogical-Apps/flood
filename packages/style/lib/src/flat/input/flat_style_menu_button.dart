@@ -21,9 +21,9 @@ class FlatStyleMenuButtonRenderer with IsTypedStyleRenderer<StyledMenuButton> {
             body: StyledList.column(
                 children: component.actions
                     .map((action) => ListTile(
-                          title:
-                              action.titleText?.mapIfNonNull((title) => StyledText.lg.withColor(action.color)(title)) ??
-                                  action.title,
+                          title: action.titleText?.mapIfNonNull(
+                                  (title) => StyledText.lg.bold.display.withColor(action.color)(title)) ??
+                              action.title,
                           subtitle: action.descriptionText?.mapIfNonNull(
                                   (description) => StyledText.body.withColor(action.color)(description)) ??
                               action.description,

@@ -46,9 +46,13 @@ class FlatStyle with IsStyle {
   final List<StyleRenderer> renderers;
   final List<Widget> examples;
 
+  /// The minimum distance to the primary color for a color to be considered a primary strong color.
+  final int minPrimaryColorDistance;
+
   FlatStyle({
     this.primaryColor = const Color(0xffe39e43),
     this.backgroundColor = const Color(0xff141424),
+    this.minPrimaryColorDistance = 30000,
   })  : renderers = [
           FlatStyleCardRenderer(),
           FlatStyleListRenderer(),
@@ -188,7 +192,7 @@ This is a `code block`.
   @override
   ColorPalette getColorPaletteFromBackground(Color backgroundColor) {
     final isDark = backgroundColor.computeLuminance() < 0.28;
-    final isCloseToPrimary = (backgroundColor - primaryColor) < 52000;
+    final isCloseToPrimary = (backgroundColor - primaryColor) < minPrimaryColorDistance;
 
     final newBackground = isDarkMode
         ? (backgroundColor == Colors.black

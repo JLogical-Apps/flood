@@ -13,7 +13,7 @@ import 'package:utils/utils.dart';
 class FlatStyleOptionFieldRenderer with IsTypedStyleRenderer<StyledOptionField> {
   @override
   Widget renderTyped(BuildContext context, StyledOptionField component) {
-    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body(text));
+    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body.bold.display(text));
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -73,8 +73,9 @@ class FlatStyleOptionFieldRenderer with IsTypedStyleRenderer<StyledOptionField> 
               borderSide: BorderSide(color: context.colorPalette().error.subtle),
             ),
             errorText: component.errorText?.nullIfBlank,
-            errorStyle: context.style().getTextStyle(
-                context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
+            errorStyle: context
+                .style()
+                .getTextStyle(context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
           ),
         ),
       ],

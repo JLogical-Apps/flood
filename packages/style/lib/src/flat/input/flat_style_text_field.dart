@@ -14,7 +14,7 @@ import 'package:utils/utils.dart';
 class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
   @override
   Widget renderTyped(BuildContext context, StyledTextField component) {
-    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body(text));
+    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body.bold.display(text));
     final leading = component.leading ?? component.leadingIcon?.mapIfNonNull((icon) => StyledIcon(icon));
 
     final textController = useTextEditingController(text: component.text);
@@ -69,8 +69,9 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                   borderSide: BorderSide(color: textFieldContext.colorPalette().error.regular),
                 ),
                 errorText: component.errorText,
-                errorStyle: context.style().getTextStyle(
-                    context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
+                errorStyle: context
+                    .style()
+                    .getTextStyle(context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
               ),
             );
           }),

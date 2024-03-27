@@ -12,7 +12,7 @@ import 'package:utils/utils.dart';
 class FlatStyleRadioFieldRenderer with IsTypedStyleRenderer<StyledRadioField> {
   @override
   Widget renderTyped(BuildContext context, StyledRadioField component) {
-    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body(text));
+    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body.display.bold(text));
 
     return StyledList.column(
       crossAxisAlignment: CrossAxisAlignment.start,
