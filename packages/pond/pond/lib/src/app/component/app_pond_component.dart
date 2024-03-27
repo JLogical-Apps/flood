@@ -12,6 +12,8 @@ abstract class AppPondComponent {
 
   Future onLoad(AppPondContext context);
 
+  Future onReset(AppPondContext context);
+
   Widget wrapApp(AppPondContext context, Widget app);
 
   Widget wrapPage(
@@ -30,6 +32,10 @@ extension AppPondComponentExtension on AppPondComponent {
 
   Future load(AppPondContext context) {
     return onLoad(context);
+  }
+
+  Future reset(AppPondContext context) {
+    return onReset(context);
   }
 
   AppPondComponentAdditionalSetup withAdditionalSetup({
@@ -56,6 +62,9 @@ mixin IsAppPondComponent implements AppPondComponent {
 
   @override
   Future onLoad(AppPondContext context) async {}
+
+  @override
+  Future onReset(AppPondContext context) async {}
 
   @override
   Widget wrapApp(AppPondContext context, Widget app) {
@@ -88,6 +97,11 @@ mixin IsAppPondComponentWrapper implements AppPondComponentWrapper {
   @override
   Future onLoad(AppPondContext context) {
     return appPondComponent.onLoad(context);
+  }
+
+  @override
+  Future onReset(AppPondContext context) {
+    return appPondComponent.onReset(context);
   }
 
   @override

@@ -48,6 +48,11 @@ dependencies:
       url: git@github.com:JLogical-Apps/flood.git
       ref: "v4.0"
       path: packages/pond/modules/messaging_core
+  persistence:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.0"
+      path: packages/persistence/persistence
   pond:
     git:
       url: git@github.com:JLogical-Apps/flood.git

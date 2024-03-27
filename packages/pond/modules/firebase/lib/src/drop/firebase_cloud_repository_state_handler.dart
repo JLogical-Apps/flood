@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:firebase/src/drop/firebase_cloud_repository.dart';
-import 'package:firebase/src/drop/firebase_timestamp_state_persister_modifier.dart';
+import 'package:firebase/src/utils/firestore_document_state_persister.dart';
 import 'package:log_core/log_core.dart';
 import 'package:runtime_type/type.dart';
 
@@ -15,14 +15,8 @@ class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
   RuntimeType? get inferredType => repository.handledTypes.length == 1 ? repository.handledTypes[0] : null;
 
   @override
-  late StatePersister<Map<String, dynamic>> statePersister = getStatePersister(repository.context.dropCoreComponent);
-
-  static StatePersister<Map<String, dynamic>> getStatePersister(DropCoreContext context) => StatePersister.json(
-        context: context,
-        extraStatePersisterModifiers: [
-          FirebaseTimestampStatePersisterModifier(),
-        ],
-      );
+  late StatePersister<Map<String, dynamic>> statePersister =
+      getDocumentSnapshotPersister(repository.context.dropCoreComponent);
 
   @override
   Future<State> onUpdate(State state) async {

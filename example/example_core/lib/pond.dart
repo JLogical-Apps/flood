@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:example_core/features/public_settings/public_settings_repository.dart';
 import 'package:example_core/features/todo/todo_repository.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
@@ -50,6 +51,7 @@ Future<CorePondContext> getCorePondContext({
 
   await corePondContext.register(UserRepository());
   await corePondContext.register(TodoRepository());
+  await corePondContext.register(PublicSettingsRepository());
   return corePondContext;
 }
 

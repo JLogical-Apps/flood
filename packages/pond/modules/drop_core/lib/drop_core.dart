@@ -69,3 +69,4 @@ export 'src/repository/security/security_repository.dart';
 export 'src/state/persistence/modifiers/state_persister_modifier.dart';
 export 'src/state/persistence/state_persister.dart';
 export 'src/state/state.dart';
+export 'src/utils/data_source_extensions.dart';

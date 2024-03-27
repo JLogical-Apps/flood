@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:app_usage/app_usage.dart';
 import 'package:auth/auth.dart';
 import 'package:debug/debug.dart';
 import 'package:device_files/device_files.dart';
@@ -17,13 +20,15 @@ import 'package:url_bar/url_bar.dart';
 
 class FloodAppComponent with IsAppPondComponent {
   final Style style;
+  final FutureOr<Version?> Function()? latestAllowedVersion;
 
-  FloodAppComponent({required this.style});
+  FloodAppComponent({required this.style, this.latestAllowedVersion});
 
   @override
   Future onRegister(AppPondContext context) async {
     await context.register(DebugAppComponent());
     await context.register(LogAppComponent());
+    await context.register(AppUsageAppComponent(latestAllowedVersion: latestAllowedVersion));
     await context.register(DeviceFilesAppComponent());
     await context.register(FocusGrabberAppComponent());
     await context.register(AuthAppComponent());

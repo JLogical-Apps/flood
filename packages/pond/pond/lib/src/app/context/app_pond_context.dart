@@ -20,6 +20,14 @@ class AppPondContext with IsLocatorWrapper<AppPondComponent> {
     }
   }
 
+  Future<void> reset() async {
+    await corePondContext.reset();
+
+    for (final component in appComponents) {
+      await component.reset(this);
+    }
+  }
+
   Map<Route, AppPage> getPages() {
     return {
       for (final appComponent in appComponents) ...appComponent.pages.cast<Route, AppPage>(),

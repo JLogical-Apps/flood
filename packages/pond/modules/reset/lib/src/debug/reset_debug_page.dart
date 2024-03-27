@@ -25,12 +25,14 @@ class ResetDebugPage with IsAppPageWrapper<ResetDebugRoute> {
       body: StyledList.column.centered.scrollable.withScrollbar(
         children: [
           StyledText.xl('Are you sure you want to reset?'),
-          StyledText.body('This will delete Flood files from your device, which will emulate installing the app for the first time.'),
+          StyledText.body(
+              'This will delete Flood files from your device, which will emulate installing the app for the first time.'),
           StyledButton.strong(
             labelText: 'Reset',
             iconData: Icons.delete,
             onPressed: () async {
-              await context.corePondContext.reset();
+              await context.appPondContext.reset();
+              await context.appPondContext.load();
               context.read<PondApp>().navigateHome(context);
             },
           ),

@@ -65,7 +65,7 @@ class State extends Equatable implements Stateful {
 
   static State fromMap(
     Map<String, dynamic> fullData, {
-    required RuntimeType Function(String typeName) runtimeTypeGetter,
+    required TypeContext typeContext,
   }) {
     fullData = fullData.copy();
 
@@ -75,7 +75,7 @@ class State extends Equatable implements Stateful {
     final type = typeValue is RuntimeType
         ? typeValue
         : typeValue is String
-            ? runtimeTypeGetter(typeValue)
+            ? typeContext.getByNameOrNull(typeValue)
             : null;
 
     return State(

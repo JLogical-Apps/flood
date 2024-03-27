@@ -27,17 +27,21 @@ class PondApp extends HookWidget {
   final Widget loadingPage;
   final Widget notFoundPage;
 
+  final AppPage<R>? Function<R extends Route>(AppPage<R> appPage)? appPageWrapper;
+
   PondApp({
     super.key,
     required this.appPondContext,
     required this.loadingPage,
     required this.notFoundPage,
+    this.appPageWrapper,
   });
 
   static Future<void> run({
     required FutureOr<AppPondContext> Function() appPondContextGetter,
     required Widget loadingPage,
     required Widget notFoundPage,
+    AppPage<R>? Function<R extends Route>(AppPage<R> appPage)? appPageWrapper,
   }) async {
     AppPondContext? appPondContext;
     await runZonedGuarded(
@@ -51,6 +55,7 @@ class PondApp extends HookWidget {
           appPondContext: appPondContext!,
           loadingPage: loadingPage,
           notFoundPage: notFoundPage,
+          appPageWrapper: appPageWrapper,
         ));
       },
       (Object error, StackTrace stackTrace) {
@@ -226,15 +231,17 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
     final (matchingRoute, matchingPage) = (matchingPageEntry.key, matchingPageEntry.value);
     final routeInstance = matchingRoute.fromRouteData(routeData) as Route;
 
+    final wrappedPage = app.appPageWrapper?.call(matchingPage) ?? matchingPage;
+
     final redirectRouteData = await guardAsync(
-      () => matchingPage.getRedirect(app.appPondContext, routeInstance),
+      () => wrappedPage.getRedirect(app.appPondContext, routeInstance),
       onException: (error, stackTrace) => app.appPondContext.logError(error, stackTrace),
     );
     if (redirectRouteData != null) {
       return await _getAppPageFromRouteData(redirectRouteData);
     }
 
-    return buildWithoutRedirect(Builder(builder: (context) => matchingPage.build(context, routeInstance)));
+    return buildWithoutRedirect(Builder(builder: (context) => wrappedPage.build(context, routeInstance)));
   }
 
   Future<List<RouteData>> _getParentRouteDataChain(RouteData routeData) async {

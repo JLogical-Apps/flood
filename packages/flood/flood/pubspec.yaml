@@ -16,11 +16,17 @@ dependencies:
       url: git@github.com:JLogical-Apps/flood.git
       ref: "v4.0"
       path: packages/flood/flood_core
+
   actions:
     git:
       url: git@github.com:JLogical-Apps/flood.git
       ref: "v4.0"
       path: packages/pond/modules/actions
+  app_usage:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.0"
+      path: packages/pond/modules/app_usage
   appwrite_app:
     git:
       url: git@github.com:JLogical-Apps/flood.git

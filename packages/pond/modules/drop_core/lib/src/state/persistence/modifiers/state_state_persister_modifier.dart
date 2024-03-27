@@ -2,7 +2,6 @@ import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/state/persistence/modifiers/state_persister_modifier.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
-import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 class StateStatePersisterModifier extends StatePersisterModifier {
@@ -39,7 +38,7 @@ class StateStatePersisterModifier extends StatePersisterModifier {
             (key, value) => value is Map && value.isA<String, dynamic>() && value.containsKey(State.typeField),
             (key, value) => State.fromMap(
                   replaceDataWithState((value as Map).cast<String, dynamic>()),
-                  runtimeTypeGetter: (name) => context.typeContext.getByName(name),
+                  typeContext: context.typeContext,
                 ))
         .cast<String, dynamic>();
     return newData;
