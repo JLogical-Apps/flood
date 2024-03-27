@@ -8,9 +8,6 @@ import 'package:example_core/pond.dart';
 import 'package:flood/flood.dart';
 import 'package:flutter/material.dart';
 
-// When setting up the test suite testingLoggedIn] will determine whether to have the user logged in.
-const testingLoggedIn = true;
-
 Future<void> main(List<String> args) async {
   await PondApp.run(
     appPondContextGetter: buildAppPondContext,
@@ -44,7 +41,8 @@ Future<AppPondContext> buildAppPondContext() async {
   final appPondContext = AppPondContext(corePondContext: corePondContext);
   await appPondContext.register(FloodAppComponent(style: style));
   await appPondContext.register(TestingSetupAppComponent(onSetup: () async {
-    if (testingLoggedIn) {
+    final testingSetup = await corePondContext.environmentConfig.getOrDefault('testingSetup', fallback: () => false);
+    if (testingSetup) {
       await setupTesting(corePondContext);
     }
   }));
