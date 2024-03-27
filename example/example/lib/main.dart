@@ -41,7 +41,7 @@ Future<AppPondContext> buildAppPondContext() async {
   final appPondContext = AppPondContext(corePondContext: corePondContext);
   await appPondContext.register(FloodAppComponent(style: style));
   await appPondContext.register(TestingSetupAppComponent(onSetup: () async {
-    final testingSetup = await corePondContext.environmentConfig.getOrDefault('testingSetup', fallback: () => false);
+    final testingSetup = await corePondContext.environmentConfig.getOrDefault('testingSetup', fallback: () => true);
     if (testingSetup) {
       await setupTesting(corePondContext);
     }
