@@ -18,7 +18,12 @@ class DeltaStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
   Widget renderTyped(BuildContext context, StyledButton component) {
     final label = component.label ??
         component.labelText?.mapIfNonNull((text) => StyledText.body.display.bold
-            .withColor(component.emphasis == Emphasis.regular ? context.colorPalette().foreground.strong : null)(text));
+            .withColor(component.isTextButton
+                ? null
+                : component.emphasis == Emphasis.regular
+                    ? context.colorPalette().foreground.strong
+                    : null)
+            .withEmphasis(component.isTextButton ? component.emphasis : Emphasis.regular)(text));
     final icon = component.icon ??
         component.iconData?.mapIfNonNull((iconData) => StyledIcon(
               iconData,
@@ -100,13 +105,14 @@ class DeltaStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
         elevation: MaterialStateProperty.all(0),
         shape: MaterialStateProperty.all(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(1000),
-          side: component.emphasis == Emphasis.strong
+          side: component.emphasis == Emphasis.strong || component.isTextButton
               ? BorderSide.none
               : BorderSide(
                   width: 1,
                   color: component.emphasis == Emphasis.regular
                       ? context.colorPalette().foreground.strong
-                      : context.colorPalette().foreground.subtle),
+                      : context.colorPalette().foreground.subtle,
+                ),
         )),
         padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 15, vertical: 12)),
       ),
@@ -151,6 +157,25 @@ class DeltaStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
             )
           ],
         ),
+      ))
+      ..add(StyledList.row.withScrollbar(
+        children: [
+          StyledButton.subtle(
+            labelText: 'Subtle',
+            isTextButton: true,
+            onPressed: () => Future.delayed(Duration(seconds: 1)),
+          ),
+          StyledButton(
+            labelText: 'Regular',
+            isTextButton: true,
+            onPressed: () => Future.delayed(Duration(seconds: 1)),
+          ),
+          StyledButton.strong(
+            labelText: 'Strong',
+            isTextButton: true,
+            onPressed: () => Future.delayed(Duration(seconds: 1)),
+          )
+        ],
       ))
       ..add(StyledList.row.withScrollbar(
         children: [

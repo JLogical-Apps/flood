@@ -69,6 +69,7 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                   borderSide: BorderSide(color: textFieldContext.colorPalette().error.regular),
                 ),
                 errorText: component.errorText,
+                errorMaxLines: 2,
                 errorStyle: context
                     .style()
                     .getTextStyle(context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),

@@ -48,7 +48,8 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
               keyboardType: component.keyboard,
               decoration: InputDecoration(
                 filled: true,
-                hoverColor: Colors.transparent, // https://github.com/flutter/flutter/issues/132373
+                hoverColor: Colors.transparent,
+                // https://github.com/flutter/flutter/issues/132373
                 focusColor: context.colorPalette().background.regular,
                 fillColor: textFieldColor,
                 prefixIcon: leading,
@@ -83,6 +84,7 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                   borderSide: BorderSide(color: textFieldContext.colorPalette().error.regular),
                 ),
                 errorText: component.errorText,
+                errorMaxLines: 2,
                 errorStyle: context
                     .style()
                     .getTextStyle(context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
