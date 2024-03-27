@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:persistence_core/src/data_source.dart';
+import 'package:persistence_core/src/data_source/data_source.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class MapperDataSource<T, T2> with IsDataSource<T2> {

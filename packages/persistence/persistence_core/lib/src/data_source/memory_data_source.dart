@@ -1,4 +1,4 @@
-import 'package:persistence_core/src/data_source.dart';
+import 'package:persistence_core/src/data_source/data_source.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MemoryDataSource<T> with IsDataSource<T> {

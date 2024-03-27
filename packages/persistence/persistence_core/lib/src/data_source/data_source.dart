@@ -3,19 +3,20 @@ import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:persistence_core/persistence_core.dart';
-import 'package:persistence_core/src/base64_data_source.dart';
-import 'package:persistence_core/src/cross_directory_data_source.dart';
-import 'package:persistence_core/src/cross_file_data_source.dart';
-import 'package:persistence_core/src/csv_data_source.dart';
-import 'package:persistence_core/src/directory_data_source.dart';
-import 'package:persistence_core/src/file_data_source.dart';
-import 'package:persistence_core/src/json_data_source.dart';
-import 'package:persistence_core/src/mapper_data_source.dart';
-import 'package:persistence_core/src/memory_data_source.dart';
-import 'package:persistence_core/src/raw_cross_file_data_source.dart';
-import 'package:persistence_core/src/raw_file_data_source.dart';
+import 'package:persistence_core/src/data_source/base64_data_source.dart';
+import 'package:persistence_core/src/data_source/cache_data_source.dart';
+import 'package:persistence_core/src/data_source/cross_directory_data_source.dart';
+import 'package:persistence_core/src/data_source/cross_file_data_source.dart';
+import 'package:persistence_core/src/data_source/csv_data_source.dart';
+import 'package:persistence_core/src/data_source/directory_data_source.dart';
+import 'package:persistence_core/src/data_source/file_data_source.dart';
+import 'package:persistence_core/src/data_source/json_data_source.dart';
+import 'package:persistence_core/src/data_source/mapper_data_source.dart';
+import 'package:persistence_core/src/data_source/memory_data_source.dart';
+import 'package:persistence_core/src/data_source/raw_cross_file_data_source.dart';
+import 'package:persistence_core/src/data_source/raw_file_data_source.dart';
+import 'package:persistence_core/src/data_source/yaml_data_source.dart';
 import 'package:persistence_core/src/utils/create_archive.dart';
-import 'package:persistence_core/src/yaml_data_source.dart';
 
 abstract class DataSource<T> {
   Stream<T>? getXOrNull();
@@ -79,6 +80,10 @@ extension DataSourceExtension<T> on DataSource<T> {
     final newData = newDataGetter(existingData);
     await set(newData);
     return newData;
+  }
+
+  CacheDataSource<T> withCache([CachePolicy? cachePolicy]) {
+    return CacheDataSource(dataSource: this, cachePolicy: cachePolicy);
   }
 
   MapperDataSource<T, T2> map<T2>({

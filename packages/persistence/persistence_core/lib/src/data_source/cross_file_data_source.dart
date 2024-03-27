@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:persistence_core/src/crossfile/cross_file.dart';
-import 'package:persistence_core/src/data_source.dart';
+import 'package:persistence_core/src/data_source/data_source.dart';
 
 class CrossFileDataSource with IsDataSourceWrapper<String> {
   final CrossFile file;

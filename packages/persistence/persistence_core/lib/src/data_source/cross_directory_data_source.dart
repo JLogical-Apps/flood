@@ -1,6 +1,6 @@
 import 'package:persistence_core/src/crossfile/cross_directory.dart';
 import 'package:persistence_core/src/crossfile/cross_element.dart';
-import 'package:persistence_core/src/data_source.dart';
+import 'package:persistence_core/src/data_source/data_source.dart';
 
 class CrossDirectoryDataSource extends DataSource<List<CrossElement>?> {
   final CrossDirectory directory;

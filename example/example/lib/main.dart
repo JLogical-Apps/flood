@@ -42,21 +42,21 @@ Future<AppPondContext> buildAppPondContext() async {
         : LoggerService.static.console,
   );
 
+  final latestAllowedVersionDataSource = corePondContext.environmental((type) => type.isOnline
+      ? DataSource.static
+          .firestoreDocumentEntity<PublicSettingsEntity>(
+            'public/public',
+            context: corePondContext.dropCoreComponent,
+          )
+          .mapGet((publicSettingsEntity) => publicSettingsEntity.value.minVersionProperty.value)
+          .withCache(CachePolicy.timed(Duration(minutes: 10)))
+      : null);
+
   final appPondContext = AppPondContext(corePondContext: corePondContext);
   await appPondContext.register(FloodAppComponent(
     style: style,
     latestAllowedVersion: () async {
-      final rawVersion = await appPondContext
-          .environmental((type) => type.isOnline
-              ? DataSource.static
-                  .firestoreDocumentEntity<PublicSettingsEntity>(
-                    'public/public',
-                    context: corePondContext.dropCoreComponent,
-                  )
-                  .mapGet((publicSettingsEntity) => publicSettingsEntity.value.minVersionProperty.value)
-              : null)
-          ?.getOrNull();
-
+      final rawVersion = await latestAllowedVersionDataSource?.getOrNull();
       return rawVersion?.mapIfNonNull((value) => Version.parse(value));
     },
   ));

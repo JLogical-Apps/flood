@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:persistence_core/src/data_source.dart';
+import 'package:persistence_core/src/data_source/data_source.dart';
 
 class FileDataSource with IsDataSourceWrapper<String> {
   final File file;

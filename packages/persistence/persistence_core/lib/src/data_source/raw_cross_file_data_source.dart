@@ -1,6 +1,6 @@
 import 'package:persistence_core/src/crossfile/cross_element.dart';
 import 'package:persistence_core/src/crossfile/cross_file.dart';
-import 'package:persistence_core/src/data_source.dart';
+import 'package:persistence_core/src/data_source/data_source.dart';
 
 class RawCrossFileDataSource extends DataSource<List<int>> {
   final CrossFile file;

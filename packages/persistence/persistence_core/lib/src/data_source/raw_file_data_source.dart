@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:persistence_core/src/data_source.dart';
+import 'package:persistence_core/src/data_source/data_source.dart';
 import 'package:utils_core/utils_core.dart';
 
 class RawFileDataSource extends DataSource<List<int>> {
