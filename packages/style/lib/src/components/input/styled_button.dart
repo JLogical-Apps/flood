@@ -12,6 +12,7 @@ class StyledButton extends StyleComponent {
   final Function()? onPressed;
 
   final Emphasis emphasis;
+  final bool isTextButton;
 
   StyledButton({
     this.label,
@@ -20,6 +21,7 @@ class StyledButton extends StyleComponent {
     this.iconData,
     required this.onPressed,
     this.emphasis = Emphasis.regular,
+    this.isTextButton = false,
   });
 
   StyledButton.subtle({
@@ -28,6 +30,7 @@ class StyledButton extends StyleComponent {
     this.icon,
     this.iconData,
     required this.onPressed,
+    this.isTextButton = false,
   }) : emphasis = Emphasis.subtle;
 
   StyledButton.strong({
@@ -36,5 +39,6 @@ class StyledButton extends StyleComponent {
     this.icon,
     this.iconData,
     required this.onPressed,
+    this.isTextButton = false,
   }) : emphasis = Emphasis.strong;
 }

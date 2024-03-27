@@ -8,6 +8,7 @@ class StyledTextBuilder {
   int? size;
   FontWeight? fontWeight;
   FontStyle? fontStyle;
+  TextDecoration? textDecoration;
   bool? isDisplay;
   Color? color;
   bool isError = false;
@@ -19,6 +20,11 @@ class StyledTextBuilder {
 
   StyledTextBuilder get strong {
     emphasis = Emphasis.strong;
+    return this;
+  }
+
+  StyledTextBuilder withEmphasis(Emphasis emphasis) {
+    this.emphasis = emphasis;
     return this;
   }
 
@@ -87,6 +93,11 @@ class StyledTextBuilder {
     return this;
   }
 
+  StyledTextBuilder get underline {
+    textDecoration = TextDecoration.underline;
+    return this;
+  }
+
   StyledTextBuilder get display {
     isDisplay = true;
     return this;
@@ -110,6 +121,7 @@ class StyledTextBuilder {
       textAlign: textAlign,
       fontWeight: fontWeight,
       fontStyle: fontStyle,
+      textDecoration: textDecoration,
       isDisplay: isDisplay ?? false,
       color: color,
       isError: isError,

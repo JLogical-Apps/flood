@@ -14,8 +14,7 @@ import 'package:utils/utils.dart';
 class FlatStyleDialogRenderer with IsTypedStyleRenderer<StyledDialog> {
   @override
   Widget renderTyped(BuildContext context, StyledDialog component) {
-    final title =
-        component.titleText?.mapIfNonNull((title) => StyledText.lg.bold.strong.display(title)) ?? component.title;
+    final title = component.titleText?.mapIfNonNull((title) => StyledText.lg.bold.display(title)) ?? component.title;
     final body = component.bodyText?.mapIfNonNull((body) => StyledText.body(body)) ?? component.body;
 
     return StyledContainer(

@@ -136,7 +136,7 @@ This is a `code block`.
 
   @override
   TextStyle getTextStyle(BuildContext context, StyledText text) {
-    final baseTextStyle = text.isDisplay ? GoogleFonts.roboto : GoogleFonts.roboto;
+    final baseTextStyle = text.isDisplay ? GoogleFonts.urbanist : GoogleFonts.roboto;
     return baseTextStyle(
       fontSize: text.size.toDouble(),
       color: text.isError
@@ -144,6 +144,7 @@ This is a `code block`.
           : text.color ?? context.colorPalette().foreground.getByEmphasis(text.emphasis),
       fontStyle: text.fontStyle,
       fontWeight: text.fontWeight,
+      decoration: text.textDecoration,
       height: text.size > 18 ? 1.2 : 1,
     );
   }

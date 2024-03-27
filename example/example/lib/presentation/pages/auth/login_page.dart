@@ -2,9 +2,9 @@ import 'package:example/presentation/pages/auth/signup_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/utils/otp_utils.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
+import 'package:flood/flood.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flood/flood.dart';
 
 class LoginRoute with IsRoute<LoginRoute> {
   late final redirectPathProperty = field<String>(name: 'redirect');
@@ -95,6 +95,11 @@ class LoginPage with IsAppPageWrapper<LoginRoute> {
                 },
               ),
               if (otpErrorState.value != null) StyledText.body.error(otpErrorState.value!),
+              StyledButton.subtle(
+                labelText: 'Forgot Password?',
+                onPressed: () {},
+                isTextButton: true,
+              ),
             ],
           ),
         ),

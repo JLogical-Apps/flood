@@ -16,7 +16,9 @@ import 'package:utils/utils.dart';
 class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
   @override
   Widget renderTyped(BuildContext context, StyledButton component) {
-    final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body.bold.display(text));
+    final label = component.label ??
+        component.labelText?.mapIfNonNull((text) => StyledText.body.bold.display
+            .withEmphasis(component.isTextButton ? component.emphasis : Emphasis.regular)(text));
     final icon = component.icon ?? component.iconData?.mapIfNonNull((iconData) => StyledIcon(iconData));
     final backgroundColorPalette = context.colorPalette().background.getByEmphasis(component.emphasis);
 
@@ -56,9 +58,8 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
       );
     }
 
-    return ElevatedButton(
-      child: ColorPaletteProvider(
-        colorPalette: backgroundColorPalette,
+    if (component.isTextButton) {
+      return TextButton(
         child: Stack(
           children: [
             Opacity(
@@ -81,22 +82,59 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
             ),
           ],
         ),
-      ),
-      style: ButtonStyle(
-        backgroundColor:
-            MaterialStateProperty.all(backgroundColorPalette.withOpacity(component.onPressed == null ? 0.6 : 1)),
-        textStyle: MaterialStateProperty.all(context.style().getTextStyle(context, StyledText.body.empty)),
-        elevation: MaterialStateProperty.all(0),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(6),
-          side: component.emphasis != Emphasis.subtle
-              ? BorderSide.none
-              : BorderSide(width: 1.5, color: context.colorPalette().background.regular),
-        )),
-        padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 4, vertical: 2)),
-      ),
-      onPressed: onPressed,
-    );
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          )),
+          textStyle: MaterialStateProperty.all(
+              context.style().getTextStyle(context, StyledText.body.underline.withEmphasis(component.emphasis).empty)),
+          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
+        ),
+        onPressed: onPressed,
+      );
+    } else {
+      return ElevatedButton(
+        child: ColorPaletteProvider(
+          colorPalette: backgroundColorPalette,
+          child: Stack(
+            children: [
+              Opacity(
+                opacity: loadingState.value ? 0 : 1,
+                child: StyledList.row.shrink(
+                  itemPadding: EdgeInsets.all(2),
+                  children: [
+                    if (icon != null) icon,
+                    if (label != null) label,
+                  ],
+                ),
+              ),
+              Positioned.fill(
+                child: Center(
+                  child: Visibility(
+                    visible: loadingState.value,
+                    child: StyledLoadingIndicator(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        style: ButtonStyle(
+          backgroundColor:
+              MaterialStateProperty.all(backgroundColorPalette.withOpacity(component.onPressed == null ? 0.6 : 1)),
+          textStyle: MaterialStateProperty.all(context.style().getTextStyle(context, StyledText.body.empty)),
+          elevation: MaterialStateProperty.all(0),
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+            side: component.emphasis != Emphasis.subtle
+                ? BorderSide.none
+                : BorderSide(width: 1.5, color: context.colorPalette().background.regular),
+          )),
+          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 4, vertical: 2)),
+        ),
+        onPressed: onPressed,
+      );
+    }
   }
 
   @override
@@ -152,6 +190,27 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
           StyledButton.strong(
             labelText: 'Strong',
             iconData: Icons.add,
+            onPressed: () => Future.delayed(Duration(seconds: 1)),
+          )
+        ],
+      ))
+      ..add(StyledList.row.withScrollbar(
+        children: [
+          StyledButton.subtle(
+            labelText: 'Subtle',
+            isTextButton: true,
+            iconData: Icons.add,
+            onPressed: () => Future.delayed(Duration(seconds: 1)),
+          ),
+          StyledButton(
+            labelText: 'Regular',
+            isTextButton: true,
+            iconData: Icons.add,
+            onPressed: () => Future.delayed(Duration(seconds: 1)),
+          ),
+          StyledButton.strong(
+            labelText: 'Strong',
+            isTextButton: true,
             onPressed: () => Future.delayed(Duration(seconds: 1)),
           )
         ],

@@ -11,6 +11,7 @@ class StyledText extends StyleComponent {
   final TextAlign? textAlign;
   final FontWeight? fontWeight;
   final FontStyle? fontStyle;
+  final TextDecoration? textDecoration;
   final bool isDisplay;
   final Color? color;
   final bool isError;
@@ -23,6 +24,7 @@ class StyledText extends StyleComponent {
     this.textAlign,
     this.fontWeight,
     this.fontStyle,
+    this.textDecoration,
     this.isDisplay = false,
     this.color,
     this.isError = false,
