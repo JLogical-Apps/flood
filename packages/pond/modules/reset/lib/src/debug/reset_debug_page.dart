@@ -1,7 +1,6 @@
 import 'package:debug/debug.dart';
 import 'package:flutter/material.dart';
 import 'package:pond/pond.dart';
-import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
 class ResetDebugRoute with IsRoute<ResetDebugRoute> {
@@ -33,7 +32,7 @@ class ResetDebugPage with IsAppPageWrapper<ResetDebugRoute> {
             onPressed: () async {
               await context.appPondContext.reset();
               await context.appPondContext.load();
-              context.read<PondApp>().navigateHome(context);
+              context.warpToLocation('/');
             },
           ),
         ],

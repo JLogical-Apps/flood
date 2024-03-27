@@ -49,16 +49,14 @@ Future<AppPondContext> buildAppPondContext() async {
             context: corePondContext.dropCoreComponent,
           )
           .mapGet((publicSettingsEntity) => publicSettingsEntity.value.minVersionProperty.value)
+          .mapGet((rawVersion) => rawVersion?.mapIfNonNull((rawVersion) => Version.parse(rawVersion)))
           .withCache(CachePolicy.timed(Duration(minutes: 10)))
       : null);
 
   final appPondContext = AppPondContext(corePondContext: corePondContext);
   await appPondContext.register(FloodAppComponent(
     style: style,
-    latestAllowedVersion: () async {
-      final rawVersion = await latestAllowedVersionDataSource?.getOrNull();
-      return rawVersion?.mapIfNonNull((value) => Version.parse(value));
-    },
+    latestAllowedVersion: () => latestAllowedVersionDataSource?.getOrNull(),
   ));
   await appPondContext.register(TestingSetupAppComponent(onSetup: () async {
     final testingSetup = await corePondContext.environmentConfig.getOrDefault('testingSetup', fallback: () => true);

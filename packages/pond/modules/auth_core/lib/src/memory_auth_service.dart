@@ -26,8 +26,8 @@ class MemoryAuthService with IsAuthService, IsCorePondComponent {
   @override
   List<CorePondComponentBehavior> get behaviors => [
         CorePondComponentBehavior(
-          onRegister: (context, _) async => await context.register(AccountRepository().memory()),
-        ),
+            onRegister: (context, _) async => await context.register(AccountRepository().memory()),
+            onReset: (context, _) async {}),
       ];
 
   @override

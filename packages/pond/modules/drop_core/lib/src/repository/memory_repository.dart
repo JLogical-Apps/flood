@@ -5,6 +5,7 @@ import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -13,6 +14,16 @@ class MemoryRepository with IsRepositoryWrapper {
 
   @override
   final Repository repository;
+
+  @override
+  late final List<CorePondComponentBehavior> behaviors = super.behaviors +
+      [
+        CorePondComponentBehavior(
+          onReset: (context, _) async {
+            stateByIdX.value = {};
+          },
+        ),
+      ];
 
   MemoryRepository({required this.repository});
 
