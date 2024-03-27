@@ -11,6 +11,7 @@ import 'package:flood_core/flood_core.dart';
 import 'package:focus_grabber/focus_grabber.dart';
 import 'package:log/log.dart';
 import 'package:pond/pond.dart';
+import 'package:port_style/port_style.dart';
 import 'package:port_style_component/port_style_component.dart';
 import 'package:reset/reset.dart';
 import 'package:share/share.dart';
@@ -20,9 +21,10 @@ import 'package:url_bar/url_bar.dart';
 
 class FloodAppComponent with IsAppPondComponent {
   final Style style;
+  final List<StyledObjectPortOverride> styledObjectPortOverrides;
   final FutureOr<Version?> Function()? latestAllowedVersion;
 
-  FloodAppComponent({required this.style, this.latestAllowedVersion});
+  FloodAppComponent({required this.style, this.styledObjectPortOverrides = const [], this.latestAllowedVersion});
 
   @override
   Future onRegister(AppPondContext context) async {
@@ -35,7 +37,7 @@ class FloodAppComponent with IsAppPondComponent {
     await context.register(DropAppComponent());
     await context.register(ResetAppComponent());
     await context.register(FirebaseCrashlyticsAppComponent());
-    await context.register(PortStyleAppComponent());
+    await context.register(PortStyleAppComponent(overrides: styledObjectPortOverrides));
     await context.register(StyleAppComponent(style: style));
     await context.register(UrlBarAppComponent());
     await context.register(EnvironmentBannerAppComponent());
