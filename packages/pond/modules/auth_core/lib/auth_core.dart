@@ -1,4 +1,5 @@
 export 'src/account.dart';
+export 'src/auth_context_extensions.dart';
 export 'src/auth_core_component.dart';
 export 'src/auth_credentials/auth_credentials.dart';
 export 'src/auth_credentials/email_auth_credentials.dart';

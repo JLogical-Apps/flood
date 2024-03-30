@@ -5,3 +5,7 @@ import 'package:pond/pond.dart';
 extension AuthBuildContextExtensions on BuildContext {
   AuthCoreComponent get authCoreComponent => find<AuthCoreComponent>();
 }
+
+extension AuthAppPondContextExtensions on AppPondContext {
+  AuthCoreComponent get authCoreComponent => find<AuthCoreComponent>();
+}
