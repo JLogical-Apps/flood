@@ -58,7 +58,3 @@ external packages as well.
 ### Testing
 
 Run `melos test` to run tests on all the packages.
-
-## Licensing
-
-Your sponsorship grants you a license to use Flood for non-commercial projects. If you're interested in using Flood for commercial purposes, please contact us at [contact@flooddev.com](mailto:contact@flooddev.com) to discuss commercial licensing options.
