@@ -35,6 +35,21 @@ class DropDebugRepositoryPage with IsAppPageWrapper<DropDebugRepositoryRoute> {
       builder: (List<Entity> entities, Future Function()? loadMore) {
         return StyledPage(
           titleText: repository.runtimeType.toString(),
+          actions: [
+            ActionItem(
+              titleText: 'Re-save All Entities',
+              descriptionText: 'Save all entities in this repository. Use this for re-indexing fallback values.',
+              color: Colors.blue,
+              iconData: Icons.save,
+              onPerform: (_) async {
+                final entities = await repository.executeQuery(Query.fromAll().all());
+                for (final entity in entities) {
+                  await repository.update(entity);
+                }
+                await context.showStyledMessage(StyledMessage(labelText: 'Successfully re-saved all entiites!'));
+              },
+            ),
+          ],
           body: StyledList.column.scrollable.withScrollbar.centered.withMinChildSize(250)(
             children: [
               ...entities.map(
