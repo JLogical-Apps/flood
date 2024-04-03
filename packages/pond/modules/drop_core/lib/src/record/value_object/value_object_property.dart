@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
+import 'package:drop_core/src/record/value_object/async_fallback_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/color_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/computed_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/currency_value_object_property.dart';
@@ -85,6 +86,11 @@ mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements V
 
   @override
   State modifyState(State state) {
+    return state;
+  }
+
+  @override
+  Future<State> modifyStateForRepository(DropCoreContext context, State state) async {
     return state;
   }
 
@@ -255,6 +261,13 @@ extension SameNullableGetterSetterValueObjectPropertyExtensions<T, L, V extends 
   }
 }
 
+extension SameGetterSetterValueObjectPropertyExtensions<T, L, V extends ValueObjectProperty>
+    on ValueObjectProperty<T, T, L, V> {
+  AsyncFallbackValueObjectProperty<T, L> withAsyncFallback(FutureOr<T> Function(DropCoreContext context) fallback) {
+    return AsyncFallbackValueObjectProperty(property: this, fallback: fallback);
+  }
+}
+
 extension FieldValueObjectPropertyExtensions<T, L> on FieldValueObjectProperty<T, L> {
   ListValueObjectProperty<T, L> list() {
     return ListValueObjectProperty(property: this);
@@ -295,6 +308,10 @@ mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, 
 
   @override
   State modifyState(State state) => property.modifyState(state);
+
+  @override
+  Future<State> modifyStateForRepository(DropCoreContext context, State state) =>
+      property.modifyStateForRepository(context, state);
 
   @override
   Future<L> load(DropCoreContext context) => property.load(context);

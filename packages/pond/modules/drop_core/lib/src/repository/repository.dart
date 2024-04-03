@@ -97,7 +97,7 @@ extension RepositoryExtension on Repository {
     await entity.throwIfInvalid(null);
     final newState = await update(entity);
     entity.id = newState.id;
-    return context.dropCoreComponent.constructEntityFromState(newState);
+    return await context.dropCoreComponent.constructEntityFromState(newState);
   }
 
   Future<State> delete(Stateful state) {

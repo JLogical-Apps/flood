@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/display_name_value_object_behavior.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -9,6 +10,8 @@ abstract class ValueObjectBehavior implements Validator<ValueObject, String> {
   void fromState(State state);
 
   State modifyState(State state);
+
+  Future<State> modifyStateForRepository(DropCoreContext context, State state);
 
   static DisplayNameValueObjectBehavior displayName(String? displayName) {
     return DisplayNameValueObjectBehavior(displayNameGetter: () => displayName);
@@ -25,6 +28,11 @@ mixin IsValueObjectBehavior implements ValueObjectBehavior {
 
   @override
   State modifyState(State state) {
+    return state;
+  }
+
+  @override
+  Future<State> modifyStateForRepository(DropCoreContext context, State state) async {
     return state;
   }
 
