@@ -3,16 +3,25 @@ import 'package:firebase/src/persistence/firestore_document_data_source.dart';
 import 'package:firebase/src/persistence/firestore_document_raw_data_source.dart';
 import 'package:firebase/src/persistence/firestore_document_state_data_source.dart';
 import 'package:persistence/persistence.dart';
+import 'package:pond_core/pond_core.dart';
 import 'package:runtime_type/type.dart';
 
 extension DataSourceStaticExtension on DataSourceStatic {
-  FirestoreDocumentRawDataSource firestoreDocumentRaw(String path) => FirestoreDocumentRawDataSource(path: path);
+  FirestoreDocumentRawDataSource firestoreDocumentRaw(
+    String path, {
+    required CorePondContext context,
+  }) =>
+      FirestoreDocumentRawDataSource(context: context, path: path);
 
-  FirestoreDocumentDataSource firestoreDocument(String path) => FirestoreDocumentDataSource(path: path);
+  FirestoreDocumentDataSource firestoreDocument(
+    String path, {
+    required CorePondContext context,
+  }) =>
+      FirestoreDocumentDataSource(context: context, path: path);
 
   FirestoreDocumentStateDataSource firestoreDocumentState(
     String path, {
-    required DropCoreContext context,
+    required CorePondContext context,
     required RuntimeType stateType,
   }) =>
       FirestoreDocumentStateDataSource(
@@ -21,10 +30,10 @@ extension DataSourceStaticExtension on DataSourceStatic {
         stateType: stateType,
       );
 
-  DataSource<E> firestoreDocumentEntity<E extends Entity>(String path, {required DropCoreContext context}) =>
+  DataSource<E> firestoreDocumentEntity<E extends Entity>(String path, {required CorePondContext context}) =>
       firestoreDocumentState(
         path,
         context: context,
-        stateType: context.typeContext.getRuntimeType<E>(),
-      ).mapEntity(context);
+        stateType: context.dropCoreComponent.getRuntimeType<E>(),
+      ).mapEntity(context.dropCoreComponent);
 }

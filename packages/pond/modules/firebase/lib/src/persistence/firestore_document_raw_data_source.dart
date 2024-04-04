@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/src/utils/firebase_context_extensions.dart';
 import 'package:persistence/persistence.dart';
+import 'package:pond/pond.dart';
 
 class FirestoreDocumentRawDataSource with IsDataSource<DocumentSnapshot> {
+  final CorePondContext context;
   final String path;
 
-  late DocumentReference documentReference = FirebaseFirestore.instance.doc(path);
+  late DocumentReference documentReference = context.firebaseCoreComponent.firestore.doc(path);
 
-  FirestoreDocumentRawDataSource({required this.path});
+  FirestoreDocumentRawDataSource({required this.context, required this.path});
 
   @override
   Stream<DocumentSnapshot>? getXOrNull() {

@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/src/utils/firebase_context_extensions.dart';
 import 'package:persistence/persistence.dart';
+import 'package:pond/pond.dart';
 import 'package:rxdart/rxdart.dart';
 
 class FirestoreDocumentDataSource with IsDataSource<Map<String, dynamic>> {
+  final CorePondContext context;
   final String path;
 
-  late DocumentReference documentReference = FirebaseFirestore.instance.doc(path);
+  late DocumentReference documentReference = context.firebaseCoreComponent.firestore.doc(path);
 
-  FirestoreDocumentDataSource({required this.path});
+  FirestoreDocumentDataSource({required this.context, required this.path});
 
   @override
   Stream<Map<String, dynamic>>? getXOrNull() {

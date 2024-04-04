@@ -1,11 +1,12 @@
 import 'package:auth_core/auth_core.dart';
+import 'package:firebase/firebase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils/utils.dart';
 
 class FirebaseAuthService with IsAuthService, IsCorePondComponent {
-  late final FirebaseAuth auth = FirebaseAuth.instance;
+  late final FirebaseAuth auth = context.firebaseCoreComponent.auth;
 
   late final BehaviorSubject<FutureValue<Account?>> _accountX = BehaviorSubject.seeded(FutureValue.empty());
 

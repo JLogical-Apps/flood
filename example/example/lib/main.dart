@@ -46,7 +46,7 @@ Future<AppPondContext> buildAppPondContext() async {
       ? DataSource.static
           .firestoreDocumentEntity<PublicSettingsEntity>(
             'public/public',
-            context: corePondContext.dropCoreComponent,
+            context: corePondContext,
           )
           .mapGet((publicSettingsEntity) => publicSettingsEntity.value.minVersionProperty.value)
           .mapGet((rawVersion) => rawVersion?.mapIfNonNull((rawVersion) => Version.parse(rawVersion)))

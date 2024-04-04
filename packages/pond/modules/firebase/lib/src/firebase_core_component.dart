@@ -15,6 +15,11 @@ class FirebaseCoreComponent with IsCorePondComponent {
 
   final bool Function(EnvironmentType environment) shouldInitialize;
 
+  FirebaseApp get firebaseApp => Firebase.app(appName ?? defaultFirebaseAppName);
+  FirebaseFirestore get firestore => FirebaseFirestore.instanceFor(app: firebaseApp);
+  FirebaseAuth get auth => FirebaseAuth.instanceFor(app: firebaseApp);
+  FirebaseStorage get storage => FirebaseStorage.instanceFor(app: firebaseApp);
+
   FirebaseCoreComponent({
     required this.app,
     this.appName,
@@ -35,17 +40,17 @@ class FirebaseCoreComponent with IsCorePondComponent {
 
             if (context.environment == EnvironmentType.static.qa) {
               final host = isEmulator ? '10.0.2.2' : 'localhost';
-              FirebaseFirestore.instance.settings = Settings(
+              firestore.settings = Settings(
                 host: '$host:$firestorePort',
                 sslEnabled: false,
                 persistenceEnabled: false,
               );
 
-              await FirebaseAuth.instance.useAuthEmulator(host, 9099);
-              await FirebaseStorage.instance.useStorageEmulator(host, 9199);
+              await auth.useAuthEmulator(host, 9099);
+              await storage.useStorageEmulator(host, 9199);
               FirebaseFunctions.instance.useFunctionsEmulator(host, 5001);
             } else {
-              FirebaseFirestore.instance.settings = Settings(
+              firestore.settings = Settings(
                 persistenceEnabled: false,
               );
             }

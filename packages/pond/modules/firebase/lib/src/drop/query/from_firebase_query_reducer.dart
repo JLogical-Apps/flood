@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as firebase;
 import 'package:drop_core/drop_core.dart';
+import 'package:firebase/firebase.dart';
 import 'package:firebase/src/drop/firebase_query_reducer.dart';
 import 'package:runtime_type/type.dart';
 
@@ -13,7 +14,7 @@ class FromFirebaseQueryReducer extends FirebaseQueryReducer<FromQuery> {
 
   @override
   firebase.Query reduce(FromQuery query, firebase.Query? currentFirestoreQuery) {
-    final collection = firebase.FirebaseFirestore.instance.collection(rootPath);
+    final collection = context.context.firebaseCoreComponent.firestore.collection(rootPath);
     if (query.entityType == Entity) {
       return collection;
     }

@@ -1,17 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drop_core/drop_core.dart';
+import 'package:firebase/src/utils/firebase_context_extensions.dart';
 import 'package:firebase/src/utils/firestore_document_state_persister.dart';
 import 'package:persistence/persistence.dart';
+import 'package:pond_core/pond_core.dart';
 import 'package:runtime_type/type.dart';
 import 'package:rxdart/rxdart.dart';
 
 class FirestoreDocumentStateDataSource with IsDataSource<State> {
-  final DropCoreContext context;
+  final CorePondContext context;
   final String path;
   final RuntimeType stateType;
 
-  late DocumentReference documentReference = FirebaseFirestore.instance.doc(path);
-  late StatePersister<Map<String, dynamic>> statePersister = getDocumentSnapshotPersister(context);
+  late DocumentReference documentReference = context.firebaseCoreComponent.firestore.doc(path);
+  late StatePersister<Map<String, dynamic>> statePersister = getDocumentSnapshotPersister(context.dropCoreComponent);
 
   FirestoreDocumentStateDataSource({required this.context, required this.path, required this.stateType});
 
