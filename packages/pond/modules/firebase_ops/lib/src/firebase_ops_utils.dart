@@ -33,6 +33,7 @@ class FirebaseOpsUtils {
 
     final projectId = projects[environmentType.name];
     if (projectId != null) {
+      await context.firebaseTerminal.run('firebase use $projectId');
       return projectId;
     }
 
