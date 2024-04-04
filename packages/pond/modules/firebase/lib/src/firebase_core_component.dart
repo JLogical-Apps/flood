@@ -8,6 +8,7 @@ import 'package:pond/pond.dart';
 
 class FirebaseCoreComponent with IsCorePondComponent {
   final FirebaseOptions app;
+  final String? appName;
 
   final bool isEmulator;
   final int firestorePort;
@@ -16,6 +17,7 @@ class FirebaseCoreComponent with IsCorePondComponent {
 
   FirebaseCoreComponent({
     required this.app,
+    this.appName,
     this.shouldInitialize = _defaultShouldInitialize,
     this.isEmulator = false,
     this.firestorePort = 8080,
@@ -29,7 +31,7 @@ class FirebaseCoreComponent with IsCorePondComponent {
               return;
             }
 
-            await Firebase.initializeApp(options: app);
+            await Firebase.initializeApp(options: app, name: appName);
 
             if (context.environment == EnvironmentType.static.qa) {
               final host = isEmulator ? '10.0.2.2' : 'localhost';
