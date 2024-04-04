@@ -26,11 +26,12 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
     return scaffoldStateUnsafe.withType(context.getRuntimeTypeRuntime(runtimeType));
   }
 
-  Future<State> getRepositoryState(DropCoreContext context) async {
-    var state = getState(context);
+  Future<State> setRepositoryState(DropCoreContext context, State state) async {
     for (final behavior in behaviors) {
       state = await behavior.modifyStateForRepository(context, state);
+      behavior.fromState(state);
     }
+    this.state = state;
     return state;
   }
 

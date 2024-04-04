@@ -121,7 +121,7 @@ class PortDropCoreComponent with IsCorePondComponent {
     );
 
     port = Port.of(portFieldByName).map(
-      (sourceData, port) {
+      (sourceData, port) async {
         final typeContext = context.locate<TypeCoreComponent>();
         final dropCoreContext = context.locate<DropCoreComponent>();
 
@@ -133,6 +133,7 @@ class PortDropCoreComponent with IsCorePondComponent {
 
         final newValueObject = typeContext.construct(valueObject.runtimeType) as V;
         newValueObject.copyFrom(dropCoreContext, mergedState);
+        await newValueObject.throwIfInvalid(null);
         return newValueObject;
       },
       submitType: valueObject.runtimeType,

@@ -214,6 +214,22 @@ void main() {
     result = await userPort.submit();
     expect(result.isValid, isTrue);
   });
+
+  test('Port for required hidden field.', () async {
+    corePondContext.locate<TypeCoreComponent>().register(Data12.new, name: 'Data12');
+
+    final user = Data12();
+    var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+
+    expect(() => userPort.submit(), throwsA(anything));
+
+    await Future(() {});
+
+    user.requiredProperty.set('Something not null');
+    userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+    final result = await userPort.submit();
+    expect(result.isValid, isTrue);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -342,4 +358,12 @@ class Data11 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [numberProperty];
+}
+
+class Data12 extends ValueObject {
+  static const requiredField = 'required';
+  late final requiredProperty = field<String>(name: requiredField).hidden().required();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [requiredProperty];
 }
