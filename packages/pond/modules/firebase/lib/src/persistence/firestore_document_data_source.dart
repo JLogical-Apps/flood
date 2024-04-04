@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:persistence/persistence.dart';
+import 'package:rxdart/rxdart.dart';
 
 class FirestoreDocumentDataSource with IsDataSource<Map<String, dynamic>> {
   final String path;
@@ -10,12 +11,12 @@ class FirestoreDocumentDataSource with IsDataSource<Map<String, dynamic>> {
 
   @override
   Stream<Map<String, dynamic>>? getXOrNull() {
-    return documentReference.snapshots().map((snapshot) => snapshot.data() as Map<String, dynamic>);
+    return documentReference.snapshots().map((snapshot) => snapshot.data() as Map<String, dynamic>?).whereNotNull();
   }
 
   @override
   Future<Map<String, dynamic>?> getOrNull() async {
-    return (await documentReference.get()).data() as Map<String, dynamic>;
+    return (await documentReference.get()).data() as Map<String, dynamic>?;
   }
 
   @override

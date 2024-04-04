@@ -3,6 +3,7 @@ import 'package:drop_core/drop_core.dart';
 import 'package:firebase/src/utils/firestore_document_state_persister.dart';
 import 'package:persistence/persistence.dart';
 import 'package:runtime_type/type.dart';
+import 'package:rxdart/rxdart.dart';
 
 class FirestoreDocumentStateDataSource with IsDataSource<State> {
   final DropCoreContext context;
@@ -16,7 +17,7 @@ class FirestoreDocumentStateDataSource with IsDataSource<State> {
 
   @override
   Stream<State>? getXOrNull() {
-    return documentReference.snapshots().map((snapshot) => _snapshotToState(snapshot));
+    return documentReference.snapshots().map((snapshot) => _snapshotToState(snapshot)).whereNotNull();
   }
 
   @override
@@ -42,8 +43,12 @@ class FirestoreDocumentStateDataSource with IsDataSource<State> {
     await documentReference.delete();
   }
 
-  State _snapshotToState(DocumentSnapshot snapshot) {
-    final json = snapshot.data() as Map<String, dynamic>;
+  State? _snapshotToState(DocumentSnapshot snapshot) {
+    final json = snapshot.data() as Map<String, dynamic>?;
+    if (json == null) {
+      return null;
+    }
+
     json[State.idField] = snapshot.id;
     json[State.typeField] ??= stateType;
 
