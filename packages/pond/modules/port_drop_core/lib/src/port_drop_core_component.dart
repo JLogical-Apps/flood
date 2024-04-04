@@ -87,7 +87,11 @@ class PortDropCoreComponent with IsCorePondComponent {
 
   DropCoreComponent get dropCoreComponent => context.locate<DropCoreComponent>();
 
-  Port<V> generatePort<V extends ValueObject>(V valueObject, {List<PortGeneratorOverride> overrides = const []}) {
+  Port<V> generatePort<V extends ValueObject>(
+    V valueObject, {
+    List<PortGeneratorOverride> overrides = const [],
+    bool validateResult = true,
+  }) {
     var portFieldByName = <String, PortField>{};
 
     late Port<V> port;
@@ -133,7 +137,9 @@ class PortDropCoreComponent with IsCorePondComponent {
 
         final newValueObject = typeContext.construct(valueObject.runtimeType) as V;
         newValueObject.copyFrom(dropCoreContext, mergedState);
-        await newValueObject.throwIfInvalid(null);
+        if (validateResult) {
+          await newValueObject.throwIfInvalid(null);
+        }
         return newValueObject;
       },
       submitType: valueObject.runtimeType,

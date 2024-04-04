@@ -6,7 +6,15 @@ import 'package:port_drop_core/src/port_generator_override.dart';
 import 'package:utils_core/utils_core.dart';
 
 extension PortDropValueObjectExtensions<V extends ValueObject> on V {
-  Port<V> asPort(CorePondContext corePondContext, {List<PortGeneratorOverride> overrides = const []}) {
-    return corePondContext.locate<PortDropCoreComponent>().generatePort(this, overrides: overrides);
+  Port<V> asPort(
+    CorePondContext corePondContext, {
+    List<PortGeneratorOverride> overrides = const [],
+    bool validateResult = true,
+  }) {
+    return corePondContext.locate<PortDropCoreComponent>().generatePort(
+          this,
+          overrides: overrides,
+          validateResult: validateResult,
+        );
   }
 }
