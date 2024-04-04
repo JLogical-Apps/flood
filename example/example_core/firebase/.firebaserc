@@ -2,7 +2,8 @@
   "projects": {
     "qa": "pond-automation-1",
     "staging": "pond-automation-1",
-    "production": "pond-automation-1"
+    "production": "pond-automation-1",
+    "default": "pond-automation-1"
   },
   "targets": {},
   "etags": {}
