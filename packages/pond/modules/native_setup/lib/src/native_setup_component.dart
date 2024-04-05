@@ -155,11 +155,11 @@ class NativeSetupCommand extends AutomateCommand<NativeSetupCommand> {
     image.Color? colorBackground,
     int padding = 0,
   }) {
-    final scaleX = maxWidth / source.width;
-    final scaleY = maxHeight / source.height;
+    final scaleX = (maxWidth - padding * 2) / source.width;
+    final scaleY = (maxHeight - padding * 2) / source.height;
     final scale = (scaleX * source.height > maxHeight) ? scaleY : scaleX;
-    final width = (source.width * scale).round() - padding * 2;
-    final height = (source.height * scale).round() - padding * 2;
+    final width = ((source.width) * scale).round();
+    final height = (source.height * scale).round();
 
     var backgroundImage = image.Image(
       width: maxWidth,
