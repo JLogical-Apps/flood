@@ -22,6 +22,7 @@ class StyledTextField extends StyleComponent {
   final TextInputType? keyboard;
 
   final Function()? onTapped;
+  final Function(String text)? onSubmitted;
 
   StyledTextField({
     super.key,
@@ -39,5 +40,6 @@ class StyledTextField extends StyleComponent {
     this.maxLines = 1,
     this.keyboard,
     this.onTapped,
+    this.onSubmitted,
   });
 }

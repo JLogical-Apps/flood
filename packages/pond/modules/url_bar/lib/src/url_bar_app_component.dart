@@ -12,6 +12,11 @@ class UrlBarAppComponent with IsAppPondComponent {
 
       final locationValue = useState<String>('/');
 
+      void go() {
+        context.pushLocation(locationValue.value);
+        isExpandedState.value = false;
+      }
+
       return Stack(
         children: [
           page,
@@ -34,16 +39,14 @@ class UrlBarAppComponent with IsAppPondComponent {
                                   child: StyledTextField(
                                     text: locationValue.value,
                                     onChanged: (text) => locationValue.value = text,
+                                    onSubmitted: (_) => go(),
                                   ),
                                 ),
                                 Column(
                                   children: [
                                     StyledButton.strong(
                                       labelText: 'Go',
-                                      onPressed: () async {
-                                        context.pushLocation(locationValue.value);
-                                        isExpandedState.value = false;
-                                      },
+                                      onPressed: () => go(),
                                     ),
                                     StyledButton(
                                       labelText: 'Hide',

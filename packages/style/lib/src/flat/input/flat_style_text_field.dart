@@ -42,6 +42,7 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
               obscureText: component.obscureText,
               maxLines: component.maxLines,
               keyboardType: component.keyboard,
+              onFieldSubmitted: component.onSubmitted == null ? null : (text) => component.onSubmitted!(text),
               decoration: InputDecoration(
                 hoverColor: textFieldContext.colorPalette().background.regular,
                 focusColor: textFieldContext.colorPalette().background.regular.background.regular,

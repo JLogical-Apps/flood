@@ -46,6 +46,7 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
               obscureText: component.obscureText && !revealSecretState.value,
               maxLines: component.maxLines,
               keyboardType: component.keyboard,
+              onFieldSubmitted: component.onSubmitted == null ? null : (text) => component.onSubmitted!(text),
               decoration: InputDecoration(
                 filled: true,
                 hoverColor: Colors.transparent,
