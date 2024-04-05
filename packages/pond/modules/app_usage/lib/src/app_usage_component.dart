@@ -40,7 +40,7 @@ class AppUsageAppComponent with IsAppPondComponent {
 
     final appUsageYaml = await appUsageDataSource.getOrNull();
 
-    if (appUsageYaml == null) {
+    if (appUsageYaml == null || appUsageYaml['firstRun'] == true) {
       isFirstRun = true;
       await appUsageDataSource.set({'firstRun': false});
     } else {
