@@ -1,6 +1,6 @@
 # Flood
 
-Framework on Flood to streamline Flutter/Dart development.
+Framework on Flutter to streamline Flutter/Dart development.
 
 ## Example
 
@@ -18,7 +18,7 @@ The structure of this repository is called a `monorepo`. The `monorepo` is manag
 called [melos](https://pub.dev/packages/melos). More details on the tools `melos` provides are down
 below.
 
-Each package is a separate Dart project with its own `pubspec.yaml` file and `lib` folder.
+Each package is a separate Dart/Flutter project with its own `pubspec.yaml` file and `lib` folder.
 
 ### Types of packages
 
@@ -39,7 +39,7 @@ dependencies:
   utils_core: # Must be the name of the package as defined in its `pubspec.yaml` `name` field. 
     git:
       url: git@github.com:JLogical-Apps/flood.git # Reference the git repository.
-      ref: master # Must use master
+      ref: v4.0 # Must use the latest branch
       path: packages/utils/utils_core # The path of the package 
 ```
 
