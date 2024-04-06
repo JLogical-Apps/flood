@@ -4,15 +4,23 @@ import 'package:ops/src/firebase/permission/permission_context.dart';
 
 class PropertyPermissionFieldTextModifier extends PermissionFieldTextModifier<PropertyPermissionField> {
   @override
-  String getText(
+  List<String> getText(
     DropCoreContext context,
     PermissionContext permissionContext,
     PropertyPermissionField permissionField,
   ) {
-    final resourceContext =
-        (permissionContext == PermissionContext.read || permissionContext == PermissionContext.delete)
-            ? 'resource.data'
-            : 'request.resource.data';
-    return '$resourceContext.${permissionField.propertyName}';
+    return _getPropertyContexts(permissionContext)
+        .map((context) => '$context.${permissionField.propertyName}')
+        .toList();
+  }
+
+  List<String> _getPropertyContexts(PermissionContext permissionContext) {
+    if (permissionContext == PermissionContext.read || permissionContext == PermissionContext.delete) {
+      return ['resource.data'];
+    } else if (permissionContext == PermissionContext.create) {
+      return ['request.resource.data'];
+    } else {
+      return ['request.resource.data', 'resource.data'];
+    }
   }
 }

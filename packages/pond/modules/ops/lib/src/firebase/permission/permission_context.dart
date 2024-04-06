@@ -1,5 +1,6 @@
 enum PermissionContext {
   read,
-  write,
+  create,
+  update,
   delete;
 }

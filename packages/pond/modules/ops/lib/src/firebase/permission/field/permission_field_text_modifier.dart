@@ -6,7 +6,7 @@ import 'package:ops/src/firebase/permission/permission_context.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class PermissionFieldTextModifier<P extends PermissionField> with IsTypedModifier<P, PermissionField> {
-  String getText(DropCoreContext context, PermissionContext permissionContext, P permissionField);
+  List<String> getText(DropCoreContext context, PermissionContext permissionContext, P permissionField);
 
   static final permissionFieldTextModifierResolver =
       ModifierResolver<PermissionFieldTextModifier, PermissionField>(modifiers: [

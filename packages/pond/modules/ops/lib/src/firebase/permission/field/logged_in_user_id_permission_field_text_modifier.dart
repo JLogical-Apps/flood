@@ -4,8 +4,8 @@ import 'package:ops/src/firebase/permission/permission_context.dart';
 
 class LoggedInUserIdPermissionFieldTextModifier extends PermissionFieldTextModifier<LoggedInUserIdPermissionField> {
   @override
-  String getText(
+  List<String> getText(
       DropCoreContext context, PermissionContext permissionContext, LoggedInUserIdPermissionField permissionField) {
-    return 'request.auth.uid';
+    return ['request.auth.uid'];
   }
 }

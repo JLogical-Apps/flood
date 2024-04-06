@@ -22,15 +22,15 @@ service cloud.firestore {
       allow read, write: if false;
     }
     match /users/{id} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
-      allow update: if request.auth != null;
-      allow delete: if request.auth != null;
+      allow read: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow create: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow update: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow delete: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
     }
     match /documents/{id} {
-      allow read: if true;
-      allow create: if request.auth != null;
-      allow update: if request.auth != null;
+      allow read: if (request.auth.uid != null && request.auth.token.admin == true) || (resource.data.owner == request.auth.uid);
+      allow create: if (request.auth.uid != null && request.auth.token.admin == true) || (request.resource.data.owner == request.auth.uid);
+      allow update: if (request.auth.uid != null && request.auth.token.admin == true) || (request.resource.data.owner == request.auth.uid && resource.data.owner == request.auth.uid);
       allow delete: if false;
     }
   }
@@ -49,10 +49,20 @@ class UserRepository with IsRepositoryWrapper {
     User.new,
     entityTypeName: 'UserEntity',
     valueObjectTypeName: 'User',
-  ).cloud('users').withSecurity(RepositorySecurity.authenticated());
+  ).cloud('users').withSecurity(RepositorySecurity.all(Permission.admin |
+      Permission.equals(
+        PermissionField.entityId,
+        PermissionField.loggedInUserId,
+      )));
 }
 
-class Document extends ValueObject {}
+class Document extends ValueObject {
+  static const ownerField = 'owner';
+  late final ownerProperty = field<String>(name: ownerField);
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [ownerProperty];
+}
 
 class DocumentEntity extends Entity<Document> {}
 
@@ -63,7 +73,10 @@ class DocumentRepository with IsRepositoryWrapper {
     Document.new,
     entityTypeName: 'DocumentEntity',
     valueObjectTypeName: 'Document',
-  )
-      .cloud('documents')
-      .withSecurity(RepositorySecurity.public().withWrite(Permission.authenticated).copyWith(delete: Permission.none));
+  ).cloud('documents').withSecurity(RepositorySecurity.all(Permission.admin |
+          Permission.equals(
+            PermissionField.propertyName(Document.ownerField),
+            PermissionField.loggedInUserId,
+          ))
+      .copyWith(delete: Permission.none));
 }

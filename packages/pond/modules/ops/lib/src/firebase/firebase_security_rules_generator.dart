@@ -59,14 +59,6 @@ ${repositoryRules.withIndent(4)}
   }
 
   PermissionContext getPermissionContext(String action) {
-    if (action == 'read') {
-      return PermissionContext.read;
-    } else if (action == 'create' || action == 'update') {
-      return PermissionContext.write;
-    } else if (action == 'delete') {
-      return PermissionContext.delete;
-    }
-
-    throw UnimplementedError();
+    return PermissionContext.values.byName(action);
   }
 }

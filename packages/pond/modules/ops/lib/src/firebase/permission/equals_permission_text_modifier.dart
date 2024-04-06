@@ -6,9 +6,25 @@ import 'package:ops/src/firebase/permission/permission_text_modifier.dart';
 class EqualsPermissionTextModifier extends PermissionTextModifier<EqualsPermission> {
   @override
   String getText(DropCoreContext context, PermissionContext permissionContext, EqualsPermission permission) {
-    return [permission.field1, permission.field2]
-        .map((permissionField) => PermissionFieldTextModifier.getModifier(permissionField)
-            .getText(context, permissionContext, permissionField))
-        .join(' == ');
+    final permission1Text = _getPermissionText(context, permissionContext, permission.field1);
+    final permission2Text = _getPermissionText(context, permissionContext, permission.field2);
+
+    final permissionCombinations = permission1Text.expand((permission) {
+      return permission2Text.map((permission2) => [permission, permission2]);
+    }).toList();
+
+    return permissionCombinations.map((permission) {
+      final [permission1, permission2] = permission;
+      return '$permission1 == $permission2';
+    }).join(' && ');
+  }
+
+  List<String> _getPermissionText(
+    DropCoreContext context,
+    PermissionContext permissionContext,
+    PermissionField permissionField,
+  ) {
+    return PermissionFieldTextModifier.getModifier(permissionField)
+        .getText(context, permissionContext, permissionField);
   }
 }

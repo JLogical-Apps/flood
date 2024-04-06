@@ -4,8 +4,11 @@ import 'package:ops/src/firebase/permission/permission_context.dart';
 
 class EntityIdPermissionFieldTextModifier extends PermissionFieldTextModifier<EntityIdPermissionField> {
   @override
-  String getText(
-      DropCoreContext context, PermissionContext permissionContext, EntityIdPermissionField permissionField) {
-    return 'id';
+  List<String> getText(
+    DropCoreContext context,
+    PermissionContext permissionContext,
+    EntityIdPermissionField permissionField,
+  ) {
+    return ['id'];
   }
 }
