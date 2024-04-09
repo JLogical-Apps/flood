@@ -15,6 +15,7 @@ class StyledButton extends StyleComponent {
   final bool isTextButton;
 
   StyledButton({
+    super.key,
     this.label,
     this.labelText,
     this.icon,
@@ -25,6 +26,7 @@ class StyledButton extends StyleComponent {
   });
 
   StyledButton.subtle({
+    super.key,
     this.label,
     this.labelText,
     this.icon,
@@ -34,6 +36,7 @@ class StyledButton extends StyleComponent {
   }) : emphasis = Emphasis.subtle;
 
   StyledButton.strong({
+    super.key,
     this.label,
     this.labelText,
     this.icon,

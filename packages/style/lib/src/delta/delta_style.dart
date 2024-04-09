@@ -21,6 +21,7 @@ import 'package:style/src/delta/input/delta_style_option_field.dart';
 import 'package:style/src/delta/input/delta_style_radio_field.dart';
 import 'package:style/src/delta/input/delta_style_text_field.dart';
 import 'package:style/src/delta/layout/delta_style_card.dart';
+import 'package:style/src/delta/layout/delta_style_carousel.dart';
 import 'package:style/src/delta/layout/delta_style_container.dart';
 import 'package:style/src/delta/layout/delta_style_list.dart';
 import 'package:style/src/delta/layout/delta_style_tabs.dart';
@@ -65,6 +66,7 @@ class DeltaStyle with IsStyle {
           DeltaStyleImageRenderer(),
           DeltaStyleContainerRenderer(),
           DeltaStyleTabsRenderer(),
+          DeltaStyleCarouselRenderer(),
           DeltaStylePageRenderer(),
           DeltaStyleDividerRenderer(),
           DeltaStyleIconRenderer(),

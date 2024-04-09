@@ -21,6 +21,7 @@ import 'package:style/src/flat/input/flat_style_option_field.dart';
 import 'package:style/src/flat/input/flat_style_radio_field.dart';
 import 'package:style/src/flat/input/flat_style_text_field.dart';
 import 'package:style/src/flat/layout/flat_style_card.dart';
+import 'package:style/src/flat/layout/flat_style_carousel.dart';
 import 'package:style/src/flat/layout/flat_style_container.dart';
 import 'package:style/src/flat/layout/flat_style_list.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
@@ -69,6 +70,7 @@ class FlatStyle with IsStyle {
           FlatStyleImageRenderer(),
           FlatStyleContainerRenderer(),
           FlatStyleTabsRenderer(),
+          FlatStyleCarouselRenderer(),
           FlatStylePageRenderer(),
           FlatStyleDividerRenderer(),
           FlatStyleIconRenderer(),

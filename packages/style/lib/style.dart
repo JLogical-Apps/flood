@@ -13,6 +13,7 @@ export 'src/components/input/styled_radio_field.dart';
 export 'src/components/input/styled_readonly_text_field.dart';
 export 'src/components/input/styled_text_field.dart';
 export 'src/components/layout/styled_card.dart';
+export 'src/components/layout/styled_carousel.dart';
 export 'src/components/layout/styled_container.dart';
 export 'src/components/layout/styled_list.dart';
 export 'src/components/layout/styled_tabs.dart';
