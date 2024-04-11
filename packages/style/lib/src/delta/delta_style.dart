@@ -17,6 +17,7 @@ import 'package:style/src/delta/input/delta_style_chip.dart';
 import 'package:style/src/delta/input/delta_style_color_picker.dart';
 import 'package:style/src/delta/input/delta_style_date_time_field.dart';
 import 'package:style/src/delta/input/delta_style_menu_button.dart';
+import 'package:style/src/delta/input/delta_style_multi_option_field.dart';
 import 'package:style/src/delta/input/delta_style_option_field.dart';
 import 'package:style/src/delta/input/delta_style_radio_field.dart';
 import 'package:style/src/delta/input/delta_style_text_field.dart';
@@ -61,6 +62,7 @@ class DeltaStyle with IsStyle {
           DeltaStyleButtonRenderer(),
           DeltaStyleChipRenderer(),
           DeltaStyleOptionFieldRenderer(),
+          DeltaStyleMultiOptionFieldRenderer(),
           DeltaStyleRadioFieldRenderer(),
           DeltaStyleMenuButtonRenderer(),
           DeltaStyleImageRenderer(),

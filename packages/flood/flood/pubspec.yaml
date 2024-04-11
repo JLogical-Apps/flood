@@ -144,3 +144,5 @@ dependencies:
       path: packages/utils/utils
 dev_dependencies:
   lints: ^2.0.0
+dependency_overrides:
+  http: 0.13.5

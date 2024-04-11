@@ -10,7 +10,7 @@ version: 0.0.1
 
 dependencies:
   collection: ^1.16.0
-  dart_appwrite: ^10.0.0
+  dart_appwrite: ^11.0.2
   path: ^1.8.0
   rxdart: ^0.27.5
 

@@ -14,7 +14,7 @@ dependencies:
   collection: ^1.16.0
   rxdart: ^0.27.5
 
-  appwrite: ^11.0.0
+  appwrite: ^12.0.1
 
   appwrite_core:
     git:
@@ -80,3 +80,5 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   lints: ^2.0.0
+dependency_overrides:
+  http: 0.13.5

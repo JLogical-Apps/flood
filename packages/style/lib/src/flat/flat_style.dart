@@ -17,6 +17,7 @@ import 'package:style/src/flat/input/flat_style_chip.dart';
 import 'package:style/src/flat/input/flat_style_color_picker.dart';
 import 'package:style/src/flat/input/flat_style_date_time_field.dart';
 import 'package:style/src/flat/input/flat_style_menu_button.dart';
+import 'package:style/src/flat/input/flat_style_multi_option_field.dart';
 import 'package:style/src/flat/input/flat_style_option_field.dart';
 import 'package:style/src/flat/input/flat_style_radio_field.dart';
 import 'package:style/src/flat/input/flat_style_text_field.dart';
@@ -65,6 +66,7 @@ class FlatStyle with IsStyle {
           FlatStyleButtonRenderer(),
           FlatStyleChipRenderer(),
           FlatStyleOptionFieldRenderer(),
+          FlatStyleMultiOptionFieldRenderer(),
           FlatStyleRadioFieldRenderer(),
           FlatStyleMenuButtonRenderer(),
           FlatStyleImageRenderer(),

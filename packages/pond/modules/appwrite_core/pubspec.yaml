@@ -10,7 +10,7 @@ version: 0.0.1
 
 dependencies:
   collection: ^1.16.0
-  dart_appwrite: ^10.0.0
+  dart_appwrite: ^11.0.2
   equatable: ^2.0.5
   rxdart: ^0.27.5
   uuid: ^3.0.7

@@ -12,10 +12,10 @@ packages:
     dependency: "direct main"
     description:
       name: appwrite
-      sha256: "3d06ae350dba1c213cb235ff194155059d2e0c428dabd54734c19521dd1b2c45"
+      sha256: "335faac24642aaf66627c21ce26a5c64bcbc3911e624c61b9dfbe0eec7be1342"
       url: "https://pub.dev"
     source: hosted
-    version: "11.0.0"
+    version: "12.0.1"
   appwrite_core:
     dependency: "direct main"
     description:
@@ -162,10 +162,10 @@ packages:
     dependency: transitive
     description:
       name: dart_appwrite
-      sha256: a43972ea7868b3811af513810e2fb20b0208ab70d09e195fb8d9c0b8f7c4524f
+      sha256: "3919e57064b4a5eb6286026ef89ac19c28f15cb9c88c00186d6b342b9f3d3ceb"
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.0"
+    version: "11.0.2"
   debug:
     dependency: "direct overridden"
     description:
@@ -304,18 +304,18 @@ packages:
     dependency: transitive
     description:
       name: flutter_web_auth_2
-      sha256: "0da41e631a368e02366fc1a9b79dd8da191e700a836878bc54466fff51c07df2"
+      sha256: "3ea3a0cc539ca74319f4f2f7484f62742fe5b2ff9a0fca37575426d6e6f07901"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "3.1.1"
   flutter_web_auth_2_platform_interface:
     dependency: transitive
     description:
       name: flutter_web_auth_2_platform_interface
-      sha256: f6fa7059ff3428c19cd756c02fef8eb0147131c7e64591f9060c90b5ab84f094
+      sha256: e8669e262005a8354389ba2971f0fc1c36188481234ff50d013aaf993f30f739
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "3.1.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -354,13 +354,13 @@ packages:
     source: hosted
     version: "0.15.4"
   http:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: http
-      sha256: "4c3f04bfb64d3efd508d06b41b825542f08122d30bda4933fb95c069d22a4fa3"
+      sha256: "6aa2946395183537c8b880962d935877325d6a09a2867c3970c05c0fed6ac482"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "0.13.5"
   http_parser:
     dependency: transitive
     description:
@@ -524,6 +524,14 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  multi_dropdown:
+    dependency: transitive
+    description:
+      name: multi_dropdown
+      sha256: b63ff339fcc875d667f8688c8ef62853545b580dd2b6fe78b73339783268afd8
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.4"
   nested:
     dependency: transitive
     description:

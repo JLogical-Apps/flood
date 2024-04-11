@@ -178,10 +178,10 @@ packages:
     dependency: transitive
     description:
       name: dart_appwrite
-      sha256: a43972ea7868b3811af513810e2fb20b0208ab70d09e195fb8d9c0b8f7c4524f
+      sha256: "3919e57064b4a5eb6286026ef89ac19c28f15cb9c88c00186d6b342b9f3d3ceb"
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.0"
+    version: "11.0.2"
   dart_console:
     dependency: transitive
     description:

@@ -33,7 +33,7 @@ class AppwriteAuthService with IsAuthService, IsCorePondComponent {
   Future<Account> login(AuthCredentials authCredentials) async {
     try {
       if (authCredentials is EmailAuthCredentials) {
-        await account.createEmailSession(email: authCredentials.email, password: authCredentials.password);
+        await account.createEmailPasswordSession(email: authCredentials.email, password: authCredentials.password);
       } else {
         throw UnimplementedError();
       }
@@ -109,7 +109,7 @@ class AppwriteAuthService with IsAuthService, IsCorePondComponent {
   Future<User> getUserFromCredentials(AuthCredentials credentials) async {
     if (credentials is EmailAuthCredentials) {
       final user = await account.create(userId: ID.unique(), email: credentials.email, password: credentials.password);
-      await account.createEmailSession(email: credentials.email, password: credentials.password);
+      await account.createEmailPasswordSession(email: credentials.email, password: credentials.password);
       return user;
     }
 

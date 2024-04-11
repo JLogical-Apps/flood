@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:appwrite_core/appwrite_core.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_appwrite/dart_appwrite.dart' hide Permission;
+import 'package:dart_appwrite/enums.dart' as enums;
 import 'package:dart_appwrite/models.dart' hide File;
 import 'package:drop_core/drop_core.dart';
 import 'package:environment_core/environment_core.dart';
@@ -15,8 +16,8 @@ import 'package:ops/src/repository_security/repository_security_modifier.dart';
 import 'package:path/path.dart' as path;
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
-import 'package:task_core/task_core.dart';
 import 'package:runtime_type/type.dart';
+import 'package:task_core/task_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 const _databaseId = 'default';
@@ -278,7 +279,7 @@ class AppwriteOpsUtils {
               function = await functions.create(
                 functionId: functionId,
                 name: functionName,
-                runtime: 'dart-3.1',
+                runtime: enums.Runtime.dart33,
                 enabled: true,
                 logging: true,
                 schedule: schedule,
@@ -659,7 +660,7 @@ class AppwriteOpsUtils {
           databaseId: _databaseId,
           collectionId: collection.$id,
           key: index.key,
-          type: index.type,
+          type: enums.IndexType.values.firstWhere((indexType) => index.type == indexType.name),
           attributes: index.attributes.cast<String>(),
           orders: index.orders?.cast<String>(),
         );
