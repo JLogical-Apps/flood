@@ -1,5 +1,6 @@
 import 'package:port_core/src/date_port_field.dart';
 import 'package:port_core/src/file/allowed_file_types.dart';
+import 'package:port_core/src/list_port_field.dart';
 import 'package:port_core/src/modifier/allowed_file_types_port_field_modifier.dart';
 import 'package:port_core/src/modifier/base_port_field_modifier.dart';
 import 'package:port_core/src/modifier/color_port_field_modifier.dart';
@@ -9,6 +10,7 @@ import 'package:port_core/src/modifier/display_name_port_field_modifier.dart';
 import 'package:port_core/src/modifier/email_port_field_modifier.dart';
 import 'package:port_core/src/modifier/fallback_port_field_modifier.dart';
 import 'package:port_core/src/modifier/hint_port_field_modifier.dart';
+import 'package:port_core/src/modifier/list_port_field_modifier.dart';
 import 'package:port_core/src/modifier/map_port_field_node_modifier.dart';
 import 'package:port_core/src/modifier/multiline_port_field_modifier.dart';
 import 'package:port_core/src/modifier/name_port_field_modifier.dart';
@@ -79,8 +81,13 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return null;
   }
 
+  ListPortField? findListPortFieldOrNull(T portField) {
+    return null;
+  }
+
   static final nodeModifierResolver = ModifierResolver<PortFieldNodeModifier, PortField>(modifiers: [
     OptionsPortFieldNodeModifier(),
+    ListPortFieldNodeModifier(),
     AllowedFileTypesPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     StagePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     DatePortFieldNodeModifier(modifierGetter: getModifierOrNull),

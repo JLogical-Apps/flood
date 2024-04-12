@@ -31,8 +31,8 @@ class StyledMultiOptionField<T> extends StyleComponent {
     return itemLabelMapper(value);
   }
 
-  void change(List<T> values) {
-    onChanged?.call(values);
+  void change(List values) {
+    onChanged?.call(values.cast<T>());
   }
 }
 

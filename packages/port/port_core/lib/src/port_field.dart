@@ -12,6 +12,7 @@ import 'package:port_core/src/email_port_field.dart';
 import 'package:port_core/src/fallback_port_field.dart';
 import 'package:port_core/src/file/allowed_file_types.dart';
 import 'package:port_core/src/hint_port_field.dart';
+import 'package:port_core/src/list_port_field.dart';
 import 'package:port_core/src/map_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
 import 'package:port_core/src/multiline_port_field.dart';
@@ -37,6 +38,8 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
   S submitRaw(T value);
 
   FutureOr<S> submit(T value);
+
+  T parseValue(dynamic value);
 
   PortField<T, S> copyWith({required T value, required dynamic error});
 
@@ -96,6 +99,17 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
   }) {
     return OptionsPortField(
       portField: PortField(value: initialValue, submitMapper: submitMapper),
+      options: options,
+    );
+  }
+
+  static PortField<List<T>, List<S>> list<T, S>({
+    required List<T> options,
+    List<T>? initialValues,
+    List<S> Function(List<T> value)? submitMapper,
+  }) {
+    return ListPortField(
+      portField: PortField(value: initialValues ?? [], submitMapper: submitMapper),
       options: options,
     );
   }
@@ -196,6 +210,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
     return PortFieldNodeModifier.getModifierOrNull(this)?.findDatePortFieldOrNull(this);
   }
 
+  ListPortField? findListFieldOrNull() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.findListPortFieldOrNull(this);
+  }
+
   List<T>? findOptionsOrNull() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.getOptionsOrNull(this);
   }
@@ -247,6 +265,11 @@ mixin IsPortField<T, S> implements PortField<T, S> {
 
   @override
   Type get submitType => S;
+
+  @override
+  T parseValue(value) {
+    return value;
+  }
 }
 
 class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldValidatorContext, String> {
@@ -389,6 +412,9 @@ mixin IsPortFieldWrapper<T, S> implements PortFieldWrapper<T, S> {
 
   @override
   S submitRaw(T value) => portField.submitRaw(value);
+
+  @override
+  T parseValue(value) => portField.parseValue(value);
 
   @override
   Validator<PortFieldValidatorContext, String> get validator => portField.validator;

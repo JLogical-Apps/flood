@@ -21,6 +21,8 @@ class DeltaStyleMultiOptionFieldRenderer with IsTypedStyleRenderer<StyledMultiOp
         IgnorePointer(
           ignoring: !component.enabled,
           child: MultiSelectDropDown(
+            selectedOptions:
+                component.values.map((value) => ValueItem(label: component.getLabel(value), value: value)).toList(),
             options: component.options
                 .map((option) => ValueItem(
                       label: component.getLabel(option),
@@ -81,7 +83,7 @@ class DeltaStyleMultiOptionFieldRenderer with IsTypedStyleRenderer<StyledMultiOp
                       children: [
                         SizedBox(
                           width: 30,
-                          child: selected ? StyledIcon.strong(Icons.check_circle) : null,
+                          child: selected ? StyledIcon(Icons.check) : null,
                         ),
                         Expanded(child: StyledText.body.display.bold(item.label)),
                       ],

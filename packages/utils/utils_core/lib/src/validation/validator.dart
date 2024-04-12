@@ -109,6 +109,14 @@ abstract class Validator<T, E> {
         return null;
       });
 
+  static Validator<List<T>, String> isNotEmpty<T>() => Validator((data) {
+        if (data.isEmpty) {
+          return 'Cannot be empty!';
+        }
+
+        return null;
+      });
+
   static Validator<String?, String> isEmail() => Validator((data) {
         if (data == null) {
           return null;

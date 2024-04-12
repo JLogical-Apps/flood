@@ -7,6 +7,7 @@ import 'package:port_style/src/object/date_time_port_field_builder_modifier.dart
 import 'package:port_style/src/object/double_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/file_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/int_port_field_builder_modifier.dart';
+import 'package:port_style/src/object/multi_option_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/options_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/stage_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/string_port_field_builder_modifier.dart';
@@ -17,6 +18,7 @@ abstract class PortFieldBuilderModifier with IsModifier<PortField> {
 
   static final portFieldBuilderModifierResolver = ModifierResolver<PortFieldBuilderModifier, PortField>(modifiers: [
     StagePortFieldBuilderModifier(),
+    MultiOptionPortFieldBuilderModifier(),
     OptionsPortFieldBuilderModifier(),
     StringPortFieldBuilderModifier(),
     CurrencyPortFieldBuilderModifier(),

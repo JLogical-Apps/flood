@@ -39,10 +39,14 @@ extension PortExtensions<T> on Port<T> {
   dynamic getErrorByName(String name) =>
       (portFieldByName[name] ?? (throw Exception('Cannot find value [$name]'))).error;
 
-  void setValue({required String name, required dynamic value}) => setPortField(
-        name: name,
-        portField: getFieldByName(name).copyWithValue(value),
-      );
+  void setValue({required String name, required dynamic value}) {
+    final field = getFieldByName(name);
+    final parsedValue = field.parseValue(value);
+    setPortField(
+      name: name,
+      portField: field.copyWithValue(parsedValue),
+    );
+  }
 
   void setError({required String name, required dynamic error}) => setPortField(
         name: name,
