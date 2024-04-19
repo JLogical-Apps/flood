@@ -53,7 +53,7 @@ class AssetPortField extends PortField<String?> {
       value = uploadedAsset.id!;
     }
 
-    if (initialValue != null && forcedAssetId == null) {
+    if (initialValue != null && forcedAssetId == null && value != initialValue) {
       await locate<AssetModule>().deleteAsset(initialValue!, assetProvider: assetProvider);
     }
 

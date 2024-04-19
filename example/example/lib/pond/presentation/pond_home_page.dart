@@ -7,6 +7,7 @@ import 'package:example/pond/presentation/pond_budget_page.dart';
 import 'package:example/pond/presentation/video_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:image/image.dart' as image;
 import 'package:jlogical_utils/jlogical_utils.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -67,6 +68,24 @@ class PondHomePage extends HookWidget {
                               name: 'profilePicture',
                               labelText: 'Profile Picture',
                               uploadType: UploadType.image,
+                              assetActionBuilders: [
+                                AssetAction((asset, setAsset) => StyledButton.high(
+                                      text: 'Kachow',
+                                      onTapped: () async {
+                                        var assetImage = image.decodeImage(asset.value)!;
+                                        assetImage = image.fillCircle(
+                                          assetImage,
+                                          x: assetImage.width ~/ 2,
+                                          y: assetImage.height ~/ 2,
+                                          radius: 5,
+                                          color: image.ColorRgb8(0, 0, 0),
+                                        );
+                                        final newImage = image.encodePng(assetImage);
+                                        final newAsset = asset.copyWith(value: newImage);
+                                        setAsset(newAsset);
+                                      },
+                                    )),
+                              ],
                             ),
                           ],
                         ).show(context);

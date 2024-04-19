@@ -24,6 +24,8 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
 
   final UploadType uploadType;
 
+  final List<AssetAction> assetActionBuilders;
+
   @override
   final String? labelText;
 
@@ -47,6 +49,7 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
     this.showRequiredIndicator,
     this.leading,
     this.exceptionTextGetterOverride,
+    this.assetActionBuilders = const [],
   });
 
   @override
@@ -72,35 +75,53 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
       leading: leading ?? StyledIcon(Icons.image),
       children: [
         if (preview != null || (value != null && !isChanged))
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Column(
             children: [
-              if (assetValue != null)
-                StyledLoadingAsset(
-                  maybeAsset: assetValue,
-                  width: _imageWidth,
-                  height: _imageHeight,
-                ),
-              Column(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  IconButton(
-                    icon: StyledIcon(Icons.remove_circle),
-                    onPressed: () async {
-                      final isChanged = field.initialValue != null;
+                  if (assetValue != null)
+                    StyledLoadingAsset(
+                      key: ValueKey(preview != null ? 'preview:${preview.name}' : 'value:$value'),
+                      maybeAsset: assetValue,
+                      width: _imageWidth,
+                      height: _imageHeight,
+                    ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: StyledIcon(Icons.remove_circle),
+                        onPressed: () async {
+                          final isChanged = field.initialValue != null;
 
-                      newAssetX.value = null;
-                      isChangedX.value = isChanged;
-                    },
-                  ),
-                  IconButton(
-                    icon: StyledIcon(Icons.swap_horiz),
-                    onPressed: () async {
-                      await upload(newAssetX: newAssetX, isChangedX: isChangedX);
-                    },
+                          newAssetX.value = null;
+                          isChangedX.value = isChanged;
+                        },
+                      ),
+                      IconButton(
+                        icon: StyledIcon(Icons.swap_horiz),
+                        onPressed: () async {
+                          await upload(newAssetX: newAssetX, isChangedX: isChangedX);
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
+              if (assetValue != null && assetValue.getOrNull() != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: assetActionBuilders
+                      .map((actionBuilder) => actionBuilder.assetBuilder(
+                            assetValue.getOrNull()!,
+                            (asset) {
+                              newAssetX.value = asset;
+                              isChangedX.value = true;
+                            },
+                          ))
+                      .toList(),
+                ),
             ],
           ),
         if (preview == null && value == null)
@@ -167,4 +188,10 @@ class StyledUploadPortField extends PortFieldWidget<AssetPortField, String?, Str
 enum UploadType {
   image,
   video,
+}
+
+class AssetAction {
+  Widget Function(Asset asset, void Function(Asset asset) updater) assetBuilder;
+
+  AssetAction(this.assetBuilder);
 }
