@@ -7,6 +7,7 @@ import 'package:jlogical_utils/src/pond/utils/resolvable.dart';
 import 'package:jlogical_utils/src/utils/export_core.dart';
 
 mixin WithPropertiesState on Record {
+  String get typeName;
   List<Property> get properties => [];
   Map<String, dynamic> extraValues = {};
 
@@ -15,7 +16,7 @@ mixin WithPropertiesState on Record {
           ...extraValues,
           ...properties.map((property) => MapEntry(property.name, property.toStateValue())).toMap(),
         },
-        type: '$runtimeType',
+        type: '$typeName',
       );
 
   set state(State state) {

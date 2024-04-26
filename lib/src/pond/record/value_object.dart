@@ -19,6 +19,8 @@ abstract class ValueObject extends Record
   late final timeCreatedProperty =
       FieldProperty<DateTime>(name: timeCreatedField).withFallbackReplacement(() => AppContext.global.getNow());
 
+  String get typeName => runtimeType.toString();
+
   ValueObject() {
     properties.forEach((property) => property.registerPropertyContextProvider(this));
   }
