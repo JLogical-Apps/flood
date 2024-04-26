@@ -54,8 +54,7 @@ mixin WithExplicitAppRegistration implements AppRegistration {
     }
 
     final valueObjectRegistration = valueObjectRegistrations.firstWhereOrNull((registration) =>
-        registration.valueObjectType.toString() == state.type ||
-        registration.nullableValueObjectType.toString() == state.type);
+        registration.getValueObjectName() == state.type || registration.getNullableValueObjectName() == state.type);
     if (valueObjectRegistration != null) {
       final valueObject = valueObjectRegistration.create();
       valueObject.state = state;
@@ -118,14 +117,14 @@ mixin WithExplicitAppRegistration implements AppRegistration {
 
   @override
   Type? getTypeByNameOrNull(String typeName) {
-    final valueObjectRegistration = valueObjectRegistrations
-        .firstWhereOrNull((registration) => registration.valueObjectType.toString() == typeName);
+    final valueObjectRegistration =
+        valueObjectRegistrations.firstWhereOrNull((registration) => registration.getValueObjectName() == typeName);
     if (valueObjectRegistration != null) {
       return valueObjectRegistration.valueObjectType;
     }
 
     final nullableValueObjectRegistration = valueObjectRegistrations
-        .firstWhereOrNull((registration) => registration.nullableValueObjectType.toString() == typeName);
+        .firstWhereOrNull((registration) => registration.getNullableValueObjectName() == typeName);
     if (nullableValueObjectRegistration != null) {
       return nullableValueObjectRegistration.valueObjectType;
     }

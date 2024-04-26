@@ -6,15 +6,18 @@ class ValueObjectRegistration<V extends ValueObject, NullableV extends ValueObje
 
   final Set<Type> parents;
 
+  final String? valueObjectName;
+  final String? nullableValueObjectName;
+
   bool get isAbstract => onCreate == null;
 
-  ValueObjectRegistration(this.onCreate, {Set<Type>? parents})
+  ValueObjectRegistration(this.onCreate, {Set<Type>? parents, this.valueObjectName, this.nullableValueObjectName})
       : this.parents = {
           ...?parents,
           ..._baseParentTypes,
         };
 
-  ValueObjectRegistration.abstract({Set<Type>? parents})
+  ValueObjectRegistration.abstract({Set<Type>? parents, this.valueObjectName, this.nullableValueObjectName})
       : this.parents = {
           ...?parents,
           ..._baseParentTypes,
@@ -24,6 +27,10 @@ class ValueObjectRegistration<V extends ValueObject, NullableV extends ValueObje
   Type get valueObjectType => V;
 
   Type get nullableValueObjectType => NullableV;
+
+  String getValueObjectName() => valueObjectName ?? valueObjectType.toString();
+
+  String getNullableValueObjectName() => nullableValueObjectName ?? nullableValueObjectType.toString();
 
   V create() => onCreate!();
 
