@@ -118,7 +118,7 @@ abstract class Validator<T, E> {
       });
 
   static Validator<String?, String> isEmail() => Validator((data) {
-        if (data == null) {
+        if (data == null || data.isEmpty) {
           return null;
         }
 
@@ -130,7 +130,7 @@ abstract class Validator<T, E> {
       });
 
   static Validator<String?, String> isPhone() => Validator((data) {
-        if (data == null) {
+        if (data == null || data.isEmpty) {
           return null;
         }
 
@@ -145,7 +145,7 @@ abstract class Validator<T, E> {
       });
 
   static Validator<String?, String> isInt() => Validator((data) {
-        if (data == null) {
+        if (data == null || data.isEmpty) {
           return null;
         }
 
@@ -157,7 +157,7 @@ abstract class Validator<T, E> {
       });
 
   static Validator<String?, String> isDouble() => Validator((data) {
-        if (data == null) {
+        if (data == null || data.isEmpty) {
           return null;
         }
 
