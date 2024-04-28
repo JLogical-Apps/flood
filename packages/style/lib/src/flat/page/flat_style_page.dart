@@ -13,7 +13,8 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
   @override
   Widget renderTyped(BuildContext context, StyledPage component) {
     final colorPalette = context.colorPalette();
-
+    final systemOverlayStyle =
+        (context.style() as FlatStyle).backgroundColor.isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
     return PopScope(
       canPop: component.onShouldPop == null,
       onPopInvoked: component.onShouldPop == null
@@ -25,9 +26,7 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
               }
             },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: (context.style() as FlatStyle).backgroundColor.isDark
-            ? SystemUiOverlayStyle.light
-            : SystemUiOverlayStyle.dark,
+        value: systemOverlayStyle,
         child: Scaffold(
           appBar: component.title == null &&
                   component.titleText == null &&
@@ -40,6 +39,7 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
                   title: component.title ?? component.titleText?.mapIfNonNull(StyledText.xl.bold.display),
                   backgroundColor: Colors.transparent,
                   elevation: 0,
+                  systemOverlayStyle: systemOverlayStyle,
                   actions: [
                     ...component.actionWidgets,
                     if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),

@@ -13,6 +13,8 @@ class DeltaStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
   @override
   Widget renderTyped(BuildContext context, StyledPage component) {
     final colorPalette = context.colorPalette();
+    final systemOverlayStyle =
+        (context.style() as DeltaStyle).backgroundColor.isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
 
     return PopScope(
       canPop: component.onShouldPop == null,
@@ -25,9 +27,7 @@ class DeltaStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
               }
             },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: (context.style() as DeltaStyle).backgroundColor.isDark
-            ? SystemUiOverlayStyle.light
-            : SystemUiOverlayStyle.dark,
+        value: systemOverlayStyle,
         child: Scaffold(
           appBar: component.title == null &&
                   component.titleText == null &&
@@ -40,6 +40,7 @@ class DeltaStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
                   title: component.title ?? component.titleText?.mapIfNonNull(StyledText.xl.bold.display),
                   backgroundColor: Colors.transparent,
                   elevation: 0,
+                  systemOverlayStyle: systemOverlayStyle,
                   scrolledUnderElevation: 0,
                   actions: [
                     ...component.actionWidgets,
