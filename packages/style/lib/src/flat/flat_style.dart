@@ -203,7 +203,9 @@ This is a `code block`.
         ? (backgroundColor == Colors.black
             ? Color(0xff202020)
             : (isDark ? backgroundColor.lighten(10) : backgroundColor.darken(5)))
-        : (backgroundColor == this.backgroundColor ? Colors.white : this.backgroundColor);
+        : (backgroundColor == Colors.white
+            ? Color(0xfff3f3f3)
+            : (isDark ? backgroundColor.lighten(10) : backgroundColor.darken(5)));
     final newForeground = isDark ? Colors.white : Colors.black;
     final newSubtleForeground = isDark ? Colors.white.withOpacity(0.6) : Colors.black.withOpacity(0.6);
 
