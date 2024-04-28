@@ -128,6 +128,11 @@ class FirebaseAuthService with IsAuthService, IsCorePondComponent {
 
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> resetPassword(String email) async {
+    await auth.sendPasswordResetEmail(email: email);
+  }
 }
 
 extension on User {

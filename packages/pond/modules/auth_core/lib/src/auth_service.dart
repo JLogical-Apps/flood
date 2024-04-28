@@ -25,6 +25,8 @@ abstract class AuthService with IsCorePondComponent {
 
   Future<void> delete();
 
+  Future<void> resetPassword(String email);
+
   ValueStream<FutureValue<Account?>> get accountX;
 
   static AuthServiceStatic get static => AuthServiceStatic();
@@ -79,7 +81,12 @@ class AuthServiceStatic {
   }
 }
 
-mixin IsAuthService implements AuthService {}
+mixin IsAuthService implements AuthService {
+  @override
+  Future<void> resetPassword(String email) {
+    throw UnimplementedError();
+  }
+}
 
 abstract class AuthServiceWrapper implements AuthService {
   AuthService get authService;
@@ -100,6 +107,9 @@ mixin IsAuthServiceWrapper implements AuthServiceWrapper {
 
   @override
   Future<void> delete() => authService.delete();
+
+  @override
+  Future<void> resetPassword(String email) => authService.resetPassword(email);
 
   @override
   late ValueStream<FutureValue<Account?>> accountX = authService.accountX;

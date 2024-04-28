@@ -4,6 +4,7 @@ import 'package:auth_core/src/auth_service.dart';
 import 'package:auth_core/src/drop/account.dart';
 import 'package:auth_core/src/drop/account_entity.dart';
 import 'package:auth_core/src/drop/account_repository.dart';
+import 'package:auth_core/src/drop/email_auth_credentials.dart';
 import 'package:auth_core/src/login_failure.dart';
 import 'package:auth_core/src/otp/otp_provider.dart';
 import 'package:auth_core/src/otp/otp_request_type.dart';
@@ -126,4 +127,18 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
 
   @override
   ValueStream<FutureValue<Account?>> get accountX => _accountX;
+
+  @override
+  Future<void> resetPassword(String email) async {
+    final authCredentials = AuthCredentials.email(email: email, password: '');
+    final accountEntity =
+        await AccountEntity.accountFromCredentialsQuery(authCredentials).firstOrNull().get(context.dropCoreComponent);
+    if (accountEntity == null) {
+      print('Could not find account with email [$email]');
+      return;
+    }
+
+    final emailAuthCredentials = accountEntity.value.authCredentialProperty.value as EmailAuthCredentialsValueObject;
+    print('Password is: [${emailAuthCredentials.passwordProperty.value}]');
+  }
 }

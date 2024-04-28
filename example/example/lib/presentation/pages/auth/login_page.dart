@@ -1,3 +1,4 @@
+import 'package:example/presentation/pages/auth/forgot_password_page.dart';
 import 'package:example/presentation/pages/auth/signup_page.dart';
 import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/utils/otp_utils.dart';
@@ -97,7 +98,9 @@ class LoginPage with IsAppPageWrapper<LoginRoute> {
               if (otpErrorState.value != null) StyledText.body.error(otpErrorState.value!),
               StyledButton.subtle(
                 labelText: 'Forgot Password?',
-                onPressed: () {},
+                onPressed: () {
+                  context.push(ForgotPasswordRoute());
+                },
                 isTextButton: true,
               ),
             ],
