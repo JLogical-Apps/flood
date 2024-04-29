@@ -27,6 +27,7 @@ import 'package:style/src/flat/layout/flat_style_container.dart';
 import 'package:style/src/flat/layout/flat_style_list.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
 import 'package:style/src/flat/media/flat_style_image.dart';
+import 'package:style/src/flat/misc/flat_style_calendar.dart';
 import 'package:style/src/flat/misc/flat_style_divider.dart';
 import 'package:style/src/flat/misc/flat_style_icon.dart';
 import 'package:style/src/flat/misc/flat_style_loading_indicator.dart';
@@ -43,6 +44,7 @@ import 'package:utils/utils.dart';
 
 class FlatStyle with IsStyle {
   final Color primaryColor;
+  final Color accentColor;
   final Color backgroundColor;
 
   final List<StyleRenderer> renderers;
@@ -53,6 +55,7 @@ class FlatStyle with IsStyle {
 
   FlatStyle({
     this.primaryColor = const Color(0xffe39e43),
+    this.accentColor = const Color(0xff06b6d4),
     this.backgroundColor = const Color(0xff141424),
     this.minPrimaryColorDistance = 30000,
   })  : renderers = [
@@ -74,6 +77,7 @@ class FlatStyle with IsStyle {
           FlatStyleTabsRenderer(),
           FlatStyleCarouselRenderer(),
           FlatStylePageRenderer(),
+          FlatStyleCalendarRenderer(),
           FlatStyleDividerRenderer(),
           FlatStyleIconRenderer(),
           FlatStyleLoadingIndicatorRenderer(),

@@ -27,6 +27,7 @@ import 'package:style/src/delta/layout/delta_style_container.dart';
 import 'package:style/src/delta/layout/delta_style_list.dart';
 import 'package:style/src/delta/layout/delta_style_tabs.dart';
 import 'package:style/src/delta/media/delta_style_image.dart';
+import 'package:style/src/delta/misc/delta_style_calendar.dart';
 import 'package:style/src/delta/misc/delta_style_divider.dart';
 import 'package:style/src/delta/misc/delta_style_icon.dart';
 import 'package:style/src/delta/misc/delta_style_loading_indicator.dart';
@@ -43,6 +44,7 @@ import 'package:utils/utils.dart';
 
 class DeltaStyle with IsStyle {
   final Color primaryColor;
+  final Color accentColor;
   final Color backgroundColor;
 
   final List<StyleRenderer> renderers;
@@ -50,6 +52,7 @@ class DeltaStyle with IsStyle {
 
   DeltaStyle({
     this.primaryColor = const Color(0xffe39e43),
+    this.accentColor = const Color(0xff06b6d4),
     this.backgroundColor = const Color(0xff141424),
   })  : renderers = [
           DeltaStyleCardRenderer(),
@@ -70,6 +73,7 @@ class DeltaStyle with IsStyle {
           DeltaStyleTabsRenderer(),
           DeltaStyleCarouselRenderer(),
           DeltaStylePageRenderer(),
+          DeltaStyleCalendarRenderer(),
           DeltaStyleDividerRenderer(),
           DeltaStyleIconRenderer(),
           DeltaStyleLoadingIndicatorRenderer(),
