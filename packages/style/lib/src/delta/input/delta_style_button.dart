@@ -32,7 +32,8 @@ class DeltaStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
                   : null,
             ));
     final backgroundColorPalette =
-        component.emphasis == Emphasis.strong ? context.colorPalette().background.strong : context.colorPalette();
+        component.backgroundColor?.mapIfNonNull((color) => context.style().getColorPaletteFromBackground(color)) ??
+            (component.emphasis == Emphasis.strong ? context.colorPalette().background.strong : context.colorPalette());
 
     final loadingState = useState<bool>(false);
 

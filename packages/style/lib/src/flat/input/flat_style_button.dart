@@ -20,7 +20,9 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
         component.labelText?.mapIfNonNull((text) => StyledText.body.bold.display
             .withEmphasis(component.isTextButton ? component.emphasis : Emphasis.regular)(text));
     final icon = component.icon ?? component.iconData?.mapIfNonNull((iconData) => StyledIcon(iconData));
-    final backgroundColorPalette = context.colorPalette().background.getByEmphasis(component.emphasis);
+    final backgroundColorPalette =
+        component.backgroundColor?.mapIfNonNull((color) => context.style().getColorPaletteFromBackground(color)) ??
+            context.colorPalette().background.getByEmphasis(component.emphasis);
 
     final loadingState = useState<bool>(false);
 
@@ -38,21 +40,28 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
 
     if (label == null && icon != null) {
       return IconButton(
-        icon: Stack(
-          children: [
-            Opacity(
-              opacity: loadingState.value ? 0 : 1,
-              child: icon,
-            ),
-            Positioned.fill(
-              child: Center(
-                child: Visibility(
-                  visible: loadingState.value,
-                  child: StyledLoadingIndicator(),
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all(CircleBorder()),
+          backgroundColor: MaterialStateProperty.all(backgroundColorPalette),
+        ),
+        icon: ColorPaletteProvider(
+          colorPalette: backgroundColorPalette,
+          child: Stack(
+            children: [
+              Opacity(
+                opacity: loadingState.value ? 0 : 1,
+                child: icon,
+              ),
+              Positioned.fill(
+                child: Center(
+                  child: Visibility(
+                    visible: loadingState.value,
+                    child: StyledLoadingIndicator(),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         onPressed: onPressed,
       );
