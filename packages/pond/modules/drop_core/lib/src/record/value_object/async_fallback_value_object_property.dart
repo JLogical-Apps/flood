@@ -19,13 +19,13 @@ class AsyncFallbackValueObjectProperty<T> with IsValueObjectProperty<T, T, Async
   AsyncFallbackValueObjectProperty({required this.property, required this.fallback}) : getterType = T;
 
   @override
-  State modifyState(State state) {
-    return property.modifyState(state);
+  State modifyState(DropCoreContext context, State state) {
+    return property.modifyState(context, state);
   }
 
   @override
-  void fromState(State state) {
-    property.fromState(state);
+  void fromState(DropCoreContext context, State state) {
+    property.fromState(context, state);
   }
 
   @override

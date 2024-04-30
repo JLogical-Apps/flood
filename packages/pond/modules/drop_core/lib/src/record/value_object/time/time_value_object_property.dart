@@ -1,3 +1,4 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/time/timestamp.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -10,7 +11,7 @@ class TimeValueObjectProperty<G extends Timestamp?, S extends Timestamp?>
   TimeValueObjectProperty({required this.property});
 
   @override
-  void fromState(State state) {
+  void fromState(DropCoreContext context, State state) {
     final stateValue = state.data[property.name];
     if (stateValue == null) {
       property.set(null as S);

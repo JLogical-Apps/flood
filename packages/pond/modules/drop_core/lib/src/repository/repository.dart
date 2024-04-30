@@ -89,7 +89,7 @@ extension RepositoryExtension on Repository {
     final newValueObject = valueObjectRuntimeType.createInstance() as V;
 
     if (entity.hasValue) {
-      newValueObject.state = entity.value.getState(context.dropCoreComponent);
+      newValueObject.setState(context.dropCoreComponent, entity.value.getState(context.dropCoreComponent));
     }
 
     await updater?.call(newValueObject);

@@ -17,6 +17,7 @@ import 'package:port_drop_core/src/behavior_modifiers/is_email_property_behavior
 import 'package:port_drop_core/src/behavior_modifiers/is_name_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/is_not_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/is_phone_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/list_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/null_if_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/only_date_property_behavior_modifier.dart';
@@ -47,6 +48,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       DoubleFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       DateTimeFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       TimestampFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      ListFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       StageFieldBehaviorModifier(
         portDropContext: context.locate<PortDropCoreComponent>(),
         typeContext: context.locate<TypeCoreComponent>(),

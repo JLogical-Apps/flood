@@ -104,8 +104,8 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
   }
 
   static PortField<List<T>, List<S>> list<T, S>({
-    required List<T> options,
     List<T>? initialValues,
+    List<T>? options,
     List<S> Function(List<T> value)? submitMapper,
   }) {
     return ListPortField(

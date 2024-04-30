@@ -23,10 +23,10 @@ void main() {
     data.intProperty.value = 0;
     expect(data.intProperty.value, 0);
 
-    data.state = State(data: {});
+    data.setState(dropContext, State(data: {}));
     expect(data.intProperty.value, null);
 
-    data.state = State(data: {'int': 1});
+    data.setState(dropContext, State(data: {'int': 1}));
     expect(data.intProperty.value, 1);
   });
 
@@ -37,10 +37,10 @@ void main() {
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
 
-    data.state = State(data: {});
+    data.setState(dropContext, State(data: {}));
     expect(await data.validate(null), isNotNull);
 
-    data.state = State(data: {'int': 1});
+    data.setState(dropContext, State(data: {'int': 1}));
     expect(data.intProperty.value, 1);
   });
 
@@ -54,10 +54,10 @@ void main() {
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
 
-    data.state = State(data: {});
+    data.setState(dropContext, State(data: {}));
     expect(data.intProperty.value, -1);
 
-    data.state = State(data: {'int': 1});
+    data.setState(dropContext, State(data: {'int': 1}));
     expect(data.intProperty.value, 1);
   });
 
@@ -71,10 +71,10 @@ void main() {
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
 
-    data.state = State(data: {});
+    data.setState(dropContext, State(data: {}));
     expect(data.intProperty.value, -1);
 
-    data.state = State(data: {'int': 1});
+    data.setState(dropContext, State(data: {'int': 1}));
     expect(data.intProperty.value, 1);
   });
 
@@ -88,10 +88,10 @@ void main() {
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
 
-    data.state = State(data: {});
+    data.setState(dropContext, State(data: {}));
     expect(data.intProperty.value, -1);
 
-    data.state = State(data: {'int': 1});
+    data.setState(dropContext, State(data: {'int': 1}));
     expect(data.intProperty.value, 1);
   });
 
@@ -104,10 +104,10 @@ void main() {
     data.nameProperty.set('John Doe');
     expect(data.nameProperty.value, 'John Doe');
 
-    data.state = State(data: {});
+    data.setState(dropContext, State(data: {}));
     expect(await data.validate(null), isNotNull);
 
-    data.state = State(data: {'name': 'John Doe'});
+    data.setState(dropContext, State(data: {'name': 'John Doe'}));
     expect(data.nameProperty.value, 'John Doe');
   });
 
@@ -120,12 +120,15 @@ void main() {
     data.itemsProperty.set(['one', 'two', 'three']);
     expect(data.itemsProperty.value, ['one', 'two', 'three']);
 
-    data.state = State(data: {});
+    data.setState(dropContext, State(data: {}));
     expect(data.itemsProperty.value, []);
 
-    data.state = State(data: {
-      'items': ['hello', 'world'],
-    });
+    data.setState(
+      dropContext,
+      State(data: {
+        'items': ['hello', 'world'],
+      }),
+    );
     expect(data.itemsProperty.value, ['hello', 'world']);
   });
 
@@ -153,12 +156,15 @@ void main() {
     data.studentToScoreProperty.set({'Jack': 82, 'Jill': 93});
     expect(data.studentToScoreProperty.value, {'Jack': 82, 'Jill': 93});
 
-    data.state = State(data: {});
+    data.setState(dropContext, State(data: {}));
     expect(data.studentToScoreProperty.value, {});
 
-    data.state = State(data: {
-      'studentToScore': {'Jack': 82, 'Jill': 93},
-    });
+    data.setState(
+      dropContext,
+      State(data: {
+        'studentToScore': {'Jack': 82, 'Jill': 93},
+      }),
+    );
     expect(data.studentToScoreProperty.value, {'Jack': 82, 'Jill': 93});
   });
 
@@ -206,6 +212,33 @@ void main() {
 
     data.emailProperty.set('test@test.com');
     expect(await data.validate(null), isNull);
+  });
+
+  test('embedded property', () async {
+    dropContext.register<Data12>(Data12.new, name: 'Data12');
+    dropContext.register<Data13>(Data13.new, name: 'Data12');
+
+    final data = Data13()..dataProperty.set(Data12()..emailProperty.set('test@test.com'));
+    expect(
+        data.getState(dropContext),
+        State(type: dropContext.getRuntimeType<Data13>(), data: {
+          'data': State(
+            type: dropContext.getRuntimeType<Data12>(),
+            data: {'email': 'test@test.com'},
+          ),
+        }));
+
+    data.setState(
+      dropContext,
+      State(type: dropContext.getRuntimeType<Data13>(), data: {
+        'data': State(
+          type: dropContext.getRuntimeType<Data12>(),
+          data: {'email': 'asdf@asdf.com'},
+        ),
+      }),
+    );
+
+    expect(data.dataProperty.value!.emailProperty.value, 'asdf@asdf.com');
   });
 }
 
@@ -297,4 +330,11 @@ class Data12 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [emailProperty];
+}
+
+class Data13 extends ValueObject {
+  late final dataProperty = field<Data12>(name: 'data').embedded();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [dataProperty];
 }

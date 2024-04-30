@@ -20,6 +20,7 @@ import 'package:drop_core/src/record/value_object/is_email_value_object_property
 import 'package:drop_core/src/record/value_object/is_name_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/is_not_blank_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/is_phone_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/list_embedded_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/list_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/map_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/multiline_value_object_property.dart';
@@ -80,10 +81,10 @@ mixin IsValueObjectProperty<G, S, V extends ValueObjectProperty> implements Valu
   G? get valueOrNull => value;
 
   @override
-  void fromState(State state) {}
+  void fromState(DropCoreContext context, State state) {}
 
   @override
-  State modifyState(State state) {
+  State modifyState(DropCoreContext context, State state) {
     return state;
   }
 
@@ -271,6 +272,12 @@ extension FieldValueObjectPropertyExtensions<T> on FieldValueObjectProperty<T> {
   }
 }
 
+extension ValueObjectListValueObjectPropertyExtensions<T extends ValueObject> on ListValueObjectProperty<T> {
+  ListEmbeddedValueObjectProperty<T> embedded() {
+    return ListEmbeddedValueObjectProperty<T>(property: this);
+  }
+}
+
 abstract class ValueObjectPropertyWrapper<G, S, V extends ValueObjectProperty> implements ValueObjectProperty<G, S, V> {
   ValueObjectProperty<G, S, dynamic> get property;
 }
@@ -296,10 +303,10 @@ mixin IsValueObjectPropertyWrapper<G, S, V extends ValueObjectProperty<G, S, V>>
   void set(S value) => property.set(value);
 
   @override
-  void fromState(State state) => property.fromState(state);
+  void fromState(DropCoreContext context, State state) => property.fromState(context, state);
 
   @override
-  State modifyState(State state) => property.modifyState(state);
+  State modifyState(DropCoreContext context, State state) => property.modifyState(context, state);
 
   @override
   Future<State> modifyStateForRepository(DropCoreContext context, State state) =>

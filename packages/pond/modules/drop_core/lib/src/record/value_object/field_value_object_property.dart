@@ -1,3 +1,4 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
@@ -23,7 +24,7 @@ class FieldValueObjectProperty<T> with IsValueObjectProperty<T?, T?, FieldValueO
   set(T? value) => this.value = value;
 
   @override
-  void fromState(State state) {
+  void fromState(DropCoreContext context, State state) {
     try {
       value = coerceOrNull<T>(state[name]);
     } catch (e) {
@@ -32,7 +33,7 @@ class FieldValueObjectProperty<T> with IsValueObjectProperty<T?, T?, FieldValueO
   }
 
   @override
-  State modifyState(State state) {
+  State modifyState(DropCoreContext context, State state) {
     return state.withData(state.data.copy()..set(name, value));
   }
 

@@ -1,3 +1,4 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
@@ -17,17 +18,17 @@ class FallbackReplacementValueObjectProperty<T>
   FallbackReplacementValueObjectProperty({required this.property, required this.fallbackReplacement}) : getterType = T;
 
   @override
-  State modifyState(State state) {
+  State modifyState(DropCoreContext context, State state) {
     if (property.value == null) {
       property.set(fallbackReplacement());
     }
 
-    return property.modifyState(state);
+    return property.modifyState(context, state);
   }
 
   @override
-  void fromState(State state) {
-    property.fromState(state);
+  void fromState(DropCoreContext context, State state) {
+    property.fromState(context, state);
   }
 
   @override

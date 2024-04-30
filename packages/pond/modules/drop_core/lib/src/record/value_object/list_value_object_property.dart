@@ -1,10 +1,10 @@
-import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
 class ListValueObjectProperty<T> with IsValueObjectProperty<List<T>, List<T>, ListValueObjectProperty<T>> {
-  final FieldValueObjectProperty<T> property;
+  final ValueObjectProperty<T?, T?, dynamic> property;
 
   @override
   List<T> value;
@@ -31,12 +31,12 @@ class ListValueObjectProperty<T> with IsValueObjectProperty<List<T>, List<T>, Li
   set(List<T>? value) => this.value = value ?? [];
 
   @override
-  void fromState(State state) {
+  void fromState(DropCoreContext context, State state) {
     value = (state[name] as List?)?.cast<T>() ?? [];
   }
 
   @override
-  State modifyState(State state) {
+  State modifyState(DropCoreContext context, State state) {
     return state.withData(state.data.copy()..set(name, value));
   }
 

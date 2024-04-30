@@ -46,6 +46,13 @@ extension IterableExtensions<T> on Iterable<T> {
   Iterable<T> repeat(int amount) {
     return List.filled(amount, this).expand((i) => i);
   }
+
+  Iterable<T>? get nullIfEmpty {
+    if (isEmpty) {
+      return null;
+    }
+    return this;
+  }
 }
 
 extension NullableIterableExtensions<T> on Iterable<T?> {

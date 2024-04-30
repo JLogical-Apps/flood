@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -17,13 +18,13 @@ class IsNotBlankValueObjectProperty with IsValueObjectProperty<String, String, I
   Type get setterType => String;
 
   @override
-  State modifyState(State state) {
-    return property.modifyState(state);
+  State modifyState(DropCoreContext context, State state) {
+    return property.modifyState(context, state);
   }
 
   @override
-  void fromState(State state) {
-    property.fromState(state);
+  void fromState(DropCoreContext context, State state) {
+    property.fromState(context, state);
   }
 
   @override

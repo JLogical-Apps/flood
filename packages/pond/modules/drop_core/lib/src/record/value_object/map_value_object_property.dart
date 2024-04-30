@@ -1,10 +1,10 @@
-import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
 class MapValueObjectProperty<K, V> with IsValueObjectProperty<Map<K, V>, Map<K, V>, MapValueObjectProperty<K, V>> {
-  final FieldValueObjectProperty<K> property;
+  final ValueObjectProperty<K?, K?, dynamic> property;
 
   @override
   Map<K, V> value;
@@ -28,12 +28,12 @@ class MapValueObjectProperty<K, V> with IsValueObjectProperty<Map<K, V>, Map<K, 
   set(Map<K, V>? value) => this.value = value ?? {};
 
   @override
-  void fromState(State state) {
+  void fromState(DropCoreContext context, State state) {
     value = (state[name] as Map?)?.cast<K, V>() ?? {};
   }
 
   @override
-  State modifyState(State state) {
+  State modifyState(DropCoreContext context, State state) {
     return state.withData(state.data.copy()..set(name, value));
   }
 

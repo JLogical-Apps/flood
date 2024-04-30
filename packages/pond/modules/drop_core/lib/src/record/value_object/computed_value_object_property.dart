@@ -18,7 +18,7 @@ class ComputedValueObjectProperty<T> with IsValueObjectProperty<T, void, Compute
         setterType = T;
 
   @override
-  State modifyState(State state) {
+  State modifyState(DropCoreContext context, State state) {
     return state.withData(state.data.copy()..set(name, value));
   }
 

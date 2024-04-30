@@ -7,9 +7,9 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class ValueObjectBehavior implements Validator<ValueObject, String> {
-  void fromState(State state);
+  void fromState(DropCoreContext context, State state);
 
-  State modifyState(State state);
+  State modifyState(DropCoreContext context, State state);
 
   Future<State> modifyStateForRepository(DropCoreContext context, State state);
 
@@ -24,10 +24,10 @@ abstract class ValueObjectBehavior implements Validator<ValueObject, String> {
 
 mixin IsValueObjectBehavior implements ValueObjectBehavior {
   @override
-  void fromState(State state) {}
+  void fromState(DropCoreContext context, State state) {}
 
   @override
-  State modifyState(State state) {
+  State modifyState(DropCoreContext context, State state) {
     return state;
   }
 

@@ -1,3 +1,4 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
@@ -16,16 +17,16 @@ class FallbackValueObjectProperty<T, S> with IsValueObjectProperty<T, S, Fallbac
   FallbackValueObjectProperty({required this.property, required this.fallback}) : getterType = T;
 
   @override
-  State modifyState(State state) {
+  State modifyState(DropCoreContext context, State state) {
     if (property.value == null) {
       return state.withData(state.data.copy()..set(property.name, fallback()));
     }
-    return property.modifyState(state);
+    return property.modifyState(context, state);
   }
 
   @override
-  void fromState(State state) {
-    property.fromState(state);
+  void fromState(DropCoreContext context, State state) {
+    property.fromState(context, state);
   }
 
   @override
