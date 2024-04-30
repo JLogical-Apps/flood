@@ -1836,6 +1836,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  user_location:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/pond/modules/user_location"
+      relative: true
+    source: path
+    version: "0.0.1"
   utils:
     dependency: "direct overridden"
     description:
