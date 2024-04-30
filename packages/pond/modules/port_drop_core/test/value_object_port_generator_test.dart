@@ -75,7 +75,35 @@ void main() {
     expect(userPort.getFieldByName(Data4.descriptionField).findIsMultiline(), true);
   });
 
-  test('ValueObject field.', () async {
+  test('Concrete ValueObject field.', () async {
+    corePondContext.locate<TypeCoreComponent>()
+      ..register(Data13.new, name: 'Data13')
+      ..register<Student>(Student.new, name: 'Student');
+
+    final user = Data13();
+    var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+    expect(userPort.getFieldByName(Data13.studentField).findStageFieldOrNull(), isNull);
+    expect((userPort[Data13.studentField] as Port)[Student.nameField], isEmpty);
+
+    user.studentProperty.set(Student());
+    userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+    expect(userPort.getFieldByName(Data13.studentField).findStageFieldOrNull(), isNull);
+    expect((userPort[Data13.studentField] as Port)[Student.nameField], isEmpty);
+
+    var result = await userPort.submit();
+    expect(result.isValid, false);
+
+    user.studentProperty.set(Student()..nameProperty.set('John Doe'));
+    userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
+
+    expect((userPort[Data13.studentField] as Port)[Student.nameField], 'John Doe');
+
+    result = await userPort.submit();
+    expect(result.isValid, true);
+    expect(result.data.studentProperty.value, Student()..nameProperty.set('John Doe'));
+  });
+
+  test('Abstract ValueObject field.', () async {
     corePondContext.locate<TypeCoreComponent>()
       ..register(Data5.new, name: 'Data5')
       ..registerAbstract<Person>(name: 'Person')
@@ -371,4 +399,12 @@ class Data12 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [requiredProperty];
+}
+
+class Data13 extends ValueObject {
+  static const studentField = 'student';
+  late final studentProperty = field<Student>(name: studentField).embedded().required().withDisplayName('Student');
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [studentProperty];
 }

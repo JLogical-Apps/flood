@@ -24,7 +24,7 @@ import 'package:port_drop_core/src/behavior_modifiers/only_date_property_behavio
 import 'package:port_drop_core/src/behavior_modifiers/placeholder_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_on_edit_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior_modifier.dart';
-import 'package:port_drop_core/src/behavior_modifiers/stage_field_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/value_object_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/string_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/timestamp_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/validator_property_behavior_modifier.dart';
@@ -49,7 +49,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       DateTimeFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       TimestampFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       ListFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      StageFieldBehaviorModifier(
+      ValueObjectFieldBehaviorModifier(
         portDropContext: context.locate<PortDropCoreComponent>(),
         typeContext: context.locate<TypeCoreComponent>(),
         portCreator: (valueObject) => generatePort(valueObject),
