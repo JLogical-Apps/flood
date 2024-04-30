@@ -21,7 +21,7 @@ dependencies:
   utils_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "location"
+      ref: "v4.0"
       path: packages/utils/utils_core
 dev_dependencies:
   lints: ^2.0.0
