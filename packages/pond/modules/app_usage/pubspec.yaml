@@ -18,22 +18,22 @@ dependencies:
   environment:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.0"
+      ref: "location"
       path: packages/pond/modules/environment
   log:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.0"
+      ref: "location"
       path: packages/pond/modules/log
   persistence:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.0"
+      ref: "location"
       path: packages/persistence/persistence
   pond:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.0"
+      ref: "location"
       path: packages/pond/pond
 dev_dependencies:
   lints: ^2.0.0

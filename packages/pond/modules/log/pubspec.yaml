@@ -20,37 +20,37 @@ dependencies:
   debug:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.0"
+      ref: "location"
       path: packages/pond/modules/debug
   log_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.0"
+      ref: "location"
       path: packages/pond/modules/log_core
   model:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.0"
+      ref: "location"
       path: packages/model/model
   pond:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.0"
+      ref: "location"
       path: packages/pond/pond
   share:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.0"
+      ref: "location"
       path: packages/pond/modules/share
   style:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.0"
+      ref: "location"
       path: packages/style
   utils:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.0"
+      ref: "location"
       path: packages/utils/utils
 
 dev_dependencies:
