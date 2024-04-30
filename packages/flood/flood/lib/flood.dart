@@ -10,6 +10,7 @@ export 'package:environment_banner/environment_banner.dart';
 export 'package:firebase/firebase.dart';
 export 'package:flood_core/flood_core.dart';
 export 'package:focus_grabber/focus_grabber.dart';
+export 'package:location/location.dart';
 export 'package:log/log.dart';
 export 'package:model/model.dart';
 export 'package:persistence/persistence.dart';

@@ -428,6 +428,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  location_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/location_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   log_core:
     dependency: "direct overridden"
     description:

@@ -3,6 +3,7 @@ export 'package:appwrite_core/appwrite_core.dart';
 export 'package:auth_core/auth_core.dart';
 export 'package:drop_core/drop_core.dart';
 export 'package:environment_core/environment_core.dart';
+export 'package:location_core/location_core.dart';
 export 'package:log_core/log_core.dart';
 export 'package:messaging_core/messaging_core.dart';
 export 'package:model_core/model_core.dart';

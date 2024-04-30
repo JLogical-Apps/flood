@@ -1,0 +1,30 @@
+name: location_core
+description: Core module for location.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+
+  drop_core:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.0"
+      path: packages/pond/modules/drop_core
+  pond_core:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.0"
+      path: packages/pond/pond_core
+  utils_core:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.0"
+      path: packages/utils/utils_core
+dev_dependencies:
+  lints: ^2.0.0
+  test: 1.24.6
