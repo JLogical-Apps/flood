@@ -2,10 +2,10 @@ import 'package:drop_core/src/record/value_object/time/timestamp.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 
-class TimeValueObjectProperty<G extends Timestamp?, S extends Timestamp?, L>
-    with IsValueObjectPropertyWrapper<G, S, L, TimeValueObjectProperty<G, S, L>> {
+class TimeValueObjectProperty<G extends Timestamp?, S extends Timestamp?>
+    with IsValueObjectPropertyWrapper<G, S, TimeValueObjectProperty<G, S>> {
   @override
-  final ValueObjectProperty<G, S, L, dynamic> property;
+  final ValueObjectProperty<G, S, dynamic> property;
 
   TimeValueObjectProperty({required this.property});
 
@@ -28,7 +28,7 @@ class TimeValueObjectProperty<G extends Timestamp?, S extends Timestamp?, L>
   }
 
   @override
-  TimeValueObjectProperty<G, S, L> copy() {
+  TimeValueObjectProperty<G, S> copy() {
     return TimeValueObjectProperty(property: property.copy());
   }
 }

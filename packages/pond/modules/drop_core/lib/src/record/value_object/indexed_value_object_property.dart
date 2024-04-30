@@ -1,9 +1,8 @@
 import 'package:drop_core/drop_core.dart';
 
-class IndexedValueObjectProperty<G, S, L>
-    with IsValueObjectPropertyWrapper<G, S, L, IndexedValueObjectProperty<G, S, L>> {
+class IndexedValueObjectProperty<G, S> with IsValueObjectPropertyWrapper<G, S, IndexedValueObjectProperty<G, S>> {
   @override
-  final ValueObjectProperty<G, S, L, dynamic> property;
+  final ValueObjectProperty<G, S, dynamic> property;
 
   final bool Function()? isIndexedGetter;
 
@@ -12,7 +11,7 @@ class IndexedValueObjectProperty<G, S, L>
   bool get isIndexed => isIndexedGetter?.call() ?? true;
 
   @override
-  IndexedValueObjectProperty<G, S, L> copy() {
-    return IndexedValueObjectProperty<G, S, L>(property: property.copy(), isIndexedGetter: isIndexedGetter);
+  IndexedValueObjectProperty<G, S> copy() {
+    return IndexedValueObjectProperty<G, S>(property: property.copy(), isIndexedGetter: isIndexedGetter);
   }
 }

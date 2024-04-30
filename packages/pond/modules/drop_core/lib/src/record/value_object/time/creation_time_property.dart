@@ -2,7 +2,7 @@ import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/time/timestamp.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 
-class CreationTimeProperty with IsValueObjectPropertyWrapper<Timestamp?, Timestamp?, dynamic, CreationTimeProperty> {
+class CreationTimeProperty with IsValueObjectPropertyWrapper<Timestamp?, Timestamp?, CreationTimeProperty> {
   static const field = 'creationTime';
 
   @override

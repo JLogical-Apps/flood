@@ -5,9 +5,8 @@ import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-class AsyncFallbackValueObjectProperty<T, L>
-    with IsValueObjectProperty<T, T, L, AsyncFallbackValueObjectProperty<T, L>> {
-  final ValueObjectProperty<T, T, L, dynamic> property;
+class AsyncFallbackValueObjectProperty<T> with IsValueObjectProperty<T, T, AsyncFallbackValueObjectProperty<T>> {
+  final ValueObjectProperty<T, T, dynamic> property;
 
   final FutureOr<T> Function(DropCoreContext context) fallback;
 
@@ -47,11 +46,8 @@ class AsyncFallbackValueObjectProperty<T, L>
   set(T value) => property.set(value);
 
   @override
-  Future<L> load(DropCoreContext context) => property.load(context);
-
-  @override
-  AsyncFallbackValueObjectProperty<T, L> copy() {
-    return AsyncFallbackValueObjectProperty<T, L>(property: property.copy(), fallback: fallback);
+  AsyncFallbackValueObjectProperty<T> copy() {
+    return AsyncFallbackValueObjectProperty<T>(property: property.copy(), fallback: fallback);
   }
 
   @override

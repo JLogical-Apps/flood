@@ -6,8 +6,7 @@ import 'package:port_drop_core/src/port_generator_behavior_modifier_context.dart
 import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
-class StageFieldBehaviorModifier
-    extends PortGeneratorBehaviorModifier<FieldValueObjectProperty<ValueObject?, dynamic>> {
+class StageFieldBehaviorModifier extends PortGeneratorBehaviorModifier<FieldValueObjectProperty<ValueObject?>> {
   final PortDropCoreComponent portDropContext;
   final TypeContext typeContext;
 
@@ -23,7 +22,7 @@ class StageFieldBehaviorModifier
 
   @override
   Map<String, PortField> getPortFieldByName(
-    FieldValueObjectProperty<ValueObject?, dynamic> behavior,
+    FieldValueObjectProperty<ValueObject?> behavior,
     PortGeneratorBehaviorModifierContext context,
   ) {
     final baseType = behavior.fieldType;

@@ -3,10 +3,10 @@ import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-class EmbeddedValueObjectProperty<G extends ValueObject?, S extends ValueObject?, L>
-    with IsValueObjectPropertyWrapper<G, S, L, EmbeddedValueObjectProperty<G, S, L>> {
+class EmbeddedValueObjectProperty<G extends ValueObject?, S extends ValueObject?>
+    with IsValueObjectPropertyWrapper<G, S, EmbeddedValueObjectProperty<G, S>> {
   @override
-  final ValueObjectProperty<G, S, L, dynamic> property;
+  final ValueObjectProperty<G, S, dynamic> property;
 
   EmbeddedValueObjectProperty({required this.property});
 
@@ -29,7 +29,7 @@ class EmbeddedValueObjectProperty<G extends ValueObject?, S extends ValueObject?
   }
 
   @override
-  EmbeddedValueObjectProperty<G, S, L> copy() {
+  EmbeddedValueObjectProperty<G, S> copy() {
     return EmbeddedValueObjectProperty(property: property.copy());
   }
 }

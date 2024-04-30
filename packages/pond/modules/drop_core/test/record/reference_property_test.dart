@@ -38,8 +38,8 @@ void main() {
     final queriedContent = queriedContentEntity.value;
     expect(queriedContent.ownerProperty.value, newState.id);
 
-    final loadedUserEntity = await queriedContent.ownerProperty.load(dropCoreComponent);
-    expect(loadedUserEntity!.id, newState.id);
+    final loadedUserEntity = await userRepository.executeQuery(Query.getById(queriedContent.ownerProperty.value!));
+    expect(loadedUserEntity.id, newState.id);
   });
 }
 

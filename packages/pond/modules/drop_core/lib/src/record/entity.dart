@@ -5,8 +5,8 @@ import 'package:drop_core/src/record/record.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:equatable/equatable.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:runtime_type/type.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class Entity<V extends ValueObject> extends Record with EquatableMixin, IsValidatorWrapper<void, String?> {

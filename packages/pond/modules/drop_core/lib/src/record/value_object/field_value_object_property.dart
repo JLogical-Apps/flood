@@ -2,7 +2,7 @@ import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-class FieldValueObjectProperty<T, L> with IsValueObjectProperty<T?, T?, L, FieldValueObjectProperty<T, L>> {
+class FieldValueObjectProperty<T> with IsValueObjectProperty<T?, T?, FieldValueObjectProperty<T>> {
   @override
   final String name;
 
@@ -42,7 +42,7 @@ class FieldValueObjectProperty<T, L> with IsValueObjectProperty<T?, T?, L, Field
   }
 
   @override
-  FieldValueObjectProperty<T, L> copy() {
-    return FieldValueObjectProperty<T, L>(name: name, value: value);
+  FieldValueObjectProperty<T> copy() {
+    return FieldValueObjectProperty<T>(name: name, value: value);
   }
 }

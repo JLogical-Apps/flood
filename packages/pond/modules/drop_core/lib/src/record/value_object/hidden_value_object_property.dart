@@ -1,9 +1,8 @@
 import 'package:drop_core/drop_core.dart';
 
-class HiddenValueObjectProperty<G, S, L>
-    with IsValueObjectPropertyWrapper<G, S, L, HiddenValueObjectProperty<G, S, L>> {
+class HiddenValueObjectProperty<G, S> with IsValueObjectPropertyWrapper<G, S, HiddenValueObjectProperty<G, S>> {
   @override
-  final ValueObjectProperty<G, S, L, dynamic> property;
+  final ValueObjectProperty<G, S, dynamic> property;
 
   final bool Function()? isHiddenGetter;
 
@@ -12,7 +11,7 @@ class HiddenValueObjectProperty<G, S, L>
   bool get isHidden => isHiddenGetter?.call() ?? true;
 
   @override
-  HiddenValueObjectProperty<G, S, L> copy() {
-    return HiddenValueObjectProperty<G, S, L>(property: property.copy(), isHiddenGetter: isHiddenGetter);
+  HiddenValueObjectProperty<G, S> copy() {
+    return HiddenValueObjectProperty<G, S>(property: property.copy(), isHiddenGetter: isHiddenGetter);
   }
 }

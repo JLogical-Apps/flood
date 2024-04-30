@@ -6,12 +6,12 @@ class MultilinePropertyBehaviorModifier extends WrapperAppwriteAttributeBehavior
   MultilinePropertyBehaviorModifier({required super.modifierGetter});
 
   @override
-  ValueObjectBehavior unwrapBehavior(MultilineValueObjectProperty<String?, String?, dynamic> behavior) {
+  ValueObjectBehavior unwrapBehavior(MultilineValueObjectProperty<String?, String?> behavior) {
     return behavior.property;
   }
 
   @override
-  int getSize(MultilineValueObjectProperty<String?, String?, dynamic> behavior) {
+  int getSize(MultilineValueObjectProperty<String?, String?> behavior) {
     return AppwriteConsts.longTextSize;
   }
 }

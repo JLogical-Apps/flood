@@ -37,9 +37,9 @@ import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-typedef SimpleValueObjectProperty<T> = ValueObjectProperty<T, dynamic, dynamic, ValueObjectProperty>;
+typedef SimpleValueObjectProperty<T> = ValueObjectProperty<T, dynamic, ValueObjectProperty>;
 
-abstract class ValueObjectProperty<G, S, L, V extends ValueObjectProperty<dynamic, dynamic, dynamic, dynamic>>
+abstract class ValueObjectProperty<G, S, V extends ValueObjectProperty<dynamic, dynamic, dynamic>>
     implements ValueObjectBehavior {
   String get name;
 
@@ -53,11 +53,9 @@ abstract class ValueObjectProperty<G, S, L, V extends ValueObjectProperty<dynami
 
   void set(S value);
 
-  Future<L> load(DropCoreContext context);
-
   V copy();
 
-  static FieldValueObjectProperty<T, dynamic> field<T>({required String name}) {
+  static FieldValueObjectProperty<T> field<T>({required String name}) {
     return FieldValueObjectProperty(name: name);
   }
 
@@ -65,7 +63,7 @@ abstract class ValueObjectProperty<G, S, L, V extends ValueObjectProperty<dynami
     return ReferenceValueObjectProperty(name: name);
   }
 
-  static ComputedValueObjectProperty<T, dynamic> computed<T>({
+  static ComputedValueObjectProperty<T> computed<T>({
     required String name,
     required T Function() computation,
   }) {
@@ -77,7 +75,7 @@ abstract class ValueObjectProperty<G, S, L, V extends ValueObjectProperty<dynami
   }
 }
 
-mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements ValueObjectProperty<G, S, L, V> {
+mixin IsValueObjectProperty<G, S, V extends ValueObjectProperty> implements ValueObjectProperty<G, S, V> {
   @override
   G? get valueOrNull => value;
 
@@ -95,11 +93,6 @@ mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements V
   }
 
   @override
-  Future<L> load(DropCoreContext context) {
-    throw Exception('Load not supported!');
-  }
-
-  @override
   FutureOr<String?> onValidate(ValueObject data) async {
     return null;
   }
@@ -110,181 +103,180 @@ mixin IsValueObjectProperty<G, S, L, V extends ValueObjectProperty> implements V
   }
 }
 
-extension ValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
-  ValidatorValueObjectProperty<G, S, L> withValidator(Validator<G, String> validator) {
+extension ValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty> on ValueObjectProperty<G, S, V> {
+  ValidatorValueObjectProperty<G, S> withValidator(Validator<G, String> validator) {
     return ValidatorValueObjectProperty(property: this, validator: validator);
   }
 
-  RequiredOnEditValueObjectProperty<G, S, L> requiredOnEdit([bool requiredOnEdit = true]) {
-    return RequiredOnEditValueObjectProperty<G, S, L>(property: this, requiredOnEdit: requiredOnEdit);
+  RequiredOnEditValueObjectProperty<G, S> requiredOnEdit([bool requiredOnEdit = true]) {
+    return RequiredOnEditValueObjectProperty<G, S>(property: this, requiredOnEdit: requiredOnEdit);
   }
 
-  PlaceholderValueObjectProperty<G, S, L> withPlaceholder(G Function() placeholder) {
+  PlaceholderValueObjectProperty<G, S> withPlaceholder(G Function() placeholder) {
     return PlaceholderValueObjectProperty(property: this, placeholder: placeholder);
   }
 
-  DefaultValueObjectProperty<G, S, L> withDefault(G Function() defaultValueGetter) {
+  DefaultValueObjectProperty<G, S> withDefault(G Function() defaultValueGetter) {
     return DefaultValueObjectProperty(property: this, defaultValueGetter: defaultValueGetter);
   }
 
-  DisplayNameValueObjectProperty<G, S, L> withDisplayName(String? displayName) {
+  DisplayNameValueObjectProperty<G, S> withDisplayName(String? displayName) {
     return DisplayNameValueObjectProperty(property: this, displayNameGetter: () => displayName);
   }
 
-  DisplayNameValueObjectProperty<G, S, L> withDynamicDisplayName(String? Function() displayNameGetter) {
+  DisplayNameValueObjectProperty<G, S> withDynamicDisplayName(String? Function() displayNameGetter) {
     return DisplayNameValueObjectProperty(property: this, displayNameGetter: displayNameGetter);
   }
 
-  HiddenValueObjectProperty<G, S, L> hidden([bool Function()? isHiddenGetter]) {
+  HiddenValueObjectProperty<G, S> hidden([bool Function()? isHiddenGetter]) {
     return HiddenValueObjectProperty(property: this, isHiddenGetter: isHiddenGetter);
   }
 
-  IndexedValueObjectProperty<G, S, L> indexed([bool Function()? isIndexedGetter]) {
+  IndexedValueObjectProperty<G, S> indexed([bool Function()? isIndexedGetter]) {
     return IndexedValueObjectProperty(property: this, isIndexedGetter: isIndexedGetter);
   }
 }
 
-extension GetterSetterNullabeValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty>
-    on ValueObjectProperty<G?, S?, L, V> {
-  RequiredValueObjectProperty<G, S, L> required() {
+extension GetterSetterNullabeValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty>
+    on ValueObjectProperty<G?, S?, V> {
+  RequiredValueObjectProperty<G, S> required() {
     return RequiredValueObjectProperty(property: this);
   }
 }
 
-extension GetterNullableValueObjectPropertyExtensions<G, S, L, V extends ValueObjectProperty>
-    on ValueObjectProperty<G?, S, L, V> {
-  FallbackValueObjectProperty<G, S, L> withFallback(G Function() fallback) {
+extension GetterNullableValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty>
+    on ValueObjectProperty<G?, S, V> {
+  FallbackValueObjectProperty<G, S> withFallback(G Function() fallback) {
     return FallbackValueObjectProperty(property: this, fallback: fallback);
   }
 
-  FallbackWithoutReplacementValueObjectProperty<G, S, L> withFallbackWithoutReplacement(G Function() fallback) {
+  FallbackWithoutReplacementValueObjectProperty<G, S> withFallbackWithoutReplacement(G Function() fallback) {
     return FallbackWithoutReplacementValueObjectProperty(property: this, fallback: fallback);
   }
 }
 
-extension NullableStringValueObjectPropertyExtensions<G extends String?, S extends String?, L,
-    V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
-  IsNotBlankValueObjectProperty<L> isNotBlank() {
-    return IsNotBlankValueObjectProperty<L>(property: this);
+extension NullableStringValueObjectPropertyExtensions<G extends String?, S extends String?,
+    V extends ValueObjectProperty> on ValueObjectProperty<G, S, V> {
+  IsNotBlankValueObjectProperty isNotBlank() {
+    return IsNotBlankValueObjectProperty(property: this);
   }
 
-  IsNameValueObjectProperty<G, S, L> isName() {
-    return IsNameValueObjectProperty<G, S, L>(property: this);
+  IsNameValueObjectProperty<G, S> isName() {
+    return IsNameValueObjectProperty<G, S>(property: this);
   }
 
-  IsEmailValueObjectProperty<G, S, L> isEmail() {
-    return IsEmailValueObjectProperty<G, S, L>(property: this);
+  IsEmailValueObjectProperty<G, S> isEmail() {
+    return IsEmailValueObjectProperty<G, S>(property: this);
   }
 
-  IsPhoneValueObjectProperty<G, S, L> isPhone() {
-    return IsPhoneValueObjectProperty<G, S, L>(property: this);
+  IsPhoneValueObjectProperty<G, S> isPhone() {
+    return IsPhoneValueObjectProperty<G, S>(property: this);
   }
 
-  MultilineValueObjectProperty<G, S, L> multiline([bool isMultiline = true]) {
-    return MultilineValueObjectProperty<G, S, L>(property: this, isMultiline: isMultiline);
+  MultilineValueObjectProperty<G, S> multiline([bool isMultiline = true]) {
+    return MultilineValueObjectProperty<G, S>(property: this, isMultiline: isMultiline);
   }
 
-  NullIfBlankValueObjectProperty<G, S, L> nullIfBlank() {
-    return NullIfBlankValueObjectProperty<G, S, L>(property: this);
+  NullIfBlankValueObjectProperty<G, S> nullIfBlank() {
+    return NullIfBlankValueObjectProperty<G, S>(property: this);
   }
 }
 
-extension TimestampValueObjectPropertyExtensions<G extends Timestamp?, S extends Timestamp?, L,
-    V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
-  TimeValueObjectProperty<G, S, L> time() {
-    return TimeValueObjectProperty<G, S, L>(property: this);
+extension TimestampValueObjectPropertyExtensions<G extends Timestamp?, S extends Timestamp?,
+    V extends ValueObjectProperty> on ValueObjectProperty<G, S, V> {
+  TimeValueObjectProperty<G, S> time() {
+    return TimeValueObjectProperty<G, S>(property: this);
   }
 
-  OnlyDateValueObjectProperty<G, S, L> onlyDate([bool onlyDate = true]) {
+  OnlyDateValueObjectProperty<G, S> onlyDate([bool onlyDate = true]) {
     return OnlyDateValueObjectProperty(property: this, onlyDate: onlyDate);
   }
 }
 
-extension ValueObjectValueObjectPropertyExtensions<G extends ValueObject?, S extends ValueObject?, L,
-    V extends ValueObjectProperty> on ValueObjectProperty<G, S, L, V> {
-  EmbeddedValueObjectProperty<G, S, L> embedded() {
-    return EmbeddedValueObjectProperty<G, S, L>(property: this);
+extension ValueObjectValueObjectPropertyExtensions<G extends ValueObject?, S extends ValueObject?,
+    V extends ValueObjectProperty> on ValueObjectProperty<G, S, V> {
+  EmbeddedValueObjectProperty<G, S> embedded() {
+    return EmbeddedValueObjectProperty<G, S>(property: this);
   }
 }
 
-extension NullableNumValueObjectPropertyExtensions<G extends num?, S extends num?, L, V extends ValueObjectProperty>
-    on ValueObjectProperty<G, S, L, V> {
-  ValidatorValueObjectProperty<G, S, L> isGreaterThan(num number) {
+extension NullableNumValueObjectPropertyExtensions<G extends num?, S extends num?, V extends ValueObjectProperty>
+    on ValueObjectProperty<G, S, V> {
+  ValidatorValueObjectProperty<G, S> isGreaterThan(num number) {
     return withValidator(Validator.isGreaterThan<G>(number).mapError((_) => 'Must be greater than [$number]!'));
   }
 
-  ValidatorValueObjectProperty<G, S, L> isLessThan(num number) {
+  ValidatorValueObjectProperty<G, S> isLessThan(num number) {
     return withValidator(Validator.isLessThan<G>(number).mapError((_) => 'Must be less than [$number]!'));
   }
 
-  ValidatorValueObjectProperty<G, S, L> isGreaterThanOrEqualTo(num number) {
+  ValidatorValueObjectProperty<G, S> isGreaterThanOrEqualTo(num number) {
     return withValidator(
         Validator.isGreaterThanOrEqualTo<G>(number).mapError((_) => 'Must be greater than or equal to [$number]!'));
   }
 
-  ValidatorValueObjectProperty<G, S, L> isLessThanOrEqualTo(num number) {
+  ValidatorValueObjectProperty<G, S> isLessThanOrEqualTo(num number) {
     return withValidator(Validator.isLessThanOrEqualTo<G>(number).mapError((_) => 'Must be less than [$number]!'));
   }
 
-  ValidatorValueObjectProperty<G, S, L> isPositive() {
+  ValidatorValueObjectProperty<G, S> isPositive() {
     return withValidator(Validator.isPositive<G>().mapError((_) => 'Must be positive!'));
   }
 
-  ValidatorValueObjectProperty<G, S, L> isNegative() {
+  ValidatorValueObjectProperty<G, S> isNegative() {
     return withValidator(Validator.isNegative<G>().mapError((_) => 'Must be negative!'));
   }
 
-  ValidatorValueObjectProperty<G, S, L> isNonPositive() {
+  ValidatorValueObjectProperty<G, S> isNonPositive() {
     return withValidator(Validator.isNonPositive<G>().mapError((_) => 'Cannot be positive!'));
   }
 
-  ValidatorValueObjectProperty<G, S, L> isNonNegative() {
+  ValidatorValueObjectProperty<G, S> isNonNegative() {
     return withValidator(Validator.isNonNegative<G>().mapError((_) => 'Cannot be negative!'));
   }
 }
 
-extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int?, L, V extends ValueObjectProperty>
-    on ValueObjectProperty<G, S, L, V> {
-  CurrencyValueObjectProperty<G, S, L> currency([bool isCurrency = true]) {
-    return CurrencyValueObjectProperty<G, S, L>(property: this, isCurrency: isCurrency);
+extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int?, V extends ValueObjectProperty>
+    on ValueObjectProperty<G, S, V> {
+  CurrencyValueObjectProperty<G, S> currency([bool isCurrency = true]) {
+    return CurrencyValueObjectProperty<G, S>(property: this, isCurrency: isCurrency);
   }
 
-  ColorValueObjectProperty<G, S, L> color([bool isColor = true]) {
-    return ColorValueObjectProperty<G, S, L>(property: this, isColor: isColor);
+  ColorValueObjectProperty<G, S> color([bool isColor = true]) {
+    return ColorValueObjectProperty<G, S>(property: this, isColor: isColor);
   }
 }
 
-extension SameNullableGetterSetterValueObjectPropertyExtensions<T, L, V extends ValueObjectProperty>
-    on ValueObjectProperty<T?, T?, L, V> {
-  FallbackReplacementValueObjectProperty<T, L> withFallbackReplacement(T Function() fallbackReplacement) {
+extension SameNullableGetterSetterValueObjectPropertyExtensions<T, V extends ValueObjectProperty>
+    on ValueObjectProperty<T?, T?, V> {
+  FallbackReplacementValueObjectProperty<T> withFallbackReplacement(T Function() fallbackReplacement) {
     return FallbackReplacementValueObjectProperty(property: this, fallbackReplacement: fallbackReplacement);
   }
 }
 
-extension SameGetterSetterValueObjectPropertyExtensions<T, L, V extends ValueObjectProperty>
-    on ValueObjectProperty<T, T, L, V> {
-  AsyncFallbackValueObjectProperty<T, L> withAsyncFallback(FutureOr<T> Function(DropCoreContext context) fallback) {
+extension SameGetterSetterValueObjectPropertyExtensions<T, V extends ValueObjectProperty>
+    on ValueObjectProperty<T, T, V> {
+  AsyncFallbackValueObjectProperty<T> withAsyncFallback(FutureOr<T> Function(DropCoreContext context) fallback) {
     return AsyncFallbackValueObjectProperty(property: this, fallback: fallback);
   }
 }
 
-extension FieldValueObjectPropertyExtensions<T, L> on FieldValueObjectProperty<T, L> {
-  ListValueObjectProperty<T, L> list() {
+extension FieldValueObjectPropertyExtensions<T> on FieldValueObjectProperty<T> {
+  ListValueObjectProperty<T> list() {
     return ListValueObjectProperty(property: this);
   }
 
-  MapValueObjectProperty<T, V, L> mapTo<V>() {
+  MapValueObjectProperty<T, V> mapTo<V>() {
     return MapValueObjectProperty(property: this);
   }
 }
 
-abstract class ValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty>
-    implements ValueObjectProperty<G, S, L, V> {
-  ValueObjectProperty<G, S, L, dynamic> get property;
+abstract class ValueObjectPropertyWrapper<G, S, V extends ValueObjectProperty> implements ValueObjectProperty<G, S, V> {
+  ValueObjectProperty<G, S, dynamic> get property;
 }
 
-mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, L, V>>
-    implements ValueObjectPropertyWrapper<G, S, L, V> {
+mixin IsValueObjectPropertyWrapper<G, S, V extends ValueObjectProperty<G, S, V>>
+    implements ValueObjectPropertyWrapper<G, S, V> {
   @override
   String get name => property.name;
 
@@ -312,9 +304,6 @@ mixin IsValueObjectPropertyWrapper<G, S, L, V extends ValueObjectProperty<G, S, 
   @override
   Future<State> modifyStateForRepository(DropCoreContext context, State state) =>
       property.modifyStateForRepository(context, state);
-
-  @override
-  Future<L> load(DropCoreContext context) => property.load(context);
 
   @override
   FutureOr<String?> onValidate(ValueObject data) => property.validate(data);

@@ -1,11 +1,10 @@
-import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-class FallbackReplacementValueObjectProperty<T, L>
-    with IsValueObjectProperty<T, T?, L, FallbackReplacementValueObjectProperty<T, L>> {
-  final ValueObjectProperty<T?, T?, L, dynamic> property;
+class FallbackReplacementValueObjectProperty<T>
+    with IsValueObjectProperty<T, T?, FallbackReplacementValueObjectProperty<T>> {
+  final ValueObjectProperty<T?, T?, dynamic> property;
 
   final T Function() fallbackReplacement;
 
@@ -41,11 +40,8 @@ class FallbackReplacementValueObjectProperty<T, L>
   set(T? value) => property.set(value);
 
   @override
-  Future<L> load(DropCoreContext context) => property.load(context);
-
-  @override
-  FallbackReplacementValueObjectProperty<T, L> copy() {
-    return FallbackReplacementValueObjectProperty<T, L>(
+  FallbackReplacementValueObjectProperty<T> copy() {
+    return FallbackReplacementValueObjectProperty<T>(
       property: property.copy(),
       fallbackReplacement: fallbackReplacement,
     );

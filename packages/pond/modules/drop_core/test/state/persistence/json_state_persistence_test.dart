@@ -1,6 +1,6 @@
 import 'package:drop_core/drop_core.dart';
-import 'package:test/test.dart';
 import 'package:runtime_type/type.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('persist state as json.', () {

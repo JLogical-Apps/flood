@@ -81,12 +81,12 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
   @override
   List<Object> get props => [scaffoldState];
 
-  FieldValueObjectProperty<T, dynamic> field<T>({required String name}) => ValueObjectProperty.field<T>(name: name);
+  FieldValueObjectProperty<T> field<T>({required String name}) => ValueObjectProperty.field<T>(name: name);
 
   ReferenceValueObjectProperty<E> reference<E extends Entity>({required String name}) =>
       ValueObjectProperty.reference<E>(name: name);
 
-  ComputedValueObjectProperty<T, dynamic> computed<T>({required String name, required T Function() computation}) =>
+  ComputedValueObjectProperty<T> computed<T>({required String name, required T Function() computation}) =>
       ValueObjectProperty.computed<T>(name: name, computation: computation);
 
   CreationTimeProperty creationTime() => ValueObjectProperty.creationTime();

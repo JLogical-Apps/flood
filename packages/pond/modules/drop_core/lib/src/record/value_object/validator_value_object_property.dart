@@ -4,10 +4,9 @@ import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:utils_core/utils_core.dart';
 
-class ValidatorValueObjectProperty<T, S, L>
-    with IsValueObjectPropertyWrapper<T, S, L, ValidatorValueObjectProperty<T, S, L>> {
+class ValidatorValueObjectProperty<T, S> with IsValueObjectPropertyWrapper<T, S, ValidatorValueObjectProperty<T, S>> {
   @override
-  final ValueObjectProperty<T, S, L, dynamic> property;
+  final ValueObjectProperty<T, S, dynamic> property;
 
   final Validator<T, String> validator;
 
@@ -24,8 +23,8 @@ class ValidatorValueObjectProperty<T, S, L>
   }
 
   @override
-  ValidatorValueObjectProperty<T, S, L> copy() {
-    return ValidatorValueObjectProperty<T, S, L>(property: property.copy(), validator: validator);
+  ValidatorValueObjectProperty<T, S> copy() {
+    return ValidatorValueObjectProperty<T, S>(property: property.copy(), validator: validator);
   }
 
   @override

@@ -1,10 +1,10 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:utils_core/utils_core.dart';
 
-class NullIfBlankValueObjectProperty<G extends String?, S extends String?, L>
-    with IsValueObjectPropertyWrapper<String?, String?, L, NullIfBlankValueObjectProperty<G, S, L>> {
+class NullIfBlankValueObjectProperty<G extends String?, S extends String?>
+    with IsValueObjectPropertyWrapper<String?, String?, NullIfBlankValueObjectProperty<G, S>> {
   @override
-  final ValueObjectProperty<G, S, L, dynamic> property;
+  final ValueObjectProperty<G, S, dynamic> property;
 
   final bool useNullIfBlank;
 
@@ -17,7 +17,7 @@ class NullIfBlankValueObjectProperty<G extends String?, S extends String?, L>
   String? get valueOrNull => value;
 
   @override
-  NullIfBlankValueObjectProperty<G, S, L> copy() {
-    return NullIfBlankValueObjectProperty<G, S, L>(property: property.copy(), useNullIfBlank: useNullIfBlank);
+  NullIfBlankValueObjectProperty<G, S> copy() {
+    return NullIfBlankValueObjectProperty<G, S>(property: property.copy(), useNullIfBlank: useNullIfBlank);
   }
 }

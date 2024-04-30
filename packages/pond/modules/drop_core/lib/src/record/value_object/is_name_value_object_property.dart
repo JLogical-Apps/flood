@@ -1,18 +1,16 @@
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 
-class IsNameValueObjectProperty<G extends String?, S extends String?, L>
-    with IsValueObjectPropertyWrapper<G, S, L, IsNameValueObjectProperty<G, S, L>> {
-  final ValueObjectProperty<G, S, L, dynamic> _property;
+class IsNameValueObjectProperty<G extends String?, S extends String?>
+    with IsValueObjectPropertyWrapper<G, S, IsNameValueObjectProperty<G, S>> {
+  final ValueObjectProperty<G, S, dynamic> _property;
 
   @override
-  ValueObjectProperty<G, S, L, dynamic> get property =>
-      (_property as ValueObjectProperty<G, S, L, ValueObjectProperty>);
+  ValueObjectProperty<G, S, dynamic> get property => (_property as ValueObjectProperty<G, S, ValueObjectProperty>);
 
-  IsNameValueObjectProperty({required ValueObjectProperty<G, S, L, ValueObjectProperty> property})
-      : _property = property;
+  IsNameValueObjectProperty({required ValueObjectProperty<G, S, ValueObjectProperty> property}) : _property = property;
 
   @override
-  IsNameValueObjectProperty<G, S, L> copy() {
-    return IsNameValueObjectProperty<G, S, L>(property: _property.copy());
+  IsNameValueObjectProperty<G, S> copy() {
+    return IsNameValueObjectProperty<G, S>(property: _property.copy());
   }
 }

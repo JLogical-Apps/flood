@@ -1,11 +1,10 @@
-import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/field_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-class ListValueObjectProperty<T, L> with IsValueObjectProperty<List<T>, List<T>, L, ListValueObjectProperty<T, L>> {
-  final FieldValueObjectProperty<T, L> property;
+class ListValueObjectProperty<T> with IsValueObjectProperty<List<T>, List<T>, ListValueObjectProperty<T>> {
+  final FieldValueObjectProperty<T> property;
 
   @override
   List<T> value;
@@ -42,10 +41,7 @@ class ListValueObjectProperty<T, L> with IsValueObjectProperty<List<T>, List<T>,
   }
 
   @override
-  Future<L> load(DropCoreContext context) => property.load(context);
-
-  @override
-  ListValueObjectProperty<T, L> copy() {
-    return ListValueObjectProperty<T, L>(property: property.copy(), value: value);
+  ListValueObjectProperty<T> copy() {
+    return ListValueObjectProperty<T>(property: property.copy(), value: value);
   }
 }
