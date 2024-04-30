@@ -2,6 +2,8 @@ import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example_core/features/todo/todo.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
+import 'package:example_core/features/user/user.dart';
+import 'package:example_core/features/user/user_entity.dart';
 import 'package:flood/flood.dart';
 import 'package:flutter/material.dart';
 
@@ -26,17 +28,31 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
       return StyledLoadingPage();
     }
 
+    final loggedInUserModel = useEntity<UserEntity>(loggedInUserId);
     final todosModel = useQuery(Query.from<TodoEntity>().where(Todo.userField).isEqualTo(loggedInUserId).all());
 
     return ModelBuilder.page(
-      model: todosModel,
-      builder: (List<TodoEntity> todoEntities) {
+      model: Model.union([loggedInUserModel, todosModel]),
+      builder: (List values) {
+        final [UserEntity loggedInUserEntity, List<TodoEntity> todoEntities] = values;
         final uncompletedTodos = todoEntities.where((todoEntity) => !todoEntity.value.completedProperty.value).toList();
         final completedTodos = todoEntities.where((todoEntity) => todoEntity.value.completedProperty.value).toList();
 
         return StyledPage(
           titleText: 'Todos',
           actions: [
+            ActionItem.edit(
+                contentType: 'Profile',
+                descriptionText: 'Edit your profile.',
+                onPerform: (_) async {
+                  await context.showStyledDialog(StyledPortDialog(
+                    titleText: 'Edit Profile',
+                    port: loggedInUserEntity.value.asPort(context.corePondContext),
+                    onAccept: (User user) async {
+                      await context.dropCoreComponent.updateEntity(loggedInUserEntity..set(user));
+                    },
+                  ));
+                }),
             ActionItem(
               titleText: 'Import',
               color: Colors.blue,
@@ -99,7 +115,7 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                               .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
                         },
                       ),
-                      actions: _getTodoActions(todoEntity),
+                      actions: _getTodoActions(context, todoEntity),
                     )),
                 if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) ...[
                   StyledDivider(),
@@ -116,7 +132,7 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                               .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
                         },
                       ),
-                      actions: _getTodoActions(todoEntity),
+                      actions: _getTodoActions(context, todoEntity),
                     )),
               ],
             ),
@@ -126,33 +142,24 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
     );
   }
 
-  List<ActionItem> _getTodoActions(TodoEntity todoEntity) {
+  List<ActionItem> _getTodoActions(BuildContext context, TodoEntity todoEntity) {
     return [
-      ActionItem(
-        titleText: 'Edit',
-        color: Colors.orange,
-        descriptionText: 'Edit this Todo.',
-        iconData: Icons.edit,
-        onPerform: (context) => context.showStyledDialog(StyledPortDialog<Todo>(
-          titleText: 'Edit Todo',
-          port: todoEntity.value.asPort(context.corePondContext),
-          onAccept: (Todo todo) async {
-            await context.dropCoreComponent.updateEntity(todoEntity..set(todo));
-          },
-        )),
+      ActionItem.edit(
+        contentType: 'Todo',
+        onPerform: (context) async {
+          await context.showStyledDialog(StyledPortDialog(
+            titleText: 'Edit Todo',
+            port: todoEntity.value.asPort(context.corePondContext),
+            onAccept: (Todo todo) async {
+              await context.dropCoreComponent.updateEntity(todoEntity..set(todo));
+            },
+          ));
+        },
       ),
-      ActionItem(
-        titleText: 'Delete',
-        color: Colors.red,
-        descriptionText: 'Delete this Todo.',
-        iconData: Icons.delete,
-        onPerform: (context) => context.showStyledDialog(StyledDialog.yesNo(
-          titleText: 'Confirm Delete',
-          bodyText: 'Are you sure you want to delete this Todo? You cannot undo this.',
-          onAccept: () async {
-            await context.dropCoreComponent.delete(todoEntity);
-          },
-        )),
+      ActionItem.delete(
+        context,
+        contentType: 'Todo',
+        onDelete: () => context.dropCoreComponent.delete(todoEntity),
       ),
     ];
   }

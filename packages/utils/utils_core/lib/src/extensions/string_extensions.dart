@@ -1,4 +1,4 @@
-
+import 'package:dart_casing/dart_casing.dart';
 
 extension StringExtensions on String {
   bool get isBlank => trim().isEmpty;
@@ -17,4 +17,18 @@ extension StringExtensions on String {
   }
 
   String get withoutAnsiEscapeCodes => replaceAll(RegExp(r'\x1B\[[0-?]*[ -/]*[@-~]'), '');
+
+  String get camelCase => Casing.camelCase(this);
+
+  String get pascalCase => Casing.pascalCase(this);
+
+  String get titleCase => Casing.titleCase(this);
+
+  String get snakeCase => Casing.snakeCase(this);
+
+  String get kebabCase => Casing.kebabCase(this);
+
+  String get dotCase => Casing.dotCase(this);
+
+  String get constantCase => Casing.constantCase(this);
 }
