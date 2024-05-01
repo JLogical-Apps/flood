@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:port_core/src/port_field.dart';
+import 'package:port_core/src/port_field_provider.dart';
 import 'package:port_core/src/port_mapper.dart';
 import 'package:port_core/src/port_submit_result.dart';
 import 'package:rxdart/rxdart.dart';
@@ -25,39 +26,114 @@ extension PortExtensions<T> on Port<T> {
 
   Map<String, dynamic> get portValueByName => portFieldByName.map((name, field) => MapEntry(name, field.value));
 
-  PortField? getFieldByNameOrNull(String name) => portFieldByName[name];
+  PortFieldProvider getPortFieldProvider() {
+    return PortFieldProvider(
+      fieldGetter: (name) => portFieldByName[name],
+      portFieldSetter: (name, portField) => setPortField(name: name, portField: portField),
+    );
+  }
 
-  PortField getFieldByName(String name) =>
-      getFieldByNameOrNull(name) ?? (throw Exception('Cannot find port field with name [$name]'));
+  PortField? getFieldByPathOrNull(String path) {
+    if (path.isEmpty) {
+      return null;
+    }
 
-  F? getByNameOrNull<F>(String name) => portFieldByName[name]?.value;
+    final segments = path.split('/');
+    PortFieldProvider portFieldProvider = getPortFieldProvider();
+    PortField? portField;
 
-  F getByName<F>(String name) => (portFieldByName[name] ?? (throw Exception('Cannot find value [$name]'))).value;
+    for (var i = 0; i < segments.length; i++) {
+      final segment = segments[i];
+      final isLast = (i + 1) == segments.length;
 
-  dynamic getErrorByNameOrNull(String name) => portFieldByName[name]?.error;
+      final newPortField = portFieldProvider.getFieldByNameOrNull(segment);
+      if (newPortField == null) {
+        return null;
+      }
 
-  dynamic getErrorByName(String name) =>
-      (portFieldByName[name] ?? (throw Exception('Cannot find value [$name]'))).error;
+      portField = newPortField;
+      if (!isLast) {
+        final newPortFieldProvider = portField.getPortFieldProviderOrNull();
+        if (newPortFieldProvider == null) {
+          return null;
+        }
+        portFieldProvider = newPortFieldProvider;
+      }
+    }
 
-  void setValue({required String name, required dynamic value}) {
-    final field = getFieldByName(name);
+    return portField;
+  }
+
+  PortField getFieldByPath(String path) {
+    if (path.isEmpty) {
+      return portFieldByName[path] ?? (throw Exception('Could not find port field with name [$path]'));
+    }
+
+    final segments = path.split('/');
+    PortFieldProvider portFieldProvider = getPortFieldProvider();
+    late PortField portField;
+
+    for (var i = 0; i < segments.length; i++) {
+      final segment = segments[i];
+      final isLast = (i + 1) == segments.length;
+
+      portField = portFieldProvider.getFieldByNameOrNull(segment) ??
+          (throw Exception('Could not find port field with segment [$segment] in path [$path]'));
+
+      if (!isLast) {
+        portFieldProvider = portField.getPortFieldProviderOrNull() ??
+            (throw Exception('Could not find port field provider with segment [$segment] in path [$path]'));
+      }
+    }
+
+    return portField;
+  }
+
+  void setPortFieldForPath({required String path, required PortField portField}) {
+    final segments = path.split('/');
+    PortFieldProvider portFieldProvider = getPortFieldProvider();
+    late PortField nestedPortField;
+
+    for (var i = 0; i < segments.length - 1; i++) {
+      final segment = segments[i];
+
+      nestedPortField = portFieldProvider.getFieldByNameOrNull(segment) ??
+          (throw Exception('Could not find port field with segment [$segment] in path [$path]'));
+
+      portFieldProvider = nestedPortField.getPortFieldProviderOrNull() ??
+          (throw Exception('Could not find port field provider with segment [$segment] in path [$path]'));
+    }
+
+    portFieldProvider.setFieldByName(name: segments.last, portField: portField);
+  }
+
+  F? getByPathOrNull<F>(String path) => getFieldByPathOrNull(path)?.value;
+
+  F getByPath<F>(String path) => getFieldByPath(path).value;
+
+  dynamic getErrorByPathOrNull(String path) => getFieldByPathOrNull(path)?.error;
+
+  dynamic getErrorByPath(String path) => getFieldByPath(path).error;
+
+  void setValue({required String path, required dynamic value}) {
+    final field = getFieldByPath(path);
     final parsedValue = field.parseValue(value);
-    setPortField(
-      name: name,
+    setPortFieldForPath(
+      path: path,
       portField: field.copyWithValue(parsedValue),
     );
   }
 
-  void setError({required String name, required dynamic error}) => setPortField(
-        name: name,
-        portField: getFieldByName(name).copyWithError(error),
+  void setError({required String path, required dynamic error}) => setPortFieldForPath(
+        path: path,
+        portField: getFieldByPath(path).copyWithError(error),
       );
 
-  void clearError({required String name}) => setError(name: name, error: null);
+  void clearError({required String path}) => setError(path: path, error: null);
 
-  dynamic operator [](String name) => getByName(name);
+  dynamic operator [](String path) => getByPath(path);
 
-  operator []=(String name, dynamic value) => setValue(name: name, value: value);
+  operator []=(String path, dynamic value) => setValue(path: path, value: value);
 
   PortMapper<T, R> map<R>(FutureOr<R?> Function(T sourceData, Port<T> port) mapper, {Type? submitType}) {
     return PortMapper(port: this, mapper: mapper, submitType: submitType);
@@ -70,8 +146,8 @@ class _PortImpl with IsPort<Map<String, dynamic>> {
   final BehaviorSubject<Map<String, PortField>> _portFieldByNameX;
 
   _PortImpl(Map<String, PortField> valueByName) : _portFieldByNameX = BehaviorSubject.seeded(valueByName) {
-    for (final portField in valueByName.values) {
-      portField.registerToPort(this);
+    for (final (fieldName, portField) in valueByName.entryRecords) {
+      portField.registerToPort(fieldName, this);
     }
   }
 

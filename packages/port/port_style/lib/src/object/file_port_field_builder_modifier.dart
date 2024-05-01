@@ -7,9 +7,9 @@ import 'package:utils/utils.dart';
 
 class FilePortFieldBuilderModifier extends PortFieldBuilderModifier {
   @override
-  Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
+  Widget? getWidgetOrNull(PortField portField) {
     return StyledFilePortField(
-      fieldName: fieldName,
+      fieldPath: portField.fieldPath,
       allowedFileTypes: portField.findAllowedFileTypes(),
       labelText: portField.findDisplayNameOrNull(),
       hintText: portField.findHintOrNull()?.toString(),

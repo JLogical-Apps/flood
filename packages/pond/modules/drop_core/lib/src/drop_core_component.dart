@@ -23,9 +23,12 @@ class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositor
   @override
   List<CorePondComponentBehavior> get behaviors => [
         CorePondComponentBehavior.dependency<TypeCoreComponent>(),
-        CorePondComponentBehavior(onLoad: (context, component) {
-          context.locate<TypeCoreComponent>().registerAbstract<ValueObject>(name: 'ValueObject');
-        })
+        CorePondComponentBehavior(
+          onRegister: (context, component) {
+            context.locate<TypeCoreComponent>().registerAbstract<ValueObject>(name: 'ValueObject');
+            context.locate<TypeCoreComponent>().registerAbstract<Entity>(name: 'Entity');
+          },
+        )
       ];
 
   Future<void> runWithoutSecurity(FutureOr Function() runner) async {

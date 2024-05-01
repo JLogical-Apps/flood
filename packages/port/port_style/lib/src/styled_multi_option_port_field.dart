@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
 class StyledMultiOptionPortField<T> extends HookWidget {
-  final String fieldName;
+  final String fieldPath;
 
   final String? labelText;
   final Widget? label;
@@ -16,7 +16,7 @@ class StyledMultiOptionPortField<T> extends HookWidget {
 
   const StyledMultiOptionPortField({
     super.key,
-    required this.fieldName,
+    required this.fieldPath,
     this.labelText,
     this.label,
     this.enabled = true,
@@ -27,7 +27,7 @@ class StyledMultiOptionPortField<T> extends HookWidget {
   Widget build(BuildContext context) {
     final port = Provider.of<Port>(context, listen: false);
     return PortFieldBuilder<List<T>>(
-      fieldName: fieldName,
+      fieldPath: fieldPath,
       builder: (context, field, value, error) {
         final options =
             field.findOptionsOrNull() ?? (throw Exception('Could not find options for port field [$field]'));
@@ -37,7 +37,7 @@ class StyledMultiOptionPortField<T> extends HookWidget {
           label: label,
           errorText: error?.toString(),
           enabled: enabled,
-          onChanged: (value) => port[fieldName] = value,
+          onChanged: (value) => port[fieldPath] = value,
           options: options.cast<T>(),
           itemLabelMapper: itemLabelMapper,
         );

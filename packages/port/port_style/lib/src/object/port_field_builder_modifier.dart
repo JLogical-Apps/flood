@@ -8,6 +8,7 @@ import 'package:port_style/src/object/double_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/embedded_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/file_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/int_port_field_builder_modifier.dart';
+import 'package:port_style/src/object/list_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/multi_option_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/options_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/stage_port_field_builder_modifier.dart';
@@ -15,13 +16,14 @@ import 'package:port_style/src/object/string_port_field_builder_modifier.dart';
 import 'package:utils/utils.dart';
 
 abstract class PortFieldBuilderModifier with IsModifier<PortField> {
-  Widget? getWidgetOrNull(Port port, String fieldName, PortField portField);
+  Widget? getWidgetOrNull(PortField portField);
 
   static final portFieldBuilderModifierResolver = ModifierResolver<PortFieldBuilderModifier, PortField>(modifiers: [
     StagePortFieldBuilderModifier(),
     EmbeddedPortFieldBuilderModifier(),
     MultiOptionPortFieldBuilderModifier(),
     OptionsPortFieldBuilderModifier(),
+    ListPortFieldBuilderModifier(),
     StringPortFieldBuilderModifier(),
     CurrencyPortFieldBuilderModifier(),
     ColorPortFieldBuilderModifier(),

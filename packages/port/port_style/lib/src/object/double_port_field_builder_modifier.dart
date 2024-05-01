@@ -6,9 +6,9 @@ import 'package:utils/utils.dart';
 
 class DoublePortFieldBuilderModifier extends PortFieldBuilderModifier {
   @override
-  Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
+  Widget? getWidgetOrNull(PortField portField) {
     return StyledDoubleFieldPortField(
-      fieldName: fieldName,
+      fieldPath: portField.fieldPath,
       labelText: portField.findDisplayNameOrNull(),
       hintText: (portField.findHintOrNull() as Object?)?.as<double>()?.formatIntOrDouble(),
     );

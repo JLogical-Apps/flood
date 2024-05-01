@@ -6,13 +6,4 @@ class ListPortFieldNodeModifier extends PortFieldNodeModifier<ListPortField> {
   ListPortField? findListPortFieldOrNull(ListPortField portField) {
     return portField;
   }
-
-  @override
-  List<R>? getOptionsOrNull<R>(ListPortField portField) {
-    if (portField.options != null) {
-      return portField.options!.cast<R>();
-    }
-
-    return null;
-  }
 }

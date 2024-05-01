@@ -6,9 +6,9 @@ import 'package:utils/utils.dart';
 
 class StringPortFieldBuilderModifier extends PortFieldBuilderModifier {
   @override
-  Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
+  Widget? getWidgetOrNull(PortField portField) {
     return StyledTextFieldPortField(
-      fieldName: fieldName,
+      fieldPath: portField.fieldPath,
       labelText: portField.findDisplayNameOrNull(),
       maxLines: portField.findIsMultiline() ? 3 : 1,
       hintText: portField.findHintOrNull()?.toString(),

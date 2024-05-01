@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:utils/utils.dart';
 
 class PortFieldBuilder<T> extends HookWidget {
-  final String fieldName;
+  final String fieldPath;
   final Widget Function(BuildContext context, PortField portField, T value, dynamic error) builder;
 
-  const PortFieldBuilder({super.key, required this.fieldName, required this.builder});
+  const PortFieldBuilder({super.key, required this.fieldPath, required this.builder});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +16,9 @@ class PortFieldBuilder<T> extends HookWidget {
     useValueStream(port.getPortX());
     return builder(
       context,
-      port.getFieldByName(fieldName),
-      port[fieldName],
-      port.getErrorByName(fieldName),
+      port.getFieldByPath(fieldPath),
+      port[fieldPath],
+      port.getErrorByPath(fieldPath),
     );
   }
 }

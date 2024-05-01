@@ -51,8 +51,6 @@ class PortDropCoreComponent with IsCorePondComponent {
       ListFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       ValueObjectFieldBehaviorModifier(
         portDropContext: context.locate<PortDropCoreComponent>(),
-        typeContext: context.locate<TypeCoreComponent>(),
-        portCreator: (valueObject) => generatePort(valueObject),
         modifierGetter: getBehaviorModifierOrNull,
       ),
       FieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),

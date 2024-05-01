@@ -6,7 +6,7 @@ import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
 class StyledColorPickerPortField extends HookWidget {
-  final String fieldName;
+  final String fieldPath;
 
   final String? labelText;
   final Widget? label;
@@ -18,7 +18,7 @@ class StyledColorPickerPortField extends HookWidget {
 
   const StyledColorPickerPortField({
     super.key,
-    required this.fieldName,
+    required this.fieldPath,
     this.labelText,
     this.label,
     this.enabled = true,
@@ -30,14 +30,14 @@ class StyledColorPickerPortField extends HookWidget {
   Widget build(BuildContext context) {
     final port = Provider.of<Port>(context, listen: false);
     return PortFieldBuilder<int?>(
-      fieldName: fieldName,
+      fieldPath: fieldPath,
       builder: (context, field, color, error) {
         return StyledColorPicker(
           value: color?.mapIfNonNull((value) => Color(value)),
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
           errorText: error?.toString(),
-          onChanged: (color) => port[fieldName] = color?.value,
+          onChanged: (color) => port[fieldPath] = color?.value,
           canBeNone: canBeNone,
           allowedColors: allowedColors,
         );

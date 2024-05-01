@@ -8,15 +8,11 @@ import 'package:utils_core/utils_core.dart';
 
 class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<FieldValueObjectProperty<ValueObject?>> {
   final PortDropCoreComponent portDropContext;
-  final TypeContext typeContext;
 
-  final Port<ValueObject> Function(ValueObject valueObject) portCreator;
   final PortGeneratorBehaviorModifier? Function(ValueObjectBehavior behavior) modifierGetter;
 
   ValueObjectFieldBehaviorModifier({
     required this.portDropContext,
-    required this.typeContext,
-    required this.portCreator,
     required this.modifierGetter,
   });
 
@@ -25,14 +21,30 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
     FieldValueObjectProperty<ValueObject?> behavior,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    final baseType = behavior.fieldType;
-    final baseRuntimeType = typeContext.getRuntimeTypeRuntime(baseType);
+    return {
+      behavior.name: getValueObjectPortField(
+        context,
+        valueObjectType: behavior.fieldType,
+        initialValue: behavior.value,
+        modifierGetter: modifierGetter,
+      ),
+    };
+  }
+
+  static PortField getValueObjectPortField(
+    PortGeneratorBehaviorModifierContext context, {
+    bool? isRequiredOnEdit,
+    required Type valueObjectType,
+    ValueObject? initialValue,
+    required PortGeneratorBehaviorModifier? Function(ValueObjectBehavior behavior) modifierGetter,
+  }) {
+    final typeContext = context.corePondContext.dropCoreComponent.typeContext;
+    final baseRuntimeType = typeContext.getRuntimeTypeRuntime(valueObjectType);
     final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
 
-    final isRequiredOnEdit =
-        modifierGetter(context.originalBehavior)?.isRequiredOnEdit(context.originalBehavior) ?? false;
+    isRequiredOnEdit ??= modifierGetter(context.originalBehavior)?.isRequiredOnEdit(context.originalBehavior) ?? false;
 
-    final initialValueObject = behavior.value ?? defaultValue as ValueObject?;
+    final initialValueObject = initialValue ?? defaultValue as ValueObject?;
     final initialRuntimeType =
         initialValueObject?.mapIfNonNull((value) => typeContext.getRuntimeTypeRuntime(value.runtimeType));
 
@@ -46,36 +58,33 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
       ]
     ];
 
-    return {
-      if (options.length == 1)
-        behavior.name: getEmbeddedPortField(
-          context,
-          valueObjectType: baseRuntimeType,
-          initialValueObject: initialValueObject,
-          defaultValue: defaultValue as ValueObject?,
-        )
-      else
-        behavior.name: getStagePortField(
-          context,
-          initialRuntimeType: initialRuntimeType,
-          initialValueObject: initialValueObject,
-          defaultValue: defaultValue as ValueObject?,
-          options: options,
-        ),
-    };
+    return options.length == 1
+        ? getEmbeddedPortField(
+            context,
+            valueObjectType: baseRuntimeType,
+            initialValueObject: initialValueObject,
+            defaultValue: defaultValue as ValueObject?,
+          )
+        : getStagePortField(
+            context,
+            initialRuntimeType: initialRuntimeType,
+            initialValueObject: initialValueObject,
+            defaultValue: defaultValue as ValueObject?,
+            options: options,
+          );
   }
 
-  PortField getEmbeddedPortField(
+  static PortField getEmbeddedPortField(
     PortGeneratorBehaviorModifierContext context, {
     required RuntimeType valueObjectType,
     required ValueObject? initialValueObject,
     required ValueObject? defaultValue,
   }) {
     final valueObject = initialValueObject ?? defaultValue ?? valueObjectType.createInstance();
-    return PortField.embedded(port: portCreator(valueObject));
+    return PortField.embedded(port: context.corePortDropComponent.generatePort(valueObject));
   }
 
-  PortField getStagePortField(
+  static PortField getStagePortField(
     PortGeneratorBehaviorModifierContext context, {
     required RuntimeType? initialRuntimeType,
     required ValueObject? initialValueObject,
@@ -91,11 +100,11 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
         }
 
         if (type == initialRuntimeType && initialValueObject != null) {
-          return portCreator(initialValueObject);
+          return context.corePortDropComponent.generatePort(initialValueObject);
         }
 
         final valueObject = type.createInstance();
-        return portCreator(valueObject);
+        return context.corePortDropComponent.generatePort(valueObject);
       },
       submitRawMapper: (portValue, type) {
         portValue ??= defaultValue?.asPort(context.corePondContext);
@@ -103,7 +112,7 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
           return null;
         }
 
-        return portDropContext.getValueObjectFromPort(
+        return context.corePortDropComponent.getValueObjectFromPort(
           port: portValue,
           valueObjectType: type.type,
         );

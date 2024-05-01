@@ -21,16 +21,16 @@ void main() {
 
     final user = Data1();
     var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data1.nameField), isA<PortField<String, String>>());
+    expect(userPort.getFieldByPath(Data1.nameField), isA<PortField<String, String>>());
 
     var result = await userPort.submit();
     expect(result.data.nameProperty.value, '');
 
     user.nameProperty.set('Jill');
     userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getByName(Data1.nameField), 'Jill');
+    expect(userPort.getByPath(Data1.nameField), 'Jill');
 
-    userPort.setValue(name: Data1.nameField, value: 'John Doe');
+    userPort.setValue(path: Data1.nameField, value: 'John Doe');
 
     result = await userPort.submit();
     expect(result.isValid, true);
@@ -42,16 +42,16 @@ void main() {
 
     final user = Data2();
     var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data2.nameField), isA<PortField>());
+    expect(userPort.getFieldByPath(Data2.nameField), isA<PortField>());
 
     final invalidResult = await userPort.submit();
     expect(invalidResult.isValid, false);
 
     user.nameProperty.set('Jill');
     userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getByName(Data2.nameField), 'Jill');
+    expect(userPort.getByPath(Data2.nameField), 'Jill');
 
-    userPort.setValue(name: Data2.nameField, value: 'John Doe');
+    userPort.setValue(path: Data2.nameField, value: 'John Doe');
 
     final result = await userPort.submit();
     expect(result.isValid, true);
@@ -63,7 +63,7 @@ void main() {
 
     final user = Data3();
     final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data3.nameField).findDisplayNameOrNull(), 'Name');
+    expect(userPort.getFieldByPath(Data3.nameField).findDisplayNameOrNull(), 'Name');
   });
 
   test('Port for multiline fields.', () async {
@@ -71,8 +71,8 @@ void main() {
 
     final user = Data4();
     final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data4.nameField).findIsMultiline(), false);
-    expect(userPort.getFieldByName(Data4.descriptionField).findIsMultiline(), true);
+    expect(userPort.getFieldByPath(Data4.nameField).findIsMultiline(), false);
+    expect(userPort.getFieldByPath(Data4.descriptionField).findIsMultiline(), true);
   });
 
   test('Concrete ValueObject field.', () async {
@@ -82,12 +82,12 @@ void main() {
 
     final user = Data13();
     var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data13.studentField).findStageFieldOrNull(), isNull);
+    expect(userPort.getFieldByPath(Data13.studentField).findStageFieldOrNull(), isNull);
     expect((userPort[Data13.studentField] as Port)[Student.nameField], isEmpty);
 
     user.studentProperty.set(Student());
     userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data13.studentField).findStageFieldOrNull(), isNull);
+    expect(userPort.getFieldByPath(Data13.studentField).findStageFieldOrNull(), isNull);
     expect((userPort[Data13.studentField] as Port)[Student.nameField], isEmpty);
 
     var result = await userPort.submit();
@@ -112,7 +112,7 @@ void main() {
 
     final user = Data5();
     var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data5.personField).findStageFieldOrNull(), isNotNull);
+    expect(userPort.getFieldByPath(Data5.personField).findStageFieldOrNull(), isNotNull);
     expect((userPort[Data5.personField] as StageValue).value, isNull);
 
     user.personProperty.set(Teacher());
@@ -144,14 +144,14 @@ void main() {
 
     final user = Data6();
     final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(), 'John');
-    expect(userPort.getFieldByName(Data6.lastNameField).findHintOrNull(), 'Doe');
-    expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(), 'John Doe');
-    expect(userPort.getFieldByName(Data6.errorField).findHintOrNull(), isNull);
+    expect(userPort.getFieldByPath(Data6.firstNameField).findHintOrNull(), 'John');
+    expect(userPort.getFieldByPath(Data6.lastNameField).findHintOrNull(), 'Doe');
+    expect(userPort.getFieldByPath(Data6.nameField).findHintOrNull(), 'John Doe');
+    expect(userPort.getFieldByPath(Data6.errorField).findHintOrNull(), isNull);
 
     userPort[Data6.firstNameField] = 'Jill';
-    expect(userPort.getFieldByName(Data6.firstNameField).findHintOrNull(), 'John');
-    expect(userPort.getFieldByName(Data6.nameField).findHintOrNull(), 'Jill Doe');
+    expect(userPort.getFieldByPath(Data6.firstNameField).findHintOrNull(), 'John');
+    expect(userPort.getFieldByPath(Data6.nameField).findHintOrNull(), 'Jill Doe');
   });
 
   test('Port for default fields.', () async {
@@ -159,10 +159,10 @@ void main() {
 
     final user = Data7();
     final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
-    expect(userPort.getFieldByName(Data7.nameField).value, 'John');
+    expect(userPort.getFieldByPath(Data7.nameField).value, 'John');
 
     userPort[Data7.nameField] = 'Jill';
-    expect(userPort.getFieldByName(Data7.nameField).value, 'Jill');
+    expect(userPort.getFieldByPath(Data7.nameField).value, 'Jill');
   });
 
   test('Port with overridden fields.', () async {
@@ -189,7 +189,7 @@ void main() {
     expect((await userPort.submit()).isValid, true);
 
     expect(userPort[Data8.lastNameField], 'Doe');
-    expect(userPort.getFieldByNameOrNull(Data8.errorField), isNull);
+    expect(userPort.getFieldByPathOrNull(Data8.errorField), isNull);
   });
 
   test('Port for date fields.', () async {
@@ -198,11 +198,11 @@ void main() {
     final user = Data9();
     final userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
     expect(
-      userPort.getFieldByName(Data9.dateField).findDateFieldOrNull(),
+      userPort.getFieldByPath(Data9.dateField).findDateFieldOrNull(),
       isA<DatePortField>().having((f) => f.isDate, 'isDate', true).having((f) => f.isTime, 'isTime', false),
     );
     expect(
-      userPort.getFieldByName(Data9.createdField).findDateFieldOrNull(),
+      userPort.getFieldByPath(Data9.createdField).findDateFieldOrNull(),
       isA<DatePortField>().having((f) => f.isDate, 'isDate', true).having((f) => f.isTime, 'isTime', true),
     );
   });

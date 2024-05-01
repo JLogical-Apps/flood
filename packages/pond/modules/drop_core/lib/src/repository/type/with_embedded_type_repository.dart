@@ -32,7 +32,7 @@ class WithEmbeddedTypeRepository<V extends ValueObject> with IsRepositoryWrapper
             typeComponent.register<V>(
               valueObjectConstructor,
               name: valueObjectTypeName,
-              parents: valueObjectParents,
+              parents: [...valueObjectParents, ValueObject],
             );
           },
         )

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
 class StyledBoolFieldPortField extends HookWidget {
-  final String fieldName;
+  final String fieldPath;
 
   final String? labelText;
   final Widget? label;
@@ -14,7 +14,7 @@ class StyledBoolFieldPortField extends HookWidget {
 
   const StyledBoolFieldPortField({
     super.key,
-    required this.fieldName,
+    required this.fieldPath,
     this.labelText,
     this.label,
     this.enabled = true,
@@ -24,7 +24,7 @@ class StyledBoolFieldPortField extends HookWidget {
   Widget build(BuildContext context) {
     final port = Provider.of<Port>(context, listen: false);
     return PortFieldBuilder<bool?>(
-      fieldName: fieldName,
+      fieldPath: fieldPath,
       builder: (context, field, value, error) {
         return StyledCheckbox(
           value: value ?? false,
@@ -33,8 +33,8 @@ class StyledBoolFieldPortField extends HookWidget {
           errorText: error?.toString(),
           onChanged: enabled
               ? (value) {
-                  port.clearError(name: fieldName);
-                  port[fieldName] = value;
+                  port.clearError(path: fieldPath);
+                  port[fieldPath] = value;
                 }
               : null,
         );

@@ -4,7 +4,7 @@ import 'package:port/port.dart';
 import 'package:port_style/src/styled_object_port_builder.dart';
 
 class StyledObjectPortField<T> extends HookWidget {
-  final String fieldName;
+  final String fieldPath;
 
   final String? labelText;
   final Widget? label;
@@ -15,7 +15,7 @@ class StyledObjectPortField<T> extends HookWidget {
 
   const StyledObjectPortField({
     super.key,
-    required this.fieldName,
+    required this.fieldPath,
     this.labelText,
     this.label,
     this.enabled = true,
@@ -25,7 +25,7 @@ class StyledObjectPortField<T> extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return PortFieldBuilder<Port<T>?>(
-      fieldName: fieldName,
+      fieldPath: fieldPath,
       builder: (context, field, objectPort, error) {
         if (objectPort == null) {
           return Container();

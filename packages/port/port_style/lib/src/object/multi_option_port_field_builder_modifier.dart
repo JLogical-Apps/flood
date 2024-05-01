@@ -5,9 +5,9 @@ import 'package:port_style/src/styled_multi_option_port_field.dart';
 
 class MultiOptionPortFieldBuilderModifier extends PortFieldBuilderModifier {
   @override
-  Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
+  Widget? getWidgetOrNull(PortField portField) {
     return StyledMultiOptionPortField(
-      fieldName: fieldName,
+      fieldPath: portField.fieldPath,
       labelText: portField.findDisplayNameOrNull(),
     );
   }

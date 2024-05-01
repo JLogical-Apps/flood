@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
 class StyledFilePortField extends HookWidget {
-  final String fieldName;
+  final String fieldPath;
 
   final AllowedFileTypes? allowedFileTypes;
 
@@ -24,7 +24,7 @@ class StyledFilePortField extends HookWidget {
 
   const StyledFilePortField({
     super.key,
-    required this.fieldName,
+    required this.fieldPath,
     this.allowedFileTypes,
     this.labelText,
     this.label,
@@ -38,7 +38,7 @@ class StyledFilePortField extends HookWidget {
   Widget build(BuildContext context) {
     final port = Provider.of<Port>(context, listen: false);
     return PortFieldBuilder<CrossFile?>(
-      fieldName: fieldName,
+      fieldPath: fieldPath,
       builder: (context, field, file, error) {
         return StyledList.row(
           children: [
@@ -64,7 +64,7 @@ class StyledFilePortField extends HookWidget {
                           return;
                         }
 
-                        port[fieldName] = result.files.first.asCrossFile();
+                        port[fieldPath] = result.files.first.asCrossFile();
                       }
                     : null,
               ),
@@ -73,7 +73,7 @@ class StyledFilePortField extends HookWidget {
               StyledButton(
                 iconData: Icons.remove_circle,
                 onPressed: () {
-                  port[fieldName] = null;
+                  port[fieldPath] = null;
                 },
               ),
           ],

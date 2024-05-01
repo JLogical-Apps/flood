@@ -63,7 +63,7 @@ class LoginPage with IsAppPageWrapper<LoginRoute> {
                         context.warpTo(HomeRoute());
                       } catch (e, stackTrace) {
                         final errorText = e.as<LoginFailure>()?.displayText ?? e.toString();
-                        loginPort.setError(name: 'email', error: errorText);
+                        loginPort.setError(path: 'email', error: errorText);
                         context.logError(e, stackTrace);
                       }
                     },

@@ -20,11 +20,13 @@ import 'package:port_core/src/name_port_field.dart';
 import 'package:port_core/src/options_port_field.dart';
 import 'package:port_core/src/phone_port_field.dart';
 import 'package:port_core/src/port.dart';
+import 'package:port_core/src/port_field_provider.dart';
 import 'package:port_core/src/port_field_validator_context.dart';
 import 'package:port_core/src/secret_port_field.dart';
 import 'package:port_core/src/stage_port_field.dart';
 import 'package:port_core/src/validator_port_field.dart';
 import 'package:utils_core/utils_core.dart';
+import 'package:uuid/uuid.dart';
 
 typedef SimplePortField<T> = PortField<T, T>;
 
@@ -32,6 +34,8 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
   T get value;
 
   dynamic get error;
+
+  late String fieldPath;
 
   late Port port;
 
@@ -49,12 +53,16 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
 
   PortFieldValidatorContext createValidationContext();
 
+  PortFieldProvider? getPortFieldProviderOrNull();
+
   factory PortField({
     required T value,
     dynamic error,
     Validator<PortFieldValidatorContext, String>? validator,
     S Function(T value)? submitRawMapper,
     FutureOr<S> Function(T value)? submitMapper,
+    Type? dataType,
+    Type? submitType,
   }) =>
       _PortFieldImpl<T, S>(
         value: value,
@@ -62,6 +70,8 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
         validator: validator ?? Validator.empty(),
         submitRawMapper: submitRawMapper,
         submitMapper: submitMapper,
+        dataType: dataType,
+        submitType: submitType,
       );
 
   static SimplePortField<String> string({String? initialValue}) {
@@ -103,14 +113,17 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
     );
   }
 
-  static PortField<List<T>, List<S>> list<T, S>({
+  static ListPortField<T, S> list<T, S>({
+    required PortField<T, S> Function(T? value) itemPortFieldGenerator,
     List<T>? initialValues,
-    List<T>? options,
-    List<S> Function(List<T> value)? submitMapper,
+    List<S> Function(Map<String, T?> value)? submitMapper,
   }) {
     return ListPortField(
-      portField: PortField(value: initialValues ?? [], submitMapper: submitMapper),
-      options: options,
+      portField: PortField(
+        value: (initialValues ?? []).mapToMap((value) => MapEntry(Uuid().v4(), value)),
+        submitMapper: submitMapper,
+      ),
+      itemPortFieldGenerator: itemPortFieldGenerator,
     );
   }
 
@@ -150,7 +163,8 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
 }
 
 extension PortFieldExtensions<T, S> on PortField<T, S> {
-  void registerToPort(Port port) {
+  void registerToPort(String fieldPath, Port port) {
+    this.fieldPath = fieldPath;
     this.port = port;
   }
 
@@ -270,6 +284,11 @@ mixin IsPortField<T, S> implements PortField<T, S> {
   T parseValue(value) {
     return value;
   }
+
+  @override
+  PortFieldProvider? getPortFieldProviderOrNull() {
+    return null;
+  }
 }
 
 class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldValidatorContext, String> {
@@ -280,7 +299,16 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
   final dynamic error;
 
   @override
+  late String fieldPath;
+
+  @override
   late Port port;
+
+  @override
+  final Type dataType;
+
+  @override
+  final Type submitType;
 
   @override
   final Validator<PortFieldValidatorContext, String> validator;
@@ -295,8 +323,15 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
     required this.validator,
     required this.submitRawMapper,
     required this.submitMapper,
+    String? fieldPath,
     Port? port,
-  }) {
+    Type? dataType,
+    Type? submitType,
+  })  : dataType = dataType ?? T,
+        submitType = submitType ?? S {
+    if (fieldPath != null) {
+      this.fieldPath = fieldPath;
+    }
     if (port != null) {
       this.port = port;
     }
@@ -320,13 +355,21 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
       validator: validator,
       submitRawMapper: submitRawMapper,
       submitMapper: submitMapper,
+      fieldPath: fieldPath,
       port: port,
+      dataType: dataType,
+      submitType: submitType,
     );
   }
 
   @override
   PortFieldValidatorContext createValidationContext() {
     return PortFieldValidatorContext(value: value, port: port);
+  }
+
+  @override
+  PortFieldProvider? getPortFieldProviderOrNull() {
+    return null;
   }
 }
 
@@ -402,6 +445,12 @@ mixin IsPortFieldWrapper<T, S> implements PortFieldWrapper<T, S> {
   dynamic get error => portField.error;
 
   @override
+  String get fieldPath => portField.fieldPath;
+
+  @override
+  set fieldPath(String fieldPath) => portField.fieldPath = fieldPath;
+
+  @override
   Port get port => portField.port;
 
   @override
@@ -434,6 +483,9 @@ mixin IsPortFieldWrapper<T, S> implements PortFieldWrapper<T, S> {
   PortFieldValidatorContext createValidationContext() {
     return PortFieldValidatorContext(value: value, port: port);
   }
+
+  @override
+  PortFieldProvider? getPortFieldProviderOrNull() => portField.getPortFieldProviderOrNull();
 }
 
 extension PortFieldValidatorExtensions<T> on Validator<T, String> {

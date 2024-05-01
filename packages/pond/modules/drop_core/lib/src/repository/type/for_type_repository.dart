@@ -43,12 +43,12 @@ class ForTypeRepository<E extends Entity<V>, V extends ValueObject> with IsRepos
             entityRuntimeType = typeComponent.register<E>(
               entityConstructor,
               name: entityTypeName,
-              parents: entityParents,
+              parents: [...entityParents, Entity],
             );
             valueObjectRuntimeType = typeComponent.register<V>(
               valueObjectConstructor,
               name: valueObjectTypeName,
-              parents: valueObjectParents,
+              parents: [...valueObjectParents, ValueObject],
             );
             entityParentsRuntimeTypes = entityParents.map((type) => typeComponent.getRuntimeTypeRuntime(type)).toList();
             valueObjectParentsRuntimeTypes =

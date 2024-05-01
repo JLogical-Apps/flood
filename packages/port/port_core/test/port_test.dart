@@ -12,7 +12,7 @@ void main() {
 
     expect(port['name'], '');
 
-    port.setValue(name: 'name', value: name);
+    port.setValue(path: 'name', value: name);
 
     expect(port['name'], name);
 
@@ -36,18 +36,18 @@ void main() {
 
     var result = await port.submit();
     expect(result.isValid, false);
-    expect(port.getErrorByName('name'), isNotNull);
-    expect(port.getErrorByName('email'), isNotNull);
+    expect(port.getErrorByPath('name'), isNotNull);
+    expect(port.getErrorByPath('email'), isNotNull);
 
-    port.setValue(name: 'name', value: name);
-    port.setValue(name: 'email', value: 'invalidEmail');
+    port.setValue(path: 'name', value: name);
+    port.setValue(path: 'email', value: 'invalidEmail');
 
     result = await port.submit();
     expect(result.isValid, false);
-    expect(port.getErrorByName('name'), isNull);
-    expect(port.getErrorByName('email'), isNotNull);
+    expect(port.getErrorByPath('name'), isNull);
+    expect(port.getErrorByPath('email'), isNotNull);
 
-    port.setValue(name: 'email', value: email);
+    port.setValue(path: 'email', value: email);
 
     result = await port.submit();
     expect(result.isValid, true);
@@ -85,9 +85,9 @@ void main() {
       'gender': PortField.option(initialValue: 'M', options: ['M', 'F']).withDisplayName('Gender'),
     });
 
-    expect(contactPort.getFieldByName('phone').findOptionsOrNull(), null);
-    expect(contactPort.getFieldByName('email').findOptionsOrNull(), null);
-    expect(contactPort.getFieldByName('gender').findOptionsOrNull(), ['M', 'F']);
+    expect(contactPort.getFieldByPath('phone').findOptionsOrNull(), null);
+    expect(contactPort.getFieldByPath('email').findOptionsOrNull(), null);
+    expect(contactPort.getFieldByPath('gender').findOptionsOrNull(), ['M', 'F']);
   });
 
   test('display name of field', () {
@@ -97,9 +97,9 @@ void main() {
       'gender': PortField.option(initialValue: 'M', options: ['M', 'F']).withDisplayName('Gender'),
     });
 
-    expect(contactPort.getFieldByName('phone').findDisplayNameOrNull(), 'Phone');
-    expect(contactPort.getFieldByName('email').findDisplayNameOrNull(), 'Email');
-    expect(contactPort.getFieldByName('gender').findDisplayNameOrNull(), 'Gender');
+    expect(contactPort.getFieldByPath('phone').findDisplayNameOrNull(), 'Phone');
+    expect(contactPort.getFieldByPath('email').findDisplayNameOrNull(), 'Email');
+    expect(contactPort.getFieldByPath('gender').findDisplayNameOrNull(), 'Gender');
   });
 
   test('multiline fields', () {
@@ -108,8 +108,8 @@ void main() {
       'notes': PortField.string().withDisplayName('Description').multiline(),
     });
 
-    expect(contactPort.getFieldByName('name').findIsMultiline(), false);
-    expect(contactPort.getFieldByName('notes').findIsMultiline(), true);
+    expect(contactPort.getFieldByPath('name').findIsMultiline(), false);
+    expect(contactPort.getFieldByPath('notes').findIsMultiline(), true);
   });
 
   test('fallback fields', () async {
@@ -117,7 +117,7 @@ void main() {
       'name': PortField.string().withFallback('John'),
     });
 
-    expect(contactPort.getFieldByName('name').findHintOrNull(), 'John');
+    expect(contactPort.getFieldByPath('name').findHintOrNull(), 'John');
     expect(
       await contactPort.submit(),
       isA<PortSubmitResult<Map<String, dynamic>>>().having((source) => source.data['name'], 'name', 'John'),
@@ -148,7 +148,7 @@ void main() {
     var result = await personPort.submit();
     expect(result.isValid, false);
 
-    final personField = personPort.getFieldByName('person') as StagePortField<Type, Person>;
+    final personField = personPort.getFieldByPath('person') as StagePortField<Type, Person>;
     expect(personField.findStageFieldOrNull(), isA<StagePortField<Type, Person>>());
 
     final stageValue = personField.value;
@@ -157,6 +157,34 @@ void main() {
     expect((result.data['person'] as Student).name, 'John Doe');
 
     personPort['person'] = personField.getStageValue(Teacher);
+  });
+
+  test('nested list port fields', () async {
+    final port = Port.of({
+      'words': PortField.list(
+        initialValues: ['Hello', 'World'],
+        itemPortFieldGenerator: (value) => PortField.string(initialValue: value),
+      ),
+    });
+
+    final wordsField = port.getFieldByPath('words');
+    expect(wordsField.value, ['Hello', 'World']);
+
+    final helloField = port.getFieldByPath('words/0');
+    expect(helloField.value, 'Hello');
+    expect(port['words/0'], 'Hello');
+    expect(port['words/1'], 'World');
+
+    port['words/0'] = 'Bye';
+    expect(port['words'], ['Bye', 'World']);
+    expect(port['words/0'], 'Bye');
+
+    port['words'] = [...port['words'], ''];
+    port['words/2'] = 'Test';
+    expect(port['words'], ['Bye', 'World', 'Test']);
+    expect(port['words/2'], 'Test');
+
+    expect(() => port.getFieldByPath('words/3'), throwsRangeError);
   });
 }
 

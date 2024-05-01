@@ -20,6 +20,12 @@ class MapPortField<T1, S1, T2, S2> with IsPortField<T2, S2> {
   });
 
   @override
+  String get fieldPath => portField.fieldPath;
+
+  @override
+  set fieldPath(String fieldPath) => portField.fieldPath = fieldPath;
+
+  @override
   Port get port => portField.port;
 
   @override

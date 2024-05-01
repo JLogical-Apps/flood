@@ -24,6 +24,8 @@ class ListEmbeddedValueObjectProperty<T extends ValueObject>
         valueObject.throwIfInvalid(null);
         return valueObject;
       }).toList());
+    } else if (stateValue is List<dynamic>) {
+      property.set(stateValue.cast<T>());
     } else {
       throw Exception('Unknown ValueObject value: [$stateValue]');
     }

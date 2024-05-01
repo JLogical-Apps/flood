@@ -5,9 +5,9 @@ import 'package:port_style/src/object/port_field_builder_modifier.dart';
 
 class StagePortFieldBuilderModifier extends PortFieldBuilderModifier {
   @override
-  Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
+  Widget? getWidgetOrNull(PortField portField) {
     return StyledStagePortField(
-      fieldName: fieldName,
+      fieldPath: portField.fieldPath,
       labelText: portField.findDisplayNameOrNull(),
     );
   }

@@ -6,7 +6,7 @@ import 'package:style/style.dart';
 
 class EmbeddedPortFieldBuilderModifier extends PortFieldBuilderModifier {
   @override
-  Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
+  Widget? getWidgetOrNull(PortField portField) {
     final displayName = portField.findDisplayNameOrNull();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

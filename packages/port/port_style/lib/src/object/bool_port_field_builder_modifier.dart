@@ -6,9 +6,9 @@ import 'package:utils/utils.dart';
 
 class BoolPortFieldBuilderModifier extends PortFieldBuilderModifier {
   @override
-  Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
+  Widget? getWidgetOrNull(PortField portField) {
     return StyledBoolFieldPortField(
-      fieldName: fieldName,
+      fieldPath: portField.fieldPath,
       labelText: portField.findDisplayNameOrNull(),
     );
   }

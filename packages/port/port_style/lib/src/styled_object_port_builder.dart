@@ -15,7 +15,8 @@ class StyledObjectPortBuilder<T> extends HookWidget {
 
   final Function(Port<T> port)? portListener;
 
-  StyledObjectPortBuilder({super.key, required this.port, this.overrides = const {}, this.order = const [], this.portListener});
+  StyledObjectPortBuilder(
+      {super.key, required this.port, this.overrides = const {}, this.order = const [], this.portListener});
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +43,7 @@ class StyledObjectPortBuilder<T> extends HookWidget {
                   return overrides[name];
                 }
 
-                return PortFieldBuilderModifier.getPortFieldBuilderModifier(portField)
-                    ?.getWidgetOrNull(port, name, portField);
+                return PortFieldBuilderModifier.getPortFieldBuilderModifier(portField)?.getWidgetOrNull(portField);
               })
               .whereNonNull()
               .toList(),

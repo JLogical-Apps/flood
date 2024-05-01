@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
 class StyledDateTimeFieldPortField extends HookWidget {
-  final String fieldName;
+  final String fieldPath;
 
   final String? labelText;
   final Widget? label;
@@ -16,7 +16,7 @@ class StyledDateTimeFieldPortField extends HookWidget {
 
   const StyledDateTimeFieldPortField({
     super.key,
-    required this.fieldName,
+    required this.fieldPath,
     this.labelText,
     this.label,
     this.hintText,
@@ -27,7 +27,7 @@ class StyledDateTimeFieldPortField extends HookWidget {
   Widget build(BuildContext context) {
     final port = Provider.of<Port>(context, listen: false);
     return PortFieldBuilder<DateTime?>(
-      fieldName: fieldName,
+      fieldPath: fieldPath,
       builder: (context, field, text, error) {
         return StyledDateTimeField(
           value: text,
@@ -36,7 +36,7 @@ class StyledDateTimeFieldPortField extends HookWidget {
           errorText: error?.toString(),
           hintText: hintText,
           showTime: field.findDateFieldOrNull()?.isTime ?? false,
-          onChanged: (text) => port[fieldName] = text,
+          onChanged: (text) => port[fieldPath] = text,
         );
       },
     );

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
 class StyledStagePortField<E, T> extends HookWidget {
-  final String fieldName;
+  final String fieldPath;
 
   final String? labelText;
   final Widget? label;
@@ -21,7 +21,7 @@ class StyledStagePortField<E, T> extends HookWidget {
 
   const StyledStagePortField({
     super.key,
-    required this.fieldName,
+    required this.fieldPath,
     this.labelText,
     this.label,
     this.enabled = true,
@@ -37,7 +37,7 @@ class StyledStagePortField<E, T> extends HookWidget {
   Widget build(BuildContext context) {
     final port = Provider.of<Port>(context, listen: false);
     return PortFieldBuilder<StageValue<E, T>>(
-      fieldName: fieldName,
+      fieldPath: fieldPath,
       builder: (context, field, value, error) {
         final stageField = (field.findStageFieldOrNull() ??
             (throw Exception('Could not find stage field for [$field]'))) as StagePortField<E, T>;
@@ -52,7 +52,7 @@ class StyledStagePortField<E, T> extends HookWidget {
                   )
                 : beforeBuilder!(stageField, value.value),
           if (valuePort != null && valuePort.portFieldByName.isNotEmpty)
-            portWidgetMapper(stageField, port, fieldName, valuePort),
+            portWidgetMapper(stageField, port, fieldPath, valuePort),
           if (afterBuilder != null)
             valuePort != null
                 ? PortBuilder(
@@ -71,7 +71,7 @@ class StyledStagePortField<E, T> extends HookWidget {
               label: label,
               errorText: error?.toString(),
               enabled: enabled,
-              onChanged: (value) => port[fieldName] = stageField.getStageValue(value),
+              onChanged: (value) => port[fieldPath] = stageField.getStageValue(value),
               options: stageField.options,
               widgetMapper: (option) => valueWidgetMapper(stageField, option),
             ),

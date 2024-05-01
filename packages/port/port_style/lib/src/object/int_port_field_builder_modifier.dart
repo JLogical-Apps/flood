@@ -6,9 +6,9 @@ import 'package:utils/utils.dart';
 
 class IntPortFieldBuilderModifier extends PortFieldBuilderModifier {
   @override
-  Widget? getWidgetOrNull(Port port, String fieldName, PortField portField) {
+  Widget? getWidgetOrNull(PortField portField) {
     return StyledIntFieldPortField(
-      fieldName: fieldName,
+      fieldPath: portField.fieldPath,
       labelText: portField.findDisplayNameOrNull(),
       hintText: (portField.findHintOrNull() as Object?)?.as<int>()?.formatIntOrDouble(),
     );

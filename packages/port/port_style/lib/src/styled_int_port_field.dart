@@ -6,7 +6,7 @@ import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
 class StyledIntFieldPortField extends HookWidget {
-  final String fieldName;
+  final String fieldPath;
 
   final String? labelText;
   final Widget? label;
@@ -17,7 +17,7 @@ class StyledIntFieldPortField extends HookWidget {
 
   const StyledIntFieldPortField({
     super.key,
-    required this.fieldName,
+    required this.fieldPath,
     this.labelText,
     this.label,
     this.hintText,
@@ -28,7 +28,7 @@ class StyledIntFieldPortField extends HookWidget {
   Widget build(BuildContext context) {
     final port = Provider.of<Port>(context, listen: false);
     return PortFieldBuilder<int?>(
-      fieldName: fieldName,
+      fieldPath: fieldPath,
       builder: (context, field, amount, error) {
         return StyledTextField(
           text: amount?.formatIntOrDouble() ?? '',
@@ -40,19 +40,19 @@ class StyledIntFieldPortField extends HookWidget {
           keyboard: TextInputType.number,
           onChanged: (amountRaw) {
             if (amountRaw.isEmpty) {
-              port.clearError(name: fieldName);
-              port[fieldName] = null;
+              port.clearError(path: fieldPath);
+              port[fieldPath] = null;
               return;
             }
 
             final amount = amountRaw.tryParseIntAfterClean(cleanCurrency: false);
             if (amount == null) {
-              port.setError(name: fieldName, error: 'Must be an integer!');
+              port.setError(path: fieldPath, error: 'Must be an integer!');
               return;
             }
 
-            port.clearError(name: fieldName);
-            port[fieldName] = amount;
+            port.clearError(path: fieldPath);
+            port[fieldPath] = amount;
           },
         );
       },

@@ -36,10 +36,13 @@ class ForAbstractTypeRepository<E extends Entity<V>, V extends ValueObject> with
         CorePondComponentBehavior(
           onRegister: (context, comp) {
             final typeComponent = context.locate<TypeCoreComponent>();
-            entityRuntimeType = typeComponent.registerAbstract<E>(name: entityTypeName, parents: entityParents);
+            entityRuntimeType = typeComponent.registerAbstract<E>(
+              name: entityTypeName,
+              parents: [...entityParents, Entity],
+            );
             valueObjectRuntimeType = typeComponent.registerAbstract<V>(
               name: valueObjectTypeName,
-              parents: valueObjectParents,
+              parents: [...valueObjectParents, ValueObject],
             );
             entityParentsRuntimeTypes = entityParents.map((type) => typeComponent.getRuntimeTypeRuntime(type)).toList();
             valueObjectParentsRuntimeTypes =

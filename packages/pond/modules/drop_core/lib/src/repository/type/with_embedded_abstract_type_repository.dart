@@ -28,7 +28,7 @@ class WithEmbeddedAbstractTypeRepository<V extends ValueObject> with IsRepositor
             final typeComponent = context.locate<TypeCoreComponent>();
             typeComponent.registerAbstract<V>(
               name: valueObjectTypeName,
-              parents: valueObjectParents,
+              parents: [...valueObjectParents, ValueObject],
             );
           },
         )
