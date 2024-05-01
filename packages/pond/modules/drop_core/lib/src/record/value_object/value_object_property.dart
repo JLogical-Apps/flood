@@ -105,6 +105,10 @@ mixin IsValueObjectProperty<G, S, V extends ValueObjectProperty> implements Valu
 }
 
 extension ValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty> on ValueObjectProperty<G, S, V> {
+  void update(S Function(G value) updater) {
+    set(updater(value));
+  }
+
   ValidatorValueObjectProperty<G, S> withValidator(Validator<G, String> validator) {
     return ValidatorValueObjectProperty(property: this, validator: validator);
   }

@@ -39,6 +39,16 @@ class ActionItem {
         iconData = Icons.edit,
         color = Colors.orange;
 
+  ActionItem.duplicate({String? contentType, String? titleText, String? descriptionText, this.onPerform})
+      : title = null,
+        titleText = titleText ?? contentType?.mapIfNonNull((contentType) => 'Duplicate ${contentType.titleCase}'),
+        description = null,
+        descriptionText = descriptionText ??
+            contentType?.mapIfNonNull((contentType) => 'Duplicate this ${contentType.titleCase.toLowerCase()}.'),
+        icon = null,
+        iconData = Icons.copy,
+        color = Colors.blue;
+
   ActionItem.delete(
     BuildContext context, {
     required Future Function() onDelete,

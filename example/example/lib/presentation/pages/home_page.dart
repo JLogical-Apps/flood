@@ -146,12 +146,27 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
     return [
       ActionItem.edit(
         contentType: 'Todo',
-        onPerform: (context) async {
+        onPerform: (_) async {
           await context.showStyledDialog(StyledPortDialog(
             titleText: 'Edit Todo',
             port: todoEntity.value.asPort(context.corePondContext),
             onAccept: (Todo todo) async {
               await context.dropCoreComponent.updateEntity(todoEntity..set(todo));
+            },
+          ));
+        },
+      ),
+      ActionItem.duplicate(
+        contentType: 'Todo',
+        onPerform: (_) async {
+          await context.showStyledDialog(StyledPortDialog(
+            titleText: 'Duplicate Todo',
+            port: (Todo()
+                  ..copyFrom(context.dropCoreComponent, todoEntity)
+                  ..nameProperty.update((name) => '$name - Copy'))
+                .asPort(context.corePondContext),
+            onAccept: (Todo todo) async {
+              await context.dropCoreComponent.updateEntity(TodoEntity()..set(todo));
             },
           ));
         },
