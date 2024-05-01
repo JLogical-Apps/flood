@@ -30,7 +30,7 @@ class AsyncFallbackValueObjectProperty<T> with IsValueObjectProperty<T, T, Async
 
   @override
   Future<State> modifyStateForRepository(DropCoreContext context, State state) async {
-    if (state[property.name] == null) {
+    if (value == null) {
       state = state.withData(state.data.copy()..set(property.name, await fallback(context)));
     }
     return await property.modifyStateForRepository(context, state);

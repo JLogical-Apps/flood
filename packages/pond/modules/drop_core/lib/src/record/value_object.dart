@@ -28,8 +28,8 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
 
   Future<State> setRepositoryState(DropCoreContext context, State state) async {
     for (final behavior in behaviors) {
-      state = await behavior.modifyStateForRepository(context, state);
       behavior.fromState(context, state);
+      state = await behavior.modifyStateForRepository(context, state);
     }
     setState(context, state);
     return state;

@@ -32,7 +32,10 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
   Map<String, T?> parseValue(value) {
     if (value is List) {
       return value.mapToMap((value) => MapEntry(Uuid().v4(), value));
+    } else if (value is Map) {
+      return value.cast<String, T?>();
     }
+
     return value;
   }
 
@@ -80,11 +83,14 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
         final id = value.keys.toList()[index];
         final currentValue = value.values.toList()[index];
         return _initialItemPortFieldById.putIfAbsent(
-            id, () => itemPortFieldGenerator(currentValue)..registerToPort('$fieldPath/$index', port));
+          id,
+          () => itemPortFieldGenerator(currentValue)..registerToPort('$fieldPath/$index', port),
+        );
       },
       portFieldSetter: (name, portField) {
         final index = int.parse(name);
         final id = value.keys.toList()[index];
+        itemPortFieldById.remove(id);
         port.setValue(
           path: fieldPath,
           value: value.copy()..set(id, portField.value as T),

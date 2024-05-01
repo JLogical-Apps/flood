@@ -168,7 +168,7 @@ void main() {
     });
 
     final wordsField = port.getFieldByPath('words');
-    expect(wordsField.value, ['Hello', 'World']);
+    expect(wordsField.value.values, ['Hello', 'World']);
 
     final helloField = port.getFieldByPath('words/0');
     expect(helloField.value, 'Hello');
@@ -176,12 +176,12 @@ void main() {
     expect(port['words/1'], 'World');
 
     port['words/0'] = 'Bye';
-    expect(port['words'], ['Bye', 'World']);
+    expect(port['words'].values, ['Bye', 'World']);
     expect(port['words/0'], 'Bye');
 
-    port['words'] = [...port['words'], ''];
+    port['words'] = {...port['words'], 'someNewId': ''};
     port['words/2'] = 'Test';
-    expect(port['words'], ['Bye', 'World', 'Test']);
+    expect(port['words'].values, ['Bye', 'World', 'Test']);
     expect(port['words/2'], 'Test');
 
     expect(() => port.getFieldByPath('words/3'), throwsRangeError);
