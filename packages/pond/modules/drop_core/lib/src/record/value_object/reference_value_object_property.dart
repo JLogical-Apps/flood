@@ -20,6 +20,8 @@ class ReferenceValueObjectProperty<E extends Entity>
   @override
   Type get setterType => typeOf<String?>();
 
+  Type get entityType => E;
+
   @override
   set(String? value) => this.value = value;
 

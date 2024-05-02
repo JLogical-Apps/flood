@@ -25,7 +25,7 @@ class StyledObjectPortBuilder<T> extends HookWidget {
       key: ObjectKey(port),
       port: port,
       builder: (context, port) {
-        final providedOverrides = Provider.of<StyledObjectPortOverrides>(context, listen: false);
+        final providedOverrides = context.read<StyledObjectPortOverrides>();
         final portOverride = providedOverrides.getOverrideByTypeOrNullRuntime(port.submitType);
         if ((overrides.isEmpty && order.isEmpty) && portOverride != null) {
           return portOverride.build(port);

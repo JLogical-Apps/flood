@@ -22,9 +22,15 @@ import 'package:url_bar/url_bar.dart';
 class FloodAppComponent with IsAppPondComponent {
   final Style style;
   final List<StyledObjectPortOverride> styledObjectPortOverrides;
+  final List<StyledSearchResultOverride> styledSearchResultOverrides;
   final FutureOr<Version?> Function()? latestAllowedVersion;
 
-  FloodAppComponent({required this.style, this.styledObjectPortOverrides = const [], this.latestAllowedVersion});
+  FloodAppComponent({
+    required this.style,
+    this.styledObjectPortOverrides = const [],
+    this.styledSearchResultOverrides = const [],
+    this.latestAllowedVersion,
+  });
 
   @override
   Future onRegister(AppPondContext context) async {
@@ -37,7 +43,10 @@ class FloodAppComponent with IsAppPondComponent {
     await context.register(DropAppComponent());
     await context.register(ResetAppComponent());
     await context.register(FirebaseCrashlyticsAppComponent());
-    await context.register(PortStyleAppComponent(overrides: styledObjectPortOverrides));
+    await context.register(PortStyleAppComponent(
+      portOverrides: styledObjectPortOverrides,
+      searchResultOverrides: styledSearchResultOverrides,
+    ));
     await context.register(StyleAppComponent(style: style));
     await context.register(UrlBarAppComponent());
     await context.register(EnvironmentBannerAppComponent());

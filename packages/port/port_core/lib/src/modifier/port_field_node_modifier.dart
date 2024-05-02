@@ -16,10 +16,12 @@ import 'package:port_core/src/modifier/multiline_port_field_modifier.dart';
 import 'package:port_core/src/modifier/name_port_field_modifier.dart';
 import 'package:port_core/src/modifier/options_port_field_modifier.dart';
 import 'package:port_core/src/modifier/phone_port_field_modifier.dart';
+import 'package:port_core/src/modifier/search_port_field_modifier.dart';
 import 'package:port_core/src/modifier/secret_port_field_modifier.dart';
 import 'package:port_core/src/modifier/stage_port_field_modifier.dart';
 import 'package:port_core/src/modifier/wrapper_port_field_node_modifier.dart';
 import 'package:port_core/src/port_field.dart';
+import 'package:port_core/src/search_port_field.dart';
 import 'package:port_core/src/stage_port_field.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -85,8 +87,13 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return null;
   }
 
+  SearchPortField? findSearchPortFieldOrNull(T portField) {
+    return null;
+  }
+
   static final nodeModifierResolver = ModifierResolver<PortFieldNodeModifier, PortField>(modifiers: [
     OptionsPortFieldNodeModifier(),
+    SearchPortFieldNodeModifier(),
     ListPortFieldNodeModifier(),
     AllowedFileTypesPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     StagePortFieldNodeModifier(modifierGetter: getModifierOrNull),

@@ -11,6 +11,7 @@ import 'package:port_style/src/object/int_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/list_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/multi_option_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/options_port_field_builder_modifier.dart';
+import 'package:port_style/src/object/search_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/stage_port_field_builder_modifier.dart';
 import 'package:port_style/src/object/string_port_field_builder_modifier.dart';
 import 'package:utils/utils.dart';
@@ -23,6 +24,7 @@ abstract class PortFieldBuilderModifier with IsModifier<PortField> {
     EmbeddedPortFieldBuilderModifier(),
     MultiOptionPortFieldBuilderModifier(),
     OptionsPortFieldBuilderModifier(),
+    SearchPortFieldBuilderModifier(),
     ListPortFieldBuilderModifier(),
     StringPortFieldBuilderModifier(),
     CurrencyPortFieldBuilderModifier(),

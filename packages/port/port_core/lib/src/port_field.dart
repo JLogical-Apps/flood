@@ -22,6 +22,7 @@ import 'package:port_core/src/phone_port_field.dart';
 import 'package:port_core/src/port.dart';
 import 'package:port_core/src/port_field_provider.dart';
 import 'package:port_core/src/port_field_validator_context.dart';
+import 'package:port_core/src/search_port_field.dart';
 import 'package:port_core/src/secret_port_field.dart';
 import 'package:port_core/src/stage_port_field.dart';
 import 'package:port_core/src/validator_port_field.dart';
@@ -110,6 +111,21 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
     return OptionsPortField(
       portField: PortField(value: initialValue, submitMapper: submitMapper),
       options: options,
+    );
+  }
+
+  static PortField<T, T> search<R, T>({
+    required FutureOr<List<R>> Function() search,
+    required T Function(R result) valueMapper,
+    required R Function(T value, List<R> results) resultsMapper,
+    required T initialValue,
+    T Function(T value)? submitMapper,
+  }) {
+    return SearchPortField<R, T>(
+      portField: PortField(value: initialValue, submitMapper: submitMapper),
+      search: search,
+      valueMapper: valueMapper,
+      resultsMapper: resultsMapper,
     );
   }
 
@@ -226,6 +242,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
 
   ListPortField? findListFieldOrNull() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.findListPortFieldOrNull(this);
+  }
+
+  SearchPortField? findSearchFieldOrNull() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.findSearchPortFieldOrNull(this);
   }
 
   List<T>? findOptionsOrNull() {

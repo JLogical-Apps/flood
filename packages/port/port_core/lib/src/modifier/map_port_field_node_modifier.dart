@@ -13,6 +13,11 @@ class MapPortFieldNodeModifier extends PortFieldNodeModifier<MapPortField> {
   }
 
   @override
+  SearchPortField? findSearchPortFieldOrNull(MapPortField portField) {
+    return modifierGetter(portField.portField)?.findSearchPortFieldOrNull(portField.portField);
+  }
+
+  @override
   AllowedFileTypes? getAllowedFileTypes(MapPortField portField) {
     return modifierGetter(portField.portField)?.getAllowedFileTypes(portField.portField);
   }

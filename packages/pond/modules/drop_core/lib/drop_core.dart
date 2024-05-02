@@ -40,6 +40,7 @@ export 'src/record/value_object/is_email_value_object_property.dart';
 export 'src/record/value_object/is_name_value_object_property.dart';
 export 'src/record/value_object/is_not_blank_value_object_property.dart';
 export 'src/record/value_object/is_phone_value_object_property.dart';
+export 'src/record/value_object/label_value_object_behavior.dart';
 export 'src/record/value_object/list_value_object_property.dart';
 export 'src/record/value_object/map_value_object_property.dart';
 export 'src/record/value_object/multiline_value_object_property.dart';

@@ -23,12 +23,13 @@ import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavio
 import 'package:port_drop_core/src/behavior_modifiers/null_if_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/only_date_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/placeholder_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/reference_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_on_edit_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior_modifier.dart';
-import 'package:port_drop_core/src/behavior_modifiers/value_object_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/string_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/timestamp_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/validator_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/value_object_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/wrapper_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier_context.dart';
@@ -55,6 +56,7 @@ class PortDropCoreComponent with IsCorePondComponent {
         modifierGetter: getBehaviorModifierOrNull,
       ),
       FieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      ReferenceBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       RequiredPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       RequiredOnEditPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       IsNotBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
