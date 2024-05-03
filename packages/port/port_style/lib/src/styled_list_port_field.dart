@@ -29,12 +29,18 @@ class StyledListPortField<T> extends HookWidget {
       fieldPath: fieldPath,
       builder: (context, field, value, error) {
         return StyledList.column(
+          key: EquatableKey(value),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (labelText != null)
               Padding(
                 padding: const EdgeInsets.all(4),
                 child: label,
+              ),
+            if (error != null)
+              Padding(
+                padding: const EdgeInsets.all(4),
+                child: StyledText.body.bold.error.centered(error.toString()),
               ),
             ...value.entries
                 .mapIndexed((i, entry) {
@@ -49,8 +55,8 @@ class StyledListPortField<T> extends HookWidget {
                   return MapEntry(entry.key, editWidget);
                 })
                 .whereNonNull()
-                .map((entry) => StyledList.row(
-                      key: EquatableKey(entry.key),
+                .mapIndexed((i, entry) => StyledList.row(
+                      key: EquatableKey([i, entry.key]),
                       itemPadding: EdgeInsets.zero,
                       children: [
                         StyledButton.subtle(

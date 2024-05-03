@@ -50,7 +50,7 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
 
     final options = [
       if (baseRuntimeType.isAbstract) ...[
-        if (!isRequiredOnEdit || initialRuntimeType == null) null,
+        if (!isRequiredOnEdit) null,
         ...baseRuntimeType.getConcreteDescendants(),
       ] else ...[
         if (!isRequiredOnEdit) null,
@@ -125,6 +125,13 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
         final valueObject = type.createInstance() as ValueObject;
         return valueObject.getDisplayName() ?? valueObject.runtimeType.toString();
       },
-    );
+    ).withValidator(Validator((context) {
+      final stageValue = context.value as StageValue?;
+      if (stageValue?.value == null) {
+        return 'Cannot have an empty value!';
+      }
+
+      return null;
+    }));
   }
 }

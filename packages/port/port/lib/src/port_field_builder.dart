@@ -13,10 +13,15 @@ class PortFieldBuilder<T> extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final port = Provider.of<Port>(context, listen: false);
+    final field = guard(() => port.getFieldByPathOrNull(fieldPath));
+    if (field == null) {
+      return Container();
+    }
+
     useValueStream(port.getPortX());
     return builder(
       context,
-      port.getFieldByPath(fieldPath),
+      field,
       port[fieldPath],
       port.getErrorByPath(fieldPath),
     );

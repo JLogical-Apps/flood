@@ -16,9 +16,10 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
 
   late final Map<String, PortField> itemPortFieldById = Map.fromEntries(value.entries.mapIndexed((i, entry) {
     final (id, value) = entry.asRecord();
+    final existingPortField = _initialItemPortFieldById[id]?..fieldPath = '${portField.fieldPath}/$i';
     return MapEntry(
       id,
-      _initialItemPortFieldById[id] ?? (itemPortFieldGenerator(value)..registerToPort('$fieldPath/$i', port)),
+      existingPortField ?? (itemPortFieldGenerator(value)..registerToPort('$fieldPath/$i', port)),
     );
   }));
 
@@ -91,7 +92,7 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
         final index = int.parse(name);
         final id = value.keys.toList()[index];
         final existingValue = itemPortFieldById[id];
-        if (existingValue?.value == portField.value) {
+        if (existingValue?.value == portField.value && existingValue?.fieldPath == portField.fieldPath) {
           return;
         }
         itemPortFieldById.remove(id);
