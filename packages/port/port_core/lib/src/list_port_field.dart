@@ -82,7 +82,7 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
         final index = int.parse(name);
         final id = value.keys.toList()[index];
         final currentValue = value.values.toList()[index];
-        return _initialItemPortFieldById.putIfAbsent(
+        return itemPortFieldById.putIfAbsent(
           id,
           () => itemPortFieldGenerator(currentValue)..registerToPort('$fieldPath/$index', port),
         );
@@ -90,6 +90,10 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
       portFieldSetter: (name, portField) {
         final index = int.parse(name);
         final id = value.keys.toList()[index];
+        final existingValue = itemPortFieldById[id];
+        if (existingValue?.value == portField.value) {
+          return;
+        }
         itemPortFieldById.remove(id);
         port.setValue(
           path: fieldPath,

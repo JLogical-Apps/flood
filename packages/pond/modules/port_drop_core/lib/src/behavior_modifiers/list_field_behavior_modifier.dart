@@ -23,10 +23,9 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
         itemPortFieldGenerator: (value) {
           final dropContext = context.corePondContext.dropCoreComponent;
           final runtimeType = dropContext.getRuntimeTypeOrNullRuntime(behavior.valueType);
-          if (runtimeType != null &&
-              runtimeType.isConcrete &&
-              runtimeType.isA(dropContext.getRuntimeType<ValueObject>())) {
-            final valueObject = value ?? runtimeType.createInstance() as ValueObject;
+          if (runtimeType != null && runtimeType.isA(dropContext.getRuntimeType<ValueObject>())) {
+            var valueObject = extractValueObject(context, value: value);
+            valueObject ??= runtimeType.createInstanceOrNull() as ValueObject?;
             return ValueObjectFieldBehaviorModifier.getValueObjectPortField(
               context,
               initialValue: valueObject,
@@ -40,5 +39,26 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
         },
       )
     };
+  }
+
+  ValueObject? extractValueObject(PortGeneratorBehaviorModifierContext context, {required dynamic value}) {
+    if (value is ValueObject) {
+      return value;
+    }
+
+    if (value is StageValue) {
+      final port = value.port;
+      final runtimeType = value.value as RuntimeType?;
+      if (port == null || runtimeType == null) {
+        return null;
+      }
+
+      return context.corePortDropComponent.getValueObjectFromPort(
+        port: port,
+        valueObjectType: runtimeType.type,
+      );
+    }
+
+    return null;
   }
 }
