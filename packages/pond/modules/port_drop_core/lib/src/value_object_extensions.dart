@@ -8,11 +8,13 @@ import 'package:utils_core/utils_core.dart';
 extension PortDropValueObjectExtensions<V extends ValueObject> on V {
   Port<V> asPort(
     CorePondContext corePondContext, {
+    List<String>? only,
     List<PortGeneratorOverride> overrides = const [],
     bool validateResult = true,
   }) {
     return corePondContext.locate<PortDropCoreComponent>().generatePort(
           this,
+          only: only,
           overrides: overrides,
           validateResult: validateResult,
         );

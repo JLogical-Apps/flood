@@ -93,6 +93,7 @@ class PortDropCoreComponent with IsCorePondComponent {
 
   Port<V> generatePort<V extends ValueObject>(
     V valueObject, {
+    List<String>? only,
     List<PortGeneratorOverride> overrides = const [],
     bool validateResult = true,
   }) {
@@ -116,6 +117,10 @@ class PortDropCoreComponent with IsCorePondComponent {
 
       final behaviorPortFieldByName = modifier.getPortFieldByName(behavior, portBehaviorContext);
       portFieldByName = {...portFieldByName, ...behaviorPortFieldByName};
+    }
+
+    if (only != null) {
+      portFieldByName = portFieldByName.where((name, portField) => only.contains(name));
     }
 
     final overrideContext = PortGeneratorOverrideContext(
