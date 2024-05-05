@@ -5,6 +5,7 @@ import 'package:style/src/style_component.dart';
 class StyledList extends StyleComponent {
   final List<Widget> children;
   final Axis axis;
+  final bool isWrap;
   final MainAxisSize mainAxisSize;
   final CrossAxisAlignment crossAxisAlignment;
 
@@ -20,6 +21,7 @@ class StyledList extends StyleComponent {
     super.key,
     required this.children,
     this.axis = Axis.vertical,
+    this.isWrap = false,
     this.mainAxisSize = MainAxisSize.max,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.isScrollable = false,

@@ -59,6 +59,20 @@ class DeltaStyleListRenderer with IsTypedStyleRenderer<StyledList> {
     required List<Widget> children,
     required bool usingEmpty,
   }) {
+    if (list.isWrap) {
+      return Wrap(
+        direction: list.axis,
+        children: children,
+        spacing: list.itemPadding.horizontal,
+        alignment: list.isCentered ? WrapAlignment.center : WrapAlignment.start,
+        crossAxisAlignment: switch (list.crossAxisAlignment) {
+          CrossAxisAlignment.start => WrapCrossAlignment.start,
+          CrossAxisAlignment.center || CrossAxisAlignment.stretch => WrapCrossAlignment.center,
+          CrossAxisAlignment.end || CrossAxisAlignment.baseline => WrapCrossAlignment.end,
+        },
+      );
+    }
+
     if (list.childMinSize == null || usingEmpty) {
       children = children
           .intersperse(SizedBox(

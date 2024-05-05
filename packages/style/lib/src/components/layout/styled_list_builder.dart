@@ -5,11 +5,17 @@ class StyledListBuilder {
   bool isScrollable = false;
   bool hasScrollbar = false;
   Axis axis;
+  bool isWrap = false;
   bool isCentered = false;
   double? childMinSize;
   MainAxisSize mainAxisSize = MainAxisSize.max;
 
   StyledListBuilder({this.axis = Axis.vertical});
+
+  StyledListBuilder get wrap {
+    isWrap = true;
+    return this;
+  }
 
   StyledListBuilder get scrollable {
     isScrollable = true;
@@ -49,6 +55,7 @@ class StyledListBuilder {
       key: key,
       children: children,
       axis: axis,
+      isWrap: isWrap,
       mainAxisSize: mainAxisSize,
       crossAxisAlignment: crossAxisAlignment,
       hasScrollbar: hasScrollbar,
