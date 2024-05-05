@@ -12,11 +12,18 @@ class StyledObjectPortBuilder<T> extends HookWidget {
   final Port<T> port;
   final Map<String, Widget> overrides;
   final List<String> order;
+  final bool useOverrides;
 
   final Function(Port<T> port)? portListener;
 
-  StyledObjectPortBuilder(
-      {super.key, required this.port, this.overrides = const {}, this.order = const [], this.portListener});
+  StyledObjectPortBuilder({
+    super.key,
+    required this.port,
+    this.overrides = const {},
+    this.order = const [],
+    this.useOverrides = true,
+    this.portListener,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +32,12 @@ class StyledObjectPortBuilder<T> extends HookWidget {
       key: ObjectKey(port),
       port: port,
       builder: (context, port) {
-        final providedOverrides = context.read<StyledObjectPortOverrides>();
-        final portOverride = providedOverrides.getOverrideByTypeOrNullRuntime(port.submitType);
-        if ((overrides.isEmpty && order.isEmpty) && portOverride != null) {
-          return portOverride.build(port);
+        if (useOverrides) {
+          final providedOverrides = context.read<StyledObjectPortOverrides>();
+          final portOverride = providedOverrides.getOverrideByTypeOrNullRuntime(port.submitType);
+          if ((overrides.isEmpty && order.isEmpty) && portOverride != null) {
+            return portOverride.build(port);
+          }
         }
 
         final portFieldByName = port.portFieldByName;
