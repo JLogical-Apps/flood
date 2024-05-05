@@ -35,6 +35,7 @@ class StyledRadioPortField<T> extends HookWidget {
           value: value,
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
+          showRequiredIndicator: field.findIsRequired(),
           errorText: error?.toString(),
           enabled: enabled,
           onChanged: (value) => port[fieldPath] = value,

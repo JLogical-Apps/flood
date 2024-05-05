@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:style/src/components/input/styled_radio_field.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
+import 'package:style/src/components/misc/styled_icon.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/style_build_context_extensions.dart';
 import 'package:style/src/style_renderer.dart';
@@ -18,10 +19,21 @@ class FlatStyleRadioFieldRenderer with IsTypedStyleRenderer<StyledRadioField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       itemPadding: EdgeInsets.zero,
       children: [
-        if (label != null)
+        if (label != null || component.showRequiredIndicator)
           Padding(
-            padding: EdgeInsets.only(left: 4, right: 4, top: 4),
-            child: label,
+            padding: EdgeInsets.all(4),
+            child: StyledList.row(
+              itemPadding: EdgeInsets.all(2),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (label != null) label,
+                if (component.showRequiredIndicator)
+                  StyledIcon.strong(
+                    Icons.emergency,
+                    size: 8,
+                  ),
+              ],
+            ),
           ),
         StyledList.row.centered.withScrollbar(
           children: component.options

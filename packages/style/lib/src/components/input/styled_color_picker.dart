@@ -7,6 +7,7 @@ class StyledColorPicker extends StyleComponent {
 
   final Widget? label;
   final String? labelText;
+  final bool showRequiredIndicator;
 
   final String? errorText;
 
@@ -19,6 +20,7 @@ class StyledColorPicker extends StyleComponent {
     this.onChanged,
     this.label,
     this.labelText,
+    this.showRequiredIndicator = false,
     this.errorText,
     this.canBeNone = false,
     this.allowedColors,

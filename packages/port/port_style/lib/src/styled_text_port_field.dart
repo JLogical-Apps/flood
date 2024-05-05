@@ -43,6 +43,7 @@ class StyledTextFieldPortField extends HookWidget {
           text: text ?? '',
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
+          showRequiredIndicator: field.findIsRequired(),
           leadingIcon: leadingIcon,
           leading: leading,
           errorText: error?.toString(),

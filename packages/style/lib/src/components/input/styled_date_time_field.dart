@@ -10,6 +10,7 @@ class StyledDateTimeField extends StyleComponent {
 
   final Widget? label;
   final String? labelText;
+  final bool showRequiredIndicator;
 
   final String? errorText;
 
@@ -23,6 +24,7 @@ class StyledDateTimeField extends StyleComponent {
     this.showTime = true,
     this.label,
     this.labelText,
+    this.showRequiredIndicator = false,
     this.errorText,
     this.hintText,
   });

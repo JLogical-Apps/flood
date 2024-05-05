@@ -13,10 +13,21 @@ class FlatStyleMultiOptionFieldRenderer with IsTypedStyleRenderer<StyledMultiOpt
       itemPadding: EdgeInsets.zero,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (label != null)
+        if (label != null || component.showRequiredIndicator)
           Padding(
             padding: EdgeInsets.all(4),
-            child: label,
+            child: StyledList.row(
+              itemPadding: EdgeInsets.all(2),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (label != null) label,
+                if (component.showRequiredIndicator)
+                  StyledIcon.strong(
+                    Icons.emergency,
+                    size: 8,
+                  ),
+              ],
+            ),
           ),
         IgnorePointer(
           ignoring: !component.enabled,

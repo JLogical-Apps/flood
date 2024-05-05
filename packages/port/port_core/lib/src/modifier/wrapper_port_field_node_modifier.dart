@@ -32,6 +32,11 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   }
 
   @override
+  bool isRequired(T portField) {
+    return modifierGetter(portField.portField)?.isRequired(portField.portField) ?? false;
+  }
+
+  @override
   bool isMultiline(T portField) {
     return modifierGetter(portField.portField)?.isMultiline(portField.portField) ?? false;
   }

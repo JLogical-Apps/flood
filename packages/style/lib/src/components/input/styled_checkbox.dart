@@ -7,6 +7,7 @@ class StyledCheckbox extends StyleComponent {
 
   final Widget? label;
   final String? labelText;
+  final bool showRequiredIndicator;
   final String? errorText;
 
   final Widget? leading;
@@ -18,6 +19,7 @@ class StyledCheckbox extends StyleComponent {
     this.onChanged,
     this.label,
     this.labelText,
+    this.showRequiredIndicator = false,
     this.errorText,
     this.leading,
     this.leadingIcon,

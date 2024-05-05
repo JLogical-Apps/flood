@@ -16,6 +16,7 @@ import 'package:port_core/src/modifier/multiline_port_field_modifier.dart';
 import 'package:port_core/src/modifier/name_port_field_modifier.dart';
 import 'package:port_core/src/modifier/options_port_field_modifier.dart';
 import 'package:port_core/src/modifier/phone_port_field_modifier.dart';
+import 'package:port_core/src/modifier/required_port_field_modifier.dart';
 import 'package:port_core/src/modifier/search_port_field_modifier.dart';
 import 'package:port_core/src/modifier/secret_port_field_modifier.dart';
 import 'package:port_core/src/modifier/stage_port_field_modifier.dart';
@@ -41,6 +42,10 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
 
   dynamic getHintOrNull(T portField) {
     return null;
+  }
+
+  bool isRequired(T portField) {
+    return false;
   }
 
   bool isMultiline(T portField) {
@@ -95,6 +100,7 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     OptionsPortFieldNodeModifier(),
     SearchPortFieldNodeModifier(),
     ListPortFieldNodeModifier(),
+    RequiredPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     AllowedFileTypesPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     StagePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     DatePortFieldNodeModifier(modifierGetter: getModifierOrNull),

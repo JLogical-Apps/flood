@@ -33,6 +33,7 @@ class StyledDateTimeFieldPortField extends HookWidget {
           value: text,
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
+          showRequiredIndicator: field.findIsRequired(),
           errorText: error?.toString(),
           hintText: hintText,
           showTime: field.findDateFieldOrNull()?.isTime ?? false,

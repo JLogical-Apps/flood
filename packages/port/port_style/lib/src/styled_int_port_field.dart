@@ -34,6 +34,7 @@ class StyledIntFieldPortField extends HookWidget {
           text: amount?.formatIntOrDouble() ?? '',
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
+          showRequiredIndicator: field.findIsRequired(),
           hintText: hintText,
           errorText: error?.toString(),
           enabled: enabled,

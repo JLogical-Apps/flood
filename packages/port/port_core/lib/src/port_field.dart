@@ -22,6 +22,7 @@ import 'package:port_core/src/phone_port_field.dart';
 import 'package:port_core/src/port.dart';
 import 'package:port_core/src/port_field_provider.dart';
 import 'package:port_core/src/port_field_validator_context.dart';
+import 'package:port_core/src/required_port_field.dart';
 import 'package:port_core/src/search_port_field.dart';
 import 'package:port_core/src/secret_port_field.dart';
 import 'package:port_core/src/stage_port_field.dart';
@@ -213,7 +214,7 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
         submitMapper: (submit) => submit as S2,
       );
 
-  PortField<T, S> isNotNull() => withValidator(Validator.isNotNull<T>().forPortField());
+  PortField<T, S> required() => RequiredPortField<T, S>(portField: this);
 
   PortField<T, S> withDisplayName(String displayName) =>
       DisplayNamePortField<T, S>(portField: this, displayNameGetter: (port) => displayName);
@@ -231,6 +232,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
 
   PortField<T, S> withDynamicHint(T? Function(Port port) hintGetter) =>
       HintPortField<T, S>(portField: this, hintGetter: hintGetter);
+
+  bool findIsRequired() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.isRequired(this) ?? false;
+  }
 
   StagePortField? findStageFieldOrNull() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.findStagePortFieldOrNull(this);
@@ -394,7 +399,8 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
 }
 
 extension StringPortFieldExtensions<S> on PortField<String, S> {
-  PortField<String, S> isNotBlank() => withValidator(Validator.isNotBlank().asNonNullable().forPortField());
+  PortField<String, S> isNotBlank() =>
+      RequiredPortField(portField: this).withValidator(Validator.isNotBlank().asNonNullable().forPortField());
 
   PortField<String, S> isName([bool isName = true]) => NamePortField(portField: this, isName: isName);
 

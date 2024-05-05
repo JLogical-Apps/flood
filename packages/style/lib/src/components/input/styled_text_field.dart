@@ -7,6 +7,7 @@ class StyledTextField extends StyleComponent {
 
   final Widget? label;
   final String? labelText;
+  final bool showRequiredIndicator;
   final String? errorText;
   final String? hintText;
 
@@ -30,6 +31,7 @@ class StyledTextField extends StyleComponent {
     this.onChanged,
     this.label,
     this.labelText,
+    this.showRequiredIndicator = false,
     this.errorText,
     this.hintText,
     this.leading,

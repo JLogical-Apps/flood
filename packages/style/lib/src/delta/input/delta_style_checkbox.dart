@@ -20,13 +20,24 @@ class DeltaStyleCheckboxRenderer with IsTypedStyleRenderer<StyledCheckbox> {
                 child: leading,
                 onTap: () => component.onChanged?.call(!component.value),
               ),
-            if (label != null)
+            if (label != null || component.showRequiredIndicator)
               GestureDetector(
+                onTap: () => component.onChanged?.call(!component.value),
                 child: Padding(
                   padding: EdgeInsets.all(4),
-                  child: label,
+                  child: StyledList.row(
+                    itemPadding: EdgeInsets.all(2),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (label != null) label,
+                      if (component.showRequiredIndicator)
+                        StyledIcon.strong(
+                          Icons.emergency,
+                          size: 8,
+                        ),
+                    ],
+                  ),
                 ),
-                onTap: () => component.onChanged?.call(!component.value),
               ),
             Checkbox(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

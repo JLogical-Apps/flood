@@ -17,7 +17,7 @@ class RequiredPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModif
     PortField sourcePortField,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    return sourcePortField.isNotNull();
+    return sourcePortField.required();
   }
 
   @override

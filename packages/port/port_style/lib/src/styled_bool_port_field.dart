@@ -30,6 +30,7 @@ class StyledBoolFieldPortField extends HookWidget {
           value: value ?? false,
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
+          showRequiredIndicator: field.findIsRequired(),
           errorText: error?.toString(),
           onChanged: enabled
               ? (value) {

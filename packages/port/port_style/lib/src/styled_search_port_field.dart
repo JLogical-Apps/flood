@@ -48,6 +48,7 @@ class StyledSearchPortField<R> extends HookWidget {
               labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
               label: label,
               leading: StyledLoadingIndicator(),
+              showRequiredIndicator: field.findIsRequired(),
             );
           }
 
@@ -55,6 +56,7 @@ class StyledSearchPortField<R> extends HookWidget {
             value: selectedValueState.value,
             labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
             label: label,
+            showRequiredIndicator: field.findIsRequired(),
             errorText: error?.toString(),
             enabled: enabled,
             onChanged: (value) {

@@ -18,6 +18,7 @@ class FlatStyleColorPickerRenderer with IsTypedStyleRenderer<StyledColorPicker> 
       key: ObjectKey(component.value),
       labelText: component.labelText,
       label: component.label,
+      showRequiredIndicator: component.showRequiredIndicator,
       enabled: component.onChanged != null,
       readonly: true,
       errorText: component.errorText,

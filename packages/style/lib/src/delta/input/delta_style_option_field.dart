@@ -19,10 +19,21 @@ class DeltaStyleOptionFieldRenderer with IsTypedStyleRenderer<StyledOptionField>
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (label != null)
+        if (label != null || component.showRequiredIndicator)
           Padding(
             padding: EdgeInsets.all(4),
-            child: label,
+            child: StyledList.row(
+              itemPadding: EdgeInsets.all(2),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (label != null) label,
+                if (component.showRequiredIndicator)
+                  StyledIcon.strong(
+                    Icons.emergency,
+                    size: 8,
+                  ),
+              ],
+            ),
           ),
         DropdownButtonFormField(
           isExpanded: true,
@@ -73,8 +84,9 @@ class DeltaStyleOptionFieldRenderer with IsTypedStyleRenderer<StyledOptionField>
               borderSide: BorderSide(color: context.colorPalette().error.subtle),
             ),
             errorText: component.errorText?.nullIfBlank,
-            errorStyle: context.style().getTextStyle(
-                context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
+            errorStyle: context
+                .style()
+                .getTextStyle(context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
           ),
         ),
       ],

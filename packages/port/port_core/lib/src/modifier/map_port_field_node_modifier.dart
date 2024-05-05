@@ -28,6 +28,11 @@ class MapPortFieldNodeModifier extends PortFieldNodeModifier<MapPortField> {
   }
 
   @override
+  bool isRequired(MapPortField portField) {
+    return modifierGetter(portField.portField)?.isRequired(portField.portField) ?? false;
+  }
+
+  @override
   bool isMultiline(MapPortField portField) {
     return modifierGetter(portField.portField)?.isMultiline(portField.portField) ?? false;
   }

@@ -34,6 +34,7 @@ class StyledCurrencyFieldPortField extends HookWidget {
           text: amountCents?.formatCentsAsCurrency() ?? '',
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
+          showRequiredIndicator: field.findIsRequired(),
           hintText: hintText,
           errorText: error?.toString(),
           enabled: enabled,

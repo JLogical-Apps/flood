@@ -6,6 +6,8 @@ class StyledDisabledTextField extends StatelessWidget {
 
   final Widget? label;
   final String? labelText;
+  final bool showRequiredIndicator;
+
   final String? errorText;
   final String? hintText;
 
@@ -23,6 +25,7 @@ class StyledDisabledTextField extends StatelessWidget {
     this.text,
     this.label,
     this.labelText,
+    this.showRequiredIndicator = false,
     this.errorText,
     this.hintText,
     this.leading,
