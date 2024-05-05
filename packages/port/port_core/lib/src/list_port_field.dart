@@ -47,8 +47,9 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
 
   @override
   Future<List<S>> submit(Map<String, T?> value) async {
-    return (await Future.wait(
-            itemPortFieldById.mapToIterable((id, portField) async => await portField.submit(portField.value))))
+    return (await Future.wait(itemPortFieldById
+            .where((id, portField) => value[id] != null)
+            .mapToIterable((id, portField) async => await portField.submit(portField.value))))
         .cast<S>()
         .toList();
   }

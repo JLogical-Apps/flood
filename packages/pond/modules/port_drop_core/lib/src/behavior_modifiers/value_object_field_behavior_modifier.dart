@@ -127,9 +127,6 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
       },
     ).withValidator(Validator((context) {
       final stageValue = context.value as StageValue?;
-      if (stageValue?.value == null) {
-        return 'Cannot have an empty value!';
-      }
 
       return null;
     }));
