@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:style/src/color_palette_provider.dart';
@@ -23,6 +25,20 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
         component.enabled ? context.colorPalette().background.regular : context.colorPalette().baseBackground;
 
     final revealSecretState = useState<bool>(false);
+
+    final previousText = usePrevious(component.text);
+
+    if (previousText != component.text && component.text != textController.text) {
+      final text = component.text ?? '';
+      final isAtEnd =
+          textController.text.length + 1 == text.length && textController.selection.baseOffset + 1 == text.length;
+      final offset = isAtEnd ? text.length : min(text.length, textController.selection.baseOffset);
+
+      textController.value = textController.value.copyWith(
+        text: text,
+        selection: TextSelection.collapsed(offset: offset),
+      );
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,

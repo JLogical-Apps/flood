@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:style/src/color_palette_provider.dart';
+import 'package:style/src/components/input/styled_button.dart';
 import 'package:style/src/components/input/styled_text_field.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
@@ -20,6 +23,23 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
     final textController = useTextEditingController(text: component.text);
     final textFieldColor =
         component.enabled ? context.colorPalette().background.regular : context.colorPalette().baseBackground;
+
+    final revealSecretState = useState<bool>(false);
+
+    final previousText = usePrevious(component.text);
+
+    if (previousText != component.text && component.text != textController.text) {
+      final text = component.text ?? '';
+      final isAtEnd =
+          textController.text.length + 1 == text.length && textController.selection.baseOffset + 1 == text.length;
+      final offset = isAtEnd ? text.length : min(text.length, textController.selection.baseOffset);
+
+      textController.value = textController.value.copyWith(
+        text: text,
+        selection: TextSelection.collapsed(offset: offset),
+      );
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +70,7 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
               style: context.style().getTextStyle(textFieldContext, StyledText.body.empty),
               cursorColor: textFieldContext.colorPalette().foreground.regular,
               readOnly: component.readonly || !component.enabled,
-              obscureText: component.obscureText,
+              obscureText: component.obscureText && !revealSecretState.value,
               maxLines: component.maxLines,
               keyboardType: component.keyboard,
               onFieldSubmitted: component.onSubmitted == null ? null : (text) => component.onSubmitted!(text),
@@ -59,6 +79,20 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                 focusColor: textFieldContext.colorPalette().background.regular.background.regular,
                 fillColor: textFieldColor,
                 prefixIcon: leading,
+                suffixIcon: !component.obscureText || textController.text.isEmpty
+                    ? null
+                    : Padding(
+                        padding: EdgeInsets.only(right: 2),
+                        child: revealSecretState.value
+                            ? StyledButton.subtle(
+                                iconData: Icons.visibility,
+                                onPressed: () => revealSecretState.value = false,
+                              )
+                            : StyledButton.subtle(
+                                iconData: Icons.visibility_off,
+                                onPressed: () => revealSecretState.value = true,
+                              ),
+                      ),
                 filled: true,
                 hintText: component.hintText,
                 hintStyle: context.style().getTextStyle(textFieldContext,
