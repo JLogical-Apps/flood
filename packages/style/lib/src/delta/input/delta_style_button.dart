@@ -16,24 +16,25 @@ import 'package:utils/utils.dart';
 class DeltaStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
   @override
   Widget renderTyped(BuildContext context, StyledButton component) {
+    final backgroundColorPalette =
+        component.backgroundColor?.mapIfNonNull((color) => context.style().getColorPaletteFromBackground(color)) ??
+            (component.emphasis == Emphasis.strong ? context.colorPalette().background.strong : context.colorPalette());
+
     final label = component.label ??
         component.labelText?.mapIfNonNull((text) => StyledText.body.display.bold
             .withColor(component.isTextButton
                 ? null
                 : component.emphasis == Emphasis.regular
-                    ? context.colorPalette().foreground.strong
+                    ? backgroundColorPalette.foreground.strong
                     : null)
             .withEmphasis(component.isTextButton ? component.emphasis : Emphasis.regular)(text));
     final icon = component.icon ??
         component.iconData?.mapIfNonNull((iconData) => StyledIcon(
               iconData,
               color: label != null && component.emphasis == Emphasis.regular
-                  ? context.colorPalette().foreground.strong
+                  ? backgroundColorPalette.foreground.strong
                   : null,
             ));
-    final backgroundColorPalette =
-        component.backgroundColor?.mapIfNonNull((color) => context.style().getColorPaletteFromBackground(color)) ??
-            (component.emphasis == Emphasis.strong ? context.colorPalette().background.strong : context.colorPalette());
 
     final loadingState = useState<bool>(false);
 

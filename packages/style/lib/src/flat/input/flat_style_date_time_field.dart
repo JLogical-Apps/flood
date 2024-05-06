@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:style/src/components/input/styled_date_time_field.dart';
 import 'package:style/src/components/input/styled_text_field.dart';
+import 'package:style/src/components/text/styled_text.dart';
+import 'package:style/src/flat/flat_style.dart';
 import 'package:style/src/style_build_context_extensions.dart';
 import 'package:style/src/style_renderer.dart';
 import 'package:style/src/styleguide.dart';
@@ -19,51 +21,37 @@ class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> 
       errorText: component.errorText,
       hintText: component.hintText,
       leadingIcon: Icons.date_range,
-      text: component.value?.format(showDate: component.showDate, showTime: component.showTime),
+      text: component.value?.formatWith((dateFormat) {
+        if (component.showTime) {
+          return dateFormat.add_yMd().addPattern('h:mm a');
+        } else {
+          return dateFormat.add_yMd();
+        }
+      }),
       onTapped: component.onChanged == null
           ? null
           : () async {
-              final result = await showDatePicker(
-                context: context,
-                builder: (context, child) {
-                  return Theme(
-                    data: ThemeData.light().copyWith(
-                      colorScheme: ColorScheme.dark(
-                        primary: context.colorPalette().background.strong,
-                        onPrimary: context.colorPalette().background.strong.foreground.regular,
-                        surface: context.colorPalette().background.regular,
-                        onSurface: context.colorPalette().background.regular.foreground.regular,
-                        brightness: context.colorPalette().background.regular.computeLuminance() > 0.5
-                            ? Brightness.dark
-                            : Brightness.light,
-                      ),
-                      inputDecorationTheme: InputDecorationTheme(
-                        labelStyle: TextStyle(
-                          color: context.colorPalette().background.regular.foreground.strong,
-                        ),
-                      ),
-                      textTheme: Theme.of(context).textTheme.apply(
-                            bodyColor: context.colorPalette().foreground.regular,
-                          ),
-                      dialogTheme: DialogTheme(
-                        backgroundColor: context.colorPalette().background.regular,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    child: child ?? Container(),
-                  );
-                },
-                useRootNavigator: false,
-                initialDate: component.value ?? DateTime.now(),
-                firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-                lastDate: DateTime.now().add(Duration(days: 1000)),
-              );
+              var result = await getDate(context, component);
+              if (result == null) {
+                FocusScope.of(context).requestFocus(FocusNode());
+                return;
+              }
+
+              if (component.showTime) {
+                final time = await getTime(context, component);
+                if (time == null) {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  return;
+                }
+
+                result = result.copyWith(
+                  hour: time.hour,
+                  minute: time.minute,
+                );
+              }
 
               FocusScope.of(context).requestFocus(FocusNode());
-
-              if (result != null) component.onChanged!(result);
+              component.onChanged!(result);
             },
     );
   }
@@ -109,5 +97,128 @@ class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> 
         value: DateTime.now(),
         errorText: 'Oops here is an error',
       ));
+  }
+
+  Future<DateTime?> getDate(BuildContext context, StyledDateTimeField component) async {
+    final colorPalette = (context.style() as FlatStyle).colorPalette;
+    return await showDatePicker(
+      context: context,
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: colorPalette.background.strong,
+              onPrimary: colorPalette.background.strong.foreground.regular,
+              surface: colorPalette.baseBackground,
+              onSurface: colorPalette.foreground.regular,
+              brightness: colorPalette.baseBackground.computeLuminance() > 0.5 ? Brightness.dark : Brightness.light,
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              labelStyle: context.style().getTextStyle(context, StyledText.sm.bold.display.empty),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colorPalette.background.regular.background.regular,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colorPalette.background.regular.background.regular,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colorPalette.background.regular.background.strong,
+                  width: 2,
+                ),
+              ),
+            ),
+            dialogTheme: DialogTheme(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            textTheme: TextTheme(
+              displayLarge: context.style().getTextStyle(context, StyledText.xs.bold.display.empty),
+              headlineLarge: context.style().getTextStyle(context, StyledText.lg.bold.display.empty),
+              labelLarge: context.style().getTextStyle(context, StyledText.sm.bold.display.empty),
+              bodyLarge: context.style().getTextStyle(context, StyledText.sm.bold.display.empty),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: colorPalette.foreground.regular,
+                textStyle: context.style().getTextStyle(context, StyledText.sm.display.bold.empty),
+              ),
+            ),
+          ),
+          child: child ?? Container(),
+        );
+      },
+      useRootNavigator: false,
+      initialDate: component.value ?? DateTime.now(),
+      firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+      lastDate: DateTime.now().add(Duration(days: 1000)),
+    );
+  }
+
+  Future<TimeOfDay?> getTime(BuildContext context, StyledDateTimeField component) async {
+    final style = context.style() as FlatStyle;
+    final colorPalette = style.colorPalette;
+    return await showTimePicker(
+      context: context,
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: colorPalette.background.strong,
+              onPrimary: colorPalette.background.strong.foreground.regular,
+              secondary: style.accentColor,
+              onSecondary: style.getColorPaletteFromBackground(style.accentColor).foreground.regular,
+              surface: colorPalette.baseBackground,
+              onSurface: colorPalette.foreground.regular,
+              brightness: colorPalette.baseBackground.computeLuminance() > 0.5 ? Brightness.dark : Brightness.light,
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              labelStyle: context.style().getTextStyle(context, StyledText.sm.bold.display.empty),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colorPalette.background.regular.background.regular,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colorPalette.background.regular.background.regular,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: colorPalette.background.regular.background.strong,
+                  width: 2,
+                ),
+              ),
+            ),
+            dialogTheme: DialogTheme(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            textTheme: TextTheme(
+              displayLarge: context.style().getTextStyle(context, StyledText.xs.bold.display.empty),
+              headlineLarge: context.style().getTextStyle(context, StyledText.lg.bold.display.empty),
+              labelLarge: context.style().getTextStyle(context, StyledText.sm.bold.display.empty),
+              bodyLarge: context.style().getTextStyle(context, StyledText.sm.bold.display.empty),
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: colorPalette.foreground.regular,
+                textStyle: context.style().getTextStyle(context, StyledText.sm.display.bold.empty),
+              ),
+            ),
+          ),
+          child: child ?? Container(),
+        );
+      },
+      useRootNavigator: false,
+      initialTime: component.value != null ? TimeOfDay.fromDateTime(component.value!) : TimeOfDay.now(),
+    );
   }
 }
