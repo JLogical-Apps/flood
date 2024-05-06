@@ -125,10 +125,6 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
         final valueObject = type.createInstance() as ValueObject;
         return valueObject.getDisplayName() ?? valueObject.runtimeType.toString();
       },
-    ).withValidator(Validator((context) {
-      final stageValue = context.value as StageValue?;
-
-      return null;
-    }));
+    );
   }
 }

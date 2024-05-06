@@ -20,7 +20,7 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
     final label = component.label ?? component.labelText?.mapIfNonNull((text) => StyledText.body.display.bold(text));
     final leading = component.leading ?? component.leadingIcon?.mapIfNonNull((icon) => StyledIcon(icon));
 
-    final textController = useTextEditingController(text: component.text);
+    final textController = useTextEditingController();
     final textFieldColor =
         component.enabled ? context.colorPalette().background.regular : context.colorPalette().baseBackground;
 
@@ -28,7 +28,9 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
 
     final previousText = usePrevious(component.text);
 
-    if (previousText != component.text && component.text != textController.text) {
+    if (previousText != component.text &&
+        component.text != textController.text &&
+        (component.shouldUpdate?.call(textController.text, component.text ?? '') ?? true)) {
       final text = component.text ?? '';
       final isAtEnd =
           textController.text.length + 1 == text.length && textController.selection.baseOffset + 1 == text.length;

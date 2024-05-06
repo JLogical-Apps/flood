@@ -4,6 +4,7 @@ import 'package:style/src/style_component.dart';
 class StyledTextField extends StyleComponent {
   final String? text;
   final Function(String value)? onChanged;
+  final bool Function(String textControllerText, String value)? shouldUpdate;
 
   final Widget? label;
   final String? labelText;
@@ -29,6 +30,7 @@ class StyledTextField extends StyleComponent {
     super.key,
     this.text,
     this.onChanged,
+    this.shouldUpdate,
     this.label,
     this.labelText,
     this.showRequiredIndicator = false,

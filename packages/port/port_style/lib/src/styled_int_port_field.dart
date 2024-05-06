@@ -35,6 +35,7 @@ class StyledIntFieldPortField extends HookWidget {
           labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
           label: label,
           showRequiredIndicator: field.findIsRequired(),
+          shouldUpdate: (val1, val2) => val1.tryParseDoubleAfterClean() != val2.tryParseDoubleAfterClean(),
           hintText: hintText,
           errorText: error?.toString(),
           enabled: enabled,
