@@ -1,4 +1,5 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/record.dart';
 import 'package:drop_core/src/record/value_object/computed_value_object_property.dart';
@@ -86,8 +87,16 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
 
   FieldValueObjectProperty<T> field<T>({required String name}) => ValueObjectProperty.field<T>(name: name);
 
-  ReferenceValueObjectProperty<E> reference<E extends Entity>({required String name}) =>
-      ValueObjectProperty.reference<E>(name: name);
+  ReferenceValueObjectProperty<E> reference<E extends Entity>({
+    required String name,
+    Query<E> Function(Query<E> query)? searchQueryModifier,
+    List<E> Function(List<E> results)? searchResultsFilter,
+  }) =>
+      ValueObjectProperty.reference<E>(
+        name: name,
+        searchQueryModifier: searchQueryModifier,
+        searchResultsFilter: searchResultsFilter,
+      );
 
   ComputedValueObjectProperty<T> computed<T>({required String name, required T Function() computation}) =>
       ValueObjectProperty.computed<T>(name: name, computation: computation);

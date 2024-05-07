@@ -1,4 +1,6 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/query/query.dart';
+import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -9,10 +11,18 @@ class ReferenceValueObjectProperty<E extends Entity>
   @override
   final String name;
 
+  final Query<E> Function(Query<E> query)? searchQueryModifier;
+  final List<E> Function(List<E> results)? searchResultsFilter;
+
   @override
   String? value;
 
-  ReferenceValueObjectProperty({required this.name, this.value});
+  ReferenceValueObjectProperty({
+    required this.name,
+    this.value,
+    this.searchQueryModifier,
+    this.searchResultsFilter,
+  });
 
   @override
   Type get getterType => typeOf<String?>();
@@ -38,5 +48,19 @@ class ReferenceValueObjectProperty<E extends Entity>
   @override
   ReferenceValueObjectProperty<E> copy() {
     return ReferenceValueObjectProperty<E>(name: name, value: value);
+  }
+
+  Future<List<E>> getSearchResults(DropCoreContext context) async {
+    Query<E> query = Query.from<E>();
+    if (searchQueryModifier != null) {
+      query = searchQueryModifier!(query);
+    }
+
+    var entities = await query.all().get(context);
+    if (searchResultsFilter != null) {
+      entities = searchResultsFilter!(entities);
+    }
+
+    return entities;
   }
 }

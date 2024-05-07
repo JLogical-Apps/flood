@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/async_fallback_value_object_property.dart';
@@ -60,8 +61,16 @@ abstract class ValueObjectProperty<G, S, V extends ValueObjectProperty<dynamic, 
     return FieldValueObjectProperty(name: name);
   }
 
-  static ReferenceValueObjectProperty<E> reference<E extends Entity>({required String name}) {
-    return ReferenceValueObjectProperty(name: name);
+  static ReferenceValueObjectProperty<E> reference<E extends Entity>({
+    required String name,
+    Query<E> Function(Query<E> query)? searchQueryModifier,
+    List<E> Function(List<E> results)? searchResultsFilter,
+  }) {
+    return ReferenceValueObjectProperty(
+      name: name,
+      searchQueryModifier: searchQueryModifier,
+      searchResultsFilter: searchResultsFilter,
+    );
   }
 
   static ComputedValueObjectProperty<T> computed<T>({
