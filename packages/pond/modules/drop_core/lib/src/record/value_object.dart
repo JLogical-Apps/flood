@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/record/entity.dart';
@@ -89,8 +91,8 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
 
   ReferenceValueObjectProperty<E> reference<E extends Entity>({
     required String name,
-    Query<E> Function(Query<E> query)? searchQueryModifier,
-    List<E> Function(List<E> results)? searchResultsFilter,
+    FutureOr<Query<E>> Function(DropCoreContext context, Query<E> query)? searchQueryModifier,
+    FutureOr<List<E>> Function(DropCoreContext context, List<E> results)? searchResultsFilter,
   }) =>
       ValueObjectProperty.reference<E>(
         name: name,

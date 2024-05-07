@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
@@ -11,8 +13,8 @@ class ReferenceValueObjectProperty<E extends Entity>
   @override
   final String name;
 
-  final Query<E> Function(Query<E> query)? searchQueryModifier;
-  final List<E> Function(List<E> results)? searchResultsFilter;
+  final FutureOr<Query<E>> Function(DropCoreContext context, Query<E> query)? searchQueryModifier;
+  final FutureOr<List<E>> Function(DropCoreContext context, List<E> results)? searchResultsFilter;
 
   @override
   String? value;
@@ -53,12 +55,12 @@ class ReferenceValueObjectProperty<E extends Entity>
   Future<List<E>> getSearchResults(DropCoreContext context) async {
     Query<E> query = Query.from<E>();
     if (searchQueryModifier != null) {
-      query = searchQueryModifier!(query);
+      query = await searchQueryModifier!(context, query);
     }
 
     var entities = await query.all().get(context);
     if (searchResultsFilter != null) {
-      entities = searchResultsFilter!(entities);
+      entities = await searchResultsFilter!(context, entities);
     }
 
     return entities;
