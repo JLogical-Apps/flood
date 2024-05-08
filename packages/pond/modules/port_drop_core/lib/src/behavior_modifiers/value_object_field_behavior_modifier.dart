@@ -123,7 +123,7 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
         }
 
         final valueObject = type.createInstance() as ValueObject;
-        return valueObject.getDisplayName() ?? valueObject.runtimeType.toString();
+        return valueObject.getDisplayName();
       },
     );
   }

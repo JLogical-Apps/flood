@@ -41,18 +41,12 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
         return StyledPage(
           titleText: 'Todos',
           actions: [
-            ActionItem.edit(
-                contentType: 'Profile',
-                descriptionText: 'Edit your profile.',
-                onPerform: (_) async {
-                  await context.showStyledDialog(StyledPortDialog(
-                    titleText: 'Edit Profile',
-                    port: loggedInUserEntity.value.asPort(context.corePondContext),
-                    onAccept: (User user) async {
-                      await context.dropCoreComponent.updateEntity(loggedInUserEntity..set(user));
-                    },
-                  ));
-                }),
+            ActionItem.static.editEntity(
+              context,
+              entity: loggedInUserEntity,
+              contentTypeName: 'Profile',
+              description: 'Edit your profile.',
+            ),
             ActionItem(
               titleText: 'Import',
               color: Colors.blue,
@@ -115,7 +109,7 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                               .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
                         },
                       ),
-                      actions: _getTodoActions(context, todoEntity),
+                      actions: ActionItem.static.entityCrudActions(context, entity: todoEntity),
                     )),
                 if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) ...[
                   StyledDivider(),
@@ -132,7 +126,7 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                               .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
                         },
                       ),
-                      actions: _getTodoActions(context, todoEntity),
+                      actions: ActionItem.static.entityCrudActions(context, entity: todoEntity),
                     )),
               ],
             ),
@@ -140,42 +134,5 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
         );
       },
     );
-  }
-
-  List<ActionItem> _getTodoActions(BuildContext context, TodoEntity todoEntity) {
-    return [
-      ActionItem.edit(
-        contentType: 'Todo',
-        onPerform: (_) async {
-          await context.showStyledDialog(StyledPortDialog(
-            titleText: 'Edit Todo',
-            port: todoEntity.value.asPort(context.corePondContext),
-            onAccept: (Todo todo) async {
-              await context.dropCoreComponent.updateEntity(todoEntity..set(todo));
-            },
-          ));
-        },
-      ),
-      ActionItem.duplicate(
-        contentType: 'Todo',
-        onPerform: (_) async {
-          await context.showStyledDialog(StyledPortDialog(
-            titleText: 'Duplicate Todo',
-            port: (Todo()
-                  ..copyFrom(context.dropCoreComponent, todoEntity)
-                  ..nameProperty.update((name) => '$name - Copy'))
-                .asPort(context.corePondContext),
-            onAccept: (Todo todo) async {
-              await context.dropCoreComponent.updateEntity(TodoEntity()..set(todo));
-            },
-          ));
-        },
-      ),
-      ActionItem.delete(
-        context,
-        contentType: 'Todo',
-        onDelete: () => context.dropCoreComponent.delete(todoEntity),
-      ),
-    ];
   }
 }
