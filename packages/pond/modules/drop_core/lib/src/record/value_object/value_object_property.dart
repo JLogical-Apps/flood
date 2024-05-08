@@ -266,22 +266,20 @@ extension SameNullableGetterSetterValueObjectPropertyExtensions<T, V extends Val
   FallbackReplacementValueObjectProperty<T> withFallbackReplacement(T Function() fallbackReplacement) {
     return FallbackReplacementValueObjectProperty(property: this, fallbackReplacement: fallbackReplacement);
   }
+
+  ListValueObjectProperty<T> list() {
+    return ListValueObjectProperty(property: this);
+  }
+
+  MapValueObjectProperty<T, T2> mapTo<T2>() {
+    return MapValueObjectProperty(property: this);
+  }
 }
 
 extension SameGetterSetterValueObjectPropertyExtensions<T, V extends ValueObjectProperty>
     on ValueObjectProperty<T, T, V> {
   AsyncFallbackValueObjectProperty<T> withAsyncFallback(FutureOr<T> Function(DropCoreContext context) fallback) {
     return AsyncFallbackValueObjectProperty(property: this, fallback: fallback);
-  }
-}
-
-extension FieldValueObjectPropertyExtensions<T> on FieldValueObjectProperty<T> {
-  ListValueObjectProperty<T> list() {
-    return ListValueObjectProperty(property: this);
-  }
-
-  MapValueObjectProperty<T, V> mapTo<V>() {
-    return MapValueObjectProperty(property: this);
   }
 }
 

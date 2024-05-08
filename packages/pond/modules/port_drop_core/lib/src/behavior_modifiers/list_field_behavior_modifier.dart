@@ -35,7 +35,20 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
             );
           }
 
-          return SimplePortField(value: value, dataType: behavior.valueType, submitType: behavior.valueType);
+          final itemPortField = modifierGetter(behavior.property);
+          if (itemPortField == null) {
+            throw Exception('Cannot generate port for item of property [$behavior]');
+          }
+
+          final itemPropertyInstance = behavior.property.copy() as ValueObjectProperty;
+          itemPropertyInstance.set(value);
+
+          final portFieldByName = itemPortField.getPortFieldByName(itemPropertyInstance, context);
+          if (portFieldByName.length > 1) {
+            throw Exception('There are too many port fields generated for item of property [$behavior]');
+          }
+
+          return portFieldByName.values.first;
         },
       )
     };

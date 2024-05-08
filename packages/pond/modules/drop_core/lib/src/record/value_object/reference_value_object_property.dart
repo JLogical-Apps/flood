@@ -49,7 +49,12 @@ class ReferenceValueObjectProperty<E extends Entity>
 
   @override
   ReferenceValueObjectProperty<E> copy() {
-    return ReferenceValueObjectProperty<E>(name: name, value: value);
+    return ReferenceValueObjectProperty<E>(
+      name: name,
+      value: value,
+      searchResultsFilter: searchResultsFilter,
+      searchQueryGetter: searchQueryGetter,
+    );
   }
 
   Future<List<E>> getSearchResults(DropCoreContext context) async {
