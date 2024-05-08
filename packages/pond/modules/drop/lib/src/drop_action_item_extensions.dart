@@ -19,11 +19,10 @@ extension DropActionItemExtensions on ActionItemStatic {
   }) {
     contentTypeName ??= context.dropCoreComponent.getRuntimeTypeRuntime(entity.value.runtimeType).name.titleCase;
 
-    return ActionItem(
-      titleText: title ?? 'Edit $contentTypeName',
-      descriptionText: description ?? 'Edit this $contentTypeName.',
-      iconData: Icons.edit,
-      color: Colors.orange,
+    return ActionItem.static.edit(
+      contentTypeName: contentTypeName,
+      title: title,
+      description: description,
       onPerform: (_) async {
         await context.showStyledDialog(StyledPortDialog(
           titleText: 'Edit $contentTypeName',
@@ -47,16 +46,18 @@ extension DropActionItemExtensions on ActionItemStatic {
   }) {
     contentTypeName ??= context.dropCoreComponent.getRuntimeTypeRuntime(entity.value.runtimeType).name.titleCase;
 
-    return ActionItem(
-      titleText: title ?? 'Duplicate $contentTypeName',
-      descriptionText: description ?? 'Duplicate this $contentTypeName.',
-      iconData: Icons.copy,
-      color: Colors.blue,
+    return ActionItem.static.duplicate(
+      contentTypeName: contentTypeName,
+      title: title,
+      description: description,
       onPerform: (_) async {
-        final existingValue = entity.value;
+        final newInstance =
+            context.dropCoreComponent.getRuntimeTypeRuntime(entity.value.runtimeType).createInstance() as V;
+        newInstance.copyFrom(context.dropCoreComponent, entity.value);
+
         await context.showStyledDialog(StyledPortDialog(
           titleText: 'Duplicate $contentTypeName',
-          port: (duplicator?.call(existingValue) ?? existingValue).asPort(context.corePondContext, only: only),
+          port: (duplicator?.call(newInstance) ?? newInstance).asPort(context.corePondContext, only: only),
           onAccept: (V result) async {
             final newEntity = context.dropCoreComponent.getRuntimeType<E>().createInstance();
             await context.dropCoreComponent.updateEntity(newEntity..set(result));
@@ -75,11 +76,10 @@ extension DropActionItemExtensions on ActionItemStatic {
   }) {
     contentTypeName ??= context.dropCoreComponent.getRuntimeTypeRuntime(entity.value.runtimeType).name.titleCase;
 
-    return ActionItem(
-      titleText: title ?? 'Delete $contentTypeName',
-      descriptionText: description ?? 'Delete this $contentTypeName.',
-      iconData: Icons.delete,
-      color: Colors.red,
+    return ActionItem.static.delete(
+      contentTypeName: contentTypeName,
+      title: title,
+      description: description,
       onPerform: (_) async {
         await context.showStyledDialog(StyledDialog.yesNo(
           titleText: 'Confirm Delete $contentTypeName',
@@ -96,10 +96,11 @@ extension DropActionItemExtensions on ActionItemStatic {
     BuildContext context, {
     required E entity,
     String? contentTypeName,
+    V Function(V value)? duplicator,
   }) {
     return [
       editEntity(context, entity: entity, contentTypeName: contentTypeName),
-      duplicateEntity(context, entity: entity, contentTypeName: contentTypeName),
+      duplicateEntity(context, entity: entity, contentTypeName: contentTypeName, duplicator: duplicator),
       deleteEntity(context, entity: entity, contentTypeName: contentTypeName),
     ];
   }

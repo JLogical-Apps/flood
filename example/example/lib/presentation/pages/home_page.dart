@@ -2,7 +2,6 @@ import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example_core/features/todo/todo.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
-import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:flood/flood.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +108,7 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                               .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
                         },
                       ),
-                      actions: ActionItem.static.entityCrudActions(context, entity: todoEntity),
+                      actions: getTodoActions(context, todoEntity: todoEntity),
                     )),
                 if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) ...[
                   StyledDivider(),
@@ -126,13 +125,21 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                               .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
                         },
                       ),
-                      actions: ActionItem.static.entityCrudActions(context, entity: todoEntity),
+                      actions: getTodoActions(context, todoEntity: todoEntity),
                     )),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  List<ActionItem> getTodoActions(BuildContext context, {required TodoEntity todoEntity}) {
+    return ActionItem.static.entityCrudActions(
+      context,
+      entity: todoEntity,
+      duplicator: (Todo todo) => todo..nameProperty.update((name) => '$name - Copy'),
     );
   }
 }
