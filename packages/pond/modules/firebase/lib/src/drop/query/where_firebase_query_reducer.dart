@@ -5,6 +5,7 @@ import 'package:firebase/src/drop/condition/equals_firebase_query_condition_redu
 import 'package:firebase/src/drop/condition/firebase_query_condition_reducer.dart';
 import 'package:firebase/src/drop/condition/is_greater_than_firebase_query_condition_reducer.dart';
 import 'package:firebase/src/drop/condition/is_greater_than_or_equal_to_firebase_query_condition_reducer.dart';
+import 'package:firebase/src/drop/condition/is_in_firebase_query_condition_reducer.dart';
 import 'package:firebase/src/drop/condition/is_less_than_firebase_query_condition_reducer.dart';
 import 'package:firebase/src/drop/condition/is_less_than_or_equal_to_firebase_query_condition_reducer.dart';
 import 'package:firebase/src/drop/condition/is_non_null_firebase_query_condition_reducer.dart';
@@ -16,6 +17,7 @@ class WhereFirebaseQueryReducer extends FirebaseQueryReducer<WhereQuery> {
   ModifierResolver<FirebaseQueryConditionReducer, QueryCondition> getQueryConditionReducerResolver() =>
       ModifierResolver(modifiers: [
         ContainsFirebaseQueryConditionReducer(),
+        IsInFirebaseQueryConditionReducer(),
         EqualsFirebaseQueryConditionReducer(),
         IsGreaterThanOrEqualToFirebaseQueryConditionReducer(),
         IsGreaterThanFirebaseQueryConditionReducer(),

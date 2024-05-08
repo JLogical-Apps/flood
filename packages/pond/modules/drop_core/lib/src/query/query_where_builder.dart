@@ -39,4 +39,8 @@ class QueryWhereBuilder<E extends Entity> {
   Query<E> contains(dynamic value) {
     return query.whereCondition(QueryCondition.field(stateField).contains(value));
   }
+
+  Query<E> isIn(List values) {
+    return query.whereCondition(QueryCondition.field(stateField).isIn(values));
+  }
 }

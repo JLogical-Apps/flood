@@ -2,6 +2,7 @@ import 'package:drop_core/src/query/condition/contains_query_condition.dart';
 import 'package:drop_core/src/query/condition/equals_query_condition.dart';
 import 'package:drop_core/src/query/condition/is_greater_than_or_equal_to_query_condition.dart';
 import 'package:drop_core/src/query/condition/is_greater_than_query_condition.dart';
+import 'package:drop_core/src/query/condition/is_in_query_condition.dart';
 import 'package:drop_core/src/query/condition/is_less_than_or_equal_to_query_condition.dart';
 import 'package:drop_core/src/query/condition/is_less_than_query_condition.dart';
 import 'package:drop_core/src/query/condition/is_non_null_query_condition.dart';
@@ -42,5 +43,9 @@ class QueryConditionBuilder {
 
   ContainsQueryCondition contains(dynamic value) {
     return ContainsQueryCondition(stateField: stateField, value: value);
+  }
+
+  IsInQueryCondition isIn(List values) {
+    return IsInQueryCondition(stateField: stateField, values: values);
   }
 }
