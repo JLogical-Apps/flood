@@ -63,12 +63,12 @@ abstract class ValueObjectProperty<G, S, V extends ValueObjectProperty<dynamic, 
 
   static ReferenceValueObjectProperty<E> reference<E extends Entity>({
     required String name,
-    FutureOr<Query<E>> Function(DropCoreContext context, Query<E> query)? searchQueryModifier,
+    FutureOr<Query<E>> Function(DropCoreContext context)? searchQueryGetter,
     FutureOr<List<E>> Function(DropCoreContext context, List<E> results)? searchResultsFilter,
   }) {
     return ReferenceValueObjectProperty(
       name: name,
-      searchQueryModifier: searchQueryModifier,
+      searchQueryGetter: searchQueryGetter,
       searchResultsFilter: searchResultsFilter,
     );
   }

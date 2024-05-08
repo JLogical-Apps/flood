@@ -13,7 +13,7 @@ class ReferenceValueObjectProperty<E extends Entity>
   @override
   final String name;
 
-  final FutureOr<Query<E>> Function(DropCoreContext context, Query<E> query)? searchQueryModifier;
+  final FutureOr<Query<E>> Function(DropCoreContext context)? searchQueryGetter;
   final FutureOr<List<E>> Function(DropCoreContext context, List<E> results)? searchResultsFilter;
 
   @override
@@ -22,7 +22,7 @@ class ReferenceValueObjectProperty<E extends Entity>
   ReferenceValueObjectProperty({
     required this.name,
     this.value,
-    this.searchQueryModifier,
+    this.searchQueryGetter,
     this.searchResultsFilter,
   });
 
@@ -53,10 +53,7 @@ class ReferenceValueObjectProperty<E extends Entity>
   }
 
   Future<List<E>> getSearchResults(DropCoreContext context) async {
-    Query<E> query = Query.from<E>();
-    if (searchQueryModifier != null) {
-      query = await searchQueryModifier!(context, query);
-    }
+    final query = searchQueryGetter == null ? Query.from<E>() : await searchQueryGetter!(context);
 
     var entities = await query.all().get(context);
     if (searchResultsFilter != null) {

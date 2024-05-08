@@ -91,12 +91,12 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
 
   ReferenceValueObjectProperty<E> reference<E extends Entity>({
     required String name,
-    FutureOr<Query<E>> Function(DropCoreContext context, Query<E> query)? searchQueryModifier,
+    FutureOr<Query<E>> Function(DropCoreContext context)? searchQueryGetter,
     FutureOr<List<E>> Function(DropCoreContext context, List<E> results)? searchResultsFilter,
   }) =>
       ValueObjectProperty.reference<E>(
         name: name,
-        searchQueryModifier: searchQueryModifier,
+        searchQueryGetter: searchQueryGetter,
         searchResultsFilter: searchResultsFilter,
       );
 
