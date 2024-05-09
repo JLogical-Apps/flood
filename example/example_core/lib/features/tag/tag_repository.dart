@@ -9,5 +9,6 @@ class TagRepository with IsRepositoryWrapper {
     Tag.new,
     entityTypeName: 'TagEntity',
     valueObjectTypeName: 'Tag',
-  ).adapting('tags');
+  ).adapting('tags').withSecurity(RepositorySecurity.all(Permission.admin |
+      Permission.equals(PermissionField.propertyName(Tag.ownerField), PermissionField.loggedInUserId)));
 }

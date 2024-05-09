@@ -18,22 +18,27 @@ class StyledTodoPortOverride with IsStyledObjectPortOverride<Todo> {
               children: [
                 StyledListPortField(
                   fieldPath: Todo.tagsField,
-                  labelText: 'Tags',
-                ),
-                if (loggedInUserId != null)
-                  StyledButton(
-                    labelText: 'Create New Tag',
-                    iconData: Icons.add,
-                    onPressed: () async {
-                      await context.showStyledDialog(StyledPortDialog(
-                        titleText: 'Create New Tag',
-                        port: (Tag()..ownerProperty.set(loggedInUserId)).asPort(context.corePondContext),
-                        onAccept: (Tag tag) async {
-                          await context.dropCoreComponent.updateEntity(TagEntity()..set(tag));
-                        },
-                      ));
-                    },
+                  label: StyledList.row(
+                    children: [
+                      Expanded(child: StyledText.lg.bold.display('Tags')),
+                      if (loggedInUserId != null)
+                        StyledButton.strong(
+                          labelText: 'Create Tag',
+                          iconData: Icons.add,
+                          onPressed: () async {
+                            await context.showStyledDialog(StyledPortDialog(
+                              titleText: 'Create New Tag',
+                              port: (Tag()..ownerProperty.set(loggedInUserId)).asPort(context.corePondContext),
+                              onAccept: (Tag tag) async {
+                                final tagEntity = await context.dropCoreComponent.updateEntity(TagEntity()..set(tag));
+                                port.addToList(path: Todo.tagsField, value: tagEntity.id!);
+                              },
+                            ));
+                          },
+                        ),
+                    ],
                   ),
+                ),
               ],
             ),
           },

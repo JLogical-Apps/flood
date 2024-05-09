@@ -9,7 +9,7 @@ class TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StyledChip(
+    return StyledChip.subtle(
       labelText: tag.nameProperty.value,
       foregroundColor: Color(tag.colorProperty.value),
     );

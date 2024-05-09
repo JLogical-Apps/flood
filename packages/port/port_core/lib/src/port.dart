@@ -6,6 +6,7 @@ import 'package:port_core/src/port_mapper.dart';
 import 'package:port_core/src/port_submit_result.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class Port<T> {
   ValueStream<Map<String, PortField>> getPortX();
@@ -134,6 +135,11 @@ extension PortExtensions<T> on Port<T> {
   dynamic operator [](String path) => getByPath(path);
 
   operator []=(String path, dynamic value) => setValue(path: path, value: value);
+
+  void addToList({required String path, required dynamic value}) => setValue(
+        path: path,
+        value: {...getByPath(path) as Map, Uuid().v4(): value},
+      );
 
   PortMapper<T, R> map<R>(FutureOr<R?> Function(T sourceData, Port<T> port) mapper, {Type? submitType}) {
     return PortMapper(port: this, mapper: mapper, submitType: submitType);

@@ -32,7 +32,7 @@ class StyledListPortField<T> extends HookWidget {
           key: EquatableKey(value),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (labelText != null)
+            if (label != null)
               Padding(
                 padding: const EdgeInsets.all(4),
                 child: label,
