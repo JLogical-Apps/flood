@@ -40,11 +40,21 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
   }) {
     final typeContext = context.corePondContext.dropCoreComponent.typeContext;
     final baseRuntimeType = typeContext.getRuntimeTypeRuntime(valueObjectType);
-    final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
-
+    final defaultValue =
+        modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior) as ValueObject?;
+    final onInstantiate =
+        modifierGetter(context.originalBehavior)?.getValueObjectInstantiator(context.originalBehavior);
     isRequiredOnEdit ??= modifierGetter(context.originalBehavior)?.isRequiredOnEdit(context.originalBehavior) ?? false;
 
-    final initialValueObject = initialValue ?? defaultValue as ValueObject?;
+    if (defaultValue != null) {
+      onInstantiate?.call(defaultValue);
+    }
+    if (initialValue != null) {
+      onInstantiate?.call(initialValue);
+    }
+
+    final initialValueObject = initialValue ?? defaultValue;
+
     final initialRuntimeType =
         initialValueObject?.mapIfNonNull((value) => typeContext.getRuntimeTypeRuntime(value.runtimeType));
 
@@ -63,14 +73,16 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
             context,
             valueObjectType: baseRuntimeType,
             initialValueObject: initialValueObject,
-            defaultValue: defaultValue as ValueObject?,
+            defaultValue: defaultValue,
+            onInstantiate: onInstantiate,
           )
         : getStagePortField(
             context,
             initialRuntimeType: initialRuntimeType,
             initialValueObject: initialValueObject,
-            defaultValue: defaultValue as ValueObject?,
+            defaultValue: defaultValue,
             options: options,
+            onInstantiate: onInstantiate,
           );
   }
 
@@ -79,8 +91,11 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
     required RuntimeType valueObjectType,
     required ValueObject? initialValueObject,
     required ValueObject? defaultValue,
+    required void Function(ValueObject valueObject)? onInstantiate,
   }) {
     final valueObject = initialValueObject ?? defaultValue ?? valueObjectType.createInstance();
+    onInstantiate?.call(valueObject);
+
     return PortField.embedded(port: context.corePortDropComponent.generatePort(valueObject));
   }
 
@@ -90,6 +105,7 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
     required ValueObject? initialValueObject,
     required ValueObject? defaultValue,
     required List<RuntimeType?> options,
+    required void Function(ValueObject valueObject)? onInstantiate,
   }) {
     return PortField.stage<RuntimeType?, dynamic>(
       initialValue: initialRuntimeType,
@@ -104,6 +120,7 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
         }
 
         final valueObject = type.createInstance();
+        onInstantiate?.call(valueObject);
         return context.corePortDropComponent.generatePort(valueObject);
       },
       submitRawMapper: (portValue, type) {

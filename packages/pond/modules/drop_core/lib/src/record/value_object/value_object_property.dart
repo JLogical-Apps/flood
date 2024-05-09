@@ -207,10 +207,13 @@ extension TimestampValueObjectPropertyExtensions<G extends Timestamp?, S extends
   }
 }
 
-extension ValueObjectValueObjectPropertyExtensions<G extends ValueObject?, S extends ValueObject?,
-    V extends ValueObjectProperty> on ValueObjectProperty<G, S, V> {
-  EmbeddedValueObjectProperty<G, S> embedded() {
-    return EmbeddedValueObjectProperty<G, S>(property: this);
+extension ValueObjectValueObjectPropertyExtensions<T extends ValueObject, V extends ValueObjectProperty>
+    on ValueObjectProperty<T?, T?, V> {
+  EmbeddedValueObjectProperty<T> embedded({void Function(T valueObject)? onInstantiate}) {
+    return EmbeddedValueObjectProperty<T>(
+      property: this,
+      onInstantiate: onInstantiate,
+    );
   }
 }
 

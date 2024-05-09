@@ -216,7 +216,7 @@ void main() {
 
   test('embedded property', () async {
     dropContext.register<Data12>(Data12.new, name: 'Data12');
-    dropContext.register<Data13>(Data13.new, name: 'Data12');
+    dropContext.register<Data13>(Data13.new, name: 'Data13');
 
     final data = Data13()..dataProperty.set(Data12()..emailProperty.set('test@test.com'));
     expect(
@@ -239,6 +239,26 @@ void main() {
     );
 
     expect(data.dataProperty.value!.emailProperty.value, 'asdf@asdf.com');
+  });
+
+  test('instantiating embedded property', () async {
+    dropContext.register<Data14>(Data14.new, name: 'Data14');
+
+    final data = Data14()..dataProperty.set(Data14());
+
+    expect(data.dataProperty.value!.instantiated, isFalse);
+
+    data.setState(
+      dropContext,
+      State(type: dropContext.getRuntimeType<Data14>(), data: {
+        'data': State(
+          type: dropContext.getRuntimeType<Data14>(),
+          data: {},
+        ),
+      }),
+    );
+
+    expect(data.dataProperty.value!.instantiated, isTrue);
   });
 }
 
@@ -334,6 +354,17 @@ class Data12 extends ValueObject {
 
 class Data13 extends ValueObject {
   late final dataProperty = field<Data12>(name: 'data').embedded();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [dataProperty];
+}
+
+class Data14 extends ValueObject {
+  bool instantiated = false;
+
+  late final dataProperty = field<Data14>(name: 'data').embedded(
+    onInstantiate: (valueObject) => valueObject.instantiated = true,
+  );
 
   @override
   List<ValueObjectBehavior> get behaviors => [dataProperty];

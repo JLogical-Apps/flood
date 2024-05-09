@@ -22,6 +22,10 @@ abstract class PortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
   dynamic getDefaultValue(T behavior) {
     return null;
   }
+
+  void Function(ValueObject valueObject)? getValueObjectInstantiator(T behavior) {
+    return null;
+  }
 }
 
 abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
@@ -80,5 +84,11 @@ abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavio
   dynamic getDefaultValue(T behavior) {
     final unwrappedBehavior = unwrapBehavior(behavior);
     return modifierGetter(unwrappedBehavior)?.getDefaultValue(unwrappedBehavior);
+  }
+
+  @override
+  void Function(ValueObject valueObject)? getValueObjectInstantiator(T behavior) {
+    final unwrappedBehavior = unwrapBehavior(behavior);
+    return modifierGetter(unwrappedBehavior)?.getValueObjectInstantiator(unwrappedBehavior);
   }
 }

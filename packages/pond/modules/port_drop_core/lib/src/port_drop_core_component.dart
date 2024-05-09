@@ -9,6 +9,7 @@ import 'package:port_drop_core/src/behavior_modifiers/date_time_field_behavior_m
 import 'package:port_drop_core/src/behavior_modifiers/default_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/display_name_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/double_field_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/embedded_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/fallback_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/fallback_replacement_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/field_behavior_modifier.dart';
@@ -57,6 +58,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       ),
       FieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       ReferenceBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      EmbeddedPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       RequiredPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       RequiredOnEditPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       IsNotBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
