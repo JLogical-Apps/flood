@@ -118,7 +118,7 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
   static PortField<T, T> search<R, T>({
     required FutureOr<List<R>> Function() search,
     required T Function(R result) valueMapper,
-    required R Function(T value, List<R> results) resultsMapper,
+    required R? Function(T value, List<R> results) resultsMapper,
     required T initialValue,
     T Function(T value)? submitMapper,
   }) {

@@ -9,7 +9,7 @@ class SearchPortField<R, T> with IsPortFieldWrapper<T, T> {
   final FutureOr<List<R>> Function() search;
 
   final T Function(R result) valueMapper;
-  final R Function(T value, List<R> results) resultsMapper;
+  final R? Function(T value, List<R> results) resultsMapper;
 
   SearchPortField({
     required this.portField,
@@ -32,7 +32,7 @@ class SearchPortField<R, T> with IsPortFieldWrapper<T, T> {
     return valueMapper(result);
   }
 
-  R getResult(T value, List<R> results) {
+  R? getResult(T value, List<R> results) {
     return resultsMapper(value, results);
   }
 }

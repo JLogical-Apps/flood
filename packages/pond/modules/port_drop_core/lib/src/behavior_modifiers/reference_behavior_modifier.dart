@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:port_core/port_core.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier.dart';
@@ -18,7 +19,7 @@ class ReferenceBehaviorModifier extends PortGeneratorBehaviorModifier<ReferenceV
       behavior.name: PortField.search<Entity?, String?>(
         search: () => behavior.getSearchResults(context.corePondContext.dropCoreComponent),
         valueMapper: (entity) => entity?.id,
-        resultsMapper: (id, entities) => entities.firstWhere((entity) => entity?.id == id),
+        resultsMapper: (id, entities) => entities.firstWhereOrNull((entity) => entity?.id == id),
         initialValue: behavior.value ?? defaultValue,
       )
     };
