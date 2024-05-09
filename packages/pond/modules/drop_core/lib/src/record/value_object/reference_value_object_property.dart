@@ -6,6 +6,7 @@ import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 class ReferenceValueObjectProperty<E extends Entity>
@@ -55,6 +56,20 @@ class ReferenceValueObjectProperty<E extends Entity>
       searchResultsFilter: searchResultsFilter,
       searchQueryGetter: searchQueryGetter,
     );
+  }
+
+  Future<ValueStream<FutureValue<List<E>>>> getSearchResultsX(DropCoreContext context) async {
+    final query = searchQueryGetter == null ? Query.from<E>() : await searchQueryGetter!(context);
+    return query.all().getX(context).asyncMapWithValue(
+          (maybeEntities) => maybeEntities.asyncMap((entities) async {
+            if (searchResultsFilter == null) {
+              return entities;
+            }
+
+            return await searchResultsFilter!(context, entities);
+          }),
+          initialValue: FutureValue.loading(),
+        );
   }
 
   Future<List<E>> getSearchResults(DropCoreContext context) async {

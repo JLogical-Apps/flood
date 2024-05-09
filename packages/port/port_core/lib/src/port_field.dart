@@ -27,6 +27,7 @@ import 'package:port_core/src/search_port_field.dart';
 import 'package:port_core/src/secret_port_field.dart';
 import 'package:port_core/src/stage_port_field.dart';
 import 'package:port_core/src/validator_port_field.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 import 'package:uuid/uuid.dart';
 
@@ -116,7 +117,7 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
   }
 
   static PortField<T, T> search<R, T>({
-    required FutureOr<List<R>> Function() search,
+    required FutureOr<ValueStream<FutureValue<List<R>>>> Function() searchX,
     required T Function(R result) valueMapper,
     required R? Function(T value, List<R> results) resultsMapper,
     required T initialValue,
@@ -124,7 +125,7 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
   }) {
     return SearchPortField<R, T>(
       portField: PortField(value: initialValue, submitMapper: submitMapper),
-      search: search,
+      searchX: searchX,
       valueMapper: valueMapper,
       resultsMapper: resultsMapper,
     );

@@ -44,9 +44,13 @@ List<T> useValueStreams<T>(List<ValueStream<T>> valueStreams) {
   return combinedStream.value.toList();
 }
 
-void useListen<T>(Stream<T> stream, [Function(T? value)? valueChanged]) {
+void useListen<T>(Stream<T>? stream, [Function(T value)? valueChanged]) {
   useEffect(
     () {
+      if (stream == null) {
+        return null;
+      }
+
       final subscription = stream.listen((event) => valueChanged?.call(event));
       return () => subscription.cancel();
     },

@@ -17,7 +17,7 @@ class ReferenceBehaviorModifier extends PortGeneratorBehaviorModifier<ReferenceV
     final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
     return {
       behavior.name: PortField.search<Entity?, String?>(
-        search: () => behavior.getSearchResults(context.corePondContext.dropCoreComponent),
+        searchX: () => behavior.getSearchResultsX(context.corePondContext.dropCoreComponent),
         valueMapper: (entity) => entity?.id,
         resultsMapper: (id, entities) => entities.firstWhereOrNull((entity) => entity?.id == id),
         initialValue: behavior.value ?? defaultValue,

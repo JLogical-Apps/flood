@@ -33,51 +33,56 @@ class StyledSearchPortField<R> extends HookWidget {
       builder: (context, field, value, error) {
         final searchField =
             field.findSearchFieldOrNull() ?? (throw Exception('Could not find search field for port field [$field]'));
-        final resultsState = useState<List?>(null);
         final selectedValueState = useState<R?>(null);
 
-        return HookBuilder(builder: (context) {
-          useAsyncEffect(() async {
-            final results = await searchField.search();
-            resultsState.value = results;
-            selectedValueState.value = value == null ? null : searchField.getResult(value, results);
-          });
+        final searchX = useMemoizedFuture(() async => await searchField.searchX());
+        final results = useValueStreamOrNull(searchX.getOrNull());
+        useListen(
+          searchX.getOrNull(),
+          (FutureValue<List> maybeResults) {
+            final results = maybeResults.getOrNull();
+            if (results == null) {
+              return;
+            }
 
-          if (resultsState.value == null) {
-            return StyledDisabledTextField(
-              labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
-              label: label,
-              leading: StyledLoadingIndicator(),
-              showRequiredIndicator: field.findIsRequired(),
-            );
-          }
+            selectedValueState.value = searchField.getResult(value, results);
+          },
+        );
 
-          return StyledOptionField<R?>(
-            value: selectedValueState.value,
+        if (results?.getOrNull() == null) {
+          return StyledDisabledTextField(
             labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
             label: label,
+            leading: StyledLoadingIndicator(),
             showRequiredIndicator: field.findIsRequired(),
-            errorText: error?.toString(),
-            enabled: enabled,
-            onChanged: (value) {
-              port[fieldPath] = searchField.getValue(value);
-              selectedValueState.value = value;
-            },
-            options: [
-              null,
-              ...resultsState.value!.cast<R>(),
-            ],
-            widgetMapper: widgetMapper ??
-                (result) {
-                  if (result == null) {
-                    return StyledText.body.thin('(None)');
-                  }
-                  final searchResultOverrides = context.read<StyledSearchResultOverrides>();
-                  final override = searchResultOverrides.getOverrideOrNull(result);
-                  return override?.build(result) ?? StyledText.body('$result');
-                },
           );
-        });
+        }
+
+        return StyledOptionField<R?>(
+          value: selectedValueState.value,
+          labelText: label == null ? (labelText ?? field.findDisplayNameOrNull()) : null,
+          label: label,
+          showRequiredIndicator: field.findIsRequired(),
+          errorText: error?.toString(),
+          enabled: enabled,
+          onChanged: (value) {
+            port[fieldPath] = searchField.getValue(value);
+            selectedValueState.value = value;
+          },
+          options: [
+            null,
+            ...results!.getOrNull()!.cast<R>(),
+          ],
+          widgetMapper: widgetMapper ??
+              (result) {
+                if (result == null) {
+                  return StyledText.body.thin('(None)');
+                }
+                final searchResultOverrides = context.read<StyledSearchResultOverrides>();
+                final override = searchResultOverrides.getOverrideOrNull(result);
+                return override?.build(result) ?? StyledText.body('$result');
+              },
+        );
       },
     );
   }
