@@ -1,4 +1,6 @@
+import 'package:example/presentation/components/todo_entity_card.dart';
 import 'package:example/presentation/pages/auth/login_page.dart';
+import 'package:example/presentation/pages/tags_page.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example_core/features/todo/todo.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
@@ -45,6 +47,15 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
               entity: loggedInUserEntity,
               contentTypeName: 'Profile',
               description: 'Edit your profile.',
+            ),
+            ActionItem(
+              titleText: 'Manage Tags',
+              descriptionText: 'Manage your tags.',
+              color: Colors.blue,
+              iconData: Icons.tag,
+              onPerform: (_) {
+                context.push(TagsRoute());
+              },
             ),
             ActionItem(
               titleText: 'Import',
@@ -97,49 +108,23 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                     },
                   )),
                 ),
-                ...uncompletedTodos.map((todoEntity) => StyledCard(
+                ...uncompletedTodos.map((todoEntity) => TodoEntityCard(
                       key: ValueKey(todoEntity.id),
-                      titleText: todoEntity.value.nameProperty.value,
-                      bodyText: todoEntity.value.descriptionProperty.value,
-                      leading: StyledCheckbox(
-                        value: todoEntity.value.completedProperty.value,
-                        onChanged: (value) async {
-                          await context.dropCoreComponent
-                              .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
-                        },
-                      ),
-                      actions: getTodoActions(context, todoEntity: todoEntity),
+                      todoEntity: todoEntity,
                     )),
                 if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) ...[
                   StyledDivider(),
                   StyledText.xl.display.bold('Completed'),
                 ],
-                ...completedTodos.map((todoEntity) => StyledCard(
+                ...completedTodos.map((todoEntity) => TodoEntityCard(
                       key: ValueKey(todoEntity.id),
-                      titleText: todoEntity.value.nameProperty.value,
-                      bodyText: todoEntity.value.descriptionProperty.value,
-                      leading: StyledCheckbox(
-                        value: todoEntity.value.completedProperty.value,
-                        onChanged: (value) async {
-                          await context.dropCoreComponent
-                              .updateEntity(todoEntity, (Todo todo) => todo.completedProperty.set(value));
-                        },
-                      ),
-                      actions: getTodoActions(context, todoEntity: todoEntity),
+                      todoEntity: todoEntity,
                     )),
               ],
             ),
           ),
         );
       },
-    );
-  }
-
-  List<ActionItem> getTodoActions(BuildContext context, {required TodoEntity todoEntity}) {
-    return ActionItem.static.entityCrudActions(
-      context,
-      entity: todoEntity,
-      duplicator: (Todo todo) => todo..nameProperty.update((name) => '$name - Copy'),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:example_core/features/tag/tag_entity.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:flood_core/flood_core.dart';
 
@@ -12,6 +13,11 @@ class Todo extends ValueObject {
   static const completedField = 'completed';
   late final completedProperty = field<bool>(name: completedField).hidden().withFallback(() => false);
 
+  static const tagsField = 'tags';
+  late final tagsProperty = reference<TagEntity>(
+    name: tagsField,
+  ).list().withDisplayName('Tags');
+
   static const userField = 'user';
   late final userProperty = reference<UserEntity>(name: userField).hidden().required();
 
@@ -20,6 +26,7 @@ class Todo extends ValueObject {
     nameProperty,
     descriptionProperty,
     completedProperty,
+    tagsProperty,
     userProperty,
     creationTime(),
   ];

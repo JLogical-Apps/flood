@@ -1,3 +1,5 @@
+import 'package:example_core/features/tag/tag.dart';
+import 'package:example_core/features/tag/tag_entity.dart';
 import 'package:example_core/features/todo/todo.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
 import 'package:example_core/features/user/user.dart';
@@ -17,6 +19,12 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       ..emailProperty.set('test@test.com'),
   );
 
+  final urgentTag = await dropComponent.updateEntity(TagEntity()
+    ..set(Tag()
+      ..nameProperty.set('Urgent')
+      ..colorProperty.set(0xffff0000)
+      ..ownerProperty.set(account.accountId)));
+
   final todos = [
     Todo()
       ..nameProperty.set('Take out trash')
@@ -31,7 +39,8 @@ Future<void> setupTesting(CorePondContext corePondContext) async {
       ..userProperty.set(userEntity.id!),
     Todo()
       ..nameProperty.set('Get milk')
-      ..userProperty.set(userEntity.id!),
+      ..userProperty.set(userEntity.id!)
+      ..tagsProperty.set([urgentTag.id!]),
     Todo()
       ..nameProperty.set('Take the dogs to the vet')
       ..completedProperty.set(true)

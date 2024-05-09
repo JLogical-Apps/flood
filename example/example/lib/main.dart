@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:example/firebase_options.dart';
+import 'package:example/port/styled_tag_search_result_override.dart';
+import 'package:example/port/styled_todo_port_override.dart';
 import 'package:example/presentation/pages_pond_component.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
@@ -57,6 +59,12 @@ Future<AppPondContext> buildAppPondContext() async {
   await appPondContext.register(FloodAppComponent(
     style: style,
     latestAllowedVersion: () => latestAllowedVersionDataSource?.getOrNull(),
+    styledSearchResultOverrides: [
+      StyledTagSearchResultOverride(),
+    ],
+    styledObjectPortOverrides: [
+      StyledTodoPortOverride(),
+    ],
   ));
   await appPondContext.register(TestingSetupAppComponent(onSetup: () async {
     final testingSetup = await corePondContext.environmentConfig.getOrDefault('testingSetup', fallback: () => true);
