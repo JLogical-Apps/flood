@@ -50,6 +50,17 @@ class FlatStyleListRenderer with IsTypedStyleRenderer<StyledList> {
         );
       }
     }
+
+    if (component.maxSize != null) {
+      widget = ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: component.axis == Axis.horizontal ? component.maxSize! : double.infinity,
+          maxHeight: component.axis == Axis.vertical ? component.maxSize! : double.infinity,
+        ),
+        child: widget,
+      );
+    }
+
     return widget;
   }
 

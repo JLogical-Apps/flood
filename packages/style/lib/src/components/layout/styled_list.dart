@@ -16,6 +16,7 @@ class StyledList extends StyleComponent {
   final double? childMinSize;
   final Widget? ifEmpty;
   final String? ifEmptyText;
+  final double? maxSize;
 
   StyledList({
     super.key,
@@ -31,6 +32,7 @@ class StyledList extends StyleComponent {
     this.childMinSize,
     this.ifEmpty,
     this.ifEmptyText,
+    this.maxSize,
   });
 
   static StyledListBuilder get column => StyledListBuilder(axis: Axis.vertical);

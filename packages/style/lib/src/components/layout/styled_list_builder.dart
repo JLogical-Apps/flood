@@ -9,6 +9,7 @@ class StyledListBuilder {
   bool isCentered = false;
   double? childMinSize;
   MainAxisSize mainAxisSize = MainAxisSize.max;
+  double? maxSize;
 
   StyledListBuilder({this.axis = Axis.vertical});
 
@@ -43,6 +44,11 @@ class StyledListBuilder {
     return this;
   }
 
+  StyledListBuilder withMaxSize(double? maxSize) {
+    this.maxSize = maxSize;
+    return this;
+  }
+
   StyledList call({
     Key? key,
     List<Widget> children = const [],
@@ -65,6 +71,7 @@ class StyledListBuilder {
       childMinSize: childMinSize,
       ifEmpty: ifEmpty,
       ifEmptyText: ifEmptyText,
+      maxSize: maxSize,
     );
   }
 }
