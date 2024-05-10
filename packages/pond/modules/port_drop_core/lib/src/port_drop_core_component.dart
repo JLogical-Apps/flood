@@ -23,6 +23,7 @@ import 'package:port_drop_core/src/behavior_modifiers/list_field_behavior_modifi
 import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/null_if_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/only_date_property_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/options_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/placeholder_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/reference_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_on_edit_property_behavior_modifier.dart';
@@ -45,6 +46,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       Resolver.fromModifiers(
     [
       HiddenPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      OptionsPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       StringFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       IntFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       BoolFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),

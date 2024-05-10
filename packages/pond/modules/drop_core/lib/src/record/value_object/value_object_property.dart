@@ -27,6 +27,7 @@ import 'package:drop_core/src/record/value_object/map_value_object_property.dart
 import 'package:drop_core/src/record/value_object/multiline_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/null_if_blank_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/only_date_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/options_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/placeholder_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_on_edit_value_object_property.dart';
@@ -148,6 +149,10 @@ extension ValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty> on 
 
   IndexedValueObjectProperty<G, S> indexed([bool Function()? isIndexedGetter]) {
     return IndexedValueObjectProperty(property: this, isIndexedGetter: isIndexedGetter);
+  }
+
+  OptionsValueObjectProperty<G, S> withOptions(List<S> options, {bool canBeNull = false}) {
+    return OptionsValueObjectProperty(property: this, options: options, canBeNull: canBeNull);
   }
 }
 
