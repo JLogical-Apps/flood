@@ -46,6 +46,7 @@ export 'src/record/value_object/label_value_object_behavior.dart';
 export 'src/record/value_object/list_embedded_value_object_property.dart';
 export 'src/record/value_object/list_value_object_property.dart';
 export 'src/record/value_object/map_value_object_property.dart';
+export 'src/record/value_object/mapper_value_object_property.dart';
 export 'src/record/value_object/multiline_value_object_property.dart';
 export 'src/record/value_object/null_if_blank_value_object_property.dart';
 export 'src/record/value_object/only_date_value_object_property.dart';

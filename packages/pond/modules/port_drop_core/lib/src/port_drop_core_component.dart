@@ -20,6 +20,7 @@ import 'package:port_drop_core/src/behavior_modifiers/is_name_property_behavior_
 import 'package:port_drop_core/src/behavior_modifiers/is_not_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/is_phone_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/list_field_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/mapper_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/null_if_blank_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/only_date_property_behavior_modifier.dart';
@@ -79,6 +80,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       ColorPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       OnlyDatePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       ValidatorPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      MapperPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
       WrapperPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
     ],
   );

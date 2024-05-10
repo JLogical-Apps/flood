@@ -24,6 +24,7 @@ import 'package:drop_core/src/record/value_object/is_phone_value_object_property
 import 'package:drop_core/src/record/value_object/list_embedded_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/list_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/map_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/mapper_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/multiline_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/null_if_blank_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/only_date_value_object_property.dart';
@@ -153,6 +154,13 @@ extension ValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty> on 
 
   OptionsValueObjectProperty<G, S> withOptions(List<S> options, {bool canBeNull = false}) {
     return OptionsValueObjectProperty(property: this, options: options, canBeNull: canBeNull);
+  }
+
+  MapperValueObjectProperty<G, S, G2, S2> withMapper<G2, S2>({
+    required G2 Function(G) getMapper,
+    required S Function(S2) setMapper,
+  }) {
+    return MapperValueObjectProperty(property: this, getMapper: getMapper, setMapper: setMapper);
   }
 }
 

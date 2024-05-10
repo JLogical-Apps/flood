@@ -1,0 +1,49 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/record/value_object/value_object_property.dart';
+import 'package:drop_core/src/state/state.dart';
+
+class MapperValueObjectProperty<G, S, G2, S2>
+    with IsValueObjectProperty<G2, S2, MapperValueObjectProperty<G, S, G2, S2>> {
+  final ValueObjectProperty<G, S, dynamic> property;
+  final G2 Function(G) getMapper;
+  final S Function(S2) setMapper;
+
+  MapperValueObjectProperty({required this.property, required this.getMapper, required this.setMapper});
+
+  @override
+  Type get getterType => G;
+
+  @override
+  Type get setterType => S;
+
+  @override
+  String get name => property.name;
+
+  @override
+  State modifyState(DropCoreContext context, State state) {
+    return property.modifyState(context, state);
+  }
+
+  @override
+  void fromState(DropCoreContext context, State state) {
+    property.fromState(context, state);
+  }
+
+  @override
+  G2 get value => getMapper(property.value);
+
+  @override
+  G2? get valueOrNull => property.valueOrNull == null ? null : getMapper(property.value);
+
+  @override
+  set(S2 value) => property.set(setMapper(value));
+
+  @override
+  MapperValueObjectProperty<G, S, G2, S2> copy() {
+    return MapperValueObjectProperty<G, S, G2, S2>(
+      property: property.copy(),
+      getMapper: getMapper,
+      setMapper: setMapper,
+    );
+  }
+}
