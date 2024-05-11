@@ -771,6 +771,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
+  type_core:
+    dependency: "direct overridden"
+    description:
+      path: "../type_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   typed_data:
     dependency: transitive
     description:

@@ -14,12 +14,16 @@ class StyledPortDialog<T> extends StyledDialog<T> {
     super.titleText,
     List<Widget>? children,
     Map<String, Widget>? overrides,
+    List<String>? order,
+    List<String>? only,
     FutureOr Function(T result)? onAccept,
   }) : super(
           body: _portBuilder<T>(
             port: port,
             children: children,
             overrides: overrides,
+            order: order,
+            only: only,
             onAccept: onAccept,
           ),
         );
@@ -29,6 +33,7 @@ class StyledPortDialog<T> extends StyledDialog<T> {
     List<Widget>? children,
     Map<String, Widget>? overrides,
     List<String>? order,
+    List<String>? only,
     FutureOr Function(T result)? onAccept,
   }) {
     assert(children == null || overrides == null, '`children` or `overrides` must be null!');
@@ -40,7 +45,8 @@ class StyledPortDialog<T> extends StyledDialog<T> {
                 ? StyledObjectPortBuilder(
                     port: port,
                     overrides: overrides ?? {},
-                    order: order ?? [],
+                    order: order,
+                    only: only,
                   )
                 : PortBuilder(
                     port: port,
