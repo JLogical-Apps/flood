@@ -43,7 +43,7 @@ class DeltaStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
             ),
       child: Padding(
         padding: EdgeInsets.all(4),
-        child: StyledList.column(
+        child: StyledList.column.withScrollbar(
           children: [
             if (hasHeader)
               Padding(
