@@ -4,9 +4,12 @@ import 'package:drop_core/src/repository/query_executor/condition/state_query_co
 class IsGreaterThanStateQueryConditionReducer extends StateQueryConditionReducer<IsGreaterThanQueryCondition> {
   @override
   bool valueMatches(IsGreaterThanQueryCondition queryCondition, dynamic stateValue) {
-    if (stateValue == null) {
+    final (comparisonValue, value) = convertValues(queryCondition.value, stateValue);
+
+    if (value == null) {
       return false;
     }
-    return stateValue > queryCondition.value;
+
+    return value > comparisonValue;
   }
 }

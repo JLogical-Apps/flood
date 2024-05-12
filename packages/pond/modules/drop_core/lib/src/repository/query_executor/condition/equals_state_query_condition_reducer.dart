@@ -4,6 +4,7 @@ import 'package:drop_core/src/repository/query_executor/condition/state_query_co
 class EqualsStateQueryConditionReducer extends StateQueryConditionReducer<EqualsQueryCondition> {
   @override
   bool valueMatches(EqualsQueryCondition queryCondition, dynamic stateValue) {
-    return queryCondition.value == stateValue;
+    final (comparisonValue, value) = convertValues(queryCondition.value, stateValue);
+    return comparisonValue == value;
   }
 }

@@ -13,4 +13,17 @@ abstract class StateQueryConditionReducer<QC extends QueryCondition> extends Mod
   }
 
   bool valueMatches(QC queryCondition, dynamic stateValue);
+
+  (dynamic, dynamic) convertValues(dynamic comparisonValue, dynamic stateValue) {
+    if (comparisonValue is DateTime) {
+      comparisonValue = comparisonValue.millisecondsSinceEpoch;
+      if (stateValue is String) {
+        stateValue = DateTime.parse(stateValue).millisecondsSinceEpoch;
+      } else if (stateValue is DateTime) {
+        stateValue = stateValue.millisecondsSinceEpoch;
+      }
+    }
+
+    return (comparisonValue, stateValue);
+  }
 }

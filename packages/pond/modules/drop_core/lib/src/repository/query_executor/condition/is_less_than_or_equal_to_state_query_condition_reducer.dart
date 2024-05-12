@@ -5,9 +5,10 @@ class IsLessThanOrEqualToStateQueryConditionReducer
     extends StateQueryConditionReducer<IsLessThanOrEqualToQueryCondition> {
   @override
   bool valueMatches(IsLessThanOrEqualToQueryCondition queryCondition, dynamic stateValue) {
-    if (stateValue == null) {
+    final (comparisonValue, value) = convertValues(queryCondition.value, stateValue);
+    if (value == null) {
       return false;
     }
-    return stateValue <= queryCondition.value;
+    return value <= comparisonValue;
   }
 }
