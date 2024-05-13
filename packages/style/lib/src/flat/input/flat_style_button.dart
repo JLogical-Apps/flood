@@ -25,18 +25,27 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
             context.colorPalette().background.getByEmphasis(component.emphasis);
 
     final loadingState = useState<bool>(false);
+    final errorState = useState<bool>(false);
 
     final onPressed = component.onPressed?.mapIfNonNull(
       (onPressed) => () async {
-        if (loadingState.value) {
+        if (loadingState.value || errorState.value) {
           return;
         }
 
         loadingState.value = true;
-        await onPressed();
-        loadingState.value = false;
+        try {
+          await onPressed();
+        } catch (e) {
+          errorState.value = true;
+          rethrow;
+        } finally {
+          loadingState.value = false;
+        }
       },
     );
+
+    final canPress = !loadingState.value && !errorState.value;
 
     if (label == null && icon != null) {
       return IconButton(
@@ -49,14 +58,16 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
           child: Stack(
             children: [
               Opacity(
-                opacity: loadingState.value ? 0 : 1,
+                opacity: canPress ? 1 : 0,
                 child: icon,
               ),
               Positioned.fill(
                 child: Center(
                   child: Visibility(
-                    visible: loadingState.value,
-                    child: StyledLoadingIndicator(),
+                    visible: !canPress,
+                    child: loadingState.value
+                        ? StyledLoadingIndicator()
+                        : StyledIcon(Icons.error, color: context.colorPalette().error.regular),
                   ),
                 ),
               ),
@@ -72,7 +83,7 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
         child: Stack(
           children: [
             Opacity(
-              opacity: loadingState.value ? 0 : 1,
+              opacity: canPress ? 1 : 0,
               child: StyledList.row.shrink(
                 itemPadding: EdgeInsets.all(2),
                 children: [
@@ -84,8 +95,10 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
             Positioned.fill(
               child: Center(
                 child: Visibility(
-                  visible: loadingState.value,
-                  child: StyledLoadingIndicator(),
+                  visible: !canPress,
+                  child: loadingState.value
+                      ? StyledLoadingIndicator()
+                      : StyledIcon(Icons.error, color: context.colorPalette().error.regular),
                 ),
               ),
             ),
@@ -108,7 +121,7 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
           child: Stack(
             children: [
               Opacity(
-                opacity: loadingState.value ? 0 : 1,
+                opacity: canPress ? 1 : 0,
                 child: StyledList.row.shrink(
                   itemPadding: EdgeInsets.all(2),
                   children: [
@@ -120,8 +133,10 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
               Positioned.fill(
                 child: Center(
                   child: Visibility(
-                    visible: loadingState.value,
-                    child: StyledLoadingIndicator(),
+                    visible: !canPress,
+                    child: loadingState.value
+                        ? StyledLoadingIndicator()
+                        : StyledIcon(Icons.error, color: context.colorPalette().error.regular),
                   ),
                 ),
               ),
