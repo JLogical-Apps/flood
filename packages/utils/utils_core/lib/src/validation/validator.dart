@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:phone_numbers_parser/phone_numbers_parser.dart';
+import 'package:dlibphonenumber/dlibphonenumber.dart';
 import 'package:utils_core/src/extensions/string_extensions.dart';
 import 'package:utils_core/src/guard.dart';
 import 'package:utils_core/src/validation/compound_validator.dart';
@@ -134,8 +134,10 @@ abstract class Validator<T, E> {
           return null;
         }
 
-        final phoneValid = guard(() => PhoneNumber.parse(data).isValid()) ?? false;
-        final usNumberValid = guard(() => PhoneNumber.parse(data, destinationCountry: IsoCode.US).isValid()) ?? false;
+        final phone = PhoneNumberUtil.instance;
+
+        final phoneValid = guard(() => phone.isValidNumber(phone.parse(data, null))) ?? false;
+        final usNumberValid = guard(() => phone.isValidNumber(phone.parse(data, 'US'))) ?? false;
 
         if (!phoneValid && !usNumberValid) {
           return '[$data] must be a phone number!';

@@ -11,11 +11,11 @@ version: 0.0.1
 dependencies:
   collection: ^1.16.0
   dart_casing: ^3.0.1
+  dlibphonenumber: ^1.1.14
   equatable: ^2.0.5
   filesize: ^2.0.1
   intl: ^0.18.0
   path: ^1.8.2
-  phone_numbers_parser: ^8.2.1
   rxdart: ^0.27.5
   yaml: ^3.1.2
 dev_dependencies:

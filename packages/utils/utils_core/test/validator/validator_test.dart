@@ -72,6 +72,7 @@ void main() {
     expect(await isPhone.validate('(540) 456-7890'), isNull);
     expect(await isPhone.validate('5404567890'), isNull);
     expect(await isPhone.validate('+15404567890'), isNull);
+    expect(await isPhone.validate('+1 888-920-5757'), isNull);
     expect(await isPhone.validate('+44 20 1234 5678'), isNull);
     expect(await isPhone.validate('+49-89-636-48018'), isNull);
     expect(await isPhone.validate('540.456.7890'), isNull);
