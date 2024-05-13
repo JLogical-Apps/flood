@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
@@ -48,5 +50,10 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
 
   void Function(ValueObject valueObject)? instantiator() {
     return onInstantiate == null ? null : (valueObject) => onInstantiate!(valueObject as T);
+  }
+
+  @override
+  Future<String?> onValidate(ValueObject data) async {
+    return await value?.validate(null);
   }
 }

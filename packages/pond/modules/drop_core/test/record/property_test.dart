@@ -260,6 +260,17 @@ void main() {
 
     expect(data.dataProperty.value!.instantiated, isTrue);
   });
+
+  test('embedded property inner validation', () async {
+    dropContext.register<Data2>(Data2.new, name: 'Data2');
+    dropContext.register<Data15>(Data15.new, name: 'Data15');
+
+    final data = Data15()..dataProperty.set(Data2());
+    expect(await data.validate(null), isA<String>());
+
+    data.dataProperty.set(Data2()..intProperty.set(1));
+    expect(await data.validate(null), isNull);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -365,6 +376,14 @@ class Data14 extends ValueObject {
   late final dataProperty = field<Data14>(name: 'data').embedded(
     onInstantiate: (valueObject) => valueObject.instantiated = true,
   );
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [dataProperty];
+}
+
+class Data15 extends ValueObject {
+  static const dataField = 'data';
+  late final dataProperty = field<Data2>(name: dataField).embedded();
 
   @override
   List<ValueObjectBehavior> get behaviors => [dataProperty];
