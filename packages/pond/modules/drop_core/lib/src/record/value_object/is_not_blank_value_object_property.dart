@@ -1,15 +1,24 @@
-import 'dart:async';
-
-import 'package:drop_core/src/context/drop_core_context.dart';
-import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
-import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-class IsNotBlankValueObjectProperty with IsValueObjectProperty<String, String, IsNotBlankValueObjectProperty> {
-  final ValueObjectProperty<String?, String?, dynamic> property;
+class IsNotBlankValueObjectProperty with IsValueObjectPropertyWrapper<String, String, IsNotBlankValueObjectProperty> {
+  @override
+  final ValueObjectProperty<String, String, dynamic> property;
 
   IsNotBlankValueObjectProperty({required this.property});
+
+  IsNotBlankValueObjectProperty.fromProperty({
+    required ValueObjectProperty<String?, String?, ValueObjectProperty> property,
+  }) : property = property.withValidator(Validator.isNotBlank()).withMapper(
+              getMapper: (value) {
+                if (value == null || value.isBlank) {
+                  throw Exception('Cannot be blank! [$property]');
+                }
+
+                return value;
+              },
+              setMapper: (value) => value.nullIfBlank ?? (throw Exception('Cannot be blank! [$property]')),
+            );
 
   @override
   Type get getterType => String;
@@ -18,40 +27,7 @@ class IsNotBlankValueObjectProperty with IsValueObjectProperty<String, String, I
   Type get setterType => String;
 
   @override
-  State modifyState(DropCoreContext context, State state) {
-    return property.modifyState(context, state);
-  }
-
-  @override
-  void fromState(DropCoreContext context, State state) {
-    property.fromState(context, state);
-  }
-
-  @override
-  FutureOr<String?> onValidate(ValueObject data) {
-    if (property.value == null || property.value!.isBlank) {
-      return 'Cannot be blank! [$property]';
-    }
-
-    return property.validate(data);
-  }
-
-  @override
-  String get value => property.value == null || property.value!.isBlank
-      ? (throw Exception('Cannot be blank! [$property]'))
-      : property.value!;
-
-  @override
-  String? get valueOrNull => property.valueOrNull;
-
-  @override
-  void set(String value) => property.set(value.nullIfBlank ?? (throw Exception('Cannot be blank! [$property]')));
-
-  @override
   IsNotBlankValueObjectProperty copy() {
     return IsNotBlankValueObjectProperty(property: property.copy());
   }
-
-  @override
-  String get name => property.name;
 }

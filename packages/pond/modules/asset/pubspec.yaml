@@ -1,0 +1,51 @@
+name: asset
+description: Handles loading and displaying assets.
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  collection: ^1.16.0
+  flutter_hooks: ^0.18.5+1
+  rxdart: ^0.27.5
+
+  asset_core:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/pond/modules/asset_core
+  model:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/model/model
+  persistence:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/persistence/persistence
+  pond:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/pond/pond
+  style:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/style
+  utils:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/utils/utils
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^2.0.0

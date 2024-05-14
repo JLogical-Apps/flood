@@ -1,15 +1,12 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:port_core/port_core.dart';
-import 'package:port_drop_core/src/behavior_modifiers/async_fallback_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/bool_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/color_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/currency_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/date_time_field_behavior_modifier.dart';
-import 'package:port_drop_core/src/behavior_modifiers/default_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/display_name_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/double_field_behavior_modifier.dart';
-import 'package:port_drop_core/src/behavior_modifiers/embedded_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/fallback_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/fallback_replacement_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/field_behavior_modifier.dart';
@@ -22,8 +19,6 @@ import 'package:port_drop_core/src/behavior_modifiers/is_phone_property_behavior
 import 'package:port_drop_core/src/behavior_modifiers/list_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/mapper_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/multiline_property_behavior_modifier.dart';
-import 'package:port_drop_core/src/behavior_modifiers/null_if_blank_property_behavior_modifier.dart';
-import 'package:port_drop_core/src/behavior_modifiers/only_date_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/options_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/placeholder_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/reference_behavior_modifier.dart';
@@ -33,7 +28,6 @@ import 'package:port_drop_core/src/behavior_modifiers/string_field_behavior_modi
 import 'package:port_drop_core/src/behavior_modifiers/timestamp_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/validator_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/value_object_field_behavior_modifier.dart';
-import 'package:port_drop_core/src/behavior_modifiers/wrapper_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier_context.dart';
 import 'package:port_drop_core/src/port_generator_override.dart';
@@ -43,49 +37,41 @@ import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class PortDropCoreComponent with IsCorePondComponent {
-  late final ModifierResolver<PortGeneratorBehaviorModifier, ValueObjectBehavior> behaviorModifierResolver =
+  static final ModifierResolver<PortGeneratorBehaviorModifier, ValueObjectBehavior> behaviorModifierResolver =
       Resolver.fromModifiers(
     [
-      HiddenPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      OptionsPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      StringFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      IntFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      BoolFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      DoubleFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      DateTimeFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      TimestampFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      ListFieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      ValueObjectFieldBehaviorModifier(
-        portDropContext: context.locate<PortDropCoreComponent>(),
-        modifierGetter: getBehaviorModifierOrNull,
-      ),
-      FieldBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      ReferenceBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      EmbeddedPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      RequiredPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      RequiredOnEditPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      IsNotBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      AsyncFallbackPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      FallbackPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      FallbackReplacementPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      PlaceholderPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      DefaultPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      DisplayNamePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      MultilinePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      IsNamePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      IsEmailPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      IsPhonePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      NullIfBlankPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      CurrencyPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      ColorPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      OnlyDatePropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      ValidatorPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      MapperPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
-      WrapperPropertyBehaviorModifier(modifierGetter: getBehaviorModifierOrNull),
+      HiddenPropertyBehaviorModifier(),
+      OptionsPropertyBehaviorModifier(),
+      StringFieldBehaviorModifier(),
+      IntFieldBehaviorModifier(),
+      BoolFieldBehaviorModifier(),
+      DoubleFieldBehaviorModifier(),
+      DateTimeFieldBehaviorModifier(),
+      TimestampFieldBehaviorModifier(),
+      ListFieldBehaviorModifier(),
+      ValueObjectFieldBehaviorModifier(),
+      FieldBehaviorModifier(),
+      ReferenceBehaviorModifier(),
+      RequiredPropertyBehaviorModifier(),
+      RequiredOnEditPropertyBehaviorModifier(),
+      IsNotBlankPropertyBehaviorModifier(),
+      FallbackPropertyBehaviorModifier(),
+      FallbackReplacementPropertyBehaviorModifier(),
+      PlaceholderPropertyBehaviorModifier(),
+      DisplayNamePropertyBehaviorModifier(),
+      MultilinePropertyBehaviorModifier(),
+      IsNamePropertyBehaviorModifier(),
+      IsEmailPropertyBehaviorModifier(),
+      IsPhonePropertyBehaviorModifier(),
+      CurrencyPropertyBehaviorModifier(),
+      ColorPropertyBehaviorModifier(),
+      ValidatorPropertyBehaviorModifier(),
+      MapperPropertyBehaviorModifier(),
+      WrapperPortGeneratorBehaviorModifier(),
     ],
   );
 
-  PortGeneratorBehaviorModifier? getBehaviorModifierOrNull(ValueObjectBehavior behavior) {
+  static PortGeneratorBehaviorModifier? getBehaviorModifier(ValueObjectBehavior behavior) {
     return behaviorModifierResolver.resolveOrNull(behavior);
   }
 

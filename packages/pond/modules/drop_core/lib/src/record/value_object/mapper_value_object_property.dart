@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
+import 'package:utils_core/utils_core.dart';
 
 class MapperValueObjectProperty<G, S, G2, S2>
     with IsValueObjectProperty<G2, S2, MapperValueObjectProperty<G, S, G2, S2>> {
@@ -25,6 +29,10 @@ class MapperValueObjectProperty<G, S, G2, S2>
   }
 
   @override
+  Future<State> modifyStateForRepository(DropCoreContext context, State state) =>
+      property.modifyStateForRepository(context, state);
+
+  @override
   void fromState(DropCoreContext context, State state) {
     property.fromState(context, state);
   }
@@ -37,6 +45,9 @@ class MapperValueObjectProperty<G, S, G2, S2>
 
   @override
   set(S2 value) => property.set(setMapper(value));
+
+  @override
+  FutureOr<String?> onValidate(ValueObject data) => property.validate(data);
 
   @override
   MapperValueObjectProperty<G, S, G2, S2> copy() {

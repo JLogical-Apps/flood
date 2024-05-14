@@ -1,5 +1,6 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:port_core/port_core.dart';
+import 'package:port_drop_core/port_drop_core.dart';
 import 'package:port_drop_core/src/behavior_modifiers/value_object_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier_context.dart';
@@ -7,16 +8,13 @@ import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueObjectProperty> {
-  final PortGeneratorBehaviorModifier? Function(ValueObjectBehavior behavior) modifierGetter;
-
-  ListFieldBehaviorModifier({required this.modifierGetter});
-
   @override
   Map<String, PortField> getPortFieldByName(
     ListValueObjectProperty behavior,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    final defaultValue = modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
+    final defaultValue =
+        BehaviorMetaModifier.getModifier(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
     return {
       behavior.name: PortField.list<dynamic, dynamic>(
         initialValues: behavior.value.nullIfEmpty ?? defaultValue,
@@ -31,19 +29,18 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
               initialValue: valueObject,
               isRequiredOnEdit: true,
               valueObjectType: behavior.valueType,
-              modifierGetter: modifierGetter,
             );
           }
 
-          final itemPortField = modifierGetter(behavior.property);
-          if (itemPortField == null) {
+          final itemPortModifier = PortDropCoreComponent.getBehaviorModifier(behavior.property);
+          if (itemPortModifier == null) {
             throw Exception('Cannot generate port for item of property [$behavior]');
           }
 
           final itemPropertyInstance = behavior.property.copy() as ValueObjectProperty;
           itemPropertyInstance.set(value);
 
-          final portFieldByName = itemPortField.getPortFieldByName(itemPropertyInstance, context);
+          final portFieldByName = itemPortModifier.getPortFieldByName(itemPropertyInstance, context);
           if (portFieldByName.length > 1) {
             throw Exception('There are too many port fields generated for item of property [$behavior]');
           }

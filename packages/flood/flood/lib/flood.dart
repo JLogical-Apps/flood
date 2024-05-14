@@ -1,6 +1,7 @@
 export 'package:actions/actions.dart';
 export 'package:app_usage/app_usage.dart';
 export 'package:appwrite_app/appwrite_app.dart';
+export 'package:asset/asset.dart';
 export 'package:auth/auth.dart';
 export 'package:debug/debug.dart';
 export 'package:device_files/device_files.dart';

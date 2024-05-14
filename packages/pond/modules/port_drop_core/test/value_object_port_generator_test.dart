@@ -368,7 +368,7 @@ class Data8 extends ValueObject {
 
 class Data9 extends ValueObject {
   static const dateField = 'date';
-  late final dateProperty = field<Timestamp>(name: dateField).onlyDate().required();
+  late final dateProperty = field<Timestamp>(name: dateField).time().onlyDate().required();
 
   static const createdField = 'created';
   late final createdProperty = field<Timestamp>(name: createdField).time();

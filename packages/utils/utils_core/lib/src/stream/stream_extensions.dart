@@ -8,6 +8,14 @@ import 'package:utils_core/src/stream/map_value_stream.dart';
 import 'package:utils_core/src/stream/merge_value_stream.dart';
 import 'package:utils_core/src/stream/switch_map_value_stream.dart';
 
+extension StreamExtensions<T> on Stream<T> {
+  ValueStream<FutureValue<T>> asValueStream({FutureValue<T>? initialValue}) {
+    return map((data) => FutureValue.loaded(data) as FutureValue<T>)
+        .publishValueSeeded(initialValue ?? FutureValue.loading())
+        .autoConnect();
+  }
+}
+
 extension ValueStreamExtensions<T> on ValueStream<T> {
   /// Maps this value stream to another value stream that contains the last mapped value.
   ValueStream<R> mapWithValue<R>(R Function(T value) mapper) {

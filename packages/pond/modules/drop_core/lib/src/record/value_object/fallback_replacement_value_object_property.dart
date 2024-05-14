@@ -4,22 +4,36 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
 class FallbackReplacementValueObjectProperty<T>
-    with IsValueObjectProperty<T, T?, FallbackReplacementValueObjectProperty<T>> {
-  final ValueObjectProperty<T?, T?, dynamic> property;
+    with IsValueObjectPropertyWrapper<T, T?, FallbackReplacementValueObjectProperty<T>> {
+  @override
+  final ValueObjectProperty<T, T?, dynamic> property;
+
+  final ValueObjectProperty<T?, T?, dynamic> rootProperty;
 
   final T Function() fallbackReplacement;
 
   @override
   final Type getterType;
 
-  @override
-  Type get setterType => property.setterType;
+  FallbackReplacementValueObjectProperty({
+    required this.property,
+    required this.rootProperty,
+    required this.fallbackReplacement,
+  }) : getterType = T;
 
-  FallbackReplacementValueObjectProperty({required this.property, required this.fallbackReplacement}) : getterType = T;
+  FallbackReplacementValueObjectProperty.fromProperty({
+    required ValueObjectProperty<T?, T?, ValueObjectProperty> property,
+    required this.fallbackReplacement,
+  })  : getterType = T,
+        rootProperty = property,
+        property = property.withMapper(
+          getMapper: (value) => value ?? fallbackReplacement(),
+          setMapper: (value) => value,
+        );
 
   @override
   State modifyState(DropCoreContext context, State state) {
-    if (property.value == null) {
+    if (rootProperty.value == null) {
       property.set(fallbackReplacement());
     }
 
@@ -27,27 +41,14 @@ class FallbackReplacementValueObjectProperty<T>
   }
 
   @override
-  void fromState(DropCoreContext context, State state) {
-    property.fromState(context, state);
-  }
-
-  @override
-  T get value => property.value ?? fallbackReplacement();
-
-  @override
-  T? get valueOrNull => property.valueOrNull ?? guard(() => fallbackReplacement());
-
-  @override
-  set(T? value) => property.set(value);
+  T? get valueOrNull => rootProperty.valueOrNull ?? guard(() => fallbackReplacement());
 
   @override
   FallbackReplacementValueObjectProperty<T> copy() {
     return FallbackReplacementValueObjectProperty<T>(
       property: property.copy(),
+      rootProperty: rootProperty.copy(),
       fallbackReplacement: fallbackReplacement,
     );
   }
-
-  @override
-  String get name => property.name;
 }

@@ -1,0 +1,39 @@
+name: asset_core
+description: Core module for assets
+
+publish_to: "none"
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+version: 0.0.1
+
+dependencies:
+  collection: ^1.16.0
+  equatable: ^2.0.5
+  rxdart: ^0.27.5
+  uuid: ^3.0.7
+
+  environment_core:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/pond/modules/environment_core
+  persistence_core:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/persistence/persistence_core
+  pond_core:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/pond/pond_core
+  utils_core:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/utils/utils_core
+dev_dependencies:
+  lints: ^2.0.0
+  test: 1.24.6

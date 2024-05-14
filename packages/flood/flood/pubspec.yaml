@@ -32,6 +32,11 @@ dependencies:
       url: git@github.com:JLogical-Apps/flood.git
       ref: "v4.1"
       path: packages/pond/modules/appwrite_app
+  asset:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/pond/modules/asset
   auth:
     git:
       url: git@github.com:JLogical-Apps/flood.git

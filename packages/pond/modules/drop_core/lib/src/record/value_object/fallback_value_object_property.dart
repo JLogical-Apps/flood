@@ -3,46 +3,47 @@ import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
-class FallbackValueObjectProperty<T, S> with IsValueObjectProperty<T, S, FallbackValueObjectProperty<T, S>> {
-  final ValueObjectProperty<T?, S, dynamic> property;
+class FallbackValueObjectProperty<T, S> with IsValueObjectPropertyWrapper<T, S, FallbackValueObjectProperty<T, S>> {
+  @override
+  final ValueObjectProperty<T, S, dynamic> property;
+
+  final ValueObjectProperty<T?, S, dynamic> rootProperty;
 
   final T Function() fallback;
 
   @override
   final Type getterType;
 
-  @override
-  Type get setterType => property.setterType;
+  FallbackValueObjectProperty({required this.property, required this.rootProperty, required this.fallback})
+      : getterType = T;
 
-  FallbackValueObjectProperty({required this.property, required this.fallback}) : getterType = T;
+  FallbackValueObjectProperty.fromProperty({
+    required ValueObjectProperty<T?, S, ValueObjectProperty> property,
+    required this.fallback,
+  })  : getterType = T,
+        rootProperty = property,
+        property = property.withMapper(
+          getMapper: (value) => value ?? fallback(),
+          setMapper: (value) => value,
+        );
 
   @override
   State modifyState(DropCoreContext context, State state) {
-    if (property.value == null) {
+    if (rootProperty.value == null) {
       return state.withData(state.data.copy()..set(property.name, fallback()));
     }
     return property.modifyState(context, state);
   }
 
   @override
-  void fromState(DropCoreContext context, State state) {
-    property.fromState(context, state);
-  }
-
-  @override
-  T get value => property.value ?? fallback();
-
-  @override
-  T? get valueOrNull => property.valueOrNull ?? guard(() => fallback());
-
-  @override
-  set(S value) => property.set(value);
+  T? get valueOrNull => rootProperty.valueOrNull ?? guard(() => fallback());
 
   @override
   FallbackValueObjectProperty<T, S> copy() {
-    return FallbackValueObjectProperty<T, S>(property: property.copy(), fallback: fallback);
+    return FallbackValueObjectProperty<T, S>(
+      property: property.copy(),
+      rootProperty: rootProperty.copy(),
+      fallback: fallback,
+    );
   }
-
-  @override
-  String get name => property.name;
 }

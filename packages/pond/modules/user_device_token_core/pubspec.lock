@@ -40,6 +40,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.2"
+  asset_core:
+    dependency: "direct overridden"
+    description:
+      path: "../asset_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   async:
     dependency: transitive
     description:

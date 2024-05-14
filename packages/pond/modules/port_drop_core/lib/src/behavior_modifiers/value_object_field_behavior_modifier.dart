@@ -7,15 +7,6 @@ import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<FieldValueObjectProperty<ValueObject?>> {
-  final PortDropCoreComponent portDropContext;
-
-  final PortGeneratorBehaviorModifier? Function(ValueObjectBehavior behavior) modifierGetter;
-
-  ValueObjectFieldBehaviorModifier({
-    required this.portDropContext,
-    required this.modifierGetter,
-  });
-
   @override
   Map<String, PortField> getPortFieldByName(
     FieldValueObjectProperty<ValueObject?> behavior,
@@ -26,7 +17,6 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
         context,
         valueObjectType: behavior.fieldType,
         initialValue: behavior.value,
-        modifierGetter: modifierGetter,
       ),
     };
   }
@@ -36,15 +26,14 @@ class ValueObjectFieldBehaviorModifier extends PortGeneratorBehaviorModifier<Fie
     bool? isRequiredOnEdit,
     required Type valueObjectType,
     ValueObject? initialValue,
-    required PortGeneratorBehaviorModifier? Function(ValueObjectBehavior behavior) modifierGetter,
   }) {
     final typeContext = context.corePondContext.dropCoreComponent.typeContext;
     final baseRuntimeType = typeContext.getRuntimeTypeRuntime(valueObjectType);
-    final defaultValue =
-        modifierGetter(context.originalBehavior)?.getDefaultValue(context.originalBehavior) as ValueObject?;
-    final onInstantiate =
-        modifierGetter(context.originalBehavior)?.getValueObjectInstantiator(context.originalBehavior);
-    isRequiredOnEdit ??= modifierGetter(context.originalBehavior)?.isRequiredOnEdit(context.originalBehavior) ?? false;
+
+    final originalBehaviorMetaModifier = BehaviorMetaModifier.getModifier(context.originalBehavior);
+    final defaultValue = originalBehaviorMetaModifier?.getDefaultValue(context.originalBehavior) as ValueObject?;
+    final onInstantiate = originalBehaviorMetaModifier?.getValueObjectInstantiator(context.originalBehavior);
+    isRequiredOnEdit ??= originalBehaviorMetaModifier?.isRequiredOnEdit(context.originalBehavior) ?? false;
 
     if (defaultValue != null) {
       onInstantiate?.call(defaultValue);

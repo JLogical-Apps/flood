@@ -390,7 +390,7 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
 
   @override
   PortFieldValidatorContext createValidationContext() {
-    return PortFieldValidatorContext(value: value, port: port);
+    return PortFieldValidatorContext(value: submitRaw(value), port: port);
   }
 
   @override

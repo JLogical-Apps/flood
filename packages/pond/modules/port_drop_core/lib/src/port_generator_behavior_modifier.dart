@@ -1,40 +1,12 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:port_core/port_core.dart';
+import 'package:port_drop_core/port_drop_core.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier_context.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class PortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
     with IsTypedModifier<T, ValueObjectBehavior> {
   Map<String, PortField> getPortFieldByName(T behavior, PortGeneratorBehaviorModifierContext context);
-
-  dynamic getHintOrNull(T behavior) {
-    return null;
-  }
-
-  bool isRequiredOnEdit(T behavior) {
-    return false;
-  }
-
-  bool isOnlyDate(T behavior) {
-    return false;
-  }
-
-  dynamic getDefaultValue(T behavior) {
-    return null;
-  }
-
-  void Function(ValueObject valueObject)? getValueObjectInstantiator(T behavior) {
-    return null;
-  }
-}
-
-abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavior>
-    extends PortGeneratorBehaviorModifier<T> {
-  final PortGeneratorBehaviorModifier? Function(ValueObjectBehavior behavior) modifierGetter;
-
-  WrapperPortGeneratorBehaviorModifier({required this.modifierGetter});
-
-  ValueObjectBehavior unwrapBehavior(T behavior);
 
   PortField? getPortField(
     T behavior,
@@ -44,13 +16,20 @@ abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavio
     return sourcePortField;
   }
 
+  dynamic getHintOrNull(T behavior) {
+    return null;
+  }
+}
+
+class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectPropertyWrapper>
+    extends PortGeneratorBehaviorModifier<T> {
   @override
   Map<String, PortField> getPortFieldByName(
-    ValueObjectBehavior behavior,
+    T behavior,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    final unwrappedBehavior = unwrapBehavior(behavior as T);
-    final subModifier = modifierGetter(unwrappedBehavior);
+    final unwrappedBehavior = behavior.property;
+    final subModifier = PortDropCoreComponent.getBehaviorModifier(unwrappedBehavior);
     if (subModifier == null) {
       return {};
     }
@@ -64,31 +43,7 @@ abstract class WrapperPortGeneratorBehaviorModifier<T extends ValueObjectBehavio
 
   @override
   dynamic getHintOrNull(T behavior) {
-    final unwrappedBehavior = unwrapBehavior(behavior);
-    return modifierGetter(unwrappedBehavior)?.getHintOrNull(unwrappedBehavior);
-  }
-
-  @override
-  bool isRequiredOnEdit(T behavior) {
-    final unwrappedBehavior = unwrapBehavior(behavior);
-    return modifierGetter(unwrappedBehavior)?.isRequiredOnEdit(unwrappedBehavior) ?? false;
-  }
-
-  @override
-  bool isOnlyDate(T behavior) {
-    final unwrappedBehavior = unwrapBehavior(behavior);
-    return modifierGetter(unwrappedBehavior)?.isOnlyDate(unwrappedBehavior) ?? false;
-  }
-
-  @override
-  dynamic getDefaultValue(T behavior) {
-    final unwrappedBehavior = unwrapBehavior(behavior);
-    return modifierGetter(unwrappedBehavior)?.getDefaultValue(unwrappedBehavior);
-  }
-
-  @override
-  void Function(ValueObject valueObject)? getValueObjectInstantiator(T behavior) {
-    final unwrappedBehavior = unwrapBehavior(behavior);
-    return modifierGetter(unwrappedBehavior)?.getValueObjectInstantiator(unwrappedBehavior);
+    final unwrappedBehavior = (behavior as ValueObjectPropertyWrapper).property;
+    return PortDropCoreComponent.getBehaviorModifier(unwrappedBehavior)?.getHintOrNull(unwrappedBehavior);
   }
 }

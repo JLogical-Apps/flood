@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:asset_core/asset_core.dart';
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
+import 'package:drop_core/src/record/value_object/asset_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/async_fallback_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/color_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/computed_value_object_property.dart';
@@ -167,25 +169,25 @@ extension ValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty> on 
 extension GetterSetterNullabeValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty>
     on ValueObjectProperty<G?, S?, V> {
   RequiredValueObjectProperty<G, S> required() {
-    return RequiredValueObjectProperty(property: this);
+    return RequiredValueObjectProperty.fromProperty(property: this);
   }
 }
 
 extension GetterNullableValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty>
     on ValueObjectProperty<G?, S, V> {
   FallbackValueObjectProperty<G, S> withFallback(G Function() fallback) {
-    return FallbackValueObjectProperty(property: this, fallback: fallback);
+    return FallbackValueObjectProperty.fromProperty(property: this, fallback: fallback);
   }
 
   FallbackWithoutReplacementValueObjectProperty<G, S> withFallbackWithoutReplacement(G Function() fallback) {
-    return FallbackWithoutReplacementValueObjectProperty(property: this, fallback: fallback);
+    return FallbackWithoutReplacementValueObjectProperty.fromProperty(property: this, fallback: fallback);
   }
 }
 
 extension NullableStringValueObjectPropertyExtensions<G extends String?, S extends String?,
     V extends ValueObjectProperty> on ValueObjectProperty<G, S, V> {
   IsNotBlankValueObjectProperty isNotBlank() {
-    return IsNotBlankValueObjectProperty(property: this);
+    return IsNotBlankValueObjectProperty.fromProperty(property: this);
   }
 
   IsNameValueObjectProperty<G, S> isName() {
@@ -206,6 +208,10 @@ extension NullableStringValueObjectPropertyExtensions<G extends String?, S exten
 
   NullIfBlankValueObjectProperty<G, S> nullIfBlank() {
     return NullIfBlankValueObjectProperty<G, S>(property: this);
+  }
+
+  AssetValueObjectProperty asset({required AssetProvider assetProvider}) {
+    return AssetValueObjectProperty.fromId(assetProvider: assetProvider, idProperty: this);
   }
 }
 
@@ -280,7 +286,8 @@ extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int
 extension SameNullableGetterSetterValueObjectPropertyExtensions<T, V extends ValueObjectProperty>
     on ValueObjectProperty<T?, T?, V> {
   FallbackReplacementValueObjectProperty<T> withFallbackReplacement(T Function() fallbackReplacement) {
-    return FallbackReplacementValueObjectProperty(property: this, fallbackReplacement: fallbackReplacement);
+    return FallbackReplacementValueObjectProperty.fromProperty(
+        property: this, fallbackReplacement: fallbackReplacement);
   }
 
   ListValueObjectProperty<T> list() {

@@ -4,13 +4,6 @@ import 'package:port_drop_core/src/port_generator_behavior_modifier.dart';
 import 'package:port_drop_core/src/port_generator_behavior_modifier_context.dart';
 
 class ColorPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModifier<ColorValueObjectProperty> {
-  ColorPropertyBehaviorModifier({required super.modifierGetter});
-
-  @override
-  ValueObjectBehavior unwrapBehavior(ColorValueObjectProperty behavior) {
-    return behavior.property;
-  }
-
   @override
   PortField getPortField(
     ColorValueObjectProperty behavior,
