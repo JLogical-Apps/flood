@@ -7,7 +7,7 @@ import 'package:style/src/styleguide.dart';
 class FlatStyleImageRenderer with IsTypedStyleRenderer<StyledImage> {
   @override
   Widget renderTyped(BuildContext context, StyledImage component) {
-    return Image(
+    return Ink.image(
       image: component.image,
       width: component.width,
       height: component.height,

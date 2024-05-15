@@ -10,7 +10,7 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
   @override
   final PortField<Map<String, T?>, List<S>> portField;
 
-  final PortField<T, S> Function(T? value) itemPortFieldGenerator;
+  final PortField<T, S> Function(T? value, String fieldPath, Port port) itemPortFieldGenerator;
 
   final Map<String, PortField> _initialItemPortFieldById;
 
@@ -19,7 +19,7 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
     final existingPortField = _initialItemPortFieldById[id]?..fieldPath = '${portField.fieldPath}/$i';
     return MapEntry(
       id,
-      existingPortField ?? (itemPortFieldGenerator(value)..registerToPort('$fieldPath/$i', port)),
+      existingPortField ?? (itemPortFieldGenerator(value, '$fieldPath/$i', port)),
     );
   }));
 
@@ -47,9 +47,9 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
 
   @override
   Future<List<S>> submit(Map<String, T?> value) async {
-    return (await Future.wait(itemPortFieldById
-            .where((id, portField) => value[id] != null)
-            .mapToIterable((id, portField) async => await portField.submit(portField.value))))
+    return (await Future.wait(
+            itemPortFieldById.mapToIterable((id, portField) async => await portField.submit(portField.value))))
+        .whereNonNull()
         .cast<S>()
         .toList();
   }
@@ -86,7 +86,7 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
         final currentValue = value.values.toList()[index];
         return itemPortFieldById.putIfAbsent(
           id,
-          () => itemPortFieldGenerator(currentValue)..registerToPort('$fieldPath/$index', port),
+          () => itemPortFieldGenerator(currentValue, '$fieldPath/$index', port),
         );
       },
       portFieldSetter: (name, portField) {

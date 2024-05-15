@@ -163,7 +163,8 @@ void main() {
     final port = Port.of({
       'words': PortField.list(
         initialValues: ['Hello', 'World'],
-        itemPortFieldGenerator: (value) => PortField.string(initialValue: value),
+        itemPortFieldGenerator: (value, fieldPath, port) =>
+            PortField.string(initialValue: value)..registerToPort(fieldPath, port),
       ),
     });
 

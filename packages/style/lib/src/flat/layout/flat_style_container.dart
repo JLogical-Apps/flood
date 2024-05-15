@@ -21,6 +21,7 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
         color: backgroundColorPalette.baseBackground,
         borderRadius: component.shape == null ? BorderRadius.circular(12) : null,
         shape: component.shape,
+        clipBehavior: Clip.hardEdge,
         child: InkWell(
           onTap: component.onPressed,
           onLongPress: component.onLongPressed,

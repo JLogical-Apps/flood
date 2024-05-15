@@ -37,6 +37,7 @@ class StyledAssetPortField<E, T> extends HookWidget {
             (field.findAssetFieldOrNull() ?? (throw Exception('Could not find asset field for [$field]')));
 
         return StyledList.column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (label != null)
               Padding(

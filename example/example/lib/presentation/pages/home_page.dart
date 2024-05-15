@@ -4,6 +4,7 @@ import 'package:example/presentation/pages/tags_page.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example_core/features/todo/todo.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
+import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:flood/flood.dart';
 import 'package:flutter/material.dart';
@@ -41,55 +42,62 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
 
         return StyledPage(
           titleText: 'Todos',
-          actions: [
-            ActionItem.static.editEntity(
+          actionWidgets: [
+            profileButton(
               context,
-              entity: loggedInUserEntity,
-              contentTypeName: 'Profile',
-              description: 'Edit your profile.',
-            ),
-            ActionItem(
-              titleText: 'Manage Tags',
-              descriptionText: 'Manage your tags.',
-              color: Colors.blue,
-              iconData: Icons.tag,
-              onPerform: (_) {
-                context.push(TagsRoute());
-              },
-            ),
-            ActionItem(
-              titleText: 'Import',
-              color: Colors.blue,
-              iconData: Icons.download,
-              descriptionText: 'Import a csv of todos',
-              onPerform: (context) async {
-                await context.showStyledDialog(StyledPortDialog(
-                  port: Port.of({
-                    'file': PortField.file().withDisplayName('CSV File').withAllowedFileTypes(['csv']).required(),
-                  }).map((values, port) => values['file'] as CrossFile),
-                  titleText: 'Import Todos',
-                  onAccept: (file) async {
-                    final csv = await DataSource.static.crossFile(file).mapCsv(hasHeaderRow: true).get();
-                    final todos = csv
-                        .map((row) => Todo()
-                          ..nameProperty.set(row[0])
-                          ..descriptionProperty.set(row[1])
-                          ..userProperty.set(loggedInUserId))
-                        .toList();
-                    await Future.wait(todos.map((todo) => context.dropCoreComponent.update(TodoEntity()..set(todo))));
+              user: loggedInUserEntity.value,
+              actions: [
+                ActionItem.static.editEntity(
+                  context,
+                  entity: loggedInUserEntity,
+                  contentTypeName: 'Profile',
+                  description: 'Edit your profile.',
+                ),
+                ActionItem(
+                  titleText: 'Manage Tags',
+                  descriptionText: 'Manage your tags.',
+                  color: Colors.blue,
+                  iconData: Icons.tag,
+                  onPerform: (_) {
+                    context.push(TagsRoute());
                   },
-                ));
-              },
-            ),
-            ActionItem(
-              titleText: 'Logout',
-              color: Colors.red,
-              descriptionText: 'Log out of your account.',
-              iconData: Icons.logout,
-              onPerform: (context) async {
-                await context.authCoreComponent.logout();
-                await context.pushReplacement(LoginRoute());
-              },
+                ),
+                ActionItem(
+                  titleText: 'Import',
+                  color: Colors.blue,
+                  iconData: Icons.download,
+                  descriptionText: 'Import a csv of todos',
+                  onPerform: (context) async {
+                    await context.showStyledDialog(StyledPortDialog(
+                      port: Port.of({
+                        'file': PortField.file().withDisplayName('CSV File').withAllowedFileTypes(['csv']).required(),
+                      }).map((values, port) => values['file'] as CrossFile),
+                      titleText: 'Import Todos',
+                      onAccept: (file) async {
+                        final csv = await DataSource.static.crossFile(file).mapCsv(hasHeaderRow: true).get();
+                        final todos = csv
+                            .map((row) => Todo()
+                              ..nameProperty.set(row[0])
+                              ..descriptionProperty.set(row[1])
+                              ..userProperty.set(loggedInUserId))
+                            .toList();
+                        await Future.wait(
+                            todos.map((todo) => context.dropCoreComponent.update(TodoEntity()..set(todo))));
+                      },
+                    ));
+                  },
+                ),
+                ActionItem(
+                  titleText: 'Logout',
+                  color: Colors.red,
+                  descriptionText: 'Log out of your account.',
+                  iconData: Icons.logout,
+                  onPerform: (context) async {
+                    await context.authCoreComponent.logout();
+                    await context.pushReplacement(LoginRoute());
+                  },
+                ),
+              ],
             ),
           ],
           body: Padding(
@@ -125,6 +133,32 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
           ),
         );
       },
+    );
+  }
+
+  Widget profileButton(BuildContext context, {required User user, required List<ActionItem> actions}) {
+    return Padding(
+      padding: EdgeInsets.only(right: 8),
+      child: StyledContainer(
+        shape: CircleBorder(),
+        onPressed: () async {
+          await context.showStyledDialog(StyledDialog.actionList(context: context, actions: actions));
+        },
+        child: user.profilePictureProperty.value != null
+            ? AssetReferenceBuilder.buildAssetReference(
+                user.profilePictureProperty.value!,
+                width: 35,
+                height: 35,
+                fit: BoxFit.cover,
+              )
+            : Padding(
+                padding: EdgeInsets.all(5),
+                child: StyledIcon(
+                  Icons.person,
+                  size: 25,
+                ),
+              ),
+      ),
     );
   }
 }

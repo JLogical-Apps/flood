@@ -18,7 +18,7 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
     return {
       behavior.name: PortField.list<dynamic, dynamic>(
         initialValues: behavior.value.nullIfEmpty ?? defaultValue,
-        itemPortFieldGenerator: (value) {
+        itemPortFieldGenerator: (value, fieldPath, port) {
           final dropContext = context.corePondContext.dropCoreComponent;
           final runtimeType = dropContext.getRuntimeTypeOrNullRuntime(behavior.valueType);
           if (runtimeType != null && runtimeType.isA(dropContext.getRuntimeType<ValueObject>())) {
@@ -29,23 +29,26 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
               initialValue: valueObject,
               isRequiredOnEdit: true,
               valueObjectType: behavior.valueType,
-            );
+            )..registerToPort(fieldPath, port);
           }
 
-          final itemPortModifier = PortDropCoreComponent.getBehaviorModifier(behavior.property);
-          if (itemPortModifier == null) {
-            throw Exception('Cannot generate port for item of property [$behavior]');
+          final assetProvider =
+              BehaviorMetaModifier.getModifier(behavior.property)?.getAssetProvider(behavior.property);
+          if (assetProvider != null && value is! AssetPortValue) {
+            value = AssetPortValue.initial(initialValue: value);
           }
+
+          final itemPortModifier = PortDropCoreComponent.getBehaviorModifier(behavior.property) ??
+              (throw Exception('Cannot generate port for item of property [$behavior]'));
 
           final itemPropertyInstance = behavior.property.copy() as ValueObjectProperty;
-          itemPropertyInstance.set(value);
 
           final portFieldByName = itemPortModifier.getPortFieldByName(itemPropertyInstance, context);
           if (portFieldByName.length > 1) {
             throw Exception('There are too many port fields generated for item of property [$behavior]');
           }
 
-          return portFieldByName.values.first;
+          return (portFieldByName.values.first..registerToPort(fieldPath, port)).copyWithValue(value);
         },
       )
     };
