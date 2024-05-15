@@ -60,7 +60,7 @@ class ShellTerminal with IsTerminal {
     bool interactable = false,
     Map<String, String> environment = const {},
   }) async {
-    return await dcli.withEnvironment(
+    return await dcli.withEnvironmentAsync(
       () async {
         return command.split('\n').map((line) {
           core.print('> $line');

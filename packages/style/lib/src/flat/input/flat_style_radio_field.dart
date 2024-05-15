@@ -49,8 +49,8 @@ class FlatStyleRadioFieldRenderer with IsTypedStyleRenderer<StyledRadioField> {
                           onChanged: component.enabled ? (_) => component.changeValue(option) : null,
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           fillColor: component.errorText != null
-                              ? MaterialStateProperty.all(Colors.red)
-                              : MaterialStateProperty.resolveWith((states) => states.contains(MaterialState.selected)
+                              ? WidgetStateProperty.all(Colors.red)
+                              : WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected)
                                   ? context.colorPalette().foreground.strong
                                   : context.colorPalette().foreground.regular),
                         ),

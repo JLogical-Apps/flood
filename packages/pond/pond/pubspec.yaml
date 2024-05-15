@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
 
   collection: ^1.16.0
-  flutter_hooks: ^0.18.5+1
+  flutter_hooks: ^0.21.1-pre.0
   provider: ^6.0.5
   rxdart: ^0.27.5
   url_strategy: ^0.2.0

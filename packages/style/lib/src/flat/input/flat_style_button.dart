@@ -50,8 +50,8 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
     if (label == null && icon != null) {
       return IconButton(
         style: ButtonStyle(
-          shape: MaterialStateProperty.all(CircleBorder()),
-          backgroundColor: MaterialStateProperty.all(backgroundColorPalette),
+          shape: WidgetStateProperty.all(CircleBorder()),
+          backgroundColor: WidgetStateProperty.all(backgroundColorPalette),
         ),
         icon: ColorPaletteProvider(
           colorPalette: backgroundColorPalette,
@@ -105,12 +105,12 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
           ],
         ),
         style: ButtonStyle(
-          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+          shape: WidgetStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6),
           )),
-          textStyle: MaterialStateProperty.all(
+          textStyle: WidgetStateProperty.all(
               context.style().getTextStyle(context, StyledText.body.underline.withEmphasis(component.emphasis).empty)),
-          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
+          padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 8, vertical: 4)),
         ),
         onPressed: onPressed,
       );
@@ -145,16 +145,16 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
         ),
         style: ButtonStyle(
           backgroundColor:
-              MaterialStateProperty.all(backgroundColorPalette.withOpacity(component.onPressed == null ? 0.6 : 1)),
-          textStyle: MaterialStateProperty.all(context.style().getTextStyle(context, StyledText.body.empty)),
-          elevation: MaterialStateProperty.all(0),
-          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              WidgetStateProperty.all(backgroundColorPalette.withOpacity(component.onPressed == null ? 0.6 : 1)),
+          textStyle: WidgetStateProperty.all(context.style().getTextStyle(context, StyledText.body.empty)),
+          elevation: WidgetStateProperty.all(0),
+          shape: WidgetStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6),
             side: component.emphasis != Emphasis.subtle
                 ? BorderSide.none
                 : BorderSide(width: 1.5, color: context.colorPalette().background.regular),
           )),
-          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 4, vertical: 2)),
+          padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 4, vertical: 2)),
         ),
         onPressed: onPressed,
       );

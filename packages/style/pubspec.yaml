@@ -14,7 +14,7 @@ dependencies:
 
   collection: ^1.16.0
   font_awesome_flutter: ^10.4.0
-  flutter_hooks: ^0.18.5+1
+  flutter_hooks: ^0.21.1-pre.0
   flutter_markdown: ^0.6.8
   google_fonts: ^6.1.0
   intersperse: ^2.0.0

@@ -10,11 +10,7 @@ version: 0.0.1
 
 dependencies:
   collection: ^1.16.0
-  dcli:
-    git:
-      url: git@github.com:Linkadi98/dcli.git
-      ref: 922bb02830458f065750909dbf40fa785e59c5d5
-      path: dcli
+  dcli: ^4.0.0
   diffutil_dart: ^4.0.0
   equatable: ^2.0.5
   mason_logger: ^0.2.12

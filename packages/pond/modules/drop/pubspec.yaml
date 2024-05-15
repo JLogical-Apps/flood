@@ -13,12 +13,12 @@ dependencies:
     sdk: flutter
   collection: ^1.16.0
   equatable: ^2.0.5
-  flutter_hooks: ^0.18.5+1
+  flutter_hooks: ^0.21.1-pre.0
   path: ^1.8.3
   pool: ^1.5.1
   provider: ^6.0.5
   rxdart: ^0.27.5
-  uuid: ^3.0.7
+  uuid: ^4.1.0
 
   debug:
     git:

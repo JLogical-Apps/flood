@@ -51,7 +51,7 @@ class StyledAssetPortField<E, T> extends HookWidget {
                         ? AssetBuilder.buildAsset(value.uploadedAsset!, height: 140)
                         : (value.removed || value.initialValue == null
                             ? StyledText.sm('No asset')
-                            : AssetReferenceBuilder.buildAssetReference(value.initialValue!)),
+                            : AssetReferenceBuilder.buildAssetReference(value.initialValue!, height: 140)),
                   ),
                 ),
                 StyledList.column.centered(

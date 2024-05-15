@@ -41,13 +41,13 @@ class FlatStyleCheckboxRenderer with IsTypedStyleRenderer<StyledCheckbox> {
               ),
             Checkbox(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              fillColor: MaterialStateProperty.resolveWith(
+              fillColor: WidgetStateProperty.resolveWith(
                 (states) {
-                  if (component.errorText != null && states.contains(MaterialState.selected)) {
+                  if (component.errorText != null && states.contains(WidgetState.selected)) {
                     return Colors.red;
                   }
-                  if (states.contains(MaterialState.selected)) {
-                    if (states.contains(MaterialState.disabled)) {
+                  if (states.contains(WidgetState.selected)) {
+                    if (states.contains(WidgetState.disabled)) {
                       return context.colorPalette().background.regular;
                     } else {
                       return context.colorPalette().background.strong;
@@ -67,7 +67,7 @@ class FlatStyleCheckboxRenderer with IsTypedStyleRenderer<StyledCheckbox> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(3),
               ),
-              overlayColor: MaterialStateProperty.all(context.colorPalette().background.regular.withOpacity(0.5)),
+              overlayColor: WidgetStateProperty.all(context.colorPalette().background.regular.withOpacity(0.5)),
               value: component.value,
               onChanged: component.onChanged == null ? null : (value) => component.onChanged!(value ?? false),
             ),

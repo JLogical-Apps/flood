@@ -103,9 +103,9 @@ class DeltaStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
       ),
       style: ButtonStyle(
         backgroundColor:
-            MaterialStateProperty.all(backgroundColorPalette.withOpacity(component.onPressed == null ? 0.6 : 1)),
-        elevation: MaterialStateProperty.all(0),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+            WidgetStateProperty.all(backgroundColorPalette.withOpacity(component.onPressed == null ? 0.6 : 1)),
+        elevation: WidgetStateProperty.all(0),
+        shape: WidgetStateProperty.all(RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(1000),
           side: component.emphasis == Emphasis.strong || component.isTextButton
               ? BorderSide.none
@@ -116,7 +116,7 @@ class DeltaStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
                       : context.colorPalette().foreground.subtle,
                 ),
         )),
-        padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 15, vertical: 12)),
+        padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 15, vertical: 12)),
       ),
       onPressed: onPressed,
     );

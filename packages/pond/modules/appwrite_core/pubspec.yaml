@@ -13,7 +13,7 @@ dependencies:
   dart_appwrite: ^11.0.2
   equatable: ^2.0.5
   rxdart: ^0.27.5
-  uuid: ^3.0.7
+  uuid: ^4.1.0
 
   auth_core:
     git:
