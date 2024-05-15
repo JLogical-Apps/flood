@@ -1,5 +1,6 @@
+import 'package:asset_core/asset_core.dart';
+import 'package:port_core/src/asset_port_field.dart';
 import 'package:port_core/src/date_port_field.dart';
-import 'package:port_core/src/file/allowed_file_types.dart';
 import 'package:port_core/src/list_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
 import 'package:port_core/src/port_field.dart';
@@ -79,6 +80,11 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   @override
   StagePortField? findStagePortFieldOrNull(T portField) {
     return modifierGetter(portField.portField)?.findStagePortFieldOrNull(portField.portField);
+  }
+
+  @override
+  AssetPortField? findAssetPortFieldOrNull(T portField) {
+    return modifierGetter(portField.portField)?.findAssetPortFieldOrNull(portField.portField);
   }
 
   @override

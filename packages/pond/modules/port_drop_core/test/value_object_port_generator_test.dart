@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:asset_core/asset_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:port_core/port_core.dart';
@@ -263,6 +266,30 @@ void main() {
     final result = await userPort.submit();
     expect(result.isValid, isTrue);
   });
+
+  test('Port for asset field.', () async {
+    corePondContext.locate<TypeCoreComponent>().register(Data14.new, name: 'Data14');
+
+    final data = Data14();
+    var dataPort = corePondContext.locate<PortDropCoreComponent>().generatePort(data);
+
+    expect(dataPort.getFieldByPath('asset'), isA<AssetPortField>());
+    expect((await dataPort.submit()).data.assetProperty.value, isNull);
+
+    final assetValue = Uint8List.fromList([1, 2, 3]);
+
+    dataPort['asset'] = (dataPort['asset'] as AssetPortValue)
+        .withUpload(Asset.upload(path: 'image.png', value: assetValue, mimeType: 'image/png'));
+    expect((await dataPort.submit()).data.assetProperty.value, isA<AssetReference>());
+
+    data.assetProperty.set(AssetProvider.static.memory.getById('someId'));
+    dataPort = corePondContext.locate<PortDropCoreComponent>().generatePort(data);
+
+    expect((await dataPort.submit()).data.assetProperty.value, isA<AssetReference>());
+
+    dataPort['asset'] = (dataPort['asset'] as AssetPortValue).withRemoved();
+    expect((await dataPort.submit()).data.assetProperty.value, isNull);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -407,4 +434,12 @@ class Data13 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [studentProperty];
+}
+
+class Data14 extends ValueObject {
+  static const assetField = 'asset';
+  late final assetProperty = field<String>(name: assetField).asset(assetProvider: AssetProvider.static.memory);
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [assetProperty];
 }

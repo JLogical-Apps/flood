@@ -2,30 +2,25 @@ import 'dart:async';
 import 'dart:core' as dart;
 import 'dart:core';
 
+import 'package:asset_core/asset_core.dart';
 import 'package:persistence_core/persistence_core.dart';
+import 'package:port_core/port_core.dart';
 import 'package:port_core/src/allowed_file_types_port_field.dart';
 import 'package:port_core/src/color_port_field.dart';
 import 'package:port_core/src/currency_port_field.dart';
-import 'package:port_core/src/date_port_field.dart';
 import 'package:port_core/src/display_name_port_field.dart';
 import 'package:port_core/src/email_port_field.dart';
 import 'package:port_core/src/fallback_port_field.dart';
-import 'package:port_core/src/file/allowed_file_types.dart';
 import 'package:port_core/src/hint_port_field.dart';
 import 'package:port_core/src/list_port_field.dart';
 import 'package:port_core/src/map_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
 import 'package:port_core/src/multiline_port_field.dart';
 import 'package:port_core/src/name_port_field.dart';
-import 'package:port_core/src/options_port_field.dart';
 import 'package:port_core/src/phone_port_field.dart';
-import 'package:port_core/src/port.dart';
 import 'package:port_core/src/port_field_provider.dart';
-import 'package:port_core/src/port_field_validator_context.dart';
 import 'package:port_core/src/required_port_field.dart';
-import 'package:port_core/src/search_port_field.dart';
 import 'package:port_core/src/secret_port_field.dart';
-import 'package:port_core/src/stage_port_field.dart';
 import 'package:port_core/src/validator_port_field.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
@@ -178,6 +173,16 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
   static SimplePortField<CrossFile?> file({CrossFile? initialValue}) {
     return PortField(value: initialValue);
   }
+
+  static AssetPortField asset({
+    AssetReference? initialValue,
+    required AssetProvider assetProvider,
+  }) {
+    return AssetPortField(
+      value: AssetPortValue.initial(initialValue: initialValue),
+      assetProvider: assetProvider,
+    );
+  }
 }
 
 extension PortFieldExtensions<T, S> on PortField<T, S> {
@@ -240,6 +245,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
 
   StagePortField? findStageFieldOrNull() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.findStagePortFieldOrNull(this);
+  }
+
+  AssetPortField? findAssetFieldOrNull() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.findAssetPortFieldOrNull(this);
   }
 
   DatePortField? findDateFieldOrNull() {
@@ -436,6 +445,14 @@ extension IntPortFieldExtensions<T extends int?, S> on PortField<T, S> {
 extension DatePortFieldExtensions<T extends DateTime?, S> on PortField<T, S> {
   PortField<T, S> dateTime([bool isDate = true, bool isTime = true]) =>
       DatePortField<T, S>(portField: this, isDate: isDate, isTime: isTime);
+}
+
+extension AssetPortFieldExtensions<S> on PortField<AssetPortValue, S> {
+  PortField<AssetPortValue, S> withAllowedFileTypes(AllowedFileTypes allowedFileTypes) =>
+      AllowedFileTypesPortField<AssetPortValue, S>(
+        portField: this,
+        allowedFileTypes: allowedFileTypes,
+      );
 }
 
 extension FilePortFieldExtensions<T extends CrossFile?, S> on PortField<T, S> {

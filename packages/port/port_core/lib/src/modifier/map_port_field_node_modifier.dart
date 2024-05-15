@@ -1,3 +1,4 @@
+import 'package:asset_core/asset_core.dart';
 import 'package:port_core/port_core.dart';
 import 'package:port_core/src/map_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';

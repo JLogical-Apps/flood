@@ -1,8 +1,7 @@
-import 'package:persistence_core/persistence_core.dart';
-import 'package:port_core/src/file/allowed_file_types.dart';
+import 'package:asset_core/asset_core.dart';
 import 'package:port_core/src/port_field.dart';
 
-class AllowedFileTypesPortField<T extends CrossFile?, S> with IsPortFieldWrapper<T, S> {
+class AllowedFileTypesPortField<T, S> with IsPortFieldWrapper<T, S> {
   @override
   final PortField<T, S> portField;
 

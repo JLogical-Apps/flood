@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:style/src/action/action_item.dart';
 import 'package:style/src/components/input/styled_button.dart';
 import 'package:style/src/components/layout/styled_list.dart';
+import 'package:style/src/components/misc/styled_icon.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/style_component.dart';
 import 'package:utils/utils.dart';
@@ -58,6 +59,36 @@ class StyledDialog<T> extends StyleComponent {
           ],
         );
       }),
+    );
+  }
+
+  static StyledDialog actionList({
+    required BuildContext context,
+    Widget? title,
+    String? titleText,
+    required List<ActionItem> actions,
+  }) {
+    return StyledDialog(
+      body: StyledList.column(
+          children: actions
+              .map((action) => ListTile(
+                    title: action.titleText
+                            ?.mapIfNonNull((title) => StyledText.lg.bold.display.withColor(action.color)(title)) ??
+                        action.title,
+                    subtitle: action.descriptionText
+                            ?.mapIfNonNull((description) => StyledText.body.withColor(action.color)(description)) ??
+                        action.description,
+                    leading: action.iconData?.mapIfNonNull((icon) => StyledIcon(
+                              icon,
+                              color: action.color,
+                            )) ??
+                        action.icon,
+                    onTap: action.onPerform?.mapIfNonNull((onPerform) => () async {
+                          Navigator.of(context).pop();
+                          await onPerform(context);
+                        }),
+                  ))
+              .toList()),
     );
   }
 }

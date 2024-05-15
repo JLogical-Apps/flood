@@ -1,7 +1,9 @@
+import 'package:asset_core/asset_core.dart';
+import 'package:port_core/src/asset_port_field.dart';
 import 'package:port_core/src/date_port_field.dart';
-import 'package:port_core/src/file/allowed_file_types.dart';
 import 'package:port_core/src/list_port_field.dart';
 import 'package:port_core/src/modifier/allowed_file_types_port_field_modifier.dart';
+import 'package:port_core/src/modifier/asset_port_field_modifier.dart';
 import 'package:port_core/src/modifier/base_port_field_modifier.dart';
 import 'package:port_core/src/modifier/color_port_field_modifier.dart';
 import 'package:port_core/src/modifier/currency_port_field_modifier.dart';
@@ -84,6 +86,10 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return null;
   }
 
+  AssetPortField? findAssetPortFieldOrNull(T portField) {
+    return null;
+  }
+
   DatePortField? findDatePortFieldOrNull(T portField) {
     return null;
   }
@@ -103,6 +109,7 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     RequiredPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     AllowedFileTypesPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     StagePortFieldNodeModifier(modifierGetter: getModifierOrNull),
+    AssetPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     DatePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     DisplayNamePortFieldNodeModifier(modifierGetter: getModifierOrNull),
     MultilinePortFieldNodeModifier(modifierGetter: getModifierOrNull),

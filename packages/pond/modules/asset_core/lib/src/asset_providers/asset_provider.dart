@@ -1,8 +1,15 @@
-import 'package:asset_core/asset_core.dart';
+import 'dart:async';
+
+import 'package:asset_core/src/asset.dart';
 import 'package:asset_core/src/asset_providers/memory_asset_provider.dart';
+import 'package:asset_core/src/asset_reference.dart';
 
 abstract class AssetProvider {
   AssetReference getById(String id);
+
+  Future<Asset> upload(Asset assetUpload);
+
+  Future<void> delete(String id);
 
   static final AssetProviderStatic static = AssetProviderStatic();
 }

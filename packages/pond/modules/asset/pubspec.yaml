@@ -12,7 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
   collection: ^1.16.0
+  file_picker: ^6.2.0
   flutter_hooks: ^0.18.5+1
+  image_picker: ^1.1.1
   rxdart: ^0.27.5
 
   asset_core:

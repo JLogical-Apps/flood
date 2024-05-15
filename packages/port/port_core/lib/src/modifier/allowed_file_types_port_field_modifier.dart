@@ -1,5 +1,5 @@
+import 'package:asset_core/asset_core.dart';
 import 'package:port_core/src/allowed_file_types_port_field.dart';
-import 'package:port_core/src/file/allowed_file_types.dart';
 import 'package:port_core/src/modifier/wrapper_port_field_node_modifier.dart';
 
 class AllowedFileTypesPortFieldNodeModifier extends WrapperPortFieldNodeModifier<AllowedFileTypesPortField> {

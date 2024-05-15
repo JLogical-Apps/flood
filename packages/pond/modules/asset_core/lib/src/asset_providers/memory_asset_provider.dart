@@ -1,19 +1,32 @@
-import 'dart:typed_data';
-
-import 'package:asset_core/src/asset_metadata.dart';
+import 'package:asset_core/src/asset.dart';
 import 'package:asset_core/src/asset_providers/asset_provider.dart';
 import 'package:asset_core/src/asset_reference.dart';
-import 'package:persistence_core/persistence_core.dart';
+import 'package:model_core/model_core.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:utils_core/utils_core.dart';
 
 class MemoryAssetProvider with IsAssetProvider {
-  final Map<String, DataSource<AssetMetadata>> _assetMetadataDataSourceById = {};
-  final Map<String, DataSource<Uint8List>> _assetBytesDataSourceById = {};
+  final Map<String, BehaviorSubject<FutureValue<Asset>>> _assetXById = {};
 
   @override
   AssetReference getById(String id) {
     return AssetReference(
-      assetMetadataDataSource: _assetMetadataDataSourceById.putIfAbsent(id, () => DataSource.static.memory()),
-      bytesDataSource: _assetBytesDataSourceById.putIfAbsent(id, () => DataSource.static.memory()),
+      id: id,
+      assetModel: Model.fromValueStream(_assetXById.putIfAbsent(id, () => BehaviorSubject.seeded(FutureValue.empty()))),
     );
+  }
+
+  @override
+  Future<Asset> upload(Asset asset) async {
+    final assetX = _assetXById.putIfAbsent(asset.id, () => BehaviorSubject.seeded(FutureValue.empty()));
+    assetX.value = FutureValue.loaded(asset);
+
+    return asset;
+  }
+
+  @override
+  Future<void> delete(String id) async {
+    _assetXById[id]?.value = FutureValue.empty();
+    _assetXById.remove(id);
   }
 }

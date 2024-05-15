@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:asset/asset.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -81,36 +80,5 @@ class StyledFilePortField extends HookWidget {
         );
       },
     );
-  }
-}
-
-extension on PlatformFile {
-  CrossFile asCrossFile() {
-    final bytes = this.bytes ?? Uint8List(0);
-    return CrossFile.static.fromBytes(path: name, bytesGetter: () => bytes);
-  }
-}
-
-extension on AllowedFileTypes {
-  FileType asFileType() {
-    if (this is ImageAllowedFileTypes) {
-      return FileType.image;
-    } else if (this is VideoAllowedFileTypes) {
-      return FileType.video;
-    } else if (this is AudioAllowedFileTypes) {
-      return FileType.audio;
-    } else if (this is CustomAllowedFileTypes) {
-      return FileType.custom;
-    } else {
-      return FileType.any;
-    }
-  }
-
-  List<String>? getAllowedExtensions() {
-    if (this is CustomAllowedFileTypes) {
-      return (this as CustomAllowedFileTypes).allowedFileTypes;
-    } else {
-      return null;
-    }
   }
 }

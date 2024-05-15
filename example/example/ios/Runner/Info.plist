@@ -46,9 +46,9 @@
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Upload photos to envelopes.</string>
+		<string>Upload photos to todos.</string>
 		<key>NSCameraUsageDescription</key>
-		<string>Take pictures and upload them to budgets.</string>
+		<string>Take pictures and upload them to todos.</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UIBackgroundModes</key>

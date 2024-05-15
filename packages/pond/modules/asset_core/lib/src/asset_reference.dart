@@ -1,20 +1,23 @@
-import 'dart:typed_data';
-
-import 'package:asset_core/asset_core.dart';
-import 'package:persistence_core/persistence_core.dart';
+import 'package:asset_core/src/asset.dart';
+import 'package:asset_core/src/asset_metadata.dart';
+import 'package:model_core/model_core.dart';
 
 abstract class AssetReference {
-  DataSource<AssetMetadata> get assetMetadataDataSource;
+  String get id;
 
-  DataSource<Uint8List> get bytesDataSource;
+  Model<AssetMetadata> get assetMetadataModel;
+
+  Model<Asset> get assetModel;
 
   factory AssetReference({
-    required DataSource<AssetMetadata> assetMetadataDataSource,
-    required DataSource<Uint8List> bytesDataSource,
+    required String id,
+    Model<AssetMetadata>? assetMetadataModel,
+    required Model<Asset> assetModel,
   }) =>
       _AssetReferenceImpl(
-        assetMetadataDataSource: assetMetadataDataSource,
-        bytesDataSource: bytesDataSource,
+        id: id,
+        assetMetadataModel: assetMetadataModel ?? assetModel.map((asset) => asset.metadata),
+        assetModel: assetModel,
       );
 }
 
@@ -22,10 +25,17 @@ mixin IsAssetReference implements AssetReference {}
 
 class _AssetReferenceImpl with IsAssetReference {
   @override
-  final DataSource<AssetMetadata> assetMetadataDataSource;
+  final String id;
 
   @override
-  final DataSource<Uint8List> bytesDataSource;
+  final Model<AssetMetadata> assetMetadataModel;
 
-  _AssetReferenceImpl({required this.assetMetadataDataSource, required this.bytesDataSource});
+  @override
+  final Model<Asset> assetModel;
+
+  _AssetReferenceImpl({
+    required this.id,
+    required this.assetMetadataModel,
+    required this.assetModel,
+  });
 }
