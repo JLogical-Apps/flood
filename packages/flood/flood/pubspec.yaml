@@ -161,3 +161,4 @@ dev_dependencies:
   lints: ^2.0.0
 dependency_overrides:
   http: 0.13.5
+  win32: ^5.4.0

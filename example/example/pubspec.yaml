@@ -33,3 +33,4 @@ dev_dependencies:
 dependency_overrides:
   http: 0.13.5
   vm_service: 13.0.0
+  win32: ^5.4.0

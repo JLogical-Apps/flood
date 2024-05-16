@@ -62,11 +62,11 @@ void useOneTimeEffect(void Function()? Function() effect) {
   useEffect(effect, [0]);
 }
 
-void useAsyncEffect(FutureOr Function() effect) {
+void useAsyncEffect(FutureOr Function() effect, [List keys = const []]) {
   useEffect(() {
     () async {
       await effect();
     }();
     return null;
-  }, []);
+  }, keys);
 }

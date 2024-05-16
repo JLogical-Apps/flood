@@ -1,3 +1,5 @@
+export 'package:video_player/video_player.dart';
+
 export 'src/action/action_item.dart';
 export 'src/color_palette.dart';
 export 'src/color_palette_provider.dart';
@@ -20,6 +22,7 @@ export 'src/components/layout/styled_container.dart';
 export 'src/components/layout/styled_list.dart';
 export 'src/components/layout/styled_tabs.dart';
 export 'src/components/media/styled_image.dart';
+export 'src/components/media/styled_video.dart';
 export 'src/components/message/styled_message.dart';
 export 'src/components/misc/styled_calendar.dart';
 export 'src/components/misc/styled_divider.dart';

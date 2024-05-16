@@ -4,7 +4,8 @@ import 'package:model/model.dart';
 
 class DefaultAssetReferenceBuilder extends AssetReferenceBuilder {
   @override
-  Widget build(AssetReferenceBuilderContext assetReferenceBuilderContext, double? width, double? height, BoxFit? fit) {
+  Widget build(BuildContext context, AssetReferenceBuilderContext assetReferenceBuilderContext, double? width,
+      double? height, BoxFit? fit) {
     return ModelBuilder(
       model: assetReferenceBuilderContext.assetReference.assetModel,
       builder: (Asset asset) {

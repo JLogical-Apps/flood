@@ -27,6 +27,7 @@ import 'package:style/src/flat/layout/flat_style_container.dart';
 import 'package:style/src/flat/layout/flat_style_list.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
 import 'package:style/src/flat/media/flat_style_image.dart';
+import 'package:style/src/flat/media/flat_style_video.dart';
 import 'package:style/src/flat/misc/flat_style_calendar.dart';
 import 'package:style/src/flat/misc/flat_style_divider.dart';
 import 'package:style/src/flat/misc/flat_style_icon.dart';
@@ -73,6 +74,7 @@ class FlatStyle with IsStyle {
           FlatStyleRadioFieldRenderer(),
           FlatStyleMenuButtonRenderer(),
           FlatStyleImageRenderer(),
+          FlatStyleVideoRenderer(),
           FlatStyleContainerRenderer(),
           FlatStyleTabsRenderer(),
           FlatStyleCarouselRenderer(),

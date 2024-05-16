@@ -5,7 +5,7 @@ import 'package:style/style.dart';
 
 class ImageAssetBuilder extends AssetBuilder {
   @override
-  Widget build(Asset asset, double? width, double? height, BoxFit? fit) {
+  Widget build(BuildContext context, Asset asset, double? width, double? height, BoxFit? fit) {
     return StyledImage(
       image: MemoryImage(asset.value),
       width: width,

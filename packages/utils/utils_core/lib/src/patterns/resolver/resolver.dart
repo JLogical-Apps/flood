@@ -22,7 +22,7 @@ extension ResolverExtension<I, O> on Resolver<I, O> {
   O resolve(I input) => resolveOrNull(input) ?? (throw Exception('Could not resolve an output with input [$input]'));
 }
 
-mixin WithResolverDelegate<I, O> implements Resolver<I, O> {
+mixin IsResolverWrapper<I, O> implements Resolver<I, O> {
   Resolver<I, O> get resolver;
 
   @override

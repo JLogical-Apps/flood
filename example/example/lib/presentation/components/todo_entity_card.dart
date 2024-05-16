@@ -29,6 +29,20 @@ class TodoEntityCard extends StatelessWidget {
                       ))
                   .toList(),
             ),
+          if (todoEntity.value.assetsProperty.value.isNotEmpty)
+            StyledList.row.withScrollbar(
+              children: todoEntity.value.assetsProperty.value
+                  .map((asset) => StyledContainer.subtle(
+                        onPressed: () {},
+                        child: AssetReferenceBuilder.buildAssetReference(
+                          asset,
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ))
+                  .toList(),
+            ),
         ],
       ),
       leading: StyledCheckbox(

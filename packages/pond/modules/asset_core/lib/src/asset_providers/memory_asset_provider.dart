@@ -17,6 +17,11 @@ class MemoryAssetProvider with IsAssetProvider {
   }
 
   @override
+  Future<List<AssetReference>> listReferences() async {
+    return _assetXById.keys.map(getById).toList();
+  }
+
+  @override
   Future<Asset> upload(Asset asset) async {
     final assetX = _assetXById.putIfAbsent(asset.id, () => BehaviorSubject.seeded(FutureValue.empty()));
     assetX.value = FutureValue.loaded(asset);

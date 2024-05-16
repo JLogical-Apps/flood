@@ -50,6 +50,10 @@ Future<CorePondContext> getCorePondContext({
     },
   ));
 
+  await corePondContext.register(AssetCoreComponent(
+    assetProviders: [User.profilePictureAssetProvider],
+  ));
+
   await corePondContext.register(UserRepository());
   await corePondContext.register(TodoRepository());
   await corePondContext.register(TagRepository());

@@ -7,6 +7,8 @@ import 'package:asset_core/src/asset_reference.dart';
 abstract class AssetProvider {
   AssetReference getById(String id);
 
+  Future<List<AssetReference>> listReferences();
+
   Future<Asset> upload(Asset assetUpload);
 
   Future<void> delete(String id);
@@ -26,7 +28,14 @@ abstract class AssetProviderWrapper implements AssetProvider {
 
 mixin IsAssetProviderWrapper implements AssetProviderWrapper {
   @override
-  AssetReference getById(String id) {
-    return assetProvider.getById(id);
-  }
+  AssetReference getById(String id) => assetProvider.getById(id);
+
+  @override
+  Future<List<AssetReference>> listReferences() => assetProvider.listReferences();
+
+  @override
+  Future<Asset> upload(Asset assetUpload) => assetProvider.upload(assetUpload);
+
+  @override
+  Future<void> delete(String id) => assetProvider.delete(id);
 }

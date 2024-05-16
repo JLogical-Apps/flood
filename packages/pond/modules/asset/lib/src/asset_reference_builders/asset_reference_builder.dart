@@ -6,7 +6,8 @@ import 'package:model/model.dart';
 import 'package:utils/utils.dart';
 
 abstract class AssetReferenceBuilder with IsModifier<AssetReferenceBuilderContext> {
-  Widget build(AssetReferenceBuilderContext assetReferenceBuilderContext, double? width, double? height, BoxFit? fit);
+  Widget build(BuildContext context, AssetReferenceBuilderContext assetReferenceBuilderContext, double? width,
+      double? height, BoxFit? fit);
 
   static final assetReferenceBuilderResolver =
       ModifierResolver<AssetReferenceBuilder, AssetReferenceBuilderContext>(modifiers: [
@@ -21,10 +22,12 @@ abstract class AssetReferenceBuilder with IsModifier<AssetReferenceBuilderContex
     return ModelBuilder(
       model: assetReference.assetMetadataModel,
       builder: (AssetMetadata assetMetadata) {
-        final context = AssetReferenceBuilderContext(assetReference: assetReference, assetMetadata: assetMetadata);
+        final assetReferenceContext =
+            AssetReferenceBuilderContext(assetReference: assetReference, assetMetadata: assetMetadata);
         return HookBuilder(
-          builder: (_) {
-            return getAssetReferenceBuilder(context)?.build(context, width, height, fit) ??
+          builder: (context) {
+            return getAssetReferenceBuilder(assetReferenceContext)
+                    ?.build(context, assetReferenceContext, width, height, fit) ??
                 (throw Exception('Could not find an AssetReferenceBuilder for ${{
                   'assetReference': assetReference,
                   'assetMetadata': assetMetadata,

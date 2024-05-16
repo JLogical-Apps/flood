@@ -3,6 +3,8 @@ import 'package:example_core/features/user/user_entity.dart';
 import 'package:flood_core/flood_core.dart';
 
 class Todo extends ValueObject {
+  static AssetProvider assetProvider = AssetProvider.static.memory;
+
   static const nameField = 'name';
   late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank();
 
@@ -21,6 +23,10 @@ class Todo extends ValueObject {
   static const userField = 'user';
   late final userProperty = reference<UserEntity>(name: userField).hidden().required();
 
+  static const assetsField = 'assets';
+  late final assetsProperty =
+      field<String>(name: assetsField).asset(assetProvider: assetProvider).list().withDisplayName('Assets');
+
   @override
   late final List<ValueObjectBehavior> behaviors = [
     nameProperty,
@@ -28,6 +34,7 @@ class Todo extends ValueObject {
     completedProperty,
     tagsProperty,
     userProperty,
+    assetsProperty,
     creationTime(),
   ];
 }
