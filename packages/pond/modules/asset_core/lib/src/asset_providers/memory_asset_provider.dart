@@ -24,7 +24,13 @@ class MemoryAssetProvider with IsAssetProvider {
   @override
   Future<Asset> upload(Asset asset) async {
     final assetX = _assetXById.putIfAbsent(asset.id, () => BehaviorSubject.seeded(FutureValue.empty()));
-    assetX.value = FutureValue.loaded(asset);
+    final newAsset = assetX.value.maybeWhen(
+      onLoaded: (asset) => asset.copyWith(
+        metadata: asset.metadata.withUpdatedAt(DateTime.now()),
+      ),
+      orElse: () => asset,
+    );
+    assetX.value = FutureValue.loaded(newAsset);
 
     return asset;
   }

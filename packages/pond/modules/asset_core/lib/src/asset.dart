@@ -30,8 +30,25 @@ class Asset extends Equatable {
     return Asset(
       id: assetId,
       value: value,
-      metadata: AssetMetadata(size: value.length, mimeType: mimeType),
+      metadata: AssetMetadata(
+        size: value.length,
+        mimeType: mimeType,
+        createdTime: DateTime.now(),
+        updatedTime: DateTime.now(),
+      ),
     );
+  }
+
+  Asset copyWith({String? id, Uint8List? value, AssetMetadata? metadata}) {
+    return Asset(
+      id: id ?? this.id,
+      value: value ?? this.value,
+      metadata: metadata ?? this.metadata,
+    );
+  }
+
+  Asset withMetadata(AssetMetadata metadata) {
+    return copyWith(metadata: metadata);
   }
 
   @override
