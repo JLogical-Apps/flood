@@ -22,6 +22,13 @@ class AssetMetadata extends Equatable {
     );
   }
 
+  AssetMetadata withCreatedAt(DateTime dateTime) {
+    return copyWith(
+      mimeType: mimeType,
+      createdTime: dateTime,
+    );
+  }
+
   AssetMetadata withUpdatedAt(DateTime dateTime) {
     return copyWith(
       mimeType: mimeType,
