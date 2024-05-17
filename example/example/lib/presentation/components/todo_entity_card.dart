@@ -37,8 +37,6 @@ class TodoEntityCard extends StatelessWidget {
                         child: AssetReferenceBuilder.buildAssetReference(
                           asset,
                           height: 100,
-                          width: 100,
-                          fit: BoxFit.cover,
                         ),
                       ))
                   .toList(),
