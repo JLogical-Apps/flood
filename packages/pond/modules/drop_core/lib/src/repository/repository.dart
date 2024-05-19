@@ -24,6 +24,7 @@ import 'package:drop_core/src/repository/type/with_embedded_type_repository.dart
 import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
+import 'package:environment_core/environment_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:runtime_type/type.dart';
 import 'package:rxdart/rxdart.dart';
@@ -149,8 +150,15 @@ extension RepositoryExtension on Repository {
     return CloudRepository(rootPath: rootPath, childRepository: this);
   }
 
-  Repository adapting(String rootPath) {
-    return AdaptingRepository(rootPath: rootPath, childRepository: this);
+  Repository adapting(
+    String rootPath, {
+    Repository Function(EnvironmentConfigCoreComponent config)? repositoryGetter,
+  }) {
+    return AdaptingRepository(
+      rootPath: rootPath,
+      childRepository: this,
+      repositoryGetter: repositoryGetter,
+    );
   }
 
   MemoryCacheRepository withMemoryCache() {
