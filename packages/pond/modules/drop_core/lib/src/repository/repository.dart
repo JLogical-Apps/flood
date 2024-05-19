@@ -8,6 +8,7 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/adapting_repository.dart';
 import 'package:drop_core/src/repository/cloud_repository.dart';
+import 'package:drop_core/src/repository/environmental_repository.dart';
 import 'package:drop_core/src/repository/file_repository.dart';
 import 'package:drop_core/src/repository/listener_repository.dart';
 import 'package:drop_core/src/repository/memory_cache_repository.dart';
@@ -150,12 +151,17 @@ extension RepositoryExtension on Repository {
     return CloudRepository(rootPath: rootPath, childRepository: this);
   }
 
-  Repository adapting(
-    String rootPath, {
-    Repository Function(EnvironmentConfigCoreComponent config)? repositoryGetter,
-  }) {
+  Repository adapting(String rootPath) {
     return AdaptingRepository(
       rootPath: rootPath,
+      childRepository: this,
+    );
+  }
+
+  Repository environmental(
+    Repository Function(Repository repository, EnvironmentConfigCoreComponent config) repositoryGetter,
+  ) {
+    return EnvironmentalRepository(
       childRepository: this,
       repositoryGetter: repositoryGetter,
     );
