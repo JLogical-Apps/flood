@@ -374,12 +374,12 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
 
   @override
   S submitRaw(T value) {
-    return submitRawMapper?.mapIfNonNull((mapper) => mapper(value)) ?? (value as S);
+    return submitRawMapper != null ? submitRawMapper!(value) : (value as S);
   }
 
   @override
   Future<S> submit(T value) async {
-    return submitMapper?.mapIfNonNull((mapper) async => await mapper(value)) ?? (value as S);
+    return submitMapper != null ? await submitMapper!(value) : (value as S);
   }
 
   @override
@@ -399,7 +399,7 @@ class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldV
 
   @override
   PortFieldValidatorContext createValidationContext() {
-    return PortFieldValidatorContext(value: submitRaw(value), port: port);
+    return PortFieldValidatorContext(value: value, port: port);
   }
 
   @override

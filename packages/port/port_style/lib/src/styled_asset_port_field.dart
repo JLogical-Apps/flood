@@ -86,6 +86,10 @@ class StyledAssetPortField<E, T> extends HookWidget {
                 ),
               ],
             ),
+            if (error != null)
+              Center(
+                child: StyledText.body.bold.error(error),
+              ),
           ],
         );
       },

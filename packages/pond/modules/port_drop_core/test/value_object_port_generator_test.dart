@@ -290,6 +290,21 @@ void main() {
     dataPort['asset'] = (dataPort['asset'] as AssetPortValue).withRemoved();
     expect((await dataPort.submit()).data.assetProperty.value, isNull);
   });
+
+  test('Port for required asset field.', () async {
+    corePondContext.locate<TypeCoreComponent>().register(Data15.new, name: 'Data15');
+
+    final data = Data15();
+    var dataPort = corePondContext.locate<PortDropCoreComponent>().generatePort(data);
+
+    expect((await dataPort.submit()).isValid, isFalse);
+
+    final assetValue = Uint8List.fromList([1, 2, 3]);
+
+    dataPort['asset'] = (dataPort['asset'] as AssetPortValue)
+        .withUpload(Asset.upload(path: 'image.png', value: assetValue, mimeType: 'image/png'));
+    expect((await dataPort.submit()).data.assetProperty.value, isA<AssetReference>());
+  });
 }
 
 class Data1 extends ValueObject {
@@ -439,6 +454,15 @@ class Data13 extends ValueObject {
 class Data14 extends ValueObject {
   static const assetField = 'asset';
   late final assetProperty = field<String>(name: assetField).asset(assetProvider: AssetProvider.static.memory);
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [assetProperty];
+}
+
+class Data15 extends ValueObject {
+  static const assetField = 'asset';
+  late final assetProperty =
+      field<String>(name: assetField).asset(assetProvider: AssetProvider.static.memory).required();
 
   @override
   List<ValueObjectBehavior> get behaviors => [assetProperty];

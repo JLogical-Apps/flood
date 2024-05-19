@@ -1,6 +1,7 @@
 import 'package:asset_core/asset_core.dart';
 import 'package:equatable/equatable.dart';
 import 'package:port_core/port_core.dart';
+import 'package:utils_core/utils_core.dart';
 
 class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReference?> {
   @override
@@ -15,6 +16,10 @@ class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReference?> {
   }) : portField = PortField(
           value: value,
           error: error,
+          submitRawMapper: (assetValue) {
+            final id = assetValue.uploadedAsset?.id ?? assetValue.initialValue?.id;
+            return id?.mapIfNonNull((id) => assetProvider.getById(id));
+          },
           submitMapper: (assetValue) async {
             if (assetValue.initialValue != null && (assetValue.uploadedAsset != null || assetValue.removed)) {
               await assetProvider.delete(assetValue.initialValue!.id);
