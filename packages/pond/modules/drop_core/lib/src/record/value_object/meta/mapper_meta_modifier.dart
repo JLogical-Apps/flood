@@ -3,9 +3,9 @@ import 'package:drop_core/drop_core.dart';
 
 class MapperMetaModifier extends BehaviorMetaModifier<MapperValueObjectProperty> {
   @override
-  AssetProvider? getAssetProvider(MapperValueObjectProperty behavior) {
+  AssetProvider? getAssetProvider(AssetCoreComponent context, MapperValueObjectProperty behavior) {
     final unwrappedBehavior = behavior.property;
-    return BehaviorMetaModifier.getModifier(unwrappedBehavior)?.getAssetProvider(unwrappedBehavior);
+    return BehaviorMetaModifier.getModifier(unwrappedBehavior)?.getAssetProvider(context, unwrappedBehavior);
   }
 
   @override

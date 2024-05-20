@@ -1,3 +1,4 @@
+import 'package:asset_core/asset_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:port_core/port_core.dart';
 import 'package:port_drop_core/port_drop_core.dart';
@@ -32,8 +33,10 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
             )..registerToPort(fieldPath, port);
           }
 
-          final assetProvider =
-              BehaviorMetaModifier.getModifier(behavior.property)?.getAssetProvider(behavior.property);
+          final assetProvider = BehaviorMetaModifier.getModifier(behavior.property)?.getAssetProvider(
+            context.corePondContext.assetCoreComponent,
+            behavior.property,
+          );
           if (assetProvider != null && value is! AssetPortValue) {
             value = AssetPortValue.initial(initialValue: value);
           }

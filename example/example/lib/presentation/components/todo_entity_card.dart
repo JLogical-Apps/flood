@@ -34,8 +34,8 @@ class TodoEntityCard extends StatelessWidget {
               children: todoEntity.value.assetsProperty.value
                   .map((asset) => StyledContainer.subtle(
                         onPressed: () {},
-                        child: AssetReferenceBuilder.buildAssetReference(
-                          asset,
+                        child: StyledAssetProperty(
+                          assetProperty: asset,
                           height: 100,
                         ),
                       ))

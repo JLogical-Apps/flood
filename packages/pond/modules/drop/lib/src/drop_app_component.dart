@@ -3,7 +3,6 @@ import 'package:drop/drop.dart';
 import 'package:drop/src/debug/drop_debug_component.dart';
 import 'package:drop/src/debug/drop_debug_page.dart';
 import 'package:drop/src/debug/drop_debug_repository_page.dart';
-import 'package:drop_core/drop_core.dart';
 import 'package:flutter/material.dart' hide Route;
 import 'package:model/model.dart';
 import 'package:pond/pond.dart';

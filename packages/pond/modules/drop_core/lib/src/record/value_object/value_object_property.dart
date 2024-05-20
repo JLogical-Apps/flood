@@ -210,7 +210,10 @@ extension NullableStringValueObjectPropertyExtensions<G extends String?, S exten
     return NullIfBlankValueObjectProperty<G, S>(property: this);
   }
 
-  AssetValueObjectProperty asset({required AssetProvider assetProvider, AllowedFileTypes? allowedFileTypes}) {
+  AssetValueObjectProperty asset({
+    required AssetProvider Function(AssetCoreComponent context) assetProvider,
+    AllowedFileTypes? allowedFileTypes,
+  }) {
     return AssetValueObjectProperty.fromId(
       assetProvider: assetProvider,
       idProperty: this,

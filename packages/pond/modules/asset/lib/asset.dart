@@ -6,3 +6,6 @@ export 'src/asset_reference_builders/asset_reference_builder.dart';
 export 'src/utils/file_picker_extensions.dart';
 export 'src/utils/platform_file_extensions.dart';
 export 'src/utils/xfile_extensions.dart';
+export 'src/widgets/styled_asset.dart';
+export 'src/widgets/styled_asset_reference.dart';
+export 'src/widgets/styled_asset_property.dart';

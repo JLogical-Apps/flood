@@ -11,7 +11,11 @@ class AssetPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModifier
     PortField sourcePortField,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    return PortField.asset(initialValue: behavior.value, assetProvider: behavior.assetProvider)
-        .withAllowedFileTypes(behavior.allowedFileTypes ?? AllowedFileTypes.any);
+    final assetProvider = behavior.assetProvider(context.corePondContext.assetCoreComponent);
+    final assetId = behavior.value?.id;
+    return PortField.asset(
+      initialValue: assetId == null ? null : assetProvider.getById(assetId),
+      assetProvider: assetProvider,
+    ).withAllowedFileTypes(behavior.allowedFileTypes ?? AllowedFileTypes.any);
   }
 }

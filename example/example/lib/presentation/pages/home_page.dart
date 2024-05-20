@@ -145,8 +145,8 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
           await context.showStyledDialog(StyledDialog.actionList(context: context, actions: actions));
         },
         child: user.profilePictureProperty.value != null
-            ? AssetReferenceBuilder.buildAssetReference(
-                user.profilePictureProperty.value!,
+            ? StyledAssetProperty(
+                assetProperty: user.profilePictureProperty.value!,
                 width: 35,
                 height: 35,
                 fit: BoxFit.cover,

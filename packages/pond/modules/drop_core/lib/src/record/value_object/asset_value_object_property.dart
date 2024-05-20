@@ -5,11 +5,11 @@ import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 
 class AssetValueObjectProperty
-    with IsValueObjectPropertyWrapper<AssetReference?, AssetReference?, AssetValueObjectProperty> {
+    with IsValueObjectPropertyWrapper<AssetReferenceGetter?, AssetReferenceGetter?, AssetValueObjectProperty> {
   @override
-  final ValueObjectProperty<AssetReference?, AssetReference?, dynamic> property;
+  final ValueObjectProperty<AssetReferenceGetter?, AssetReferenceGetter?, dynamic> property;
 
-  final AssetProvider assetProvider;
+  final AssetProvider Function(AssetCoreComponent context) assetProvider;
   final AllowedFileTypes? allowedFileTypes;
 
   AssetValueObjectProperty({
@@ -23,7 +23,12 @@ class AssetValueObjectProperty
     required this.assetProvider,
     this.allowedFileTypes,
   }) : property = idProperty.withMapper(
-          getMapper: (assetId) => assetId == null ? null : assetProvider.getById(assetId),
+          getMapper: (assetId) => assetId == null
+              ? null
+              : AssetReferenceGetter(
+                  id: assetId,
+                  assetProviderGetter: assetProvider,
+                ),
           setMapper: (assetReference) => assetReference?.id,
         );
 
@@ -31,8 +36,10 @@ class AssetValueObjectProperty
   void fromState(DropCoreContext context, State state) {
     final stateValue = state.data[property.name];
     if (stateValue is String) {
-      property.set(assetProvider.getById(stateValue));
+      property.set(AssetReferenceGetter(id: stateValue, assetProviderGetter: assetProvider));
     } else if (stateValue is AssetReference) {
+      property.set(AssetReferenceGetter(id: stateValue.id, assetProviderGetter: assetProvider));
+    } else if (stateValue is AssetReferenceGetter) {
       property.set(stateValue);
     } else if (stateValue != null) {
       throw Exception('Unknown asset value: [$stateValue]');
@@ -49,9 +56,19 @@ class AssetValueObjectProperty
   }
 }
 
-extension AssetValueObjectPropertyExtensions<G extends AssetReference?, S extends AssetReference?>
+class AssetReferenceGetter {
+  final String id;
+  final AssetProvider Function(AssetCoreComponent context) assetProviderGetter;
+
+  AssetReferenceGetter({required this.id, required this.assetProviderGetter});
+}
+
+extension AssetValueObjectPropertyExtensions<G extends AssetReferenceGetter?, S extends AssetReferenceGetter?>
     on ValueObjectProperty<G, S, dynamic> {
-  AssetProvider findAssetProvider() =>
-      BehaviorMetaModifier.getModifier(this)?.getAssetProvider(this) ??
+  AssetProvider findAssetProvider(AssetCoreComponent context) =>
+      BehaviorMetaModifier.getModifier(this)?.getAssetProvider(context, this) ??
       (throw Exception('Could not find asset provider for field [$this]'));
+
+  AssetReference? getAssetReference(AssetCoreComponent context) =>
+      value == null ? null : findAssetProvider(context).getById(value!.id);
 }

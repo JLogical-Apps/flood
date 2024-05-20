@@ -16,6 +16,7 @@ void main() {
     corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
     await corePondContext.register(DropCoreComponent());
+    await corePondContext.register(AssetCoreComponent(assetProviders: []));
     await corePondContext.register(PortDropCoreComponent());
   });
 
@@ -280,12 +281,15 @@ void main() {
 
     dataPort['asset'] = (dataPort['asset'] as AssetPortValue)
         .withUpload(Asset.upload(path: 'image.png', value: assetValue, mimeType: 'image/png'));
-    expect((await dataPort.submit()).data.assetProperty.value, isA<AssetReference>());
+    expect((await dataPort.submit()).data.assetProperty.value, isA<AssetReferenceGetter>());
 
-    data.assetProperty.set(AssetProvider.static.memory.getById('someId'));
+    data.assetProperty.set(AssetReferenceGetter(
+      id: 'someId',
+      assetProviderGetter: (context) => AssetProvider.static.memory,
+    ));
     dataPort = corePondContext.locate<PortDropCoreComponent>().generatePort(data);
 
-    expect((await dataPort.submit()).data.assetProperty.value, isA<AssetReference>());
+    expect((await dataPort.submit()).data.assetProperty.value, isA<AssetReferenceGetter>());
 
     dataPort['asset'] = (dataPort['asset'] as AssetPortValue).withRemoved();
     expect((await dataPort.submit()).data.assetProperty.value, isNull);
@@ -303,7 +307,7 @@ void main() {
 
     dataPort['asset'] = (dataPort['asset'] as AssetPortValue)
         .withUpload(Asset.upload(path: 'image.png', value: assetValue, mimeType: 'image/png'));
-    expect((await dataPort.submit()).data.assetProperty.value, isA<AssetReference>());
+    expect((await dataPort.submit()).data.assetProperty.value, isA<AssetReferenceGetter>());
   });
 }
 
@@ -453,7 +457,8 @@ class Data13 extends ValueObject {
 
 class Data14 extends ValueObject {
   static const assetField = 'asset';
-  late final assetProperty = field<String>(name: assetField).asset(assetProvider: AssetProvider.static.memory);
+  late final assetProperty =
+      field<String>(name: assetField).asset(assetProvider: (context) => AssetProvider.static.memory);
 
   @override
   List<ValueObjectBehavior> get behaviors => [assetProperty];
@@ -462,7 +467,7 @@ class Data14 extends ValueObject {
 class Data15 extends ValueObject {
   static const assetField = 'asset';
   late final assetProperty =
-      field<String>(name: assetField).asset(assetProvider: AssetProvider.static.memory).required();
+      field<String>(name: assetField).asset(assetProvider: (context) => AssetProvider.static.memory).required();
 
   @override
   List<ValueObjectBehavior> get behaviors => [assetProperty];

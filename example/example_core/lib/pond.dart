@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:example_core/features/public_settings/public_settings_repository.dart';
 import 'package:example_core/features/tag/tag_repository.dart';
+import 'package:example_core/features/todo/todo.dart';
 import 'package:example_core/features/todo/todo_repository.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
@@ -51,7 +52,7 @@ Future<CorePondContext> getCorePondContext({
   ));
 
   await corePondContext.register(AssetCoreComponent(
-    assetProviders: [User.profilePictureAssetProvider],
+    assetProviders: [TodoAssetProvider(), UserProfilePictureAssetProvider()],
   ));
 
   await corePondContext.register(UserRepository());

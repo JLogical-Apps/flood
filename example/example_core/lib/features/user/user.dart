@@ -1,8 +1,6 @@
 import 'package:flood_core/flood_core.dart';
 
 class User extends ValueObject {
-  static AssetProvider profilePictureAssetProvider = AssetProvider.static.memory;
-
   static const nameField = 'name';
   late final nameProperty = field<String>(name: nameField).withDisplayName('Name').isNotBlank().isName();
 
@@ -14,7 +12,10 @@ class User extends ValueObject {
 
   static const profilePictureField = 'profilePicture';
   late final profilePictureProperty = field<String>(name: profilePictureField)
-      .asset(assetProvider: profilePictureAssetProvider, allowedFileTypes: AllowedFileTypes.image)
+      .asset(
+        assetProvider: (context) => context.locate<UserProfilePictureAssetProvider>(),
+        allowedFileTypes: AllowedFileTypes.image,
+      )
       .withDisplayName('Profile Picture');
 
   @override
@@ -25,4 +26,9 @@ class User extends ValueObject {
     profilePictureProperty,
     creationTime(),
   ];
+}
+
+class UserProfilePictureAssetProvider with IsAssetProviderWrapper {
+  @override
+  late final AssetProvider assetProvider = AssetProvider.static.memory;
 }

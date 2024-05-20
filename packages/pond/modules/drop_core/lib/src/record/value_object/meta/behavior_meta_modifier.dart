@@ -10,7 +10,7 @@ import 'package:drop_core/src/record/value_object/meta/required_on_edit_meta_mod
 import 'package:utils_core/utils_core.dart';
 
 abstract class BehaviorMetaModifier<T extends ValueObjectBehavior> with IsTypedModifier<T, ValueObjectBehavior> {
-  AssetProvider? getAssetProvider(T behavior) {
+  AssetProvider? getAssetProvider(AssetCoreComponent context, T behavior) {
     return null;
   }
 
@@ -47,9 +47,9 @@ abstract class BehaviorMetaModifier<T extends ValueObjectBehavior> with IsTypedM
 
 class WrapperBehaviorMetaModifier<T extends ValueObjectPropertyWrapper> extends BehaviorMetaModifier<T> {
   @override
-  AssetProvider? getAssetProvider(T behavior) {
+  AssetProvider? getAssetProvider(AssetCoreComponent context, T behavior) {
     final unwrappedBehavior = behavior.property;
-    return BehaviorMetaModifier.getModifier(unwrappedBehavior)?.getAssetProvider(unwrappedBehavior);
+    return BehaviorMetaModifier.getModifier(unwrappedBehavior)?.getAssetProvider(context, unwrappedBehavior);
   }
 
   @override

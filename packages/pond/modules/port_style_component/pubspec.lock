@@ -212,6 +212,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.14"
+  drop:
+    dependency: "direct overridden"
+    description:
+      path: "../drop"
+      relative: true
+    source: path
+    version: "0.0.1"
   drop_core:
     dependency: "direct main"
     description:
@@ -837,6 +844,13 @@ packages:
     dependency: "direct overridden"
     description:
       path: "../../../port/port_core"
+      relative: true
+    source: path
+    version: "0.0.1"
+  port_drop_core:
+    dependency: "direct overridden"
+    description:
+      path: "../port_drop_core"
       relative: true
     source: path
     version: "0.0.1"
