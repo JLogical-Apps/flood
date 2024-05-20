@@ -40,6 +40,10 @@ class QueryWhereBuilder<E extends Entity> {
     return query.whereCondition(QueryCondition.field(stateField).contains(value));
   }
 
+  Query<E> containsAny(List values) {
+    return query.whereCondition(QueryCondition.field(stateField).containsAny(values));
+  }
+
   Query<E> isIn(List values) {
     return query.whereCondition(QueryCondition.field(stateField).isIn(values));
   }

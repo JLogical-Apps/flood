@@ -1,6 +1,7 @@
 export 'src/context/core_pond_context_extensions.dart';
 export 'src/context/drop_core_context.dart';
 export 'src/drop_core_component.dart';
+export 'src/query/condition/contains_any_query_condition.dart';
 export 'src/query/condition/contains_query_condition.dart';
 export 'src/query/condition/equals_query_condition.dart';
 export 'src/query/condition/is_greater_than_or_equal_to_query_condition.dart';

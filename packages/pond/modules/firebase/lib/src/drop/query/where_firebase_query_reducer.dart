@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' as firebase;
 import 'package:drop_core/drop_core.dart';
+import 'package:firebase/src/drop/condition/contains_any_firebase_query_condition_reducer.dart';
 import 'package:firebase/src/drop/condition/contains_firebase_query_condition_reducer.dart';
 import 'package:firebase/src/drop/condition/equals_firebase_query_condition_reducer.dart';
 import 'package:firebase/src/drop/condition/firebase_query_condition_reducer.dart';
@@ -17,6 +18,7 @@ class WhereFirebaseQueryReducer extends FirebaseQueryReducer<WhereQuery> {
   ModifierResolver<FirebaseQueryConditionReducer, QueryCondition> getQueryConditionReducerResolver() =>
       ModifierResolver(modifiers: [
         ContainsFirebaseQueryConditionReducer(),
+        ContainsAnyFirebaseQueryConditionReducer(),
         IsInFirebaseQueryConditionReducer(),
         EqualsFirebaseQueryConditionReducer(),
         IsGreaterThanOrEqualToFirebaseQueryConditionReducer(),

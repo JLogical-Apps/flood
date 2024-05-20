@@ -1,3 +1,4 @@
+import 'package:drop_core/src/query/condition/contains_any_query_condition.dart';
 import 'package:drop_core/src/query/condition/contains_query_condition.dart';
 import 'package:drop_core/src/query/condition/equals_query_condition.dart';
 import 'package:drop_core/src/query/condition/is_greater_than_or_equal_to_query_condition.dart';
@@ -43,6 +44,10 @@ class QueryConditionBuilder {
 
   ContainsQueryCondition contains(dynamic value) {
     return ContainsQueryCondition(stateField: stateField, value: value);
+  }
+
+  ContainsAnyQueryCondition containsAny(List values) {
+    return ContainsAnyQueryCondition(stateField: stateField, values: values);
   }
 
   IsInQueryCondition isIn(List values) {

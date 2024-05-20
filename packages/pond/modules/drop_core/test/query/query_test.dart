@@ -101,7 +101,7 @@ void main() {
     expect(johnUserEntity?.value, users[1]);
   });
 
-  test('query where equals', () async {
+  test('query where contains', () async {
     final repository = Repository.forType<UserEntity, User>(
       UserEntity.new,
       User.new,
@@ -139,6 +139,49 @@ void main() {
     expect(containsC.map((user) => user.value.nameProperty.value), ['John']);
 
     final containsD = await repository.executeQuery(Query.from<UserEntity>().where('items').contains('d').all());
+    expect(containsD, []);
+  });
+
+  test('query where contains any', () async {
+    final repository = Repository.forType<UserEntity, User>(
+      UserEntity.new,
+      User.new,
+      entityTypeName: 'UserEntity',
+      valueObjectTypeName: 'User',
+    ).memory();
+
+    final users = [
+      User()
+        ..nameProperty.set('Jake')
+        ..emailProperty.set('jake@jake.com')
+        ..itemsProperty.set(['a', 'b']),
+      User()
+        ..nameProperty.set('John')
+        ..emailProperty.set('john@doe.com')
+        ..itemsProperty.set(['b', 'c']),
+    ];
+
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
+
+    for (final user in users) {
+      await repository.update(UserEntity()..value = user);
+    }
+
+    final containsA =
+        await repository.executeQuery(Query.from<UserEntity>().where('items').containsAny(['a', 'c']).all());
+    expect(containsA.map((user) => user.value.nameProperty.value), ['Jake', 'John']);
+
+    final containsB =
+        await repository.executeQuery(Query.from<UserEntity>().where('items').containsAny(['b', 'd']).all());
+    expect(containsB.map((user) => user.value.nameProperty.value), ['Jake', 'John']);
+
+    final containsC = await repository.executeQuery(Query.from<UserEntity>().where('items').containsAny(['a']).all());
+    expect(containsC.map((user) => user.value.nameProperty.value), ['Jake']);
+
+    final containsD = await repository.executeQuery(Query.from<UserEntity>().where('items').containsAny([]).all());
     expect(containsD, []);
   });
 

@@ -295,7 +295,7 @@ void main() {
     corePondContext.locate<TypeCoreComponent>().register(Data15.new, name: 'Data15');
 
     final data = Data15();
-    var dataPort = corePondContext.locate<PortDropCoreComponent>().generatePort(data);
+    final dataPort = corePondContext.locate<PortDropCoreComponent>().generatePort(data);
 
     expect((await dataPort.submit()).isValid, isFalse);
 

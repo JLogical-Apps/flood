@@ -1,5 +1,6 @@
 import 'package:drop_core/src/query/condition/query_condition.dart';
 import 'package:drop_core/src/query/where_query.dart';
+import 'package:drop_core/src/repository/query_executor/condition/contains_any_state_query_condition_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/condition/contains_state_query_condition_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/condition/equals_state_query_condition_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/condition/is_greater_than_or_equal_to_state_query_condition_reducer.dart';
@@ -18,6 +19,7 @@ class WhereStateQueryReducer extends StateQueryReducer<WhereQuery> {
   ModifierResolver<StateQueryConditionReducer, QueryCondition> getQueryReducerResolver() =>
       ModifierResolver(modifiers: [
         ContainsStateQueryConditionReducer(),
+        ContainsAnyStateQueryConditionReducer(),
         IsInStateQueryConditionReducer(),
         EqualsStateQueryConditionReducer(),
         IsGreaterThanStateQueryConditionReducer(),
