@@ -29,6 +29,10 @@ class User extends ValueObject {
 }
 
 class UserProfilePictureAssetProvider with IsAssetProviderWrapper {
+  final AssetCoreComponent context;
+
+  UserProfilePictureAssetProvider(this.context);
+
   @override
-  late final AssetProvider assetProvider = AssetProvider.static.memory;
+  late final AssetProvider assetProvider = AssetProvider.static.adapting(context, 'profilePictures');
 }

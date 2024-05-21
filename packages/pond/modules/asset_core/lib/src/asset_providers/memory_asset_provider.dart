@@ -17,12 +17,12 @@ class MemoryAssetProvider with IsAssetProvider {
   }
 
   @override
-  Future<List<AssetReference>> listReferences() async {
-    return _assetXById.keys.map(getById).toList();
+  Future<List<String>> onListIds() async {
+    return _assetXById.keys.toList();
   }
 
   @override
-  Future<Asset> upload(Asset asset) async {
+  Future<Asset> onUpload(Asset asset) async {
     final assetX = _assetXById.putIfAbsent(asset.id, () => BehaviorSubject.seeded(FutureValue.empty()));
     final newAsset = assetX.value.maybeWhen(
       onLoaded: (existingAsset) => asset.copyWith(
@@ -36,7 +36,7 @@ class MemoryAssetProvider with IsAssetProvider {
   }
 
   @override
-  Future<void> delete(String id) async {
+  Future<void> onDelete(String id) async {
     _assetXById[id]?.value = FutureValue.empty();
     _assetXById.remove(id);
   }

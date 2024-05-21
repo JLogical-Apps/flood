@@ -112,28 +112,27 @@ class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
                       ));
                     },
                   ),
-                if (fileContents != null)
-                  StyledMenuButton(
-                    actions: [
-                      ActionItem(
-                        titleText: 'Delete',
-                        descriptionText: 'Delete this file.',
-                        iconData: Icons.delete,
-                        color: Colors.red,
-                        onPerform: (context) async {
-                          await context.showStyledDialog(StyledDialog.yesNo(
-                            titleText: 'Confirm Delete',
-                            bodyText: 'Are you sure you want to delete this file? This cannot be undone.',
-                            onAccept: () async {
-                              final file = rootDirectoryState.value.getDirectory(context) - pathState.value;
-                              await file.delete();
-                              pathState.value = dirname(pathState.value);
-                            },
-                          ));
-                        },
-                      ),
-                    ],
-                  ),
+                StyledMenuButton(
+                  actions: [
+                    ActionItem(
+                      titleText: 'Delete',
+                      descriptionText: 'Delete this file.',
+                      iconData: Icons.delete,
+                      color: Colors.red,
+                      onPerform: (context) async {
+                        await context.showStyledDialog(StyledDialog.yesNo(
+                          titleText: 'Confirm Delete',
+                          bodyText: 'Are you sure you want to delete this file? This cannot be undone.',
+                          onAccept: () async {
+                            final file = rootDirectoryState.value.getDirectory(context) - pathState.value;
+                            await file.delete();
+                            pathState.value = dirname(pathState.value);
+                          },
+                        ));
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           files == null && fileContents == null

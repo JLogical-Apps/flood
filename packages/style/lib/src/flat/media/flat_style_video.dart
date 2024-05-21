@@ -1,8 +1,12 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:style/src/components/layout/styled_container.dart';
+import 'package:style/src/components/media/styled_video.dart';
+import 'package:style/src/components/misc/styled_loading_indicator.dart';
 import 'package:style/src/style_renderer.dart';
-import 'package:style/style.dart';
+import 'package:style/src/styleguide.dart';
+import 'package:video_player/video_player.dart';
 
 class FlatStyleVideoRenderer with IsTypedStyleRenderer<StyledVideo> {
   @override

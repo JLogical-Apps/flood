@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
+import 'package:model_core/model_core.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:persistence_core/src/data_source/base64_data_source.dart';
 import 'package:persistence_core/src/data_source/cache_data_source.dart';
@@ -73,6 +74,14 @@ extension DataSourceExtension<T> on DataSource<T> {
 
   Future<T> get() async {
     return (await getOrNull()) ?? (throw Exception('Could not get data for [$this]'));
+  }
+
+  Model<T> asModel() {
+    return Model(loader: () async => await get());
+  }
+
+  Model<T?> asNullableModel() {
+    return Model(loader: () => getOrNull());
   }
 
   Future<T> update(T Function(T? existingData) newDataGetter) async {

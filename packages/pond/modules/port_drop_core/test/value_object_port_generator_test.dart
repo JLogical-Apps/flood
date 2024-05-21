@@ -16,7 +16,7 @@ void main() {
     corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
     await corePondContext.register(DropCoreComponent());
-    await corePondContext.register(AssetCoreComponent(assetProviders: []));
+    await corePondContext.register(AssetCoreComponent(assetProviders: (_) => []));
     await corePondContext.register(PortDropCoreComponent());
   });
 

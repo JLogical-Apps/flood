@@ -13,7 +13,8 @@ abstract class Model<T> {
 
   Future<void> onLoad();
 
-  factory Model({required FutureOr<T> Function() loader}) => _ModelImpl(loader: loader);
+  factory Model({required FutureOr<T> Function() loader, FutureValue<T>? initialValue}) =>
+      _ModelImpl(loader: loader, initialValue: initialValue);
 
   factory Model.value(T value) => _ModelImpl(loader: () => value);
 
@@ -56,7 +57,11 @@ extension ModelExtensions<T> on Model<T> {
       throw (state as ErrorFutureValue<T>).error;
     }
 
-    return state.as<LoadedFutureValue<T>>()?.data ?? (throw Exception('Could not load this model! Value is: [$state]'));
+    if (state is! LoadedFutureValue<T>) {
+      throw Exception('Could not load this model! Value is: [$state]');
+    }
+
+    return (state as LoadedFutureValue<T>).data;
   }
 
   Model<R> map<R>(R Function(T value) mapper) {
@@ -77,15 +82,25 @@ mixin IsModel<T> implements Model<T> {}
 class _ModelImpl<T> with IsModel<T> {
   final FutureOr<T> Function() loader;
 
-  final BehaviorSubject<FutureValue<T>> _statesSubject = BehaviorSubject.seeded(FutureValue.empty<T>());
+  final BehaviorSubject<FutureValue<T>> _statesSubject;
 
   @override
   ValueStream<FutureValue<T>> get stateX => _statesSubject;
 
-  _ModelImpl({required this.loader});
+  Completer? _completer;
+
+  _ModelImpl({required this.loader, FutureValue<T>? initialValue})
+      : _statesSubject = BehaviorSubject.seeded(initialValue ?? FutureValue.empty<T>());
 
   @override
   Future<void> onLoad() async {
+    if (_completer != null) {
+      await _completer!.future;
+      return;
+    }
+
+    _completer = Completer();
+
     if (state.isEmpty || state.isError) {
       _statesSubject.value = FutureValue.loading();
     }
@@ -96,6 +111,9 @@ class _ModelImpl<T> with IsModel<T> {
     } catch (e, stacktrace) {
       _statesSubject.value = FutureValue.error(e, stacktrace);
     }
+
+    _completer!.complete();
+    _completer = null;
   }
 }
 

@@ -7,9 +7,11 @@ import 'package:utils_core/utils_core.dart';
 
 void main() {
   test('asset provider of property', () async {
-    final assetCoreComponent = AssetCoreComponent(assetProviders: [
-      TestAssetProvider(),
-    ]);
+    final assetCoreComponent = AssetCoreComponent(
+      assetProviders: (_) => [
+        TestAssetProvider(),
+      ],
+    );
     final corePondContext = CorePondContext();
     await corePondContext.register(assetCoreComponent);
 

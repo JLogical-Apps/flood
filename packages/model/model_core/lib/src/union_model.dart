@@ -14,8 +14,7 @@ class UnionModel with IsModel<List> {
   Future<void> onLoad() async {
     await Future.wait(models.map((model) => model.load()));
 
-    // Allow enough time for the combinedLatestWithValue to refresh its value.
-    await Future(() {});
+    await stateX.first;
   }
 
   @override
