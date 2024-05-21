@@ -56,13 +56,6 @@ class AssetValueObjectProperty
   }
 }
 
-class AssetReferenceGetter {
-  final String id;
-  final AssetProvider Function(AssetCoreComponent context) assetProviderGetter;
-
-  AssetReferenceGetter({required this.id, required this.assetProviderGetter});
-}
-
 extension AssetValueObjectPropertyExtensions<G extends AssetReferenceGetter?, S extends AssetReferenceGetter?>
     on ValueObjectProperty<G, S, dynamic> {
   AssetProvider findAssetProvider(AssetCoreComponent context) =>

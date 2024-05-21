@@ -49,6 +49,10 @@ extension AssetProviderExtensions on AssetProvider {
   AssetProvider withCache() {
     return CacheAssetProvider(assetProvider: this);
   }
+
+  AssetReferenceGetter getterById(String id) {
+    return AssetReferenceGetter(id: id, assetProviderGetter: (_) => this);
+  }
 }
 
 abstract class AssetProviderWrapper implements AssetProvider {
