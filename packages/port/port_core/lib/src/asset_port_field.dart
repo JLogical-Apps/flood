@@ -3,9 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:port_core/port_core.dart';
 import 'package:utils_core/utils_core.dart';
 
-class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReference?> {
+class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReferenceGetter?> {
   @override
-  final PortField<AssetPortValue, AssetReference?> portField;
+  final PortField<AssetPortValue, AssetReferenceGetter?> portField;
 
   final AssetProvider assetProvider;
 
@@ -18,7 +18,7 @@ class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReference?> {
           error: error,
           submitRawMapper: (assetValue) {
             final id = assetValue.uploadedAsset?.id ?? assetValue.initialValue?.id;
-            return id?.mapIfNonNull((id) => assetProvider.getById(id));
+            return id?.mapIfNonNull((id) => assetProvider.getterById(id));
           },
           submitMapper: (assetValue) async {
             if (assetValue.initialValue != null && (assetValue.uploadedAsset != null || assetValue.removed)) {
@@ -26,11 +26,12 @@ class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReference?> {
             }
             if (assetValue.uploadedAsset != null) {
               final asset = await assetProvider.upload(assetValue.uploadedAsset!);
-              return assetProvider.getById(asset.id);
+              return assetProvider.getterById(asset.id);
             } else if (assetValue.removed) {
               return null;
             } else {
-              return assetValue.initialValue;
+              return assetValue.initialValue
+                  ?.mapIfNonNull((assetReference) => assetProvider.getterById(assetReference.id));
             }
           },
         );

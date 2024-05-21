@@ -32,12 +32,48 @@ class ListValueObjectProperty<T> with IsValueObjectProperty<List<T>, List<T>, Li
 
   @override
   void fromState(DropCoreContext context, State state) {
-    value = (state[name] as List?)?.cast<T>() ?? [];
+    value = (state[name] as List?)
+            ?.map((item) {
+              final itemProperty = property.copy() as ValueObjectProperty<T?, T?, ValueObjectProperty>;
+              final itemState = State(data: {name: item});
+              itemProperty.fromState(context, itemState);
+              return itemProperty.value;
+            })
+            .whereNonNull()
+            .toList() ??
+        [];
   }
 
   @override
   State modifyState(DropCoreContext context, State state) {
-    return state.withData(state.data.copy()..set(name, value));
+    return state.withData(state.data.copy()
+      ..set(
+        name,
+        value.map((item) {
+          final itemProperty = property.copy() as ValueObjectProperty<T?, T?, ValueObjectProperty>;
+          itemProperty.set(item);
+
+          var emulatedState = State(data: {});
+          emulatedState = itemProperty.modifyState(context, emulatedState);
+          return emulatedState.data[name];
+        }).toList(),
+      ));
+  }
+
+  @override
+  Future<State> modifyStateForRepository(DropCoreContext context, State state) async {
+    return state.withData(state.data.copy()
+      ..set(
+        name,
+        await Future.wait(value.map((item) async {
+          final itemProperty = property.copy() as ValueObjectProperty<T?, T?, ValueObjectProperty>;
+          itemProperty.set(item);
+
+          var emulatedState = State(data: {name: item});
+          emulatedState = await itemProperty.modifyStateForRepository(context, emulatedState);
+          return emulatedState.data[name];
+        }).toList()),
+      ));
   }
 
   @override

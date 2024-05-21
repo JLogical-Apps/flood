@@ -20,7 +20,7 @@ class StyledTodoPortOverride with IsStyledObjectPortOverride<Todo> {
                   fieldPath: Todo.tagsField,
                   label: StyledList.row(
                     children: [
-                      Expanded(child: StyledText.lg.bold.display('Tags')),
+                      Expanded(child: StyledText.body.bold.display('Tags')),
                       if (loggedInUserId != null)
                         StyledButton.strong(
                           labelText: 'Create Tag',

@@ -38,7 +38,15 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
             behavior.property,
           );
           if (assetProvider != null && value is! AssetPortValue) {
-            value = AssetPortValue.initial(initialValue: value);
+            final id = switch (value) {
+              String() => value,
+              AssetReference() => value.id,
+              AssetReferenceGetter() => value.id,
+              _ => null,
+            };
+            value = AssetPortValue.initial(
+              initialValue: id == null ? null : assetProvider.getById(id),
+            );
           }
 
           final itemPortModifier = PortDropCoreComponent.getBehaviorModifier(behavior.property) ??

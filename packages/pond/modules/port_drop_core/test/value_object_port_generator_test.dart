@@ -274,7 +274,7 @@ void main() {
     final data = Data14();
     var dataPort = corePondContext.locate<PortDropCoreComponent>().generatePort(data);
 
-    expect(dataPort.getFieldByPath('asset'), isA<PortField<AssetPortValue, AssetReference?>>());
+    expect(dataPort.getFieldByPath('asset'), isA<PortField<AssetPortValue, AssetReferenceGetter?>>());
     expect((await dataPort.submit()).data.assetProperty.value, isNull);
 
     final assetValue = Uint8List.fromList([1, 2, 3]);
