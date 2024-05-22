@@ -13,6 +13,8 @@ class FileAssetProvider with IsAssetProvider {
   final AssetCoreComponent context;
   final String path;
 
+  final Map<String, Model<List<int>>> _bytesModelById = {};
+
   FileAssetProvider({required this.context, required this.path});
 
   Directory get directory => context.context.environmentCoreComponent.fileSystem.storageIoDirectory! / 'assets' / path;
@@ -20,7 +22,7 @@ class FileAssetProvider with IsAssetProvider {
   @override
   AssetReference getById(String id) {
     final fileModel = DataSource.static.directory(directory).asModel().map((directory) => directory - id);
-    final bytesModel = DataSource.static.rawFile(directory - id).asModel();
+    final bytesModel = _bytesModelById.putIfAbsent(id, () => DataSource.static.rawFile(directory - id).asModel());
     final metadataModel = Model.union([fileModel, bytesModel]).map((List results) {
       final [File file, List<int> bytes] = results;
       return AssetMetadata(
@@ -49,6 +51,7 @@ class FileAssetProvider with IsAssetProvider {
   @override
   Future<Asset> onUpload(Asset asset) async {
     await DataSource.static.rawFile(directory - asset.id).set(asset.value);
+    _bytesModelById[asset.id]?.load();
     return asset;
   }
 
