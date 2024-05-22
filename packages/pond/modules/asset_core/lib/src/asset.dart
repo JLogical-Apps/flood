@@ -20,7 +20,7 @@ class Asset extends Equatable {
 
   factory Asset.upload({required String path, required Uint8List value, String? mimeType}) {
     mimeType ??= lookupMimeType(path, headerBytes: value.take(defaultMagicNumbersMaxLength).toList()) ??
-        (throw Exception('Could not determine mime type for [$path]'));
+        'application/octet-stream';
     final assetExtension = extension(path).nullIfBlank ??
         (extensionFromMime(mimeType) == mimeType
             ? (throw Exception('Could not determine extension for [$path]'))

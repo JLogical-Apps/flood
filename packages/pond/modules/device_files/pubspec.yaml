@@ -17,6 +17,11 @@ dependencies:
   intersperse: ^2.0.0
   path: ^1.8.2
 
+  asset:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/pond/modules/asset
   debug:
     git:
       url: git@github.com:JLogical-Apps/flood.git
@@ -52,6 +57,11 @@ dependencies:
       url: git@github.com:JLogical-Apps/flood.git
       ref: "v4.1"
       path: packages/port/port_style
+  share:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/pond/modules/share
   style:
     git:
       url: git@github.com:JLogical-Apps/flood.git

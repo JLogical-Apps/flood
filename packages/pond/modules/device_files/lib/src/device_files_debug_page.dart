@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:asset/asset.dart';
 import 'package:collection/collection.dart';
 import 'package:debug/debug.dart';
 import 'package:environment/environment.dart';
@@ -44,17 +47,29 @@ class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
     );
     final files = filesModel.getOrNull();
 
-    final fileContentsModel = useFutureModel(
+    final fileModel = useFutureModel(
       () async {
         final file = rootDirectoryState.value.getDirectory(context) - pathState.value;
         if (!await file.exists()) {
           return null;
         }
-        return file.readAsString();
+        return file;
       },
       [pathState.value],
     );
-    final fileContents = fileContentsModel.getOrNull();
+    final file = fileModel.getOrNull();
+
+    final fileStringContentsModel = useFutureModel(
+      () async => await file?.readAsString(),
+      [file],
+    );
+    final fileStringContents = fileStringContentsModel.getOrNull();
+
+    final fileRawContentsModel = useFutureModel(
+      () async => await file?.read(),
+      [file],
+    );
+    final fileRawContents = fileRawContentsModel.getOrNull();
 
     return StyledPage(
       titleText: 'Device Files',
@@ -91,7 +106,7 @@ class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
                   onPressed: () => pathState.value = '.',
                 ),
                 Expanded(child: Container()),
-                if (fileContents != null)
+                if (fileStringContents != null)
                   StyledChip(
                     backgroundColor: Colors.orange,
                     labelText: 'Edit',
@@ -99,7 +114,7 @@ class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
                     onPressed: () async {
                       final port = Port.of({
                         'contents':
-                            PortField.string(initialValue: fileContents).withDisplayName('Contents').multiline(),
+                            PortField.string(initialValue: fileStringContents).withDisplayName('Contents').multiline(),
                       }).map((data, port) => port['contents'] as String);
                       await context.showStyledDialog(StyledPortDialog(
                         port: port,
@@ -107,35 +122,36 @@ class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
                         onAccept: (contents) async {
                           final file = rootDirectoryState.value.getDirectory(context) - pathState.value;
                           await file.writeAsString(contents);
-                          await fileContentsModel.load();
+                          await fileStringContentsModel.load();
                         },
                       ));
                     },
                   ),
-                StyledMenuButton(
-                  actions: [
-                    ActionItem(
-                      titleText: 'Delete',
-                      descriptionText: 'Delete this file.',
-                      iconData: Icons.delete,
-                      color: Colors.red,
-                      onPerform: (context) async {
-                        await context.showStyledDialog(StyledDialog.yesNo(
-                          titleText: 'Confirm Delete',
-                          bodyText: 'Are you sure you want to delete this file? This cannot be undone.',
-                          onAccept: () async {
-                            final file = rootDirectoryState.value.getDirectory(context) - pathState.value;
-                            await file.delete();
-                            pathState.value = dirname(pathState.value);
-                          },
-                        ));
-                      },
-                    ),
-                  ],
-                ),
+                if (file != null)
+                  StyledMenuButton(
+                    actions: [
+                      ActionItem(
+                        titleText: 'Delete',
+                        descriptionText: 'Delete this file.',
+                        iconData: Icons.delete,
+                        color: Colors.red,
+                        onPerform: (context) async {
+                          await context.showStyledDialog(StyledDialog.yesNo(
+                            titleText: 'Confirm Delete',
+                            bodyText: 'Are you sure you want to delete this file? This cannot be undone.',
+                            onAccept: () async {
+                              final file = rootDirectoryState.value.getDirectory(context) - pathState.value;
+                              await file.delete();
+                              pathState.value = dirname(pathState.value);
+                            },
+                          ));
+                        },
+                      ),
+                    ],
+                  ),
               ],
             ),
-          files == null && fileContents == null
+          files == null && fileStringContents == null && fileRawContents == null
               ? StyledLoadingIndicator()
               : files != null
                   ? directoryView(
@@ -145,14 +161,38 @@ class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
                       files: files,
                       onUpdatePath: (path) => pathState.value = path,
                     )
-                  : fileView(fileContents: fileContents!),
+                  : fileView(
+                      fileStringContents: fileStringContents,
+                      fileRawContents: fileRawContents,
+                      file: file!,
+                    ),
         ],
       ),
     );
   }
 
-  Widget fileView({required String fileContents}) {
-    return StyledText.body(fileContents);
+  Widget fileView({
+    required String? fileStringContents,
+    required Uint8List? fileRawContents,
+    required CrossFile file,
+  }) {
+    if (fileStringContents != null) {
+      return StyledText.body(fileStringContents);
+    }
+    if (fileRawContents != null) {
+      final asset = Asset.upload(
+        value: fileRawContents,
+        path: file.path,
+      );
+      final assetBuilder = AssetBuilder.getAssetBuilder(asset);
+      if (assetBuilder == null) {
+        return StyledText.body.centered.error('File type is not recognized');
+      }
+
+      return StyledAsset(asset: asset);
+    }
+
+    throw Exception();
   }
 
   Widget directoryView(

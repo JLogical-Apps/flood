@@ -15,7 +15,7 @@ class FileAssetProvider with IsAssetProvider {
 
   FileAssetProvider({required this.context, required this.path});
 
-  Directory get directory => context.context.environmentCoreComponent.fileSystem.storageIoDirectory! / 'assets';
+  Directory get directory => context.context.environmentCoreComponent.fileSystem.storageIoDirectory! / 'assets' / path;
 
   @override
   AssetReference getById(String id) {

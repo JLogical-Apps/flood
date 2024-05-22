@@ -25,7 +25,7 @@ packages:
     source: hosted
     version: "2.3.1"
   asset:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../asset"
       relative: true
@@ -874,7 +874,7 @@ packages:
     source: hosted
     version: "0.27.7"
   share:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../share"
       relative: true
