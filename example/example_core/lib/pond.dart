@@ -53,7 +53,7 @@ Future<CorePondContext> getCorePondContext({
 
   await corePondContext.register(AssetCoreComponent(
     assetProviders: (context) => [
-      TodoAssetProvider(),
+      TodoAssetProvider(context),
       UserProfilePictureAssetProvider(context),
     ],
   ));

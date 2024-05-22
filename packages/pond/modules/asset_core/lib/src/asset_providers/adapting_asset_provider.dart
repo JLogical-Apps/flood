@@ -14,7 +14,7 @@ class AdaptingAssetProvider with IsAssetProviderWrapper {
     if (context.context.environment == EnvironmentType.static.testing) {
       return AssetProvider.static.memory;
     } else if (context.context.environment == EnvironmentType.static.device) {
-      return AssetProvider.static.file(context, path).withCache();
+      return AssetProvider.static.file(context, path);
     } else {
       return throw Exception('Invalid environment for adapting asset provider');
     }

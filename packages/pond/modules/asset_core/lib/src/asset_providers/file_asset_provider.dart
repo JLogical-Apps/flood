@@ -37,7 +37,7 @@ class FileAssetProvider with IsAssetProvider {
         final [List<int> bytes, AssetMetadata metadata] = results;
         return Asset(id: id, value: Uint8List.fromList(bytes), metadata: metadata);
       }),
-    );
+    ).withFile(directory - id);
   }
 
   @override

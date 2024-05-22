@@ -5,4 +5,5 @@ export 'src/asset_metadata.dart';
 export 'src/asset_providers/asset_provider.dart';
 export 'src/asset_reference.dart';
 export 'src/asset_reference_getter.dart';
+export 'src/asset_references/meta/asset_reference_meta_modifier.dart';
 export 'src/context_extensions.dart';

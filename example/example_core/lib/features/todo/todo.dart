@@ -40,6 +40,10 @@ class Todo extends ValueObject {
 }
 
 class TodoAssetProvider with IsAssetProviderWrapper {
+  final AssetCoreComponent context;
+
+  TodoAssetProvider(this.context);
+
   @override
-  late final AssetProvider assetProvider = AssetProvider.static.memory;
+  late final AssetProvider assetProvider = AssetProvider.static.adapting(context, 'todo');
 }
