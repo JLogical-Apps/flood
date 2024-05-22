@@ -3,12 +3,14 @@ import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/media/styled_image.dart';
 import 'package:style/src/style_renderer.dart';
 import 'package:style/src/styleguide.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class FlatStyleImageRenderer with IsTypedStyleRenderer<StyledImage> {
   @override
   Widget renderTyped(BuildContext context, StyledImage component) {
-    return Image(
+    return FadeInImage(
       image: component.image,
+      placeholder: MemoryImage(kTransparentImage),
       width: component.width,
       height: component.height,
       fit: component.fit,
