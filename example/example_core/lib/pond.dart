@@ -14,6 +14,7 @@ Future<CorePondContext> getCorePondContext({
   FutureOr<List<CorePondComponent>> Function(CorePondContext context)? initialCoreComponents,
   List<RepositoryImplementation> Function(CorePondContext context)? repositoryImplementations,
   List<AuthServiceImplementation> Function(CorePondContext context)? authServiceImplementations,
+  List<AssetProviderImplementation> Function(CorePondContext context)? assetProviderImplementations,
   MessagingService? Function(CorePondContext context)? messagingService,
   LoggerService? Function(CorePondContext context)? loggerService,
   TaskRunner? Function(CorePondContext context)? taskRunner,
@@ -52,6 +53,7 @@ Future<CorePondContext> getCorePondContext({
   ));
 
   await corePondContext.register(AssetCoreComponent(
+    assetProviderImplementations: assetProviderImplementations?.call(corePondContext) ?? [],
     assetProviders: (context) => [
       TodoAssetProvider(context),
       UserProfilePictureAssetProvider(context),

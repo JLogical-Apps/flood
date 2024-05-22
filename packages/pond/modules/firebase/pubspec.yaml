@@ -22,7 +22,14 @@ dependencies:
   firebase_crashlytics: ^3.4.1
   firebase_messaging: ^14.0.4
   firebase_storage: ^11.0.4
+  mime: ^1.0.5
+  path: ^1.8.2
 
+  asset:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/pond/modules/asset
   auth_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
@@ -48,6 +55,11 @@ dependencies:
       url: git@github.com:JLogical-Apps/flood.git
       ref: "v4.1"
       path: packages/pond/modules/messaging_core
+  model_core:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.1"
+      path: packages/model/model_core
   persistence:
     git:
       url: git@github.com:JLogical-Apps/flood.git

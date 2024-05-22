@@ -5,4 +5,5 @@ export 'src/drop/firebase_cloud_repository_state_handler.dart';
 export 'src/firebase_core_component.dart';
 export 'src/message/firebase_messaging_service.dart';
 export 'src/persistence/data_source_extensions.dart';
+export 'src/storage/firebase_storage_asset_provider_implementation.dart';
 export 'src/utils/firebase_context_extensions.dart';

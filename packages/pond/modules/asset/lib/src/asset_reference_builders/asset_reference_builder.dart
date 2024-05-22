@@ -1,6 +1,7 @@
 import 'package:asset/asset.dart';
 import 'package:asset/src/asset_reference_builders/default_asset_reference_builder.dart';
 import 'package:asset/src/asset_reference_builders/file_asset_reference_builder.dart';
+import 'package:asset/src/asset_reference_builders/uri_asset_reference_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:model/model.dart';
@@ -13,6 +14,7 @@ abstract class AssetReferenceBuilder with IsModifier<AssetReferenceBuilderContex
   static final assetReferenceBuilderResolver =
       ModifierResolver<AssetReferenceBuilder, AssetReferenceBuilderContext>(modifiers: [
     FileAssetReferenceBuilder(),
+    UriAssetReferenceBuilder(),
     DefaultAssetReferenceBuilder(),
   ]);
 

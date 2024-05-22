@@ -25,6 +25,8 @@ class AssetProviderStatic {
 
   FileAssetProvider file(AssetCoreComponent context, String path) => FileAssetProvider(context: context, path: path);
 
+  CloudAssetProvider cloud(AssetCoreComponent context, String path) => CloudAssetProvider(context: context, path: path);
+
   AdaptingAssetProvider adapting(AssetCoreComponent context, String path) =>
       AdaptingAssetProvider(context: context, path: path);
 }

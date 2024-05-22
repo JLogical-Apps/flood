@@ -37,6 +37,7 @@ Future<AppPondContext> buildAppPondContext() async {
       FirebaseCloudRepositoryImplementation(),
     ],
     authServiceImplementations: (corePondContext) => [FirebaseAuthServiceImplementation()],
+    assetProviderImplementations: (corePondContext) => [FirebaseStorageAssetProviderImplementation()],
     messagingService: (corePondContext) => corePondContext
         .environmental((type) => type.isOnline ? MessagingService.static.firebase : MessagingService.static.local()),
     loggerService: (corePondContext) => corePondContext.environment.isOnline

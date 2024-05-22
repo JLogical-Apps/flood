@@ -5,26 +5,36 @@ class AssetMetadata extends Equatable {
   final int size;
   final DateTime createdTime;
   final DateTime updatedTime;
+  final Uri? uri;
 
   AssetMetadata({
     required this.mimeType,
     required this.size,
     required this.createdTime,
     required this.updatedTime,
+    this.uri,
   });
 
-  AssetMetadata copyWith({required String? mimeType, int? size, DateTime? createdTime, DateTime? updatedTime}) {
+  AssetMetadata copyWith({
+    required String? mimeType,
+    int? size,
+    DateTime? createdTime,
+    DateTime? updatedTime,
+    required Uri? uri,
+  }) {
     return AssetMetadata(
       mimeType: mimeType,
       size: size ?? this.size,
       createdTime: createdTime ?? this.createdTime,
       updatedTime: updatedTime ?? this.updatedTime,
+      uri: uri ?? this.uri,
     );
   }
 
   AssetMetadata withCreatedAt(DateTime dateTime) {
     return copyWith(
       mimeType: mimeType,
+      uri: uri,
       createdTime: dateTime,
     );
   }
@@ -32,10 +42,11 @@ class AssetMetadata extends Equatable {
   AssetMetadata withUpdatedAt(DateTime dateTime) {
     return copyWith(
       mimeType: mimeType,
+      uri: uri,
       updatedTime: dateTime,
     );
   }
 
   @override
-  List<Object?> get props => [mimeType, size, createdTime, updatedTime];
+  List<Object?> get props => [mimeType, size, createdTime, updatedTime, uri];
 }
