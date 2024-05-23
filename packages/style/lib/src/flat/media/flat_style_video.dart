@@ -24,8 +24,9 @@ class FlatStyleVideoRenderer with IsTypedStyleRenderer<StyledVideo> {
               autoPlay: true,
               looping: true,
               showControlsOnInitialize: false,
+              placeholder: StyledLoadingIndicator(),
               showControls: false,
-            ),
+            )..setVolume(0),
             [component.videoPlayerController],
           );
           useEffect(() {
@@ -35,12 +36,17 @@ class FlatStyleVideoRenderer with IsTypedStyleRenderer<StyledVideo> {
             };
           }, [chewieController]);
 
-          return Center(
-            child: AspectRatio(
-              aspectRatio: videoValue.aspectRatio,
-              child: videoValue.isInitialized ? Chewie(controller: chewieController) : StyledLoadingIndicator(),
-            ),
-          );
+          Widget widget = videoValue.isInitialized
+              ? Chewie(controller: chewieController)
+              : Padding(
+                  padding: EdgeInsets.all(8),
+                  child: StyledLoadingIndicator(),
+                );
+          if (videoValue.isInitialized) {
+            widget = AspectRatio(aspectRatio: videoValue.aspectRatio, child: widget);
+          }
+          widget = Center(child: widget);
+          return widget;
         },
       ),
     );
@@ -51,7 +57,7 @@ class FlatStyleVideoRenderer with IsTypedStyleRenderer<StyledVideo> {
     styleguide
         .getTabByNameOrCreate('Media', icon: Icons.perm_media)
         .getSectionByNameOrCreate('Video')
-        .add(StyledContainer(
+        .add(StyledContainer.subtle(
       child: HookBuilder(
         builder: (context) {
           return StyledVideo(
