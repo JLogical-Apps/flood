@@ -10,7 +10,7 @@ class UserLocationAppComponent with IsAppPondComponent {
       if (account == null) {
         context.find<LocationAppComponent>().disableTracking();
       } else {
-        context.find<LocationAppComponent>().enableTracking();
+        context.find<LocationAppComponent>().enableTracking(context);
       }
     });
   }

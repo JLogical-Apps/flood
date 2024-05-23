@@ -73,6 +73,7 @@ Future<AppPondContext> buildAppPondContext() async {
       await setupTesting(corePondContext);
     }
   }));
+  await appPondContext.register(LocationAppComponent(shouldTrackImmediately: true));
   await appPondContext.register(PagesPondComponent());
 
   return appPondContext;

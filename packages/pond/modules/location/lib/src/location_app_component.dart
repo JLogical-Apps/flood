@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:drop/drop.dart';
+import 'package:environment/environment.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location_core/location_core.dart';
 import 'package:pond/pond.dart';
@@ -42,23 +43,25 @@ class LocationAppComponent with IsAppPondComponent {
   @override
   Future onLoad(AppPondContext context) async {
     if (shouldTrackImmediately) {
-      await enableTracking();
+      await enableTracking(context);
     }
 
-    Geolocator.getServiceStatusStream().listen((status) async {
-      if (!_shouldTrack) {
-        return;
-      }
+    if (context.environmentCoreComponent.platform != Platform.web) {
+      Geolocator.getServiceStatusStream().listen((status) async {
+        if (!_shouldTrack) {
+          return;
+        }
 
-      if (status == ServiceStatus.enabled && _locationSubscription == null) {
-        await enableTracking();
-      } else if (status == ServiceStatus.disabled && _locationSubscription != null) {
-        _stopTracking();
-      }
-    });
+        if (status == ServiceStatus.enabled && _locationSubscription == null) {
+          await enableTracking(context);
+        } else if (status == ServiceStatus.disabled && _locationSubscription != null) {
+          _stopTracking();
+        }
+      });
+    }
   }
 
-  Future<void> enableTracking() async {
+  Future<void> enableTracking(AppPondContext context) async {
     final shouldTrackButInvalid = _shouldTrack && _locationSubscription != null;
     if (shouldTrackButInvalid || _isLoadingLocation) {
       return;
@@ -67,7 +70,7 @@ class LocationAppComponent with IsAppPondComponent {
     _isLoadingLocation = true;
     _shouldTrack = true;
 
-    _locationSubscription = await _loadPositionX();
+    _locationSubscription = await _loadPositionX(context);
 
     _isLoadingLocation = false;
   }
@@ -100,7 +103,7 @@ class LocationAppComponent with IsAppPondComponent {
     _locationSubscription = null;
   }
 
-  Future<StreamSubscription?> _loadPositionX() async {
+  Future<StreamSubscription?> _loadPositionX(AppPondContext context) async {
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       _positionX.value = FutureValue.loaded(null);
@@ -121,7 +124,8 @@ class LocationAppComponent with IsAppPondComponent {
       return null;
     }
 
-    final lastPosition = await Geolocator.getLastKnownPosition();
+    final lastPosition =
+        context.environmentCoreComponent.platform == Platform.web ? null : await Geolocator.getLastKnownPosition();
     if (lastPosition != null) {
       onPositionUpdated?.call(lastPosition, false);
       _positionX.value = FutureValue.loaded(lastPosition);

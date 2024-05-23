@@ -61,5 +61,7 @@
             <key>NSAllowsArbitraryLoads</key>
             <true/>
         </dict>
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>Location required for testing</string>
 	</dict>
 </plist>
