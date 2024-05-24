@@ -11,6 +11,7 @@ export 'src/query/condition/is_less_than_or_equal_to_query_condition.dart';
 export 'src/query/condition/is_less_than_query_condition.dart';
 export 'src/query/condition/is_non_null_query_condition.dart';
 export 'src/query/condition/is_null_query_condition.dart';
+export 'src/query/condition/not_equals_query_condition.dart';
 export 'src/query/condition/query_condition.dart';
 export 'src/query/from_query.dart';
 export 'src/query/limit_query.dart';

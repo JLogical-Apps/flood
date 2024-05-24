@@ -10,6 +10,7 @@ import 'package:drop_core/src/repository/query_executor/condition/is_less_than_o
 import 'package:drop_core/src/repository/query_executor/condition/is_less_than_state_query_condition_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/condition/is_non_null_state_query_condition_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/condition/is_null_state_query_condition_reducer.dart';
+import 'package:drop_core/src/repository/query_executor/condition/not_equals_state_query_condition_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/condition/state_query_condition_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_reducer.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -22,6 +23,7 @@ class WhereStateQueryReducer extends StateQueryReducer<WhereQuery> {
         ContainsAnyStateQueryConditionReducer(),
         IsInStateQueryConditionReducer(),
         EqualsStateQueryConditionReducer(),
+        NotEqualsStateQueryConditionReducer(),
         IsGreaterThanStateQueryConditionReducer(),
         IsGreaterThanOrEqualToStateQueryConditionReducer(),
         IsLessThanStateQueryConditionReducer(),

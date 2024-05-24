@@ -8,6 +8,7 @@ import 'package:drop_core/src/query/condition/is_less_than_or_equal_to_query_con
 import 'package:drop_core/src/query/condition/is_less_than_query_condition.dart';
 import 'package:drop_core/src/query/condition/is_non_null_query_condition.dart';
 import 'package:drop_core/src/query/condition/is_null_query_condition.dart';
+import 'package:drop_core/src/query/condition/not_equals_query_condition.dart';
 
 class QueryConditionBuilder {
   final String stateField;
@@ -16,6 +17,10 @@ class QueryConditionBuilder {
 
   EqualsQueryCondition isEqualTo(dynamic value) {
     return EqualsQueryCondition(stateField: stateField, value: value);
+  }
+
+  NotEqualsQueryCondition isNotEqualTo(dynamic value) {
+    return NotEqualsQueryCondition(stateField: stateField, value: value);
   }
 
   IsGreaterThanQueryCondition isGreaterThan(dynamic value) {
