@@ -12,7 +12,6 @@ class LifecycleStateHandler with IsRepositoryStateHandlerWrapper {
   @override
   Future<State> onUpdate(State state) async {
     final isNew = state.isNew;
-    final id = state.id ?? Uuid().v4();
 
     final entity = await context.constructEntityFromState(state);
     if (isNew) {
@@ -22,6 +21,8 @@ class LifecycleStateHandler with IsRepositoryStateHandlerWrapper {
     await entity.beforeSave(context);
     state = entity.getState(context);
 
+    final id = state.id ?? Uuid().v4();
+    entity.id = id;
     state = state.withId(id);
 
     await stateHandler.update(state);
