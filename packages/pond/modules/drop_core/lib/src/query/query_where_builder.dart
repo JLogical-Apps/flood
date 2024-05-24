@@ -12,6 +12,10 @@ class QueryWhereBuilder<E extends Entity> {
     return query.whereCondition(QueryCondition.field(stateField).isEqualTo(value));
   }
 
+  Query<E> isNotEqualTo(dynamic value) {
+    return query.whereCondition(QueryCondition.field(stateField).isNotEqualTo(value));
+  }
+
   Query<E> isGreaterThan(dynamic value) {
     return query.whereCondition(QueryCondition.field(stateField).isGreaterThan(value));
   }
