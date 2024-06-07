@@ -22,7 +22,7 @@ class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReferenceGette
           },
           submitMapper: (assetValue) async {
             if (assetValue.initialValue != null && (assetValue.uploadedAsset != null || assetValue.removed)) {
-              await assetProvider.delete(assetValue.initialValue!.id);
+              await guardAsync(() => assetProvider.delete(assetValue.initialValue!.id));
             }
             if (assetValue.uploadedAsset != null) {
               final asset = await assetProvider.upload(assetValue.uploadedAsset!);
@@ -59,9 +59,7 @@ class AssetPortValue with EquatableMixin {
     required this.removed,
   });
 
-  AssetPortValue.initial({required this.initialValue})
-      : uploadedAsset = null,
-        removed = false;
+  AssetPortValue.initial({required this.initialValue, this.uploadedAsset}) : removed = false;
 
   AssetPortValue withUpload(Asset upload) {
     return AssetPortValue(initialValue: initialValue, uploadedAsset: upload, removed: false);

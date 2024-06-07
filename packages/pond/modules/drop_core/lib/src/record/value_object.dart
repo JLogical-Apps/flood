@@ -69,6 +69,14 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
     setStateUnsafe(context, stateful.getStateUnsafe(context));
   }
 
+  Future<void> duplicateFrom(DropCoreContext context, Stateful stateful) async {
+    final state = stateful.getState(context);
+    copyFrom(context, state);
+    for (final behavior in behaviors) {
+      await behavior.onDuplicate(context, state);
+    }
+  }
+
   @override
   Validator<void, String> get validator => Validator((_) async {
         for (final behavior in behaviors) {

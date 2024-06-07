@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:asset_core/asset_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:runtime_type/type.dart';
@@ -12,7 +15,8 @@ void main() {
   setUp(() {
     context = CorePondContext()
       ..register(TypeCoreComponent())
-      ..register(DropCoreComponent());
+      ..register(DropCoreComponent())
+      ..register(AssetCoreComponent(assetProviders: (context) => []));
     dropContext = context.locate<DropCoreComponent>();
   });
 
@@ -271,6 +275,27 @@ void main() {
     data.dataProperty.set(Data2()..intProperty.set(1));
     expect(await data.validate(null), isNull);
   });
+
+  test('asset property with duplication', () async {
+    final assetProvider = AssetProvider.static.memory;
+
+    dropContext.register<Data16>(() => Data16(assetProvider: assetProvider), name: 'Data16');
+
+    final asset = Asset.upload(path: 'abc.png', value: Uint8List.fromList([]), mimeType: 'image/png');
+    await assetProvider.upload(asset);
+
+    final data = Data16(assetProvider: assetProvider)
+      ..assetProperty.set(AssetReferenceGetter(
+        id: asset.id,
+        assetProviderGetter: (context) => assetProvider,
+      ));
+    final duplicate = Data16(assetProvider: assetProvider);
+    await duplicate.duplicateFrom(dropContext, data);
+
+    expect(duplicate.assetProperty.duplicatedAsset!.id, isNot(asset.id));
+    expect(duplicate.assetProperty.duplicatedAsset!.value, asset.value);
+    expect(duplicate.assetProperty.value, isNull);
+  });
 }
 
 class Data1 extends ValueObject {
@@ -387,4 +412,18 @@ class Data15 extends ValueObject {
 
   @override
   List<ValueObjectBehavior> get behaviors => [dataProperty];
+}
+
+class Data16 extends ValueObject {
+  final AssetProvider assetProvider;
+
+  Data16({required this.assetProvider});
+
+  static const assetField = 'asset';
+  late final assetProperty = field<String>(name: assetField).asset(
+    assetProvider: (context) => assetProvider,
+  );
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [assetProperty];
 }

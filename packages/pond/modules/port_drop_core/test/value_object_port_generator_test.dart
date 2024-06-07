@@ -309,6 +309,46 @@ void main() {
         .withUpload(Asset.upload(path: 'image.png', value: assetValue, mimeType: 'image/png'));
     expect((await dataPort.submit()).data.assetProperty.value, isA<AssetReferenceGetter>());
   });
+
+  test('Port for duplicated ValueObject with asset field.', () async {
+    final assetProvider = AssetProvider.static.memory;
+    corePondContext.locate<TypeCoreComponent>().register(() => Data15(assetProvider: assetProvider), name: 'Data15');
+
+    final asset = Asset.upload(path: 'abc.png', value: Uint8List.fromList([]), mimeType: 'image/png');
+    await assetProvider.upload(asset);
+
+    final data = Data15(assetProvider: assetProvider)
+      ..assetProperty.set(AssetReferenceGetter(
+        id: asset.id,
+        assetProviderGetter: (context) => assetProvider,
+      ));
+    final duplicate = Data15(assetProvider: assetProvider);
+    await duplicate.duplicateFrom(corePondContext.dropCoreComponent, data);
+
+    final sourcePort = corePondContext.locate<PortDropCoreComponent>().generatePort(data);
+    final duplicatePort = corePondContext.locate<PortDropCoreComponent>().generatePort(duplicate);
+
+    expect(
+        sourcePort.getFieldByPath(Data15.assetField).findAssetFieldOrNull()!.value,
+        isA<AssetPortValue>()
+            .having((assetPortValue) => assetPortValue.initialValue, 'initialValue', isNotNull)
+            .having((assetPortValue) => assetPortValue.uploadedAsset, 'uploadedAsset', isNull));
+
+    expect(
+        duplicatePort.getFieldByPath(Data15.assetField).findAssetFieldOrNull()!.value,
+        isA<AssetPortValue>()
+            .having((assetPortValue) => assetPortValue.initialValue, 'initialValue', isNull)
+            .having((assetPortValue) => assetPortValue.uploadedAsset, 'uploadedAsset', isNotNull));
+
+    final duplicateResult = await duplicatePort.submit();
+
+    final oldAsset = await assetProvider.getById(asset.id).loadAsset();
+    expect(oldAsset, isNotNull);
+
+    final newAsset = await assetProvider.getById(duplicateResult.data.assetProperty.value.id).loadAsset();
+    expect(newAsset, isNotNull);
+    expect(newAsset, isNot(oldAsset));
+  });
 }
 
 class Data1 extends ValueObject {
@@ -465,9 +505,13 @@ class Data14 extends ValueObject {
 }
 
 class Data15 extends ValueObject {
+  final AssetProvider assetProvider;
+
+  Data15({AssetProvider? assetProvider}) : assetProvider = assetProvider ?? AssetProvider.static.memory;
+
   static const assetField = 'asset';
   late final assetProperty =
-      field<String>(name: assetField).asset(assetProvider: (context) => AssetProvider.static.memory).required();
+      field<String>(name: assetField).asset(assetProvider: (context) => assetProvider).required();
 
   @override
   List<ValueObjectBehavior> get behaviors => [assetProperty];

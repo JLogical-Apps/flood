@@ -12,10 +12,13 @@ class AssetValueObjectProperty
   final AssetProvider Function(AssetCoreComponent context) assetProvider;
   final AllowedFileTypes? allowedFileTypes;
 
+  Asset? duplicatedAsset;
+
   AssetValueObjectProperty({
     required this.property,
     required this.assetProvider,
     this.allowedFileTypes,
+    this.duplicatedAsset,
   });
 
   AssetValueObjectProperty.fromId({
@@ -47,11 +50,23 @@ class AssetValueObjectProperty
   }
 
   @override
+  Future<void> onDuplicate(DropCoreContext context, State state) async {
+    // Instead of containing the same asset as the source, copy the asset and use that instead.
+    // This issues with the original asset being deleted.
+    if (value?.id != null) {
+      final asset = await assetProvider(context.context.assetCoreComponent).getById(value!.id).getAsset();
+      duplicatedAsset = asset.withNewId();
+      set(null);
+    }
+  }
+
+  @override
   AssetValueObjectProperty copy() {
     return AssetValueObjectProperty(
       property: property.copy(),
       assetProvider: assetProvider,
       allowedFileTypes: allowedFileTypes,
+      duplicatedAsset: duplicatedAsset,
     );
   }
 }

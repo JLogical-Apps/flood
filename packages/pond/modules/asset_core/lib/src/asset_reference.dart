@@ -4,6 +4,7 @@ import 'package:asset_core/src/asset.dart';
 import 'package:asset_core/src/asset_metadata.dart';
 import 'package:asset_core/src/asset_references/file_asset_reference.dart';
 import 'package:model_core/model_core.dart';
+import 'package:utils_core/utils_core.dart';
 
 abstract class AssetReference {
   String get id;
@@ -27,6 +28,14 @@ abstract class AssetReference {
 mixin IsAssetReference implements AssetReference {}
 
 extension AssetReferenceExtensions on AssetReference {
+  Future<Asset> getAsset() async {
+    return await assetModel.getOrLoad();
+  }
+
+  Future<Asset> loadAsset() async {
+    return (await assetModel.load()).getOrNull()!;
+  }
+
   FileAssetReference withFile(File file) {
     return FileAssetReference(assetReference: this, file: file);
   }

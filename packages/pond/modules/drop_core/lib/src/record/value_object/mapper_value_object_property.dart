@@ -38,6 +38,11 @@ class MapperValueObjectProperty<G, S, G2, S2>
   }
 
   @override
+  Future<void> onDuplicate(DropCoreContext context, State state) async {
+    await property.onDuplicate(context, state);
+  }
+
+  @override
   G2 get value => getMapper(property.value);
 
   @override

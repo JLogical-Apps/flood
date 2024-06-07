@@ -37,7 +37,10 @@ class MemoryAssetProvider with IsAssetProvider {
 
   @override
   Future<void> onDelete(String id) async {
-    _assetXById[id]?.value = FutureValue.empty();
+    if (_assetXById[id] == null) {
+      throw Exception('Cannot delete non-existing asset! [$id]');
+    }
+    _assetXById[id]!.value = FutureValue.empty();
     _assetXById.remove(id);
   }
 }

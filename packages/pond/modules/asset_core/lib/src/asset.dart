@@ -47,6 +47,11 @@ class Asset extends Equatable {
     );
   }
 
+  Asset withNewId() {
+    final ext = extension(id);
+    return copyWith(id: '${Uuid().v4()}$ext');
+  }
+
   Asset withMetadata(AssetMetadata metadata) {
     return copyWith(metadata: metadata);
   }

@@ -53,6 +53,12 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                   contentTypeName: 'Profile',
                   description: 'Edit your profile.',
                 ),
+                ActionItem.static.duplicateEntity(
+                  context,
+                  entity: loggedInUserEntity,
+                  contentTypeName: 'Duplicate',
+                  description: 'Duplicate your profile.',
+                ),
                 ActionItem(
                   titleText: 'Manage Tags',
                   descriptionText: 'Manage your tags.',

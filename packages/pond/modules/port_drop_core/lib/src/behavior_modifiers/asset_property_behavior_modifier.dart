@@ -16,6 +16,7 @@ class AssetPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModifier
     return PortField.asset(
       initialValue: assetId == null ? null : assetProvider.getById(assetId),
       assetProvider: assetProvider,
+      uploadedAsset: behavior.duplicatedAsset,
     ).withAllowedFileTypes(behavior.allowedFileTypes ?? AllowedFileTypes.any);
   }
 }
