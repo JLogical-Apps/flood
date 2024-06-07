@@ -54,7 +54,7 @@ extension DropActionItemExtensions on ActionItemStatic {
       onPerform: (_) async {
         final newInstance =
             context.dropCoreComponent.getRuntimeTypeRuntime(valueObject.runtimeType).createInstance() as V;
-        newInstance.duplicateFrom(context.dropCoreComponent, valueObject);
+        await newInstance.duplicateFrom(context.dropCoreComponent, valueObject);
         await context.showStyledDialog(StyledPortDialog(
           titleText: 'Duplicate $contentTypeName',
           port: (duplicator?.call(newInstance) ?? newInstance).asPort(context.corePondContext, only: only),
