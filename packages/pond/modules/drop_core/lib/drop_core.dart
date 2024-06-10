@@ -20,6 +20,7 @@ export 'src/query/pagination/paginated_query_result.dart';
 export 'src/query/pagination/query_result_page.dart';
 export 'src/query/query.dart';
 export 'src/query/request/all_states_query_request.dart';
+export 'src/query/request/count_query_request.dart';
 export 'src/query/request/first_or_null_state_query_request.dart';
 export 'src/query/request/map_query_request.dart';
 export 'src/query/request/paginate_states_query_request.dart';

@@ -494,6 +494,40 @@ void main() {
     final firstUser = await Query.from<UserEntity>().limit(1).all().get(context.dropCoreComponent);
     expect(firstUser[0].value, users[0]);
   });
+
+  test('query count', () async {
+    final repository = Repository.forType<UserEntity, User>(
+      UserEntity.new,
+      User.new,
+      entityTypeName: 'UserEntity',
+      valueObjectTypeName: 'User',
+    ).memory();
+
+    final users = [
+      User()
+        ..nameProperty.set('Jake')
+        ..emailProperty.set('jake@jake.com'),
+      User()
+        ..nameProperty.set('John')
+        ..emailProperty.set('john@doe.com'),
+    ];
+
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
+
+    for (final user in users) {
+      await repository.update(UserEntity()..value = user);
+    }
+
+    final allUsersCount = await Query.from<UserEntity>().count().get(context.dropCoreComponent);
+    expect(allUsersCount, users.length);
+
+    final johnUsersCount =
+        await Query.from<UserEntity>().where('name').isEqualTo('John').count().get(context.dropCoreComponent);
+    expect(johnUsersCount, 1);
+  });
 }
 
 class User extends ValueObject {

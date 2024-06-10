@@ -8,6 +8,7 @@ import 'package:drop_core/src/repository/query_executor/from_state_query_reducer
 import 'package:drop_core/src/repository/query_executor/limit_state_query_executor.dart';
 import 'package:drop_core/src/repository/query_executor/order_by_state_query_executor.dart';
 import 'package:drop_core/src/repository/query_executor/request/all_states_state_query_request_reducer.dart';
+import 'package:drop_core/src/repository/query_executor/request/count_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/first_or_null_state_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/map_state_query_request_reducer.dart';
 import 'package:drop_core/src/repository/query_executor/request/paginate_states_state_query_request_reducer.dart';
@@ -55,6 +56,7 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
           ),
         ),
         PaginateStatesStateQueryRequestReducer(dropContext: dropContext),
+        CountStateQueryRequestReducer(dropContext: dropContext),
         WrapperStateQueryRequestReducer(
           dropContext: dropContext,
           queryRequestResolver: <E extends Entity, T>(qr, states, onStateRetrieved) => resolveForQueryRequest(

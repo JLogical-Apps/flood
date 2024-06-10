@@ -6,6 +6,7 @@ import 'package:drop_core/src/query/order_by_query.dart';
 import 'package:drop_core/src/query/query_where_builder.dart';
 import 'package:drop_core/src/query/request/all_query_request.dart';
 import 'package:drop_core/src/query/request/all_states_query_request.dart';
+import 'package:drop_core/src/query/request/count_query_request.dart';
 import 'package:drop_core/src/query/request/first_or_null_query_request.dart';
 import 'package:drop_core/src/query/request/first_or_null_state_query_request.dart';
 import 'package:drop_core/src/query/request/first_query_request.dart';
@@ -72,6 +73,10 @@ extension QueryExtensions<E extends Entity> on Query<E> {
 
   FirstQueryRequest<E> first() {
     return FirstQueryRequest(sourceQueryRequest: FirstOrNullStateQueryRequest(query: this));
+  }
+
+  CountQueryRequest<E> count() {
+    return CountQueryRequest(query: this);
   }
 
   QueryWhereBuilder<E> where(String stateField) {

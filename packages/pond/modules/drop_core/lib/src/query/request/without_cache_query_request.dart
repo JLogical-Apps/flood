@@ -19,6 +19,6 @@ class WithoutCacheQueryRequest<E extends Entity, T> extends QueryRequestWrapper<
 
   @override
   QueryRequest<E, T> copyWith({Query<E>? query}) {
-    return queryRequest.copyWith(query: query);
+    return WithoutCacheQueryRequest(queryRequest: queryRequest.copyWith(query: query));
   }
 }

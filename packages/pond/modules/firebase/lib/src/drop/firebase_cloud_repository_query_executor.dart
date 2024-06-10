@@ -8,6 +8,7 @@ import 'package:firebase/src/drop/query/limit_firebase_query_reducer.dart';
 import 'package:firebase/src/drop/query/order_by_firebase_query_reducer.dart';
 import 'package:firebase/src/drop/query/where_firebase_query_reducer.dart';
 import 'package:firebase/src/drop/request/all_states_firebase_query_request_reducer.dart';
+import 'package:firebase/src/drop/request/count_firebase_query_request_reducer.dart';
 import 'package:firebase/src/drop/request/first_or_null_state_firebase_query_request_reducer.dart';
 import 'package:firebase/src/drop/request/map_firebase_query_request_reducer.dart';
 import 'package:firebase/src/drop/request/paginate_states_firebase_query_request_reducer.dart';
@@ -59,6 +60,7 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
           dropContext: dropContext,
           inferredType: inferredType,
         ),
+        CountFirebaseQueryRequestReducer(dropContext: dropContext, inferredType: inferredType),
         WrapperFirebaseQueryRequestReducer(
           dropContext: dropContext,
           inferredType: inferredType,
