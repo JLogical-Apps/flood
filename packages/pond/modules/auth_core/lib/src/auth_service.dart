@@ -21,6 +21,8 @@ abstract class AuthService with IsCorePondComponent {
 
   Future<Account> loginWithOtp(OtpProvider otpProvider);
 
+  Future<Account> createAccount(AuthCredentials authCredentials);
+
   Future<void> logout();
 
   Future<void> delete();
@@ -101,6 +103,9 @@ mixin IsAuthServiceWrapper implements AuthServiceWrapper {
 
   @override
   Future<Account> signup(AuthCredentials authCredentials) => authService.signup(authCredentials);
+
+  @override
+  Future<Account> createAccount(AuthCredentials authCredentials) => authService.createAccount(authCredentials);
 
   @override
   Future<void> logout() => authService.logout();

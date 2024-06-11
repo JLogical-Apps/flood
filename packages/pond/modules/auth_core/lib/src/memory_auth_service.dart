@@ -72,7 +72,7 @@ class MemoryAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
-  Future<Account> signup(AuthCredentials authCredentials) async {
+  Future<Account> createAccount(AuthCredentials authCredentials) async {
     final existingAccountEntity =
         await AccountEntity.accountFromCredentialsQuery(authCredentials).firstOrNull().get(context.dropCoreComponent);
     if (existingAccountEntity != null) {
@@ -86,6 +86,13 @@ class MemoryAuthService with IsAuthService, IsCorePondComponent {
 
     await context.dropCoreComponent
         .update(AccountEntity()..set(AccountValueObject.fromAccount(account, authCredentials)));
+
+    return account;
+  }
+
+  @override
+  Future<Account> signup(AuthCredentials authCredentials) async {
+    final account = await createAccount(authCredentials);
 
     _accountX.value = account;
 

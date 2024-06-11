@@ -19,6 +19,7 @@ class FirebaseCoreComponent with IsCorePondComponent {
   FirebaseFirestore get firestore => FirebaseFirestore.instanceFor(app: firebaseApp);
   FirebaseAuth get auth => FirebaseAuth.instanceFor(app: firebaseApp);
   FirebaseStorage get storage => FirebaseStorage.instanceFor(app: firebaseApp);
+  FirebaseFunctions get functions => FirebaseFunctions.instanceFor(app: firebaseApp);
 
   FirebaseCoreComponent({
     required this.app,

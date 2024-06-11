@@ -68,6 +68,28 @@ class AppwriteAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
+  Future<Account> createAccount(AuthCredentials authCredentials) async {
+    try {
+      final user = await createUserFromCredentials(authCredentials);
+
+      return Account(
+        accountId: user.$id,
+        isAdmin: user.labels.contains('admin'),
+      );
+    } on AppwriteException catch (e) {
+      switch (e.type) {
+        case 'user_invalid_credentials':
+          throw SignupFailure.invalidEmail();
+        case 'user_already_exists':
+        case 'user_email_already_exists':
+          throw SignupFailure.emailAlreadyUsed();
+        default:
+          rethrow;
+      }
+    }
+  }
+
+  @override
   Future<Account> signup(AuthCredentials authCredentials) async {
     try {
       final user = await getUserFromCredentials(authCredentials);
@@ -106,9 +128,17 @@ class AppwriteAuthService with IsAuthService, IsCorePondComponent {
   @override
   ValueStream<FutureValue<Account?>> get accountX => _accountX;
 
+  Future<User> createUserFromCredentials(AuthCredentials credentials) async {
+    if (credentials is EmailAuthCredentials) {
+      return await account.create(userId: ID.unique(), email: credentials.email, password: credentials.password);
+    }
+
+    throw UnimplementedError();
+  }
+
   Future<User> getUserFromCredentials(AuthCredentials credentials) async {
     if (credentials is EmailAuthCredentials) {
-      final user = await account.create(userId: ID.unique(), email: credentials.email, password: credentials.password);
+      final user = await createUserFromCredentials(credentials);
       await account.createEmailPasswordSession(email: credentials.email, password: credentials.password);
       return user;
     }

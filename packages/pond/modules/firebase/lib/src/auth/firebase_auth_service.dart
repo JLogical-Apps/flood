@@ -62,6 +62,19 @@ class FirebaseAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
+  Future<Account> createAccount(AuthCredentials authCredentials) async {
+    if (authCredentials is EmailAuthCredentials) {
+      final response = await context.firebaseCoreComponent.functions
+          .httpsCallable('createUser')
+          .call<String>({'email': authCredentials.email, 'password': authCredentials.password});
+      final accountId = response.data;
+      return Account(accountId: accountId, isAdmin: false);
+    }
+
+    throw UnimplementedError();
+  }
+
+  @override
   Future<Account> signup(AuthCredentials authCredentials) async {
     try {
       final user = await createUserFromCredentials(authCredentials);

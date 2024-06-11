@@ -81,7 +81,7 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
-  Future<Account> signup(AuthCredentials authCredentials) async {
+  Future<Account> createAccount(AuthCredentials authCredentials) async {
     final existingAccountEntity =
         await AccountEntity.accountFromCredentialsQuery(authCredentials).firstOrNull().get(context.dropCoreComponent);
     if (existingAccountEntity != null) {
@@ -93,10 +93,17 @@ class FileAuthService with IsAuthService, IsCorePondComponent {
       isAdmin: false,
     );
 
-    await Future.wait([
-      context.dropCoreComponent.update(AccountEntity()..set(AccountValueObject.fromAccount(account, authCredentials))),
-      loggedInUserIdDataSource.set(account.accountId),
-    ]);
+    await context.dropCoreComponent
+        .update(AccountEntity()..set(AccountValueObject.fromAccount(account, authCredentials)));
+
+    return account;
+  }
+
+  @override
+  Future<Account> signup(AuthCredentials authCredentials) async {
+    final account = await createAccount(authCredentials);
+
+    await loggedInUserIdDataSource.set(account.accountId);
 
     _accountX.value = FutureValue.loaded(account);
 

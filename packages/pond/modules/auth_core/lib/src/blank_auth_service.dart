@@ -21,6 +21,11 @@ class BlankAuthService with IsAuthService, IsCorePondComponent {
   }
 
   @override
+  Future<Account> createAccount(AuthCredentials authCredentials) {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> logout() {
     throw UnimplementedError();
   }
