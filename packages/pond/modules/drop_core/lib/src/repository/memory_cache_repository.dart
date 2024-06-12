@@ -57,7 +57,7 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) async {
     final isNewlyRunQuery = repository.queriesRun.add(queryRequest);
     final needsSource = QueryRequestModifier.findIsWithoutCache(queryRequest) || isNewlyRunQuery;
@@ -88,7 +88,7 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) {
     final isNewlyRunQuery = repository.queriesRun.add(queryRequest);
 

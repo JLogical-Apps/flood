@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:drop_core/src/query/from_query.dart';
 import 'package:drop_core/src/query/query.dart';
@@ -53,14 +55,14 @@ mixin IsRepositoryListWrapper implements RepositoryListWrapper {
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQuery(queryRequest, onStateRetreived: onStateRetreived);
 
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQueryX(queryRequest, onStateRetreived: onStateRetreived);
 }
@@ -101,7 +103,7 @@ class _RepositoryListQueryExecutor implements RepositoryQueryExecutor {
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) {
     return findRepositoryToHandleQuery(queryRequest).executeQuery(
       queryRequest,
@@ -112,7 +114,7 @@ class _RepositoryListQueryExecutor implements RepositoryQueryExecutor {
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) {
     return findRepositoryToHandleQuery(queryRequest).executeQueryX(
       queryRequest,

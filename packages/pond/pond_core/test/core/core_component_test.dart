@@ -82,7 +82,7 @@ void main() {
         final corePondContext = CorePondContext();
         await corePondContext.register(DependentPondComponent());
       },
-      throwsA(isA<Exception>()),
+      throwsException,
     );
     expect(
         () => CorePondContext()

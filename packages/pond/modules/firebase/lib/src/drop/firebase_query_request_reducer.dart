@@ -22,13 +22,13 @@ abstract class FirebaseQueryRequestReducer<QR extends QueryRequest<dynamic, T>, 
   FutureOr<T> reduce(
     QR queryRequest,
     firebase.Query firestoreQuery, {
-    required Function(State state)? onStateRetrieved,
+    required FutureOr Function(State state)? onStateRetrieved,
   });
 
   Stream<T> reduceX(
     QR queryRequest,
     firebase.Query firestoreQuery, {
-    required Function(State state)? onStateRetrieved,
+    required FutureOr Function(State state)? onStateRetrieved,
   });
 
   State getStateFromDocument(firebase.QueryDocumentSnapshot doc) {

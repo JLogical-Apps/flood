@@ -13,7 +13,7 @@ class AllStatesAppwriteQueryRequestReducer extends AppwriteQueryRequestReducer<A
   Future<List<State>> reduce(
     AllStatesQueryRequest queryRequest,
     AppwriteQuery appwriteQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async {
     final queries = [
       ...appwriteQuery.queries,
@@ -28,7 +28,7 @@ class AllStatesAppwriteQueryRequestReducer extends AppwriteQueryRequestReducer<A
 
     final states = documents.documents.map(getStateFromDocument).toList();
     for (final state in states) {
-      onStateRetrieved?.call(state);
+      await onStateRetrieved?.call(state);
     }
     return states;
   }
@@ -37,7 +37,7 @@ class AllStatesAppwriteQueryRequestReducer extends AppwriteQueryRequestReducer<A
   Stream<List<State>> reduceX(
     AllStatesQueryRequest queryRequest,
     AppwriteQuery appwriteQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) {
     throw Exception('Stream of documents from a query is not supported.');
   }

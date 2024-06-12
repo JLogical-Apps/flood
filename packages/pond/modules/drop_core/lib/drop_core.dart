@@ -77,6 +77,7 @@ export 'src/repository/repository_query_executor.dart';
 export 'src/repository/repository_state_handler.dart';
 export 'src/repository/security/permission.dart';
 export 'src/repository/security/permission_field.dart';
+export 'src/repository/security/permission_entity_builder.dart';
 export 'src/repository/security/repository_security.dart';
 export 'src/repository/security/security_repository.dart';
 export 'src/state/persistence/modifiers/state_persister_modifier.dart';

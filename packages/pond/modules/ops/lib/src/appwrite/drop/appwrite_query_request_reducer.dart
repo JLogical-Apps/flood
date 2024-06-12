@@ -38,13 +38,13 @@ abstract class AppwriteQueryRequestReducer<QR extends QueryRequest<dynamic, T>, 
   FutureOr<T> reduce(
     QR queryRequest,
     AppwriteQuery appwriteQuery, {
-    required Function(State state)? onStateRetrieved,
+    required FutureOr Function(State state)? onStateRetrieved,
   });
 
   Stream<T> reduceX(
     QR queryRequest,
     AppwriteQuery appwriteQuery, {
-    required Function(State state)? onStateRetrieved,
+    required FutureOr Function(State state)? onStateRetrieved,
   });
 
   State getStateFromDocument(Document doc) {

@@ -70,7 +70,7 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) async {
     return await executeOnStates(
       queryRequest,
@@ -82,7 +82,7 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) {
     return maybeStatesX.asyncMapWithValue(
       (maybeStates) => maybeStates.asyncMap((states) => executeOnStates(queryRequest, states)),
@@ -102,7 +102,7 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
   Future<T> executeOnStates<E extends Entity, T>(
     QueryRequest<E, T> queryRequest,
     List<State> states, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) async {
     final reducedStates = reduceStates(states, queryRequest.query);
     return await resolveForQueryRequest<E, T>(
@@ -115,7 +115,7 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
   Future<T> resolveForQueryRequest<E extends Entity, T>(
     QueryRequest<E, T> queryRequest,
     Iterable<State> states, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) async {
     return await getQueryRequestReducerResolver<T>().resolve(queryRequest).reduce(
           queryRequest,

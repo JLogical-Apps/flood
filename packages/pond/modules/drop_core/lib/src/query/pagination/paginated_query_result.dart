@@ -10,8 +10,10 @@ class PaginatedQueryResult<T> with IsQueryResultPage<T> {
 
   QueryResultPage<T> get page => pageX.value;
 
-  PaginatedQueryResult({required this.initialPage, this.onPageLoaded}) : pageX = BehaviorSubject.seeded(initialPage) {
-    onPageLoaded?.call(page);
+  PaginatedQueryResult({required this.initialPage, this.onPageLoaded}) : pageX = BehaviorSubject.seeded(initialPage);
+
+  Future initialize() async {
+    await onPageLoaded?.call(page);
   }
 
   @override

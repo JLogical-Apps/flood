@@ -12,6 +12,7 @@ void main() {
     await corePondContext.register(DropCoreComponent());
     await corePondContext.register(UserRepository());
     await corePondContext.register(DocumentRepository());
+    await corePondContext.register(AttachmentRepository());
 
     final firestoreRules = FirebaseSecurityRulesGenerator().generateFirestoreRules(corePondContext);
     expect(firestoreRules, '''\
@@ -32,6 +33,12 @@ service cloud.firestore {
       allow create: if (request.auth.uid != null && request.auth.token.admin == true) || (request.resource.data.owner == request.auth.uid);
       allow update: if (request.auth.uid != null && request.auth.token.admin == true) || (request.resource.data.owner == request.auth.uid && resource.data.owner == request.auth.uid);
       allow delete: if false;
+    }
+    match /attachments/{id} {
+      allow read: if get(/databases/\$(database)/documents/documents/\$(resource.data.owner)).data.owner == request.auth.uid;
+      allow create: if get(/databases/\$(database)/documents/documents/\$(request.resource.data.owner)).data.owner == request.auth.uid;
+      allow update: if get(/databases/\$(database)/documents/documents/\$(request.resource.data.owner)).data.owner == request.auth.uid && get(/databases/\$(database)/documents/documents/\$(resource.data.owner)).data.owner == request.auth.uid;
+      allow delete: if get(/databases/\$(database)/documents/documents/\$(resource.data.owner)).data.owner == request.auth.uid;
     }
   }
 }''');
@@ -79,4 +86,28 @@ class DocumentRepository with IsRepositoryWrapper {
             PermissionField.loggedInUserId,
           ))
       .copyWith(delete: Permission.none));
+}
+
+class Attachment extends ValueObject {
+  static const documentField = 'document';
+  late final documentProperty = reference<DocumentEntity>(name: documentField).required();
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [documentProperty];
+}
+
+class AttachmentEntity extends Entity<Attachment> {}
+
+class AttachmentRepository with IsRepositoryWrapper {
+  @override
+  late final Repository repository = Repository.forType<AttachmentEntity, Attachment>(
+    AttachmentEntity.new,
+    Attachment.new,
+    entityTypeName: 'AttachmentEntity',
+    valueObjectTypeName: 'Attachment',
+  ).cloud('attachments').withSecurity(RepositorySecurity.all(Permission.equals(
+        PermissionField.entity<DocumentEntity>(PermissionField.propertyName(Document.ownerField))
+            .propertyName(Document.ownerField),
+        PermissionField.loggedInUserId,
+      )));
 }

@@ -11,13 +11,13 @@ class AllStatesFirebaseQueryRequestReducer extends FirebaseQueryRequestReducer<A
   Future<List<State>> reduce(
     AllStatesQueryRequest queryRequest,
     firebase.Query firestoreQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async {
     final snap = await firestoreQuery.get(firebase.GetOptions(source: firebase.Source.server));
 
     final states = snap.docs.map(getStateFromDocument).toList();
     for (final state in states) {
-      onStateRetrieved?.call(state);
+      await onStateRetrieved?.call(state);
     }
     return states;
   }
@@ -26,12 +26,12 @@ class AllStatesFirebaseQueryRequestReducer extends FirebaseQueryRequestReducer<A
   Stream<List<State>> reduceX(
     AllStatesQueryRequest queryRequest,
     firebase.Query firestoreQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) {
-    return firestoreQuery.snapshots().map((snap) {
+    return firestoreQuery.snapshots().asyncMap((snap) async {
       final states = snap.docs.map(getStateFromDocument).toList();
       for (final state in states) {
-        onStateRetrieved?.call(state);
+        await onStateRetrieved?.call(state);
       }
       return states;
     });

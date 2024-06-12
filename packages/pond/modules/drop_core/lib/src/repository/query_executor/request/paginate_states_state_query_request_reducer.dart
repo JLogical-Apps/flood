@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drop_core/src/query/pagination/paginated_query_result.dart';
 import 'package:drop_core/src/query/pagination/query_result_page.dart';
 import 'package:drop_core/src/query/request/paginate_states_query_request.dart';
@@ -9,12 +11,12 @@ class PaginateStatesStateQueryRequestReducer
   PaginateStatesStateQueryRequestReducer({required super.dropContext});
 
   @override
-  PaginatedQueryResult<State> reduce(
+  Future<PaginatedQueryResult<State>> reduce(
     PaginateStatesQueryRequest queryRequest,
     Iterable<State> states, {
-    Function(State state)? onStateRetrieved,
-  }) {
-    return PaginatedQueryResult(
+    FutureOr Function(State state)? onStateRetrieved,
+  }) async {
+    final result = PaginatedQueryResult<State>(
       initialPage: QueryResultPage.batched(
         items: states.toList(),
         batchSize: queryRequest.pageSize,
@@ -24,9 +26,11 @@ class PaginateStatesStateQueryRequestReducer
           : (page) async {
               final states = await page.getItems();
               for (final state in states) {
-                onStateRetrieved(state);
+                await onStateRetrieved(state);
               }
             },
     );
+    await result.initialize();
+    return result;
   }
 }

@@ -13,13 +13,13 @@ class FirstOrNullStateFirebaseQueryRequestReducer
   Future<State?> reduce(
     FirstOrNullStateQueryRequest queryRequest,
     firebase.Query firestoreQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async {
     final snap = await firestoreQuery.limit(1).get(firebase.GetOptions(source: firebase.Source.server));
 
     final state = snap.docs.firstOrNull?.mapIfNonNull(getStateFromDocument);
     if (state != null) {
-      onStateRetrieved?.call(state);
+      await onStateRetrieved?.call(state);
     }
 
     return state;
@@ -29,12 +29,12 @@ class FirstOrNullStateFirebaseQueryRequestReducer
   Stream<State?> reduceX(
     FirstOrNullStateQueryRequest queryRequest,
     firebase.Query firestoreQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) {
-    return firestoreQuery.limit(1).snapshots().map((snap) {
+    return firestoreQuery.limit(1).snapshots().asyncMap((snap) async {
       final state = snap.docs.firstOrNull?.mapIfNonNull(getStateFromDocument);
       if (state != null) {
-        onStateRetrieved?.call(state);
+        await onStateRetrieved?.call(state);
       }
 
       return state;

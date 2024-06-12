@@ -16,9 +16,13 @@ class FirebaseCoreComponent with IsCorePondComponent {
   final bool Function(EnvironmentType environment) shouldInitialize;
 
   FirebaseApp get firebaseApp => Firebase.app(appName ?? defaultFirebaseAppName);
+
   FirebaseFirestore get firestore => FirebaseFirestore.instanceFor(app: firebaseApp);
+
   FirebaseAuth get auth => FirebaseAuth.instanceFor(app: firebaseApp);
+
   FirebaseStorage get storage => FirebaseStorage.instanceFor(app: firebaseApp);
+
   FirebaseFunctions get functions => FirebaseFunctions.instanceFor(app: firebaseApp);
 
   FirebaseCoreComponent({

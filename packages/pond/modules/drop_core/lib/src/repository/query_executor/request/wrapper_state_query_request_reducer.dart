@@ -9,7 +9,7 @@ class WrapperStateQueryRequestReducer extends StateQueryRequestReducer<QueryRequ
   final FutureOr<T> Function<E extends Entity, T>(
     QueryRequest<E, T> queryRequest,
     Iterable<State> states,
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   ) queryRequestResolver;
 
   WrapperStateQueryRequestReducer({required super.dropContext, required this.queryRequestResolver});
@@ -18,7 +18,7 @@ class WrapperStateQueryRequestReducer extends StateQueryRequestReducer<QueryRequ
   dynamic reduce(
     QueryRequestWrapper queryRequest,
     Iterable<State> states, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) {
     return queryRequestResolver(queryRequest.queryRequest, states, onStateRetrieved);
   }

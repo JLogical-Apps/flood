@@ -11,7 +11,7 @@ class CountFirebaseQueryRequestReducer extends FirebaseQueryRequestReducer<Count
   Future<int> reduce(
     CountQueryRequest queryRequest,
     firebase.Query firestoreQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async {
     final snap = await firestoreQuery.count().get();
 
@@ -23,7 +23,7 @@ class CountFirebaseQueryRequestReducer extends FirebaseQueryRequestReducer<Count
   Stream<int> reduceX(
     CountQueryRequest queryRequest,
     firebase.Query firestoreQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async* {
     yield await reduce(queryRequest, firestoreQuery, onStateRetrieved: onStateRetrieved);
   }

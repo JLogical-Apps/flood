@@ -1,7 +1,7 @@
+import 'dart:async';
+
 import 'package:auth_core/auth_core.dart';
 import 'package:drop_core/src/context/drop_core_context.dart';
-import 'package:drop_core/src/query/query.dart';
-import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/security/permission_field.dart';
 import 'package:drop_core/src/state/state.dart';
 
@@ -14,27 +14,21 @@ abstract class Permission {
 
   static Permission get admin => AdminPermission();
 
-  static Permission equals(PermissionFieldSource field1, PermissionFieldValue field2) =>
+  static Permission equals(PermissionField field1, PermissionField field2) =>
       EqualsPermission(field1: field1, field2: field2);
 
   static Permission and(List<Permission> permissions) => AndPermission(permissions: permissions);
 
   static Permission or(List<Permission> permissions) => OrPermission(permissions: permissions);
 
-  bool passes(
+  FutureOr<bool> passes(
     DropCoreContext context, {
     required Account? loggedInAccount,
   });
 
-  bool passesState(
+  FutureOr<bool> passesState(
     DropCoreContext context, {
     required State state,
-    required Account? loggedInAccount,
-  });
-
-  Query<E> modifyQuery<E extends Entity>(
-    DropCoreContext context, {
-    required Query<E> query,
     required Account? loggedInAccount,
   });
 
@@ -55,21 +49,12 @@ mixin IsPermission implements Permission {
   }
 
   @override
-  bool passesState(
+  Future<bool> passesState(
     DropCoreContext context, {
     required State state,
     required Account? loggedInAccount,
-  }) {
-    return passes(context, loggedInAccount: loggedInAccount);
-  }
-
-  @override
-  Query<E> modifyQuery<E extends Entity>(
-    DropCoreContext context, {
-    required Query<E> query,
-    required Account? loggedInAccount,
-  }) {
-    return query;
+  }) async {
+    return await passes(context, loggedInAccount: loggedInAccount);
   }
 }
 
@@ -118,8 +103,8 @@ class AdminPermission with IsPermission {
 }
 
 class EqualsPermission with IsPermission {
-  final PermissionFieldSource field1;
-  final PermissionFieldValue field2;
+  final PermissionField field1;
+  final PermissionField field2;
 
   EqualsPermission({required this.field1, required this.field2});
 
@@ -129,24 +114,18 @@ class EqualsPermission with IsPermission {
   }
 
   @override
-  bool passesState(
+  Future<bool> passesState(
     DropCoreContext context, {
     required State state,
     required Account? loggedInAccount,
-  }) {
-    return field1.extractValue(context, state: state, loggedInAccount: loggedInAccount) ==
-        field2.extractValue(context, state: state, loggedInAccount: loggedInAccount);
-  }
+  }) async {
+    if (!await field1.isValidValue(context, state: state, loggedInAccount: loggedInAccount) ||
+        !await field2.isValidValue(context, state: state, loggedInAccount: loggedInAccount)) {
+      return false;
+    }
 
-  @override
-  Query<E> modifyQuery<E extends Entity>(
-    DropCoreContext context, {
-    required Query<E> query,
-    required Account? loggedInAccount,
-  }) {
-    return query
-        .where(field1.getStateField(context))
-        .isEqualTo(field2.getFieldValue(context, loggedInAccount: loggedInAccount));
+    return await field1.extractValue(context, state: state, loggedInAccount: loggedInAccount) ==
+        await field2.extractValue(context, state: state, loggedInAccount: loggedInAccount);
   }
 }
 
@@ -156,12 +135,12 @@ class AndPermission with IsPermission {
   AndPermission({required this.permissions});
 
   @override
-  bool passes(
+  Future<bool> passes(
     DropCoreContext context, {
     required Account? loggedInAccount,
-  }) {
+  }) async {
     for (final permission in permissions) {
-      if (!permission.passes(context, loggedInAccount: loggedInAccount)) {
+      if (!await permission.passes(context, loggedInAccount: loggedInAccount)) {
         return false;
       }
     }
@@ -170,13 +149,13 @@ class AndPermission with IsPermission {
   }
 
   @override
-  bool passesState(
+  Future<bool> passesState(
     DropCoreContext context, {
     required State state,
     required Account? loggedInAccount,
-  }) {
+  }) async {
     for (final permission in permissions) {
-      if (!permission.passesState(
+      if (!await permission.passesState(
         context,
         state: state,
         loggedInAccount: loggedInAccount,
@@ -186,18 +165,6 @@ class AndPermission with IsPermission {
     }
 
     return true;
-  }
-
-  @override
-  Query<E> modifyQuery<E extends Entity>(
-    DropCoreContext context, {
-    required Query<E> query,
-    required Account? loggedInAccount,
-  }) {
-    for (final permission in permissions) {
-      query = permission.modifyQuery(context, query: query, loggedInAccount: loggedInAccount);
-    }
-    return query;
   }
 }
 
@@ -207,12 +174,12 @@ class OrPermission with IsPermission {
   OrPermission({required this.permissions});
 
   @override
-  bool passes(
+  Future<bool> passes(
     DropCoreContext context, {
     required Account? loggedInAccount,
-  }) {
+  }) async {
     for (final permission in permissions) {
-      if (permission.passes(context, loggedInAccount: loggedInAccount)) {
+      if (await permission.passes(context, loggedInAccount: loggedInAccount)) {
         return true;
       }
     }
@@ -221,13 +188,13 @@ class OrPermission with IsPermission {
   }
 
   @override
-  bool passesState(
+  Future<bool> passesState(
     DropCoreContext context, {
     required State state,
     required Account? loggedInAccount,
-  }) {
+  }) async {
     for (final permission in permissions) {
-      if (permission.passesState(
+      if (await permission.passesState(
         context,
         state: state,
         loggedInAccount: loggedInAccount,
@@ -237,20 +204,5 @@ class OrPermission with IsPermission {
     }
 
     return false;
-  }
-
-  @override
-  Query<E> modifyQuery<E extends Entity>(
-    DropCoreContext context, {
-    required Query<E> query,
-    required Account? loggedInAccount,
-  }) {
-    for (final permission in permissions) {
-      if (permission.passes(context, loggedInAccount: loggedInAccount)) {
-        return permission.modifyQuery(context, query: query, loggedInAccount: loggedInAccount);
-      }
-    }
-
-    return query;
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auth_core/auth_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:rxdart/rxdart.dart';
@@ -54,38 +56,34 @@ class SecurityQueryExecutor with IsRepositoryQueryExecutorWrapper {
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) async {
     if (!await passesReadPermission()) {
       throw Exception('Invalid permissions to read from [$securityRepository]!');
     }
 
-    final modifiedQuery = repositorySecurity.read.modifyQuery(
-      context,
-      query: queryRequest.query,
-      loggedInAccount: loggedInAccount,
-    );
-
     return await queryExecutor.executeQuery(
-      queryRequest.copyWith(query: modifiedQuery),
-      onStateRetreived: onStateRetreived,
+      queryRequest,
+      onStateRetreived: (state) async {
+        if (!await repositorySecurity.read.passesState(context, state: state, loggedInAccount: loggedInAccount)) {
+          throw Exception('Invalid permissions to read [${state.id}] from [$securityRepository]!');
+        }
+        await onStateRetreived?.call(state);
+      },
     );
   }
 
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) {
-    final modifiedQuery = repositorySecurity.read.modifyQuery(
-      context,
-      query: queryRequest.query,
-      loggedInAccount: loggedInAccount,
-    );
-
-    return queryExecutor
-        .executeQueryX(queryRequest.copyWith(query: modifiedQuery), onStateRetreived: onStateRetreived)
-        .asyncMapWithValue(
+    return queryExecutor.executeQueryX(queryRequest, onStateRetreived: (state) async {
+      if (!await repositorySecurity.read.passesState(context, state: state, loggedInAccount: loggedInAccount)) {
+        throw Exception('Invalid permissions to read [${state.id}] from [$securityRepository]!');
+      }
+      await onStateRetreived?.call(state);
+    }).asyncMapWithValue(
       (result) async {
         if (!await passesReadPermission()) {
           throw Exception('Invalid permissions to read from [$securityRepository]!');

@@ -97,13 +97,13 @@ void main() {
     // Test create
     expect(
       () => documentRepository.updateEntity(DocumentEntity()..set(Document())),
-      throwsA(isA<Exception>()),
+      throwsException,
     );
 
     // Test read
     expect(
       () => documentRepository.executeQuery(Query.fromAll().all()),
-      throwsA(isA<Exception>()),
+      throwsException,
     );
   });
 
@@ -126,29 +126,27 @@ void main() {
       ..set(User()));
 
     // Test create
-    expect(
+    await expectLater(
       () => documentRepository.updateEntity(DocumentEntity()..set(Document())),
-      throwsA(isA<Exception>()),
+      throwsException,
     );
 
     // Test read
-    expect(
+    await expectLater(
       () => documentRepository.executeQuery(Query.fromAll().all()),
       returnsNormally,
     );
 
-    // Allow previous [expect] to run before changing to admin user.
-    await Future(() {});
     loggedInAccountX.value = Account(accountId: 'admin', isAdmin: true);
 
     // Test create
-    expect(
+    await expectLater(
       () => documentRepository.updateEntity(DocumentEntity()..set(Document())),
       returnsNormally,
     );
 
     // Test read
-    expect(
+    await expectLater(
       () => documentRepository.executeQuery(Query.fromAll().all()),
       returnsNormally,
     );
@@ -169,40 +167,101 @@ void main() {
     await corePondContext.register(userRepository);
 
     // Test create
-    expect(
-      () => userRepository.updateEntity(UserEntity()
+    await expectLater(
+      userRepository.updateEntity(UserEntity()
         ..id = userId
         ..set(User())),
-      returnsNormally,
+      completes,
     );
 
-    // Allow previous [expect] to run before changing to admin user.
-    await Future(() {});
-
     // Test read. Expect to see the one UserEntity.
-    var userEntities = await userRepository.executeQuery(Query.from<UserEntity>().all());
+    final userEntities = await userRepository.executeQuery(Query.from<UserEntity>().all());
     expect(
       userEntities.isNotEmpty,
       isTrue,
     );
 
-    // Allow previous [expect] to run before changing to admin user.
-    await Future(() {});
     loggedInAccountX.value = Account(accountId: 'someOtherUserId');
 
     // Test create
-    expect(
+    await expectLater(
       () => userRepository.updateEntity(UserEntity()
         ..id = 'randomId'
         ..set(User())),
-      throwsA(isA<Exception>()),
+      throwsException,
     );
 
-    // Instead of throwing, permissions should just hide entities they do not have access to.
-    userEntities = await userRepository.executeQuery(Query.from<UserEntity>().all());
-    expect(
-      userEntities.isEmpty,
-      isTrue,
+    // Throw when attempting to access the invalid user.
+    await expectLater(
+      () => userRepository.executeQuery(Query.from<UserEntity>().all()),
+      throwsException,
+    );
+  });
+
+  test('security rules for extracted currently logged-in user.', () async {
+    const userId = 'user1';
+    const otherUserId = 'user2';
+
+    final userRepository = UserRepository();
+    final documentRepository = DocumentRepository().withSecurity(RepositorySecurity.all(Permission.equals(
+            PermissionField.entityId,
+            PermissionField.entity<UserEntity>(PermissionField.loggedInUserId).propertyName(User.documentField)) |
+        Permission.equals(PermissionField.propertyName(Document.ownerField), PermissionField.loggedInUserId)));
+    final loggedInAccountX = BehaviorSubject<Account?>.seeded(Account(accountId: userId));
+
+    final corePondContext = CorePondContext();
+    await corePondContext.register(TypeCoreComponent());
+    await corePondContext.register(ActionCoreComponent());
+    await corePondContext.register(DropCoreComponent(loggedInAccountGetter: () => loggedInAccountX.value));
+    await corePondContext.register(userRepository);
+    await corePondContext.register(documentRepository);
+
+    await userRepository.updateEntity(UserEntity()
+      ..id = userId
+      ..set(User()));
+
+    await expectLater(
+      () =>
+          corePondContext.dropCoreComponent.updateEntity(DocumentEntity()..set(Document()..ownerProperty.set(userId))),
+      returnsNormally,
+    );
+    await expectLater(
+      () => corePondContext.dropCoreComponent.updateEntity(DocumentEntity()..set(Document()..ownerProperty.set('123'))),
+      throwsException,
+    );
+    await expectLater(
+      () => corePondContext.dropCoreComponent.updateEntity(DocumentEntity()..set(Document())),
+      throwsException,
+    );
+
+    final queriedDocument = await Query.from<DocumentEntity>().first().get(corePondContext.dropCoreComponent);
+    expect(queriedDocument, isNotNull);
+
+    loggedInAccountX.value = Account(accountId: otherUserId);
+
+    await userRepository.updateEntity(UserEntity()
+      ..id = otherUserId
+      ..set(User()..documentProperty.set(queriedDocument.id!)));
+
+    await expectLater(
+        () => Query.from<DocumentEntity>().first().get(corePondContext.dropCoreComponent), returnsNormally);
+
+    final otherQueriedDocument =
+        await Query.getById<DocumentEntity>(queriedDocument.id!).get(corePondContext.dropCoreComponent);
+
+    await expectLater(
+      await corePondContext.dropCoreComponent
+          .updateEntity(otherQueriedDocument, (Document document) => document..ownerProperty.set(null)),
+      isNotNull,
+    );
+
+    await userRepository.updateEntity(UserEntity()
+      ..id = otherUserId
+      ..set(User()..documentProperty.set(null)));
+
+    await expectLater(
+      () => Query.getByIdOrNull<DocumentEntity>(queriedDocument.id!).get(corePondContext.dropCoreComponent),
+      throwsException,
     );
   });
 }
@@ -222,7 +281,7 @@ Future<T> expectFailsWithoutAuth<T>(
         completer.complete();
       }
     },
-    throwsA(isA<Exception>()),
+    throwsException,
   );
 
   await completer.future;
@@ -256,7 +315,13 @@ Future<T> expectPassesWithoutAuth<T>(
   return await function();
 }
 
-class Document extends ValueObject {}
+class Document extends ValueObject {
+  static const ownerField = 'owner';
+  late final ownerProperty = reference<UserEntity>(name: ownerField);
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [ownerProperty];
+}
 
 class DocumentEntity extends Entity<Document> {}
 
@@ -270,7 +335,13 @@ class DocumentRepository with IsRepositoryWrapper {
   ).memory();
 }
 
-class User extends ValueObject {}
+class User extends ValueObject {
+  static const documentField = 'document';
+  late final documentProperty = reference<DocumentEntity>(name: documentField);
+
+  @override
+  List<ValueObjectBehavior> get behaviors => [documentProperty];
+}
 
 class UserEntity extends Entity<User> {}
 

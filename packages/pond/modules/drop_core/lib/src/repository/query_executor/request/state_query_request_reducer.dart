@@ -18,6 +18,6 @@ abstract class StateQueryRequestReducer<QR extends QueryRequest<dynamic, T>, T> 
   FutureOr<T> reduce(
     QR queryRequest,
     Iterable<State> states, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   });
 }

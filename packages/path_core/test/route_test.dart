@@ -19,7 +19,7 @@ void main() {
     expect(route.uri, Uri(path: '/budget/asdf'));
     expect(route.userProperty.value, 'john');
 
-    expect(() => routeDefinition.fromPath('/budget'), throwsA(isA<Exception>()));
+    expect(() => routeDefinition.fromPath('/budget'), throwsException);
   });
 
   test('budget route with encoded', () async {
@@ -63,8 +63,8 @@ void main() {
     expect(route.trayIdProperty.value, 'trayId');
     expect(route.uri, Uri(path: '/envelope/envelope', queryParameters: {'budgetId': 'budgetId', 'trayId': 'trayId'}));
 
-    expect(() => routeDefinition.fromPath('/envelope/asdf'), throwsA(isA<Exception>()));
-    expect(() => routeDefinition.fromPath('/envelope?budgetId=123'), throwsA(isA<Exception>()));
+    expect(() => routeDefinition.fromPath('/envelope/asdf'), throwsException);
+    expect(() => routeDefinition.fromPath('/envelope?budgetId=123'), throwsException);
   });
 
   test('login route', () async {
@@ -81,10 +81,10 @@ void main() {
     expect(route.passwordProperty.value, 'pass');
     expect(route.uri, Uri(path: '/login'));
 
-    expect(() => routeDefinition.fromRouteData(RouteData.path('/login')), throwsA(isA<Exception>()));
+    expect(() => routeDefinition.fromRouteData(RouteData.path('/login')), throwsException);
     expect(
       () => routeDefinition.fromRouteData(RouteData.path('/login', hiddenState: {'username': null})),
-      throwsA(isA<Exception>()),
+      throwsException,
     );
   });
 

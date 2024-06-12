@@ -14,7 +14,7 @@ class PaginateStatesAppwriteQueryRequestReducer
   Future<PaginatedQueryResult<State>> reduce(
     PaginateStatesQueryRequest queryRequest,
     AppwriteQuery appwriteQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async {
     final page = await _paginate(
       query: appwriteQuery,
@@ -23,14 +23,16 @@ class PaginateStatesAppwriteQueryRequestReducer
       onStateRetrieved: onStateRetrieved,
     );
 
-    return PaginatedQueryResult(initialPage: page);
+    final result = PaginatedQueryResult(initialPage: page);
+    await result.initialize();
+    return result;
   }
 
   @override
   Stream<PaginatedQueryResult<State>> reduceX(
     PaginateStatesQueryRequest queryRequest,
     AppwriteQuery appwriteQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) {
     throw UnimplementedError();
   }
@@ -39,7 +41,7 @@ class PaginateStatesAppwriteQueryRequestReducer
     required AppwriteQuery query,
     required String? lastDocumentId,
     required int limit,
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async {
     var paginateQuery = query.withQuery(appwrite.Query.limit(limit));
     if (lastDocumentId != null) {
@@ -54,7 +56,7 @@ class PaginateStatesAppwriteQueryRequestReducer
 
     final states = documents.documents.map(getStateFromDocument).toList();
     for (final state in states) {
-      onStateRetrieved?.call(state);
+      await onStateRetrieved?.call(state);
     }
 
     return QueryResultPage(

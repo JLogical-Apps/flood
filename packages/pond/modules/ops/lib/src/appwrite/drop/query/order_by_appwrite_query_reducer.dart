@@ -1,7 +1,7 @@
 import 'package:dart_appwrite/dart_appwrite.dart' as appwrite;
+import 'package:drop_core/drop_core.dart';
 import 'package:ops/src/appwrite/drop/appwrite_query.dart';
 import 'package:ops/src/appwrite/drop/appwrite_query_reducer.dart';
-import 'package:drop_core/drop_core.dart';
 
 class OrderByAppwriteQueryReducer extends AppwriteQueryReducer<OrderByQuery> {
   @override

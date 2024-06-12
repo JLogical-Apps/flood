@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart' as firebase;
 import 'package:drop_core/drop_core.dart';
 import 'package:firebase/src/drop/firebase_cloud_repository.dart';
@@ -80,7 +82,7 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) async {
     repository.context.log('Executing query to Firebase: [${queryRequest.prettyPrint(dropContext)}]');
     final firestoreQuery = reduceQuery(null, queryRequest.query);
@@ -94,7 +96,7 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) {
     repository.context.log('Executing queryX to Firebase: [${queryRequest.prettyPrint(dropContext)}]');
     final firestoreQuery = reduceQuery(null, queryRequest.query);
@@ -116,7 +118,7 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   Future<T> resolveForQueryRequest<E extends Entity, T>(
     QueryRequest<E, T> queryRequest,
     firebase.Query firestoreQuery, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) async {
     return await getQueryRequestReducerResolver<T>().resolve(queryRequest).reduce(
           queryRequest,
@@ -128,7 +130,7 @@ class FirebaseCloudRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   Stream<T> resolveForQueryRequestX<E extends Entity, T>(
     QueryRequest<E, T> queryRequest,
     firebase.Query firestoreQuery, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) {
     return getQueryRequestReducerResolver<T>()
         .resolve(queryRequest)

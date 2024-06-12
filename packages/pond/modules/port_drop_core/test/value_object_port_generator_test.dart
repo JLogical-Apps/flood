@@ -253,14 +253,10 @@ void main() {
     final user = Data12();
     var userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);
 
-    expect(() => userPort.submit(), throwsA(anything));
-
-    await Future(() {});
+    await expectLater(() => userPort.submit(), throwsA(anything));
 
     userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user, validateResult: false);
-    expect(() => userPort.submit(), returnsNormally);
-
-    await Future(() {});
+    await expectLater(() => userPort.submit(), returnsNormally);
 
     user.requiredProperty.set('Something not null');
     userPort = corePondContext.locate<PortDropCoreComponent>().generatePort(user);

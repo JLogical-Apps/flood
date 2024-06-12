@@ -36,7 +36,7 @@ void main() {
 
   test('required', () async {
     final data = Data2();
-    expect(() => data.intProperty.value, throwsA(isA<Exception>()));
+    expect(() => data.intProperty.value, throwsException);
 
     data.intProperty.set(0);
     expect(data.intProperty.value, 0);
@@ -103,7 +103,7 @@ void main() {
     dropContext.register<Data6>(Data6.new, name: 'Data6');
 
     final data = Data6();
-    expect(() => data.nameProperty.value, throwsA(isA<Exception>()));
+    expect(() => data.nameProperty.value, throwsException);
 
     data.nameProperty.set('John Doe');
     expect(data.nameProperty.value, 'John Doe');

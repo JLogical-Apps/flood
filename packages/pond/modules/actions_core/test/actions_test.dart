@@ -27,7 +27,7 @@ void main() {
     expect(finishCount, 1);
     expect(lastOutput, 'Hello World');
 
-    expect(() => action(null), throwsA(isA<Exception>()));
+    expect(() => action(null), throwsException);
     expect(startCount, 2);
     expect(finishCount, 1);
     expect(lastOutput, 'Hello World');

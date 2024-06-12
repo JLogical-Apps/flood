@@ -9,13 +9,13 @@ class MapAppwriteQueryRequestReducer<E extends Entity, T>
   final FutureOr<T> Function<T>(
     QueryRequest<E, T> queryRequest,
     AppwriteQuery appwriteQuery,
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   ) queryRequestResolver;
 
   final Stream<T> Function<T>(
     QueryRequest<E, T> queryRequest,
     AppwriteQuery appwriteQuery,
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   ) queryRequestResolverX;
 
   MapAppwriteQueryRequestReducer({
@@ -29,7 +29,7 @@ class MapAppwriteQueryRequestReducer<E extends Entity, T>
   Future<T> reduce(
     MapQueryRequest<E, dynamic, T> queryRequest,
     AppwriteQuery appwriteQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async {
     final sourceQueryRequestResult = await queryRequestResolver(
       queryRequest.sourceQueryRequest,
@@ -43,7 +43,7 @@ class MapAppwriteQueryRequestReducer<E extends Entity, T>
   Stream<T> reduceX(
     MapQueryRequest<E, dynamic, T> queryRequest,
     AppwriteQuery appwriteQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) {
     return queryRequestResolverX(
       queryRequest.sourceQueryRequest,

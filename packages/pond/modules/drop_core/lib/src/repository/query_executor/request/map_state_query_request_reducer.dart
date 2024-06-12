@@ -11,7 +11,7 @@ class MapStateQueryRequestReducer<E extends Entity, T>
   final FutureOr<T> Function<T>(
     QueryRequest<E, T> queryRequest,
     Iterable<State> states,
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   ) queryRequestResolver;
 
   MapStateQueryRequestReducer({
@@ -23,7 +23,7 @@ class MapStateQueryRequestReducer<E extends Entity, T>
   Future<T> reduce(
     MapQueryRequest<E, dynamic, T> queryRequest,
     Iterable<State> states, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async {
     final sourceQueryRequestResult = await queryRequestResolver(
       queryRequest.sourceQueryRequest,

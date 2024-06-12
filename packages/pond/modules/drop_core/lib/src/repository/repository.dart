@@ -131,7 +131,7 @@ extension RepositoryExtension on Repository {
   }
 
   ListenerRepository withListener({
-    final Function(State state)? onStateRetrieved,
+    final FutureOr Function(State state)? onStateRetrieved,
   }) {
     return ListenerRepository(
       repository: this,
@@ -198,14 +198,14 @@ mixin IsRepository implements Repository, IsRepositoryStateHandlerWrapper, IsRep
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQuery(queryRequest, onStateRetreived: onStateRetreived);
 
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQueryX(queryRequest, onStateRetreived: onStateRetreived);
 }
@@ -259,14 +259,14 @@ mixin IsRepositoryWrapper implements RepositoryWrapper, RepositoryStateHandlerWr
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQuery(queryRequest, onStateRetreived: onStateRetreived);
 
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) =>
       queryExecutor.onExecuteQueryX(queryRequest, onStateRetreived: onStateRetreived);
 }

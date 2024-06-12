@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:dart_appwrite/dart_appwrite.dart' as appwrite;
+import 'package:drop_core/drop_core.dart';
 import 'package:ops/src/appwrite/drop/appwrite_cloud_repository.dart';
 import 'package:ops/src/appwrite/drop/appwrite_query.dart';
 import 'package:ops/src/appwrite/drop/appwrite_query_request_reducer.dart';
-import 'package:drop_core/drop_core.dart';
 
 class FirstOrNullStateAppwriteQueryRequestReducer
     extends AppwriteQueryRequestReducer<FirstOrNullStateQueryRequest, State?> {
@@ -14,7 +14,7 @@ class FirstOrNullStateAppwriteQueryRequestReducer
   Future<State?> reduce(
     FirstOrNullStateQueryRequest queryRequest,
     AppwriteQuery appwriteQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async {
     appwriteQuery = appwriteQuery.withQuery(appwrite.Query.limit(1));
 
@@ -26,7 +26,7 @@ class FirstOrNullStateAppwriteQueryRequestReducer
 
     final state = documents.documents.map(getStateFromDocument).firstOrNull;
     if (state != null) {
-      onStateRetrieved?.call(state);
+      await onStateRetrieved?.call(state);
     }
 
     return state;
@@ -36,7 +36,7 @@ class FirstOrNullStateAppwriteQueryRequestReducer
   Stream<State?> reduceX(
     FirstOrNullStateQueryRequest queryRequest,
     AppwriteQuery appwriteQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) {
     throw Exception('Stream of documents from a query is not supported.');
   }

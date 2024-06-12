@@ -12,7 +12,7 @@ class PaginateStatesFirebaseQueryRequestReducer
   Future<PaginatedQueryResult<State>> reduce(
     PaginateStatesQueryRequest queryRequest,
     firebase.Query firestoreQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async {
     final page = await _paginate(
       query: firestoreQuery,
@@ -21,14 +21,16 @@ class PaginateStatesFirebaseQueryRequestReducer
       onStateRetrieved: onStateRetrieved,
     );
 
-    return PaginatedQueryResult(initialPage: page);
+    final result = PaginatedQueryResult(initialPage: page);
+    await result.initialize();
+    return result;
   }
 
   @override
   Stream<PaginatedQueryResult<State>> reduceX(
     PaginateStatesQueryRequest queryRequest,
     firebase.Query firestoreQuery, {
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) {
     throw UnimplementedError();
   }
@@ -37,7 +39,7 @@ class PaginateStatesFirebaseQueryRequestReducer
     required firebase.Query query,
     required firebase.DocumentSnapshot? lastSnap,
     required int limit,
-    Function(State state)? onStateRetrieved,
+    FutureOr Function(State state)? onStateRetrieved,
   }) async {
     var paginateQuery = query.limit(limit);
     if (lastSnap != null) {
@@ -48,7 +50,7 @@ class PaginateStatesFirebaseQueryRequestReducer
     final states = snap.docs.map(getStateFromDocument).toList();
 
     for (final state in states) {
-      onStateRetrieved?.call(state);
+      await onStateRetrieved?.call(state);
     }
 
     return QueryResultPage(

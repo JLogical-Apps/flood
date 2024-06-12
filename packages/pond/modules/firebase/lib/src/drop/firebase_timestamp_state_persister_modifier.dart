@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:drop_core/drop_core.dart';
 import 'package:utils/utils.dart';
-import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 
 class FirebaseTimestampStatePersisterModifier extends StatePersisterModifier {
   @override

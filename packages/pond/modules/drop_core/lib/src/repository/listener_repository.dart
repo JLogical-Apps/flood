@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/repository/repository.dart';
@@ -10,7 +12,7 @@ class ListenerRepository with IsRepositoryWrapper {
   @override
   final Repository repository;
 
-  final Function(State state)? onStateRetrieved;
+  final FutureOr Function(State state)? onStateRetrieved;
 
   ListenerRepository({required this.repository, this.onStateRetrieved});
 
@@ -26,13 +28,13 @@ class ListenerRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) async {
     return await repository.repository.executeQuery(
       queryRequest,
-      onStateRetreived: (state) {
-        onStateRetreived?.call(state);
-        repository.onStateRetrieved?.call(state);
+      onStateRetreived: (state) async {
+        await onStateRetreived?.call(state);
+        await repository.onStateRetrieved?.call(state);
       },
     );
   }
@@ -40,13 +42,13 @@ class ListenerRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   @override
   ValueStream<FutureValue<T>> onExecuteQueryX<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
-    Function(State state)? onStateRetreived,
+    FutureOr Function(State state)? onStateRetreived,
   }) {
     return repository.repository.executeQueryX(
       queryRequest,
-      onStateRetreived: (state) {
-        onStateRetreived?.call(state);
-        repository.onStateRetrieved?.call(state);
+      onStateRetreived: (state) async {
+        await onStateRetreived?.call(state);
+        await repository.onStateRetrieved?.call(state);
       },
     );
   }

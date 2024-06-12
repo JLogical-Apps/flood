@@ -10,7 +10,7 @@ void main() {
 
     const invalidInput = -1;
     expect(nameByNumberResolver.resolveOrNull(invalidInput), null);
-    expect(() => nameByNumberResolver.resolve(invalidInput), throwsA(isA<Exception>()));
+    expect(() => nameByNumberResolver.resolve(invalidInput), throwsException);
   });
 }
 

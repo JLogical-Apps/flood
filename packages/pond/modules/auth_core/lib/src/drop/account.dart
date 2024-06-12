@@ -5,7 +5,8 @@ import 'package:drop_core/drop_core.dart';
 
 class AccountValueObject extends ValueObject {
   static const authCredentialField = 'authCredential';
-  late final authCredentialProperty = field<AuthCredentialsValueObject>(name: authCredentialField).embedded().required();
+  late final authCredentialProperty =
+      field<AuthCredentialsValueObject>(name: authCredentialField).embedded().required();
 
   static const authCredentialKeyField = 'authCredentialKey';
   late final authCredentialKeyProperty =

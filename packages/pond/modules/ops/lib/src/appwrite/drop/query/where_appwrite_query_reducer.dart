@@ -1,3 +1,4 @@
+import 'package:drop_core/drop_core.dart';
 import 'package:ops/src/appwrite/drop/appwrite_query.dart';
 import 'package:ops/src/appwrite/drop/appwrite_query_reducer.dart';
 import 'package:ops/src/appwrite/drop/condition/appwrite_query_condition_reducer.dart';
@@ -9,7 +10,6 @@ import 'package:ops/src/appwrite/drop/condition/is_less_than_appwrite_query_cond
 import 'package:ops/src/appwrite/drop/condition/is_less_than_or_equal_to_appwrite_query_condition_reducer.dart';
 import 'package:ops/src/appwrite/drop/condition/is_non_null_appwrite_query_condition_reducer.dart';
 import 'package:ops/src/appwrite/drop/condition/is_null_appwrite_query_condition_reducer.dart';
-import 'package:drop_core/drop_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class WhereAppwriteQueryReducer extends AppwriteQueryReducer<WhereQuery> {

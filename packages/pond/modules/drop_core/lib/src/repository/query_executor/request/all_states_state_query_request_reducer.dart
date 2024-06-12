@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drop_core/src/query/request/all_states_query_request.dart';
 import 'package:drop_core/src/repository/query_executor/request/state_query_request_reducer.dart';
 import 'package:drop_core/src/state/state.dart';
@@ -6,13 +8,13 @@ class AllStatesStateQueryRequestReducer extends StateQueryRequestReducer<AllStat
   AllStatesStateQueryRequestReducer({required super.dropContext});
 
   @override
-  List<State> reduce(
+  Future<List<State>> reduce(
     AllStatesQueryRequest queryRequest,
     Iterable<State> states, {
-    Function(State state)? onStateRetrieved,
-  }) {
+    FutureOr Function(State state)? onStateRetrieved,
+  }) async {
     for (final state in states) {
-      onStateRetrieved?.call(state);
+      await onStateRetrieved?.call(state);
     }
     return states.toList();
   }
