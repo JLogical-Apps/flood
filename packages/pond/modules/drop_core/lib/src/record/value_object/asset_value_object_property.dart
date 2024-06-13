@@ -61,6 +61,13 @@ class AssetValueObjectProperty
   }
 
   @override
+  Future<void> onDelete(DropCoreContext context) async {
+    if (value?.id != null) {
+      await assetProvider(context.context.assetCoreComponent).delete(value!.id);
+    }
+  }
+
+  @override
   AssetValueObjectProperty copy() {
     return AssetValueObjectProperty(
       property: property.copy(),

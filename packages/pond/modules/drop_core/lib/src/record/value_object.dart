@@ -77,6 +77,12 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
     }
   }
 
+  Future<void> onDelete(DropCoreContext context) async {
+    for (final behavior in behaviors) {
+      await behavior.onDelete(context);
+    }
+  }
+
   @override
   Validator<void, String> get validator => Validator((_) async {
         for (final behavior in behaviors) {

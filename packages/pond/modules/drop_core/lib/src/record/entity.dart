@@ -77,6 +77,7 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin,
   }
 
   Future<void> beforeDelete(DropCoreContext context) async {
+    await value.onDelete(context);
     return await onBeforeDelete(context);
   }
 

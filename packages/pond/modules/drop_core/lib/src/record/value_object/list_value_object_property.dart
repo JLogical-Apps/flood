@@ -77,6 +77,26 @@ class ListValueObjectProperty<T> with IsValueObjectProperty<List<T>, List<T>, Li
   }
 
   @override
+  Future<void> onDuplicate(DropCoreContext context, State state) async {
+    for (final item in value) {
+      final itemProperty = property.copy() as ValueObjectProperty<T?, T?, ValueObjectProperty>;
+      itemProperty.set(item);
+
+      await itemProperty.onDuplicate(context, state);
+    }
+  }
+
+  @override
+  Future<void> onDelete(DropCoreContext context) async {
+    for (final item in value) {
+      final itemProperty = property.copy() as ValueObjectProperty<T?, T?, ValueObjectProperty>;
+      itemProperty.set(item);
+
+      await itemProperty.onDelete(context);
+    }
+  }
+
+  @override
   ListValueObjectProperty<T> copy() {
     return ListValueObjectProperty<T>(property: property.copy(), value: value);
   }

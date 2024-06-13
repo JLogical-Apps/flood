@@ -43,6 +43,11 @@ class MapperValueObjectProperty<G, S, G2, S2>
   }
 
   @override
+  Future<void> onDelete(DropCoreContext context) async {
+    await property.onDelete(context);
+  }
+
+  @override
   G2 get value => getMapper(property.value);
 
   @override

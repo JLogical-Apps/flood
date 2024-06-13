@@ -16,6 +16,8 @@ abstract class ValueObjectBehavior implements Validator<ValueObject, String> {
 
   Future<void> onDuplicate(DropCoreContext context, State state);
 
+  Future<void> onDelete(DropCoreContext context);
+
   static DisplayNameValueObjectBehavior displayName(String? displayName) {
     return DisplayNameValueObjectBehavior(displayNameGetter: () => displayName);
   }
@@ -45,6 +47,9 @@ mixin IsValueObjectBehavior implements ValueObjectBehavior {
 
   @override
   Future<void> onDuplicate(DropCoreContext context, State state) async {}
+
+  @override
+  Future<void> onDelete(DropCoreContext context) async {}
 
   @override
   FutureOr<String?> onValidate(ValueObject valueObject) async {
