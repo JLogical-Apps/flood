@@ -35,10 +35,10 @@ service cloud.firestore {
       allow delete: if false;
     }
     match /attachments/{id} {
-      allow read: if get(/databases/\$(database)/documents/documents/\$(resource.data.owner)).data.owner == request.auth.uid;
-      allow create: if get(/databases/\$(database)/documents/documents/\$(request.resource.data.owner)).data.owner == request.auth.uid;
-      allow update: if get(/databases/\$(database)/documents/documents/\$(request.resource.data.owner)).data.owner == request.auth.uid && get(/databases/\$(database)/documents/documents/\$(resource.data.owner)).data.owner == request.auth.uid;
-      allow delete: if get(/databases/\$(database)/documents/documents/\$(resource.data.owner)).data.owner == request.auth.uid;
+      allow read: if (resource.data.document == null) || (get(/databases/\$(database)/documents/documents/\$(resource.data.owner)).data.owner == request.auth.uid);
+      allow create: if (request.resource.data.document == null) || (get(/databases/\$(database)/documents/documents/\$(request.resource.data.owner)).data.owner == request.auth.uid);
+      allow update: if (request.resource.data.document == null && resource.data.document == null) || (get(/databases/\$(database)/documents/documents/\$(request.resource.data.owner)).data.owner == request.auth.uid && get(/databases/\$(database)/documents/documents/\$(resource.data.owner)).data.owner == request.auth.uid);
+      allow delete: if (resource.data.document == null) || (get(/databases/\$(database)/documents/documents/\$(resource.data.owner)).data.owner == request.auth.uid);
     }
   }
 }''');
@@ -106,6 +106,10 @@ class AttachmentRepository with IsRepositoryWrapper {
     entityTypeName: 'AttachmentEntity',
     valueObjectTypeName: 'Attachment',
   ).cloud('attachments').withSecurity(RepositorySecurity.all(Permission.equals(
+        PermissionField.propertyName(Attachment.documentField),
+        PermissionField.value(null),
+      ) |
+      Permission.equals(
         PermissionField.entity<DocumentEntity>(PermissionField.propertyName(Document.ownerField))
             .propertyName(Document.ownerField),
         PermissionField.loggedInUserId,

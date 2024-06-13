@@ -7,6 +7,10 @@ import 'package:drop_core/src/repository/security/permission_entity_builder.dart
 import 'package:drop_core/src/state/state.dart';
 
 abstract class PermissionField {
+  static ValuePermissionField value(dynamic value) {
+    return ValuePermissionField(value: value);
+  }
+
   static EntityIdPermissionField get entityId => EntityIdPermissionField();
 
   static PropertyPermissionField propertyName(String propertyName) =>
@@ -21,6 +25,22 @@ abstract class PermissionField {
   FutureOr<bool> isValidValue(DropCoreContext context, {required State state, required Account? loggedInAccount});
 
   FutureOr<dynamic> extractValue(DropCoreContext context, {required State state, required Account? loggedInAccount});
+}
+
+class ValuePermissionField implements PermissionField {
+  final dynamic value;
+
+  ValuePermissionField({required this.value});
+
+  @override
+  bool isValidValue(DropCoreContext context, {required State state, required Account? loggedInAccount}) {
+    return true;
+  }
+
+  @override
+  extractValue(DropCoreContext context, {required State state, required Account? loggedInAccount}) {
+    return value;
+  }
 }
 
 class PropertyPermissionField implements PermissionField {
