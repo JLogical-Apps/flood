@@ -18,10 +18,6 @@ class EqualsFirebaseQueryConditionReducer extends FirebaseQueryConditionReducer<
       return currentFirestoreQuery.where(condition.stateField, isNull: true);
     }
 
-    var compareTo = condition.value;
-    if (compareTo is DateTime) {
-      compareTo = compareTo.millisecondsSinceEpoch;
-    }
-    return currentFirestoreQuery.where(condition.stateField, isEqualTo: compareTo);
+    return currentFirestoreQuery.where(condition.stateField, isEqualTo: condition.value);
   }
 }

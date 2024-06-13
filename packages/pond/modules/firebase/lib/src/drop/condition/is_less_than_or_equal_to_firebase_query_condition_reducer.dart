@@ -6,11 +6,6 @@ class IsLessThanOrEqualToFirebaseQueryConditionReducer
     extends FirebaseQueryConditionReducer<IsLessThanOrEqualToQueryCondition> {
   @override
   firebase.Query reduce(IsLessThanOrEqualToQueryCondition condition, firebase.Query currentFirestoreQuery) {
-    var compareTo = condition.value;
-    if (compareTo is DateTime) {
-      compareTo = compareTo.millisecondsSinceEpoch;
-    }
-
-    return currentFirestoreQuery.where(condition.stateField, isLessThanOrEqualTo: compareTo);
+    return currentFirestoreQuery.where(condition.stateField, isLessThanOrEqualTo: condition.value);
   }
 }
