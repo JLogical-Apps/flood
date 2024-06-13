@@ -53,6 +53,14 @@ class SecurityQueryExecutor with IsRepositoryQueryExecutorWrapper {
     return repositorySecurity.read.passes(context, loggedInAccount: loggedInAccount);
   }
 
+  Future<bool> passesReadStatePermission(State state) async {
+    if (context.ignoreSecurity) {
+      return true;
+    }
+
+    return repositorySecurity.read.passesState(context, state: state, loggedInAccount: loggedInAccount);
+  }
+
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
@@ -65,7 +73,7 @@ class SecurityQueryExecutor with IsRepositoryQueryExecutorWrapper {
     return await queryExecutor.executeQuery(
       queryRequest,
       onStateRetreived: (state) async {
-        if (!await repositorySecurity.read.passesState(context, state: state, loggedInAccount: loggedInAccount)) {
+        if (!await passesReadStatePermission(state)) {
           throw Exception('Invalid permissions to read [${state.id}] from [$securityRepository]!');
         }
         await onStateRetreived?.call(state);
@@ -79,7 +87,7 @@ class SecurityQueryExecutor with IsRepositoryQueryExecutorWrapper {
     FutureOr Function(State state)? onStateRetreived,
   }) {
     return queryExecutor.executeQueryX(queryRequest, onStateRetreived: (state) async {
-      if (!await repositorySecurity.read.passesState(context, state: state, loggedInAccount: loggedInAccount)) {
+      if (!await passesReadStatePermission(state)) {
         throw Exception('Invalid permissions to read [${state.id}] from [$securityRepository]!');
       }
       await onStateRetreived?.call(state);
