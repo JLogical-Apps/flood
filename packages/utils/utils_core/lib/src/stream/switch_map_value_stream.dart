@@ -8,6 +8,12 @@ class SwitchMapValueStream<T, R> extends StreamView<R> implements ValueStream<R>
   @override
   R value;
 
+  @override
+  Object? errorOrNull;
+
+  @override
+  StackTrace? stackTrace;
+
   SwitchMapValueStream._({
     required this.source,
   })  : value = source.value,
@@ -21,7 +27,13 @@ class SwitchMapValueStream<T, R> extends StreamView<R> implements ValueStream<R>
     stream = SwitchMapValueStream._(
       source: source
           .switchMap(mapper)
-          .doOnData((data) => stream.value = data)
+          .doOnData((data) => stream
+            ..value = data
+            ..errorOrNull = null
+            ..stackTrace = null)
+          .doOnError((error, stackTrace) => stream
+            ..errorOrNull = error
+            ..stackTrace = stackTrace)
           .publishValueSeeded(mapper(source.value).value)
           .autoConnect(),
     );
@@ -32,17 +44,11 @@ class SwitchMapValueStream<T, R> extends StreamView<R> implements ValueStream<R>
   R? get valueOrNull => value;
 
   @override
-  Object get error => source.error;
+  Object get error => errorOrNull!;
 
   @override
-  Object? get errorOrNull => source.errorOrNull;
-
-  @override
-  bool get hasError => source.hasError;
+  bool get hasError => errorOrNull != null;
 
   @override
   bool get hasValue => source.hasValue;
-
-  @override
-  StackTrace? get stackTrace => source.stackTrace;
 }

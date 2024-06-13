@@ -30,14 +30,16 @@ void main() {
 
   test('asyncMapWithValue', () async {
     var modelHaltCompleter = Completer();
-    var modelFinishCompleter = Completer();
+    var shouldThrowError = false;
 
     final intSubject = BehaviorSubject.seeded(0);
     final toStringStream = intSubject.asyncMapWithValue(
       initialValue: '',
       (value) async {
         await modelHaltCompleter.future;
-        modelFinishCompleter.complete();
+        if (shouldThrowError) {
+          throw Exception();
+        }
         return value.toString();
       },
     );
@@ -45,24 +47,47 @@ void main() {
     expect(intSubject.value, 0);
     expect(toStringStream.value, '');
 
-    final subscription = toStringStream.listen((data) {});
+    final subscription = toStringStream.listen((data) {}, onError: (_) {});
 
     modelHaltCompleter.complete();
-    await modelFinishCompleter.future;
+    await Future(() {});
 
     expect(intSubject.value, 0);
     expect(toStringStream.value, '0');
 
     modelHaltCompleter = Completer();
-    modelFinishCompleter = Completer();
 
     intSubject.value = 1;
 
     modelHaltCompleter.complete();
-    await modelFinishCompleter.future;
+    await Future(() {});
 
     expect(intSubject.value, 1);
     expect(toStringStream.value, '1');
+
+    shouldThrowError = true;
+    modelHaltCompleter = Completer();
+
+    intSubject.value = 2;
+
+    modelHaltCompleter.complete();
+    await Future(() {});
+
+    expect(toStringStream.value, '1');
+    expect(toStringStream.error, isNotNull);
+    expect(toStringStream.stackTrace, isNotNull);
+
+    shouldThrowError = false;
+    modelHaltCompleter = Completer();
+
+    intSubject.value = 3;
+
+    modelHaltCompleter.complete();
+    await Future(() {});
+
+    expect(toStringStream.value, '3');
+    expect(toStringStream.errorOrNull, isNull);
+    expect(toStringStream.stackTrace, isNull);
 
     subscription.cancel();
   });
@@ -95,7 +120,14 @@ void main() {
 
     expect(combinedStream.value, [0, 0, 0]);
 
-    expectLater(combinedStream, emitsInOrder([[0, 0, 0], [0, 0, 0], [1, 0, 0], [2, 0, 0]]));
+    expectLater(
+        combinedStream,
+        emitsInOrder([
+          [0, 0, 0],
+          [0, 0, 0],
+          [1, 0, 0],
+          [2, 0, 0]
+        ]));
 
     intSubjects[0].value = 1;
     await Future(() {});

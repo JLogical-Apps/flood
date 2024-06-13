@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
 
 class CombineLatestValueStream<T, R> extends StreamView<R> implements ValueStream<R> {
@@ -9,6 +8,12 @@ class CombineLatestValueStream<T, R> extends StreamView<R> implements ValueStrea
 
   @override
   R value;
+
+  @override
+  Object? errorOrNull;
+
+  @override
+  StackTrace? stackTrace;
 
   CombineLatestValueStream._({
     required this.sources,
@@ -28,7 +33,15 @@ class CombineLatestValueStream<T, R> extends StreamView<R> implements ValueStrea
       sources: sources,
       combiner: combiner,
       combinedValueStream: CombineLatestStream<T, R>(sources, combiner)
-          .doOnData((data) => stream.value = data)
+          .doOnData((data) => stream
+            ..value = data
+            ..errorOrNull = null
+            ..stackTrace = null)
+          .doOnError((error, stackTrace) {
+            stream
+              ..errorOrNull = error
+              ..stackTrace = stackTrace;
+          })
           .publishValueSeeded(initialValue ?? combiner(sources.map((source) => source.value).toList()))
           .autoConnect(),
       initialValue: initialValue,
@@ -40,17 +53,11 @@ class CombineLatestValueStream<T, R> extends StreamView<R> implements ValueStrea
   R? get valueOrNull => value;
 
   @override
-  Object get error => sources.firstWhereOrNull((source) => source.errorOrNull != null)!.error;
+  Object get error => errorOrNull!;
 
   @override
-  Object? get errorOrNull => sources.firstWhereOrNull((source) => source.errorOrNull != null)?.errorOrNull;
-
-  @override
-  bool get hasError => sources.any((source) => source.hasError);
+  bool get hasError => errorOrNull != null;
 
   @override
   bool get hasValue => true;
-
-  @override
-  StackTrace? get stackTrace => sources.firstWhereOrNull((source) => source.stackTrace != null)?.stackTrace;
 }

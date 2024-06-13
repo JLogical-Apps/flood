@@ -94,7 +94,7 @@ class SecurityQueryExecutor with IsRepositoryQueryExecutorWrapper {
     }).asyncMapWithValue(
       (result) async {
         if (!await passesReadPermission()) {
-          throw Exception('Invalid permissions to read from [$securityRepository]!');
+          return FutureValue.error('Invalid permissions to read from [$securityRepository]', StackTrace.current);
         }
 
         return result;

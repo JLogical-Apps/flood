@@ -85,7 +85,11 @@ class StateQueryExecutor implements RepositoryQueryExecutor {
     FutureOr Function(State state)? onStateRetreived,
   }) {
     return maybeStatesX.asyncMapWithValue(
-      (maybeStates) => maybeStates.asyncMap((states) => executeOnStates(queryRequest, states)),
+      (maybeStates) => maybeStates.asyncMap((states) => executeOnStates(
+            queryRequest,
+            states,
+            onStateRetreived: onStateRetreived,
+          )),
       initialValue: FutureValue.empty(),
     );
   }
