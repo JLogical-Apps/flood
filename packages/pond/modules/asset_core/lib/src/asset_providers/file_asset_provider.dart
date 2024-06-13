@@ -5,7 +5,6 @@ import 'package:asset_core/asset_core.dart';
 import 'package:environment_core/environment_core.dart';
 import 'package:mime/mime.dart';
 import 'package:model_core/model_core.dart';
-import 'package:path/path.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -40,12 +39,6 @@ class FileAssetProvider with IsAssetProvider {
         return Asset(id: id, value: Uint8List.fromList(bytes), metadata: metadata);
       }),
     ).withFile(directory - id);
-  }
-
-  @override
-  Future<List<String>> onListIds() async {
-    final files = directory.listSync();
-    return files.whereType<File>().map((file) => basename(file.path)).toList();
   }
 
   @override

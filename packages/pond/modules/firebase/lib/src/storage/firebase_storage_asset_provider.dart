@@ -43,11 +43,6 @@ class FirebaseStorageAssetProvider with IsAssetProvider {
   }
 
   @override
-  Future<List<String>> onListIds() {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Asset> onUpload(Asset asset) async {
     await DataSource.static.firebaseStorageAsset(context: context, path: '$path/${asset.id}').set(asset);
     await _bytesModelById[asset.id]?.load();

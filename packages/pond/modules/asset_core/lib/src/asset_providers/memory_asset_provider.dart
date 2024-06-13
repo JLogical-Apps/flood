@@ -17,11 +17,6 @@ class MemoryAssetProvider with IsAssetProvider {
   }
 
   @override
-  Future<List<String>> onListIds() async {
-    return _assetXById.keys.toList();
-  }
-
-  @override
   Future<Asset> onUpload(Asset asset) async {
     final assetX = _assetXById.putIfAbsent(asset.id, () => BehaviorSubject.seeded(FutureValue.empty()));
     final newAsset = assetX.value.maybeWhen(

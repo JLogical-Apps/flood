@@ -14,11 +14,6 @@ class BlankAssetProvider with IsAssetProvider {
   }
 
   @override
-  Future<List<String>> onListIds() {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Asset> onUpload(Asset asset) {
     throw UnimplementedError();
   }

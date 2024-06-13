@@ -9,8 +9,6 @@ import 'package:asset_core/src/asset_providers/memory_asset_provider.dart';
 abstract class AssetProvider {
   AssetReference getById(String id);
 
-  Future<List<String>> onListIds();
-
   Future<Asset> onUpload(Asset asset);
 
   Future<void> onDelete(String id);
@@ -37,11 +35,6 @@ mixin IsAssetProvider implements AssetProvider {
 }
 
 extension AssetProviderExtensions on AssetProvider {
-  Future<List<AssetReference>> listAssetReferences() async {
-    final ids = await onListIds();
-    return ids.map((id) => getById(id)).toList();
-  }
-
   Future<Asset> upload(Asset assetUpload) => onUpload(assetUpload);
 
   Future<void> delete(String id) => onDelete(id);
@@ -64,9 +57,6 @@ abstract class AssetProviderWrapper implements AssetProvider {
 mixin IsAssetProviderWrapper implements AssetProviderWrapper {
   @override
   AssetReference getById(String id) => assetProvider.getById(id);
-
-  @override
-  Future<List<String>> onListIds() => assetProvider.onListIds();
 
   @override
   Future<Asset> onUpload(Asset asset) => assetProvider.onUpload(asset);
