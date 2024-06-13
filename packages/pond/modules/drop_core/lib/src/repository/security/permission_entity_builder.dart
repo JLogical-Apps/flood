@@ -26,6 +26,10 @@ class EntityPropertyPermissionField<E extends Entity> implements PermissionField
     required Account? loggedInAccount,
   }) async {
     final id = await permissionField.extractValue(context, state: state, loggedInAccount: loggedInAccount);
+    if (id == null) {
+      return null;
+    }
+
     final entity = await Query.getByIdOrNull<E>(id).get(context);
     if (entity == null) {
       return null;
@@ -38,6 +42,10 @@ class EntityPropertyPermissionField<E extends Entity> implements PermissionField
   @override
   Future<bool> isValidValue(DropCoreContext context, {required State state, required Account? loggedInAccount}) async {
     final id = await permissionField.extractValue(context, state: state, loggedInAccount: loggedInAccount);
+    if (id == null) {
+      return false;
+    }
+
     final entity = await Query.getByIdOrNull<E>(id).get(context);
     return entity != null;
   }
