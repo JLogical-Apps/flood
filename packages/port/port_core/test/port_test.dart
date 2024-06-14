@@ -1,6 +1,7 @@
 import 'package:port_core/port_core.dart';
 import 'package:port_core/src/port_submit_result.dart';
 import 'package:test/test.dart';
+import 'package:utils_core/utils_core.dart';
 
 void main() {
   test('basic port', () async {
@@ -157,6 +158,27 @@ void main() {
     expect((result.data['person'] as Student).name, 'John Doe');
 
     personPort['person'] = personField.getStageValue(Teacher);
+  });
+
+  test('list port fields', () async {
+    final removedItems = <String>[];
+    final port = Port.of({
+      'words': PortField.list(
+        initialValues: ['Hello', 'World'],
+        itemPortFieldGenerator: (value, fieldPath, port) =>
+            PortField.string(initialValue: value)..registerToPort(fieldPath, port),
+        onItemRemoved: (item) => removedItems.add(item),
+      ),
+    });
+
+    await port.submit();
+    expect(removedItems, isEmpty);
+
+    port['words'] = {...port['words'], 'someNewId': 'Test'};
+    port['words'] = (port['words'] as Map).copy()..removeWhere((id, value) => value == 'Hello');
+
+    await port.submit();
+    expect(removedItems, ['Hello']);
   });
 
   test('nested list port fields', () async {

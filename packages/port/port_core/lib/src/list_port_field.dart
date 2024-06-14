@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:port_core/src/port.dart';
 import 'package:port_core/src/port_field.dart';
@@ -12,11 +14,17 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
 
   final PortField<T, S> Function(T? value, String fieldPath, Port port) itemPortFieldGenerator;
 
-  final Map<String, PortField> _initialItemPortFieldById;
+  /// The items that were in the original ListPortField when the Port was created.
+  final Map<String, S> _initialItemFieldById;
+
+  /// The PortFields that were in the previous ListPortField before it was copied.
+  final Map<String, PortField> _existingItemPortFieldById;
+
+  final FutureOr Function(S)? onItemRemoved;
 
   late final Map<String, PortField> itemPortFieldById = Map.fromEntries(value.entries.mapIndexed((i, entry) {
     final (id, value) = entry.asRecord();
-    final existingPortField = _initialItemPortFieldById[id]?..fieldPath = '${portField.fieldPath}/$i';
+    final existingPortField = _existingItemPortFieldById[id]?..fieldPath = '${portField.fieldPath}/$i';
     return MapEntry(
       id,
       existingPortField ?? (itemPortFieldGenerator(value, '$fieldPath/$i', port)),
@@ -26,8 +34,11 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
   ListPortField({
     required this.portField,
     required this.itemPortFieldGenerator,
-    Map<String, PortField>? initialItemPortFieldById,
-  }) : _initialItemPortFieldById = initialItemPortFieldById ?? {};
+    Map<String, S>? initialItemFieldById,
+    this.onItemRemoved,
+    Map<String, PortField>? existingItemPortFieldById,
+  })  : _existingItemPortFieldById = existingItemPortFieldById ?? {},
+        _initialItemFieldById = initialItemFieldById ?? portField.value.cast<String, S>();
 
   @override
   Map<String, T?> parseValue(value) {
@@ -47,11 +58,21 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
 
   @override
   Future<List<S>> submit(Map<String, T?> value) async {
-    return (await Future.wait(
-            itemPortFieldById.mapToIterable((id, portField) async => await portField.submit(portField.value))))
-        .whereNonNull()
-        .cast<S>()
-        .toList();
+    final submittedValueById = (await Future.wait(itemPortFieldById
+            .mapToIterable((id, portField) async => MapEntry(id, await portField.submit(portField.value)))))
+        .toMap()
+        .where((id, value) => value != null)
+        .cast<String, S>();
+
+    if (onItemRemoved != null) {
+      final removedItems =
+          _initialItemFieldById.where((id, value) => !submittedValueById.containsKey(id)).values.toList();
+      for (final item in removedItems) {
+        await onItemRemoved!(item);
+      }
+    }
+
+    return submittedValueById.values.toList();
   }
 
   @override
@@ -59,7 +80,9 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
     return ListPortField<T, S>(
       portField: portField.copyWith(value: value.cast<String, T?>(), error: error),
       itemPortFieldGenerator: itemPortFieldGenerator,
-      initialItemPortFieldById: itemPortFieldById,
+      initialItemFieldById: _initialItemFieldById,
+      existingItemPortFieldById: itemPortFieldById,
+      onItemRemoved: onItemRemoved,
     );
   }
 

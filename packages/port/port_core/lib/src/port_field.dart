@@ -129,14 +129,14 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
   static ListPortField<T, S> list<T, S>({
     required PortField<T, S> Function(T? value, String fieldPath, Port port) itemPortFieldGenerator,
     List<T>? initialValues,
-    List<S> Function(Map<String, T?> value)? submitMapper,
+    FutureOr Function(S)? onItemRemoved,
   }) {
     return ListPortField(
       portField: PortField(
         value: (initialValues ?? []).mapToMap((value) => MapEntry(Uuid().v4(), value)),
-        submitMapper: submitMapper,
       ),
       itemPortFieldGenerator: itemPortFieldGenerator,
+      onItemRemoved: onItemRemoved,
     );
   }
 
@@ -156,10 +156,15 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
     );
   }
 
-  static PortField<Port<T>, T> embedded<T>({required Port<T> port}) {
+  static PortField<Port<T>, T> embedded<T>({
+    required Port<T> port,
+    T Function(Port<T> port)? submitRawMapper,
+  }) {
     return PortField(
       value: port,
       submitMapper: (port) async => (await port.submit()).data,
+      submitRawMapper: submitRawMapper,
+      dataType: Port,
     ).withValidator(Validator((context) async {
       final port = context.value;
       final result = await port.submit();

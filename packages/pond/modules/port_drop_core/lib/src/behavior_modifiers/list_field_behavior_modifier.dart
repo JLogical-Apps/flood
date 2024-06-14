@@ -16,13 +16,14 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
   ) {
     final defaultValue =
         BehaviorMetaModifier.getModifier(context.originalBehavior)?.getDefaultValue(context.originalBehavior);
-    return {
-      behavior.name: PortField.list<dynamic, dynamic>(
-        initialValues: behavior.value.nullIfEmpty ?? defaultValue,
-        itemPortFieldGenerator: (value, fieldPath, port) {
-          final dropContext = context.corePondContext.dropCoreComponent;
-          final runtimeType = dropContext.getRuntimeTypeOrNullRuntime(behavior.valueType);
-          if (runtimeType != null && runtimeType.isA(dropContext.getRuntimeType<ValueObject>())) {
+
+    final dropContext = context.corePondContext.dropCoreComponent;
+    final runtimeType = dropContext.getRuntimeTypeOrNullRuntime(behavior.valueType);
+    if (runtimeType != null && runtimeType.isA(dropContext.getRuntimeType<ValueObject>())) {
+      return {
+        behavior.name: PortField.list<dynamic, dynamic>(
+          initialValues: behavior.value.nullIfEmpty ?? defaultValue,
+          itemPortFieldGenerator: (value, fieldPath, port) {
             var valueObject = extractValueObject(context, value: value);
             valueObject ??= runtimeType.createInstanceOrNull() as ValueObject?;
             return ValueObjectFieldBehaviorModifier.getValueObjectPortField(
@@ -31,38 +32,52 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
               isRequiredOnEdit: true,
               valueObjectType: behavior.valueType,
             )..registerToPort(fieldPath, port);
-          }
+          },
+          onItemRemoved: (valueObject) async {
+            if (valueObject == null) {
+              return;
+            }
 
-          final assetProvider = BehaviorMetaModifier.getModifier(behavior.property)?.getAssetProvider(
-            context.corePondContext.assetCoreComponent,
-            behavior.property,
-          );
-          if (assetProvider != null && value is! AssetPortValue) {
-            final id = switch (value) {
-              String() => value,
-              AssetReference() => value.id,
-              AssetReferenceGetter() => value.id,
-              _ => null,
-            };
-            value = AssetPortValue.initial(
-              initialValue: id == null ? null : assetProvider.getById(id),
+            await valueObject.onDelete(dropContext);
+          },
+        ),
+      };
+    } else {
+      return {
+        behavior.name: PortField.list<dynamic, dynamic>(
+          initialValues: behavior.value.nullIfEmpty ?? defaultValue,
+          itemPortFieldGenerator: (value, fieldPath, port) {
+            final assetProvider = BehaviorMetaModifier.getModifier(behavior.property)?.getAssetProvider(
+              context.corePondContext.assetCoreComponent,
+              behavior.property,
             );
-          }
+            if (assetProvider != null && value is! AssetPortValue) {
+              final id = switch (value) {
+                String() => value,
+                AssetReference() => value.id,
+                AssetReferenceGetter() => value.id,
+                _ => null,
+              };
+              value = AssetPortValue.initial(
+                initialValue: id == null ? null : assetProvider.getById(id),
+              );
+            }
 
-          final itemPortModifier = PortDropCoreComponent.getBehaviorModifier(behavior.property) ??
-              (throw Exception('Cannot generate port for item of property [$behavior]'));
+            final itemPortModifier = PortDropCoreComponent.getBehaviorModifier(behavior.property) ??
+                (throw Exception('Cannot generate port for item of property [$behavior]'));
 
-          final itemPropertyInstance = behavior.property.copy() as ValueObjectProperty;
+            final itemPropertyInstance = behavior.property.copy() as ValueObjectProperty;
 
-          final portFieldByName = itemPortModifier.getPortFieldByName(itemPropertyInstance, context);
-          if (portFieldByName.length > 1) {
-            throw Exception('There are too many port fields generated for item of property [$behavior]');
-          }
+            final portFieldByName = itemPortModifier.getPortFieldByName(itemPropertyInstance, context);
+            if (portFieldByName.length > 1) {
+              throw Exception('There are too many port fields generated for item of property [$behavior]');
+            }
 
-          return (portFieldByName.values.first..registerToPort(fieldPath, port)).copyWithValue(value);
-        },
-      )
-    };
+            return (portFieldByName.values.first..registerToPort(fieldPath, port)).copyWithValue(value);
+          },
+        ),
+      };
+    }
   }
 
   ValueObject? extractValueObject(PortGeneratorBehaviorModifierContext context, {required dynamic value}) {
