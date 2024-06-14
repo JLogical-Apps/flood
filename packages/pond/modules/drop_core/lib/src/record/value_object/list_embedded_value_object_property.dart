@@ -1,7 +1,4 @@
-import 'package:drop_core/src/context/drop_core_context.dart';
-import 'package:drop_core/src/record/value_object.dart';
-import 'package:drop_core/src/record/value_object/value_object_property.dart';
-import 'package:drop_core/src/state/state.dart';
+import 'package:drop_core/drop_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class ListEmbeddedValueObjectProperty<T extends ValueObject>
@@ -38,6 +35,13 @@ class ListEmbeddedValueObjectProperty<T extends ValueObject>
         name,
         value.map((valueObject) => valueObject.getState(context)).toList(),
       ));
+  }
+
+  @override
+  Future<void> onDelete(DropCoreContext context) async {
+    for (final valueObject in value) {
+      await valueObject.onDelete(context);
+    }
   }
 
   @override

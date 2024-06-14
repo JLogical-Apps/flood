@@ -41,6 +41,13 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
   }
 
   @override
+  Future<void> onDelete(DropCoreContext context) async {
+    if (value != null) {
+      await value!.onDelete(context);
+    }
+  }
+
+  @override
   EmbeddedValueObjectProperty<T> copy() {
     return EmbeddedValueObjectProperty<T>(
       property: property.copy(),
