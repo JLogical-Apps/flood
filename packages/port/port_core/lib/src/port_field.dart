@@ -181,11 +181,13 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
 
   static AssetPortField asset({
     AssetReference? initialValue,
+    required AssetPathContext pathContext,
     required AssetProvider assetProvider,
     Asset? uploadedAsset,
   }) {
     return AssetPortField(
       value: AssetPortValue.initial(initialValue: initialValue, uploadedAsset: uploadedAsset),
+      pathContext: pathContext,
       assetProvider: assetProvider,
     );
   }

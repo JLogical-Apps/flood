@@ -15,7 +15,10 @@ class StyledAssetProperty extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final assetProvider = useMemoized(() => assetProperty.assetProviderGetter(context.assetCoreComponent));
-    final assetReference = useMemoized(() => assetProvider.getById(assetProperty.id), [assetProperty.id]);
+    final assetReference = useMemoized(
+      () => assetProvider.getById(assetProperty.pathContext, assetProperty.assetId),
+      [assetProperty.assetId],
+    );
     return AssetReferenceBuilder.buildAssetReference(assetReference, width: width, height: height, fit: fit);
   }
 }

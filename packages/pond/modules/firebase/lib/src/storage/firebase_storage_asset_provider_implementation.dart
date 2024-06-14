@@ -5,8 +5,8 @@ class FirebaseStorageAssetProviderImplementation with IsAssetProviderImplementat
   @override
   AssetProvider getImplementation(CloudAssetProvider prototype) {
     return FirebaseStorageAssetProvider(
-      context: prototype.context.context,
-      path: prototype.path,
+      corePondContext: prototype.context.context,
+      pathGetter: prototype.pathGetter,
     );
   }
 }

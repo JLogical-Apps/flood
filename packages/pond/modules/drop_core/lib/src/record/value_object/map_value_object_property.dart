@@ -1,9 +1,13 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
 class MapValueObjectProperty<K, V> with IsValueObjectProperty<Map<K, V>, Map<K, V>, MapValueObjectProperty<K, V>> {
+  @override
+  late ValueObject valueObject;
+
   final ValueObjectProperty<K?, K?, dynamic> property;
 
   @override
@@ -39,6 +43,6 @@ class MapValueObjectProperty<K, V> with IsValueObjectProperty<Map<K, V>, Map<K, 
 
   @override
   MapValueObjectProperty<K, V> copy() {
-    return MapValueObjectProperty<K, V>(property: property.copy());
+    return MapValueObjectProperty<K, V>(property: property.copy())..valueObject = valueObject;
   }
 }

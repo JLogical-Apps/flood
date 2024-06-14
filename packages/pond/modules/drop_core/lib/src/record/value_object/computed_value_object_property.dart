@@ -3,6 +3,9 @@ import 'package:utils_core/utils_core.dart';
 
 class ComputedValueObjectProperty<T> with IsValueObjectProperty<T, void, ComputedValueObjectProperty<T>> {
   @override
+  late ValueObject valueObject;
+
+  @override
   final String name;
 
   final T Function() computation;
@@ -35,6 +38,6 @@ class ComputedValueObjectProperty<T> with IsValueObjectProperty<T, void, Compute
 
   @override
   ComputedValueObjectProperty<T> copy() {
-    return ComputedValueObjectProperty<T>(name: name, computation: computation);
+    return ComputedValueObjectProperty<T>(name: name, computation: computation)..valueObject = valueObject;
   }
 }

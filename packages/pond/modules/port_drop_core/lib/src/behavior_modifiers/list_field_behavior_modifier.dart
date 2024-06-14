@@ -55,11 +55,11 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
               final id = switch (value) {
                 String() => value,
                 AssetReference() => value.id,
-                AssetReferenceGetter() => value.id,
+                AssetReferenceGetter() => value.assetId,
                 _ => null,
               };
               value = AssetPortValue.initial(
-                initialValue: id == null ? null : assetProvider.getById(id),
+                initialValue: id == null ? null : assetProvider.getById(behavior.createAssetPathContext(), id),
               );
             }
 

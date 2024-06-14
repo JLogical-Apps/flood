@@ -7,10 +7,13 @@ class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReferenceGette
   @override
   final PortField<AssetPortValue, AssetReferenceGetter?> portField;
 
+  final AssetPathContext pathContext;
+
   final AssetProvider assetProvider;
 
   AssetPortField({
     required AssetPortValue value,
+    required this.pathContext,
     dynamic error,
     required this.assetProvider,
   }) : portField = PortField(
@@ -18,20 +21,20 @@ class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReferenceGette
           error: error,
           submitRawMapper: (assetValue) {
             final id = assetValue.uploadedAsset?.id ?? assetValue.initialValue?.id;
-            return id?.mapIfNonNull((id) => assetProvider.getterById(id));
+            return id?.mapIfNonNull((id) => assetProvider.getterById(pathContext, id));
           },
           submitMapper: (assetValue) async {
             if (assetValue.initialValue != null && (assetValue.uploadedAsset != null || assetValue.removed)) {
-              await guardAsync(() => assetProvider.delete(assetValue.initialValue!.id));
+              await guardAsync(() => assetProvider.delete(pathContext, assetValue.initialValue!.id));
             }
             if (assetValue.uploadedAsset != null) {
-              final asset = await assetProvider.upload(assetValue.uploadedAsset!);
-              return assetProvider.getterById(asset.id);
+              final asset = await assetProvider.upload(pathContext, assetValue.uploadedAsset!);
+              return assetProvider.getterById(pathContext, asset.id);
             } else if (assetValue.removed) {
               return null;
             } else {
               return assetValue.initialValue
-                  ?.mapIfNonNull((assetReference) => assetProvider.getterById(assetReference.id));
+                  ?.mapIfNonNull((assetReference) => assetProvider.getterById(pathContext, assetReference.id));
             }
           },
         );
@@ -39,6 +42,7 @@ class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReferenceGette
   @override
   AssetPortField copyWith({required AssetPortValue value, required error}) {
     return AssetPortField(
+      pathContext: pathContext,
       value: value,
       assetProvider: assetProvider,
       error: error,

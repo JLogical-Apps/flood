@@ -20,7 +20,7 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin,
 
   V get value => _valueObjectX.value;
 
-  set value(V valueObject) => _valueObjectX.value = valueObject;
+  set value(V valueObject) => _valueObjectX.value = valueObject..entity = this;
 
   void set(V valueObject) => value = valueObject;
 

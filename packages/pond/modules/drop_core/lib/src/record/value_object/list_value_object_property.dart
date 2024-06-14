@@ -1,4 +1,5 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
+import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
@@ -100,4 +101,10 @@ class ListValueObjectProperty<T> with IsValueObjectProperty<List<T>, List<T>, Li
   ListValueObjectProperty<T> copy() {
     return ListValueObjectProperty<T>(property: property.copy(), value: value);
   }
+
+  @override
+  ValueObject get valueObject => property.valueObject;
+
+  @override
+  set valueObject(ValueObject value) => property.valueObject = value;
 }

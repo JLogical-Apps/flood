@@ -12,17 +12,17 @@ class ListEmbeddedValueObjectProperty<T extends ValueObject>
   void fromState(DropCoreContext context, State state) {
     final stateValue = state.data[property.name];
     if (stateValue == null) {
-      property.set([]);
+      set([]);
     } else if (stateValue is List<T>) {
-      property.set(stateValue);
+      set(stateValue);
     } else if (stateValue is List<State>) {
-      property.set(stateValue.map((state) {
+      set(stateValue.map((state) {
         final valueObject = (state.type!.createInstance() as T)..setState(context, state);
         valueObject.throwIfInvalid(null);
         return valueObject;
       }).toList());
     } else if (stateValue is List<dynamic>) {
-      property.set(stateValue.cast<T>());
+      set(stateValue.cast<T>());
     } else {
       throw Exception('Unknown ValueObject value: [$stateValue]');
     }
@@ -35,6 +35,15 @@ class ListEmbeddedValueObjectProperty<T extends ValueObject>
         name,
         value.map((valueObject) => valueObject.getState(context)).toList(),
       ));
+  }
+
+  @override
+  void set(List<T> value) {
+    for (final valueObject in value) {
+      valueObject.entity = this.valueObject.entity;
+    }
+
+    property.set(value);
   }
 
   @override

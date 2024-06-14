@@ -170,6 +170,8 @@ extension ValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty> on 
   }) {
     return MapperValueObjectProperty(property: this, getMapper: getMapper, setMapper: setMapper);
   }
+
+  AssetPathContext createAssetPathContext() => valueObject.createAssetPathContext();
 }
 
 extension GetterSetterNullabeValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty>
@@ -331,6 +333,12 @@ abstract class ValueObjectPropertyWrapper<G, S, V extends ValueObjectProperty> i
 
 mixin IsValueObjectPropertyWrapper<G, S, V extends ValueObjectProperty<G, S, V>>
     implements ValueObjectPropertyWrapper<G, S, V> {
+  @override
+  ValueObject get valueObject => property.valueObject;
+
+  @override
+  set valueObject(ValueObject value) => property.valueObject = value;
+
   @override
   String get name => property.name;
 

@@ -29,19 +29,28 @@ class AssetValueObjectProperty
           getMapper: (assetId) => assetId == null
               ? null
               : AssetReferenceGetter(
-                  id: assetId,
+                  assetId: assetId,
+                  pathContextGetter: () => idProperty.createAssetPathContext(),
                   assetProviderGetter: assetProvider,
                 ),
-          setMapper: (assetReference) => assetReference?.id,
+          setMapper: (assetReference) => assetReference?.assetId,
         );
 
   @override
   void fromState(DropCoreContext context, State state) {
     final stateValue = state.data[property.name];
     if (stateValue is String) {
-      property.set(AssetReferenceGetter(id: stateValue, assetProviderGetter: assetProvider));
+      property.set(AssetReferenceGetter(
+        assetId: stateValue,
+        pathContextGetter: () => createAssetPathContext(),
+        assetProviderGetter: assetProvider,
+      ));
     } else if (stateValue is AssetReference) {
-      property.set(AssetReferenceGetter(id: stateValue.id, assetProviderGetter: assetProvider));
+      property.set(AssetReferenceGetter(
+        assetId: stateValue.id,
+        pathContextGetter: () => createAssetPathContext(),
+        assetProviderGetter: assetProvider,
+      ));
     } else if (stateValue is AssetReferenceGetter) {
       property.set(stateValue);
     } else if (stateValue != null) {
@@ -53,8 +62,10 @@ class AssetValueObjectProperty
   Future<void> onDuplicate(DropCoreContext context, State state) async {
     // Instead of containing the same asset as the source, copy the asset and use that instead.
     // This issues with the original asset being deleted.
-    if (value?.id != null) {
-      final asset = await assetProvider(context.context.assetCoreComponent).getById(value!.id).getAsset();
+    if (value?.assetId != null) {
+      final asset = await assetProvider(context.context.assetCoreComponent)
+          .getById(createAssetPathContext(), value!.assetId)
+          .getAsset();
       duplicatedAsset = asset.withNewId();
       set(null);
     }
@@ -62,8 +73,8 @@ class AssetValueObjectProperty
 
   @override
   Future<void> onDelete(DropCoreContext context) async {
-    if (value?.id != null) {
-      await assetProvider(context.context.assetCoreComponent).delete(value!.id);
+    if (value?.assetId != null) {
+      await assetProvider(context.context.assetCoreComponent).delete(createAssetPathContext(), value!.assetId);
     }
   }
 
@@ -85,5 +96,9 @@ extension AssetValueObjectPropertyExtensions<G extends AssetReferenceGetter?, S 
       (throw Exception('Could not find asset provider for field [$this]'));
 
   AssetReference? getAssetReference(AssetCoreComponent context) =>
-      value == null ? null : findAssetProvider(context).getById(value!.id);
+      value == null ? null : findAssetProvider(context).getById(valueObject.createAssetPathContext(), value!.assetId);
+}
+
+extension AssetPathContextPropertyExtensions on AssetPathContext {
+  String get entityId => values[State.idField];
 }

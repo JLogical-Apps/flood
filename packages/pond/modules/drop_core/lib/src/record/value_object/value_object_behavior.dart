@@ -8,6 +8,8 @@ import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class ValueObjectBehavior implements Validator<ValueObject, String> {
+  late ValueObject valueObject;
+
   void fromState(DropCoreContext context, State state);
 
   State modifyState(DropCoreContext context, State state);

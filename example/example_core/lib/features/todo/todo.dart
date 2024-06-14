@@ -1,5 +1,6 @@
 import 'package:example_core/features/tag/tag_entity.dart';
 import 'package:example_core/features/user/user_entity.dart';
+import 'package:example_core/features/user/user_token.dart';
 import 'package:flood_core/flood_core.dart';
 
 class Todo extends ValueObject {
@@ -27,6 +28,9 @@ class Todo extends ValueObject {
       .list()
       .withDisplayName('Assets');
 
+  static const tokensField = 'tokens';
+  late final tokensProperty = field<UserToken>(name: tokensField).list().embedded().withDisplayName('Tokens');
+
   @override
   late final List<ValueObjectBehavior> behaviors = [
     nameProperty,
@@ -35,6 +39,7 @@ class Todo extends ValueObject {
     tagsProperty,
     userProperty,
     assetsProperty,
+    tokensProperty,
     creationTime(),
   ];
 }
@@ -45,5 +50,6 @@ class TodoAssetProvider with IsAssetProviderWrapper {
   TodoAssetProvider(this.context);
 
   @override
-  late final AssetProvider assetProvider = AssetProvider.static.adapting(context, 'todo');
+  late final AssetProvider assetProvider =
+      AssetProvider.static.adapting(context, (context) => 'todos/${context.entityId}/assets');
 }

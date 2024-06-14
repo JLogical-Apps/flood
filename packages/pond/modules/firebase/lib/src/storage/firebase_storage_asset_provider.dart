@@ -8,25 +8,27 @@ import 'package:persistence/persistence.dart';
 import 'package:pond/pond.dart';
 
 class FirebaseStorageAssetProvider with IsAssetProvider {
-  final CorePondContext context;
-  final String path;
+  final CorePondContext corePondContext;
+  final String Function(AssetPathContext pathContext) pathGetter;
 
   final Map<String, Model<Uint8List>> _bytesModelById = {};
   final Map<String, Model<AssetMetadata>> _metadataModelById = {};
 
-  FirebaseStorageAssetProvider({required this.context, required this.path});
+  FirebaseStorageAssetProvider({required this.corePondContext, required this.pathGetter});
 
-  Reference get reference => context.firebaseCoreComponent.storage.ref(path);
+  Reference getReference(AssetPathContext context) =>
+      corePondContext.firebaseCoreComponent.storage.ref(pathGetter(context));
 
   @override
-  AssetReference getById(String id) {
+  AssetReference getById(AssetPathContext context, String id) {
+    final path = pathGetter(context);
     final metadataModel = _metadataModelById.putIfAbsent(
       id,
-      () => DataSource.static.firebaseStorageMetadata(context: context, path: '$path/$id').asModel(),
+      () => DataSource.static.firebaseStorageMetadata(context: corePondContext, path: '$path/$id').asModel(),
     );
     final bytesModel = _bytesModelById.putIfAbsent(
       id,
-      () => DataSource.static.firebaseStorage(context: context, path: '$path/$id').asModel(),
+      () => DataSource.static.firebaseStorage(context: corePondContext, path: '$path/$id').asModel(),
     );
     return AssetReference(
       id: id,
@@ -43,16 +45,18 @@ class FirebaseStorageAssetProvider with IsAssetProvider {
   }
 
   @override
-  Future<Asset> onUpload(Asset asset) async {
-    await DataSource.static.firebaseStorageAsset(context: context, path: '$path/${asset.id}').set(asset);
+  Future<Asset> onUpload(AssetPathContext context, Asset asset) async {
+    final path = pathGetter(context);
+    await DataSource.static.firebaseStorageAsset(context: corePondContext, path: '$path/${asset.id}').set(asset);
     await _bytesModelById[asset.id]?.load();
     await _metadataModelById[asset.id]?.load();
     return asset;
   }
 
   @override
-  Future<void> onDelete(String id) async {
-    await DataSource.static.firebaseStorageAsset(context: context, path: '$path/$id').delete();
+  Future<void> onDelete(AssetPathContext context, String id) async {
+    final path = pathGetter(context);
+    await DataSource.static.firebaseStorageAsset(context: corePondContext, path: '$path/$id').delete();
     _bytesModelById.remove(id);
     _metadataModelById.remove(id);
   }

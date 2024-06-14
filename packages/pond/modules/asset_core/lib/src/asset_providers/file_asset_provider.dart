@@ -10,16 +10,19 @@ import 'package:utils_core/utils_core.dart';
 
 class FileAssetProvider with IsAssetProvider {
   final AssetCoreComponent context;
-  final String path;
+  final String Function(AssetPathContext pathContext) pathGetter;
 
   final Map<String, Model<List<int>>> _bytesModelById = {};
 
-  FileAssetProvider({required this.context, required this.path});
+  FileAssetProvider({required this.context, required this.pathGetter});
 
-  Directory get directory => context.context.environmentCoreComponent.fileSystem.storageIoDirectory! / 'assets' / path;
+  Directory get rootDirectory => context.context.environmentCoreComponent.fileSystem.storageIoDirectory! / 'assets';
+
+  Directory getDirectory(AssetPathContext pathContext) => rootDirectory / pathGetter(pathContext);
 
   @override
-  AssetReference getById(String id) {
+  AssetReference getById(AssetPathContext context, String id) {
+    final directory = getDirectory(context);
     final fileModel = DataSource.static.directory(directory).asModel().map((directory) => directory - id);
     final bytesModel = _bytesModelById.putIfAbsent(id, () => DataSource.static.rawFile(directory - id).asModel());
     final metadataModel = Model.union([fileModel, bytesModel]).map((List results) {
@@ -42,19 +45,21 @@ class FileAssetProvider with IsAssetProvider {
   }
 
   @override
-  Future<Asset> onUpload(Asset asset) async {
+  Future<Asset> onUpload(AssetPathContext context, Asset asset) async {
+    final directory = getDirectory(context);
     await DataSource.static.rawFile(directory - asset.id).set(asset.value);
     _bytesModelById[asset.id]?.load();
     return asset;
   }
 
   @override
-  Future<void> onDelete(String id) async {
+  Future<void> onDelete(AssetPathContext context, String id) async {
+    final directory = getDirectory(context);
     await DataSource.static.rawFile(directory - id).delete();
   }
 
   @override
   Future<void> onReset() async {
-    await DataSource.static.directory(directory).delete();
+    await DataSource.static.directory(rootDirectory).delete();
   }
 }

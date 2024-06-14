@@ -12,9 +12,11 @@ class AssetPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModifier
     PortGeneratorBehaviorModifierContext context,
   ) {
     final assetProvider = behavior.assetProvider(context.corePondContext.assetCoreComponent);
-    final assetId = behavior.value?.id;
+    final assetId = behavior.value?.assetId;
+    final pathContext = behavior.createAssetPathContext();
     return PortField.asset(
-      initialValue: assetId == null ? null : assetProvider.getById(assetId),
+      initialValue: assetId == null ? null : assetProvider.getById(pathContext, assetId),
+      pathContext: pathContext,
       assetProvider: assetProvider,
       uploadedAsset: behavior.duplicatedAsset,
     ).withAllowedFileTypes(behavior.allowedFileTypes ?? AllowedFileTypes.any);

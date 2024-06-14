@@ -2,6 +2,7 @@ export 'src/allowed_file_types.dart';
 export 'src/asset.dart';
 export 'src/asset_core_component.dart';
 export 'src/asset_metadata.dart';
+export 'src/asset_path_context.dart';
 export 'src/asset_provider_implementation.dart';
 export 'src/asset_providers/asset_provider.dart';
 export 'src/asset_providers/cloud_asset_provider.dart';

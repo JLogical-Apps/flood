@@ -1,17 +1,22 @@
 import 'dart:async';
 
-import 'package:asset_core/asset_core.dart';
+import 'package:asset_core/src/asset.dart';
+import 'package:asset_core/src/asset_core_component.dart';
+import 'package:asset_core/src/asset_path_context.dart';
 import 'package:asset_core/src/asset_providers/adapting_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/cache_asset_provider.dart';
+import 'package:asset_core/src/asset_providers/cloud_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/file_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/memory_asset_provider.dart';
+import 'package:asset_core/src/asset_reference.dart';
+import 'package:asset_core/src/asset_reference_getter.dart';
 
 abstract class AssetProvider {
-  AssetReference getById(String id);
+  AssetReference getById(AssetPathContext context, String id);
 
-  Future<Asset> onUpload(Asset asset);
+  Future<Asset> onUpload(AssetPathContext context, Asset asset);
 
-  Future<void> onDelete(String id);
+  Future<void> onDelete(AssetPathContext context, String id);
 
   Future<void> onReset();
 
@@ -21,12 +26,14 @@ abstract class AssetProvider {
 class AssetProviderStatic {
   MemoryAssetProvider get memory => MemoryAssetProvider();
 
-  FileAssetProvider file(AssetCoreComponent context, String path) => FileAssetProvider(context: context, path: path);
+  FileAssetProvider file(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
+      FileAssetProvider(context: context, pathGetter: pathGetter);
 
-  CloudAssetProvider cloud(AssetCoreComponent context, String path) => CloudAssetProvider(context: context, path: path);
+  CloudAssetProvider cloud(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
+      CloudAssetProvider(context: context, pathGetter: pathGetter);
 
-  AdaptingAssetProvider adapting(AssetCoreComponent context, String path) =>
-      AdaptingAssetProvider(context: context, path: path);
+  AdaptingAssetProvider adapting(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
+      AdaptingAssetProvider(context: context, pathGetter: pathGetter);
 }
 
 mixin IsAssetProvider implements AssetProvider {
@@ -35,9 +42,9 @@ mixin IsAssetProvider implements AssetProvider {
 }
 
 extension AssetProviderExtensions on AssetProvider {
-  Future<Asset> upload(Asset assetUpload) => onUpload(assetUpload);
+  Future<Asset> upload(AssetPathContext context, Asset assetUpload) => onUpload(context, assetUpload);
 
-  Future<void> delete(String id) => onDelete(id);
+  Future<void> delete(AssetPathContext context, String id) => onDelete(context, id);
 
   Future<void> reset() => onReset();
 
@@ -45,8 +52,12 @@ extension AssetProviderExtensions on AssetProvider {
     return CacheAssetProvider(assetProvider: this);
   }
 
-  AssetReferenceGetter getterById(String id) {
-    return AssetReferenceGetter(id: id, assetProviderGetter: (_) => this);
+  AssetReferenceGetter getterById(AssetPathContext context, String id) {
+    return AssetReferenceGetter(
+      assetId: id,
+      pathContextGetter: () => context,
+      assetProviderGetter: (_) => this,
+    );
   }
 }
 
@@ -56,13 +67,13 @@ abstract class AssetProviderWrapper implements AssetProvider {
 
 mixin IsAssetProviderWrapper implements AssetProviderWrapper {
   @override
-  AssetReference getById(String id) => assetProvider.getById(id);
+  AssetReference getById(AssetPathContext context, String id) => assetProvider.getById(context, id);
 
   @override
-  Future<Asset> onUpload(Asset asset) => assetProvider.onUpload(asset);
+  Future<Asset> onUpload(AssetPathContext context, Asset asset) => assetProvider.onUpload(context, asset);
 
   @override
-  Future<void> onDelete(String id) => assetProvider.onDelete(id);
+  Future<void> onDelete(AssetPathContext context, String id) => assetProvider.onDelete(context, id);
 
   @override
   Future<void> onReset() => assetProvider.onReset();

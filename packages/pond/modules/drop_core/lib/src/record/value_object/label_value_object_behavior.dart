@@ -1,6 +1,9 @@
 import 'package:drop_core/drop_core.dart';
 
 class LabelValueObjectBehavior with IsValueObjectBehavior {
+  @override
+  late ValueObject valueObject;
+
   final String? Function() labelGetter;
 
   LabelValueObjectBehavior({required this.labelGetter});

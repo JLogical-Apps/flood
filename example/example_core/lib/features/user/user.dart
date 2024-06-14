@@ -34,5 +34,6 @@ class UserProfilePictureAssetProvider with IsAssetProviderWrapper {
   UserProfilePictureAssetProvider(this.context);
 
   @override
-  late final AssetProvider assetProvider = AssetProvider.static.adapting(context, 'profilePictures');
+  late final AssetProvider assetProvider =
+      AssetProvider.static.adapting(context, (context) => 'users/${context.entityId}/profilePicture');
 }

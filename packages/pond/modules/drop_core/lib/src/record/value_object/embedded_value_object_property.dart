@@ -19,9 +19,9 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
   void fromState(DropCoreContext context, State state) {
     final stateValue = state.data[property.name];
     if (stateValue == null) {
-      property.set(null);
+      set(null);
     } else if (stateValue is T) {
-      property.set(stateValue);
+      set(stateValue);
     } else if (stateValue is State) {
       final valueObject = (stateValue.type!.createInstance() as T)..setState(context, stateValue);
       if (onInstantiate != null) {
@@ -29,10 +29,19 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
       }
 
       valueObject.throwIfInvalid(null);
-      property.set(valueObject);
+      set(valueObject);
     } else {
       throw Exception('Unknown ValueObject value: [$stateValue]');
     }
+  }
+
+  @override
+  void set(T? value) {
+    if (value != null) {
+      value.entity = valueObject.entity;
+    }
+
+    property.set(value);
   }
 
   @override

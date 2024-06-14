@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:asset_core/asset_core.dart';
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/record/entity.dart';
@@ -17,7 +18,15 @@ import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrapper<void, String> {
+  Entity? entity;
+
   List<ValueObjectBehavior> get behaviors => [];
+
+  ValueObject() {
+    for (final behavior in behaviors) {
+      behavior.valueObject = this;
+    }
+  }
 
   @override
   State getState(DropCoreContext context) {
@@ -118,4 +127,12 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
       ValueObjectProperty.computed<T>(name: name, computation: computation);
 
   CreationTimeProperty creationTime() => ValueObjectProperty.creationTime();
+
+  AssetPathContext createAssetPathContext() {
+    return AssetPathContext(
+      values: {
+        State.idField: entity?.id,
+      },
+    );
+  }
 }

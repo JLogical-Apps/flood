@@ -1,5 +1,6 @@
 import 'package:asset_core/src/asset.dart';
 import 'package:asset_core/src/asset_metadata.dart';
+import 'package:asset_core/src/asset_path_context.dart';
 import 'package:asset_core/src/asset_providers/asset_provider.dart';
 import 'package:asset_core/src/asset_reference.dart';
 import 'package:model_core/model_core.dart';
@@ -17,8 +18,8 @@ class CacheAssetProvider with IsAssetProviderWrapper {
   CacheAssetProvider({required this.assetProvider});
 
   @override
-  AssetReference getById(String id) {
-    final sourceAssetReference = _assetReferenceById.putIfAbsent(id, () => assetProvider.getById(id));
+  AssetReference getById(AssetPathContext context, String id) {
+    final sourceAssetReference = _assetReferenceById.putIfAbsent(id, () => assetProvider.getById(context, id));
 
     return AssetReference(
       id: id,
@@ -40,8 +41,8 @@ class CacheAssetProvider with IsAssetProviderWrapper {
   }
 
   @override
-  Future<Asset> onUpload(Asset asset) async {
-    final sourceAsset = await assetProvider.upload(asset);
+  Future<Asset> onUpload(AssetPathContext context, Asset asset) async {
+    final sourceAsset = await assetProvider.upload(context, asset);
 
     final assetX = _assetXById.putIfAbsent(asset.id, () => BehaviorSubject.seeded(FutureValue.empty()));
     final newAsset = assetX.value.maybeWhen(
@@ -56,8 +57,8 @@ class CacheAssetProvider with IsAssetProviderWrapper {
   }
 
   @override
-  Future<void> onDelete(String id) async {
-    await assetProvider.delete(id);
+  Future<void> onDelete(AssetPathContext context, String id) async {
+    await assetProvider.delete(context, id);
     _assetXById[id]?.value = FutureValue.empty();
     _assetXById.remove(id);
   }

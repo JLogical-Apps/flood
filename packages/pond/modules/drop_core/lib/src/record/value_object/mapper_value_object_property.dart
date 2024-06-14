@@ -67,4 +67,10 @@ class MapperValueObjectProperty<G, S, G2, S2>
       setMapper: setMapper,
     );
   }
+
+  @override
+  ValueObject get valueObject => property.valueObject;
+
+  @override
+  set valueObject(ValueObject value) => property.valueObject = value;
 }
