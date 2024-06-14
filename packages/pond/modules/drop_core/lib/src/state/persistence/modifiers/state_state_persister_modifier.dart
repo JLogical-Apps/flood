@@ -53,7 +53,20 @@ class StateStatePersisterModifier extends StatePersisterModifier {
                   replaceDataWithState((value as Map).cast<String, dynamic>()),
                   typeContext: context.typeContext,
                 ))
-        .cast<String, dynamic>();
+        .replaceWhereTraversed(
+      (key, value) =>
+          value is List &&
+          value.every((item) => item is Map && item.isA<String, dynamic>() && item.containsKey(State.typeField)),
+      (key, value) {
+        return (value as List)
+            .cast<Map>()
+            .map((data) => State.fromMap(
+                  replaceDataWithState(data.cast<String, dynamic>()),
+                  typeContext: context.typeContext,
+                ))
+            .toList();
+      },
+    ).cast<String, dynamic>();
     return newData;
   }
 }
