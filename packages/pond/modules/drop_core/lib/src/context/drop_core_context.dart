@@ -49,9 +49,9 @@ extension DropCoreContextExtension on DropCoreContext {
     state = await entity.beforeInitialize(this, state: state) ?? state;
 
     final valueObject = typeContext.getRuntimeTypeRuntime(entity.valueObjectType).createInstance() as ValueObject;
-    valueObject.setState(this, await valueObject.setRepositoryState(this, state));
-
     entity.value = valueObject;
+
+    valueObject.setState(this, await valueObject.setRepositoryState(this, state));
 
     await entity.afterInitialize(this);
 
