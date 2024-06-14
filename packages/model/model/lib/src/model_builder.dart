@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:log/log.dart';
 import 'package:model/src/model_builder_config.dart';
 import 'package:model/src/model_hooks.dart';
 import 'package:model_core/model_core.dart';
@@ -34,12 +35,20 @@ class ModelBuilder<T> extends HookWidget {
     final modelBuilderConfig = Provider.of<ModelBuilderConfig?>(context, listen: false);
 
     final state = useModel(model);
+    useEffect(
+      () {
+        if (state is ErrorFutureValue<T>) {
+          context.logError(state.error, state.stackTrace);
+        }
+        return null;
+      },
+      [state],
+    );
     if (state.isEmpty || state.isLoading) {
       return loadingIndicator ?? modelBuilderConfig?.loadingIndicator ?? StyledLoadingIndicator();
     }
 
     if (state is ErrorFutureValue<T>) {
-      print('${state.error}\n${state.stackTrace}');
       return errorBuilder?.call(state.error, state.stackTrace) ??
           modelBuilderConfig?.errorBuilder?.call(state.error, state.stackTrace) ??
           StyledText.body.error('${state.error}');

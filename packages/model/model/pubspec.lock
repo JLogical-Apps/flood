@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.0"
+  archive:
+    dependency: transitive
+    description:
+      name: archive
+      sha256: cb6a278ef2dbb298455e1a713bda08524a175630ec643a242c399c932a0a1f7d
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.1"
   args:
     dependency: transitive
     description:
@@ -57,6 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.1"
+  clipboard:
+    dependency: transitive
+    description:
+      name: clipboard
+      sha256: "2ec38f0e59878008ceca0ab122e4bfde98847f88ef0f83331362ba4521f565a9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.3"
   clock:
     dependency: transitive
     description:
@@ -89,14 +105,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.2"
+  cross_file:
+    dependency: transitive
+    description:
+      name: cross_file
+      sha256: "55d7b444feb71301ef6b8838dbc1ae02e63dd48c8773f3810ff53bb1e2945b32"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.4+1"
   crypto:
     dependency: transitive
     description:
       name: crypto
-      sha256: aa274aa7774f8964e4f4f38cc994db7b6158dd36e9187aaceaddc994b35c6c67
+      sha256: ff625774173754681d66daaf4a448684fb04b78f902da9cb3d308c19cc5e8bab
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.2"
+    version: "3.0.3"
   csslib:
     dependency: transitive
     description:
@@ -105,6 +129,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  csv:
+    dependency: transitive
+    description:
+      name: csv
+      sha256: c6aa2679b2a18cb57652920f674488d89712efaf4d3fdf2e537215b35fc19d6c
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.0"
   cupertino_icons:
     dependency: transitive
     description:
@@ -129,6 +161,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.10"
+  debug:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/debug"
+      relative: true
+    source: path
+    version: "0.0.1"
   dlibphonenumber:
     dependency: transitive
     description:
@@ -137,6 +176,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.14"
+  environment:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/environment"
+      relative: true
+    source: path
+    version: "0.0.1"
+  environment_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/environment_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   equatable:
     dependency: transitive
     description:
@@ -307,6 +360,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
+  json2yaml:
+    dependency: transitive
+    description:
+      name: json2yaml
+      sha256: da94630fbc56079426fdd167ae58373286f603371075b69bf46d848d63ba3e51
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   lints:
     dependency: "direct dev"
     description:
@@ -315,6 +376,28 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  localstorage:
+    dependency: transitive
+    description:
+      name: localstorage
+      sha256: fdff4f717114e992acfd4045dc4a9ab9b987ca57f020965d63e3eb34089c60d8
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1+4"
+  log:
+    dependency: "direct main"
+    description:
+      path: "../../pond/modules/log"
+      relative: true
+    source: path
+    version: "0.0.1"
+  log_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/log_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   logging:
     dependency: transitive
     description:
@@ -426,6 +509,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
+  path_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../path_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   path_provider:
     dependency: transitive
     description:
@@ -474,6 +564,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  persistence:
+    dependency: "direct overridden"
+    description:
+      path: "../../persistence/persistence"
+      relative: true
+    source: path
+    version: "0.0.1"
+  persistence_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../persistence/persistence_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   petitparser:
     dependency: transitive
     description:
@@ -506,6 +610,20 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  pond:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/pond"
+      relative: true
+    source: path
+    version: "0.0.1"
+  pond_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/pond_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   pool:
     dependency: transitive
     description:
@@ -554,6 +672,29 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  share:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/share"
+      relative: true
+    source: path
+    version: "0.0.1"
+  share_plus:
+    dependency: transitive
+    description:
+      name: share_plus
+      sha256: "3ef39599b00059db0990ca2e30fca0a29d8b37aae924d60063f8e0184cf20900"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.2.2"
+  share_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: share_plus_platform_interface
+      sha256: "251eb156a8b5fa9ce033747d73535bf53911071f8d3b6f4f0b578505ce0d4496"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.0"
   shelf:
     dependency: transitive
     description:
@@ -631,6 +772,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  sprintf:
+    dependency: transitive
+    description:
+      name: sprintf
+      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   stack_trace:
     dependency: transitive
     description:
@@ -662,6 +811,14 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  synchronized:
+    dependency: transitive
+    description:
+      name: synchronized
+      sha256: "539ef412b170d65ecdafd780f924e5be3f60032a1128df156adad6c5b373d558"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0+1"
   table_calendar:
     dependency: transitive
     description:
@@ -726,6 +883,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  url_launcher_linux:
+    dependency: transitive
+    description:
+      name: url_launcher_linux
+      sha256: ab360eb661f8879369acac07b6bb3ff09d9471155357da8443fd5d3cf7363811
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
+  url_launcher_platform_interface:
+    dependency: transitive
+    description:
+      name: url_launcher_platform_interface
+      sha256: "552f8a1e663569be95a8190206a38187b531910283c3e982193e4f2733f01029"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
+  url_launcher_web:
+    dependency: transitive
+    description:
+      name: url_launcher_web
+      sha256: "8d9e750d8c9338601e709cd0885f95825086bd8b642547f26bda435aade95d8a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.1"
+  url_launcher_windows:
+    dependency: transitive
+    description:
+      name: url_launcher_windows
+      sha256: ecf9725510600aa2bb6d7ddabe16357691b6d2805f66216a97d1b881e21beff7
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
+  url_strategy:
+    dependency: transitive
+    description:
+      name: url_strategy
+      sha256: "42b68b42a9864c4d710401add17ad06e28f1c1d5500c93b98c431f6b0ea4ab87"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   utils:
     dependency: "direct main"
     description:
@@ -740,6 +937,14 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      sha256: "814e9e88f21a176ae1359149021870e87f7cddaf633ab678a5d2b0bff7fd1ba8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.0"
   vector_math:
     dependency: transitive
     description:
@@ -816,10 +1021,10 @@ packages:
     dependency: transitive
     description:
       name: watcher
-      sha256: "6a7f46926b01ce81bfc339da6a7f20afbe7733eff9846f6d6a5466aa4c6667c0"
+      sha256: "3d2ad6751b3c16cf07c7fca317a1413b3f26530319181b37e3b9039b84fc01d8"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.1.0"
   web:
     dependency: transitive
     description:

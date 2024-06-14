@@ -5,6 +5,7 @@ import 'package:asset/src/asset_reference_builders/uri_asset_reference_builder.d
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:model/model.dart';
+import 'package:style/style.dart';
 import 'package:utils/utils.dart';
 
 abstract class AssetReferenceBuilder with IsModifier<AssetReferenceBuilderContext> {
@@ -41,6 +42,18 @@ abstract class AssetReferenceBuilder with IsModifier<AssetReferenceBuilderContex
                     'assetMetadata': assetMetadata,
                   }}'));
             },
+          );
+        },
+        errorBuilder: (error, stackTrace) {
+          return StyledContainer(
+            width: width,
+            height: height,
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Center(
+                child: StyledIcon(Icons.error, color: Colors.red),
+              ),
+            ),
           );
         },
       );
