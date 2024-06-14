@@ -15,15 +15,28 @@ class StateStatePersisterModifier extends StatePersisterModifier {
   }
 
   Map<String, dynamic> replaceStatefulWithData(Map<String, dynamic> data) {
-    return data.replaceWhereTraversed((key, value) => value is Stateful, (key, value) {
-      final stateful = value as Stateful;
-      final state = stateful.getState(context);
-      return {
-        if (state.id != null) State.idField: state.id,
-        if (state.type != null) State.typeField: state.type!.name,
-        ...replaceStatefulWithData(state.data),
-      };
-    }).cast<String, dynamic>();
+    return data
+        .replaceWhereTraversed((key, value) => value is Stateful, (key, value) {
+          final stateful = value as Stateful;
+          final state = stateful.getState(context);
+          return persistState(state);
+        })
+        .replaceWhereTraversed(
+          (key, value) => value is List<Stateful>,
+          (key, value) => (value as List<Stateful>).map((stateful) {
+            final state = stateful.getState(context);
+            return persistState(state);
+          }).toList(),
+        )
+        .cast<String, dynamic>();
+  }
+
+  Map<String, dynamic> persistState(State state) {
+    return {
+      if (state.id != null) State.idField: state.id,
+      if (state.type != null) State.typeField: state.type!.name,
+      ...replaceStatefulWithData(state.data),
+    };
   }
 
   @override
