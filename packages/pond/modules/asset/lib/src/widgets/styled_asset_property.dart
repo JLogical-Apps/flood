@@ -16,7 +16,7 @@ class StyledAssetProperty extends HookWidget {
   Widget build(BuildContext context) {
     final assetProvider = useMemoized(() => assetProperty.assetProviderGetter(context.assetCoreComponent));
     final assetReference = useMemoized(
-      () => assetProvider.getById(assetProperty.pathContext, assetProperty.assetId),
+      () => assetProvider.getById(assetProperty.getPathContext(context.assetCoreComponent), assetProperty.assetId),
       [assetProperty.assetId],
     );
     return AssetReferenceBuilder.buildAssetReference(assetReference, width: width, height: height, fit: fit);

@@ -59,7 +59,12 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
                 _ => null,
               };
               value = AssetPortValue.initial(
-                initialValue: id == null ? null : assetProvider.getById(behavior.createAssetPathContext(), id),
+                initialValue: id == null
+                    ? null
+                    : assetProvider.getById(
+                        behavior.createAssetPathContext(context.corePondContext.assetCoreComponent),
+                        id,
+                      ),
               );
             }
 

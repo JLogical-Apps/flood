@@ -4,6 +4,7 @@ import 'package:drop_core/src/record/value_object/meta/asset_meta_modifier.dart'
 import 'package:drop_core/src/record/value_object/meta/default_meta_modifier.dart';
 import 'package:drop_core/src/record/value_object/meta/embedded_meta_modifier.dart';
 import 'package:drop_core/src/record/value_object/meta/list_embedded_meta_modifier.dart';
+import 'package:drop_core/src/record/value_object/meta/list_meta_modifier.dart';
 import 'package:drop_core/src/record/value_object/meta/mapper_meta_modifier.dart';
 import 'package:drop_core/src/record/value_object/meta/only_date_meta_modifier.dart';
 import 'package:drop_core/src/record/value_object/meta/required_meta_modifier.dart';
@@ -36,6 +37,7 @@ abstract class BehaviorMetaModifier<T extends ValueObjectBehavior> with IsTypedM
     DefaultMetaModifier(),
     EmbeddedMetaModifier(),
     ListEmbeddedMetaModifier(),
+    ListMetaModifier(),
     OnlyDateMetaModifier(),
     RequiredMetaModifier(),
     RequiredOnEditMetaModifier(),

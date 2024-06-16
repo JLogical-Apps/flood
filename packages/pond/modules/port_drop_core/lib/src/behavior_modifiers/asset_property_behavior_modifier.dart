@@ -11,9 +11,10 @@ class AssetPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModifier
     PortField sourcePortField,
     PortGeneratorBehaviorModifierContext context,
   ) {
-    final assetProvider = behavior.assetProvider(context.corePondContext.assetCoreComponent);
+    final assetContext = context.corePondContext.assetCoreComponent;
+    final assetProvider = behavior.assetProvider(assetContext);
     final assetId = behavior.value?.assetId;
-    final pathContext = behavior.createAssetPathContext();
+    final pathContext = behavior.createAssetPathContext(assetContext);
     return PortField.asset(
       initialValue: assetId == null ? null : assetProvider.getById(pathContext, assetId),
       pathContext: pathContext,

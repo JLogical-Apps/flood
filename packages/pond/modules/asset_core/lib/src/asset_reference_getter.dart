@@ -4,7 +4,7 @@ import 'package:asset_core/src/asset_providers/asset_provider.dart';
 
 class AssetReferenceGetter {
   final String assetId;
-  final AssetPathContext Function() pathContextGetter;
+  final AssetPathContext Function(AssetCoreComponent context) pathContextGetter;
   final AssetProvider Function(AssetCoreComponent context) assetProviderGetter;
 
   AssetReferenceGetter({
@@ -13,5 +13,5 @@ class AssetReferenceGetter {
     required this.assetProviderGetter,
   });
 
-  AssetPathContext get pathContext => pathContextGetter();
+  AssetPathContext getPathContext(AssetCoreComponent context) => pathContextGetter(context);
 }

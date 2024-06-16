@@ -128,8 +128,9 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
 
   CreationTimeProperty creationTime() => ValueObjectProperty.creationTime();
 
-  AssetPathContext createAssetPathContext() {
+  AssetPathContext createAssetPathContext(AssetCoreComponent context) {
     return AssetPathContext(
+      context: context,
       values: {
         State.idField: entity?.id,
       },

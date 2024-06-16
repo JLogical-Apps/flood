@@ -171,7 +171,7 @@ extension ValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty> on 
     return MapperValueObjectProperty(property: this, getMapper: getMapper, setMapper: setMapper);
   }
 
-  AssetPathContext createAssetPathContext() => valueObject.createAssetPathContext();
+  AssetPathContext createAssetPathContext(AssetCoreComponent context) => valueObject.createAssetPathContext(context);
 }
 
 extension GetterSetterNullabeValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty>

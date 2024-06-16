@@ -9,6 +9,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "62.0.0"
+  actions_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/actions_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   analyzer:
     dependency: transitive
     description:
@@ -48,6 +55,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
+  auth_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/auth_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -136,6 +150,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.14"
+  drop_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/drop_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   environment_core:
     dependency: "direct overridden"
     description:
@@ -271,6 +292,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  log_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/log_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   logging:
     dependency: transitive
     description:
@@ -531,6 +559,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.6"
+  type_core:
+    dependency: "direct overridden"
+    description:
+      path: "../../pond/modules/type_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   typed_data:
     dependency: transitive
     description:

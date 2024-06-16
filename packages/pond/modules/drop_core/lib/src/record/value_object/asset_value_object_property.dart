@@ -1,8 +1,7 @@
 import 'package:asset_core/asset_core.dart';
-import 'package:drop_core/src/context/drop_core_context.dart';
-import 'package:drop_core/src/record/value_object/meta/behavior_meta_modifier.dart';
-import 'package:drop_core/src/record/value_object/value_object_property.dart';
-import 'package:drop_core/src/state/state.dart';
+import 'package:collection/collection.dart';
+import 'package:drop_core/drop_core.dart';
+import 'package:utils_core/utils_core.dart';
 
 class AssetValueObjectProperty
     with IsValueObjectPropertyWrapper<AssetReferenceGetter?, AssetReferenceGetter?, AssetValueObjectProperty> {
@@ -30,7 +29,7 @@ class AssetValueObjectProperty
               ? null
               : AssetReferenceGetter(
                   assetId: assetId,
-                  pathContextGetter: () => idProperty.createAssetPathContext(),
+                  pathContextGetter: (context) => idProperty.createAssetPathContext(context),
                   assetProviderGetter: assetProvider,
                 ),
           setMapper: (assetReference) => assetReference?.assetId,
@@ -42,13 +41,13 @@ class AssetValueObjectProperty
     if (stateValue is String) {
       property.set(AssetReferenceGetter(
         assetId: stateValue,
-        pathContextGetter: () => createAssetPathContext(),
+        pathContextGetter: (context) => createAssetPathContext(context),
         assetProviderGetter: assetProvider,
       ));
     } else if (stateValue is AssetReference) {
       property.set(AssetReferenceGetter(
         assetId: stateValue.id,
-        pathContextGetter: () => createAssetPathContext(),
+        pathContextGetter: (context) => createAssetPathContext(context),
         assetProviderGetter: assetProvider,
       ));
     } else if (stateValue is AssetReferenceGetter) {
@@ -64,7 +63,7 @@ class AssetValueObjectProperty
     // This issues with the original asset being deleted.
     if (value?.assetId != null) {
       final asset = await assetProvider(context.context.assetCoreComponent)
-          .getById(createAssetPathContext(), value!.assetId)
+          .getById(createAssetPathContext(context.context.assetCoreComponent), value!.assetId)
           .getAsset();
       duplicatedAsset = asset.withNewId();
       set(null);
@@ -74,7 +73,8 @@ class AssetValueObjectProperty
   @override
   Future<void> onDelete(DropCoreContext context) async {
     if (value?.assetId != null) {
-      await assetProvider(context.context.assetCoreComponent).delete(createAssetPathContext(), value!.assetId);
+      await assetProvider(context.context.assetCoreComponent)
+          .delete(createAssetPathContext(context.context.assetCoreComponent), value!.assetId);
     }
   }
 
@@ -95,8 +95,93 @@ extension AssetValueObjectPropertyExtensions<G extends AssetReferenceGetter?, S 
       BehaviorMetaModifier.getModifier(this)?.getAssetProvider(context, this) ??
       (throw Exception('Could not find asset provider for field [$this]'));
 
-  AssetReference? getAssetReference(AssetCoreComponent context) =>
-      value == null ? null : findAssetProvider(context).getById(valueObject.createAssetPathContext(), value!.assetId);
+  AssetReference? getAssetReference(AssetCoreComponent context) => value == null
+      ? null
+      : findAssetProvider(context).getById(valueObject.createAssetPathContext(context), value!.assetId);
+
+  Future<Asset> uploadAsset(AssetCoreComponent context, Asset asset) async {
+    final dropContext = context.context.dropCoreComponent;
+    final assetPathContext = valueObject.createAssetPathContext(context);
+    final assetProvider = findAssetProvider(context);
+    if (value != null) {
+      await guardAsync(() => assetProvider.delete(assetPathContext, value!.assetId));
+    }
+    final uploadedAsset = await assetProvider.upload(assetPathContext, asset);
+    await dropContext.updateEntity(
+      valueObject.entity!,
+      (ValueObject valueObject) {
+        final state = valueObject.getState(dropContext);
+        valueObject.setState(dropContext, state.withData(state.data.copy()..set(name, uploadedAsset.id)));
+      },
+    );
+    return uploadedAsset;
+  }
+
+  Future<void> deleteAsset(AssetCoreComponent context) async {
+    final dropContext = context.context.dropCoreComponent;
+    final assetProvider = findAssetProvider(context);
+    final assetPathContext = valueObject.createAssetPathContext(context);
+    if (value == null) {
+      throw Exception('Cannot delete asset when no asset id is in the property!');
+    }
+
+    await assetProvider.delete(assetPathContext, value!.assetId);
+    await dropContext.updateEntity(
+      valueObject.entity!,
+      (ValueObject valueObject) {
+        final state = valueObject.getState(dropContext);
+        valueObject.setState(dropContext, state.withData(state.data.copy()..set(name, null)));
+      },
+    );
+  }
+}
+
+extension AssetListValueObjectPropertyExtensions
+    on ValueObjectProperty<List<AssetReferenceGetter>, List<AssetReferenceGetter>, dynamic> {
+  AssetProvider findAssetProvider(AssetCoreComponent context) =>
+      BehaviorMetaModifier.getModifier(this)?.getAssetProvider(context, this) ??
+      (throw Exception('Could not find asset provider for field [$this]'));
+
+  Future<Asset> uploadAsset(AssetCoreComponent context, Asset asset) async {
+    final dropContext = context.context.dropCoreComponent;
+    final assetPathContext = valueObject.createAssetPathContext(context);
+    final assetProvider = findAssetProvider(context);
+
+    final uploadedAsset = await assetProvider.upload(assetPathContext, asset);
+    await dropContext.updateEntity(
+      valueObject.entity!,
+      (ValueObject valueObject) {
+        final state = valueObject.getState(dropContext);
+        valueObject.setState(dropContext, state.withData(state.data.copy()..set(name, [...value, uploadedAsset.id])));
+      },
+    );
+    return uploadedAsset;
+  }
+
+  Future<void> deleteAsset(AssetCoreComponent context, String assetId) async {
+    final dropContext = context.context.dropCoreComponent;
+    final assetProvider = findAssetProvider(context);
+    final assetPathContext = valueObject.createAssetPathContext(context);
+
+    if (value.none((reference) => reference.assetId == assetId)) {
+      throw Exception('Cannot delete asset when no asset with id [$assetId] is in the list!');
+    }
+
+    await assetProvider.delete(assetPathContext, assetId);
+    await dropContext.updateEntity(
+      valueObject.entity!,
+      (ValueObject valueObject) {
+        final state = valueObject.getState(dropContext);
+        valueObject.setState(
+            dropContext,
+            state.withData(state.data.copy()
+              ..set(
+                name,
+                value.where((reference) => reference.assetId != assetId).toList(),
+              )));
+      },
+    );
+  }
 }
 
 extension AssetPathContextPropertyExtensions on AssetPathContext {

@@ -282,12 +282,12 @@ void main() {
     dropContext.register<Data16>(() => Data16(assetProvider: assetProvider), name: 'Data16');
 
     final asset = Asset.upload(path: 'abc.png', value: Uint8List.fromList([]), mimeType: 'image/png');
-    await assetProvider.upload(AssetPathContext(), asset);
+    await assetProvider.upload(AssetPathContext(context: context.assetCoreComponent), asset);
 
     final data = Data16(assetProvider: assetProvider)
       ..assetProperty.set(AssetReferenceGetter(
         assetId: asset.id,
-        pathContextGetter: () => AssetPathContext(),
+        pathContextGetter: (context) => AssetPathContext(context: context),
         assetProviderGetter: (context) => assetProvider,
       ));
     final duplicate = Data16(assetProvider: assetProvider);

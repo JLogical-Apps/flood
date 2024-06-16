@@ -1,5 +1,6 @@
 import 'package:asset_core/src/asset_provider_implementation.dart';
 import 'package:asset_core/src/asset_providers/asset_provider.dart';
+import 'package:auth_core/auth_core.dart';
 import 'package:collection/collection.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:utils_core/utils_core.dart';
@@ -7,11 +8,16 @@ import 'package:utils_core/utils_core.dart';
 class AssetCoreComponent with IsCorePondComponent, IsLocatorWrapper<AssetProvider> {
   final List<AssetProvider> Function(AssetCoreComponent context) assetProviders;
   final List<AssetProviderImplementation> assetProviderImplementations;
+  final Account? Function()? loggedInAccountGetter;
 
   @override
   late Locator<AssetProvider> locator;
 
-  AssetCoreComponent({required this.assetProviders, this.assetProviderImplementations = const []});
+  AssetCoreComponent({
+    required this.assetProviders,
+    this.assetProviderImplementations = const [],
+    this.loggedInAccountGetter,
+  });
 
   @override
   List<CorePondComponentBehavior> get behaviors => [
@@ -39,5 +45,9 @@ class AssetCoreComponent with IsCorePondComponent, IsLocatorWrapper<AssetProvide
   AssetProvider getImplementation(AssetProvider assetProvider) {
     return getImplementationOrNull(assetProvider) ??
         (throw Exception('Could not find implementation for asset provider [$assetProvider]'));
+  }
+
+  Account? getLoggedInAccount() {
+    return loggedInAccountGetter?.call();
   }
 }

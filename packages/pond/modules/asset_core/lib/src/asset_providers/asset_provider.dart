@@ -8,6 +8,8 @@ import 'package:asset_core/src/asset_providers/cache_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/cloud_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/file_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/memory_asset_provider.dart';
+import 'package:asset_core/src/asset_providers/security/asset_security.dart';
+import 'package:asset_core/src/asset_providers/security_asset_provider.dart';
 import 'package:asset_core/src/asset_reference.dart';
 import 'package:asset_core/src/asset_reference_getter.dart';
 
@@ -52,10 +54,14 @@ extension AssetProviderExtensions on AssetProvider {
     return CacheAssetProvider(assetProvider: this);
   }
 
+  AssetProvider withSecurity(AssetSecurity assetSecurity) {
+    return SecurityAssetProvider(assetProvider: this, assetSecurity: assetSecurity);
+  }
+
   AssetReferenceGetter getterById(AssetPathContext context, String id) {
     return AssetReferenceGetter(
       assetId: id,
-      pathContextGetter: () => context,
+      pathContextGetter: (_) => context,
       assetProviderGetter: (_) => this,
     );
   }

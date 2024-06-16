@@ -281,7 +281,7 @@ void main() {
 
     data.assetProperty.set(AssetReferenceGetter(
       assetId: 'someId',
-      pathContextGetter: () => AssetPathContext(),
+      pathContextGetter: (context) => AssetPathContext(context: context),
       assetProviderGetter: (context) => AssetProvider.static.memory,
     ));
     dataPort = corePondContext.locate<PortDropCoreComponent>().generatePort(data);
@@ -312,12 +312,12 @@ void main() {
     corePondContext.locate<TypeCoreComponent>().register(() => Data15(assetProvider: assetProvider), name: 'Data15');
 
     final asset = Asset.upload(path: 'abc.png', value: Uint8List.fromList([]), mimeType: 'image/png');
-    await assetProvider.upload(AssetPathContext(), asset);
+    await assetProvider.upload(AssetPathContext(context: corePondContext.assetCoreComponent), asset);
 
     final data = Data15(assetProvider: assetProvider)
       ..assetProperty.set(AssetReferenceGetter(
         assetId: asset.id,
-        pathContextGetter: () => AssetPathContext(),
+        pathContextGetter: (context) => AssetPathContext(context: context),
         assetProviderGetter: (context) => assetProvider,
       ));
     final duplicate = Data15(assetProvider: assetProvider);
@@ -340,11 +340,15 @@ void main() {
 
     final duplicateResult = await duplicatePort.submit();
 
-    final oldAsset = await assetProvider.getById(AssetPathContext(), asset.id).loadAsset();
+    final oldAsset = await assetProvider
+        .getById(AssetPathContext(context: corePondContext.assetCoreComponent), asset.id)
+        .loadAsset();
     expect(oldAsset, isNotNull);
 
-    final newAsset =
-        await assetProvider.getById(AssetPathContext(), duplicateResult.data.assetProperty.value.assetId).loadAsset();
+    final newAsset = await assetProvider
+        .getById(AssetPathContext(context: corePondContext.assetCoreComponent),
+            duplicateResult.data.assetProperty.value.assetId)
+        .loadAsset();
     expect(newAsset, isNotNull);
     expect(newAsset, isNot(oldAsset));
   });
