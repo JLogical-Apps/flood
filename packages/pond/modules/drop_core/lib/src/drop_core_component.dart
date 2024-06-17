@@ -31,10 +31,11 @@ class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositor
         )
       ];
 
-  Future<void> runWithoutSecurity(FutureOr Function() runner) async {
+  Future<T> runWithoutSecurity<T>(FutureOr<T> Function() runner) async {
     _ignoreSecurity = true;
-    await runner();
+    final result = await runner();
     _ignoreSecurity = false;
+    return result;
   }
 
   @override

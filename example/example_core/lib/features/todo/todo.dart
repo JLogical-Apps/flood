@@ -1,4 +1,5 @@
 import 'package:example_core/features/tag/tag_entity.dart';
+import 'package:example_core/features/todo/todo_entity.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:example_core/features/user/user_token.dart';
 import 'package:flood_core/flood_core.dart';
@@ -50,6 +51,7 @@ class TodoAssetProvider with IsAssetProviderWrapper {
   TodoAssetProvider(this.context);
 
   @override
-  late final AssetProvider assetProvider =
-      AssetProvider.static.adapting(context, (context) => 'todos/${context.entityId}/assets');
+  late final AssetProvider assetProvider = AssetProvider.static
+      .adapting(context, (context) => 'todos/${context.entityId}/assets')
+      .fromRepository<TodoEntity>(context);
 }

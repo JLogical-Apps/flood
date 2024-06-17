@@ -38,4 +38,8 @@ class RepositorySecurity {
   RepositorySecurity withWrite(Permission write) {
     return copyWith(create: write, update: write, delete: write);
   }
+
+  RepositorySecurity withDelete(Permission delete) {
+    return copyWith(delete: delete);
+  }
 }

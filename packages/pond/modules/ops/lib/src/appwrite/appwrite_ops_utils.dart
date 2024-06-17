@@ -12,7 +12,6 @@ import 'package:ops/src/appwrite/appwrite_platform.dart';
 import 'package:ops/src/appwrite/behavior/appwrite_attribute_behavior_modifier.dart';
 import 'package:ops/src/appwrite/permission/permission_text_modifier.dart';
 import 'package:ops/src/appwrite/trigger/appwrite_trigger_modifier.dart';
-import 'package:ops/src/repository_security/repository_security_modifier.dart';
 import 'package:path/path.dart' as path;
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_cli/pond_cli.dart';
@@ -745,7 +744,7 @@ class AppwriteOpsUtils {
   static Collection? _getCollection(AutomateCommandContext context, {required Repository repository}) {
     final dropContext = context.automateContext.corePondContext.dropCoreComponent;
 
-    final securityModifier = RepositorySecurityModifier.getModifierOrNull(repository);
+    final securityModifier = RepositoryMetaModifier.getModifierOrNull(repository);
     if (securityModifier == null) {
       return null;
     }

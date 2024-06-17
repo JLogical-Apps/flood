@@ -1,7 +1,6 @@
 import 'package:drop_core/drop_core.dart';
 import 'package:ops/src/firebase/permission/permission_context.dart';
 import 'package:ops/src/firebase/permission/permission_text_modifier.dart';
-import 'package:ops/src/repository_security/repository_security_modifier.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -16,7 +15,7 @@ class FirebaseSecurityRulesGenerator {
 
     final repositoryRules = repositories
         .map((repository) {
-          final securityModifier = RepositorySecurityModifier.getModifierOrNull(repository);
+          final securityModifier = RepositoryMetaModifier.getModifierOrNull(repository);
           if (securityModifier == null) {
             return null;
           }

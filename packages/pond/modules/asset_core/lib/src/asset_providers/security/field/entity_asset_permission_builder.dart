@@ -4,21 +4,29 @@ import 'package:drop_core/drop_core.dart';
 
 class AssetPermissionEntityBuilder<E extends Entity> {
   final AssetPermissionField permissionField;
+  final Type entityType;
 
-  AssetPermissionEntityBuilder({required this.permissionField});
+  AssetPermissionEntityBuilder({required this.permissionField, Type? entityType}) : entityType = entityType ?? E;
 
   AssetPermissionField propertyName(String propertyName) {
-    return EntityPropertyPermissionField<E>(permissionField: permissionField, propertyName: propertyName);
+    return EntityPropertyPermissionField(
+      permissionField: permissionField,
+      propertyName: propertyName,
+      entityType: entityType,
+    );
   }
 }
 
-class EntityPropertyPermissionField<E extends Entity> with IsAssetPermissionField {
+class EntityPropertyPermissionField with IsAssetPermissionField {
   final AssetPermissionField permissionField;
   final String propertyName;
+  final Type entityType;
 
-  Type get entityType => E;
-
-  EntityPropertyPermissionField({required this.permissionField, required this.propertyName});
+  EntityPropertyPermissionField({
+    required this.permissionField,
+    required this.propertyName,
+    required this.entityType,
+  });
 
   @override
   Future<dynamic> extractValue(AssetPathContext context) async {
@@ -27,7 +35,7 @@ class EntityPropertyPermissionField<E extends Entity> with IsAssetPermissionFiel
       return null;
     }
 
-    final entity = await Query.getByIdOrNull<E>(id).get(context.dropCoreComponent);
+    final entity = await Query.getByIdOrNullRuntime(entityType, id).get(context.dropCoreComponent);
     if (entity == null) {
       return null;
     }
@@ -43,7 +51,7 @@ class EntityPropertyPermissionField<E extends Entity> with IsAssetPermissionFiel
       return false;
     }
 
-    final entity = await Query.getByIdOrNull<E>(id).get(context.dropCoreComponent);
+    final entity = await Query.getByIdOrNullRuntime(entityType, id).get(context.dropCoreComponent);
     return entity != null;
   }
 }

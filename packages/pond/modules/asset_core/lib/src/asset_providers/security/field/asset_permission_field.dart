@@ -14,8 +14,8 @@ abstract class AssetPermissionField {
 
   static AssetPermissionField get entityId => pathMetadata(State.idField);
 
-  static AssetPermissionEntityBuilder<E> entity<E extends Entity>(AssetPermissionField field) {
-    return AssetPermissionEntityBuilder<E>(permissionField: field);
+  static AssetPermissionEntityBuilder<E> entity<E extends Entity>(AssetPermissionField field, {Type? entityType}) {
+    return AssetPermissionEntityBuilder<E>(permissionField: field, entityType: entityType);
   }
 
   FutureOr<bool> isValidValue(AssetPathContext context);

@@ -23,18 +23,19 @@ void main() {
     await corePondContext.register(TypeCoreComponent());
     await corePondContext.register(ActionCoreComponent());
     await corePondContext.register(DropCoreComponent(loggedInAccountGetter: () => loggedInAccountX.value));
-    await corePondContext.register(AssetCoreComponent(
-      loggedInAccountGetter: () => loggedInAccountX.value,
-      assetProviders: (context) => [
-        TodoAssetProvider(context),
-        UserProfilePictureAssetProvider(context),
-      ],
-    ));
     await corePondContext.register(UserRepository());
     await corePondContext.register(TodoRepository());
   });
 
   test('uploading and deleting', () async {
+    await corePondContext.register(AssetCoreComponent(
+      loggedInAccountGetter: () => loggedInAccountX.value,
+      assetProviders: (context) => [
+        UserProfilePictureAssetProvider(context),
+        TodoAssetProvider(context),
+      ],
+    ));
+
     final userEntity = await corePondContext.dropCoreComponent.updateEntity(UserEntity()
       ..id = userId
       ..set(User()));
@@ -78,12 +79,44 @@ void main() {
     expect(todoEntity.value.assetsProperty.value, isEmpty);
   });
 
-  test('uploading and deleting', () async {
+  test('asset security', () async {
+    await corePondContext.register(AssetCoreComponent(
+      loggedInAccountGetter: () => loggedInAccountX.value,
+      assetProviders: (context) => [
+        UserProfilePictureAssetProvider(
+          context,
+          assetSecurity: AssetSecurity(
+            read: AssetPermission.authenticated,
+            write: AssetPermission.equals(AssetPermissionField.loggedInUserId, AssetPermissionField.entityId),
+            delete: AssetPermission.admin &
+                AssetPermission.equals(AssetPermissionField.loggedInUserId, AssetPermissionField.entityId),
+          ),
+        ),
+        TodoAssetProvider(
+          context,
+          assetSecurity: AssetSecurity(
+            read: AssetPermission.authenticated,
+            write: AssetPermission.equals(
+              AssetPermissionField.loggedInUserId,
+              AssetPermissionField.entity<TodoEntity>(AssetPermissionField.entityId).propertyName(Todo.userField),
+            ),
+            delete: AssetPermission.admin &
+                AssetPermission.equals(
+                  AssetPermissionField.loggedInUserId,
+                  AssetPermissionField.entity<TodoEntity>(AssetPermissionField.entityId).propertyName(Todo.userField),
+                ),
+          ),
+        ),
+      ],
+    ));
+
     final userEntity = await corePondContext.dropCoreComponent.updateEntity(UserEntity()
       ..id = userId
       ..set(User()));
     final todoEntity =
         await corePondContext.dropCoreComponent.updateEntity(TodoEntity()..set(Todo()..userProperty.set(userId)));
+    final otherTodoEntity = await corePondContext.dropCoreComponent.runWithoutSecurity(() =>
+        corePondContext.dropCoreComponent.updateEntity(TodoEntity()..set(Todo()..userProperty.set('someOtherId'))));
 
     await userEntity.value.profilePictureProperty.uploadAsset(
       corePondContext.assetCoreComponent,
@@ -99,6 +132,98 @@ void main() {
         path: 'image.png',
         value: Uint8List.fromList([]),
       ),
+    );
+
+    expect(
+      () => otherTodoEntity.value.assetsProperty.uploadAsset(
+        corePondContext.assetCoreComponent,
+        Asset.upload(path: 'image.png', value: Uint8List.fromList([])),
+      ),
+      throwsException,
+    );
+
+    loggedInAccountX.value = Account(accountId: userId, isAdmin: false);
+
+    expect(
+      () => userEntity.value.profilePictureProperty.deleteAsset(corePondContext.assetCoreComponent),
+      throwsException,
+    );
+
+    expect(
+      () => todoEntity.value.assetsProperty.deleteAsset(corePondContext.assetCoreComponent, userId),
+      throwsException,
+    );
+
+    loggedInAccountX.value = Account(accountId: 'someOtherUserId', isAdmin: true);
+
+    expect(
+      () => userEntity.value.profilePictureProperty.uploadAsset(
+        corePondContext.assetCoreComponent,
+        Asset.upload(
+          path: 'image.png',
+          value: Uint8List.fromList([]),
+        ),
+      ),
+      throwsException,
+    );
+
+    expect(
+      () => todoEntity.value.assetsProperty.uploadAsset(
+        corePondContext.assetCoreComponent,
+        Asset.upload(
+          path: 'image.png',
+          value: Uint8List.fromList([]),
+        ),
+      ),
+      throwsException,
+    );
+  });
+
+  test('asset security from repository', () async {
+    await corePondContext.register(AssetCoreComponent(
+      loggedInAccountGetter: () => loggedInAccountX.value,
+      assetProviders: (context) => [
+        UserProfilePictureAssetProvider(
+          context,
+          assetSecurity: AssetSecurity.fromRepository(context.context.locate<UserRepository>()),
+        ),
+        TodoAssetProvider(
+          context,
+          assetSecurity: AssetSecurity.fromRepository(context.context.locate<TodoRepository>()),
+        ),
+      ],
+    ));
+
+    final userEntity = await corePondContext.dropCoreComponent.updateEntity(UserEntity()
+      ..id = userId
+      ..set(User()));
+    final todoEntity =
+        await corePondContext.dropCoreComponent.updateEntity(TodoEntity()..set(Todo()..userProperty.set(userId)));
+    final otherTodoEntity = await corePondContext.dropCoreComponent.runWithoutSecurity(() =>
+        corePondContext.dropCoreComponent.updateEntity(TodoEntity()..set(Todo()..userProperty.set('someOtherId'))));
+
+    await userEntity.value.profilePictureProperty.uploadAsset(
+      corePondContext.assetCoreComponent,
+      Asset.upload(
+        path: 'image.png',
+        value: Uint8List.fromList([]),
+      ),
+    );
+
+    await todoEntity.value.assetsProperty.uploadAsset(
+      corePondContext.assetCoreComponent,
+      Asset.upload(
+        path: 'image.png',
+        value: Uint8List.fromList([]),
+      ),
+    );
+
+    expect(
+      () => otherTodoEntity.value.assetsProperty.uploadAsset(
+        corePondContext.assetCoreComponent,
+        Asset.upload(path: 'image.png', value: Uint8List.fromList([])),
+      ),
+      throwsException,
     );
 
     loggedInAccountX.value = Account(accountId: userId, isAdmin: false);
@@ -158,21 +283,22 @@ class UserRepository with IsRepositoryWrapper {
     User.new,
     entityTypeName: 'UserEntity',
     valueObjectTypeName: 'User',
-  ).memory();
+  ).memory().withSecurity(RepositorySecurity.readWrite(
+          read: Permission.authenticated,
+          write: Permission.equals(PermissionField.loggedInUserId, PermissionField.entityId))
+      .withDelete(Permission.admin & Permission.equals(PermissionField.loggedInUserId, PermissionField.entityId)));
 }
 
 class UserProfilePictureAssetProvider with IsAssetProviderWrapper {
   final AssetCoreComponent context;
 
-  UserProfilePictureAssetProvider(this.context);
+  final AssetSecurity? assetSecurity;
+
+  UserProfilePictureAssetProvider(this.context, {this.assetSecurity});
 
   @override
-  late final AssetProvider assetProvider = AssetProvider.static.memory.withSecurity(AssetSecurity(
-    read: AssetPermission.authenticated,
-    write: AssetPermission.equals(AssetPermissionField.loggedInUserId, AssetPermissionField.entityId),
-    delete: AssetPermission.admin &
-        AssetPermission.equals(AssetPermissionField.loggedInUserId, AssetPermissionField.entityId),
-  ));
+  late final AssetProvider assetProvider =
+      AssetProvider.static.memory.withSecurity(assetSecurity ?? AssetSecurity.all(AssetPermission.all));
 }
 
 class Todo extends ValueObject {
@@ -202,25 +328,23 @@ class TodoRepository with IsRepositoryWrapper {
     Todo.new,
     entityTypeName: 'TodoEntity',
     valueObjectTypeName: 'Todo',
-  ).memory();
+  ).memory().withSecurity(RepositorySecurity.readWrite(
+          read: Permission.authenticated,
+          write: Permission.equals(PermissionField.loggedInUserId, PermissionField.propertyName(Todo.userField)))
+      .withDelete(Permission.admin &
+          Permission.equals(
+            PermissionField.loggedInUserId,
+            PermissionField.propertyName(Todo.userField),
+          )));
 }
 
 class TodoAssetProvider with IsAssetProviderWrapper {
   final AssetCoreComponent context;
+  final AssetSecurity? assetSecurity;
 
-  TodoAssetProvider(this.context);
+  TodoAssetProvider(this.context, {this.assetSecurity});
 
   @override
-  late final AssetProvider assetProvider = AssetProvider.static.memory.withSecurity(AssetSecurity(
-    read: AssetPermission.authenticated,
-    write: AssetPermission.equals(
-      AssetPermissionField.loggedInUserId,
-      AssetPermissionField.entity<TodoEntity>(AssetPermissionField.entityId).propertyName(Todo.userField),
-    ),
-    delete: AssetPermission.admin &
-        AssetPermission.equals(
-          AssetPermissionField.loggedInUserId,
-          AssetPermissionField.entity<TodoEntity>(AssetPermissionField.entityId).propertyName(Todo.userField),
-        ),
-  ));
+  late final AssetProvider assetProvider =
+      AssetProvider.static.memory.withSecurity(assetSecurity ?? AssetSecurity.all(AssetPermission.all));
 }

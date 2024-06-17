@@ -12,6 +12,7 @@ import 'package:asset_core/src/asset_providers/security/asset_security.dart';
 import 'package:asset_core/src/asset_providers/security_asset_provider.dart';
 import 'package:asset_core/src/asset_reference.dart';
 import 'package:asset_core/src/asset_reference_getter.dart';
+import 'package:drop_core/drop_core.dart';
 
 abstract class AssetProvider {
   AssetReference getById(AssetPathContext context, String id);
@@ -56,6 +57,11 @@ extension AssetProviderExtensions on AssetProvider {
 
   AssetProvider withSecurity(AssetSecurity assetSecurity) {
     return SecurityAssetProvider(assetProvider: this, assetSecurity: assetSecurity);
+  }
+
+  AssetProvider fromRepository<E extends Entity>(AssetCoreComponent context) {
+    final entityRepository = context.context.dropCoreComponent.getRepositoryFor<E>();
+    return SecurityAssetProvider(assetProvider: this, assetSecurity: AssetSecurity.fromRepository(entityRepository));
   }
 
   AssetReferenceGetter getterById(AssetPathContext context, String id) {

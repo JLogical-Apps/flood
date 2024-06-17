@@ -7,10 +7,12 @@ class FloodCoreComponent with IsCorePondComponent {
   final FutureOr<List<CorePondComponent>> Function(CorePondContext context)? initialCoreComponents;
   final List<RepositoryImplementation> Function(CorePondContext context)? repositoryImplementations;
   final List<AuthServiceImplementation> Function(CorePondContext context)? authServiceImplementations;
+  final List<AssetProviderImplementation> Function(CorePondContext context)? assetProviderImplementations;
   final AuthService? Function(CorePondContext context)? authService;
   final TaskRunner? Function(CorePondContext context)? taskRunner;
   final LoggerService? Function(CorePondContext context)? loggerService;
   final MessagingService? Function(CorePondContext context)? messagingService;
+  final List<AssetProvider> Function(AssetCoreComponent context)? assetProviders;
   final Action<P, R> Function<P, R>(Action<P, R> action)? actionWrapper;
 
   FloodCoreComponent({
@@ -18,10 +20,12 @@ class FloodCoreComponent with IsCorePondComponent {
     this.initialCoreComponents,
     this.repositoryImplementations,
     this.authServiceImplementations,
+    this.assetProviderImplementations,
     this.authService,
     this.taskRunner,
     this.loggerService,
     this.messagingService,
+    this.assetProviders,
     this.actionWrapper,
   }) : environmentConfig = environmentConfig ?? EnvironmentConfig.static.environmentVariables();
 
@@ -53,6 +57,11 @@ class FloodCoreComponent with IsCorePondComponent {
           ));
           await context.register(MessagingCoreComponent(
             messagingService: messagingService?.call(context) ?? MessagingService.static.blank,
+          ));
+          await context.register(AssetCoreComponent(
+            assetProviders: assetProviders ?? (_) => [],
+            assetProviderImplementations: assetProviderImplementations?.call(context) ?? [],
+            loggedInAccountGetter: () => context.locate<AuthCoreComponent>().accountX.value.getOrNull(),
           ));
           await context.register(ActionCoreComponent(
             actionWrapper: actionWrapper,

@@ -29,9 +29,15 @@ Future<CorePondContext> getCorePondContext({
     authServiceImplementations: authServiceImplementations,
     actionWrapper: <P, R>(action) => action.log(context: corePondContext),
     authService: (context) => AuthService.static.adapting(memoryIsAdmin: false),
+    assetProviderImplementations: assetProviderImplementations,
     taskRunner: taskRunner,
     loggerService: loggerService,
     messagingService: messagingService,
+    assetProviders: (context) => [
+      TodoAssetProvider(context),
+      UserProfilePictureAssetProvider(context),
+      UserTokenAssetProvider(context),
+    ],
   ));
 
   await corePondContext.register(UserDeviceTokenCoreComponent(
@@ -51,15 +57,6 @@ Future<CorePondContext> getCorePondContext({
 
       await dropContext.updateEntity(userEntity, (User user) => user..deviceTokenProperty.set(null));
     },
-  ));
-
-  await corePondContext.register(AssetCoreComponent(
-    assetProviderImplementations: assetProviderImplementations?.call(corePondContext) ?? [],
-    assetProviders: (context) => [
-      TodoAssetProvider(context),
-      UserProfilePictureAssetProvider(context),
-      UserTokenAssetProvider(context),
-    ],
   ));
 
   await corePondContext.register(UserRepository());
