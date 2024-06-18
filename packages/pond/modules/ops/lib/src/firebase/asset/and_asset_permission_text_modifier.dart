@@ -16,7 +16,7 @@ class AndAssetPermissionTextModifier extends AssetPermissionTextModifier<AndAsse
   ) {
     return assetPermission.permissions
         .map((permission) =>
-            '(${permissionTextModifierGetter(assetPermission).getText(context, assetPermissionContext, permission)})')
+            '(${permissionTextModifierGetter(permission).getText(context, assetPermissionContext, permission)})')
         .join(' && ');
   }
 }
