@@ -9,7 +9,7 @@ class AssetPermissionEntityBuilder<E extends Entity> {
   AssetPermissionEntityBuilder({required this.permissionField, Type? entityType}) : entityType = entityType ?? E;
 
   AssetPermissionField propertyName(String propertyName) {
-    return EntityPropertyPermissionField(
+    return EntityPropertyAssetPermissionField(
       permissionField: permissionField,
       propertyName: propertyName,
       entityType: entityType,
@@ -17,12 +17,12 @@ class AssetPermissionEntityBuilder<E extends Entity> {
   }
 }
 
-class EntityPropertyPermissionField with IsAssetPermissionField {
+class EntityPropertyAssetPermissionField with IsAssetPermissionField {
   final AssetPermissionField permissionField;
   final String propertyName;
   final Type entityType;
 
-  EntityPropertyPermissionField({
+  EntityPropertyAssetPermissionField({
     required this.permissionField,
     required this.propertyName,
     required this.entityType,

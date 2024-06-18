@@ -1,6 +1,6 @@
 import 'package:drop_core/drop_core.dart';
-import 'package:ops/src/firebase/permission/permission_context.dart';
-import 'package:ops/src/firebase/permission/permission_text_modifier.dart';
+import 'package:ops/src/firebase/repository/permission_context.dart';
+import 'package:ops/src/firebase/repository/permission_text_modifier.dart';
 
 class AndPermissionTextModifier extends PermissionTextModifier<AndPermission> {
   final PermissionTextModifier Function(Permission permission) permissionTextModifierGetter;

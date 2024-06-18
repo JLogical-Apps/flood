@@ -1,5 +1,6 @@
 import 'package:asset_core/src/asset_providers/security/field/asset_permission_field.dart';
 import 'package:asset_core/src/asset_providers/security/repository/field/entity_id_repository_permission_field_asset_modifier.dart';
+import 'package:asset_core/src/asset_providers/security/repository/field/entity_property_repository_permission_field_asset_modifier.dart';
 import 'package:asset_core/src/asset_providers/security/repository/field/logged_in_user_id_repository_permission_field_asset_modifier.dart';
 import 'package:asset_core/src/asset_providers/security/repository/field/property_name_repository_permission_field_asset_modifier.dart';
 import 'package:asset_core/src/asset_providers/security/repository/field/value_repository_permission_field_asset_modifier.dart';
@@ -16,6 +17,7 @@ abstract class RepositoryPermissionFieldAssetModifier<T extends PermissionField>
     EntityIdRepositoryPermissionFieldAssetModifier(),
     LoggedInUserIdRepositoryPermissionFieldAssetModifier(),
     PropertyNameRepositoryPermissionFieldAssetModifier(),
+    EntityPropertyRepositoryPermissionFieldAssetModifier(),
   ]);
 
   static RepositoryPermissionFieldAssetModifier getModifier(PermissionField permissionField) =>

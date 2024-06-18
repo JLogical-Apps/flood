@@ -48,7 +48,7 @@ packages:
     source: hosted
     version: "2.4.2"
   asset_core:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../asset_core"
       relative: true

@@ -32,18 +32,48 @@ class FirebaseOpsEnvironment with IsOpsEnvironment {
   Future<void> onDeploy(AutomateCommandContext context, {required EnvironmentType environmentType}) async {
     await FirebaseOpsUtils.useProjectId(context, environmentType: environmentType);
 
+    await _deployFirestoreRules(context);
+    await _deployFirebaseStorageRules(context);
+  }
+
+  Future<void> _deployFirestoreRules(AutomateCommandContext context) async {
     final firestoreRulesFile = context.firebaseDirectory - 'firestore.rules';
     final firestoreRulesSource = DataSource.static.file(firestoreRulesFile);
     final oldFirestoreRules = (await firestoreRulesSource.getOrNull()) ?? '';
 
     final firestoreRules =
         FirebaseSecurityRulesGenerator().generateFirestoreRules(context.automateContext.corePondContext);
+    if (oldFirestoreRules == firestoreRules) {
+      return;
+    }
+
     await firestoreRulesSource.set(firestoreRules);
 
     await context.confirmAndExecutePlan(Plan([
       PlanItem.static.diff(previousValue: oldFirestoreRules, file: firestoreRulesFile),
       PlanItem.static.run(
         'firebase deploy --only firestore:rules',
+        workingDirectory: context.firebaseDirectory,
+      ),
+    ]));
+  }
+
+  Future<void> _deployFirebaseStorageRules(AutomateCommandContext context) async {
+    final firebaseStorageRulesFile = context.firebaseDirectory - 'storage.rules';
+    final firebaseStorageRulesSource = DataSource.static.file(firebaseStorageRulesFile);
+    final oldFirebaseStorageRules = (await firebaseStorageRulesSource.getOrNull()) ?? '';
+
+    final firebaseStorageRules =
+        FirebaseSecurityRulesGenerator().generateFirebaseStorageRules(context.automateContext.corePondContext);
+    if (oldFirebaseStorageRules == firebaseStorageRules) {
+      return;
+    }
+    await firebaseStorageRulesSource.set(firebaseStorageRules);
+
+    await context.confirmAndExecutePlan(Plan([
+      PlanItem.static.diff(previousValue: oldFirebaseStorageRules, file: firebaseStorageRulesFile),
+      PlanItem.static.run(
+        'firebase deploy --only storage',
         workingDirectory: context.firebaseDirectory,
       ),
     ]));

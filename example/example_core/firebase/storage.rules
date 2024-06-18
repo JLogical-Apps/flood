@@ -1,12 +1,23 @@
 rules_version = '2';
-
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
+    match /{allImages=**} {
       allow read, write: if false;
+    }
+    match /todos/{id}/assets/{imageId} {
+      allow read: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/todo/$(id)).user == request.auth.uid);
+      allow write: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/todo/$(id)).user == request.auth.uid);
+      allow delete: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/todo/$(id)).user == request.auth.uid);
+    }
+    match /users/{id}/profilePicture/{imageId} {
+      allow read: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow write: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow delete: if request.auth.uid != null && request.auth.token.admin == true;
+    }
+    match /todos/{id}/tokens/{imageId} {
+      allow read: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/todo/$(id)).user == request.auth.uid);
+      allow write: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/todo/$(id)).user == request.auth.uid);
+      allow delete: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/todo/$(id)).user == request.auth.uid);
     }
   }
 }
