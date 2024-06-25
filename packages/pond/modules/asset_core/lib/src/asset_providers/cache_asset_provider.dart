@@ -41,6 +41,10 @@ class CacheAssetProvider with IsAssetProvider {
     String id, {
     bool waitForAsset = false,
   }) async {
+    if (_assetMetadataXById[id]?.value.isLoaded ?? false) {
+      return _assetMetadataXById[id]!.value.getOrNull()!;
+    }
+
     final sourceAssetReference =
         _sourceAssetReferenceById.putIfAbsent(id, () => sourceAssetProvider.getById(context, id));
     final cacheAssetReference = _cacheAssetReferenceById.putIfAbsent(id, () => cacheAssetProvider.getById(context, id));
