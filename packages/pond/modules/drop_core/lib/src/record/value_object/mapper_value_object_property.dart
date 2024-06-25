@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object.dart';
+import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
@@ -38,8 +39,9 @@ class MapperValueObjectProperty<G, S, G2, S2>
   }
 
   @override
-  Future<void> onDuplicate(DropCoreContext context, State state) async {
-    await property.onDuplicate(context, state);
+  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) async {
+    behavior as MapperValueObjectProperty<G, S, G2, S2>;
+    await property.onDuplicateTo(context, behavior.property);
   }
 
   @override

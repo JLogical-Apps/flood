@@ -107,7 +107,7 @@ mixin IsValueObjectProperty<G, S, V extends ValueObjectProperty> implements Valu
   }
 
   @override
-  Future<void> onDuplicate(DropCoreContext context, State state) async {}
+  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) async {}
 
   @override
   Future<void> onDelete(DropCoreContext context) async {}
@@ -331,7 +331,7 @@ abstract class ValueObjectPropertyWrapper<G, S, V extends ValueObjectProperty> i
   ValueObjectProperty<G, S, dynamic> get property;
 }
 
-mixin IsValueObjectPropertyWrapper<G, S, V extends ValueObjectProperty<G, S, V>>
+mixin IsValueObjectPropertyWrapper<G, S, V extends ValueObjectPropertyWrapper<G, S, V>>
     implements ValueObjectPropertyWrapper<G, S, V> {
   @override
   ValueObject get valueObject => property.valueObject;
@@ -364,7 +364,10 @@ mixin IsValueObjectPropertyWrapper<G, S, V extends ValueObjectProperty<G, S, V>>
   State modifyState(DropCoreContext context, State state) => property.modifyState(context, state);
 
   @override
-  Future<void> onDuplicate(DropCoreContext context, State state) => property.onDuplicate(context, state);
+  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) {
+    behavior as ValueObjectPropertyWrapper;
+    return property.onDuplicateTo(context, behavior.property);
+  }
 
   @override
   Future<void> onDelete(DropCoreContext context) => property.onDelete(context);

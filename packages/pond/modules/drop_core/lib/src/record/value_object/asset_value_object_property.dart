@@ -58,15 +58,17 @@ class AssetValueObjectProperty
   }
 
   @override
-  Future<void> onDuplicate(DropCoreContext context, State state) async {
+  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) async {
+    behavior as AssetValueObjectProperty;
+
     // Instead of containing the same asset as the source, copy the asset and use that instead.
     // This issues with the original asset being deleted.
     if (value?.assetId != null) {
       final asset = await assetProvider(context.context.assetCoreComponent)
           .getById(createAssetPathContext(context.context.assetCoreComponent), value!.assetId)
           .getAsset();
-      duplicatedAsset = asset.withNewId();
-      set(null);
+      behavior.duplicatedAsset = asset.withNewId();
+      behavior.set(null);
     }
   }
 

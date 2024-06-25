@@ -21,8 +21,8 @@ void main() {
       'embeddeds': [],
     });
 
-    listData.intsProperty.value = [1, 2, 3];
-    listData.stringsProperty.value = ['one', 'two', 'three'];
+    listData.intsProperty.set([1, 2, 3]);
+    listData.stringsProperty.set(['one', 'two', 'three']);
     listData.embeddedsProperty.set([
       Embedded()..nameProperty.set('John'),
       Embedded()..nameProperty.set('Jack'),
