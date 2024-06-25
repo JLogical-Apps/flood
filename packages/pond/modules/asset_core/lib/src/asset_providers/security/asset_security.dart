@@ -4,12 +4,16 @@ import 'package:drop_core/drop_core.dart';
 
 class AssetSecurity {
   final AssetPermission read;
-  final AssetPermission write;
+  final AssetPermission create;
+  final AssetPermission update;
   final AssetPermission delete;
 
-  AssetSecurity({required this.read, required this.write, required this.delete});
+  AssetSecurity({required this.read, required this.create, required this.update, required this.delete});
 
-  AssetSecurity.readWrite({required this.read, required this.write}) : delete = write;
+  AssetSecurity.readWrite({required this.read, required AssetPermission write})
+      : create = write,
+        update = write,
+        delete = write;
 
   AssetSecurity.all(AssetPermission assetPermission) : this.readWrite(read: assetPermission, write: assetPermission);
 
@@ -25,24 +29,27 @@ class AssetSecurity {
             'Cannot generate asset security from repository security when repository does not have security!'));
     return AssetSecurity(
       read: RepositoryPermissionAssetModifier.getAssetPermission(repository, repositorySecurity.read),
-      write: RepositoryPermissionAssetModifier.getAssetPermission(repository, repositorySecurity.update),
-      delete: RepositoryPermissionAssetModifier.getAssetPermission(repository, repositorySecurity.delete),
+      create: RepositoryPermissionAssetModifier.getAssetPermission(repository, repositorySecurity.update),
+      update: RepositoryPermissionAssetModifier.getAssetPermission(repository, repositorySecurity.update),
+      delete: RepositoryPermissionAssetModifier.getAssetPermission(repository, repositorySecurity.update),
     );
   }
 
-  AssetSecurity copyWith({AssetPermission? read, AssetPermission? write, AssetPermission? delete}) {
+  AssetSecurity copyWith({
+    AssetPermission? read,
+    AssetPermission? create,
+    AssetPermission? update,
+    AssetPermission? delete,
+  }) {
     return AssetSecurity(
       read: read ?? this.read,
-      write: write ?? this.write,
+      create: create ?? this.create,
+      update: update ?? this.update,
       delete: delete ?? this.delete,
     );
   }
 
   AssetSecurity withRead(AssetPermission read) {
     return copyWith(read: read);
-  }
-
-  AssetSecurity withWrite(AssetPermission write) {
-    return copyWith(write: write, delete: write);
   }
 }

@@ -3,7 +3,6 @@ import 'package:drop_core/drop_core.dart';
 import 'package:ops/src/firebase/asset/admin_asset_permission_text_modifier.dart';
 import 'package:ops/src/firebase/asset/all_asset_permission_text_modifier.dart';
 import 'package:ops/src/firebase/asset/and_asset_permission_text_modifier.dart';
-import 'package:ops/src/firebase/asset/asset_permission_context.dart';
 import 'package:ops/src/firebase/asset/authenticated_asset_permission_text_modifier.dart';
 import 'package:ops/src/firebase/asset/equals_asset_permission_text_modifier.dart';
 import 'package:ops/src/firebase/asset/none_asset_permission_text_modifier.dart';
@@ -26,5 +25,13 @@ abstract class AssetPermissionTextModifier<P extends AssetPermission> with IsTyp
 
   static AssetPermissionTextModifier getModifier(AssetPermission assetPermission) {
     return assetPermissionTextModifierResolver.resolve(assetPermission);
+  }
+
+  static String getPermissionText(
+    DropCoreContext context, {
+    required AssetPermissionContext assetPermissionContext,
+    required AssetPermission assetPermission,
+  }) {
+    return getModifier(assetPermission).getText(context, assetPermissionContext, assetPermission);
   }
 }

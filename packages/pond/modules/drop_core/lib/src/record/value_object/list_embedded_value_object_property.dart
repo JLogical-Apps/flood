@@ -40,7 +40,9 @@ class ListEmbeddedValueObjectProperty<T extends ValueObject>
   @override
   void set(List<T> value) {
     for (final valueObject in value) {
-      valueObject.entity = this.valueObject.entity;
+      valueObject
+        ..entity = this.valueObject.entity
+        ..idToUse = this.valueObject.idToUse;
     }
 
     property.set(value);

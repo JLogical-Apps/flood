@@ -38,7 +38,9 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
   @override
   void set(T? value) {
     if (value != null) {
-      value.entity = valueObject.entity;
+      value
+        ..entity = valueObject.entity
+        ..idToUse = valueObject.idToUse;
     }
 
     property.set(value);

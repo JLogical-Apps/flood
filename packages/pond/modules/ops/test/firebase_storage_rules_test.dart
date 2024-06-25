@@ -32,18 +32,21 @@ service firebase.storage {
     }
     match /users/{id}/profilePicture/{imageId} {
       allow read: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
-      allow write: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow create: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow update: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
       allow delete: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
     }
     match /documents/{id}/assets/{imageId} {
       allow read: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/documents/\$(id)).owner == request.auth.uid);
-      allow write: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/documents/\$(id)).owner == request.auth.uid);
-      allow delete: if false;
+      allow create: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.exists(/databases/(default)/documents/documents/\$(id)) ? (firestore.get(/databases/(default)/documents/documents/\$(id)).owner == request.auth.uid) : (request.auth != null));
+      allow update: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/documents/\$(id)).owner == request.auth.uid);
+      allow delete: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/documents/\$(id)).owner == request.auth.uid);
     }
     match /attachments/{id}/assets/{imageId} {
-      allow read: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).owner)).owner == request.auth.uid);
-      allow write: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).owner)).owner == request.auth.uid);
-      allow delete: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).owner)).owner == request.auth.uid);
+      allow read: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).document)).owner == request.auth.uid);
+      allow create: if (firestore.exists(/databases/(default)/documents/attachments/\$(id)) ? (firestore.get(/databases/(default)/documents/attachments/\$(id)).document == null) : (request.auth != null)) || (firestore.exists(/databases/(default)/documents/attachments/\$(id)) ? (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).document)).owner == request.auth.uid) : (request.auth != null));
+      allow update: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).document)).owner == request.auth.uid);
+      allow delete: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).document)).owner == request.auth.uid);
     }
   }
 }''');
@@ -154,7 +157,7 @@ class AttachmentRepository with IsRepositoryWrapper {
         PermissionField.value(null),
       ) |
       Permission.equals(
-        PermissionField.entity<DocumentEntity>(PermissionField.propertyName(Document.ownerField))
+        PermissionField.entity<DocumentEntity>(PermissionField.propertyName(Attachment.documentField))
             .propertyName(Document.ownerField),
         PermissionField.loggedInUserId,
       )));

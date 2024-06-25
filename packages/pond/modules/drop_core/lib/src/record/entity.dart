@@ -27,12 +27,18 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin,
   bool get isNew => id == null;
 
   @override
-  State getState(DropCoreContext context) =>
-      value.getState(context).withId(id).withType(context.getRuntimeTypeRuntime(runtimeType));
+  State getState(DropCoreContext context) => value
+      .getState(context)
+      .withId(id ?? value.idToUse)
+      .withIsNew(id == null)
+      .withType(context.getRuntimeTypeRuntime(runtimeType));
 
   @override
-  State getStateUnsafe(DropCoreContext context) =>
-      value.getStateUnsafe(context).withId(id).withType(context.getRuntimeTypeRuntime(runtimeType));
+  State getStateUnsafe(DropCoreContext context) => value
+      .getStateUnsafe(context)
+      .withId(id ?? value.idToUse)
+      .withIsNew(id == null)
+      .withType(context.getRuntimeTypeRuntime(runtimeType));
 
   FutureOr<State?> onBeforeInitialize(DropCoreContext context, {required State state}) {
     return null;

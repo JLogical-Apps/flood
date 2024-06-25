@@ -1,6 +1,5 @@
 import 'package:asset_core/asset_core.dart';
 import 'package:drop_core/drop_core.dart';
-import 'package:ops/src/firebase/asset/asset_permission_context.dart';
 import 'package:ops/src/firebase/asset/asset_permission_text_modifier.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:utils_core/utils_core.dart';
@@ -35,7 +34,8 @@ class FirebaseStorageSecurityRulesGenerator {
 
           final firebaseStoragePermissions = {
             'read': security.read,
-            'write': security.write,
+            'create': security.create,
+            'update': security.update,
             'delete': security.delete,
           }
               .mapToIterable((action, permission) =>

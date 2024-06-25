@@ -20,9 +20,13 @@ abstract class AssetPermission {
 
   static AssetPermission or(List<AssetPermission> permissions) => OrAssetPermission(permissions: permissions);
 
-  FutureOr<bool> passes(AssetPathContext context);
+  FutureOr<bool> passes(AssetPathContext context, {required AssetPermissionContext permissionContext});
 
-  FutureOr<bool> passesWrite(AssetPathContext context, {required Asset asset});
+  FutureOr<bool> passesWrite(
+    AssetPathContext context, {
+    required Asset asset,
+    required AssetPermissionContext permissionContext,
+  });
 
   operator &(AssetPermission other);
 
@@ -41,35 +45,39 @@ mixin IsAssetPermission implements AssetPermission {
   }
 
   @override
-  Future<bool> passesWrite(AssetPathContext context, {required Asset asset}) async {
-    return await passes(context);
+  Future<bool> passesWrite(
+    AssetPathContext context, {
+    required Asset asset,
+    required AssetPermissionContext permissionContext,
+  }) async {
+    return await passes(context, permissionContext: permissionContext);
   }
 }
 
 class AllAssetPermission with IsAssetPermission {
   @override
-  bool passes(AssetPathContext context) {
+  bool passes(AssetPathContext context, {required AssetPermissionContext permissionContext}) {
     return true;
   }
 }
 
 class NoneAssetPermission with IsAssetPermission {
   @override
-  bool passes(AssetPathContext context) {
+  bool passes(AssetPathContext context, {required AssetPermissionContext permissionContext}) {
     return false;
   }
 }
 
 class AuthenticatedAssetPermission with IsAssetPermission {
   @override
-  bool passes(AssetPathContext context) {
+  bool passes(AssetPathContext context, {required AssetPermissionContext permissionContext}) {
     return context.context.getLoggedInAccount() != null;
   }
 }
 
 class AdminAssetPermission with IsAssetPermission {
   @override
-  bool passes(AssetPathContext context) {
+  bool passes(AssetPathContext context, {required AssetPermissionContext permissionContext}) {
     final loggedInAccount = context.context.getLoggedInAccount();
     if (loggedInAccount == null) {
       return false;
@@ -86,22 +94,47 @@ class EqualsAssetPermission with IsAssetPermission {
   EqualsAssetPermission({required this.field1, required this.field2});
 
   @override
-  Future<bool> passes(AssetPathContext context) async {
-    if (!await field1.isValidValue(context) || !await field2.isValidValue(context)) {
+  Future<bool> passes(AssetPathContext context, {required AssetPermissionContext permissionContext}) async {
+    // If creating an asset and the root entity does not exist, allow creating if the user is logged in.
+    if (permissionContext == AssetPermissionContext.create) {
+      for (final field in [field1, field2]) {
+        if (field.dependsOnRootEntity() && await field.getRootEntity(context) == null) {
+          return context.context.getLoggedInAccount()?.accountId != null;
+        }
+      }
+    }
+
+    if (!await field1.isValidValue(context, permissionContext: permissionContext) ||
+        !await field2.isValidValue(context, permissionContext: permissionContext)) {
       return false;
     }
 
-    return await field1.extractValue(context) == await field2.extractValue(context);
+    return await field1.extractValue(context, permissionContext: permissionContext) ==
+        await field2.extractValue(context, permissionContext: permissionContext);
   }
 
   @override
-  Future<bool> passesWrite(AssetPathContext context, {required Asset asset}) async {
-    if (!await field1.isValidValue(context) || !await field2.isValidValue(context)) {
+  Future<bool> passesWrite(
+    AssetPathContext context, {
+    required Asset asset,
+    required AssetPermissionContext permissionContext,
+  }) async {
+    // If creating an asset and the root entity does not exist, allow creating if the user is logged in.
+    if (permissionContext == AssetPermissionContext.create) {
+      for (final field in [field1, field2]) {
+        if (field.dependsOnRootEntity() && await field.getRootEntity(context) == null) {
+          return context.context.getLoggedInAccount()?.accountId != null;
+        }
+      }
+    }
+
+    if (!await field1.isValidValue(context, permissionContext: permissionContext) ||
+        !await field2.isValidValue(context, permissionContext: permissionContext)) {
       return false;
     }
 
-    return await field1.extractAssetValue(context, asset: asset) ==
-        await field2.extractAssetValue(context, asset: asset);
+    return await field1.extractAssetValue(context, asset: asset, permissionContext: permissionContext) ==
+        await field2.extractAssetValue(context, asset: asset, permissionContext: permissionContext);
   }
 }
 
@@ -111,9 +144,12 @@ class AndAssetPermission with IsAssetPermission {
   AndAssetPermission({required this.permissions});
 
   @override
-  Future<bool> passes(AssetPathContext context) async {
+  Future<bool> passes(
+    AssetPathContext context, {
+    required AssetPermissionContext permissionContext,
+  }) async {
     for (final permission in permissions) {
-      if (!await permission.passes(context)) {
+      if (!await permission.passes(context, permissionContext: permissionContext)) {
         return false;
       }
     }
@@ -122,9 +158,13 @@ class AndAssetPermission with IsAssetPermission {
   }
 
   @override
-  Future<bool> passesWrite(AssetPathContext context, {required Asset asset}) async {
+  Future<bool> passesWrite(
+    AssetPathContext context, {
+    required Asset asset,
+    required AssetPermissionContext permissionContext,
+  }) async {
     for (final permission in permissions) {
-      if (!await permission.passesWrite(context, asset: asset)) {
+      if (!await permission.passesWrite(context, asset: asset, permissionContext: permissionContext)) {
         return false;
       }
     }
@@ -139,9 +179,9 @@ class OrAssetPermission with IsAssetPermission {
   OrAssetPermission({required this.permissions});
 
   @override
-  Future<bool> passes(AssetPathContext context) async {
+  Future<bool> passes(AssetPathContext context, {required AssetPermissionContext permissionContext}) async {
     for (final permission in permissions) {
-      if (await permission.passes(context)) {
+      if (await permission.passes(context, permissionContext: permissionContext)) {
         return true;
       }
     }
@@ -150,13 +190,24 @@ class OrAssetPermission with IsAssetPermission {
   }
 
   @override
-  Future<bool> passesWrite(AssetPathContext context, {required Asset asset}) async {
+  Future<bool> passesWrite(
+    AssetPathContext context, {
+    required Asset asset,
+    required AssetPermissionContext permissionContext,
+  }) async {
     for (final permission in permissions) {
-      if (await permission.passesWrite(context, asset: asset)) {
+      if (await permission.passesWrite(context, asset: asset, permissionContext: permissionContext)) {
         return true;
       }
     }
 
     return false;
   }
+}
+
+enum AssetPermissionContext {
+  read,
+  create,
+  update,
+  delete;
 }

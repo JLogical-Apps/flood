@@ -1,34 +1,61 @@
 import 'dart:async';
 
-import 'package:asset_core/src/asset.dart';
-import 'package:asset_core/src/asset_path_context.dart';
-import 'package:asset_core/src/asset_providers/security/field/entity_asset_permission_builder.dart';
+import 'package:asset_core/asset_core.dart';
 import 'package:drop_core/drop_core.dart';
 
 abstract class AssetPermissionField {
   static AssetPermissionField value(dynamic value) => ValueAssetPermissionField(value: value);
 
-  static AssetPermissionField get loggedInUserId => LoggedInUserIdAssetPermissionField();
+  static AssetPermissionField loggedInUserId = LoggedInUserIdAssetPermissionField();
 
   static AssetPermissionField pathMetadata(String field) => PathMetadataAssetPermissionField(pathMetadataField: field);
 
-  static AssetPermissionField get entityId => pathMetadata(State.idField);
+  static AssetPermissionField entityId = pathMetadata(State.idField);
 
   static AssetPermissionEntityBuilder<E> entity<E extends Entity>(AssetPermissionField field, {Type? entityType}) {
     return AssetPermissionEntityBuilder<E>(permissionField: field, entityType: entityType);
   }
 
-  FutureOr<bool> isValidValue(AssetPathContext context);
+  FutureOr<bool> isValidValue(AssetPathContext context, {required AssetPermissionContext permissionContext});
 
-  FutureOr<dynamic> extractValue(AssetPathContext context);
+  bool dependsOnRootEntity();
 
-  FutureOr<dynamic> extractAssetValue(AssetPathContext context, {required Asset asset});
+  Future<Entity?> getRootEntity(AssetPathContext context);
+
+  Type getRootEntityType();
+
+  FutureOr<dynamic> extractValue(AssetPathContext context, {required AssetPermissionContext permissionContext});
+
+  FutureOr<dynamic> extractAssetValue(
+    AssetPathContext context, {
+    required Asset asset,
+    required AssetPermissionContext permissionContext,
+  });
 }
 
 mixin IsAssetPermissionField implements AssetPermissionField {
   @override
-  Future<dynamic> extractAssetValue(AssetPathContext context, {required Asset asset}) async {
-    return await extractValue(context);
+  Future<dynamic> extractAssetValue(
+    AssetPathContext context, {
+    required Asset asset,
+    required AssetPermissionContext permissionContext,
+  }) async {
+    return await extractValue(context, permissionContext: permissionContext);
+  }
+
+  @override
+  bool dependsOnRootEntity() {
+    return false;
+  }
+
+  @override
+  Future<Entity<ValueObject>?> getRootEntity(AssetPathContext context) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Type getRootEntityType() {
+    throw UnimplementedError();
   }
 }
 
@@ -38,24 +65,24 @@ class ValueAssetPermissionField with IsAssetPermissionField {
   ValueAssetPermissionField({required this.value});
 
   @override
-  bool isValidValue(AssetPathContext context) {
+  bool isValidValue(AssetPathContext context, {required AssetPermissionContext permissionContext}) {
     return true;
   }
 
   @override
-  extractValue(AssetPathContext context) {
+  extractValue(AssetPathContext context, {required AssetPermissionContext permissionContext}) {
     return value;
   }
 }
 
 class LoggedInUserIdAssetPermissionField with IsAssetPermissionField {
   @override
-  FutureOr<bool> isValidValue(AssetPathContext context) {
+  FutureOr<bool> isValidValue(AssetPathContext context, {required AssetPermissionContext permissionContext}) {
     return true;
   }
 
   @override
-  extractValue(AssetPathContext context) {
+  extractValue(AssetPathContext context, {required AssetPermissionContext permissionContext}) {
     return context.context.getLoggedInAccount()?.accountId;
   }
 }
@@ -66,12 +93,12 @@ class PathMetadataAssetPermissionField with IsAssetPermissionField {
   PathMetadataAssetPermissionField({required this.pathMetadataField});
 
   @override
-  FutureOr<bool> isValidValue(AssetPathContext context) {
+  FutureOr<bool> isValidValue(AssetPathContext context, {required AssetPermissionContext permissionContext}) {
     return true;
   }
 
   @override
-  extractValue(AssetPathContext context) {
+  extractValue(AssetPathContext context, {required AssetPermissionContext permissionContext}) {
     return context.values[pathMetadataField];
   }
 }

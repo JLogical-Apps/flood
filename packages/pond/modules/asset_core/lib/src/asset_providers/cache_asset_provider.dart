@@ -25,15 +25,19 @@ class CacheAssetProvider with IsAssetProviderWrapper {
       id: id,
       assetMetadataModel: Model.fromValueStream(_assetMetadataXById.putIfAbsent(id, () {
         () async {
-          final assetMetadata = await sourceAssetReference.assetMetadataModel.getOrLoad();
-          _assetMetadataXById[id]!.value = FutureValue.loaded(assetMetadata);
+          final assetMetadata = await guardAsync(() => sourceAssetReference.assetMetadataModel.getOrLoad());
+          if (assetMetadata != null) {
+            _assetMetadataXById[id]!.value = FutureValue.loaded(assetMetadata);
+          }
         }();
         return BehaviorSubject.seeded(FutureValue.empty());
       })),
       assetModel: Model.fromValueStream(_assetXById.putIfAbsent(id, () {
         () async {
-          final asset = await sourceAssetReference.assetModel.getOrLoad();
-          _assetXById[id]!.value = FutureValue.loaded(asset);
+          final asset = await guardAsync(() => sourceAssetReference.assetModel.getOrLoad());
+          if (asset != null) {
+            _assetXById[id]!.value = FutureValue.loaded(asset);
+          }
         }();
         return BehaviorSubject.seeded(FutureValue.empty());
       })),
@@ -52,6 +56,8 @@ class CacheAssetProvider with IsAssetProviderWrapper {
       orElse: () => sourceAsset,
     );
     assetX.value = FutureValue.loaded(newAsset);
+    _assetMetadataXById.putIfAbsent(asset.id, () => BehaviorSubject.seeded(FutureValue.empty())).value =
+        FutureValue.loaded(newAsset.metadata);
 
     return asset;
   }
@@ -59,6 +65,8 @@ class CacheAssetProvider with IsAssetProviderWrapper {
   @override
   Future<void> onDelete(AssetPathContext context, String id) async {
     await assetProvider.delete(context, id);
+    _assetMetadataXById[id]?.value = FutureValue.empty();
+    _assetMetadataXById.remove(id);
     _assetXById[id]?.value = FutureValue.empty();
     _assetXById.remove(id);
   }

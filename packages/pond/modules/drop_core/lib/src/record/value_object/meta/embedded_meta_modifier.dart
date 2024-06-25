@@ -4,7 +4,9 @@ class EmbeddedMetaModifier extends WrapperBehaviorMetaModifier<EmbeddedValueObje
   @override
   void Function(ValueObject valueObject)? getValueObjectInstantiator(EmbeddedValueObjectProperty behavior) {
     return (valueObject) {
-      valueObject.entity = behavior.valueObject.entity;
+      valueObject
+        ..entity = behavior.valueObject.entity
+        ..idToUse = behavior.valueObject.idToUse;
       behavior.instantiator();
     };
   }

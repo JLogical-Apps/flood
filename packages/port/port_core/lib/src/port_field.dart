@@ -160,17 +160,19 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
     required Port<T> port,
     T Function(Port<T> port)? submitRawMapper,
   }) {
+    T? submittedValue;
     return PortField(
       value: port,
-      submitMapper: (port) async => (await port.submit()).data,
+      submitMapper: (port) async => submittedValue as T,
       submitRawMapper: submitRawMapper,
       dataType: Port,
     ).withValidator(Validator((context) async {
       final port = context.value;
       final result = await port.submit();
       if (!result.isValid) {
-        return 'Embedded port [$port] is not valid!';
+        return 'Error in embedded object!';
       }
+      submittedValue = result.data;
       return null;
     }));
   }

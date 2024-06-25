@@ -140,6 +140,7 @@ class PortDropCoreComponent with IsCorePondComponent {
 
         final newValueObject = typeContext.construct(valueObject.runtimeType) as V;
         newValueObject.copyFrom(dropCoreContext, mergedState);
+        newValueObject.idToUse = valueObject.idToUse;
         if (validateResult) {
           await newValueObject.throwIfInvalid(null);
         }

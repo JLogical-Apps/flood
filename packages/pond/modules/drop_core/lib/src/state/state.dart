@@ -9,10 +9,11 @@ class State extends Equatable implements Stateful {
   static const typeField = '_type';
 
   final String? id;
+  final bool isNew;
   final RuntimeType? type;
   final Map<String, dynamic> data;
 
-  const State({this.id, this.type, required this.data});
+  const State({this.id, bool? isNew, this.type, required this.data}) : isNew = isNew ?? id == null;
 
   @override
   State getState(DropCoreContext context) => this;
@@ -22,8 +23,6 @@ class State extends Equatable implements Stateful {
 
   @override
   List<Object?> get props => [id, type, data];
-
-  bool get isNew => id == null;
 
   Map<String, dynamic> get fullData => {
         if (id != null) idField: id,
@@ -39,9 +38,10 @@ class State extends Equatable implements Stateful {
     data[fieldName] = value;
   }
 
-  State copyWith({required String? id, required RuntimeType? type, Map<String, dynamic>? data}) {
+  State copyWith({required String? id, bool? isNew, required RuntimeType? type, Map<String, dynamic>? data}) {
     return State(
       id: id ?? this.id,
+      isNew: isNew ?? this.isNew,
       type: type ?? this.type,
       data: data ?? this.data,
     );
@@ -49,6 +49,10 @@ class State extends Equatable implements Stateful {
 
   State withId(String? id) {
     return copyWith(id: id, type: type);
+  }
+
+  State withIsNew(bool isNew) {
+    return copyWith(id: id, type: type, isNew: isNew);
   }
 
   State withType(RuntimeType type) {

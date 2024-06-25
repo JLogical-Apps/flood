@@ -73,8 +73,8 @@ class AssetValueObjectProperty
   @override
   Future<void> onDelete(DropCoreContext context) async {
     if (value?.assetId != null) {
-      await assetProvider(context.context.assetCoreComponent)
-          .delete(createAssetPathContext(context.context.assetCoreComponent), value!.assetId);
+      await guardAsync(() => assetProvider(context.context.assetCoreComponent)
+          .delete(createAssetPathContext(context.context.assetCoreComponent), value!.assetId));
     }
   }
 
@@ -185,5 +185,5 @@ extension AssetListValueObjectPropertyExtensions
 }
 
 extension AssetPathContextPropertyExtensions on AssetPathContext {
-  String get entityId => values[State.idField];
+  String? get entityId => values[State.idField];
 }

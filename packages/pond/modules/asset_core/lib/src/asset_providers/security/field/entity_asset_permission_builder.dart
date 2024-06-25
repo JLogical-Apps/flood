@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:asset_core/src/asset_path_context.dart';
+import 'package:asset_core/src/asset_providers/security/asset_permission.dart';
 import 'package:asset_core/src/asset_providers/security/field/asset_permission_field.dart';
 import 'package:drop_core/drop_core.dart';
 
@@ -29,8 +32,35 @@ class EntityPropertyAssetPermissionField with IsAssetPermissionField {
   });
 
   @override
-  Future<dynamic> extractValue(AssetPathContext context) async {
-    final id = await permissionField.extractValue(context);
+  bool dependsOnRootEntity() {
+    return permissionField == AssetPermissionField.entityId || permissionField.dependsOnRootEntity();
+  }
+
+  @override
+  Future<Entity?> getRootEntity(AssetPathContext context) async {
+    if (permissionField == AssetPermissionField.entityId) {
+      final entityId = context.entityId;
+      if (entityId == null) {
+        return null;
+      }
+      return await Query.getByIdOrNullRuntime(entityType, entityId).get(context.dropCoreComponent);
+    } else {
+      return await permissionField.getRootEntity(context);
+    }
+  }
+
+  @override
+  Type getRootEntityType() {
+    if (permissionField == AssetPermissionField.entityId) {
+      return entityType;
+    } else {
+      return permissionField.getRootEntityType();
+    }
+  }
+
+  @override
+  Future<dynamic> extractValue(AssetPathContext context, {required AssetPermissionContext permissionContext}) async {
+    final id = await permissionField.extractValue(context, permissionContext: permissionContext);
     if (id == null) {
       return null;
     }
@@ -45,13 +75,12 @@ class EntityPropertyAssetPermissionField with IsAssetPermissionField {
   }
 
   @override
-  Future<bool> isValidValue(AssetPathContext context) async {
-    final id = await permissionField.extractValue(context);
+  Future<bool> isValidValue(AssetPathContext context, {required AssetPermissionContext permissionContext}) async {
+    final id = await permissionField.extractValue(context, permissionContext: permissionContext);
     if (id == null) {
       return false;
     }
 
-    final entity = await Query.getByIdOrNullRuntime(entityType, id).get(context.dropCoreComponent);
-    return entity != null;
+    return await getRootEntity(context) != null;
   }
 }

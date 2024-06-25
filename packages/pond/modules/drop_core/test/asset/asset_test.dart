@@ -87,7 +87,8 @@ void main() {
           context,
           assetSecurity: AssetSecurity(
             read: AssetPermission.authenticated,
-            write: AssetPermission.equals(AssetPermissionField.loggedInUserId, AssetPermissionField.entityId),
+            create: AssetPermission.equals(AssetPermissionField.loggedInUserId, AssetPermissionField.entityId),
+            update: AssetPermission.equals(AssetPermissionField.loggedInUserId, AssetPermissionField.entityId),
             delete: AssetPermission.admin &
                 AssetPermission.equals(AssetPermissionField.loggedInUserId, AssetPermissionField.entityId),
           ),
@@ -96,7 +97,11 @@ void main() {
           context,
           assetSecurity: AssetSecurity(
             read: AssetPermission.authenticated,
-            write: AssetPermission.equals(
+            create: AssetPermission.equals(
+              AssetPermissionField.loggedInUserId,
+              AssetPermissionField.entity<TodoEntity>(AssetPermissionField.entityId).propertyName(Todo.userField),
+            ),
+            update: AssetPermission.equals(
               AssetPermissionField.loggedInUserId,
               AssetPermissionField.entity<TodoEntity>(AssetPermissionField.entityId).propertyName(Todo.userField),
             ),

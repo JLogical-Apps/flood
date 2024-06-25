@@ -16,9 +16,12 @@ import 'package:drop_core/src/state/stateful.dart';
 import 'package:equatable/equatable.dart';
 import 'package:runtime_type/type.dart';
 import 'package:utils_core/utils_core.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrapper<void, String> {
   Entity? entity;
+
+  late String idToUse = Uuid().v4();
 
   List<ValueObjectBehavior> get behaviors => [];
 
@@ -27,6 +30,8 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
       behavior.valueObject = this;
     }
   }
+
+  String get id => entity?.id ?? idToUse;
 
   @override
   State getState(DropCoreContext context) {
@@ -132,7 +137,7 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
     return AssetPathContext(
       context: context,
       values: {
-        State.idField: entity?.id,
+        State.idField: id,
       },
     );
   }
