@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:model_core/model_core.dart';
 import 'package:persistence/persistence.dart';
 import 'package:pond/pond.dart';
+import 'package:utils/utils.dart';
 
 class FirebaseStorageAssetProvider with IsAssetProvider {
   final CorePondContext corePondContext;
@@ -19,13 +20,18 @@ class FirebaseStorageAssetProvider with IsAssetProvider {
   Reference getReference(AssetPathContext context) =>
       corePondContext.firebaseCoreComponent.storage.ref(pathGetter(context));
 
-  @override
-  AssetReference getById(AssetPathContext context, String id) {
+  Model<AssetMetadata> getMetadataModel(AssetPathContext context, String id) {
     final path = pathGetter(context);
-    final metadataModel = _metadataModelById.putIfAbsent(
+    return _metadataModelById.putIfAbsent(
       id,
       () => DataSource.static.firebaseStorageMetadata(context: corePondContext, path: '$path/$id').asModel(),
     );
+  }
+
+  @override
+  AssetReference getById(AssetPathContext context, String id) {
+    final path = pathGetter(context);
+    final metadataModel = getMetadataModel(context, id);
     final bytesModel = _bytesModelById.putIfAbsent(
       id,
       () => DataSource.static.firebaseStorage(context: corePondContext, path: '$path/$id').asModel(),
@@ -48,8 +54,10 @@ class FirebaseStorageAssetProvider with IsAssetProvider {
   Future<Asset> onUpload(AssetPathContext context, Asset asset) async {
     final path = pathGetter(context);
     await DataSource.static.firebaseStorageAsset(context: corePondContext, path: '$path/${asset.id}').set(asset);
-    await _bytesModelById[asset.id]?.load();
-    await _metadataModelById[asset.id]?.load();
+    final metadata = (await getMetadataModel(context, asset.id).load()).getOrNull();
+    if (metadata != null) {
+      asset = asset.copyWith(metadata: metadata);
+    }
     return asset;
   }
 
