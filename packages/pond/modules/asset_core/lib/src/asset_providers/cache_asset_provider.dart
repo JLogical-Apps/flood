@@ -30,19 +30,17 @@ class CacheAssetProvider with IsAssetProvider {
       assetModel: Model.fromValueStream(
         _assetXById.putIfAbsent(id, () => BehaviorSubject.seeded(FutureValue.empty())),
         onLoad: () async {
-          final sourceAssetMetadata = await getLatestAssetMetadata(context, id);
-          if (sourceAssetMetadata == null) {
-            final cachedAsset = await guardAsync(() => cacheAssetProvider.getById(context, id).assetModel.getOrLoad());
-            if (cachedAsset != null) {
-              _assetXById[id]!.value = FutureValue.loaded(cachedAsset);
-            }
-          }
+          await getLatestAssetMetadata(context, id, waitForAsset: true);
         },
       ),
     );
   }
 
-  Future<AssetMetadata?> getLatestAssetMetadata(AssetPathContext context, String id) async {
+  Future<AssetMetadata?> getLatestAssetMetadata(
+    AssetPathContext context,
+    String id, {
+    bool waitForAsset = false,
+  }) async {
     final sourceAssetReference =
         _sourceAssetReferenceById.putIfAbsent(id, () => sourceAssetProvider.getById(context, id));
     final cacheAssetReference = _cacheAssetReferenceById.putIfAbsent(id, () => cacheAssetProvider.getById(context, id));
@@ -59,7 +57,17 @@ class CacheAssetProvider with IsAssetProvider {
         (sourceAssetMetadata != null &&
             cachedAssetMetadata.updatedTime.isBefore(sourceAssetMetadata.updatedTime.subtract(Duration(seconds: 30))));
     if (needsUpdating) {
-      downloadSource(context, id);
+      if (waitForAsset) {
+        await downloadSource(context, id);
+      } else {
+        downloadSource(context, id);
+      }
+    } else if (_assetXById[id]?.value.isLoaded != true) {
+      final cacheAsset = await guardAsync(() => cacheAssetReference.assetModel.getOrLoad());
+      if (cacheAsset != null) {
+        _assetXById.putIfAbsent(id, () => BehaviorSubject.seeded(FutureValue.empty())).value =
+            FutureValue.loaded(cacheAsset);
+      }
     }
 
     return sourceAssetMetadata;

@@ -15,5 +15,6 @@ class ValueStreamModel<T> with IsModel<T> {
   @override
   Future<void> onLoad() async {
     await loader?.call();
+    await Future(() {});
   }
 }

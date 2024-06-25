@@ -23,7 +23,7 @@ class FirebaseStorageAssetProvider with IsAssetProvider {
   Model<AssetMetadata> getMetadataModel(AssetPathContext context, String id) {
     final path = pathGetter(context);
     return _metadataModelById.putIfAbsent(
-      id,
+      '$path/$id',
       () => DataSource.static.firebaseStorageMetadata(context: corePondContext, path: '$path/$id').asModel(),
     );
   }
@@ -33,7 +33,7 @@ class FirebaseStorageAssetProvider with IsAssetProvider {
     final path = pathGetter(context);
     final metadataModel = getMetadataModel(context, id);
     final bytesModel = _bytesModelById.putIfAbsent(
-      id,
+      '$path/$id',
       () => DataSource.static.firebaseStorage(context: corePondContext, path: '$path/$id').asModel(),
     );
     return AssetReference(
