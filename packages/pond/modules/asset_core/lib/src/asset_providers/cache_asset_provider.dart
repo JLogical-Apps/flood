@@ -59,7 +59,7 @@ class CacheAssetProvider with IsAssetProviderWrapper {
     _assetMetadataXById.putIfAbsent(asset.id, () => BehaviorSubject.seeded(FutureValue.empty())).value =
         FutureValue.loaded(newAsset.metadata);
 
-    return asset;
+    return newAsset;
   }
 
   @override

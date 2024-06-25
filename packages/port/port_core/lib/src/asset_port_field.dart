@@ -24,7 +24,8 @@ class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReferenceGette
             return id?.mapIfNonNull((id) => assetProvider.getterById(pathContext, id));
           },
           submitMapper: (assetValue) async {
-            if (assetValue.initialValue != null && (assetValue.uploadedAsset != null || assetValue.removed)) {
+            if (assetValue.initialValue != null &&
+                (assetValue.uploadedAsset?.id != assetValue.initialValue!.id || assetValue.removed)) {
               await guardAsync(() => assetProvider.delete(pathContext, assetValue.initialValue!.id));
             }
             if (assetValue.uploadedAsset != null) {
