@@ -29,16 +29,20 @@ class CacheAssetProvider with IsAssetProvider {
       ),
       assetModel: Model.fromValueStream(
         _assetXById.putIfAbsent(id, () => BehaviorSubject.seeded(FutureValue.empty())),
-        onLoad: () => getLatestAssetMetadata(context, id),
+        onLoad: () async {
+          final sourceAssetMetadata = await getLatestAssetMetadata(context, id);
+          if (sourceAssetMetadata == null) {
+            final cachedAsset = await guardAsync(() => cacheAssetProvider.getById(context, id).assetModel.getOrLoad());
+            if (cachedAsset != null) {
+              _assetXById[id]!.value = FutureValue.loaded(cachedAsset);
+            }
+          }
+        },
       ),
     );
   }
 
   Future<AssetMetadata?> getLatestAssetMetadata(AssetPathContext context, String id) async {
-    if (_assetMetadataXById[id]?.value.isLoaded ?? false) {
-      return _assetMetadataXById[id]!.value.getOrNull()!;
-    }
-
     final sourceAssetReference =
         _sourceAssetReferenceById.putIfAbsent(id, () => sourceAssetProvider.getById(context, id));
     final cacheAssetReference = _cacheAssetReferenceById.putIfAbsent(id, () => cacheAssetProvider.getById(context, id));
