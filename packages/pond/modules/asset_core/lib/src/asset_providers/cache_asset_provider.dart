@@ -51,7 +51,7 @@ class CacheAssetProvider with IsAssetProviderWrapper {
     final assetX = _assetXById.putIfAbsent(asset.id, () => BehaviorSubject.seeded(FutureValue.empty()));
     final newAsset = assetX.value.maybeWhen(
       onLoaded: (existingAsset) => sourceAsset.copyWith(
-        metadata: asset.metadata.withCreatedAt(existingAsset.metadata.createdTime),
+        metadata: sourceAsset.metadata.withCreatedAt(existingAsset.metadata.createdTime),
       ),
       orElse: () => sourceAsset,
     );
