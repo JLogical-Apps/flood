@@ -49,10 +49,11 @@ extension ModelExtensions<T> on Model<T> {
   T? getOrNull() => state.getOrNull();
 
   Future<T> getOrLoad() async {
-    if (!state.isLoaded) {
+    if (!this.state.isLoaded) {
       await load();
     }
 
+    final state = this.state;
     if (state.isError) {
       throw (state as ErrorFutureValue<T>).error;
     }
@@ -61,7 +62,7 @@ extension ModelExtensions<T> on Model<T> {
       throw Exception('Could not load this model! Value is: [$state]');
     }
 
-    return (state as LoadedFutureValue<T>).data;
+    return state.data;
   }
 
   Model<R> map<R>(R Function(T value) mapper) {

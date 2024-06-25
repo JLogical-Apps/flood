@@ -33,6 +33,7 @@ class CombineLatestValueStream<T, R> extends StreamView<R> implements ValueStrea
       sources: sources,
       combiner: combiner,
       combinedValueStream: CombineLatestStream<T, R>(sources, combiner)
+          .distinct()
           .doOnData((data) => stream
             ..value = data
             ..errorOrNull = null

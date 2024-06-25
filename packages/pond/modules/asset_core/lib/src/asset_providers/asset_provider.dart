@@ -29,8 +29,12 @@ abstract class AssetProvider {
 class AssetProviderStatic {
   MemoryAssetProvider get memory => MemoryAssetProvider();
 
-  FileAssetProvider file(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
-      FileAssetProvider(context: context, pathGetter: pathGetter);
+  FileAssetProvider file(
+    AssetCoreComponent context,
+    String Function(AssetPathContext context) pathGetter, {
+    bool isTemporary = false,
+  }) =>
+      FileAssetProvider(context: context, pathGetter: pathGetter, isTemporary: isTemporary);
 
   CloudAssetProvider cloud(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
       CloudAssetProvider(context: context, pathGetter: pathGetter);
@@ -51,8 +55,11 @@ extension AssetProviderExtensions on AssetProvider {
 
   Future<void> reset() => onReset();
 
-  AssetProvider withCache() {
-    return CacheAssetProvider(assetProvider: this);
+  AssetProvider withCache([AssetProvider? cacheAssetProvider]) {
+    return CacheAssetProvider(
+      sourceAssetProvider: this,
+      cacheAssetProvider: cacheAssetProvider ?? AssetProvider.static.memory,
+    );
   }
 
   AssetProvider withSecurity(AssetSecurity assetSecurity) {

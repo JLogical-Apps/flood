@@ -16,7 +16,11 @@ class AdaptingAssetProvider with IsAssetProviderWrapper {
     } else if (context.context.environment == EnvironmentType.static.device) {
       return AssetProvider.static.file(context, pathGetter).withCache();
     } else if (context.context.environment.isOnline) {
-      return AssetProvider.static.cloud(context, pathGetter).withCache();
+      return AssetProvider.static.cloud(context, pathGetter).withCache(AssetProvider.static.file(
+            context,
+            (context) => 'assetCache/${pathGetter(context)}',
+            isTemporary: true,
+          ));
     } else {
       return throw Exception('Invalid environment for adapting asset provider');
     }

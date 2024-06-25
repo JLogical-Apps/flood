@@ -11,12 +11,16 @@ import 'package:utils_core/utils_core.dart';
 class FileAssetProvider with IsAssetProvider {
   final AssetCoreComponent context;
   final String Function(AssetPathContext pathContext) pathGetter;
+  final bool isTemporary;
 
   final Map<String, Model<List<int>>> _bytesModelById = {};
 
-  FileAssetProvider({required this.context, required this.pathGetter});
+  FileAssetProvider({required this.context, required this.pathGetter, this.isTemporary = false});
 
-  Directory get rootDirectory => context.context.environmentCoreComponent.fileSystem.storageIoDirectory! / 'assets';
+  Directory get rootDirectory {
+    final fileSystem = context.context.environmentCoreComponent.fileSystem;
+    return (isTemporary ? fileSystem.tempIoDirectory! : fileSystem.storageIoDirectory!) / 'assets';
+  }
 
   Directory getDirectory(AssetPathContext pathContext) => rootDirectory / pathGetter(pathContext);
 
