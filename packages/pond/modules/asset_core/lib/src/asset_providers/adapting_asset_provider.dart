@@ -16,15 +16,15 @@ class AdaptingAssetProvider with IsAssetProviderWrapper {
     } else if (context.context.environment == EnvironmentType.static.device) {
       return AssetProvider.static.file(context, pathGetter).withCache();
     } else if (context.context.environment.isOnline) {
-      return AssetProvider.static
-          .cloud(context, pathGetter)
-          .withCache(context.context.environmentCoreComponent.platform == Platform.web
-              ? AssetProvider.static.memory
-              : AssetProvider.static.file(
-                  context,
-                  (context) => 'assetCache/${pathGetter(context)}',
-                  isTemporary: true,
-                ));
+      if (context.context.environmentCoreComponent.platform == Platform.web) {
+        return AssetProvider.static.cloud(context, pathGetter);
+      }
+
+      return AssetProvider.static.cloud(context, pathGetter).withCache(AssetProvider.static.file(
+            context,
+            (context) => 'assetCache/${pathGetter(context)}',
+            isTemporary: true,
+          ));
     } else {
       return throw Exception('Invalid environment for adapting asset provider');
     }
