@@ -7,7 +7,7 @@ import 'package:model_core/model_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
-class CacheAssetProvider with IsAssetProvider {
+class CacheAssetProvider with IsAssetProviderWrapper {
   final AssetProvider sourceAssetProvider;
   final AssetProvider cacheAssetProvider;
 
@@ -18,6 +18,9 @@ class CacheAssetProvider with IsAssetProvider {
   final Map<String, BehaviorSubject<FutureValue<Asset>>> _assetXById = {};
 
   CacheAssetProvider({required this.sourceAssetProvider, required this.cacheAssetProvider});
+
+  @override
+  AssetProvider get assetProvider => sourceAssetProvider;
 
   @override
   AssetReference getById(AssetPathContext context, String id) {
