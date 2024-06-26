@@ -37,7 +37,7 @@ class _MapQueryRequestImpl<E extends Entity, S, T> extends MapQueryRequest<E, S,
   }
 
   @override
-  List<Object?> get props => [sourceQueryRequest, mapper];
+  List<Object?> get props => [sourceQueryRequest];
 
   @override
   Query<E> get query => sourceQueryRequest.query;

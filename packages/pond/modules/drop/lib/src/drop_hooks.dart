@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:model/model.dart';
 import 'package:pond/pond.dart';
 import 'package:provider/provider.dart';
+import 'package:runtime_type/type.dart';
 import 'package:utils/utils.dart';
 
 DropCoreContext useDropCoreContext() {
@@ -159,6 +160,20 @@ Model<E?> useEntityOrNull<E extends Entity>(String? id) {
 
 Model<E> useEntity<E extends Entity>(String id) {
   return useQuery(Query.getById<E>(id));
+}
+
+Model<E> useSingleton<E extends Entity>(Query<E> query, [Function(E entity)? entityUpdater]) {
+  return useQuery(query.firstOrNull().map((context, entity) {
+    if (entity != null) {
+      return entity;
+    }
+
+    entity = context.getRuntimeType<E>().createInstance();
+    final valueObject = context.getRuntimeTypeRuntime(entity.valueObjectType).createInstance();
+    entity.set(valueObject);
+    entityUpdater?.call(entity);
+    return entity;
+  }));
 }
 
 void _debugQueryRequest({
