@@ -33,12 +33,12 @@ class WrapperAssetProviderMetaModifier<A extends AssetProviderWrapper> extends A
   @override
   String? getPath(A assetProvider, AssetPathContext context) {
     final subAssetProvider = assetProvider.assetProvider;
-    return AssetProviderMetaModifier.getModifier(subAssetProvider).getPath(subAssetProvider, context);
+    return AssetProviderMetaModifier.getModifierOrNull(subAssetProvider)?.getPath(subAssetProvider, context);
   }
 
   @override
   AssetSecurity? getSecurity(A assetProvider) {
     final subAssetProvider = assetProvider.assetProvider;
-    return AssetProviderMetaModifier.getModifier(subAssetProvider).getSecurity(subAssetProvider);
+    return AssetProviderMetaModifier.getModifierOrNull(subAssetProvider)?.getSecurity(subAssetProvider);
   }
 }
