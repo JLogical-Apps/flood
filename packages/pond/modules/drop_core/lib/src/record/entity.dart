@@ -75,7 +75,8 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin,
   }
 
   Future<void> beforeSave(DropCoreContext context) async {
-    return await onBeforeSave(context);
+    await value.onBeforeSave(context);
+    await onBeforeSave(context);
   }
 
   Future<void> afterSave(DropCoreContext context) async {

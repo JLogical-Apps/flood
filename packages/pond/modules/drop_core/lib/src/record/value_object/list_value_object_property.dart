@@ -93,6 +93,13 @@ class ListValueObjectProperty<T> with IsValueObjectProperty<List<T>, List<T>, Li
   }
 
   @override
+  Future<void> onBeforeSave(DropCoreContext context) async {
+    for (final property in properties) {
+      await property.onBeforeSave(context);
+    }
+  }
+
+  @override
   Future<void> onDelete(DropCoreContext context) async {
     for (final property in properties) {
       await property.onDelete(context);

@@ -107,6 +107,9 @@ mixin IsValueObjectProperty<G, S, V extends ValueObjectProperty> implements Valu
   }
 
   @override
+  Future<void> onBeforeSave(DropCoreContext context) async {}
+
+  @override
   Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) async {}
 
   @override
@@ -362,6 +365,9 @@ mixin IsValueObjectPropertyWrapper<G, S, V extends ValueObjectPropertyWrapper<G,
 
   @override
   State modifyState(DropCoreContext context, State state) => property.modifyState(context, state);
+
+  @override
+  Future<void> onBeforeSave(DropCoreContext context) => property.onBeforeSave(context);
 
   @override
   Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) {

@@ -12,8 +12,11 @@ class State extends Equatable implements Stateful {
   final bool isNew;
   final RuntimeType? type;
   final Map<String, dynamic> data;
+  final Map<String, dynamic> metadata;
 
-  const State({this.id, bool? isNew, this.type, required this.data}) : isNew = isNew ?? id == null;
+  State({this.id, bool? isNew, this.type, required this.data, Map<String, dynamic>? metadata})
+      : isNew = isNew ?? id == null,
+        metadata = metadata ?? {};
 
   @override
   State getState(DropCoreContext context) => this;
@@ -22,7 +25,7 @@ class State extends Equatable implements Stateful {
   State getStateUnsafe(DropCoreContext context) => this;
 
   @override
-  List<Object?> get props => [id, type, data];
+  List<Object?> get props => [id, type, data, metadata];
 
   Map<String, dynamic> get fullData => {
         if (id != null) idField: id,
@@ -38,12 +41,19 @@ class State extends Equatable implements Stateful {
     data[fieldName] = value;
   }
 
-  State copyWith({required String? id, bool? isNew, required RuntimeType? type, Map<String, dynamic>? data}) {
+  State copyWith({
+    required String? id,
+    bool? isNew,
+    required RuntimeType? type,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? metadata,
+  }) {
     return State(
       id: id ?? this.id,
       isNew: isNew ?? this.isNew,
       type: type ?? this.type,
       data: data ?? this.data,
+      metadata: metadata ?? this.metadata,
     );
   }
 
@@ -61,6 +71,10 @@ class State extends Equatable implements Stateful {
 
   State withData(Map<String, dynamic> data) {
     return copyWith(id: id, type: type, data: data);
+  }
+
+  State withMetadata(Map<String, dynamic> metadata) {
+    return copyWith(id: id, type: type, metadata: metadata);
   }
 
   State mergeWith(State state) {

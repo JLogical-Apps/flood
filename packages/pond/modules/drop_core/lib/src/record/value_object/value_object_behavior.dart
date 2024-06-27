@@ -16,6 +16,8 @@ abstract class ValueObjectBehavior implements Validator<ValueObject, String> {
 
   Future<State> modifyStateForRepository(DropCoreContext context, State state);
 
+  Future<void> onBeforeSave(DropCoreContext context);
+
   Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior);
 
   Future<void> onDelete(DropCoreContext context);
@@ -46,6 +48,9 @@ mixin IsValueObjectBehavior implements ValueObjectBehavior {
   Future<State> modifyStateForRepository(DropCoreContext context, State state) async {
     return state;
   }
+
+  @override
+  Future<void> onBeforeSave(DropCoreContext context) async {}
 
   @override
   Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) async {}

@@ -11,9 +11,15 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
   @override
   final ValueObjectProperty<T?, T?, dynamic> property;
 
+  T? initialValue;
+
   final void Function(T valueObject)? onInstantiate;
 
-  EmbeddedValueObjectProperty({required this.property, this.onInstantiate});
+  EmbeddedValueObjectProperty({
+    required this.property,
+    this.onInstantiate,
+    this.initialValue,
+  });
 
   @override
   void fromState(DropCoreContext context, State state) {
@@ -21,6 +27,7 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
     if (stateValue == null) {
       set(null);
     } else if (stateValue is T) {
+      initialValue = stateValue;
       set(stateValue);
     } else if (stateValue is State) {
       final valueObject = (stateValue.type!.createInstance() as T)..setState(context, stateValue);
@@ -29,9 +36,14 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
       }
 
       valueObject.throwIfInvalid(null);
+      initialValue = valueObject;
       set(valueObject);
     } else {
       throw Exception('Unknown ValueObject value: [$stateValue]');
+    }
+
+    if (state.metadata[property.name] != null) {
+      initialValue = state.metadata[property.name];
     }
   }
 
@@ -48,7 +60,17 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
 
   @override
   State modifyState(DropCoreContext context, State state) {
-    return state.withData(state.data.copy()..set(name, value?.getState(context)));
+    return state
+        .withData(state.data.copy()..set(name, value?.getState(context)))
+        .withMetadata(state.metadata.copy()..set(name, initialValue));
+  }
+
+  @override
+  Future<void> onBeforeSave(DropCoreContext context) async {
+    if (initialValue != null && initialValue!.runtimeType != value?.runtimeType) {
+      await initialValue!.onDelete(context);
+      initialValue = value;
+    }
   }
 
   @override
@@ -63,6 +85,7 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
     return EmbeddedValueObjectProperty<T>(
       property: property.copy(),
       onInstantiate: onInstantiate,
+      initialValue: initialValue,
     );
   }
 
