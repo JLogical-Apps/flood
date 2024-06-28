@@ -23,15 +23,15 @@ service cloud.firestore {
       allow read, write: if false;
     }
     match /users/{id} {
-      allow read: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
-      allow create: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
-      allow update: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
-      allow delete: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow read: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow create: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow update: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow delete: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
     }
     match /documents/{id} {
-      allow read: if (request.auth.uid != null && request.auth.token.admin == true) || (resource.data.owner == request.auth.uid);
-      allow create: if (request.auth.uid != null && request.auth.token.admin == true) || (request.resource.data.owner == request.auth.uid);
-      allow update: if (request.auth.uid != null && request.auth.token.admin == true) || (request.resource.data.owner == request.auth.uid && resource.data.owner == request.auth.uid);
+      allow read: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (resource.data.owner == request.auth.uid);
+      allow create: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (request.resource.data.owner == request.auth.uid);
+      allow update: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (request.resource.data.owner == request.auth.uid && resource.data.owner == request.auth.uid);
       allow delete: if false;
     }
     match /attachments/{id} {

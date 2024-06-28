@@ -1,5 +1,6 @@
 import 'package:asset_core/asset_core.dart';
 import 'package:drop_core/drop_core.dart';
+import 'package:environment_core/environment_core.dart';
 import 'package:ops/src/firebase/firebase_security_rules_generator.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
@@ -11,6 +12,8 @@ void main() {
     final corePondContext = CorePondContext();
     await corePondContext.register(TypeCoreComponent());
     await corePondContext.register(DropCoreComponent());
+    await corePondContext.register(EnvironmentConfigCoreComponent(
+        environmentConfig: EnvironmentConfig.static.testing().withEnvironmentType(EnvironmentType.static.production)));
     await corePondContext.register(AssetCoreComponent(
         assetProviders: (context) => [
               UserAssetProvider(context: context),
@@ -31,22 +34,22 @@ service firebase.storage {
       allow read, write: if false;
     }
     match /users/{id}/profilePicture/{imageId} {
-      allow read: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
-      allow create: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
-      allow update: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
-      allow delete: if (request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow read: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow create: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow update: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
+      allow delete: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
     }
     match /documents/{id}/assets/{imageId} {
-      allow read: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/documents/\$(id)).owner == request.auth.uid);
-      allow create: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.exists(/databases/(default)/documents/documents/\$(id)) ? (firestore.get(/databases/(default)/documents/documents/\$(id)).owner == request.auth.uid) : (request.auth != null));
-      allow update: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/documents/\$(id)).owner == request.auth.uid);
-      allow delete: if (request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/documents/\$(id)).owner == request.auth.uid);
+      allow read: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/documents/\$(id)).data.owner == request.auth.uid);
+      allow create: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (firestore.exists(/databases/(default)/documents/documents/\$(id)) ? (firestore.get(/databases/(default)/documents/documents/\$(id)).data.owner == request.auth.uid) : (request.auth != null));
+      allow update: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/documents/\$(id)).data.owner == request.auth.uid);
+      allow delete: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/documents/\$(id)).data.owner == request.auth.uid);
     }
     match /attachments/{id}/assets/{imageId} {
-      allow read: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).document)).owner == request.auth.uid);
-      allow create: if (firestore.exists(/databases/(default)/documents/attachments/\$(id)) ? (firestore.get(/databases/(default)/documents/attachments/\$(id)).document == null) : (request.auth != null)) || (firestore.exists(/databases/(default)/documents/attachments/\$(id)) ? (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).document)).owner == request.auth.uid) : (request.auth != null));
-      allow update: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).document)).owner == request.auth.uid);
-      allow delete: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).document)).owner == request.auth.uid);
+      allow read: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).data.document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).data.document)).data.owner == request.auth.uid);
+      allow create: if (firestore.exists(/databases/(default)/documents/attachments/\$(id)) ? (firestore.get(/databases/(default)/documents/attachments/\$(id)).data.document == null) : (request.auth != null)) || (firestore.exists(/databases/(default)/documents/attachments/\$(id)) ? (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).data.document)).data.owner == request.auth.uid) : (request.auth != null));
+      allow update: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).data.document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).data.document)).data.owner == request.auth.uid);
+      allow delete: if (firestore.get(/databases/(default)/documents/attachments/\$(id)).data.document == null) || (firestore.get(/databases/(default)/documents/documents/\$(firestore.get(/databases/(default)/documents/attachments/\$(id)).data.document)).data.owner == request.auth.uid);
     }
   }
 }''');

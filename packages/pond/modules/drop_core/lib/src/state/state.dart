@@ -25,7 +25,7 @@ class State extends Equatable implements Stateful {
   State getStateUnsafe(DropCoreContext context) => this;
 
   @override
-  List<Object?> get props => [id, type, data, metadata];
+  List<Object?> get props => [id, type, data];
 
   Map<String, dynamic> get fullData => {
         if (id != null) idField: id,
