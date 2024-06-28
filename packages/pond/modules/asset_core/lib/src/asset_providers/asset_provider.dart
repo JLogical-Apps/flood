@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:asset_core/src/asset.dart';
 import 'package:asset_core/src/asset_core_component.dart';
 import 'package:asset_core/src/asset_path_context.dart';
-import 'package:asset_core/src/asset_providers/adapting_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/cache_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/cloud_asset_provider.dart';
+import 'package:asset_core/src/asset_providers/environmental_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/file_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/memory_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/security/asset_security.dart';
@@ -13,6 +13,7 @@ import 'package:asset_core/src/asset_providers/security_asset_provider.dart';
 import 'package:asset_core/src/asset_reference.dart';
 import 'package:asset_core/src/asset_reference_getter.dart';
 import 'package:drop_core/drop_core.dart';
+import 'package:environment_core/environment_core.dart';
 
 abstract class AssetProvider {
   AssetReference getById(AssetPathContext context, String id);
@@ -39,8 +40,63 @@ class AssetProviderStatic {
   CloudAssetProvider cloud(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
       CloudAssetProvider(context: context, pathGetter: pathGetter);
 
-  AdaptingAssetProvider adapting(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
-      AdaptingAssetProvider(context: context, pathGetter: pathGetter);
+  AssetProvider environmental(
+    AssetCoreComponent context,
+    AssetProvider Function(AssetCoreComponent context) assetProviderGetter,
+  ) =>
+      EnvironmentalAssetProvider(
+        context: context,
+        assetProviderGetter: assetProviderGetter,
+      );
+
+  AssetProvider adapting(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
+      environmental(
+        context,
+        (context) {
+          if (context.context.environment == EnvironmentType.static.testing) {
+            return AssetProvider.static.memory;
+          } else if (context.context.environment == EnvironmentType.static.device) {
+            return AssetProvider.static.file(context, pathGetter).withCache();
+          } else if (context.context.environment.isOnline) {
+            if (context.context.environmentCoreComponent.platform == Platform.web) {
+              return AssetProvider.static.cloud(context, pathGetter);
+            }
+
+            return AssetProvider.static.cloud(context, pathGetter).withCache(AssetProvider.static.file(
+                  context,
+                  (context) => 'assetCache/${pathGetter(context)}',
+                  isTemporary: true,
+                ));
+          } else {
+            return throw Exception('Invalid environment for environmental asset provider');
+          }
+        },
+      );
+
+  AssetProvider adaptingToDevice(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) {
+    return environmental(
+      context,
+      (context) {
+        if (context.context.environment == EnvironmentType.static.testing) {
+          return AssetProvider.static.memory;
+        } else if (context.context.environment == EnvironmentType.static.device) {
+          return AssetProvider.static.file(context, pathGetter).withCache();
+        } else if (context.context.environment.isOnline) {
+          if (context.context.environmentCoreComponent.platform == Platform.web) {
+            return AssetProvider.static.cloud(context, pathGetter);
+          }
+
+          return AssetProvider.static.cloud(context, pathGetter).withCache(AssetProvider.static.file(
+                context,
+                (context) => 'assetCache/${pathGetter(context)}',
+                isTemporary: true,
+              ));
+        } else {
+          return throw Exception('Invalid environment for environmental asset provider');
+        }
+      },
+    );
+  }
 }
 
 mixin IsAssetProvider implements AssetProvider {

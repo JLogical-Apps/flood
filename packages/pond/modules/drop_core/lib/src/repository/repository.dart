@@ -6,7 +6,6 @@ import 'package:drop_core/src/drop_core_component.dart';
 import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
-import 'package:drop_core/src/repository/adapting_repository.dart';
 import 'package:drop_core/src/repository/cloud_repository.dart';
 import 'package:drop_core/src/repository/environmental_repository.dart';
 import 'package:drop_core/src/repository/file_repository.dart';
@@ -152,13 +151,6 @@ extension RepositoryExtension on Repository {
     return CloudRepository(rootPath: rootPath, childRepository: this);
   }
 
-  Repository adapting(String rootPath) {
-    return AdaptingRepository(
-      rootPath: rootPath,
-      childRepository: this,
-    );
-  }
-
   Repository environmental(
     Repository Function(Repository repository, EnvironmentConfigCoreComponent config) repositoryGetter,
   ) {
@@ -166,6 +158,28 @@ extension RepositoryExtension on Repository {
       childRepository: this,
       repositoryGetter: repositoryGetter,
     );
+  }
+
+  Repository adapting(String rootPath) {
+    return environmental((repository, context) {
+      if (context.environment == EnvironmentType.static.testing) {
+        return repository.memory();
+      } else if (context.environment == EnvironmentType.static.device) {
+        return repository.file(rootPath).withMemoryCache();
+      } else {
+        return repository.cloud(rootPath).withMemoryCache();
+      }
+    });
+  }
+
+  Repository adaptingToDevice(String rootPath) {
+    return environmental((repository, context) {
+      if (context.environment == EnvironmentType.static.testing) {
+        return repository.memory();
+      } else {
+        return repository.file(rootPath).withMemoryCache();
+      }
+    });
   }
 
   MemoryCacheRepository withMemoryCache() {

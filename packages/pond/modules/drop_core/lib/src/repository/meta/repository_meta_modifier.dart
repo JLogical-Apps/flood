@@ -1,5 +1,4 @@
 import 'package:drop_core/drop_core.dart';
-import 'package:drop_core/src/repository/meta/adapting_repository_security_modifier.dart';
 import 'package:drop_core/src/repository/meta/cloud_repository_security_modifier.dart';
 import 'package:drop_core/src/repository/meta/for_abstract_type_repository_security_modifier.dart';
 import 'package:drop_core/src/repository/meta/for_type_repository_security_modifier.dart';
@@ -15,7 +14,6 @@ abstract class RepositoryMetaModifier<R extends Repository> with IsTypedModifier
 
   static final repositoryPathModifierResolver = ModifierResolver<RepositoryMetaModifier, Repository>(modifiers: [
     CloudRepositoryMetaModifier(),
-    AdaptingRepositoryMetaModifier(),
     SecurityRepositoryMetaModifier(),
     ForTypeRepositoryMetaModifier(),
     ForAbstractTypeRepositoryMetaModifier(),
