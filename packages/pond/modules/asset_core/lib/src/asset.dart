@@ -24,7 +24,7 @@ class Asset extends Equatable {
     final assetExtension = extension(path).nullIfBlank ??
         (extensionFromMime(mimeType) == mimeType
             ? (throw Exception('Could not determine extension for [$path]'))
-            : extensionFromMime(mimeType));
+            : '.${extensionFromMime(mimeType)}');
 
     final assetId = '${Uuid().v4()}$assetExtension';
     return Asset(
