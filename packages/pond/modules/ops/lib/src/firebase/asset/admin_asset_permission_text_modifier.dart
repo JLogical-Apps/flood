@@ -9,6 +9,6 @@ class AdminAssetPermissionTextModifier extends AssetPermissionTextModifier<Admin
     AssetPermissionContext assetPermissionContext,
     AdminAssetPermission assetPermission,
   ) {
-    return 'request.auth.uid != null && request.auth.token.admin == true';
+    return 'request.auth != null && request.auth.uid != null && request.auth.token.admin == true';
   }
 }

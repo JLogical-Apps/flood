@@ -20,6 +20,6 @@ class EntityPropertyAssetPermissionFieldTextModifier
     final subField = assetPermissionField.permissionField;
     final subFieldText = modifierGetter(subField).getText(context, assetPermissionContext, subField);
 
-    return 'firestore.get(/databases/(default)/documents/$path/\$($subFieldText)).${assetPermissionField.propertyName}';
+    return 'firestore.get(/databases/(default)/documents/$path/\$($subFieldText)).data.${assetPermissionField.propertyName}';
   }
 }
