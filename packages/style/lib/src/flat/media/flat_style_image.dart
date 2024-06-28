@@ -13,6 +13,8 @@ class FlatStyleImageRenderer with IsTypedStyleRenderer<StyledImage> {
       placeholder: MemoryImage(kTransparentImage),
       width: component.width,
       height: component.height,
+      placeholderFit: component.fit,
+      fadeInDuration: Duration(milliseconds: 300),
       fit: component.fit,
     );
   }
