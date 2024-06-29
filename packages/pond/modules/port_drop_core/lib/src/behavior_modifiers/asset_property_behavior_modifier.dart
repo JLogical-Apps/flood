@@ -20,6 +20,7 @@ class AssetPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModifier
       pathContext: pathContext,
       assetProvider: assetProvider,
       uploadedAsset: behavior.duplicatedAsset,
+      onSubmitted: () => behavior.duplicatedAsset = null,
     ).withAllowedFileTypes(behavior.allowedFileTypes ?? AllowedFileTypes.any);
   }
 }

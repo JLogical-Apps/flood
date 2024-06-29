@@ -45,13 +45,17 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
     } else {
       return {
         behavior.name: PortField.list<dynamic, dynamic>(
-          initialValues: behavior.value.nullIfEmpty ?? defaultValue,
-          itemPortFieldGenerator: (value, fieldPath, port) {
+          initialValues: behavior.properties.nullIfEmpty ?? defaultValue,
+          itemPortFieldGenerator: (propertyOrValue, fieldPath, port) {
+            final property = (propertyOrValue as Object?)?.as<ValueObjectProperty>();
+            var value = property == null ? propertyOrValue : property.value;
+
             final assetProvider = BehaviorMetaModifier.getModifier(behavior.property)?.getAssetProvider(
               context.corePondContext.assetCoreComponent,
               behavior.property,
             );
             if (assetProvider != null && value is! AssetPortValue) {
+              propertyOrValue as AssetValueObjectProperty?;
               final id = switch (value) {
                 String() => value,
                 AssetReference() => value.id,
@@ -65,13 +69,14 @@ class ListFieldBehaviorModifier extends PortGeneratorBehaviorModifier<ListValueO
                         behavior.createAssetPathContext(context.corePondContext.assetCoreComponent),
                         id,
                       ),
+                uploadedAsset: propertyOrValue?.duplicatedAsset,
               );
             }
 
-            final itemPortModifier = PortDropCoreComponent.getBehaviorModifier(behavior.property) ??
+            final itemPortModifier = PortDropCoreComponent.getBehaviorModifier(property ?? behavior.property) ??
                 (throw Exception('Cannot generate port for item of property [$behavior]'));
 
-            final itemPropertyInstance = behavior.property.copy() as ValueObjectProperty;
+            final itemPropertyInstance = property ?? (behavior.property.copy() as ValueObjectProperty);
 
             final portFieldByName = itemPortModifier.getPortFieldByName(itemPropertyInstance, context);
             if (portFieldByName.length > 1) {

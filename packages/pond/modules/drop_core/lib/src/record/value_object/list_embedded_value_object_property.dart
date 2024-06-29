@@ -49,6 +49,21 @@ class ListEmbeddedValueObjectProperty<T extends ValueObject>
   }
 
   @override
+  Future<void> onBeforeSave(DropCoreContext context) async {
+    for (final valueObject in value) {
+      await valueObject.onBeforeSave(context);
+    }
+  }
+
+  @override
+  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) async {
+    behavior as ListEmbeddedValueObjectProperty<T>;
+    for (final (i, value) in behavior.value.indexed) {
+      await value.duplicateFrom(context, this.value[i]);
+    }
+  }
+
+  @override
   Future<void> onDelete(DropCoreContext context) async {
     for (final valueObject in value) {
       await valueObject.onDelete(context);

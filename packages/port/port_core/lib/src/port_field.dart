@@ -186,11 +186,13 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
     required AssetPathContext pathContext,
     required AssetProvider assetProvider,
     Asset? uploadedAsset,
+    FutureOr Function()? onSubmitted,
   }) {
     return AssetPortField(
       value: AssetPortValue.initial(initialValue: initialValue, uploadedAsset: uploadedAsset),
       pathContext: pathContext,
       assetProvider: assetProvider,
+      onSubmitted: onSubmitted,
     );
   }
 }

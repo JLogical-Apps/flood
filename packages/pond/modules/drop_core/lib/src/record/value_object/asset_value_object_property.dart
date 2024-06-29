@@ -55,6 +55,14 @@ class AssetValueObjectProperty
     } else if (stateValue != null) {
       throw Exception('Unknown asset value: [$stateValue]');
     }
+
+    duplicatedAsset = state.metadata[property.name];
+  }
+
+  @override
+  State modifyState(DropCoreContext context, State state) {
+    state = state.withMetadata(state.metadata.copy()..set(property.name, duplicatedAsset));
+    return super.modifyState(context, state);
   }
 
   @override
@@ -67,8 +75,8 @@ class AssetValueObjectProperty
       final asset = await assetProvider(context.context.assetCoreComponent)
           .getById(createAssetPathContext(context.context.assetCoreComponent), value!.assetId)
           .getAsset();
-      behavior.duplicatedAsset = asset.withNewId();
       behavior.set(null);
+      behavior.duplicatedAsset = asset.withNewId();
     }
   }
 
@@ -77,6 +85,22 @@ class AssetValueObjectProperty
     if (value?.assetId != null) {
       await guardAsync(() => assetProvider(context.context.assetCoreComponent)
           .delete(createAssetPathContext(context.context.assetCoreComponent), value!.assetId));
+    }
+  }
+
+  @override
+  Future<void> onBeforeSave(DropCoreContext context) async {
+    if (duplicatedAsset != null) {
+      final asset = await guardAsync(() => assetProvider(context.context.assetCoreComponent)
+          .upload(createAssetPathContext(context.context.assetCoreComponent), duplicatedAsset!));
+      if (asset != null) {
+        set(AssetReferenceGetter(
+          assetId: asset.id,
+          pathContextGetter: (context) => createAssetPathContext(context),
+          assetProviderGetter: assetProvider,
+        ));
+      }
+      duplicatedAsset = null;
     }
   }
 

@@ -78,7 +78,7 @@ class State extends Equatable implements Stateful {
   }
 
   State mergeWith(State state) {
-    return withData({...data, ...state.data});
+    return withData({...data, ...state.data}).withMetadata({...metadata, ...state.metadata});
   }
 
   static State fromMap(

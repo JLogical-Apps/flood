@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object.dart';
+import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
@@ -77,6 +78,15 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
   Future<void> onDelete(DropCoreContext context) async {
     if (value != null) {
       await value!.onDelete(context);
+    }
+  }
+
+  @override
+  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) async {
+    behavior as EmbeddedValueObjectProperty<T>;
+
+    if (value != null && behavior.value != null) {
+      behavior.value!.duplicateFrom(context, value!);
     }
   }
 

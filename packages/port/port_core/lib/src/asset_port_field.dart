@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:asset_core/asset_core.dart';
 import 'package:equatable/equatable.dart';
 import 'package:port_core/port_core.dart';
@@ -11,11 +13,14 @@ class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReferenceGette
 
   final AssetProvider assetProvider;
 
+  final FutureOr Function()? onSubmitted;
+
   AssetPortField({
     required AssetPortValue value,
     required this.pathContext,
     dynamic error,
     required this.assetProvider,
+    this.onSubmitted,
   }) : portField = PortField(
           value: value,
           error: error,
@@ -24,6 +29,7 @@ class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReferenceGette
             return id?.mapIfNonNull((id) => assetProvider.getterById(pathContext, id));
           },
           submitMapper: (assetValue) async {
+            await onSubmitted?.call();
             if (assetValue.initialValue != null &&
                 ((assetValue.uploadedAsset != null && assetValue.uploadedAsset?.id != assetValue.initialValue!.id) ||
                     assetValue.removed)) {
@@ -47,6 +53,7 @@ class AssetPortField with IsPortFieldWrapper<AssetPortValue, AssetReferenceGette
       pathContext: pathContext,
       value: value,
       assetProvider: assetProvider,
+      onSubmitted: onSubmitted,
       error: error,
     )
       ..port = port
