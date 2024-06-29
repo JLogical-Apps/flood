@@ -13,7 +13,8 @@ class MemoryAssetProvider with IsAssetProvider {
   AssetReference getById(AssetPathContext context, String id) {
     return AssetReference(
       id: id,
-      assetModel: Model.fromValueStream(_assetXById.putIfAbsent(id, () => BehaviorSubject.seeded(FutureValue.empty()))),
+      assetModel: Model.fromValueStream(_assetXById.putIfAbsent(id,
+          () => BehaviorSubject.seeded(FutureValue.error('Asset with id [$id] does not exist!', StackTrace.current)))),
     );
   }
 
@@ -36,7 +37,6 @@ class MemoryAssetProvider with IsAssetProvider {
     if (_assetXById[id] == null) {
       throw Exception('Cannot delete non-existing asset! [$id]');
     }
-    _assetXById[id]!.value = FutureValue.empty();
-    _assetXById.remove(id);
+    _assetXById[id]!.value = FutureValue.error('Asset with id [$id] does not exist!', StackTrace.current);
   }
 }

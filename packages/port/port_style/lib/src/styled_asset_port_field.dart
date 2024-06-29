@@ -82,6 +82,13 @@ class StyledAssetPortField<E, T> extends HookWidget {
                           }
                         },
                       ),
+                    if (value.removed && (value.initialValue != null && value.uploadedAsset == null))
+                      StyledButton(
+                        iconData: Icons.restore,
+                        onPressed: () async {
+                          port[fieldPath] = assetField.value.withRestored();
+                        },
+                      ),
                   ],
                 ),
               ],
