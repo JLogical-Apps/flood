@@ -18,8 +18,6 @@ abstract class ValueObjectBehavior implements Validator<ValueObject, String> {
 
   Future<void> onBeforeSave(DropCoreContext context);
 
-  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior);
-
   Future<void> onDelete(DropCoreContext context);
 
   static DisplayNameValueObjectBehavior displayName(String? displayName) {
@@ -51,9 +49,6 @@ mixin IsValueObjectBehavior implements ValueObjectBehavior {
 
   @override
   Future<void> onBeforeSave(DropCoreContext context) async {}
-
-  @override
-  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) async {}
 
   @override
   Future<void> onDelete(DropCoreContext context) async {}

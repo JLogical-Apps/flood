@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:asset_core/asset_core.dart';
+import 'package:collection/collection.dart';
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/record/entity.dart';
@@ -85,9 +86,12 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
 
   Future<void> duplicateFrom(DropCoreContext context, ValueObject valueObject) async {
     copyFrom(context, valueObject);
-    for (final (i, behavior) in behaviors.indexed) {
-      final sourceBehavior = valueObject.behaviors[i];
-      await sourceBehavior.onDuplicateTo(context, behavior);
+    for (final property in behaviors.whereType<ValueObjectProperty>()) {
+      final sourceProperty =
+          valueObject.behaviors.whereType<ValueObjectProperty>().firstWhereOrNull((p) => property.name == p.name);
+      if (sourceProperty != null) {
+        await sourceProperty.onDuplicateTo(context, property);
+      }
     }
   }
 

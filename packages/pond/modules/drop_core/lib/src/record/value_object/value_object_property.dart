@@ -61,6 +61,8 @@ abstract class ValueObjectProperty<G, S, V extends ValueObjectProperty<dynamic, 
 
   V copy();
 
+  Future<void> onDuplicateTo(DropCoreContext context, V property);
+
   static FieldValueObjectProperty<T> field<T>({required String name}) {
     return FieldValueObjectProperty(name: name);
   }
@@ -110,7 +112,7 @@ mixin IsValueObjectProperty<G, S, V extends ValueObjectProperty> implements Valu
   Future<void> onBeforeSave(DropCoreContext context) async {}
 
   @override
-  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) async {}
+  Future<void> onDuplicateTo(DropCoreContext context, V property) async {}
 
   @override
   Future<void> onDelete(DropCoreContext context) async {}
@@ -370,9 +372,8 @@ mixin IsValueObjectPropertyWrapper<G, S, V extends ValueObjectPropertyWrapper<G,
   Future<void> onBeforeSave(DropCoreContext context) => property.onBeforeSave(context);
 
   @override
-  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) {
-    behavior as ValueObjectPropertyWrapper;
-    return property.onDuplicateTo(context, behavior.property);
+  Future<void> onDuplicateTo(DropCoreContext context, V property) {
+    return this.property.onDuplicateTo(context, property.property);
   }
 
   @override

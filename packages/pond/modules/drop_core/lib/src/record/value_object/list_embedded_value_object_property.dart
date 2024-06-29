@@ -56,9 +56,8 @@ class ListEmbeddedValueObjectProperty<T extends ValueObject>
   }
 
   @override
-  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) async {
-    behavior as ListEmbeddedValueObjectProperty<T>;
-    for (final (i, value) in behavior.value.indexed) {
+  Future<void> onDuplicateTo(DropCoreContext context, ListEmbeddedValueObjectProperty<T> property) async {
+    for (final (i, value) in property.value.indexed) {
       await value.duplicateFrom(context, this.value[i]);
     }
   }

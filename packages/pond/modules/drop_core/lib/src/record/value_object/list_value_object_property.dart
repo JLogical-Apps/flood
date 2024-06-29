@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object.dart';
-import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:utils_core/utils_core.dart';
@@ -107,11 +106,10 @@ class ListValueObjectProperty<T> with IsValueObjectProperty<List<T>, List<T>, Li
   }
 
   @override
-  Future<void> onDuplicateTo(DropCoreContext context, ValueObjectBehavior behavior) async {
-    behavior as ListValueObjectProperty<T>;
-    for (final (i, property) in properties.indexed) {
-      final otherItemProperty = behavior.properties[i];
-      await property.onDuplicateTo(context, otherItemProperty);
+  Future<void> onDuplicateTo(DropCoreContext context, ListValueObjectProperty<T> property) async {
+    for (final (i, prop) in properties.indexed) {
+      final otherItemProperty = property.properties[i];
+      await prop.onDuplicateTo(context, otherItemProperty);
     }
   }
 
