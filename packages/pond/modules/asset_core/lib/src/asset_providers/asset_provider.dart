@@ -77,22 +77,10 @@ class AssetProviderStatic {
     return environmental(
       context,
       (context) {
-        if (context.context.environment == EnvironmentType.static.testing) {
+        if (context.context.environment == EnvironmentType.static.testing || context.context.platform == Platform.web) {
           return AssetProvider.static.memory;
-        } else if (context.context.environment == EnvironmentType.static.device) {
-          return AssetProvider.static.file(context, pathGetter).withCache();
-        } else if (context.context.environment.isOnline) {
-          if (context.context.environmentCoreComponent.platform == Platform.web) {
-            return AssetProvider.static.cloud(context, pathGetter);
-          }
-
-          return AssetProvider.static.cloud(context, pathGetter).withCache(AssetProvider.static.file(
-                context,
-                (context) => 'assetCache/${pathGetter(context)}',
-                isTemporary: true,
-              ));
         } else {
-          return throw Exception('Invalid environment for environmental asset provider');
+          return AssetProvider.static.file(context, pathGetter).withCache();
         }
       },
     );
