@@ -7,6 +7,8 @@ import 'package:model_core/model_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
+const timeoutDuration = Duration(seconds: 4);
+
 class CacheAssetProvider with IsAssetProviderWrapper {
   final AssetProvider sourceAssetProvider;
   final AssetProvider cacheAssetProvider;
@@ -53,7 +55,7 @@ class CacheAssetProvider with IsAssetProviderWrapper {
     final cacheAssetReference = _cacheAssetReferenceById.putIfAbsent(id, () => cacheAssetProvider.getById(context, id));
 
     final [sourceAssetMetadata, cachedAssetMetadata] = await Future.wait([
-      guardAsync(() => sourceAssetReference.assetMetadataModel.getOrLoad()),
+      guardAsync(() => sourceAssetReference.assetMetadataModel.getOrLoad().timeout(timeoutDuration)),
       guardAsync(() => cacheAssetReference.assetMetadataModel.getOrLoad())
     ]);
     if (sourceAssetMetadata != null || cachedAssetMetadata != null) {

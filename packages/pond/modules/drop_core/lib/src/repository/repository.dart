@@ -7,6 +7,7 @@ import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/cloud_repository.dart';
+import 'package:drop_core/src/repository/device_cache_repository.dart';
 import 'package:drop_core/src/repository/environmental_repository.dart';
 import 'package:drop_core/src/repository/file_repository.dart';
 import 'package:drop_core/src/repository/listener_repository.dart';
@@ -18,6 +19,7 @@ import 'package:drop_core/src/repository/repository_state_handler.dart';
 import 'package:drop_core/src/repository/security/repository_security.dart';
 import 'package:drop_core/src/repository/security/security_repository.dart';
 import 'package:drop_core/src/repository/type/for_abstract_type_repository.dart';
+import 'package:drop_core/src/repository/type/for_any_repository.dart';
 import 'package:drop_core/src/repository/type/for_type_repository.dart';
 import 'package:drop_core/src/repository/type/with_embedded_abstract_type_repository.dart';
 import 'package:drop_core/src/repository/type/with_embedded_type_repository.dart';
@@ -36,6 +38,8 @@ abstract class Repository implements CorePondComponent, RepositoryStateHandlerWr
   static Repository list(List<Repository> repositories) {
     return RepositoryListWrapper(repositories);
   }
+
+  static ForAnyRepository forAny() => ForAnyRepository();
 
   static ForTypeRepository<E, V> forType<E extends Entity<V>, V extends ValueObject>(
     E Function() entityConstructor,
@@ -167,7 +171,7 @@ extension RepositoryExtension on Repository {
       } else if (context.environment == EnvironmentType.static.device) {
         return repository.file(rootPath).withMemoryCache();
       } else {
-        return repository.cloud(rootPath).withMemoryCache();
+        return repository.cloud(rootPath).withDeviceCache();
       }
     });
   }
@@ -184,6 +188,10 @@ extension RepositoryExtension on Repository {
 
   MemoryCacheRepository withMemoryCache() {
     return MemoryCacheRepository(sourceRepository: this);
+  }
+
+  DeviceCacheRepository withDeviceCache() {
+    return DeviceCacheRepository(sourceRepository: this);
   }
 
   SecurityRepository withSecurity(RepositorySecurity repositorySecurity) {

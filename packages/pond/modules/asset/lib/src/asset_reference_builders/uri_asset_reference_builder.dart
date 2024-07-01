@@ -22,6 +22,8 @@ class UriAssetReferenceBuilder extends AssetReferenceBuilder {
         width: width,
         height: height,
         fit: fit,
+        errorBuilder: (_, __, ___) =>
+            DefaultAssetReferenceBuilder().build(context, assetReferenceBuilderContext, width, height, fit),
       );
     } else if (metadata.mimeType!.startsWith('video/')) {
       return StyledVideo(

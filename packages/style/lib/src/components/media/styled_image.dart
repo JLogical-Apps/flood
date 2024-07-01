@@ -6,8 +6,23 @@ class StyledImage extends StyleComponent {
   final double? width;
   final double? height;
   final BoxFit? fit;
+  final Widget Function(BuildContext, Object, StackTrace?)? errorBuilder;
 
-  StyledImage({super.key, required this.image, this.width, this.height, this.fit});
+  StyledImage({
+    super.key,
+    required this.image,
+    this.width,
+    this.height,
+    this.fit,
+    this.errorBuilder,
+  });
 
-  StyledImage.asset(String assetPath, {super.key, this.width, this.height, this.fit}) : image = AssetImage(assetPath);
+  StyledImage.asset(
+    String assetPath, {
+    super.key,
+    this.width,
+    this.height,
+    this.fit,
+    this.errorBuilder,
+  }) : image = AssetImage(assetPath);
 }

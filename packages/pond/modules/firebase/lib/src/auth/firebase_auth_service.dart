@@ -150,7 +150,11 @@ class FirebaseAuthService with IsAuthService, IsCorePondComponent {
 
 extension on User {
   Future<bool> isAdmin() async {
-    final token = await getIdTokenResult();
+    final token = await guardAsync(() => getIdTokenResult());
+    if (token == null) {
+      return false;
+    }
+
     final claims = token.claims ?? {};
     return claims['admin'] == true;
   }

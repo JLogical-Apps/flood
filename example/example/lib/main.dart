@@ -59,7 +59,8 @@ Future<AppPondContext> buildAppPondContext() async {
   final appPondContext = AppPondContext(corePondContext: corePondContext);
   await appPondContext.register(FloodAppComponent(
     style: style,
-    latestAllowedVersion: () => latestAllowedVersionDataSource?.getOrNull(),
+    latestAllowedVersion: () => guardAsync<Version?>(
+        () async => await latestAllowedVersionDataSource?.getOrNull().timeout(Duration(seconds: 1))),
     styledSearchResultOverrides: [
       StyledTagSearchResultOverride(),
     ],

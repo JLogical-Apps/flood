@@ -16,6 +16,7 @@ class FlatStyleImageRenderer with IsTypedStyleRenderer<StyledImage> {
       placeholderFit: component.fit,
       fadeInDuration: Duration(milliseconds: 300),
       fit: component.fit,
+      imageErrorBuilder: component.errorBuilder,
     );
   }
 

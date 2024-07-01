@@ -545,7 +545,7 @@ packages:
     source: hosted
     version: "4.0.1+4"
   log:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../log"
       relative: true

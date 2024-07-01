@@ -3,6 +3,8 @@ import 'package:drop/drop.dart';
 import 'package:drop/src/debug/drop_debug_component.dart';
 import 'package:drop/src/debug/drop_debug_page.dart';
 import 'package:drop/src/debug/drop_debug_repository_page.dart';
+import 'package:drop/src/debug/sync_debug_page.dart';
+import 'package:drop/src/sync_debug_component.dart';
 import 'package:flutter/material.dart' hide Route;
 import 'package:model/model.dart';
 import 'package:pond/pond.dart';
@@ -16,7 +18,13 @@ class DropAppComponent with IsAppPondComponent, IsDebugDialogComponent, IsDebugP
   Map<Route, AppPage> get pages => {
         DropDebugRoute(): DropDebugPage(),
         DropDebugRepositoryRoute(): DropDebugRepositoryPage(),
+        SyncDebugRoute(): SyncDebugPage(),
       };
+
+  @override
+  Future onRegister(AppPondContext context) async {
+    await context.register(SyncDebugComponent());
+  }
 
   @override
   Widget renderDebug(BuildContext context, DebugDialogContext debugContext) {
