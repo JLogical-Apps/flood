@@ -1,6 +1,7 @@
 import 'package:asset_core/asset_core.dart';
 import 'package:collection/collection.dart';
 import 'package:drop_core/drop_core.dart';
+import 'package:log_core/log_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class AssetValueObjectProperty
@@ -89,8 +90,11 @@ class AssetValueObjectProperty
   @override
   Future<void> onBeforeSave(DropCoreContext context) async {
     if (duplicatedAsset != null) {
-      final asset = await guardAsync(() => assetProvider(context.context.assetCoreComponent)
-          .upload(createAssetPathContext(context.context.assetCoreComponent), duplicatedAsset!));
+      final asset = await guardAsync(
+        () => assetProvider(context.context.assetCoreComponent)
+            .upload(createAssetPathContext(context.context.assetCoreComponent), duplicatedAsset!),
+        onException: (e, stackTrace) => context.context.logError(e, stackTrace),
+      );
       if (asset != null) {
         set(AssetReferenceGetter(
           assetId: asset.id,

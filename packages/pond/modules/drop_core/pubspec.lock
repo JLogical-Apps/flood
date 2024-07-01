@@ -286,7 +286,7 @@ packages:
     source: hosted
     version: "2.0.1"
   log_core:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../log_core"
       relative: true
