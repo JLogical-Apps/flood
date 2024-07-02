@@ -1,17 +1,11 @@
 import 'dart:async';
 
-import 'package:asset_core/src/asset.dart';
-import 'package:asset_core/src/asset_core_component.dart';
-import 'package:asset_core/src/asset_path_context.dart';
+import 'package:asset_core/asset_core.dart';
 import 'package:asset_core/src/asset_providers/cache_asset_provider.dart';
-import 'package:asset_core/src/asset_providers/cloud_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/environmental_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/file_asset_provider.dart';
 import 'package:asset_core/src/asset_providers/memory_asset_provider.dart';
-import 'package:asset_core/src/asset_providers/security/asset_security.dart';
 import 'package:asset_core/src/asset_providers/security_asset_provider.dart';
-import 'package:asset_core/src/asset_reference.dart';
-import 'package:asset_core/src/asset_reference_getter.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:environment_core/environment_core.dart';
 
@@ -62,10 +56,9 @@ class AssetProviderStatic {
               return AssetProvider.static.cloud(context, pathGetter);
             }
 
-            return AssetProvider.static.cloud(context, pathGetter).withCache(AssetProvider.static.file(
+            return AssetProvider.static.cloud(context, pathGetter).withDeviceCache(AssetProvider.static.file(
                   context,
-                  (context) => 'assetCache/${pathGetter(context)}',
-                  isTemporary: true,
+                  (context) => pathGetter(context),
                 ));
           } else {
             return throw Exception('Invalid environment for environmental asset provider');
@@ -104,6 +97,10 @@ extension AssetProviderExtensions on AssetProvider {
       sourceAssetProvider: this,
       cacheAssetProvider: cacheAssetProvider ?? AssetProvider.static.memory,
     );
+  }
+
+  AssetProvider withDeviceCache(AssetProvider cacheAssetProvider) {
+    return DeviceCacheAssetProvider(sourceAssetProvider: this, cacheAssetProvider: cacheAssetProvider);
   }
 
   AssetProvider withSecurity(AssetSecurity assetSecurity) {

@@ -13,6 +13,7 @@ class SyncIndicator extends HookWidget {
     final syncState = useSyncState();
 
     return switch (syncState) {
+      SyncState.none => Container(),
       SyncState.syncing => StyledLoadingIndicator(),
       SyncState.error => StyledButton(
           iconData: Icons.error,
@@ -35,11 +36,10 @@ class SyncIndicator extends HookWidget {
                     },
                   ),
                   StyledCard(
-                    titleText: 'Clear Local Changes',
+                    title: StyledText.lg.bold.display.withColor(Colors.red)('Clear Local Changes'),
                     bodyText:
                         'If you are connected to the internet and you believe your data is corrupted, use this to clear your local changes. Beware, you will lose any unsaved progress!',
-                    leadingIcon: Icons.delete,
-                    color: Colors.red,
+                    leading: StyledIcon(Icons.delete, color: Colors.red),
                     onPressed: () async {
                       await context.showStyledDialog(StyledDialog.yesNo(
                         titleText: 'Confirm Delete Local Changes',

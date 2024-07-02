@@ -1,12 +1,21 @@
 import 'dart:async';
 
-import 'package:drop_core/drop_core.dart';
+import 'package:drop_core/src/context/core_pond_context_extensions.dart';
+import 'package:drop_core/src/query/query.dart';
+import 'package:drop_core/src/record/value_object/time/creation_time_property.dart';
+import 'package:drop_core/src/repository/repository.dart';
+import 'package:drop_core/src/repository/repository_query_executor.dart';
+import 'package:drop_core/src/sync/delete_asset_sync_action.dart';
+import 'package:drop_core/src/sync/delete_asset_sync_action_entity.dart';
 import 'package:drop_core/src/sync/delete_entity_sync_action.dart';
 import 'package:drop_core/src/sync/delete_entity_sync_action_entity.dart';
 import 'package:drop_core/src/sync/sync_action.dart';
 import 'package:drop_core/src/sync/sync_action_entity.dart';
 import 'package:drop_core/src/sync/update_entity_sync_action.dart';
 import 'package:drop_core/src/sync/update_entity_sync_action_entity.dart';
+import 'package:drop_core/src/sync/upload_asset_sync_action.dart';
+import 'package:drop_core/src/sync/upload_asset_sync_action_entity.dart';
+import 'package:environment_core/environment_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
@@ -31,13 +40,30 @@ class SyncCoreComponent with IsRepositoryWrapper {
         entityTypeName: 'DeleteEntitySyncActionEntity',
         valueObjectTypeName: 'DeleteEntitySyncAction',
       )
+      .withImplementation<UploadAssetSyncActionEntity, UploadAssetSyncAction>(
+        UploadAssetSyncActionEntity.new,
+        UploadAssetSyncAction.new,
+        entityTypeName: 'UploadAssetSyncActionEntity',
+        valueObjectTypeName: 'UploadAssetSyncAction',
+      )
+      .withImplementation<DeleteAssetSyncActionEntity, DeleteAssetSyncAction>(
+        DeleteAssetSyncActionEntity.new,
+        DeleteAssetSyncAction.new,
+        entityTypeName: 'DeleteAssetSyncActionEntity',
+        valueObjectTypeName: 'DeleteAssetSyncAction',
+      )
       .adaptingToDevice('sync');
 
-  final BehaviorSubject<SyncState> _syncStateX = BehaviorSubject.seeded(SyncState.syncing);
+  final BehaviorSubject<SyncState> _syncStateX = BehaviorSubject.seeded(SyncState.none);
   late final ValueStream<SyncState> syncStateX = _syncStateX;
 
   bool publishing = false;
+  bool republish = false;
   late StreamSubscription refreshSubscription;
+
+  bool shouldSync(CorePondContext context) {
+    return context.environment.isOnline && context.platform != Platform.web;
+  }
 
   @override
   List<CorePondComponentBehavior> get behaviors =>
@@ -45,12 +71,16 @@ class SyncCoreComponent with IsRepositoryWrapper {
       [
         CorePondComponentBehavior(
           onLoad: (context, _) async {
-            refreshSubscription = Stream.periodic(refreshDuration).listen(
-              (_) => publish(),
-            );
+            if (shouldSync(context)) {
+              refreshSubscription = Stream.periodic(refreshDuration).listen(
+                (_) => publish(),
+              );
+            }
           },
-          onReset: (context, _) async {
-            refreshSubscription.cancel();
+          onReset: (context, _) {
+            if (shouldSync(context)) {
+              refreshSubscription.cancel();
+            }
           },
         )
       ];
@@ -62,23 +92,27 @@ class SyncCoreComponent with IsRepositoryWrapper {
 
   Future<void> publish() async {
     if (publishing) {
+      republish = true;
       return;
     }
 
     publishing = true;
 
     try {
-      final syncActionEntities = await repository
-          .executeQuery(Query.from<SyncActionEntity>().orderByAscending(CreationTimeProperty.field).all());
+      do {
+        republish = false;
+        final syncActionEntities = await repository
+            .executeQuery(Query.from<SyncActionEntity>().orderByAscending(CreationTimeProperty.field).all());
 
-      if (syncActionEntities.isNotEmpty) {
-        _syncStateX.value = SyncState.syncing;
-      }
+        if (syncActionEntities.isNotEmpty) {
+          _syncStateX.value = SyncState.syncing;
+        }
 
-      for (final syncActionEntity in syncActionEntities) {
-        await syncActionEntity.value.onPublish(context.dropCoreComponent);
-        await repository.delete(syncActionEntity);
-      }
+        for (final syncActionEntity in syncActionEntities) {
+          await syncActionEntity.value.onPublish(context.dropCoreComponent);
+          await repository.delete(syncActionEntity);
+        }
+      } while (republish);
 
       _syncStateX.value = SyncState.synced;
     } catch (e) {
@@ -106,6 +140,7 @@ extension SyncCorePondContextExtensions on CorePondContext {
 }
 
 enum SyncState {
+  none,
   syncing,
   synced,
   error,

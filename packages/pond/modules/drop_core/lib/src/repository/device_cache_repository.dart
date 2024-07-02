@@ -36,7 +36,7 @@ class DeviceCacheRepository with IsRepositoryWrapper {
   final Set<QueryRequest> queriesRun = {};
 
   late final Repository cacheRepository;
-  late final Set<String> cachedQueryRequests;
+  late Set<String> cachedQueryRequests;
 
   DeviceCacheRepository({
     required Repository sourceRepository,
@@ -72,6 +72,7 @@ class DeviceCacheRepository with IsRepositoryWrapper {
             queriesRun.clear();
             await getCachedQueryRequestsDataSource(context).delete();
             cachedQueryRequests = {};
+            await cacheRepository.reset(context);
           },
         ),
       ];

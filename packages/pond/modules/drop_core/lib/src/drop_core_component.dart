@@ -10,7 +10,6 @@ import 'package:drop_core/src/repository/repository.dart';
 import 'package:drop_core/src/repository/repository_implementation.dart';
 import 'package:drop_core/src/repository/repository_list_wrapper.dart';
 import 'package:drop_core/src/state/state.dart';
-import 'package:drop_core/src/sync_component.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:runtime_type/type.dart';
 import 'package:type_core/type_core.dart';
@@ -33,7 +32,6 @@ class DropCoreComponent with IsCorePondComponent, IsDropCoreContext, IsRepositor
           onRegister: (context, component) {
             context.locate<TypeCoreComponent>().registerAbstract<ValueObject>(name: 'ValueObject');
             context.locate<TypeCoreComponent>().registerAbstract<Entity>(name: 'Entity');
-            context.register(SyncCoreComponent());
           },
         )
       ];

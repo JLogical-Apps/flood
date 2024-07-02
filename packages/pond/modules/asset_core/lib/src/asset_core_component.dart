@@ -1,9 +1,11 @@
-import 'package:asset_core/src/asset_provider_implementation.dart';
-import 'package:asset_core/src/asset_providers/asset_provider.dart';
+import 'package:asset_core/asset_core.dart';
 import 'package:auth_core/auth_core.dart';
 import 'package:collection/collection.dart';
+import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:utils_core/utils_core.dart';
+
+const entityIdWildcard = '{entityId}';
 
 class AssetCoreComponent with IsCorePondComponent, IsLocatorWrapper<AssetProvider> {
   final List<AssetProvider> Function(AssetCoreComponent context) assetProviders;
@@ -45,6 +47,23 @@ class AssetCoreComponent with IsCorePondComponent, IsLocatorWrapper<AssetProvide
   AssetProvider getImplementation(AssetProvider assetProvider) {
     return getImplementationOrNull(assetProvider) ??
         (throw Exception('Could not find implementation for asset provider [$assetProvider]'));
+  }
+
+  AssetProvider? getByAssetPathOrNull(
+    String assetPath, {
+    Map<String, dynamic> wildcards = const {State.idField: entityIdWildcard},
+  }) {
+    final assetPathContext = AssetPathContext(context: this, values: wildcards);
+    return assetProviders(this).firstWhereOrNull((assetProvider) =>
+        AssetProviderMetaModifier.getModifier(assetProvider).getPath(assetProvider, assetPathContext) == assetPath);
+  }
+
+  AssetProvider getByAssetPath(
+    String assetPath, {
+    Map<String, dynamic> wildcards = const {State.idField: entityIdWildcard},
+  }) {
+    return getByAssetPathOrNull(assetPath, wildcards: wildcards) ??
+        (throw Exception('Could not find asset provider that handles $assetPath'));
   }
 
   Account? getLoggedInAccount() {
