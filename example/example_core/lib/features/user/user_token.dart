@@ -1,4 +1,5 @@
 import 'package:example_core/features/todo/todo_entity.dart';
+import 'package:example_core/utils/asset_provider_utils.dart';
 import 'package:flood_core/flood_core.dart';
 
 class UserToken extends ValueObject {
@@ -21,6 +22,6 @@ class UserTokenAssetProvider with IsAssetProviderWrapper {
 
   @override
   late final AssetProvider assetProvider = AssetProvider.static
-      .adapting(context, (context) => 'todos/${context.entityId}/tokens')
+      .syncingOrAdapting(context, (context) => 'todos/${context.entityId}/tokens')
       .fromRepository<TodoEntity>(context);
 }

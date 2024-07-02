@@ -2,6 +2,7 @@ import 'package:example_core/features/tag/tag_entity.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:example_core/features/user/user_token.dart';
+import 'package:example_core/utils/asset_provider_utils.dart';
 import 'package:flood_core/flood_core.dart';
 
 class Todo extends ValueObject {
@@ -52,6 +53,6 @@ class TodoAssetProvider with IsAssetProviderWrapper {
 
   @override
   late final AssetProvider assetProvider = AssetProvider.static
-      .adapting(context, (context) => 'todos/${context.entityId}/assets')
+      .syncingOrAdapting(context, (context) => 'todos/${context.entityId}/assets')
       .fromRepository<TodoEntity>(context);
 }

@@ -1,8 +1,9 @@
 import 'package:asset_core/asset_core.dart';
+import 'package:environment_core/environment_core.dart';
 
 class EnvironmentalAssetProvider with IsAssetProviderWrapper {
   final AssetCoreComponent context;
-  final AssetProvider Function(AssetCoreComponent context) assetProviderGetter;
+  final AssetProvider Function(EnvironmentConfigCoreComponent context) assetProviderGetter;
 
   EnvironmentalAssetProvider({
     required this.context,
@@ -10,5 +11,5 @@ class EnvironmentalAssetProvider with IsAssetProviderWrapper {
   });
 
   @override
-  late final AssetProvider assetProvider = assetProviderGetter(context);
+  late final AssetProvider assetProvider = assetProviderGetter(context.context.environmentCoreComponent);
 }

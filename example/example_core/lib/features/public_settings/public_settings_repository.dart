@@ -1,5 +1,6 @@
 import 'package:example_core/features/public_settings/public_settings.dart';
 import 'package:example_core/features/public_settings/public_settings_entity.dart';
+import 'package:example_core/utils/repository_utils.dart';
 import 'package:flood_core/flood_core.dart';
 
 class PublicSettingsRepository with IsRepositoryWrapper {
@@ -9,7 +10,7 @@ class PublicSettingsRepository with IsRepositoryWrapper {
     PublicSettings.new,
     entityTypeName: 'PublicSettingsEntity',
     valueObjectTypeName: 'PublicSettings',
-  ).adapting('public').withSecurity(RepositorySecurity.readWrite(
+  ).syncingOrAdapting('public').withSecurity(RepositorySecurity.readWrite(
         read: Permission.all,
         write: Permission.none,
       ));

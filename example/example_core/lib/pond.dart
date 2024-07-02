@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:example_core/components/testing_utility_component.dart';
 import 'package:example_core/features/public_settings/public_settings_repository.dart';
 import 'package:example_core/features/tag/tag_repository.dart';
 import 'package:example_core/features/todo/todo.dart';
@@ -58,6 +59,11 @@ Future<CorePondContext> getCorePondContext({
       await dropContext.updateEntity(userEntity, (User user) => user..deviceTokenProperty.set(null));
     },
   ));
+
+  await corePondContext.register(TestingUtilityComponent());
+  if (corePondContext.testingComponent.useSyncing) {
+    await corePondContext.register(SyncCoreComponent());
+  }
 
   await corePondContext.register(UserRepository());
   await corePondContext.register(TodoRepository());

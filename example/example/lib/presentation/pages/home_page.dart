@@ -2,6 +2,7 @@ import 'package:example/presentation/components/todo_entity_card.dart';
 import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/pages/tags_page.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
+import 'package:example_core/components/testing_utility_component.dart';
 import 'package:example_core/features/todo/todo.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
 import 'package:example_core/features/user/user.dart';
@@ -43,6 +44,10 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
         return StyledPage(
           titleText: 'Todos',
           actionWidgets: [
+            if (context.corePondContext.testingComponent.useSyncing) ...[
+              SyncIndicator(),
+              SizedBox(width: 5),
+            ],
             profileButton(
               context,
               user: loggedInUserEntity.value,

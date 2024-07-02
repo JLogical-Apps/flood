@@ -36,7 +36,7 @@ class AssetProviderStatic {
 
   AssetProvider environmental(
     AssetCoreComponent context,
-    AssetProvider Function(AssetCoreComponent context) assetProviderGetter,
+    AssetProvider Function(EnvironmentConfigCoreComponent context) assetProviderGetter,
   ) =>
       EnvironmentalAssetProvider(
         context: context,
@@ -46,13 +46,13 @@ class AssetProviderStatic {
   AssetProvider adapting(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
       environmental(
         context,
-        (context) {
-          if (context.context.environment == EnvironmentType.static.testing) {
+        (environment) {
+          if (environment.environment == EnvironmentType.static.testing) {
             return AssetProvider.static.memory;
-          } else if (context.context.environment == EnvironmentType.static.device) {
+          } else if (environment.environment == EnvironmentType.static.device) {
             return AssetProvider.static.file(context, pathGetter).withCache();
-          } else if (context.context.environment.isOnline) {
-            if (context.context.environmentCoreComponent.platform == Platform.web) {
+          } else if (environment.environment.isOnline) {
+            if (environment.platform == Platform.web) {
               return AssetProvider.static.cloud(context, pathGetter);
             }
 
@@ -69,13 +69,13 @@ class AssetProviderStatic {
   AssetProvider syncing(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
       environmental(
         context,
-        (context) {
-          if (context.context.environment == EnvironmentType.static.testing) {
+        (environment) {
+          if (environment.environment == EnvironmentType.static.testing) {
             return AssetProvider.static.memory;
-          } else if (context.context.environment == EnvironmentType.static.device) {
+          } else if (environment.environment == EnvironmentType.static.device) {
             return AssetProvider.static.file(context, pathGetter).withCache();
-          } else if (context.context.environment.isOnline) {
-            if (context.context.environmentCoreComponent.platform == Platform.web) {
+          } else if (environment.environment.isOnline) {
+            if (environment.platform == Platform.web) {
               return AssetProvider.static.cloud(context, pathGetter);
             }
 
@@ -92,8 +92,8 @@ class AssetProviderStatic {
   AssetProvider adaptingToDevice(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) {
     return environmental(
       context,
-      (context) {
-        if (context.context.environment == EnvironmentType.static.testing || context.context.platform == Platform.web) {
+      (environment) {
+        if (environment.environment == EnvironmentType.static.testing || environment.platform == Platform.web) {
           return AssetProvider.static.memory;
         } else {
           return AssetProvider.static.file(context, pathGetter).withCache();

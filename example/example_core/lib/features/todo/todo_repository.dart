@@ -1,5 +1,6 @@
 import 'package:example_core/features/todo/todo.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
+import 'package:example_core/utils/repository_utils.dart';
 import 'package:flood_core/flood_core.dart';
 
 class TodoRepository with IsRepositoryWrapper {
@@ -9,7 +10,7 @@ class TodoRepository with IsRepositoryWrapper {
     Todo.new,
     entityTypeName: 'TodoEntity',
     valueObjectTypeName: 'Todo',
-  ).adapting('todo').withSecurity(RepositorySecurity.all(
+  ).syncingOrAdapting('todo').withSecurity(RepositorySecurity.all(
         Permission.admin |
             Permission.equals(PermissionField.propertyName(Todo.userField), PermissionField.loggedInUserId),
       ));

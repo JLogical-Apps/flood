@@ -1,6 +1,7 @@
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:example_core/features/user/user_token.dart';
+import 'package:example_core/utils/repository_utils.dart';
 import 'package:flood_core/flood_core.dart';
 
 class UserRepository with IsRepositoryWrapper {
@@ -11,7 +12,7 @@ class UserRepository with IsRepositoryWrapper {
     entityTypeName: 'UserEntity',
     valueObjectTypeName: 'User',
   )
-      .adapting('user')
+      .syncingOrAdapting('user')
       .withSecurity(RepositorySecurity(
         read: Permission.admin | Permission.equals(PermissionField.entityId, PermissionField.loggedInUserId),
         create: Permission.admin | Permission.equals(PermissionField.entityId, PermissionField.loggedInUserId),

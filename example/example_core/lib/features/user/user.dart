@@ -1,4 +1,5 @@
 import 'package:example_core/features/user/user_entity.dart';
+import 'package:example_core/utils/asset_provider_utils.dart';
 import 'package:flood_core/flood_core.dart';
 
 class User extends ValueObject {
@@ -36,6 +37,6 @@ class UserProfilePictureAssetProvider with IsAssetProviderWrapper {
 
   @override
   late final AssetProvider assetProvider = AssetProvider.static
-      .adapting(context, (context) => 'users/${context.entityId}/profilePicture')
+      .syncingOrAdapting(context, (context) => 'users/${context.entityId}/profilePicture')
       .fromRepository<UserEntity>(context);
 }

@@ -4,7 +4,6 @@ import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/sync/sync_action.dart';
-import 'package:utils_core/utils_core.dart';
 
 class UploadAssetSyncAction extends SyncAction {
   static const assetPathField = 'assetPath';
@@ -32,9 +31,7 @@ class UploadAssetSyncAction extends SyncAction {
       context: assetCoreComponent,
       values: {State.idField: entityIdProperty.value, forceSourceUpdateField: true},
     );
-    final asset = await guardAsync(() => assetProvider.getById(assetPathContext, idProperty.value).getAsset());
-    if (asset != null) {
-      await assetProvider.upload(assetPathContext, asset).timeout(Duration(seconds: 15));
-    }
+    final asset = await assetProvider.getById(assetPathContext, idProperty.value).getAsset();
+    await assetProvider.upload(assetPathContext, asset).timeout(Duration(seconds: 15));
   }
 }
