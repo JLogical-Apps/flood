@@ -43,8 +43,6 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
         return StyledPage(
           titleText: 'Todos',
           actionWidgets: [
-            SyncIndicator(),
-            SizedBox(width: 4),
             profileButton(
               context,
               user: loggedInUserEntity.value,

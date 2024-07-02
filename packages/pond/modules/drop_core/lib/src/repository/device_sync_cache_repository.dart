@@ -26,7 +26,7 @@ import 'package:utils_core/utils_core.dart';
 const _defaultTimeoutSeconds = 2;
 const forceSourceUpdateField = 'forceSourceUpdate';
 
-class DeviceCacheRepository with IsRepositoryWrapper {
+class DeviceSyncCacheRepository with IsRepositoryWrapper {
   @override
   late final Repository repository;
 
@@ -38,7 +38,7 @@ class DeviceCacheRepository with IsRepositoryWrapper {
   late final Repository cacheRepository;
   late Set<String> cachedQueryRequests;
 
-  DeviceCacheRepository({
+  DeviceSyncCacheRepository({
     required Repository sourceRepository,
     this.timeout = const Duration(seconds: _defaultTimeoutSeconds),
   }) {
@@ -92,7 +92,7 @@ class DeviceCacheRepository with IsRepositoryWrapper {
 }
 
 class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
-  final DeviceCacheRepository repository;
+  final DeviceSyncCacheRepository repository;
 
   final BehaviorSubject<Map<QueryRequest, Completer>> _completerByLoadingQueryRequestX = BehaviorSubject.seeded({});
 
@@ -259,7 +259,7 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
 }
 
 class DeviceCacheRepositoryStateHandler with IsRepositoryStateHandler {
-  final DeviceCacheRepository repository;
+  final DeviceSyncCacheRepository repository;
 
   DeviceCacheRepositoryStateHandler({required this.repository});
 

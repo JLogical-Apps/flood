@@ -7,7 +7,7 @@ import 'package:utils_core/utils_core.dart';
 const timeoutDuration = Duration(seconds: 4);
 const forceSourceUpdateField = 'forceSourceUpdate';
 
-class DeviceCacheAssetProvider with IsAssetProviderWrapper {
+class DeviceSyncCacheAssetProvider with IsAssetProviderWrapper {
   final AssetProvider sourceAssetProvider;
   final AssetProvider cacheAssetProvider;
 
@@ -17,7 +17,7 @@ class DeviceCacheAssetProvider with IsAssetProviderWrapper {
   final Map<String, BehaviorSubject<FutureValue<AssetMetadata>>> _assetMetadataXById = {};
   final Map<String, BehaviorSubject<FutureValue<Asset>>> _assetXById = {};
 
-  DeviceCacheAssetProvider({required this.sourceAssetProvider, required this.cacheAssetProvider});
+  DeviceSyncCacheAssetProvider({required this.sourceAssetProvider, required this.cacheAssetProvider});
 
   @override
   AssetProvider get assetProvider => sourceAssetProvider;

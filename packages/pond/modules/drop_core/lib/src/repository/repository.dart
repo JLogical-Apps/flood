@@ -7,7 +7,7 @@ import 'package:drop_core/src/query/request/query_request.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/cloud_repository.dart';
-import 'package:drop_core/src/repository/device_cache_repository.dart';
+import 'package:drop_core/src/repository/device_sync_cache_repository.dart';
 import 'package:drop_core/src/repository/environmental_repository.dart';
 import 'package:drop_core/src/repository/file_repository.dart';
 import 'package:drop_core/src/repository/listener_repository.dart';
@@ -171,10 +171,22 @@ extension RepositoryExtension on Repository {
       } else if (context.environment == EnvironmentType.static.device) {
         return repository.file(rootPath).withMemoryCache();
       } else {
+        return repository.cloud(rootPath).withMemoryCache();
+      }
+    });
+  }
+
+  Repository syncing(String rootPath) {
+    return environmental((repository, context) {
+      if (context.environment == EnvironmentType.static.testing) {
+        return repository.memory();
+      } else if (context.environment == EnvironmentType.static.device) {
+        return repository.file(rootPath).withMemoryCache();
+      } else {
         if (context.platform == Platform.web) {
           return repository.cloud(rootPath).withMemoryCache();
         }
-        return repository.cloud(rootPath).withDeviceCache();
+        return repository.cloud(rootPath).withDeviceSyncCache();
       }
     });
   }
@@ -193,8 +205,8 @@ extension RepositoryExtension on Repository {
     return MemoryCacheRepository(sourceRepository: this);
   }
 
-  DeviceCacheRepository withDeviceCache() {
-    return DeviceCacheRepository(sourceRepository: this);
+  DeviceSyncCacheRepository withDeviceSyncCache() {
+    return DeviceSyncCacheRepository(sourceRepository: this);
   }
 
   SecurityRepository withSecurity(RepositorySecurity repositorySecurity) {

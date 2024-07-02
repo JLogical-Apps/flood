@@ -51,7 +51,6 @@ class FloodCoreComponent with IsCorePondComponent {
             repositoryImplementations: repositoryImplementations?.call(context) ?? [],
             loggedInAccountGetter: () => context.locate<AuthCoreComponent>().accountX.value.getOrNull(),
           ));
-          await context.register(SyncCoreComponent());
           await context.register(AuthCoreComponent(
             authService: authService?.call(context) ?? AuthService.static.memory(),
             authServiceImplementations: authServiceImplementations?.call(context) ?? [],

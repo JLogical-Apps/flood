@@ -23,7 +23,9 @@ class DropAppComponent with IsAppPondComponent, IsDebugDialogComponent, IsDebugP
 
   @override
   Future onRegister(AppPondContext context) async {
-    await context.register(SyncDebugComponent());
+    if (context.findOrNull<SyncCoreComponent>() != null) {
+      await context.register(SyncDebugComponent());
+    }
   }
 
   @override
