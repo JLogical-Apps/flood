@@ -43,4 +43,11 @@ class PaginatedQueryResult<T> with IsQueryResultPage<T> {
       initialPage: page.withListener(onNextPage: (nextPage) => onPageLoaded?.call(nextPage)).map(mapper),
     );
   }
+
+  PaginatedQueryResult<T> withListener({
+    FutureOr Function(List<T> items)? onLoaded,
+    FutureOr Function(QueryResultPage<T> page)? onNextPage,
+  }) {
+    return PaginatedQueryResult(initialPage: page.withListener(onLoaded: onLoaded, onNextPage: onNextPage));
+  }
 }

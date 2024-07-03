@@ -1,22 +1,7 @@
 import 'dart:async';
 
-import 'package:drop_core/src/context/core_pond_context_extensions.dart';
-import 'package:drop_core/src/query/pagination/paginated_query_result.dart';
+import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/query/request/modifier/query_request_modifier.dart';
-import 'package:drop_core/src/query/request/query_request.dart';
-import 'package:drop_core/src/record/entity.dart';
-import 'package:drop_core/src/repository/meta/repository_meta_modifier.dart';
-import 'package:drop_core/src/repository/query_executor/state_query_executor.dart';
-import 'package:drop_core/src/repository/repository.dart';
-import 'package:drop_core/src/repository/repository_query_executor.dart';
-import 'package:drop_core/src/repository/repository_state_handler.dart';
-import 'package:drop_core/src/state/persistence/state_persister.dart';
-import 'package:drop_core/src/state/state.dart';
-import 'package:drop_core/src/sync/delete_entity_sync_action.dart';
-import 'package:drop_core/src/sync/delete_entity_sync_action_entity.dart';
-import 'package:drop_core/src/sync/update_entity_sync_action.dart';
-import 'package:drop_core/src/sync/update_entity_sync_action_entity.dart';
-import 'package:drop_core/src/sync_component.dart';
 import 'package:environment_core/environment_core.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_core/pond_core.dart';
@@ -42,15 +27,12 @@ class DeviceSyncCacheRepository with IsRepositoryWrapper {
     required Repository sourceRepository,
     this.timeout = const Duration(seconds: _defaultTimeoutSeconds),
   }) {
-    repository = sourceRepository.withListener(
-      onStateRetrieved: (state) async {
-        stateByIdX.value = stateByIdX.value.copy()..set(state.id!, state);
-        await cacheRepository.update(state);
-      },
-    );
+    repository = sourceRepository.withListener(onStateRetrieved: (state) => cacheRepository.update(state));
     cacheRepository = Repository.forAny()
         .file('deviceRepositoryCache/${RepositoryMetaModifier.getModifier(repository).getPath(repository)}')
-        .withListener(onStateRetrieved: (state) => stateByIdX.value = stateByIdX.value.copy()..set(state.id!, state));
+        .withListener(onStateRetrieved: (state) {
+      return stateByIdX.value = stateByIdX.value.copy()..set(state.id!, state);
+    });
   }
 
   DataSource<String> getCachedQueryRequestsDataSource(CorePondContext context) {
@@ -132,18 +114,23 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       return result;
     } else if (isNewlyRunLocalQuery) {
       final result = await repository.cacheRepository.executeQuery(queryRequest);
-      return result;
+      if (result is! PaginatedQueryResult) {
+        return result;
+      }
     }
 
     if (paginatedQueryResultByQueryRequest.containsKey(queryRequest)) {
       var existingPaginatedQueryResult = paginatedQueryResultByQueryRequest[queryRequest];
-      if (existingPaginatedQueryResult == null) {
-        existingPaginatedQueryResult =
-            await repository.repository.executeQuery(queryRequest as QueryRequest<E, PaginatedQueryResult>);
-        paginatedQueryResultByQueryRequest[queryRequest] = existingPaginatedQueryResult;
+      if (existingPaginatedQueryResult != null) {
+        return existingPaginatedQueryResult as T;
       }
 
-      return existingPaginatedQueryResult as T;
+      existingPaginatedQueryResult =
+          await repository.repository.executeQuery(queryRequest as QueryRequest<E, PaginatedQueryResult>);
+      final mappedPaginatedQueryResult =
+          await fromSourcePaginatedQueryResult(queryRequest, existingPaginatedQueryResult!);
+      paginatedQueryResultByQueryRequest[queryRequest] = mappedPaginatedQueryResult;
+      return mappedPaginatedQueryResult as T;
     }
 
     return await stateQueryExecutor.executeQuery(queryRequest);
@@ -208,7 +195,7 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     return stateQueryExecutor.executeQueryX(queryRequest).value;
   }
 
-  Future<void> reloadPagination() async {
+  void reloadPagination() {
     for (final paginatedQueryResult in paginatedQueryResultByQueryRequest.keys) {
       paginatedQueryResultByQueryRequest[paginatedQueryResult] = null;
     }
@@ -244,10 +231,13 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       }
 
       if (sourceResult is PaginatedQueryResult) {
-        paginatedQueryResultByQueryRequest[queryRequest] = sourceResult;
+        final mappedPaginatedQueryResult = await fromSourcePaginatedQueryResult(queryRequest, sourceResult);
+        paginatedQueryResultByQueryRequest[queryRequest] = mappedPaginatedQueryResult;
+        completer.complete(mappedPaginatedQueryResult);
+        return mappedPaginatedQueryResult as T;
       }
-      completer.complete(sourceResult);
 
+      completer.complete(sourceResult);
       return sourceResult;
     } catch (e, stackTrace) {
       completer.completeError(e, stackTrace);
@@ -255,6 +245,15 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     } finally {
       _completerByLoadingQueryRequestX.value = completerByLoadingQueryRequest.copy()..remove(queryRequest);
     }
+  }
+
+  Future<PaginatedQueryResult> fromSourcePaginatedQueryResult(
+    QueryRequest queryRequest,
+    PaginatedQueryResult sourceResult,
+  ) async {
+    final cachedPaginatedQueryResult =
+        await repository.cacheRepository.executeQuery(queryRequest) as PaginatedQueryResult;
+    return cachedPaginatedQueryResult.withListener(onLoaded: (_) => sourceResult.getNextPageOrNull());
   }
 }
 
@@ -275,10 +274,10 @@ class DeviceCacheRepositoryStateHandler with IsRepositoryStateHandler {
           .registerAction(UpdateEntitySyncActionEntity()..set(UpdateEntitySyncAction()..stateProperty.set(state)));
     }
 
+    repository.queryExecutor.reloadPagination();
+
     await repository.cacheRepository.update(state);
     repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, statePersister.persist(state));
-
-    repository.queryExecutor.reloadPagination();
 
     return state;
   }
@@ -292,10 +291,10 @@ class DeviceCacheRepositoryStateHandler with IsRepositoryStateHandler {
           .registerAction(DeleteEntitySyncActionEntity()..set(DeleteEntitySyncAction()..stateProperty.set(state)));
     }
 
+    repository.queryExecutor.reloadPagination();
+
     await repository.cacheRepository.delete(state);
     repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(state.id!);
-
-    repository.queryExecutor.reloadPagination();
 
     return state;
   }

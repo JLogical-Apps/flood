@@ -32,110 +32,126 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
     }
 
     final loggedInUserModel = useEntity<UserEntity>(loggedInUserId);
-    final todosModel = useQuery(Query.from<TodoEntity>().where(Todo.userField).isEqualTo(loggedInUserId).all());
+    final todosModel = useQuery(Query.from<TodoEntity>()
+        .where(Todo.userField)
+        .isEqualTo(loggedInUserId)
+        .orderByAscending(CreationTimeProperty.field)
+        .paginate(pageSize: 2));
 
     return ModelBuilder.page(
-      model: Model.union([loggedInUserModel, todosModel]),
-      builder: (List values) {
-        final [UserEntity loggedInUserEntity, List<TodoEntity> todoEntities] = values;
-        final uncompletedTodos = todoEntities.where((todoEntity) => !todoEntity.value.completedProperty.value).toList();
-        final completedTodos = todoEntities.where((todoEntity) => todoEntity.value.completedProperty.value).toList();
+      model: loggedInUserModel,
+      builder: (UserEntity loggedInUserEntity) {
+        return PaginatedQueryModelBuilder(
+          paginatedQueryModel: todosModel,
+          builder: (List<TodoEntity> todoEntities, loadMore) {
+            final uncompletedTodos =
+                todoEntities.where((todoEntity) => !todoEntity.value.completedProperty.value).toList();
+            final completedTodos =
+                todoEntities.where((todoEntity) => todoEntity.value.completedProperty.value).toList();
 
-        return StyledPage(
-          titleText: 'Todos',
-          actionWidgets: [
-            if (context.corePondContext.testingComponent.useSyncing) ...[
-              SyncIndicator(),
-              SizedBox(width: 5),
-            ],
-            profileButton(
-              context,
-              user: loggedInUserEntity.value,
-              actions: [
-                ActionItem.static.editEntity(
-                  context,
-                  entity: loggedInUserEntity,
-                  contentTypeName: 'Profile',
-                  description: 'Edit your profile.',
-                ),
-                ActionItem(
-                  titleText: 'Manage Tags',
-                  descriptionText: 'Manage your tags.',
-                  color: Colors.blue,
-                  iconData: Icons.tag,
-                  onPerform: (_) {
-                    context.push(TagsRoute());
-                  },
-                ),
-                ActionItem(
-                  titleText: 'Import',
-                  color: Colors.blue,
-                  iconData: Icons.download,
-                  descriptionText: 'Import a csv of todos',
-                  onPerform: (context) async {
-                    await context.showStyledDialog(StyledPortDialog(
-                      port: Port.of({
-                        'file': PortField.file().withDisplayName('CSV File').withAllowedFileTypes(['csv']).required(),
-                      }).map((values, port) => values['file'] as CrossFile),
-                      titleText: 'Import Todos',
-                      onAccept: (file) async {
-                        final csv = await DataSource.static.crossFile(file).mapCsv(hasHeaderRow: true).get();
-                        final todos = csv
-                            .map((row) => Todo()
-                              ..nameProperty.set(row[0])
-                              ..descriptionProperty.set(row[1])
-                              ..userProperty.set(loggedInUserId))
-                            .toList();
-                        await Future.wait(
-                            todos.map((todo) => context.dropCoreComponent.update(TodoEntity()..set(todo))));
-                      },
-                    ));
-                  },
-                ),
-                ActionItem(
-                  titleText: 'Logout',
-                  color: Colors.red,
-                  descriptionText: 'Log out of your account.',
-                  iconData: Icons.logout,
-                  onPerform: (context) async {
-                    await context.authCoreComponent.logout();
-                    await context.pushReplacement(LoginRoute());
-                  },
-                ),
-              ],
-            ),
-          ],
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: StyledList.column.withScrollbar.centered(
-              children: [
-                StyledButton(
-                  labelText: 'Create Todo',
-                  iconData: Icons.add,
-                  onPressed: () => context.showStyledDialog(StyledPortDialog(
-                    titleText: 'Create Todo',
-                    port: (Todo()..userProperty.set(loggedInUserId)).asPort(context.corePondContext),
-                    onAccept: (Todo todo) async {
-                      final todoEntity = TodoEntity()..set(todo);
-                      await context.dropCoreComponent.update(todoEntity);
-                    },
-                  )),
-                ),
-                ...uncompletedTodos.map((todoEntity) => TodoEntityCard(
-                      key: ValueKey(todoEntity.id),
-                      todoEntity: todoEntity,
-                    )),
-                if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) ...[
-                  StyledDivider(),
-                  StyledText.xl.display.bold('Completed'),
+            return StyledPage(
+              titleText: 'Todos',
+              actionWidgets: [
+                if (context.corePondContext.testingComponent.useSyncing) ...[
+                  SyncIndicator(),
+                  SizedBox(width: 5),
                 ],
-                ...completedTodos.map((todoEntity) => TodoEntityCard(
-                      key: ValueKey(todoEntity.id),
-                      todoEntity: todoEntity,
-                    )),
+                profileButton(
+                  context,
+                  user: loggedInUserEntity.value,
+                  actions: [
+                    ActionItem.static.editEntity(
+                      context,
+                      entity: loggedInUserEntity,
+                      contentTypeName: 'Profile',
+                      description: 'Edit your profile.',
+                    ),
+                    ActionItem(
+                      titleText: 'Manage Tags',
+                      descriptionText: 'Manage your tags.',
+                      color: Colors.blue,
+                      iconData: Icons.tag,
+                      onPerform: (_) {
+                        context.push(TagsRoute());
+                      },
+                    ),
+                    ActionItem(
+                      titleText: 'Import',
+                      color: Colors.blue,
+                      iconData: Icons.download,
+                      descriptionText: 'Import a csv of todos',
+                      onPerform: (context) async {
+                        await context.showStyledDialog(StyledPortDialog(
+                          port: Port.of({
+                            'file':
+                                PortField.file().withDisplayName('CSV File').withAllowedFileTypes(['csv']).required(),
+                          }).map((values, port) => values['file'] as CrossFile),
+                          titleText: 'Import Todos',
+                          onAccept: (file) async {
+                            final csv = await DataSource.static.crossFile(file).mapCsv(hasHeaderRow: true).get();
+                            final todos = csv
+                                .map((row) => Todo()
+                                  ..nameProperty.set(row[0])
+                                  ..descriptionProperty.set(row[1])
+                                  ..userProperty.set(loggedInUserId))
+                                .toList();
+                            await Future.wait(
+                                todos.map((todo) => context.dropCoreComponent.update(TodoEntity()..set(todo))));
+                          },
+                        ));
+                      },
+                    ),
+                    ActionItem(
+                      titleText: 'Logout',
+                      color: Colors.red,
+                      descriptionText: 'Log out of your account.',
+                      iconData: Icons.logout,
+                      onPerform: (context) async {
+                        await context.authCoreComponent.logout();
+                        await context.pushReplacement(LoginRoute());
+                      },
+                    ),
+                  ],
+                ),
               ],
-            ),
-          ),
+              body: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                child: StyledList.column.withScrollbar.centered(
+                  children: [
+                    StyledButton(
+                      labelText: 'Create Todo',
+                      iconData: Icons.add,
+                      onPressed: () => context.showStyledDialog(StyledPortDialog(
+                        titleText: 'Create Todo',
+                        port: (Todo()..userProperty.set(loggedInUserId)).asPort(context.corePondContext),
+                        onAccept: (Todo todo) async {
+                          final todoEntity = TodoEntity()..set(todo);
+                          await context.dropCoreComponent.update(todoEntity);
+                        },
+                      )),
+                    ),
+                    ...uncompletedTodos.map((todoEntity) => TodoEntityCard(
+                          key: ValueKey(todoEntity.id),
+                          todoEntity: todoEntity,
+                        )),
+                    if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) ...[
+                      StyledDivider(),
+                      StyledText.xl.display.bold('Completed'),
+                    ],
+                    ...completedTodos.map((todoEntity) => TodoEntityCard(
+                          key: ValueKey(todoEntity.id),
+                          todoEntity: todoEntity,
+                        )),
+                    if (loadMore != null)
+                      StyledButton(
+                        labelText: 'Load More',
+                        onPressed: loadMore,
+                      ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:drop_core/src/context/core_pond_context_extensions.dart';
 import 'package:drop_core/src/repository/query_executor/state_query_executor.dart';
 import 'package:drop_core/src/repository/repository.dart';
@@ -50,8 +51,8 @@ class MemoryRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
 
     return StateQueryExecutor.fromStatesX(
       dropContext: repository.context.dropCoreComponent,
-      statesX: stateByIdX
-          .mapWithValue((stateById) => stateById.values.map((state) => statePersister.inflate(state)).toList()),
+      statesX: stateByIdX.mapWithValue((stateById) =>
+          stateById.values.map((state) => statePersister.inflate(state)).sortedBy((state) => state.id!).toList()),
     );
   }
 }

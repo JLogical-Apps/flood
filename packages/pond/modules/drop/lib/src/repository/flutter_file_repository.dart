@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:persistence/persistence.dart';
 import 'package:pond/pond.dart';
@@ -52,8 +53,10 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
           .crossDirectory(repository.fileRepository.directory)
           .getX()
           .map((fileEntities) => (fileEntities ?? []).whereType<CrossFile>())
-          .asyncMap<FutureValue<List<State>>>(
-              (files) async => FutureValue.loaded(await Future.wait(files.map(getStateFromFile))))
+          .asyncMap<FutureValue<List<State>>>((files) async {
+            final states = await Future.wait(files.map(getStateFromFile));
+            return FutureValue.loaded(states.sortedBy((state) => state.id!));
+          })
           .publishValueSeeded(FutureValue.loading())
           .autoConnect(),
       statesGetter: () async {
@@ -62,7 +65,7 @@ class FlutterFileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
 
         final crossFiles = crossElements.whereType<CrossFile>();
         final states = await Future.wait(crossFiles.map(getStateFromFile));
-        return states;
+        return states.sortedBy((state) => state.id!);
       },
       dropContext: repository.context.dropCoreComponent,
     );

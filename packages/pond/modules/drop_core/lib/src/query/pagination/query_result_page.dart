@@ -36,8 +36,15 @@ extension QueryResultPageDefaults<T> on QueryResultPage<T> {
     return MapperQueryResultPage(sourceQueryResultPage: this, mapper: mapper);
   }
 
-  QueryResultPageListener<T> withListener({FutureOr Function(QueryResultPage<T> page)? onNextPage}) {
-    return QueryResultPageListener(queryResultPage: this, onNextPage: onNextPage);
+  QueryResultPageListener<T> withListener({
+    FutureOr Function(List<T> items)? onLoaded,
+    FutureOr Function(QueryResultPage<T> page)? onNextPage,
+  }) {
+    return QueryResultPageListener(
+      queryResultPage: this,
+      onLoaded: onLoaded,
+      onNextPage: onNextPage,
+    );
   }
 
   Future<QueryResultPage<T>> append(QueryResultPage<T> nextPage) async {
