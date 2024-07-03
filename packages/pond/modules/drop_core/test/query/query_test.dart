@@ -32,11 +32,11 @@ void main() {
     }
 
     final allUserEntities = await repository.executeQuery(Query.from<UserEntity>().all());
-    expect(allUserEntities.map((entity) => entity.value).toList(), users);
+    expect(allUserEntities.map((entity) => entity.value).toList(), unorderedEquals(users));
 
     final allUserStates = await repository.executeQuery(Query.from<UserEntity>().allStates());
     expect(allUserStates.map((state) => state.data),
-        users.map((user) => user.getState(context.locate<DropCoreComponent>()).data).toList());
+        unorderedEquals(users.map((user) => user.getState(context.locate<DropCoreComponent>()).data).toList()));
   });
 
   test('query first', () async {
@@ -65,10 +65,12 @@ void main() {
       await repository.update(UserEntity()..value = user);
     }
 
-    final firstUserEntity = await repository.executeQuery(Query.from<UserEntity>().firstOrNull());
+    final firstUserEntity =
+        await repository.executeQuery(Query.from<UserEntity>().orderByAscending('name').firstOrNull());
     expect(firstUserEntity?.value, users[0]);
 
-    final firstUserEntityState = await repository.executeQuery(Query.from<UserEntity>().firstOrNullState());
+    final firstUserEntityState =
+        await repository.executeQuery(Query.from<UserEntity>().orderByAscending('name').firstOrNullState());
     expect(firstUserEntityState?.data, users[0].getState(context.locate<DropCoreComponent>()).data);
   });
 
@@ -133,7 +135,7 @@ void main() {
     expect(containsA.map((user) => user.value.nameProperty.value), ['Jake']);
 
     final containsB = await repository.executeQuery(Query.from<UserEntity>().where('items').contains('b').all());
-    expect(containsB.map((user) => user.value.nameProperty.value), ['Jake', 'John']);
+    expect(containsB.map((user) => user.value.nameProperty.value), unorderedEquals(['Jake', 'John']));
 
     final containsC = await repository.executeQuery(Query.from<UserEntity>().where('items').contains('c').all());
     expect(containsC.map((user) => user.value.nameProperty.value), ['John']);
@@ -172,11 +174,11 @@ void main() {
 
     final containsA =
         await repository.executeQuery(Query.from<UserEntity>().where('items').containsAny(['a', 'c']).all());
-    expect(containsA.map((user) => user.value.nameProperty.value), ['Jake', 'John']);
+    expect(containsA.map((user) => user.value.nameProperty.value), unorderedEquals(['Jake', 'John']));
 
     final containsB =
         await repository.executeQuery(Query.from<UserEntity>().where('items').containsAny(['b', 'd']).all());
-    expect(containsB.map((user) => user.value.nameProperty.value), ['Jake', 'John']);
+    expect(containsB.map((user) => user.value.nameProperty.value), unorderedEquals(['Jake', 'John']));
 
     final containsC = await repository.executeQuery(Query.from<UserEntity>().where('items').containsAny(['a']).all());
     expect(containsC.map((user) => user.value.nameProperty.value), ['Jake']);
@@ -216,49 +218,49 @@ void main() {
         await repository.executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isEqualTo(0).all());
     expect(
       zeroInvoiceEntities.map((e) => e.value).toList(),
-      invoices.where((i) => i.amountProperty.value == 0).toList(),
+      unorderedEquals(invoices.where((i) => i.amountProperty.value == 0).toList()),
     );
 
     final positiveInvoiceEntities =
         await repository.executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isGreaterThan(0).all());
     expect(
       positiveInvoiceEntities.map((e) => e.value).toList(),
-      invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! > 0).toList(),
+      unorderedEquals(invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! > 0).toList()),
     );
 
     final nonNegativeInvoiceEntities = await repository
         .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isGreaterThanOrEqualTo(0).all());
     expect(
       nonNegativeInvoiceEntities.map((e) => e.value).toList(),
-      invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! >= 0).toList(),
+      unorderedEquals(invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! >= 0).toList()),
     );
 
     final negativeInvoiceEntities =
         await repository.executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isLessThan(0).all());
     expect(
       negativeInvoiceEntities.map((e) => e.value).toList(),
-      invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! < 0).toList(),
+      unorderedEquals(invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! < 0).toList()),
     );
 
     final nonPositiveInvoiceEntities = await repository
         .executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isLessThanOrEqualTo(0).all());
     expect(
       nonPositiveInvoiceEntities.map((e) => e.value).toList(),
-      invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! <= 0).toList(),
+      unorderedEquals(invoices.where((i) => i.amountProperty.value != null && i.amountProperty.value! <= 0).toList()),
     );
 
     final nullInvoiceEntities =
         await repository.executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isNull().all());
     expect(
       nullInvoiceEntities.map((e) => e.value).toList(),
-      invoices.where((i) => i.amountProperty.value == null).toList(),
+      unorderedEquals(invoices.where((i) => i.amountProperty.value == null).toList()),
     );
 
     final nonNullInvoiceEntities =
         await repository.executeQuery(Query.from<InvoiceEntity>().where(Invoice.amountField).isNonNull().all());
     expect(
       nonNullInvoiceEntities.map((e) => e.value).toList(),
-      invoices.where((i) => i.amountProperty.value != null).toList(),
+      unorderedEquals(invoices.where((i) => i.amountProperty.value != null).toList()),
     );
   });
 
@@ -338,12 +340,13 @@ void main() {
       await repository.update(InvoiceEntity()..value = invoice);
     }
 
-    final queryResultPage = await repository.executeQuery(Query.from<InvoiceEntity>().paginate(pageSize: 2));
-    expect((await queryResultPage.getItems()).map((i) => i.value), invoices.take(2).toList());
+    final queryResultPage = await repository
+        .executeQuery(Query.from<InvoiceEntity>().orderByAscending(Invoice.amountField).paginate(pageSize: 2));
+    expect((queryResultPage.items).map((i) => i.value), invoices.take(2).toList());
     expect(queryResultPage.hasNext, isTrue);
 
     final nextQueryResultPage = await queryResultPage.getNextPage();
-    expect((await nextQueryResultPage.getItems()).map((i) => i.value), invoices.skip(2).take(2).toList());
+    expect((nextQueryResultPage.items).map((i) => i.value), invoices.skip(2).take(2).toList());
     expect(nextQueryResultPage.hasNext, isFalse);
 
     final allItems = await queryResultPage.combineAll();
@@ -379,11 +382,11 @@ void main() {
     final allUserNames = await repository.executeQuery(Query.from<UserEntity>()
         .all()
         .map((context, entities) => entities.map((entity) => entity.value.nameProperty.value).toList()));
-    expect(allUserNames, users.map((user) => user.nameProperty.value).toList());
+    expect(allUserNames, unorderedEquals(users.map((user) => user.nameProperty.value).toList()));
 
     final allUserEmails = await repository.executeQuery(
         Query.from<UserEntity>().allStates().map((context, states) => states.map((state) => state['email']).toList()));
-    expect(allUserEmails, users.map((user) => user.emailProperty.value).toList());
+    expect(allUserEmails, unorderedEquals(users.map((user) => user.emailProperty.value).toList()));
   });
 
   test('query on abstract type.', () async {
@@ -418,7 +421,7 @@ void main() {
     await Future.wait(transactionEntities.map((e) => repository.update(e)));
 
     final allTransactionEntities = await repository.executeQuery(Query.from<TransactionEntity>().all());
-    expect(allTransactionEntities.map((e) => e.value), transactionEntities.map((e) => e.value));
+    expect(allTransactionEntities.map((e) => e.value), unorderedEquals(transactionEntities.map((e) => e.value)));
   });
 
   test('list repository', () async {
@@ -491,7 +494,8 @@ void main() {
       await repository.update(UserEntity()..value = user);
     }
 
-    final firstUser = await Query.from<UserEntity>().limit(1).all().get(context.dropCoreComponent);
+    final firstUser =
+        await Query.from<UserEntity>().orderByAscending('name').limit(1).all().get(context.dropCoreComponent);
     expect(firstUser[0].value, users[0]);
   });
 

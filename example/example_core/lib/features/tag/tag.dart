@@ -16,9 +16,9 @@ class Tag extends ValueObject {
   late final ownerProperty = reference<UserEntity>(name: ownerField).hidden().required();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [
-        nameProperty,
-        colorProperty,
-        ownerProperty,
-      ];
+  late final List<ValueObjectBehavior> behaviors = [
+    nameProperty,
+    colorProperty,
+    ownerProperty,
+  ];
 }

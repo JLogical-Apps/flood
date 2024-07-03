@@ -5,5 +5,9 @@ import 'package:drop_core/src/state/state.dart';
 abstract class SyncAction extends ValueObject {
   void modifyStates(List<State> states) {}
 
+  bool modifies(State state) {
+    return false;
+  }
+
   Future<void> onPublish(DropCoreContext context);
 }

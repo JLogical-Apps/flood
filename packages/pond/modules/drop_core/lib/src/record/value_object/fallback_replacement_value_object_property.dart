@@ -44,6 +44,12 @@ class FallbackReplacementValueObjectProperty<T>
   T? get valueOrNull => rootProperty.valueOrNull ?? guard(() => fallbackReplacement());
 
   @override
+  void set(T? value) {
+    property.set(value);
+    rootProperty.set(value);
+  }
+
+  @override
   FallbackReplacementValueObjectProperty<T> copy() {
     return FallbackReplacementValueObjectProperty<T>(
       property: property.copy(),

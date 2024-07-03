@@ -12,7 +12,10 @@ class UpdateEntitySyncAction extends SyncAction {
   late final stateProperty = field<State>(name: stateField).required();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [creationTime(), stateProperty];
+  late final List<ValueObjectBehavior> behaviors = [
+    creationTime(),
+    stateProperty,
+  ];
 
   @override
   void modifyStates(List<State> states) {
@@ -30,5 +33,10 @@ class UpdateEntitySyncAction extends SyncAction {
     await context
         .update(state.withMetadata(state.metadata.copy()..set(forceSourceUpdateField, true)))
         .timeout(Duration(seconds: 4));
+  }
+
+  @override
+  bool modifies(State state) {
+    return state.id == stateProperty.value.id!;
   }
 }

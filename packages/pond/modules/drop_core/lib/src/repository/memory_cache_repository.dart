@@ -15,7 +15,11 @@ class MemoryCacheRepository with IsRepositoryWrapper {
 
   MemoryCacheRepository({required Repository sourceRepository}) {
     repository = sourceRepository.withListener(
-      onStateRetrieved: (state) => stateByIdX.value = stateByIdX.value.copy()..set(state.id!, state),
+      onStateRetrieved: (state) {
+        if (stateByIdX.value[state.id!] != state) {
+          stateByIdX.value = stateByIdX.value.copy()..set(state.id!, state);
+        }
+      },
     );
   }
 
@@ -126,7 +130,7 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     return stateQueryExecutor.executeQueryX(queryRequest).value;
   }
 
-  Future<void> reloadPagination() async {
+  void reloadPagination() {
     for (final paginatedQueryResult in paginatedQueryResultByQueryRequest.keys) {
       paginatedQueryResultByQueryRequest[paginatedQueryResult] = null;
     }
@@ -173,9 +177,9 @@ class MemoryCacheRepositoryStateHandler with IsRepositoryStateHandler {
   @override
   Future<State> onUpdate(State state) async {
     state = await repository.repository.update(state);
-    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, statePersister.persist(state));
 
     repository.queryExecutor.reloadPagination();
+    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, statePersister.persist(state));
 
     return state;
   }
@@ -183,9 +187,9 @@ class MemoryCacheRepositoryStateHandler with IsRepositoryStateHandler {
   @override
   Future<State> onDelete(State state) async {
     state = await repository.repository.delete(state);
-    repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(state.id!);
 
     repository.queryExecutor.reloadPagination();
+    repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(state.id!);
 
     return state;
   }

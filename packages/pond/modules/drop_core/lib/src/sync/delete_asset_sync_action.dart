@@ -18,12 +18,12 @@ class DeleteAssetSyncAction extends SyncAction {
   late final idProperty = field<String>(name: idField).isNotBlank();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [
-        creationTime(),
-        assetPathProperty,
-        entityIdProperty,
-        idProperty,
-      ];
+  late final List<ValueObjectBehavior> behaviors = [
+    creationTime(),
+    assetPathProperty,
+    entityIdProperty,
+    idProperty,
+  ];
 
   @override
   Future<void> onPublish(DropCoreContext context) async {

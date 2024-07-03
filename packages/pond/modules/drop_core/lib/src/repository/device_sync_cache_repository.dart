@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:drop_core/src/query/request/modifier/query_request_modifier.dart';
 import 'package:environment_core/environment_core.dart';
@@ -28,7 +29,12 @@ class DeviceSyncCacheRepository with IsRepositoryWrapper {
   }) {
     repositoryPath = RepositoryMetaModifier.getModifier(sourceRepository).getPath(sourceRepository)!;
     cacheRepository = Repository.forAny().file('$cacheRootFolder/$repositoryPath');
-    this.sourceRepository = sourceRepository.withListener(onStateRetrieved: (state) => cacheRepository.update(state));
+    this.sourceRepository = sourceRepository.withListener(onStateRetrieved: (state) async {
+      final syncEntities = await context.syncCoreComponent.getSyncEntities();
+      if (syncEntities.none((entity) => entity.value.modifies(state))) {
+        await cacheRepository.update(state);
+      }
+    });
   }
 
   @override
@@ -91,7 +97,26 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       return result;
     }
 
-    return await repository.cacheRepository.executeQuery(queryRequest, onStateRetreived: onStateRetreived);
+    final result = await repository.cacheRepository.executeQuery(queryRequest, onStateRetreived: onStateRetreived);
+
+    if (result is PaginatedQueryResult) {
+      return await mapPaginationRequest<T>(queryRequest: queryRequest, result: result);
+    } else if (!needsSource) {
+      fetchSourceAndDeleteStale(queryRequest, onStateRetreived: onStateRetreived);
+    }
+
+    return result;
+  }
+
+  Future<T> mapPaginationRequest<T>({required QueryRequest queryRequest, required PaginatedQueryResult result}) async {
+    final sourcePaginatedQueryResult =
+        await guardAsync(() => repository.sourceRepository.executeQuery(queryRequest) as PaginatedQueryResult);
+    if (sourcePaginatedQueryResult == null) {
+      return result as T;
+    }
+
+    await guardAsync(() => sourcePaginatedQueryResult.getNextPageOrNull());
+    return result.withListener((page) => guardAsync(() => sourcePaginatedQueryResult.getNextPageOrNull())) as T;
   }
 
   @override
@@ -123,10 +148,7 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
 
     final sourceStates = <State>[];
     final sourceResult = await repository.sourceRepository
-        .executeQuery(
-          queryRequest,
-          onStateRetreived: (state) => sourceStates.add(state),
-        )
+        .executeQuery(queryRequest, onStateRetreived: (state) => sourceStates.add(state))
         .timeout(repository.timeout);
 
     final syncEntities = await repository.context.syncCoreComponent.getSyncEntities();

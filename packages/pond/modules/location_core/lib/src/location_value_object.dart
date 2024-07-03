@@ -8,9 +8,9 @@ class LocationValueObject extends ValueObject {
   late final longitudeProperty = field<double>(name: longitudeField).required();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [
-        latitudeProperty,
-        longitudeProperty,
-        creationTime(),
-      ];
+  late final List<ValueObjectBehavior> behaviors = [
+    latitudeProperty,
+    longitudeProperty,
+    creationTime(),
+  ];
 }

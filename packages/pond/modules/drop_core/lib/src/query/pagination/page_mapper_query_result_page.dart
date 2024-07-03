@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:drop_core/src/query/pagination/query_result_page.dart';
 import 'package:utils_core/utils_core.dart';
 
-class MapperQueryResultPage<T, R> with IsQueryResultPage<R> {
+class PageMapperQueryResultPage<T, R> with IsQueryResultPage<R> {
   final QueryResultPage<T> sourceQueryResultPage;
-  final R Function(T source) mapper;
+  final FutureOr<List<R>> Function(List<T> source) mapper;
 
-  MapperQueryResultPage({required this.sourceQueryResultPage, required this.mapper});
+  @override
+  final List<R> items;
+
+  PageMapperQueryResultPage({required this.sourceQueryResultPage, required this.items, required this.mapper});
 
   @override
   FutureOr<QueryResultPage<R>> Function()? get nextPageGetter =>
@@ -17,16 +20,13 @@ class MapperQueryResultPage<T, R> with IsQueryResultPage<R> {
     final sourceNextPage = await nextPageGetter();
 
     return QueryResultPage(
-      items: mapItems(sourceNextPage.items),
+      items: await mapItems(sourceNextPage.items),
       nextPageGetter:
           sourceNextPage.nextPageGetter?.mapIfNonNull((nextPageGetter) => () => nextPageMapper(nextPageGetter)),
     );
   }
 
-  @override
-  List<R> get items => mapItems(sourceQueryResultPage.items);
-
-  List<R> mapItems(List<T> sourceItems) {
-    return (sourceItems.map(mapper)).toList();
+  Future<List<R>> mapItems(List<T> sourceItems) async {
+    return await mapper(sourceItems);
   }
 }

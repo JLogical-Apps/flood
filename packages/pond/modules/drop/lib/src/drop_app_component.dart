@@ -6,7 +6,6 @@ import 'package:drop/src/debug/drop_debug_repository_page.dart';
 import 'package:drop/src/debug/sync_debug_page.dart';
 import 'package:drop/src/sync_debug_component.dart';
 import 'package:flutter/material.dart' hide Route;
-import 'package:model/model.dart';
 import 'package:pond/pond.dart';
 import 'package:style/style.dart';
 import 'package:utils/utils.dart';
@@ -41,17 +40,6 @@ class DropAppComponent with IsAppPondComponent, IsDebugDialogComponent, IsDebugP
                   onEmpty: () => StyledText.body('N/A'),
                   onLoading: () => StyledLoadingIndicator(),
                   onLoaded: (data) {
-                    if (data is PaginatedQueryResult<Entity>) {
-                      final model = Model(loader: () => data.page.getItems());
-                      return ModelBuilder(
-                        model: model,
-                        builder: (List<Entity> entities) {
-                          return StyledText.body(
-                            'Paginated(\n[${entities.map((entity) => entity.getState(context.dropCoreComponent).toString()).join(',')}],\nhasNext: ${data.page.hasNext}\n)',
-                          );
-                        },
-                      );
-                    }
                     return StyledText.body(prettyPrint(context.dropCoreComponent, data) ?? '');
                   },
                   onError: (error, stackTrace) => StyledText.body.error(error),

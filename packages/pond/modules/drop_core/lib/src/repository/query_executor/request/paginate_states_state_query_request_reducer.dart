@@ -23,8 +23,7 @@ class PaginateStatesStateQueryRequestReducer
       ),
       onPageLoaded: onStateRetrieved == null
           ? null
-          : (page) async {
-              final states = await page.getItems();
+          : (states) async {
               for (final state in states) {
                 await onStateRetrieved(state);
               }

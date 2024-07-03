@@ -18,12 +18,15 @@ class PaginatedQueryRequest<E extends Entity>
   PaginatedQueryRequest({required this.sourceQueryRequest});
 
   @override
-  FutureOr<PaginatedQueryResult<E>> doMap(DropCoreContext context, PaginatedQueryResult<State> source) {
-    return source.map((state) async {
-      final entity = await context.constructEntityFromState<E>(state);
-      await entity.throwIfInvalid(null);
-      return entity;
-    });
+  Future<PaginatedQueryResult<E>> doMap(DropCoreContext context, PaginatedQueryResult<State> source) async {
+    return await source.withPageMapper(
+      pageMapper: (states) => Future.wait(states.map((state) async {
+        final entity = await context.constructEntityFromState<E>(state);
+        await entity.throwIfInvalid(null);
+        return entity;
+      })),
+      reversePageMapper: (entities) => entities.map((entity) => entity.getState(context)).toList(),
+    );
   }
 
   @override

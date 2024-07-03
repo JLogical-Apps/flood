@@ -12,7 +12,10 @@ class DeleteEntitySyncAction extends SyncAction {
   late final stateProperty = field<State>(name: stateField).required();
 
   @override
-  List<ValueObjectBehavior> get behaviors => [creationTime(), stateProperty];
+  late final List<ValueObjectBehavior> behaviors = [
+    creationTime(),
+    stateProperty,
+  ];
 
   @override
   Future<void> onPublish(DropCoreContext context) async {
@@ -25,5 +28,10 @@ class DeleteEntitySyncAction extends SyncAction {
   @override
   void modifyStates(List<State> states) {
     states.removeWhere((state) => state.id == stateProperty.value.id!);
+  }
+
+  @override
+  bool modifies(State state) {
+    return state.id == stateProperty.value.id!;
   }
 }

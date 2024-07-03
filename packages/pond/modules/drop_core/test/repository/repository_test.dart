@@ -102,7 +102,7 @@ void main() {
     expect(() => memoryRepository.executeQuery(Query.from<UserEntity>().first()), throwsA(isA<String>()));
     expect(() async {
       final page = await memoryRepository.executeQuery(Query.from<UserEntity>().paginate());
-      await page.getItems();
+      page.items;
     }, throwsA(isA<String>()));
     expect(() => memoryRepository.executeQuery(Query.from<UserEntity>().all()), throwsA(isA<String>()));
 
