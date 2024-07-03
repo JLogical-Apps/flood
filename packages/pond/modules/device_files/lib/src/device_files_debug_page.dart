@@ -16,7 +16,7 @@ import 'package:style/style.dart';
 
 class DeviceFilesDebugRoute with IsRoute<DeviceFilesDebugRoute> {
   @override
-  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('device_files');
+  PathDefinition get pathDefinition => PathDefinition.string('_debug').string('files');
 
   @override
   DeviceFilesDebugRoute copy() {
@@ -142,6 +142,28 @@ class DeviceFilesDebugPage with IsAppPageWrapper<DeviceFilesDebugRoute> {
                             onAccept: () async {
                               final file = rootDirectoryState.value.getDirectory(context) - pathState.value;
                               await file.delete();
+                              pathState.value = dirname(pathState.value);
+                            },
+                          ));
+                        },
+                      ),
+                    ],
+                  )
+                else if (filesModel.getOrNull() != null)
+                  StyledMenuButton(
+                    actions: [
+                      ActionItem(
+                        titleText: 'Delete',
+                        descriptionText: 'Delete this directory.',
+                        iconData: Icons.delete,
+                        color: Colors.red,
+                        onPerform: (context) async {
+                          await context.showStyledDialog(StyledDialog.yesNo(
+                            titleText: 'Confirm Delete',
+                            bodyText: 'Are you sure you want to delete this directory? This cannot be undone.',
+                            onAccept: () async {
+                              final directory = rootDirectoryState.value.getDirectory(context) / pathState.value;
+                              await directory.delete();
                               pathState.value = dirname(pathState.value);
                             },
                           ));

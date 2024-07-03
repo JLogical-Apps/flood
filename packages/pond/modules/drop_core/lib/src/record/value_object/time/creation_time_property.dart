@@ -1,3 +1,4 @@
+import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/record/value_object/time/timestamp.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
@@ -15,6 +16,11 @@ class CreationTimeProperty with IsValueObjectPropertyWrapper<Timestamp?, Timesta
   @override
   CreationTimeProperty copy() {
     return CreationTimeProperty();
+  }
+
+  @override
+  Future<void> onDuplicateTo(DropCoreContext context, CreationTimeProperty property) async {
+    property.set(Timestamp.now());
   }
 }
 

@@ -67,6 +67,7 @@ export 'src/record/value_object/validator_value_object_property.dart';
 export 'src/record/value_object/value_object_behavior.dart';
 export 'src/record/value_object/value_object_property.dart';
 export 'src/repository/cloud_repository.dart';
+export 'src/repository/device_sync_cache_repository.dart';
 export 'src/repository/environmental_repository.dart';
 export 'src/repository/file_repository.dart';
 export 'src/repository/meta/repository_meta_modifier.dart';

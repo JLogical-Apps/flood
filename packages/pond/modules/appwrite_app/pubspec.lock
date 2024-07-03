@@ -742,6 +742,14 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  pool:
+    dependency: transitive
+    description:
+      name: pool
+      sha256: "20fe868b6314b322ea036ba325e6fc0711a22948856475e2c2b6306e8ab39c2a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.1"
   protobuf:
     dependency: transitive
     description:

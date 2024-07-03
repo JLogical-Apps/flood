@@ -28,6 +28,21 @@ class SyncDebugPage with IsAppPageWrapper<SyncDebugRoute> {
     final syncState = useSyncState();
     return StyledPage(
       titleText: 'Sync',
+      actions: [
+        ActionItem(
+          titleText: 'Reset',
+          descriptionText: 'Reset the sync module to its original state.',
+          color: Colors.red,
+          iconData: Icons.restart_alt,
+          onPerform: (_) async {
+            final corePondContext = context.corePondContext;
+            await corePondContext.syncCoreComponent.reset(corePondContext);
+            await corePondContext.syncCoreComponent.load(corePondContext);
+
+            context.warpToLocation('/');
+          },
+        ),
+      ],
       body: StyledList.column.centered.withScrollbar(
         children: [
           SyncIndicator(),

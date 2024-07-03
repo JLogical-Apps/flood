@@ -5,7 +5,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 const timeoutDuration = Duration(seconds: 4);
-const forceSourceUpdateField = 'forceSourceUpdate';
 
 class DeviceSyncCacheAssetProvider with IsAssetProviderWrapper {
   final AssetProvider sourceAssetProvider;

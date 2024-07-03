@@ -21,4 +21,9 @@ class DeleteEntitySyncAction extends SyncAction {
         .delete(state.withMetadata(state.metadata.copy()..set(forceSourceUpdateField, true)))
         .timeout(Duration(seconds: 4));
   }
+
+  @override
+  void modifyStates(List<State> states) {
+    states.removeWhere((state) => state.id == stateProperty.value.id!);
+  }
 }

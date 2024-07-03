@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drop_core/src/context/core_pond_context_extensions.dart';
 import 'package:drop_core/src/query/query.dart';
 import 'package:drop_core/src/record/value_object/time/creation_time_property.dart';
+import 'package:drop_core/src/repository/device_sync_cache_repository.dart';
 import 'package:drop_core/src/repository/repository.dart';
 import 'package:drop_core/src/repository/repository_query_executor.dart';
 import 'package:drop_core/src/sync/delete_asset_sync_action.dart';
@@ -16,6 +17,7 @@ import 'package:drop_core/src/sync/update_entity_sync_action_entity.dart';
 import 'package:drop_core/src/sync/upload_asset_sync_action.dart';
 import 'package:drop_core/src/sync/upload_asset_sync_action_entity.dart';
 import 'package:environment_core/environment_core.dart';
+import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
@@ -65,6 +67,11 @@ class SyncCoreComponent with IsRepositoryWrapper {
     return context.environment.isOnline && context.platform != Platform.web;
   }
 
+  Future<List<SyncActionEntity>> getSyncEntities() async {
+    return await repository
+        .executeQuery(Query.from<SyncActionEntity>().orderByAscending(CreationTimeProperty.field).all());
+  }
+
   @override
   List<CorePondComponentBehavior> get behaviors =>
       repository.behaviors +
@@ -77,10 +84,15 @@ class SyncCoreComponent with IsRepositoryWrapper {
               );
             }
           },
-          onReset: (context, _) {
+          onReset: (context, _) async {
             if (shouldSync(context)) {
               refreshSubscription.cancel();
             }
+
+            final storageDirectory = context.environmentCoreComponent.fileSystem.storageDirectory;
+            await DataSource.static
+                .crossDirectory(storageDirectory / DeviceSyncCacheRepository.cacheRootFolder)
+                .delete();
           },
         )
       ];
@@ -101,8 +113,7 @@ class SyncCoreComponent with IsRepositoryWrapper {
     try {
       do {
         republish = false;
-        final syncActionEntities = await repository
-            .executeQuery(Query.from<SyncActionEntity>().orderByAscending(CreationTimeProperty.field).all());
+        final syncActionEntities = await getSyncEntities();
 
         if (syncActionEntities.isNotEmpty) {
           _syncStateX.value = SyncState.syncing;

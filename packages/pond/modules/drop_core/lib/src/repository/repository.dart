@@ -148,7 +148,7 @@ extension RepositoryExtension on Repository {
   }
 
   FileRepository file(String rootPath) {
-    return FileRepository(rootPath: rootPath, childRepository: this);
+    return FileRepository(rootPath: rootPath, repository: this);
   }
 
   CloudRepository cloud(String rootPath) {
@@ -181,12 +181,12 @@ extension RepositoryExtension on Repository {
       if (context.environment == EnvironmentType.static.testing) {
         return repository.memory();
       } else if (context.environment == EnvironmentType.static.device) {
-        return repository.file(rootPath).withMemoryCache();
+        return repository.file(rootPath).withDeviceSyncCache().withMemoryCache();
       } else {
         if (context.platform == Platform.web) {
           return repository.cloud(rootPath).withMemoryCache();
         }
-        return repository.cloud(rootPath).withDeviceSyncCache();
+        return repository.cloud(rootPath).withDeviceSyncCache().withMemoryCache();
       }
     });
   }

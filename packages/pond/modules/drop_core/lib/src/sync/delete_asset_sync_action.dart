@@ -2,6 +2,7 @@ import 'package:asset_core/asset_core.dart';
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/record/value_object/value_object_behavior.dart';
 import 'package:drop_core/src/record/value_object/value_object_property.dart';
+import 'package:drop_core/src/repository/device_sync_cache_repository.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/sync/sync_action.dart';
 import 'package:utils_core/utils_core.dart';

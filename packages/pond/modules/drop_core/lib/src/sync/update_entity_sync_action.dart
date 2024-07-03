@@ -15,6 +15,16 @@ class UpdateEntitySyncAction extends SyncAction {
   List<ValueObjectBehavior> get behaviors => [creationTime(), stateProperty];
 
   @override
+  void modifyStates(List<State> states) {
+    final index = states.indexWhere((state) => state.id == stateProperty.value.id);
+    if (index == -1) {
+      states.add(stateProperty.value);
+    } else {
+      states[index] = stateProperty.value;
+    }
+  }
+
+  @override
   Future<void> onPublish(DropCoreContext context) async {
     final state = stateProperty.value;
     await context
