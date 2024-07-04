@@ -63,7 +63,7 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     QueryRequest<E, T> queryRequest, {
     FutureOr Function(State state)? onStateRetreived,
   }) async {
-    final isNewlyRunQuery = repository.queriesRun.add(queryRequest);
+    final isNewlyRunQuery = !repository.queriesRun.contains(queryRequest);
     final needsSource = QueryRequestModifier.findIsWithoutCache(queryRequest) || isNewlyRunQuery;
 
     final loadingCompleter = completerByLoadingQueryRequest[queryRequest];
@@ -72,7 +72,9 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     }
 
     if (needsSource) {
-      return await fetchSourceAndDeleteStale(queryRequest);
+      final source = await fetchSourceAndDeleteStale(queryRequest);
+      repository.queriesRun.add(queryRequest);
+      return source;
     }
 
     if (paginatedQueryResultByQueryRequest.containsKey(queryRequest)) {
@@ -94,7 +96,7 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     QueryRequest<E, T> queryRequest, {
     FutureOr Function(State state)? onStateRetreived,
   }) {
-    final isNewlyRunQuery = repository.queriesRun.add(queryRequest);
+    final isNewlyRunQuery = !repository.queriesRun.contains(queryRequest);
 
     if (QueryRequestModifier.findIsWithoutCache(queryRequest)) {
       return repository.repository.executeQueryX(queryRequest);
