@@ -181,7 +181,7 @@ extension RepositoryExtension on Repository {
       if (context.environment == EnvironmentType.static.testing) {
         return repository.memory();
       } else if (context.environment == EnvironmentType.static.device) {
-        return repository.file(rootPath).withDeviceSyncCache().withMemoryCache();
+        return repository.file(rootPath).withMemoryCache();
       } else {
         if (context.platform == Platform.web) {
           return repository.cloud(rootPath).withMemoryCache();

@@ -81,7 +81,7 @@ class AssetProviderStatic {
 
             return AssetProvider.static.cloud(context, pathGetter).withDeviceSyncCache(AssetProvider.static.file(
                   context,
-                  (context) => pathGetter(context),
+                  (context) => 'deviceAssetCache/${pathGetter(context)}',
                 ));
           } else {
             return throw Exception('Invalid environment for environmental asset provider');
