@@ -43,7 +43,7 @@ class FirebaseStorageSecurityRulesGenerator {
               .join('\n');
 
           return '''\
-match /$path/{imageId} {
+match /$path/{assetIds=**} {
 ${firebaseStoragePermissions.withIndent(2)}
 }''';
         })
@@ -54,7 +54,7 @@ ${firebaseStoragePermissions.withIndent(2)}
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allImages=**} {
+    match /{assetIds=**} {
       allow read, write: if false;
     }
 ${assetProviderRules.withIndent(4)}

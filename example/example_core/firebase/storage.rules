@@ -1,22 +1,22 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allImages=**} {
+    match /{assetIds=**} {
       allow read, write: if false;
     }
-    match /todos/{id}/assets/{imageId} {
+    match /todos/{id}/assets/{assetIds=**} {
       allow read: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/todo/$(id)).data.user == request.auth.uid);
       allow create: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (firestore.exists(/databases/(default)/documents/todo/$(id)) ? (firestore.get(/databases/(default)/documents/todo/$(id)).data.user == request.auth.uid) : (request.auth != null));
       allow update: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/todo/$(id)).data.user == request.auth.uid);
       allow delete: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/todo/$(id)).data.user == request.auth.uid);
     }
-    match /users/{id}/profilePicture/{imageId} {
+    match /users/{id}/profilePicture/{assetIds=**} {
       allow read: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
       allow create: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
       allow update: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
       allow delete: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (id == request.auth.uid);
     }
-    match /todos/{id}/tokens/{imageId} {
+    match /todos/{id}/tokens/{assetIds=**} {
       allow read: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/todo/$(id)).data.user == request.auth.uid);
       allow create: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (firestore.exists(/databases/(default)/documents/todo/$(id)) ? (firestore.get(/databases/(default)/documents/todo/$(id)).data.user == request.auth.uid) : (request.auth != null));
       allow update: if (request.auth != null && request.auth.uid != null && request.auth.token.admin == true) || (firestore.get(/databases/(default)/documents/todo/$(id)).data.user == request.auth.uid);
