@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' as io;
 
 import 'package:drop/drop.dart';
 import 'package:environment/environment.dart';
@@ -131,12 +132,7 @@ class LocationAppComponent with IsAppPondComponent {
       _positionX.value = FutureValue.loaded(lastPosition);
     }
 
-    return Geolocator.getPositionStream(
-      locationSettings: LocationSettings(
-        accuracy: locationAccuracy,
-        distanceFilter: locationUpdateDistance,
-      ),
-    ).listen(
+    return Geolocator.getPositionStream(locationSettings: _locationSettings).listen(
       (position) {
         _positionX.value = FutureValue.loaded(position);
         onPositionUpdated?.call(position, true);
@@ -146,5 +142,27 @@ class LocationAppComponent with IsAppPondComponent {
         _locationSubscription = null;
       },
     );
+  }
+
+  LocationSettings get _locationSettings {
+    if (io.Platform.isAndroid) {
+      return AndroidSettings(
+        accuracy: locationAccuracy,
+        distanceFilter: locationUpdateDistance,
+        intervalDuration: const Duration(seconds: 10),
+      );
+    } else if (io.Platform.isIOS || io.Platform.isMacOS) {
+      return AppleSettings(
+        accuracy: locationAccuracy,
+        activityType: ActivityType.automotiveNavigation,
+        distanceFilter: locationUpdateDistance,
+        pauseLocationUpdatesAutomatically: true,
+      );
+    } else {
+      return LocationSettings(
+        accuracy: locationAccuracy,
+        distanceFilter: locationUpdateDistance,
+      );
+    }
   }
 }
