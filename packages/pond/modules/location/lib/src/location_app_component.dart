@@ -125,7 +125,7 @@ class LocationAppComponent with IsAppPondComponent {
       return null;
     }
 
-    final lastPosition =
+    var lastPosition =
         context.environmentCoreComponent.platform == Platform.web ? null : await Geolocator.getLastKnownPosition();
     if (lastPosition != null) {
       onPositionUpdated?.call(lastPosition, false);
@@ -134,6 +134,14 @@ class LocationAppComponent with IsAppPondComponent {
 
     return Geolocator.getPositionStream(locationSettings: _locationSettings).listen(
       (position) {
+        if (lastPosition != null) {
+          final distance = Geolocator.distanceBetween(
+              lastPosition.latitude, lastPosition.longitude, position.latitude, position.longitude);
+          if (distance < locationUpdateDistance) {
+            return;
+          }
+        }
+
         _positionX.value = FutureValue.loaded(position);
         onPositionUpdated?.call(position, true);
       },
