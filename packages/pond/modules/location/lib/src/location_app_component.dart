@@ -136,12 +136,13 @@ class LocationAppComponent with IsAppPondComponent {
       (position) {
         if (lastPosition != null) {
           final distance = Geolocator.distanceBetween(
-              lastPosition.latitude, lastPosition.longitude, position.latitude, position.longitude);
+              lastPosition!.latitude, lastPosition!.longitude, position.latitude, position.longitude);
           if (distance < locationUpdateDistance) {
             return;
           }
         }
 
+        lastPosition = position;
         _positionX.value = FutureValue.loaded(position);
         onPositionUpdated?.call(position, true);
       },
