@@ -16,6 +16,7 @@ class LocationAppComponent with IsAppPondComponent {
 
   final LocationAccuracy locationAccuracy;
   final int locationUpdateDistance;
+  final Duration locationUpdateThrottle;
 
   late final BehaviorSubject<FutureValue<Position?>> _positionX = BehaviorSubject.seeded(FutureValue.empty());
 
@@ -30,6 +31,7 @@ class LocationAppComponent with IsAppPondComponent {
     this.onPositionUpdated,
     this.locationAccuracy = LocationAccuracy.high,
     this.locationUpdateDistance = 3,
+    this.locationUpdateThrottle = const Duration(seconds: 10),
   })  : _shouldTrack = false,
         _isLoadingLocation = false;
 
@@ -132,7 +134,9 @@ class LocationAppComponent with IsAppPondComponent {
       _positionX.value = FutureValue.loaded(lastPosition);
     }
 
-    return Geolocator.getPositionStream(locationSettings: _locationSettings).listen(
+    return Geolocator.getPositionStream(locationSettings: _locationSettings)
+        .throttleTime(locationUpdateThrottle)
+        .listen(
       (position) {
         if (lastPosition != null) {
           final distance = Geolocator.distanceBetween(
