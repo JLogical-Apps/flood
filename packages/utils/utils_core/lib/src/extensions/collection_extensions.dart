@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
+
 extension IterableExtensions<T> on Iterable<T> {
   /// Returns the sum of the elements of the iterable based on a property of the items in the list.
   num sumBy(num Function(T element) f) {
@@ -82,6 +84,14 @@ extension MapExtensions<K, V> on Map<K, V> {
         this[key] = replacer(key, value);
       }
     });
+  }
+
+  bool any(bool Function(K key, V value) predicate) {
+    return entries.any((entry) => predicate(entry.key, entry.value));
+  }
+
+  bool none(bool Function(K key, V value) predicate) {
+    return entries.none((entry) => predicate(entry.key, entry.value));
   }
 
   /// Maps the key-value pairs of this map into an iterable.
