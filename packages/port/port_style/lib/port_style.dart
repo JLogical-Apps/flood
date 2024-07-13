@@ -1,4 +1,5 @@
 export 'src/styled_asset_port_field.dart';
+export 'src/styled_color_picker_port_field.dart';
 export 'src/styled_currency_port_field.dart';
 export 'src/styled_date_time_port_field.dart';
 export 'src/styled_list_port_field.dart';
