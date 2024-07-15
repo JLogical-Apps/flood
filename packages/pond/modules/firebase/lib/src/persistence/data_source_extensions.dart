@@ -44,11 +44,19 @@ extension DataSourceStaticExtension on DataSourceStatic {
         stateType: context.dropCoreComponent.getRuntimeType<E>(),
       ).mapEntity(context.dropCoreComponent);
 
-  DataSource<Asset> firebaseStorageAsset({required CorePondContext context, required String path}) =>
-      FirebaseStorageAssetDataSource(context: context, path: path);
+  DataSource<Asset> firebaseStorageAsset({
+    required CorePondContext context,
+    required String path,
+    int maxSize = 1024 * 1024,
+  }) =>
+      FirebaseStorageAssetDataSource(context: context, path: path, maxSize: maxSize);
 
-  DataSource<Uint8List> firebaseStorage({required CorePondContext context, required String path}) =>
-      FirebaseStorageDataSource(context: context, path: path);
+  DataSource<Uint8List> firebaseStorage({
+    required CorePondContext context,
+    required String path,
+    int maxSize = 1024 * 1024,
+  }) =>
+      FirebaseStorageDataSource(context: context, path: path, maxSize: maxSize);
 
   DataSource<AssetMetadata> firebaseStorageMetadata({required CorePondContext context, required String path}) =>
       FirebaseStorageMetadataDataSource(context: context, path: path);

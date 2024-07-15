@@ -8,6 +8,8 @@ import 'package:persistence/persistence.dart';
 import 'package:pond/pond.dart';
 import 'package:utils/utils.dart';
 
+const _thirtyMegabytes = 1024 * 1024 * 30;
+
 class FirebaseStorageAssetProvider with IsAssetProvider {
   final CorePondContext corePondContext;
   final String Function(AssetPathContext pathContext) pathGetter;
@@ -34,7 +36,9 @@ class FirebaseStorageAssetProvider with IsAssetProvider {
     final metadataModel = getMetadataModel(context, id);
     final bytesModel = _bytesModelById.putIfAbsent(
       '$path/$id',
-      () => DataSource.static.firebaseStorage(context: corePondContext, path: '$path/$id').asModel(),
+      () => DataSource.static
+          .firebaseStorage(context: corePondContext, path: '$path/$id', maxSize: _thirtyMegabytes)
+          .asModel(),
     );
     return AssetReference(
       id: id,
@@ -53,7 +57,9 @@ class FirebaseStorageAssetProvider with IsAssetProvider {
   @override
   Future<Asset> onUpload(AssetPathContext context, Asset asset) async {
     final path = pathGetter(context);
-    await DataSource.static.firebaseStorageAsset(context: corePondContext, path: '$path/${asset.id}').set(asset);
+    await DataSource.static
+        .firebaseStorageAsset(context: corePondContext, path: '$path/${asset.id}', maxSize: _thirtyMegabytes)
+        .set(asset);
     final metadata = (await getMetadataModel(context, asset.id).load()).getOrNull();
     if (metadata != null) {
       asset = asset.copyWith(metadata: metadata);
@@ -64,7 +70,9 @@ class FirebaseStorageAssetProvider with IsAssetProvider {
   @override
   Future<void> onDelete(AssetPathContext context, String id) async {
     final path = pathGetter(context);
-    await DataSource.static.firebaseStorageAsset(context: corePondContext, path: '$path/$id').delete();
+    await DataSource.static
+        .firebaseStorageAsset(context: corePondContext, path: '$path/$id', maxSize: _thirtyMegabytes)
+        .delete();
     _bytesModelById.remove(id);
     _metadataModelById.remove(id);
   }

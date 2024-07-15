@@ -10,17 +10,14 @@ import 'package:pond_core/pond_core.dart';
 class FirebaseStorageAssetDataSource with IsDataSource<Asset> {
   final CorePondContext context;
   final String path;
+  final int maxSize;
 
-  late FirebaseStorageDataSource dataSource = FirebaseStorageDataSource(
-    context: context,
-    path: path,
-    maxSize: 1024 * 1024 * 30,
-  );
+  late FirebaseStorageDataSource dataSource = FirebaseStorageDataSource(context: context, path: path, maxSize: maxSize);
   late FirebaseStorageMetadataDataSource metadataDataSource =
       FirebaseStorageMetadataDataSource(context: context, path: path);
   late Reference reference = context.firebaseCoreComponent.storage.ref(path);
 
-  FirebaseStorageAssetDataSource({required this.context, required this.path});
+  FirebaseStorageAssetDataSource({required this.context, required this.path, this.maxSize = 1024 * 1024 * 10});
 
   @override
   Stream<Asset> getXOrNull() async* {
