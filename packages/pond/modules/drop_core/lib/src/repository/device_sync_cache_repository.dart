@@ -109,8 +109,8 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   }
 
   Future<T> mapPaginationRequest<T>({required QueryRequest queryRequest, required PaginatedQueryResult result}) async {
-    final sourcePaginatedQueryResult =
-        await guardAsync(() => repository.sourceRepository.executeQuery(queryRequest) as PaginatedQueryResult);
+    final sourcePaginatedQueryResult = await guardAsync(
+        () async => await repository.sourceRepository.executeQuery(queryRequest) as PaginatedQueryResult);
     if (sourcePaginatedQueryResult == null) {
       return result as T;
     }
