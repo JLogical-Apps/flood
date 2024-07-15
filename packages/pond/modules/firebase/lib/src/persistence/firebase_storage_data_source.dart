@@ -10,10 +10,11 @@ import 'package:utils/utils.dart';
 class FirebaseStorageDataSource with IsDataSource<Uint8List> {
   final CorePondContext context;
   final String path;
+  final int maxSize;
 
   late Reference reference = context.firebaseCoreComponent.storage.ref(path);
 
-  FirebaseStorageDataSource({required this.context, required this.path});
+  FirebaseStorageDataSource({required this.context, required this.path, this.maxSize = 1024 * 1024 * 10});
 
   @override
   Stream<Uint8List> getXOrNull() async* {
@@ -27,7 +28,7 @@ class FirebaseStorageDataSource with IsDataSource<Uint8List> {
 
   @override
   Future<Uint8List> getOrNull() async {
-    return await reference.getData() ?? (throw Exception('Cannot get Firebase Storage data at [$path]!'));
+    return await reference.getData(maxSize) ?? (throw Exception('Cannot get Firebase Storage data at [$path]!'));
   }
 
   @override

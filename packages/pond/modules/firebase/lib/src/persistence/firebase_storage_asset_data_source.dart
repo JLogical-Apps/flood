@@ -11,7 +11,11 @@ class FirebaseStorageAssetDataSource with IsDataSource<Asset> {
   final CorePondContext context;
   final String path;
 
-  late FirebaseStorageDataSource dataSource = FirebaseStorageDataSource(context: context, path: path);
+  late FirebaseStorageDataSource dataSource = FirebaseStorageDataSource(
+    context: context,
+    path: path,
+    maxSize: 1024 * 1024 * 30,
+  );
   late FirebaseStorageMetadataDataSource metadataDataSource =
       FirebaseStorageMetadataDataSource(context: context, path: path);
   late Reference reference = context.firebaseCoreComponent.storage.ref(path);
