@@ -127,6 +127,8 @@ extension AssetValueObjectPropertyExtensions<G extends AssetReferenceGetter?, S 
       ? null
       : findAssetProvider(context).getById(valueObject.createAssetPathContext(context), value!.assetId);
 
+  Future<Asset?> getAsset(AssetCoreComponent context) async => await getAssetReference(context)?.getAsset();
+
   Future<Asset> uploadAsset(AssetCoreComponent context, Asset asset) async {
     final dropContext = context.context.dropCoreComponent;
     final assetPathContext = valueObject.createAssetPathContext(context);
@@ -169,6 +171,13 @@ extension AssetListValueObjectPropertyExtensions
   AssetProvider findAssetProvider(AssetCoreComponent context) =>
       BehaviorMetaModifier.getModifier(this)?.getAssetProvider(context, this) ??
       (throw Exception('Could not find asset provider for field [$this]'));
+
+  Future<List<Asset>> getAssets(AssetCoreComponent context) async =>
+      (await Future.wait(value.map((assetReferenceGetter) => findAssetProvider(context)
+              .getById(valueObject.createAssetPathContext(context), assetReferenceGetter.assetId)
+              .getAsset())))
+          .whereNonNull()
+          .toList();
 
   Future<Asset> uploadAsset(AssetCoreComponent context, Asset asset) async {
     final dropContext = context.context.dropCoreComponent;
