@@ -3,6 +3,7 @@ import 'dart:io' as io;
 
 import 'package:drop/drop.dart';
 import 'package:environment/environment.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location_core/location_core.dart';
 import 'package:pond/pond.dart';
@@ -158,24 +159,26 @@ class LocationAppComponent with IsAppPondComponent {
   }
 
   LocationSettings get _locationSettings {
-    if (io.Platform.isAndroid) {
-      return AndroidSettings(
-        accuracy: locationAccuracy,
-        distanceFilter: locationUpdateDistance,
-        intervalDuration: const Duration(seconds: 10),
-      );
-    } else if (io.Platform.isIOS || io.Platform.isMacOS) {
-      return AppleSettings(
-        accuracy: locationAccuracy,
-        activityType: ActivityType.automotiveNavigation,
-        distanceFilter: locationUpdateDistance,
-        pauseLocationUpdatesAutomatically: true,
-      );
-    } else {
-      return LocationSettings(
-        accuracy: locationAccuracy,
-        distanceFilter: locationUpdateDistance,
-      );
+    if (!kIsWeb) {
+      if (io.Platform.isAndroid) {
+        return AndroidSettings(
+          accuracy: locationAccuracy,
+          distanceFilter: locationUpdateDistance,
+          intervalDuration: const Duration(seconds: 10),
+        );
+      } else if (io.Platform.isIOS || io.Platform.isMacOS) {
+        return AppleSettings(
+          accuracy: locationAccuracy,
+          activityType: ActivityType.automotiveNavigation,
+          distanceFilter: locationUpdateDistance,
+          pauseLocationUpdatesAutomatically: true,
+        );
+      }
     }
+
+    return LocationSettings(
+      accuracy: locationAccuracy,
+      distanceFilter: locationUpdateDistance,
+    );
   }
 }
