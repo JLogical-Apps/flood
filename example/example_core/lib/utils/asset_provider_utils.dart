@@ -6,7 +6,7 @@ extension AssetProviderStaticExtensions on AssetProviderStatic {
     if (context.context.testingComponent.useSyncing) {
       return syncing(context, pathGetter);
     } else {
-      return syncingOrAdapting(context, pathGetter);
+      return adapting(context, pathGetter);
     }
   }
 }

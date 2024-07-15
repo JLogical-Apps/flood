@@ -13,11 +13,11 @@ class CacheAssetProvider with IsAssetProviderWrapper {
   final AssetProvider sourceAssetProvider;
   final AssetProvider cacheAssetProvider;
 
-  final Map<String, AssetReference> _sourceAssetReferenceById = {};
-  final Map<String, AssetReference> _cacheAssetReferenceById = {};
+  final Map<(AssetPathContext, String), AssetReference> _sourceAssetReferenceById = {};
+  final Map<(AssetPathContext, String), AssetReference> _cacheAssetReferenceById = {};
 
-  final Map<String, BehaviorSubject<FutureValue<AssetMetadata>>> _assetMetadataXById = {};
-  final Map<String, BehaviorSubject<FutureValue<Asset>>> _assetXById = {};
+  final Map<(AssetPathContext, String), BehaviorSubject<FutureValue<AssetMetadata>>> _assetMetadataXById = {};
+  final Map<(AssetPathContext, String), BehaviorSubject<FutureValue<Asset>>> _assetXById = {};
 
   CacheAssetProvider({required this.sourceAssetProvider, required this.cacheAssetProvider});
 
@@ -26,14 +26,15 @@ class CacheAssetProvider with IsAssetProviderWrapper {
 
   @override
   AssetReference getById(AssetPathContext context, String id) {
+    final key = (context, id);
     return AssetReference(
       id: id,
       assetMetadataModel: Model.fromValueStream(
-        _assetMetadataXById.putIfAbsent(id, () => BehaviorSubject.seeded(FutureValue.empty())),
+        _assetMetadataXById.putIfAbsent(key, () => BehaviorSubject.seeded(FutureValue.empty())),
         onLoad: () => getLatestAssetMetadata(context, id),
       ),
       assetModel: Model.fromValueStream(
-        _assetXById.putIfAbsent(id, () => BehaviorSubject.seeded(FutureValue.empty())),
+        _assetXById.putIfAbsent(key, () => BehaviorSubject.seeded(FutureValue.empty())),
         onLoad: () async {
           await getLatestAssetMetadata(context, id, waitForAsset: true);
         },
@@ -46,20 +47,22 @@ class CacheAssetProvider with IsAssetProviderWrapper {
     String id, {
     bool waitForAsset = false,
   }) async {
-    if (_assetMetadataXById[id]?.value.isLoaded ?? false) {
-      return _assetMetadataXById[id]!.value.getOrNull()!;
+    final key = (context, id);
+    if (_assetMetadataXById[key]?.value.isLoaded ?? false) {
+      return _assetMetadataXById[key]!.value.getOrNull()!;
     }
 
     final sourceAssetReference =
-        _sourceAssetReferenceById.putIfAbsent(id, () => sourceAssetProvider.getById(context, id));
-    final cacheAssetReference = _cacheAssetReferenceById.putIfAbsent(id, () => cacheAssetProvider.getById(context, id));
+        _sourceAssetReferenceById.putIfAbsent(key, () => sourceAssetProvider.getById(context, id));
+    final cacheAssetReference =
+        _cacheAssetReferenceById.putIfAbsent(key, () => cacheAssetProvider.getById(context, id));
 
     final [sourceAssetMetadata, cachedAssetMetadata] = await Future.wait([
       guardAsync(() => sourceAssetReference.assetMetadataModel.getOrLoad().timeout(timeoutDuration)),
       guardAsync(() => cacheAssetReference.assetMetadataModel.getOrLoad())
     ]);
     if (sourceAssetMetadata != null || cachedAssetMetadata != null) {
-      _assetMetadataXById[id]!.value = FutureValue.loaded(sourceAssetMetadata ?? cachedAssetMetadata!);
+      _assetMetadataXById[key]!.value = FutureValue.loaded(sourceAssetMetadata ?? cachedAssetMetadata!);
     }
 
     final needsUpdating = cachedAssetMetadata == null ||
@@ -71,10 +74,10 @@ class CacheAssetProvider with IsAssetProviderWrapper {
       } else {
         downloadSource(context, id);
       }
-    } else if (_assetXById[id]?.value.isLoaded != true) {
+    } else if (_assetXById[key]?.value.isLoaded != true) {
       final cacheAsset = await guardAsync(() => cacheAssetReference.assetModel.getOrLoad());
       if (cacheAsset != null) {
-        _assetXById.putIfAbsent(id, () => BehaviorSubject.seeded(FutureValue.empty())).value =
+        _assetXById.putIfAbsent(key, () => BehaviorSubject.seeded(FutureValue.empty())).value =
             FutureValue.loaded(cacheAsset);
       }
     }
@@ -83,6 +86,7 @@ class CacheAssetProvider with IsAssetProviderWrapper {
   }
 
   Future<void> downloadSource(AssetPathContext context, String id) async {
+    final key = (context, id);
     final sourceAsset = await guardAsync(() => sourceAssetProvider.getById(context, id).assetModel.getOrLoad());
     if (sourceAsset == null) {
       return;
@@ -90,17 +94,18 @@ class CacheAssetProvider with IsAssetProviderWrapper {
 
     await cacheAssetProvider.upload(context, sourceAsset);
 
-    _assetMetadataXById.putIfAbsent(id, () => BehaviorSubject.seeded(FutureValue.empty())).value =
+    _assetMetadataXById.putIfAbsent(key, () => BehaviorSubject.seeded(FutureValue.empty())).value =
         FutureValue.loaded(sourceAsset.metadata);
-    _assetXById.putIfAbsent(id, () => BehaviorSubject.seeded(FutureValue.empty())).value =
+    _assetXById.putIfAbsent(key, () => BehaviorSubject.seeded(FutureValue.empty())).value =
         FutureValue.loaded(sourceAsset);
   }
 
   @override
   Future<Asset> onUpload(AssetPathContext context, Asset asset) async {
-    _assetXById.putIfAbsent(asset.id, () => BehaviorSubject.seeded(FutureValue.loaded(asset))).value =
+    final key = (context, asset.id);
+    _assetXById.putIfAbsent(key, () => BehaviorSubject.seeded(FutureValue.loaded(asset))).value =
         FutureValue.loaded(asset);
-    _assetMetadataXById.putIfAbsent(asset.id, () => BehaviorSubject.seeded(FutureValue.loaded(asset.metadata))).value =
+    _assetMetadataXById.putIfAbsent(key, () => BehaviorSubject.seeded(FutureValue.loaded(asset.metadata))).value =
         FutureValue.loaded(asset.metadata);
 
     final sourceAsset = await sourceAssetProvider.upload(context, asset);
@@ -111,11 +116,12 @@ class CacheAssetProvider with IsAssetProviderWrapper {
 
   @override
   Future<void> onDelete(AssetPathContext context, String id) async {
+    final key = (context, id);
     await sourceAssetProvider.delete(context, id);
     await cacheAssetProvider.delete(context, id);
-    _assetMetadataXById[id]?.value = FutureValue.empty();
-    _assetMetadataXById.remove(id);
-    _assetXById[id]?.value = FutureValue.empty();
-    _assetXById.remove(id);
+    _assetMetadataXById[key]?.value = FutureValue.empty();
+    _assetMetadataXById.remove(key);
+    _assetXById[key]?.value = FutureValue.empty();
+    _assetXById.remove(key);
   }
 }
