@@ -38,7 +38,7 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
           : RoundedRectangleBorder(
               side: BorderSide(
                 color: context.colorPalette().foreground.subtle,
-                width: 0.2,
+                width: 0.6,
               ),
               borderRadius: BorderRadius.circular(12),
             ),
