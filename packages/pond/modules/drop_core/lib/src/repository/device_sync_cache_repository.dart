@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:drop_core/drop_core.dart';
-import 'package:drop_core/src/query/request/modifier/query_request_modifier.dart';
+import 'package:drop_core/src/query/request/meta/query_request_modifier.dart';
 import 'package:environment_core/environment_core.dart';
 import 'package:persistence_core/persistence_core.dart';
 import 'package:pond_core/pond_core.dart';
@@ -87,10 +87,7 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     QueryRequest<E, T> queryRequest, {
     FutureOr Function(State state)? onStateRetreived,
   }) async {
-    final isNewlyRunQuery =
-        !repository.cachedQueryRequests.contains(queryRequest.prettyPrint(repository.context.dropCoreComponent));
-    final needsSource = QueryRequestModifier.findIsWithoutCache(queryRequest) || isNewlyRunQuery;
-
+    final needsSource = await this.needsSource<E>(queryRequest);
     if (needsSource) {
       final result = await fetchSourceAndDeleteStale(queryRequest, onStateRetreived: onStateRetreived);
       await repository.updateCachedQueryRequests(queryRequest);
@@ -106,6 +103,22 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     }
 
     return result;
+  }
+
+  Future<bool> needsSource<E extends Entity>(QueryRequest queryRequest) async {
+    final isNewlyRunQuery =
+        !repository.cachedQueryRequests.contains(queryRequest.prettyPrint(repository.context.dropCoreComponent));
+    if (QueryRequestMetaModifier.findIsWithoutCache(queryRequest) || isNewlyRunQuery) {
+      final singleDocumentId = QueryRequestMetaModifier.findSingleDocumentId(queryRequest);
+      if (singleDocumentId == null) {
+        return true;
+      }
+
+      final cachedEntity = await repository.cacheRepository.executeQuery(Query.getByIdOrNull<E>(singleDocumentId));
+      return cachedEntity == null;
+    }
+
+    return false;
   }
 
   Future<T> mapPaginationRequest<T>({required QueryRequest queryRequest, required PaginatedQueryResult result}) async {
@@ -124,7 +137,7 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     QueryRequest<E, T> queryRequest, {
     FutureOr Function(State state)? onStateRetreived,
   }) {
-    if (QueryRequestModifier.findIsWithoutCache(queryRequest)) {
+    if (QueryRequestMetaModifier.findIsWithoutCache(queryRequest)) {
       return repository.sourceRepository.executeQueryX(queryRequest);
     }
 

@@ -1,4 +1,5 @@
 import 'package:drop_core/drop_core.dart';
+import 'package:drop_core/src/query/request/meta/query_request_modifier.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:test/test.dart';
 import 'package:type_core/type_core.dart';
@@ -531,6 +532,41 @@ void main() {
     final johnUsersCount =
         await Query.from<UserEntity>().where('name').isEqualTo('John').count().get(context.dropCoreComponent);
     expect(johnUsersCount, 1);
+  });
+
+  test('single document queries', () {
+    const id = 'id';
+    expect(QueryRequestMetaModifier.findSingleDocumentId(Query.getById(id)), id);
+    expect(QueryRequestMetaModifier.findSingleDocumentId(Query.getByIdOrNull(id)), id);
+    expect(
+      QueryRequestMetaModifier.findSingleDocumentId(Query.fromAll().where(State.idField).isEqualTo(id).first()),
+      id,
+    );
+    expect(
+      QueryRequestMetaModifier.findSingleDocumentId(Query.fromAll().where(State.idField).isEqualTo(id).firstOrNull()),
+      id,
+    );
+    expect(
+      QueryRequestMetaModifier.findSingleDocumentId(
+          Query.fromAll().where(State.idField).isEqualTo(id).firstOrNullState()),
+      id,
+    );
+    expect(
+      QueryRequestMetaModifier.findSingleDocumentId(Query.fromAll().where(State.idField).isGreaterThan(id).first()),
+      null,
+    );
+    expect(
+      QueryRequestMetaModifier.findSingleDocumentId(Query.fromAll().where(State.idField).isEqualTo(id).all()),
+      null,
+    );
+    expect(
+      QueryRequestMetaModifier.findSingleDocumentId(Query.fromAll().all()),
+      null,
+    );
+    expect(
+      QueryRequestMetaModifier.findSingleDocumentId(Query.fromAll().where('user').isEqualTo(id).first()),
+      null,
+    );
   });
 }
 

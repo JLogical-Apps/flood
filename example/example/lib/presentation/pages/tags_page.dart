@@ -28,7 +28,7 @@ class TagsPage with IsAppPageWrapper<TagsRoute> {
       builder: (List<TagEntity> tagEntities) {
         return StyledPage(
           titleText: 'Tags',
-          body: StyledList.column.withScrollbar(
+          body: StyledList.column.withScrollbar.centered(
             children: [
               StyledButton(
                 labelText: 'Create New Tag',

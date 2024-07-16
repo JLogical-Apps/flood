@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:drop_core/drop_core.dart';
-import 'package:drop_core/src/query/request/modifier/query_request_modifier.dart';
+import 'package:drop_core/src/query/request/meta/query_request_modifier.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
@@ -63,15 +63,12 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     QueryRequest<E, T> queryRequest, {
     FutureOr Function(State state)? onStateRetreived,
   }) async {
-    final isNewlyRunQuery = !repository.queriesRun.contains(queryRequest);
-    final needsSource = QueryRequestModifier.findIsWithoutCache(queryRequest) || isNewlyRunQuery;
-
     final loadingCompleter = completerByLoadingQueryRequest[queryRequest];
     if (loadingCompleter != null) {
       return await loadingCompleter.future;
     }
 
-    if (needsSource) {
+    if (needsSource(queryRequest)) {
       final source = await fetchSourceAndDeleteStale(queryRequest);
       repository.queriesRun.add(queryRequest);
       return source;
@@ -98,7 +95,7 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   }) {
     final isNewlyRunQuery = !repository.queriesRun.contains(queryRequest);
 
-    if (QueryRequestModifier.findIsWithoutCache(queryRequest)) {
+    if (QueryRequestMetaModifier.findIsWithoutCache(queryRequest)) {
       return repository.repository.executeQueryX(queryRequest);
     }
 
@@ -118,6 +115,17 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
         isNewlyRunQuery: isNewlyRunQuery,
       ),
     );
+  }
+
+  bool needsSource(QueryRequest queryRequest) {
+    final isNewlyRunQuery = !repository.queriesRun.contains(queryRequest);
+    if (QueryRequestMetaModifier.findIsWithoutCache(queryRequest) || isNewlyRunQuery) {
+      final singleDocumentId = QueryRequestMetaModifier.findSingleDocumentId(queryRequest);
+      final hasSingleDocument = singleDocumentId != null && repository.stateByIdX.value[singleDocumentId] != null;
+      return !hasSingleDocument;
+    }
+
+    return false;
   }
 
   FutureValue<T> getInitialValue<E extends Entity, T>({
