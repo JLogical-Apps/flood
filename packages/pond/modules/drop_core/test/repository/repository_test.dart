@@ -2,6 +2,7 @@ import 'package:actions_core/actions_core.dart';
 import 'package:drop_core/drop_core.dart';
 import 'package:pond_core/pond_core.dart';
 import 'package:runtime_type/type.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 import 'package:type_core/type_core.dart';
 import 'package:utils_core/utils_core.dart';
@@ -27,19 +28,20 @@ void main() {
   });
 
   test('creating, saving, and deleting from a repository.', () async {
+    final stateByIdX = BehaviorSubject<Map<String, State>>.seeded({});
     final repository = Repository.forType<UserEntity, User>(
       UserEntity.new,
       User.new,
       entityTypeName: 'UserEntity',
       valueObjectTypeName: 'User',
-    ).memory();
+    ).memory(stateByIdX: stateByIdX);
 
     final context = CorePondContext();
     await context.register(TypeCoreComponent());
     await context.register(DropCoreComponent());
     await context.register(repository);
 
-    expect(repository.stateByIdX.value, {});
+    expect(stateByIdX.value, {});
 
     var state = State(
       type: context.dropCoreComponent.getRuntimeType<UserEntity>(),
@@ -51,17 +53,17 @@ void main() {
     state = await repository.update(state);
 
     expect(state.isNew, false);
-    expect(repository.stateByIdX.value, {state.id: state});
+    expect(stateByIdX.value, {state.id: state});
 
     state = state.withData({'newField': 'newValue'});
 
     state = await repository.update(state);
 
-    expect(repository.stateByIdX.value, {state.id: state});
+    expect(stateByIdX.value, {state.id: state});
 
     await repository.delete(state);
 
-    expect(repository.stateByIdX.value, {});
+    expect(stateByIdX.value, {});
   });
 
   test('throw on saving invalid ValueObject', () async {

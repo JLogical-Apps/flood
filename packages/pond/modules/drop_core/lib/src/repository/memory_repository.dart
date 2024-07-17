@@ -11,10 +11,13 @@ import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 class MemoryRepository with IsRepositoryWrapper {
-  final BehaviorSubject<Map<String, State>> stateByIdX = BehaviorSubject.seeded({});
+  final BehaviorSubject<Map<String, State>> stateByIdX;
 
   @override
   final Repository repository;
+
+  MemoryRepository({required this.repository, BehaviorSubject<Map<String, State>>? stateByIdX})
+      : stateByIdX = stateByIdX ?? BehaviorSubject.seeded({});
 
   @override
   late final List<CorePondComponentBehavior> behaviors = super.behaviors +
@@ -25,8 +28,6 @@ class MemoryRepository with IsRepositoryWrapper {
           },
         ),
       ];
-
-  MemoryRepository({required this.repository});
 
   @override
   late final RepositoryQueryExecutor queryExecutor = MemoryRepositoryQueryExecutor(repository: this);

@@ -7,5 +7,6 @@ class EntityLifecycleRepository with IsRepositoryWrapper {
   EntityLifecycleRepository({required this.repository});
 
   @override
-  RepositoryStateHandler get stateHandler => repository.stateHandler.withEntityLifecycle(context.dropCoreComponent);
+  RepositoryStateHandler get stateHandler =>
+      repository.stateHandler.withEntityStateLifecycle(context.dropCoreComponent);
 }

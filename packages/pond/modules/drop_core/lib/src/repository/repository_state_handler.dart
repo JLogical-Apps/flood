@@ -20,7 +20,7 @@ extension RepositoryStateHandlerExtensions on RepositoryStateHandler {
     return onDelete(state);
   }
 
-  RepositoryStateHandler withEntityLifecycle(DropCoreContext context) {
+  RepositoryStateHandler withEntityStateLifecycle(DropCoreContext context) {
     return LifecycleStateHandler(context: context, stateHandler: this);
   }
 }

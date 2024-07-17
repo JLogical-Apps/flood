@@ -144,16 +144,19 @@ extension RepositoryExtension on Repository {
     );
   }
 
-  MemoryRepository memory() {
-    return MemoryRepository(repository: this);
+  Repository memory({bool includeLifecycle = true, BehaviorSubject<Map<String, State>>? stateByIdX}) {
+    final repository = MemoryRepository(repository: this, stateByIdX: stateByIdX);
+    return includeLifecycle ? repository.withEntityLifecycle() : repository;
   }
 
-  FileRepository file(String rootPath) {
-    return FileRepository(rootPath: rootPath, repository: this);
+  Repository file(String rootPath, {bool includeLifecycle = true}) {
+    final repository = FileRepository(rootPath: rootPath, repository: this);
+    return includeLifecycle ? repository.withEntityLifecycle() : repository;
   }
 
-  CloudRepository cloud(String rootPath) {
-    return CloudRepository(rootPath: rootPath, childRepository: this);
+  Repository cloud(String rootPath, {bool includeLifecycle = true}) {
+    final repository = CloudRepository(rootPath: rootPath, childRepository: this);
+    return includeLifecycle ? repository.withEntityLifecycle() : repository;
   }
 
   Repository environmental(
@@ -187,7 +190,7 @@ extension RepositoryExtension on Repository {
         if (context.platform == Platform.web) {
           return repository.cloud(rootPath).withMemoryCache();
         }
-        return repository.cloud(rootPath).withDeviceSyncCache().withMemoryCache();
+        return repository.cloud(rootPath, includeLifecycle: false).withDeviceSyncCache().withMemoryCache();
       }
     });
   }
