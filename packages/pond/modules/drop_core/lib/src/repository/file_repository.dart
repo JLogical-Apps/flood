@@ -39,8 +39,7 @@ class FileRepository with IsRepositoryWrapper {
   late final RepositoryQueryExecutor queryExecutor = FileRepositoryQueryExecutor(repository: this);
 
   @override
-  late final RepositoryStateHandler stateHandler =
-      FileRepositoryStateHandler(repository: this).withEntityLifecycle(context.dropCoreComponent);
+  late final RepositoryStateHandler stateHandler = FileRepositoryStateHandler(repository: this);
 }
 
 class FileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {

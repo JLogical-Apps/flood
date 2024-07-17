@@ -15,8 +15,7 @@ class AppwriteCloudRepository with IsRepositoryWrapper {
   late final RepositoryQueryExecutor queryExecutor = AppwriteCloudRepositoryQueryExecutor(repository: this);
 
   @override
-  late final RepositoryStateHandler stateHandler =
-      AppwriteCloudRepositoryStateHandler(repository: this).withEntityLifecycle(context.dropCoreComponent);
+  late final RepositoryStateHandler stateHandler = AppwriteCloudRepositoryStateHandler(repository: this);
 
   @override
   Repository get repository => cloudRepository.childRepository;

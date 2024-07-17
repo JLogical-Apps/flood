@@ -19,7 +19,7 @@ class LifecycleStateHandler with IsRepositoryStateHandlerWrapper {
     }
 
     await entity.beforeSave(context);
-    state = entity.getState(context);
+    state = entity.getState(context).withMetadata(state.metadata);
 
     final id = state.id ?? Uuid().v4();
     entity.id = id;
@@ -34,7 +34,7 @@ class LifecycleStateHandler with IsRepositoryStateHandlerWrapper {
 
     await entity.afterSave(context);
 
-    state = entity.getState(context).withId(id);
+    state = entity.getState(context).withId(id).withMetadata(state.metadata);
 
     return state;
   }

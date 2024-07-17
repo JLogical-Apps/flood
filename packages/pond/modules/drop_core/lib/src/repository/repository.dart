@@ -8,6 +8,7 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/record/value_object.dart';
 import 'package:drop_core/src/repository/cloud_repository.dart';
 import 'package:drop_core/src/repository/device_sync_cache_repository.dart';
+import 'package:drop_core/src/repository/entity_lifecycle_repository.dart';
 import 'package:drop_core/src/repository/environmental_repository.dart';
 import 'package:drop_core/src/repository/file_repository.dart';
 import 'package:drop_core/src/repository/listener_repository.dart';
@@ -211,6 +212,10 @@ extension RepositoryExtension on Repository {
 
   SecurityRepository withSecurity(RepositorySecurity repositorySecurity) {
     return SecurityRepository(repository: this, repositorySecurity: repositorySecurity);
+  }
+
+  Repository withEntityLifecycle() {
+    return EntityLifecycleRepository(repository: this);
   }
 }
 

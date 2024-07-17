@@ -32,8 +32,7 @@ class MemoryRepository with IsRepositoryWrapper {
   late final RepositoryQueryExecutor queryExecutor = MemoryRepositoryQueryExecutor(repository: this);
 
   @override
-  late final RepositoryStateHandler stateHandler =
-      MemoryRepositoryStateHandler(repository: this).withEntityLifecycle(context.dropCoreComponent);
+  late final RepositoryStateHandler stateHandler = MemoryRepositoryStateHandler(repository: this);
 }
 
 class MemoryRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
