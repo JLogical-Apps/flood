@@ -10,7 +10,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 
 const _defaultTimeoutSeconds = 2;
-const forceSourceUpdateField = 'forceSourceUpdate';
+const forceSourceUpdateField = '_forceSourceUpdate';
 
 class DeviceSyncCacheRepository with IsRepositoryWrapper {
   static const cacheRootFolder = 'deviceRepositoryCache';
