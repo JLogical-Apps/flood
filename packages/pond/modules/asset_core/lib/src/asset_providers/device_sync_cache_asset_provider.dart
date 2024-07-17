@@ -104,7 +104,7 @@ class DeviceSyncCacheAssetProvider with IsAssetProviderWrapper {
   @override
   Future<Asset> onUpload(AssetPathContext context, Asset asset) async {
     final key = (context, asset.id);
-    if (context.values[forceSourceUpdateField] == true) {
+    if (context.metadata[forceSourceUpdateField] == true) {
       return await sourceAssetProvider.upload(context, asset);
     }
 
@@ -130,7 +130,7 @@ class DeviceSyncCacheAssetProvider with IsAssetProviderWrapper {
   @override
   Future<void> onDelete(AssetPathContext context, String id) async {
     final key = (context, id);
-    if (context.values[forceSourceUpdateField] == true) {
+    if (context.metadata[forceSourceUpdateField] == true) {
       await sourceAssetProvider.delete(context, id);
       return;
     }

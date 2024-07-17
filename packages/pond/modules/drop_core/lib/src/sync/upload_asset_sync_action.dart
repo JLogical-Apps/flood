@@ -30,7 +30,8 @@ class UploadAssetSyncAction extends SyncAction {
     final assetProvider = assetCoreComponent.getByAssetPath(assetPathProperty.value);
     final assetPathContext = AssetPathContext(
       context: assetCoreComponent,
-      values: {State.idField: entityIdProperty.value, forceSourceUpdateField: true},
+      values: {State.idField: entityIdProperty.value},
+      metadata: {forceSourceUpdateField: true},
     );
     final asset = await assetProvider.getById(assetPathContext, idProperty.value).getAsset();
     await assetProvider.upload(assetPathContext, asset).timeout(Duration(seconds: 15));

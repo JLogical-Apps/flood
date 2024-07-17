@@ -31,7 +31,8 @@ class DeleteAssetSyncAction extends SyncAction {
     final assetProvider = assetCoreComponent.getByAssetPath(assetPathProperty.value);
     final assetPathContext = AssetPathContext(
       context: assetCoreComponent,
-      values: {State.idField: entityIdProperty.value, forceSourceUpdateField: true},
+      values: {State.idField: entityIdProperty.value},
+      metadata: {forceSourceUpdateField: true},
     );
     await guardAsync(() => assetProvider.delete(assetPathContext, idProperty.value)).timeout(Duration(seconds: 4));
   }
