@@ -133,7 +133,6 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     required bool isNewlyRunQuery,
   }) {
     if (isNewlyRunQuery) {
-      fetchSourceAndDeleteStale(queryRequest);
       return FutureValue.loading();
     }
 

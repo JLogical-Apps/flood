@@ -107,7 +107,7 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
           ],
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12),
-            child: PaginatedQueryModelBuilder.page(
+            child: PaginatedQueryModelBuilder(
                 paginatedQueryModel: todosModel,
                 builder: (List<TodoEntity> todoEntities, loadMore) {
                   final uncompletedTodos =

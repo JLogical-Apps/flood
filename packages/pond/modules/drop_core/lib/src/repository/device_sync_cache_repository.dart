@@ -80,6 +80,8 @@ class DeviceSyncCacheRepository with IsRepositoryWrapper {
 class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   final DeviceSyncCacheRepository repository;
 
+  final Map<QueryRequest, PaginatedQueryResult?> paginatedQueryResultByQueryRequest = {};
+
   DeviceCacheRepositoryQueryExecutor({required this.repository});
 
   @override
@@ -97,12 +99,24 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     final result = await repository.cacheRepository.executeQuery(queryRequest, onStateRetreived: onStateRetreived);
 
     if (result is PaginatedQueryResult) {
-      return await mapPaginationRequest<T>(queryRequest: queryRequest, result: result);
+      var existingPaginatedQueryResult = paginatedQueryResultByQueryRequest[queryRequest];
+      if (existingPaginatedQueryResult == null) {
+        existingPaginatedQueryResult = await mapPaginationRequest(queryRequest: queryRequest, result: result);
+        paginatedQueryResultByQueryRequest[queryRequest] = existingPaginatedQueryResult;
+      }
+
+      return existingPaginatedQueryResult as T;
     } else if (!needsSource) {
       fetchSourceAndDeleteStale(queryRequest, onStateRetreived: onStateRetreived);
     }
 
     return result;
+  }
+
+  void reloadPagination() {
+    for (final paginatedQueryResult in paginatedQueryResultByQueryRequest.keys) {
+      paginatedQueryResultByQueryRequest[paginatedQueryResult] = null;
+    }
   }
 
   Future<bool> needsSource<E extends Entity>(QueryRequest queryRequest) async {
@@ -122,14 +136,17 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   }
 
   Future<T> mapPaginationRequest<T>({required QueryRequest queryRequest, required PaginatedQueryResult result}) async {
-    final sourcePaginatedQueryResult = await guardAsync(
-        () async => await repository.sourceRepository.executeQuery(queryRequest) as PaginatedQueryResult);
-    if (sourcePaginatedQueryResult == null) {
-      return result as T;
-    }
-
-    await guardAsync(() => sourcePaginatedQueryResult.getNextPageOrNull());
-    return result.withListener((page) => guardAsync(() => sourcePaginatedQueryResult.getNextPageOrNull())) as T;
+    PaginatedQueryResult? sourcePaginatedQueryResult;
+    () async {
+      sourcePaginatedQueryResult ??= await guardAsync(
+          () async => await repository.sourceRepository.executeQuery(queryRequest) as PaginatedQueryResult);
+      await sourcePaginatedQueryResult?.getNextPageOrNull();
+    }();
+    return result.withListener((page) {
+      () async {
+        await sourcePaginatedQueryResult?.getNextPageOrNull();
+      }();
+    }) as T;
   }
 
   @override
@@ -177,6 +194,10 @@ class DeviceCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       }
     }
 
+    if (sourceResult is PaginatedQueryResult) {
+      paginatedQueryResultByQueryRequest[queryRequest] = sourceResult;
+    }
+
     for (final state in sourceStates) {
       await onStateRetreived?.call(state);
     }
@@ -201,7 +222,9 @@ class DeviceCacheRepositoryStateHandler with IsRepositoryStateHandler {
       await repository.context.syncCoreComponent
           .registerAction(UpdateEntitySyncActionEntity()..set(UpdateEntitySyncAction()..stateProperty.set(state)));
 
-      return await repository.cacheRepository.update(state);
+      state = await repository.cacheRepository.update(state);
+      repository.queryExecutor.reloadPagination();
+      return state;
     }
   }
 
@@ -213,7 +236,9 @@ class DeviceCacheRepositoryStateHandler with IsRepositoryStateHandler {
       await repository.context.syncCoreComponent
           .registerAction(DeleteEntitySyncActionEntity()..set(DeleteEntitySyncAction()..stateProperty.set(state)));
 
-      return await repository.cacheRepository.delete(state);
+      state = await repository.cacheRepository.delete(state);
+      repository.queryExecutor.reloadPagination();
+      return state;
     }
   }
 }
