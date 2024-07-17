@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:debug/debug.dart';
 import 'package:drop/src/drop_app_component.dart';
@@ -152,6 +154,11 @@ List<Model<T>> useQueries<E extends Entity, T>(List<QueryRequest<E, T>> queryReq
 
 List<Model<T>> useQueriesOrNull<E extends Entity, T>(List<QueryRequest<E, T>>? queryRequests) {
   return useQueries<E, T>(queryRequests ?? []);
+}
+
+Model<T?> useFutureQuery<E extends Entity, T>(FutureOr<QueryRequest<E, T>> Function() queryGetter) {
+  final queryRequest = useMemoizedFuture(() async => await queryGetter());
+  return useQueryOrNull(queryRequest.getOrNull());
 }
 
 Model<E?> useEntityOrNull<E extends Entity>(String? id) {
