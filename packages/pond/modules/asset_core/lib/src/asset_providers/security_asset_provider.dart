@@ -13,28 +13,32 @@ class SecurityAssetProvider with IsAssetProviderWrapper {
 
   final AssetSecurity assetSecurity;
 
+  final Map<(AssetPathContext, String), AssetReference> assetReferenceById = {};
+
   SecurityAssetProvider({required this.assetProvider, required this.assetSecurity});
 
   @override
   AssetReference getById(AssetPathContext context, String id) {
-    final sourceAssetReference = assetProvider.getById(context, id);
-    return AssetReference(
-      id: id,
-      assetMetadataModel: sourceAssetReference.assetMetadataModel.asyncMap((metadata) async {
-        if (!await assetSecurity.read.passes(context, permissionContext: AssetPermissionContext.read)) {
-          throw Exception('Invalid permission to read asset with id [$id]');
-        }
+    return assetReferenceById.putIfAbsent((context, id), () {
+      final sourceAssetReference = assetProvider.getById(context, id);
+      return AssetReference(
+        id: id,
+        assetMetadataModel: sourceAssetReference.assetMetadataModel.asyncMap((metadata) async {
+          if (!await assetSecurity.read.passes(context, permissionContext: AssetPermissionContext.read)) {
+            throw Exception('Invalid permission to read asset with id [$id]');
+          }
 
-        return metadata;
-      }),
-      assetModel: sourceAssetReference.assetModel.asyncMap((asset) async {
-        if (!await assetSecurity.read.passes(context, permissionContext: AssetPermissionContext.read)) {
-          throw Exception('Invalid permission to read asset with id [$id]');
-        }
+          return metadata;
+        }),
+        assetModel: sourceAssetReference.assetModel.asyncMap((asset) async {
+          if (!await assetSecurity.read.passes(context, permissionContext: AssetPermissionContext.read)) {
+            throw Exception('Invalid permission to read asset with id [$id]');
+          }
 
-        return asset;
-      }),
-    );
+          return asset;
+        }),
+      );
+    });
   }
 
   @override
