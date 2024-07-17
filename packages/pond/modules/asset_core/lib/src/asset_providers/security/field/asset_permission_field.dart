@@ -49,8 +49,8 @@ mixin IsAssetPermissionField implements AssetPermissionField {
   }
 
   @override
-  Future<Entity<ValueObject>?> getRootEntity(AssetPathContext context) {
-    throw UnimplementedError();
+  Future<Entity<ValueObject>?> getRootEntity(AssetPathContext context) async {
+    return null;
   }
 
   @override
