@@ -30,8 +30,10 @@ class UpdateEntitySyncAction extends SyncAction {
   @override
   Future<void> onPublish(DropCoreContext context) async {
     final state = stateProperty.value;
+    final entity = await context.constructEntityFromState(state);
+    final entityState = entity.getState(context);
     await context
-        .update(state.withMetadata(state.metadata.copy()..set(forceSourceUpdateField, true)))
+        .update(entityState.withMetadata(state.metadata.copy()..set(forceSourceUpdateField, true)))
         .timeout(Duration(seconds: 4));
   }
 
