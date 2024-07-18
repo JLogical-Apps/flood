@@ -7,8 +7,8 @@ class FirebaseTimestampStatePersisterModifier extends StatePersisterModifier {
   Map<String, dynamic> inflate(Map<String, dynamic> data) {
     var newData = data.copy();
     newData = newData
-        .replaceWhereTraversed((key, value) => value is firestore.Timestamp,
-            (key, value) => (value as firestore.Timestamp).toDate().toIso8601String())
+        .replaceWhereTraversed(
+            (key, value) => value is firestore.Timestamp, (key, value) => (value as firestore.Timestamp).toDate())
         .cast<String, dynamic>();
     return newData;
   }

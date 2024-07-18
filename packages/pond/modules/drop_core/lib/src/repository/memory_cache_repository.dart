@@ -85,7 +85,9 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       return existingPaginatedQueryResult as T;
     }
 
-    return await stateQueryExecutor.executeQuery(queryRequest);
+    final result = await stateQueryExecutor.executeQuery(queryRequest);
+
+    return result;
   }
 
   @override
@@ -99,17 +101,8 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       return repository.repository.executeQueryX(queryRequest);
     }
 
-    return [
-      repository.stateByIdX,
-      _completerByLoadingQueryRequestX,
-    ].combineLatestWithValue((values) => values).asyncMapWithValue(
-      (stateById) async {
-        if (completerByLoadingQueryRequest[queryRequest] != null) {
-          return FutureValue.loading();
-        }
-
-        return FutureValue.loaded(await executeQuery(queryRequest));
-      },
+    return repository.stateByIdX.asyncMapWithValue(
+      (stateById) async => FutureValue.loaded(await executeQuery(queryRequest)),
       initialValue: getInitialValue(
         queryRequest: queryRequest,
         isNewlyRunQuery: isNewlyRunQuery,
