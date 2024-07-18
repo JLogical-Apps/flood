@@ -15,6 +15,8 @@ class AssetCoreComponent with IsCorePondComponent, IsLocatorWrapper<AssetProvide
   @override
   late Locator<AssetProvider> locator;
 
+  final List<AssetProvider> _assetProviders = [];
+
   AssetCoreComponent({
     required this.assetProviders,
     this.assetProviderImplementations = const [],
@@ -28,6 +30,7 @@ class AssetCoreComponent with IsCorePondComponent, IsLocatorWrapper<AssetProvide
             locator = Locator<AssetProvider>();
             for (final assetProvider in assetProviders(this)) {
               await locator.register(assetProvider);
+              _assetProviders.add(assetProvider);
             }
           },
           onReset: (context, component) async {
@@ -54,7 +57,7 @@ class AssetCoreComponent with IsCorePondComponent, IsLocatorWrapper<AssetProvide
     Map<String, dynamic> wildcards = const {State.idField: entityIdWildcard},
   }) {
     final assetPathContext = AssetPathContext(context: this, values: wildcards);
-    return assetProviders(this).firstWhereOrNull((assetProvider) =>
+    return _assetProviders.firstWhereOrNull((assetProvider) =>
         AssetProviderMetaModifier.getModifier(assetProvider).getPath(assetProvider, assetPathContext) == assetPath);
   }
 
