@@ -1,5 +1,5 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
-import 'package:drop_core/src/state/persistence/modifiers/date_time_state_persister_modifier.dart';
+import 'package:drop_core/src/state/persistence/modifiers/timestamp_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/modifiers/runtime_type_state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/modifiers/state_persister_modifier.dart';
 import 'package:drop_core/src/state/persistence/modifiers/state_state_persister_modifier.dart';
@@ -16,7 +16,7 @@ class JsonStatePersister implements StatePersister<Map<String, dynamic>> {
     ...extraStatePersisterModifiers,
     RuntimeTypeStatePersisterModifier(),
     StateStatePersisterModifier(context: context),
-    DateTimeStatePersisterModifier(),
+    TimestampStatePersisterModifier(),
   ];
 
   @override

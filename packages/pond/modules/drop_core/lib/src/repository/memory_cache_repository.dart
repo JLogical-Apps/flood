@@ -180,7 +180,6 @@ class MemoryCacheRepositoryStateHandler with IsRepositoryStateHandler {
 
   MemoryCacheRepositoryStateHandler({required this.repository});
 
-  @override
   late StatePersister<State> statePersister = StatePersister.state(context: repository.context.dropCoreComponent);
 
   @override

@@ -97,7 +97,6 @@ class FileRepositoryStateHandler implements RepositoryStateHandler {
 
   FileRepositoryStateHandler({required this.repository});
 
-  @override
   late StatePersister<String> statePersister = StatePersister.jsonString(context: repository.context.dropCoreComponent);
 
   @override

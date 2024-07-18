@@ -19,7 +19,6 @@ class AppwriteCloudRepositoryStateHandler with IsRepositoryStateHandler {
 
   RuntimeType? get inferredType => repository.handledTypes.length == 1 ? repository.handledTypes[0] : null;
 
-  @override
   late StatePersister<Map<String, dynamic>> statePersister = getStatePersister(repository.context.dropCoreComponent);
 
   static StatePersister<Map<String, dynamic>> getStatePersister(DropCoreContext context) => StatePersister.json(

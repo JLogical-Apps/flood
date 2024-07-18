@@ -1,14 +1,11 @@
 import 'package:drop_core/src/context/drop_core_context.dart';
 import 'package:drop_core/src/repository/lifecycle_state_handler.dart';
-import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
 
 abstract class RepositoryStateHandler {
   Future<State> onUpdate(State state);
 
   Future<State> onDelete(State state);
-
-  StatePersister get statePersister;
 }
 
 extension RepositoryStateHandlerExtensions on RepositoryStateHandler {
@@ -37,7 +34,4 @@ mixin IsRepositoryStateHandlerWrapper implements RepositoryStateHandlerWrapper {
 
   @override
   Future<State> onDelete(State state) => stateHandler.delete(state);
-
-  @override
-  StatePersister get statePersister => stateHandler.statePersister;
 }

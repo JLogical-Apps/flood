@@ -24,7 +24,6 @@ import 'package:drop_core/src/repository/type/for_any_repository.dart';
 import 'package:drop_core/src/repository/type/for_type_repository.dart';
 import 'package:drop_core/src/repository/type/with_embedded_abstract_type_repository.dart';
 import 'package:drop_core/src/repository/type/with_embedded_type_repository.dart';
-import 'package:drop_core/src/state/persistence/state_persister.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/state/stateful.dart';
 import 'package:environment_core/environment_core.dart';
@@ -240,9 +239,6 @@ mixin IsRepository implements Repository, IsRepositoryStateHandlerWrapper, IsRep
   Future<State> onDelete(State state) => stateHandler.onDelete(state);
 
   @override
-  StatePersister get statePersister => stateHandler.statePersister;
-
-  @override
   Future<T> onExecuteQuery<E extends Entity, T>(
     QueryRequest<E, T> queryRequest, {
     FutureOr Function(State state)? onStateRetreived,
@@ -299,9 +295,6 @@ mixin IsRepositoryWrapper implements RepositoryWrapper, RepositoryStateHandlerWr
 
   @override
   Future<State> onDelete(State state) => stateHandler.onDelete(state);
-
-  @override
-  StatePersister get statePersister => stateHandler.statePersister;
 
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(

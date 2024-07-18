@@ -212,9 +212,6 @@ class DeviceCacheRepositoryStateHandler with IsRepositoryStateHandler {
   DeviceCacheRepositoryStateHandler({required this.repository});
 
   @override
-  late StatePersister<State> statePersister = StatePersister.state(context: repository.context.dropCoreComponent);
-
-  @override
   Future<State> onUpdate(State state) async {
     if (state.metadata[forceSourceUpdateField] == true) {
       return await repository.sourceRepository.update(state);

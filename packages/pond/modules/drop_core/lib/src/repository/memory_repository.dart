@@ -62,7 +62,6 @@ class MemoryRepositoryStateHandler with IsRepositoryStateHandler {
 
   MemoryRepositoryStateHandler({required this.repository});
 
-  @override
   late StatePersister<State> statePersister = StatePersister.state(context: repository.context.dropCoreComponent);
 
   @override
