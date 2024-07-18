@@ -96,6 +96,7 @@ extension RepositoryExtension on Repository {
 
     if (entity.hasValue) {
       newValueObject.idToUse = entity.value.idToUse;
+      newValueObject.entity = entity;
       newValueObject.copyFrom(context.dropCoreComponent, entity.value);
     }
 
