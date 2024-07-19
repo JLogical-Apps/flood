@@ -27,18 +27,14 @@ class State extends Equatable implements Stateful {
   @override
   List<Object?> get props => [id, type, data];
 
-  Map<String, dynamic> get fullData => {
-        if (id != null) idField: id,
-        if (type != null) typeField: type,
-        ...data,
-      };
+  late final Map<String, dynamic> fullData = {
+    if (id != null) idField: id,
+    if (type != null) typeField: type,
+    ...data,
+  };
 
   operator [](String fieldName) {
     return fullData[fieldName];
-  }
-
-  operator []=(String fieldName, dynamic value) {
-    data[fieldName] = value;
   }
 
   State copyWith({
