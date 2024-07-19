@@ -92,8 +92,12 @@ void main() {
 
   test('lifecycle accessing id', () async {
     String? id;
+    var isNewBeforeSave = false;
     final repository = Repository.forType<TestEntity, TestData>(
-      () => TestEntity(afterSaveGetter: (e) => id = e.id),
+      () => TestEntity(
+        beforeSaveGetter: (e) => isNewBeforeSave = e.isNew,
+        afterSaveGetter: (e) => id = e.id,
+      ),
       TestData.new,
       entityTypeName: 'TestEntity',
       valueObjectTypeName: 'TestData',
@@ -107,8 +111,18 @@ void main() {
     final entity = TestEntity()..set(TestData());
 
     expect(id, isNull);
-    final updatedState = await repository.update(entity);
-    expect(id, updatedState.id);
+    expect(isNewBeforeSave, false);
+    expect(entity.isNew, true);
+    await repository.updateEntity(entity);
+    expect(id, entity.id);
+    expect(isNewBeforeSave, true);
+    expect(entity.isNew, false);
+
+    await repository.updateEntity(entity);
+    expect(isNewBeforeSave, false);
+
+    final queriedEntity = await repository.executeQuery(Query.getById<TestEntity>(entity.id!));
+    expect(queriedEntity.isNew, false);
   });
 }
 

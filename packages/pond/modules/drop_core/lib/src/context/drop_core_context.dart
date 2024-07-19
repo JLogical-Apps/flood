@@ -43,8 +43,9 @@ extension DropCoreContextExtension on DropCoreContext {
   }
 
   Future<E> constructEntityFromState<E extends Entity>(State state) async {
-    final entity = state.type!.createInstance() as Entity;
-    entity.id = state.id;
+    final entity = (state.type!.createInstance() as Entity)
+      ..id = state.id
+      ..isNew = state.isNew;
 
     state = await entity.beforeInitialize(this, state: state) ?? state;
 

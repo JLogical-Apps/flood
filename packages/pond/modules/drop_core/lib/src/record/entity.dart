@@ -12,6 +12,8 @@ import 'package:utils_core/utils_core.dart';
 abstract class Entity<V extends ValueObject> extends Record with EquatableMixin, IsValidatorWrapper<void, String?> {
   String? id;
 
+  bool isNew = true;
+
   final BehaviorSubject<V> _valueObjectX = BehaviorSubject();
 
   Type get valueObjectType => V;
@@ -24,20 +26,18 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin,
 
   void set(V valueObject) => value = valueObject;
 
-  bool get isNew => id == null;
-
   @override
   State getState(DropCoreContext context) => value
       .getState(context)
       .withId(id ?? value.idToUse)
-      .withIsNew(id == null)
+      .withIsNew(isNew)
       .withType(context.getRuntimeTypeRuntime(runtimeType));
 
   @override
   State getStateUnsafe(DropCoreContext context) => value
       .getStateUnsafe(context)
       .withId(id ?? value.idToUse)
-      .withIsNew(id == null)
+      .withIsNew(isNew)
       .withType(context.getRuntimeTypeRuntime(runtimeType));
 
   FutureOr<State?> onBeforeInitialize(DropCoreContext context, {required State state}) {

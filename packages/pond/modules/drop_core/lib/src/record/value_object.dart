@@ -67,12 +67,12 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
 
   /// An unsafe state of the ValueObject without the type set.
   State getScaffoldState(DropCoreContext context) => behaviors.fold<State>(
-        State(data: {}),
+        State(data: {}, isNew: entity?.isNew != false),
         (state, behavior) => behavior.modifyState(context, state),
       );
 
   State getScaffoldStateUnsafe(DropCoreContext context) => behaviors.fold<State>(
-        State(data: {}),
+        State(data: {}, isNew: entity?.isNew != false),
         (state, behavior) => guard(() => behavior.modifyState(context, state)) ?? state,
       );
 

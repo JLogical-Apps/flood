@@ -27,6 +27,7 @@ class LifecycleStateHandler with IsRepositoryStateHandlerWrapper {
 
     state = await stateHandler.update(state);
     entity.value.setState(context, state);
+    entity.isNew = false;
 
     if (isNew) {
       await entity.afterCreate(context);
@@ -34,7 +35,7 @@ class LifecycleStateHandler with IsRepositoryStateHandlerWrapper {
 
     await entity.afterSave(context);
 
-    state = entity.getState(context).withId(id).withMetadata(state.metadata);
+    state = entity.getState(context).withMetadata(state.metadata);
 
     return state;
   }

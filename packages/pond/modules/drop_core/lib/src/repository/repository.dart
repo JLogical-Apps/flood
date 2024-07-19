@@ -103,7 +103,9 @@ extension RepositoryExtension on Repository {
     entity.value = newValueObject;
     await entity.throwIfInvalid(null);
     final newState = await update(entity);
-    entity.id = newState.id;
+    entity
+      ..id = newState.id
+      ..isNew = newState.isNew;
     return await context.dropCoreComponent.constructEntityFromState(newState);
   }
 

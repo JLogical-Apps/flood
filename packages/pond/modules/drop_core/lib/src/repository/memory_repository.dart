@@ -65,7 +65,7 @@ class MemoryRepositoryStateHandler with IsRepositoryStateHandler {
 
   @override
   Future<State> onUpdate(State state) async {
-    final cachedState = statePersister.inflate(statePersister.persist(state));
+    final cachedState = statePersister.inflate(statePersister.persist(state)).withIsNew(false);
     repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, cachedState);
     return state;
   }
