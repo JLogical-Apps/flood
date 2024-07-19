@@ -17,7 +17,7 @@ class MemoryCacheRepository with IsRepositoryWrapper {
     repository = sourceRepository.withListener(
       onStateRetrieved: (state) {
         if (stateByIdX.value[state.id!] != state) {
-          stateByIdX.value = stateByIdX.value.copy()..set(state.id!, state);
+          stateHandler.updateCachedState(state);
         }
       },
     );
@@ -36,7 +36,7 @@ class MemoryCacheRepository with IsRepositoryWrapper {
   late final MemoryCacheRepositoryQueryExecutor queryExecutor = MemoryCacheRepositoryQueryExecutor(repository: this);
 
   @override
-  late final RepositoryStateHandler stateHandler = MemoryCacheRepositoryStateHandler(repository: this);
+  late final MemoryCacheRepositoryStateHandler stateHandler = MemoryCacheRepositoryStateHandler(repository: this);
 }
 
 class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
@@ -48,13 +48,12 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
 
   MemoryCacheRepositoryQueryExecutor({required this.repository});
 
-  final Map<QueryRequest, PaginatedQueryResult?> paginatedQueryResultByQueryRequest = {};
+  final Map<QueryRequest, dynamic> cachedQueryRequestResults = {};
 
   late final StatePersister<State> statePersister = StatePersister.state(context: repository.context.dropCoreComponent);
 
   late StateQueryExecutor stateQueryExecutor = StateQueryExecutor.fromStatesX(
-    statesX: repository.stateByIdX
-        .mapWithValue((stateById) => stateById.values.map((state) => statePersister.inflate(state)).toList()),
+    statesX: repository.stateByIdX.mapWithValue((stateById) => stateById.values.toList()),
     dropContext: repository.context.dropCoreComponent,
   );
 
@@ -74,18 +73,17 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       return source;
     }
 
-    if (paginatedQueryResultByQueryRequest.containsKey(queryRequest)) {
-      var existingPaginatedQueryResult = paginatedQueryResultByQueryRequest[queryRequest];
-      if (existingPaginatedQueryResult == null) {
-        existingPaginatedQueryResult =
-            await repository.repository.executeQuery(queryRequest as QueryRequest<E, PaginatedQueryResult>);
-        paginatedQueryResultByQueryRequest[queryRequest] = existingPaginatedQueryResult;
-      }
-
-      return existingPaginatedQueryResult as T;
+    if (cachedQueryRequestResults.containsKey(queryRequest)) {
+      return cachedQueryRequestResults[queryRequest];
     }
 
-    final result = await stateQueryExecutor.executeQuery(queryRequest);
+    var result = await stateQueryExecutor.executeQuery(queryRequest);
+
+    if (result is PaginatedQueryResult) {
+      result = await repository.repository.executeQuery(queryRequest);
+    }
+
+    cachedQueryRequestResults[queryRequest] = result;
 
     return result;
   }
@@ -132,12 +130,6 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     return stateQueryExecutor.executeQueryX(queryRequest).value;
   }
 
-  void reloadPagination() {
-    for (final paginatedQueryResult in paginatedQueryResultByQueryRequest.keys) {
-      paginatedQueryResultByQueryRequest[paginatedQueryResult] = null;
-    }
-  }
-
   Future<T> fetchSourceAndDeleteStale<E extends Entity, T>(QueryRequest<E, T> queryRequest) async {
     final completer = Completer();
     _completerByLoadingQueryRequestX.value = completerByLoadingQueryRequest.copy()..set(queryRequest, completer);
@@ -157,10 +149,6 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
       }
     }
 
-    if (sourceResult is PaginatedQueryResult) {
-      paginatedQueryResultByQueryRequest[queryRequest] = sourceResult;
-    }
-
     completer.complete(sourceResult);
     _completerByLoadingQueryRequestX.value = completerByLoadingQueryRequest.copy()..remove(queryRequest);
 
@@ -178,18 +166,21 @@ class MemoryCacheRepositoryStateHandler with IsRepositoryStateHandler {
   @override
   Future<State> onUpdate(State state) async {
     state = await repository.repository.update(state);
-
-    repository.queryExecutor.reloadPagination();
-    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, statePersister.persist(state));
-
+    updateCachedState(state);
     return state;
+  }
+
+  void updateCachedState(State state) {
+    repository.queryExecutor.cachedQueryRequestResults.clear();
+    final cachedState = statePersister.inflate(statePersister.persist(state));
+    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, cachedState);
   }
 
   @override
   Future<State> onDelete(State state) async {
     state = await repository.repository.delete(state);
 
-    repository.queryExecutor.reloadPagination();
+    repository.queryExecutor.cachedQueryRequestResults.clear();
     repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(state.id!);
 
     return state;

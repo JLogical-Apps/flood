@@ -51,8 +51,7 @@ class MemoryRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
 
     return StateQueryExecutor.fromStatesX(
       dropContext: repository.context.dropCoreComponent,
-      statesX: stateByIdX.mapWithValue((stateById) =>
-          stateById.values.map((state) => statePersister.inflate(state)).sortedBy((state) => state.id!).toList()),
+      statesX: stateByIdX.mapWithValue((stateById) => stateById.values.sortedBy((state) => state.id!).toList()),
     );
   }
 }
@@ -66,7 +65,8 @@ class MemoryRepositoryStateHandler with IsRepositoryStateHandler {
 
   @override
   Future<State> onUpdate(State state) async {
-    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, statePersister.persist(state));
+    final cachedState = statePersister.inflate(statePersister.persist(state));
+    repository.stateByIdX.value = repository.stateByIdX.value.copy()..set(state.id!, cachedState);
     return state;
   }
 
