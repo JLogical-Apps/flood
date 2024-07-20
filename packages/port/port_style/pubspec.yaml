@@ -18,6 +18,7 @@ dependencies:
   flutter_hooks: ^0.21.1-pre.0
   intl: ^0.18.0
   number_text_input_formatter: ^1.0.0+8
+  phone_number_text_input_formatter: ^0.0.2
   provider: ^6.0.5
   uuid: ^4.1.0
 

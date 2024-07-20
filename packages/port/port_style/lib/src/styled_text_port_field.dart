@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:phone_number_text_input_formatter/phone_number_text_input_formatter.dart';
 import 'package:port/port.dart';
 import 'package:provider/provider.dart';
 import 'package:style/style.dart';
@@ -54,6 +56,12 @@ class StyledTextFieldPortField extends HookWidget {
           maxLines: maxLines ?? (field.findIsMultiline() ? 3 : null),
           keyboard: getKeyboardType(field),
           action: TextInputAction.next,
+          inputFormatters: [
+            if (field.findIsPhone()) ...[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              const NationalPhoneNumberTextInputFormatter.US(formatType: NationalPhoneNumberFormatType.domestic),
+            ],
+          ],
         );
       },
     );

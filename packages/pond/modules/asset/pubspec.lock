@@ -769,6 +769,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.2"
+  phone_number_text_input_formatter:
+    dependency: transitive
+    description:
+      name: phone_number_text_input_formatter
+      sha256: b7f3733fec1369c1fe82766ae546db5bb4e52bbbe63c0543c4e947654762ee2a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   pigment:
     dependency: transitive
     description:
