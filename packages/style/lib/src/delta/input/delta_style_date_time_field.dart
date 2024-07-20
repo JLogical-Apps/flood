@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:style/src/components/input/styled_date_time_field.dart';
 import 'package:style/src/components/input/styled_text_field.dart';
 import 'package:style/src/components/text/styled_text.dart';
@@ -12,15 +14,16 @@ class DeltaStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField>
   @override
   Widget renderTyped(BuildContext context, StyledDateTimeField component) {
     return StyledTextField(
-      key: ObjectKey(component.value),
       labelText: component.labelText,
       label: component.label,
       showRequiredIndicator: component.showRequiredIndicator,
       enabled: component.onChanged != null,
-      readonly: true,
+      readonly: false,
       errorText: component.errorText,
       hintText: component.hintText,
       leadingIcon: Icons.date_range,
+      action: TextInputAction.next,
+      inputFormatters: [DateInputFormatter()],
       text: component.value?.formatWith((dateFormat) {
         if (component.showTime) {
           return dateFormat.add_yMd().addPattern('h:mm a');
@@ -28,6 +31,13 @@ class DeltaStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField>
           return dateFormat.add_yMd();
         }
       }),
+      onSubmitted: (text) {
+        final dateFormat = DateFormat('MM/dd/yyyy');
+        final dateTime = guard(() => dateFormat.parse(text));
+        if (dateTime != null) {
+          component.onChanged?.call(dateTime);
+        }
+      },
       onTapped: component.onChanged == null
           ? null
           : () async {

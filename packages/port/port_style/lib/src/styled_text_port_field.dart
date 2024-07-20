@@ -53,6 +53,7 @@ class StyledTextFieldPortField extends HookWidget {
           onChanged: (text) => port[fieldPath] = text,
           maxLines: maxLines ?? (field.findIsMultiline() ? 3 : null),
           keyboard: getKeyboardType(field),
+          action: TextInputAction.next,
         );
       },
     );

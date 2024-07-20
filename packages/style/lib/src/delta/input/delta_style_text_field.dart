@@ -69,6 +69,7 @@ class DeltaStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
               controller: textController,
               onChanged: (text) => component.onChanged?.call(text),
               onTap: component.onTapped,
+              textInputAction: component.action,
               style: context.style().getTextStyle(textFieldContext, StyledText.body.bold.empty),
               cursorColor: textFieldContext.colorPalette().foreground.regular,
               readOnly: component.readonly || !component.enabled,

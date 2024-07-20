@@ -69,6 +69,8 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
               controller: textController,
               onChanged: (text) => component.onChanged?.call(text),
               onTap: component.onTapped,
+              textInputAction: component.action,
+              inputFormatters: component.inputFormatters,
               style: context.style().getTextStyle(textFieldContext, StyledText.body.empty),
               cursorColor: textFieldContext.colorPalette().foreground.regular,
               readOnly: component.readonly || !component.enabled,

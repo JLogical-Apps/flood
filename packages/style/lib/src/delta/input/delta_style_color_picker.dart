@@ -22,6 +22,7 @@ class DeltaStyleColorPickerRenderer with IsTypedStyleRenderer<StyledColorPicker>
       enabled: component.onChanged != null,
       readonly: true,
       errorText: component.errorText,
+      action: TextInputAction.next,
       leading: component.value == null
           ? StyledIcon(Icons.radio_button_unchecked)
           : Padding(

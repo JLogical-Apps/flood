@@ -16,6 +16,8 @@ dependencies:
   equatable: ^2.0.5
   file_picker: ^6.2.0
   flutter_hooks: ^0.21.1-pre.0
+  intl: ^0.18.0
+  number_text_input_formatter: ^1.0.0+8
   provider: ^6.0.5
   uuid: ^4.1.0
 

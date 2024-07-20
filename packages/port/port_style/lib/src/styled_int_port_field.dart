@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:number_text_input_formatter/number_text_input_formatter.dart';
 import 'package:port/port.dart';
 import 'package:provider/provider.dart';
 import 'package:style/style.dart';
@@ -40,6 +41,15 @@ class StyledIntFieldPortField extends HookWidget {
           errorText: error?.toString(),
           enabled: enabled,
           keyboard: TextInputType.number,
+          action: TextInputAction.next,
+          inputFormatters: [
+            NumberTextInputFormatter(
+              groupDigits: 3,
+              groupSeparator: ',',
+              allowNegative: true,
+              decimalDigits: 0,
+            ),
+          ],
           onChanged: (amountRaw) {
             if (amountRaw.isEmpty) {
               port.clearError(path: fieldPath);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:style/src/style_component.dart';
 
 class StyledTextField extends StyleComponent {
@@ -22,6 +23,8 @@ class StyledTextField extends StyleComponent {
 
   final int? maxLines;
   final TextInputType? keyboard;
+  final TextInputAction? action;
+  final List<TextInputFormatter>? inputFormatters;
 
   final Function()? onTapped;
   final Function(String text)? onSubmitted;
@@ -43,6 +46,8 @@ class StyledTextField extends StyleComponent {
     this.obscureText = false,
     this.maxLines = 1,
     this.keyboard,
+    this.action,
+    this.inputFormatters,
     this.onTapped,
     this.onSubmitted,
   });
