@@ -49,6 +49,7 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
   MemoryCacheRepositoryQueryExecutor({required this.repository});
 
   final Map<QueryRequest, dynamic> cachedQueryRequestResults = {};
+  final Map<QueryRequest, PaginatedQueryResult> paginationQueryRequestResults = {};
 
   late final StatePersister<State> statePersister = StatePersister.state(context: repository.context.dropCoreComponent);
 
@@ -75,15 +76,18 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
 
     if (cachedQueryRequestResults.containsKey(queryRequest)) {
       return cachedQueryRequestResults[queryRequest];
+    } else if (paginationQueryRequestResults.containsKey(queryRequest)) {
+      return paginationQueryRequestResults[queryRequest] as T;
     }
 
     var result = await stateQueryExecutor.executeQuery(queryRequest);
 
     if (result is PaginatedQueryResult) {
       result = await repository.repository.executeQuery(queryRequest);
+      paginationQueryRequestResults[queryRequest] = result as PaginatedQueryResult;
+    } else {
+      cachedQueryRequestResults[queryRequest] = result;
     }
-
-    cachedQueryRequestResults[queryRequest] = result;
 
     return result;
   }
@@ -166,6 +170,7 @@ class MemoryCacheRepositoryStateHandler with IsRepositoryStateHandler {
   @override
   Future<State> onUpdate(State state) async {
     state = await repository.repository.update(state);
+    repository.queryExecutor.paginationQueryRequestResults.clear();
     updateCachedState(state);
     return state;
   }
@@ -181,6 +186,7 @@ class MemoryCacheRepositoryStateHandler with IsRepositoryStateHandler {
     state = await repository.repository.delete(state);
 
     repository.queryExecutor.cachedQueryRequestResults.clear();
+    repository.queryExecutor.paginationQueryRequestResults.clear();
     repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(state.id!);
 
     return state;
