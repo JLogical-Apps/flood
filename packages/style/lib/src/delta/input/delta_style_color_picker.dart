@@ -45,6 +45,7 @@ class DeltaStyleColorPickerRenderer with IsTypedStyleRenderer<StyledColorPicker>
       hintText: component.value == null ? 'Select Color...' : null,
       onTapped: component.onChanged != null
           ? () async {
+              final focusedChild = FocusScope.of(context).focusedChild;
               final result = await context.showStyledDialog(
                 StyledDialog(
                   titleText: 'Select Color',
@@ -110,7 +111,7 @@ class DeltaStyleColorPickerRenderer with IsTypedStyleRenderer<StyledColorPicker>
                 ),
               );
 
-              FocusScope.of(context).requestFocus(FocusNode());
+              FocusScope.of(context).requestFocus(focusedChild);
 
               if (result != null) {
                 final newColor = result[0] as Color?;

@@ -24,15 +24,16 @@ class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> 
       leadingIcon: Icons.date_range,
       text: component.value?.formatWith((dateFormat) {
         if (component.showTime) {
-          return dateFormat.add_yMd().addPattern('h:mm a');
+          return dateFormat.addPattern('MM/dd/yyyy h:mm a');
         } else {
-          return dateFormat.add_yMd();
+          return dateFormat.addPattern('MM/dd/yyyy');
         }
       }),
+      action: TextInputAction.next,
       inputFormatters: [DateInputFormatter()],
-      onSubmitted: (text) {
+      onChanged: (text) {
         final dateFormat = DateFormat('MM/dd/yyyy');
-        final dateTime = guard(() => dateFormat.parse(text));
+        final dateTime = guard(() => dateFormat.parseStrict(text));
         if (dateTime != null) {
           component.onChanged?.call(dateTime);
         }
@@ -40,16 +41,17 @@ class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> 
       onTapped: component.onChanged == null
           ? null
           : () async {
+              final focusedChild = FocusScope.of(context).focusedChild;
               var result = await getDate(context, component);
               if (result == null) {
-                FocusScope.of(context).requestFocus(FocusNode());
+                FocusScope.of(context).requestFocus(focusedChild);
                 return;
               }
 
               if (component.showTime) {
                 final time = await getTime(context, component);
                 if (time == null) {
-                  FocusScope.of(context).requestFocus(FocusNode());
+                  FocusScope.of(context).requestFocus(focusedChild);
                   return;
                 }
 
@@ -59,7 +61,7 @@ class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> 
                 );
               }
 
-              FocusScope.of(context).requestFocus(FocusNode());
+              FocusScope.of(context).requestFocus(focusedChild);
               component.onChanged!(result);
             },
     );

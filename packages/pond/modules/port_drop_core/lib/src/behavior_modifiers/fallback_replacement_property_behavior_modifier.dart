@@ -9,7 +9,13 @@ class FallbackReplacementPropertyBehaviorModifier
     extends WrapperPortGeneratorBehaviorModifier<FallbackReplacementValueObjectProperty> {
   @override
   dynamic getHintOrNull(FallbackReplacementValueObjectProperty behavior) {
-    return guard(() => behavior.fallbackReplacement());
+    return guard(() {
+      final hint = behavior.fallbackReplacement();
+      if (hint is Timestamp) {
+        return hint.time;
+      }
+      return hint;
+    });
   }
 
   @override

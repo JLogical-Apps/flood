@@ -8,7 +8,13 @@ import 'package:utils_core/utils_core.dart';
 class PlaceholderPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModifier<PlaceholderValueObjectProperty> {
   @override
   dynamic getHintOrNull(PlaceholderValueObjectProperty behavior) {
-    return guard(() => behavior.placeholder());
+    return guard(() {
+      final hint = behavior.placeholder();
+      if (hint is Timestamp) {
+        return hint.time;
+      }
+      return hint;
+    });
   }
 
   @override

@@ -8,7 +8,13 @@ import 'package:utils_core/utils_core.dart';
 class FallbackPropertyBehaviorModifier extends WrapperPortGeneratorBehaviorModifier<FallbackValueObjectProperty> {
   @override
   dynamic getHintOrNull(FallbackValueObjectProperty behavior) {
-    return guard(() => behavior.fallback());
+    return guard(() {
+      final hint = behavior.fallback();
+      if (hint is Timestamp) {
+        return hint.time;
+      }
+      return hint;
+    });
   }
 
   @override

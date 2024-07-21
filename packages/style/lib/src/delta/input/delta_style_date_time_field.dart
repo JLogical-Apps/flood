@@ -22,8 +22,6 @@ class DeltaStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField>
       errorText: component.errorText,
       hintText: component.hintText,
       leadingIcon: Icons.date_range,
-      action: TextInputAction.next,
-      inputFormatters: [DateInputFormatter()],
       text: component.value?.formatWith((dateFormat) {
         if (component.showTime) {
           return dateFormat.add_yMd().addPattern('h:mm a');
@@ -31,9 +29,11 @@ class DeltaStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField>
           return dateFormat.add_yMd();
         }
       }),
-      onSubmitted: (text) {
+      action: TextInputAction.next,
+      inputFormatters: [DateInputFormatter()],
+      onChanged: (text) {
         final dateFormat = DateFormat('MM/dd/yyyy');
-        final dateTime = guard(() => dateFormat.parse(text));
+        final dateTime = guard(() => dateFormat.parseStrict(text));
         if (dateTime != null) {
           component.onChanged?.call(dateTime);
         }
@@ -41,16 +41,17 @@ class DeltaStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField>
       onTapped: component.onChanged == null
           ? null
           : () async {
+              final focusedChild = FocusScope.of(context).focusedChild;
               var result = await getDate(context, component);
               if (result == null) {
-                FocusScope.of(context).requestFocus(FocusNode());
+                FocusScope.of(context).requestFocus(focusedChild);
                 return;
               }
 
               if (component.showTime) {
                 final time = await getTime(context, component);
                 if (time == null) {
-                  FocusScope.of(context).requestFocus(FocusNode());
+                  FocusScope.of(context).requestFocus(focusedChild);
                   return;
                 }
 
@@ -60,7 +61,7 @@ class DeltaStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField>
                 );
               }
 
-              FocusScope.of(context).requestFocus(FocusNode());
+              FocusScope.of(context).requestFocus(focusedChild);
               component.onChanged!(result);
             },
     );

@@ -10,8 +10,30 @@ class DateTimePortFieldBuilderModifier extends PortFieldBuilderModifier {
     return StyledDateTimeFieldPortField(
       fieldPath: portField.fieldPath,
       labelText: portField.findDisplayNameOrNull(),
-      hintText: portField.findHintOrNull()?.toString(),
+      hintText: getHintText(portField),
     );
+  }
+
+  String? getHintText(PortField portField) {
+    final hint = portField.findHintOrNull();
+    final dateField = portField.findDateFieldOrNull();
+    final dateOnly = dateField?.isTime == false;
+
+    if (hint == null) {
+      return null;
+    }
+
+    if (hint is DateTime) {
+      return hint.formatWith((dateFormat) {
+        if (dateOnly) {
+          return dateFormat.addPattern('MM/dd/yyyy');
+        } else {
+          return dateFormat.addPattern('MM/dd/yyyy h:mm a');
+        }
+      });
+    }
+
+    return null;
   }
 
   @override
