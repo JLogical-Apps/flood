@@ -1,6 +1,6 @@
 # Flood
 
-Framework on Flutter to streamline Flutter/Dart development.
+[Flood](https://www.flooddev.com) is a framework for Flutter to streamline Flutter/Dart development.
 
 ## Example
 
@@ -39,7 +39,7 @@ dependencies:
   utils_core: # Must be the name of the package as defined in its `pubspec.yaml` `name` field. 
     git:
       url: git@github.com:JLogical-Apps/flood.git # Reference the git repository.
-      ref: v4.0 # Must use the latest branch
+      ref: v4.1
       path: packages/utils/utils_core # The path of the package 
 ```
 
