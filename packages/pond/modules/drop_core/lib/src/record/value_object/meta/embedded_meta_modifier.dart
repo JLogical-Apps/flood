@@ -7,7 +7,7 @@ class EmbeddedMetaModifier extends WrapperBehaviorMetaModifier<EmbeddedValueObje
       valueObject
         ..entity = behavior.valueObject.entity
         ..idToUse = behavior.valueObject.idToUse;
-      behavior.instantiator();
+      behavior.instantiate(valueObject);
     };
   }
 }

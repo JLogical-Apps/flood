@@ -96,8 +96,8 @@ class EmbeddedValueObjectProperty<T extends ValueObject>
     );
   }
 
-  void Function(ValueObject valueObject)? instantiator() {
-    return onInstantiate == null ? null : (valueObject) => onInstantiate!(valueObject as T);
+  void instantiate(ValueObject valueObject) {
+    return onInstantiate?.call(valueObject as T);
   }
 
   @override
