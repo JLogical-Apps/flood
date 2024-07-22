@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
@@ -18,7 +19,7 @@ class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> 
       label: component.label,
       showRequiredIndicator: component.showRequiredIndicator,
       enabled: component.onChanged != null,
-      readonly: false,
+      readonly: !kIsWeb,
       errorText: component.errorText,
       hintText: component.hintText,
       leadingIcon: Icons.date_range,
