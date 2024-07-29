@@ -104,7 +104,13 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     }
 
     return repository.stateByIdX.asyncMapWithValue(
-      (stateById) async => FutureValue.loaded(await executeQuery(queryRequest)),
+      (stateById) async {
+        try {
+          return FutureValue.loaded(await executeQuery(queryRequest));
+        } catch (error, stackTrace) {
+          return FutureValue.error(error, stackTrace);
+        }
+      },
       initialValue: getInitialValue(
         queryRequest: queryRequest,
         isNewlyRunQuery: isNewlyRunQuery,
