@@ -679,9 +679,9 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: "5055a63325774deecfd6bac53c51e7b08e999c22"
-      resolved-ref: "5055a63325774deecfd6bac53c51e7b08e999c22"
-      url: "git@github.com:SKnoedler/snapshot.git"
+      ref: "831db0de24842b104440554f9e3d4919fcb1db55"
+      resolved-ref: "831db0de24842b104440554f9e3d4919fcb1db55"
+      url: "git@github.com:bvoq/snapshot.git"
     source: git
     version: "0.2.5"
   source_span:
@@ -852,8 +852,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: master
-      resolved-ref: "95c8b54b18223a49cb2d99c5a81577ed993f24c3"
+      ref: a06c08297ca8611478b76313760ff70e7f1df70f
+      resolved-ref: a06c08297ca8611478b76313760ff70e7f1df70f
       url: "git@github.com:jaboyc/xcodeproj.git"
     source: git
     version: "0.2.3"

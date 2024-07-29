@@ -19,7 +19,7 @@ dependencies:
   xcodeproj:
     git:
       url: git@github.com:jaboyc/xcodeproj.git
-      ref: "master"
+      ref: "a06c08297ca8611478b76313760ff70e7f1df70f"
 
   persistence_core:
     git:
