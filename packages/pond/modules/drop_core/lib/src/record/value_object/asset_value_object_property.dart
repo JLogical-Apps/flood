@@ -53,7 +53,9 @@ class AssetValueObjectProperty
       ));
     } else if (stateValue is AssetReferenceGetter) {
       property.set(stateValue);
-    } else if (stateValue != null) {
+    } else if (stateValue == null) {
+      property.set(null);
+    } else {
       throw Exception('Unknown asset value: [$stateValue]');
     }
 
