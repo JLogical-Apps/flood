@@ -40,6 +40,7 @@ Future<void> main(List<String> args) async {
       ReleasePlatform.ios: DeployTarget.appStore,
     },
   ));
+  await automatePondContext.register(FirebaseDropAutomateComponent());
 
   await Automate.automate(
     context: automatePondContext,
