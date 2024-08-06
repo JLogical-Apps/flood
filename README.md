@@ -39,7 +39,7 @@ dependencies:
   utils_core: # Must be the name of the package as defined in its `pubspec.yaml` `name` field. 
     git:
       url: git@github.com:JLogical-Apps/flood.git # Reference the git repository.
-      ref: v4.1
+      ref: v4.2
       path: packages/utils/utils_core # The path of the package 
 ```
 

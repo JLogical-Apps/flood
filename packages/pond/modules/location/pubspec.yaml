@@ -18,37 +18,37 @@ dependencies:
   drop:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/modules/drop
   environment:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/modules/environment
   location_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/modules/location_core
   pond:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/pond
   runtime_type:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/type
   style:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/style
   utils:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/utils/utils
 dev_dependencies:
   flutter_test:

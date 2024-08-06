@@ -28,62 +28,62 @@ dependencies:
   asset:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/modules/asset
   auth_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/modules/auth_core
   drop_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/modules/drop_core
   environment:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/modules/environment
   log_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/modules/log_core
   messaging_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/modules/messaging_core
   model_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/model/model_core
   persistence:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/persistence/persistence
   pond:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/pond
   pond_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/pond/pond_core
   runtime_type:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/type
   utils:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.1"
+      ref: "v4.2"
       path: packages/utils/utils
 dev_dependencies:
   flutter_test:
