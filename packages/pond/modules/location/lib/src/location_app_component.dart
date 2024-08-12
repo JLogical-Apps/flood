@@ -103,7 +103,7 @@ class LocationAppComponent with IsAppPondComponent {
   }
 
   void _stopTracking() {
-    _locationSubscription!.cancel();
+    _locationSubscription?.cancel();
     _locationSubscription = null;
   }
 
