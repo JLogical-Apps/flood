@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:style/src/style_component.dart';
 
-class StyledTextField extends StyleComponent {
+class StyledTextField<S> extends StyleComponent {
   final String? text;
   final Function(String value)? onChanged;
   final bool Function(String textControllerText, String value)? shouldUpdate;
@@ -29,6 +29,11 @@ class StyledTextField extends StyleComponent {
   final Function()? onTapped;
   final Function(String text)? onSubmitted;
 
+  final Future<List<S>> Function(String text)? suggestionsGetter;
+  final Widget Function(S)? suggestionBuilder;
+  final Function(S, TextEditingController)? onSuggestionPressed;
+  final Duration? suggestionsDebounceDuration;
+
   StyledTextField({
     super.key,
     this.text,
@@ -50,5 +55,9 @@ class StyledTextField extends StyleComponent {
     this.inputFormatters,
     this.onTapped,
     this.onSubmitted,
+    this.suggestionsGetter,
+    this.suggestionBuilder,
+    this.onSuggestionPressed,
+    this.suggestionsDebounceDuration,
   });
 }

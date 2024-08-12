@@ -9,7 +9,7 @@ environment:
 version: 0.0.1
 
 dependencies:
-  archive: ^3.4.6
+  archive: ^3.6.1
   collection: ^1.16.0
   csv: ^6.0.0
   json2yaml: ^3.0.0

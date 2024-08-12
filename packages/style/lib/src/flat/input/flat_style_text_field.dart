@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_async_autocomplete/flutter_async_autocomplete.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:style/src/color_palette_provider.dart';
 import 'package:style/src/components/input/styled_button.dart';
@@ -8,6 +9,7 @@ import 'package:style/src/components/input/styled_text_field.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/misc/styled_icon.dart';
+import 'package:style/src/components/misc/styled_loading_indicator.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/style_build_context_extensions.dart';
 import 'package:style/src/style_renderer.dart';
@@ -64,21 +66,9 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
           ),
         ColorPaletteProvider(
           colorPalette: context.style().getColorPaletteFromBackground(textFieldColor),
-          child: Builder(builder: (textFieldContext) {
-            return TextFormField(
-              controller: textController,
-              onChanged: (text) => component.onChanged?.call(text),
-              onTap: component.onTapped,
-              textInputAction: component.action,
-              inputFormatters: component.inputFormatters,
-              style: context.style().getTextStyle(textFieldContext, StyledText.body.empty),
-              cursorColor: textFieldContext.colorPalette().foreground.regular,
-              readOnly: component.readonly || !component.enabled,
-              obscureText: component.obscureText && !revealSecretState.value,
-              maxLines: component.maxLines,
-              keyboardType: component.keyboard,
-              onFieldSubmitted: component.onSubmitted == null ? null : (text) => component.onSubmitted!(text),
-              decoration: InputDecoration(
+          child: Builder(
+            builder: (textFieldContext) {
+              final inputDecoration = InputDecoration(
                 hoverColor: textFieldContext.colorPalette().background.regular,
                 focusColor: textFieldContext.colorPalette().background.regular.background.regular,
                 fillColor: textFieldColor,
@@ -123,9 +113,49 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                 errorStyle: context
                     .style()
                     .getTextStyle(context, StyledText.body.bold.withColor(context.colorPalette().error.regular).empty),
-              ),
-            );
-          }),
+              );
+
+              if (component.suggestionsGetter != null) {
+                return AsyncAutocomplete(
+                  controller: textController,
+                  onChanged: (text) => component.onChanged?.call(text),
+                  onTap: component.onTapped,
+                  asyncSuggestions: component.suggestionsGetter!,
+                  onTapItem: (suggestion) => component.onSuggestionPressed?.call(suggestion, textController),
+                  debounceDuration: component.suggestionsDebounceDuration ?? Duration(milliseconds: 400),
+                  suggestionBuilder: (suggestion) => Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    child: component.suggestionBuilder?.call(suggestion) ?? StyledText.body(suggestion.toString()),
+                  ),
+                  maxListHeight: 250,
+                  inputFormatter: component.inputFormatters ?? [],
+                  inputTextStyle: context.style().getTextStyle(textFieldContext, StyledText.body.empty),
+                  cursorColor: textFieldContext.colorPalette().foreground.regular,
+                  keyboardType: component.keyboard ?? TextInputType.text,
+                  onSubmitted: component.onSubmitted == null ? null : (text) => component.onSubmitted!(text),
+                  suggestionBackgroundColor: context.colorPalette().background.regular,
+                  progressIndicatorBuilder: StyledLoadingIndicator(),
+                  decoration: inputDecoration,
+                );
+              }
+
+              return TextField(
+                controller: textController,
+                onChanged: (text) => component.onChanged?.call(text),
+                onTap: component.onTapped,
+                textInputAction: component.action,
+                inputFormatters: component.inputFormatters,
+                style: context.style().getTextStyle(textFieldContext, StyledText.body.empty),
+                cursorColor: textFieldContext.colorPalette().foreground.regular,
+                readOnly: component.readonly || !component.enabled,
+                obscureText: component.obscureText && !revealSecretState.value,
+                maxLines: component.maxLines,
+                keyboardType: component.keyboard,
+                onSubmitted: component.onSubmitted == null ? null : (text) => component.onSubmitted!(text),
+                decoration: inputDecoration,
+              );
+            },
+          ),
         ),
       ],
     );
