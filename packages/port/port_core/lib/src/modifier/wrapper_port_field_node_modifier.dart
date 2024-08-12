@@ -1,11 +1,7 @@
 import 'package:asset_core/asset_core.dart';
-import 'package:port_core/src/asset_port_field.dart';
-import 'package:port_core/src/date_port_field.dart';
+import 'package:port_core/port_core.dart';
 import 'package:port_core/src/list_port_field.dart';
 import 'package:port_core/src/modifier/port_field_node_modifier.dart';
-import 'package:port_core/src/port_field.dart';
-import 'package:port_core/src/search_port_field.dart';
-import 'package:port_core/src/stage_port_field.dart';
 
 class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortFieldNodeModifier<T> {
   final PortFieldNodeModifier? Function(PortField portField) modifierGetter;
@@ -95,6 +91,11 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   @override
   ListPortField? findListPortFieldOrNull(T portField) {
     return modifierGetter(portField.portField)?.findListPortFieldOrNull(portField.portField);
+  }
+
+  @override
+  SuggestionsPortField? findSuggestionsPortFieldOrNull(T portField) {
+    return modifierGetter(portField.portField)?.findSuggestionsPortFieldOrNull(portField.portField);
   }
 
   @override

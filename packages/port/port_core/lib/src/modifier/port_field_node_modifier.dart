@@ -1,6 +1,5 @@
 import 'package:asset_core/asset_core.dart';
-import 'package:port_core/src/asset_port_field.dart';
-import 'package:port_core/src/date_port_field.dart';
+import 'package:port_core/port_core.dart';
 import 'package:port_core/src/list_port_field.dart';
 import 'package:port_core/src/modifier/allowed_file_types_port_field_modifier.dart';
 import 'package:port_core/src/modifier/asset_port_field_modifier.dart';
@@ -22,10 +21,8 @@ import 'package:port_core/src/modifier/required_port_field_modifier.dart';
 import 'package:port_core/src/modifier/search_port_field_modifier.dart';
 import 'package:port_core/src/modifier/secret_port_field_modifier.dart';
 import 'package:port_core/src/modifier/stage_port_field_modifier.dart';
+import 'package:port_core/src/modifier/suggestions_port_field_modifier.dart';
 import 'package:port_core/src/modifier/wrapper_port_field_node_modifier.dart';
-import 'package:port_core/src/port_field.dart';
-import 'package:port_core/src/search_port_field.dart';
-import 'package:port_core/src/stage_port_field.dart';
 import 'package:utils_core/utils_core.dart';
 
 abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
@@ -98,6 +95,10 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return null;
   }
 
+  SuggestionsPortField? findSuggestionsPortFieldOrNull(T portField) {
+    return null;
+  }
+
   SearchPortField? findSearchPortFieldOrNull(T portField) {
     return null;
   }
@@ -106,6 +107,7 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     OptionsPortFieldNodeModifier(),
     SearchPortFieldNodeModifier(),
     ListPortFieldNodeModifier(),
+    SuggestionsPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     RequiredPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     AllowedFileTypesPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     StagePortFieldNodeModifier(modifierGetter: getModifierOrNull),

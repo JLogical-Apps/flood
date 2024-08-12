@@ -6,7 +6,7 @@ import 'package:port/port.dart';
 import 'package:provider/provider.dart';
 import 'package:style/style.dart';
 
-class StyledTextFieldPortField extends HookWidget {
+class StyledTextFieldPortField<S> extends HookWidget {
   final String fieldPath;
 
   final String? labelText;
@@ -22,6 +22,11 @@ class StyledTextFieldPortField extends HookWidget {
 
   final int? maxLines;
 
+  final Future<List<S>> Function(String text)? suggestionsGetter;
+  final Widget Function(S)? suggestionBuilder;
+  final Function(S, TextEditingController)? onSuggestionPressed;
+  final Duration? suggestionsDebounceDuration;
+
   const StyledTextFieldPortField({
     super.key,
     required this.fieldPath,
@@ -33,6 +38,10 @@ class StyledTextFieldPortField extends HookWidget {
     this.enabled = true,
     this.obscureText = false,
     this.maxLines = 1,
+    this.suggestionsGetter,
+    this.suggestionBuilder,
+    this.onSuggestionPressed,
+    this.suggestionsDebounceDuration,
   });
 
   @override
@@ -62,6 +71,10 @@ class StyledTextFieldPortField extends HookWidget {
               const NationalPhoneNumberTextInputFormatter.US(formatType: NationalPhoneNumberFormatType.domestic),
             ],
           ],
+          suggestionsGetter: suggestionsGetter,
+          suggestionBuilder: suggestionBuilder,
+          onSuggestionPressed: onSuggestionPressed ?? (value, controller) => controller.text = value?.toString() ?? '',
+          suggestionsDebounceDuration: suggestionsDebounceDuration,
         );
       },
     );

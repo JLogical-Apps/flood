@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/style_component.dart';
 
 class StyledTextField<S> extends StyleComponent {
@@ -60,4 +61,12 @@ class StyledTextField<S> extends StyleComponent {
     this.onSuggestionPressed,
     this.suggestionsDebounceDuration,
   });
+
+  void handleSuggestion(S suggestion, TextEditingController controller) {
+    onSuggestionPressed?.call(suggestion, controller);
+  }
+
+  Widget buildSuggestion(S suggestion) {
+    return suggestionBuilder?.call(suggestion) ?? StyledText.body(suggestion.toString());
+  }
 }

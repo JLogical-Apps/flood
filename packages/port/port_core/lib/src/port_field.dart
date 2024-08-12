@@ -111,6 +111,17 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
     );
   }
 
+  static PortField<T, S> suggestions<T, S>({
+    required Future<List<T>> Function(T value) suggestionsGetter,
+    required T initialValue,
+    S Function(T value)? submitMapper,
+  }) {
+    return SuggestionsPortField(
+      portField: PortField(value: initialValue, submitMapper: submitMapper),
+      suggestionsGetter: suggestionsGetter,
+    );
+  }
+
   static PortField<T, T> search<R, T>({
     required FutureOr<ValueStream<FutureValue<List<R>>>> Function() searchX,
     required T Function(R result) valueMapper,
@@ -251,6 +262,9 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   PortField<T, S> withDynamicHint(T? Function(Port port) hintGetter) =>
       HintPortField<T, S>(portField: this, hintGetter: hintGetter);
 
+  PortField<T, S> withSuggestions(Future<List<T>> Function(T value) suggestionsGetter) =>
+      SuggestionsPortField(portField: this, suggestionsGetter: suggestionsGetter);
+
   bool findIsRequired() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.isRequired(this) ?? false;
   }
@@ -269,6 +283,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
 
   ListPortField? findListFieldOrNull() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.findListPortFieldOrNull(this);
+  }
+
+  SuggestionsPortField? findSuggestionsFieldOrNull() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.findSuggestionsPortFieldOrNull(this);
   }
 
   SearchPortField? findSearchFieldOrNull() {

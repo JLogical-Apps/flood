@@ -7,12 +7,19 @@ import 'package:utils/utils.dart';
 class StringPortFieldBuilderModifier extends PortFieldBuilderModifier {
   @override
   Widget? getWidgetOrNull(PortField portField) {
+    final suggestionsField = portField.findSuggestionsFieldOrNull();
     return StyledTextFieldPortField(
       fieldPath: portField.fieldPath,
       labelText: portField.findDisplayNameOrNull(),
       maxLines: portField.findIsMultiline() ? 3 : 1,
       hintText: portField.findHintOrNull()?.toString(),
       obscureText: portField.findIsSecret(),
+      suggestionsGetter: suggestionsField == null
+          ? null
+          : (text) async {
+              final suggestions = await suggestionsField.getSuggestions(text);
+              return suggestions.map((suggestion) => suggestion.toString()).toList();
+            },
     );
   }
 

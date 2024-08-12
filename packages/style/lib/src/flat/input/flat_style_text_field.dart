@@ -66,7 +66,7 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
           ),
         ColorPaletteProvider(
           colorPalette: context.style().getColorPaletteFromBackground(textFieldColor),
-          child: Builder(
+          child: HookBuilder(
             builder: (textFieldContext) {
               final inputDecoration = InputDecoration(
                 hoverColor: textFieldContext.colorPalette().background.regular,
@@ -121,12 +121,13 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                   onChanged: (text) => component.onChanged?.call(text),
                   onTap: component.onTapped,
                   asyncSuggestions: component.suggestionsGetter!,
-                  onTapItem: (suggestion) => component.onSuggestionPressed?.call(suggestion, textController),
+                  onTapItem: (suggestion) => component.handleSuggestion(suggestion, textController),
                   debounceDuration: component.suggestionsDebounceDuration ?? Duration(milliseconds: 400),
                   suggestionBuilder: (suggestion) => Padding(
                     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                    child: component.suggestionBuilder?.call(suggestion) ?? StyledText.body(suggestion.toString()),
+                    child: component.buildSuggestion(suggestion),
                   ),
+                  scrollBarController: useScrollController(),
                   maxListHeight: 250,
                   inputFormatter: component.inputFormatters ?? [],
                   inputTextStyle: context.style().getTextStyle(textFieldContext, StyledText.body.empty),
