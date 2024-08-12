@@ -18,9 +18,9 @@ class DeltaStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
 
     return PopScope(
       canPop: component.onShouldPop == null,
-      onPopInvoked: component.onShouldPop == null
+      onPopInvokedWithResult: component.onShouldPop == null
           ? null
-          : (_) async {
+          : (_, __) async {
               final shouldPop = await component.onShouldPop!();
               if (shouldPop) {
                 Navigator.of(context).pop();

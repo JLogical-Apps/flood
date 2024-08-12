@@ -140,6 +140,7 @@ class PondRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNot
     return Navigator(
       key: navigatorKey,
       pages: _pages,
+      // ignore: deprecated_member_use
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
           return false;
