@@ -22,10 +22,12 @@ class BuildPipelineStep with IsPipelineStep {
 
     await context.appProject.run('flutter clean');
     await context.appProject.run('melos bs');
-    await context.appProject.run(
-      'pod install',
-      workingDirectory: context.appDirectory / 'ios',
-    );
+    if (releaseContext.platforms.contains(ReleasePlatform.ios)) {
+      await context.appProject.run(
+        'pod install',
+        workingDirectory: context.appDirectory / 'ios',
+      );
+    }
 
     for (final preBuildStep in releaseComponent.preBuildSteps) {
       await preBuildStep.execute(context, releaseContext);
