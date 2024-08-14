@@ -360,11 +360,12 @@ packages:
   flutter_async_autocomplete:
     dependency: transitive
     description:
-      name: flutter_async_autocomplete
-      sha256: "573c1480c8430ced699199c7a6fa9a4f3876ee908ee947bc7b9b5b0bf6c42bc0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.1"
+      path: "."
+      ref: "582b4ce5785f954276b6c465e4a8fbf02e4ef733"
+      resolved-ref: "582b4ce5785f954276b6c465e4a8fbf02e4ef733"
+      url: "git@github.com:rahmanrezaee/flutter_async_autocomplete.git"
+    source: git
+    version: "0.0.4"
   flutter_hooks:
     dependency: "direct main"
     description:

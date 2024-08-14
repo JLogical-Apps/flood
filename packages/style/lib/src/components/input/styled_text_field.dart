@@ -63,7 +63,11 @@ class StyledTextField<S> extends StyleComponent {
   });
 
   void handleSuggestion(S suggestion, TextEditingController controller) {
-    onSuggestionPressed?.call(suggestion, controller);
+    if (onSuggestionPressed != null) {
+      onSuggestionPressed!.call(suggestion, controller);
+    } else {
+      controller.text = suggestion.toString();
+    }
   }
 
   Widget buildSuggestion(S suggestion) {

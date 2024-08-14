@@ -15,7 +15,10 @@ dependencies:
   chewie: ^1.8.1
   collection: ^1.16.0
   font_awesome_flutter: ^10.4.0
-  flutter_async_autocomplete: ^0.1.1
+  flutter_async_autocomplete:
+    git:
+      url: git@github.com:rahmanrezaee/flutter_async_autocomplete.git
+      ref: "582b4ce5785f954276b6c465e4a8fbf02e4ef733"
   flutter_hooks: ^0.21.1-pre.0
   flutter_markdown: ^0.6.8
   flutter_staggered_grid_view: ^0.6.2
