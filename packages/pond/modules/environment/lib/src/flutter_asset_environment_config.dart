@@ -23,7 +23,7 @@ class FlutterAssetEnvironmentConfig with IsEnvironmentConfigWrapper {
 
       return EnvironmentConfig.static.collapsed([
         EnvironmentConfig.static.yamlAsset('assets/config.overrides.yaml'),
-        EnvironmentConfig.static.environmentVariables(),
+        if (!isWeb) EnvironmentConfig.static.environmentVariables(),
         if (isRelease) EnvironmentConfig.static.yamlAsset('assets/config.release.yaml'),
         if (isWeb) EnvironmentConfig.static.yamlAsset('assets/config.web.yaml'),
         EnvironmentConfig.static.yamlAsset('assets/config.${type.name}.yaml'),
