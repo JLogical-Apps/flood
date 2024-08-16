@@ -15,6 +15,29 @@ class SyncIndicator extends HookWidget {
     return switch (syncState) {
       SyncState.none => Container(),
       SyncState.syncing => StyledLoadingIndicator(),
+      SyncState.syncingTooLong => StyledButton(
+          iconData: Icons.cloud_off,
+          onPressed: () async {
+            await context.showStyledDialog(StyledDialog(
+              titleText: 'Poor Internet Connection',
+              body: StyledList.column(
+                children: [
+                  StyledText.body('Synchronizing the data took too long. Try again when you have better internet.'),
+                  StyledCard(
+                    titleText: 'Try Sync Again',
+                    bodyText:
+                        'Once you are connected to the internet, use this to attempt to re-sync your local changes to the cloud.',
+                    leadingIcon: Icons.refresh,
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                      context.corePondContext.syncCoreComponent.publish();
+                    },
+                  ),
+                ],
+              ),
+            ));
+          },
+        ),
       SyncState.error => StyledButton(
           iconData: Icons.error,
           onPressed: () async {

@@ -120,7 +120,13 @@ class SyncCoreComponent with IsRepositoryWrapper {
         }
 
         for (final syncActionEntity in syncActionEntities) {
-          await syncActionEntity.value.onPublish(context.dropCoreComponent);
+          try {
+            await syncActionEntity.value.onPublish(context.dropCoreComponent);
+          } on TimeoutException {
+            _syncStateX.value = SyncState.syncingTooLong;
+            publishing = false;
+            return;
+          }
           await repository.delete(syncActionEntity);
         }
       } while (republish);
@@ -153,6 +159,7 @@ extension SyncCorePondContextExtensions on CorePondContext {
 enum SyncState {
   none,
   syncing,
+  syncingTooLong,
   synced,
   error,
 }
