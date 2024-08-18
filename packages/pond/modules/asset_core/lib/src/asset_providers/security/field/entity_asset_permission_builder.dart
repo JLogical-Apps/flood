@@ -46,7 +46,6 @@ class EntityPropertyAssetPermissionField with IsAssetPermissionField {
       }
       return await guardAsync<Entity?>(
         () => Query.getByIdOrNullRuntime(entityType, entityId).get(context.dropCoreComponent),
-        onException: (e, stack) => print('$e\n$stack'),
       );
     } else {
       return await permissionField.getRootEntity(context);

@@ -16,6 +16,7 @@ dependencies:
   flutter_hooks: ^0.21.1-pre.0
   flutter_image_compress: ^2.3.0
   image_picker: ^1.1.1
+  path: ^1.8.2
   rxdart: ^0.27.5
   video_compress: ^3.1.3
 
