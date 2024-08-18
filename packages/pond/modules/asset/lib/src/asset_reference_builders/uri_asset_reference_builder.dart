@@ -14,7 +14,7 @@ class UriAssetReferenceBuilder extends AssetReferenceBuilder {
     BoxFit? fit,
   ) {
     final metadata = assetReferenceBuilderContext.assetMetadata;
-    if (metadata.mimeType!.startsWith('image/')) {
+    if (metadata.isImage) {
       final networkImage = useMemoized(() => NetworkImage(metadata.uri!.toString()), [metadata.uri]);
       return StyledImage(
         key: ValueKey(metadata.uri),

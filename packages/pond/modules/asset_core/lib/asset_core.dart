@@ -6,6 +6,7 @@ export 'src/asset_path_context.dart';
 export 'src/asset_provider_implementation.dart';
 export 'src/asset_providers/asset_provider.dart';
 export 'src/asset_providers/cloud_asset_provider.dart';
+export 'src/asset_providers/compression_asset_provider.dart';
 export 'src/asset_providers/device_sync_cache_asset_provider.dart';
 export 'src/asset_providers/meta/asset_provider_meta_modifier.dart';
 export 'src/asset_providers/security/asset_permission.dart';

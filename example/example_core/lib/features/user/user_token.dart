@@ -21,7 +21,8 @@ class UserTokenAssetProvider with IsAssetProviderWrapper {
   UserTokenAssetProvider(this.context);
 
   @override
-  late final AssetProvider assetProvider = AssetProvider.static
-      .syncingOrAdapting(context, (context) => 'todos/${context.entityId}/tokens')
-      .fromRepository<TodoEntity>(context);
+  late final AssetProvider assetProvider = AssetProvider.static.syncingOrAdapting<TodoEntity>(
+    context,
+    (context) => 'todos/${context.entityId}/tokens',
+  );
 }

@@ -5,6 +5,7 @@ import 'package:firebase/src/utils/firebase_context_extensions.dart';
 import 'package:firebase/src/utils/firestore_document_state_persister.dart';
 import 'package:log_core/log_core.dart';
 import 'package:runtime_type/type.dart';
+import 'package:utils/utils.dart';
 
 class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
   final FirebaseCloudRepository repository;
@@ -43,7 +44,10 @@ class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
 
     final id = state.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
     final doc = collection.doc(id);
-    await doc.delete();
+    final snap = await guardAsync(() => doc.get());
+    if (snap?.exists == true) {
+      await doc.delete();
+    }
 
     return state;
   }

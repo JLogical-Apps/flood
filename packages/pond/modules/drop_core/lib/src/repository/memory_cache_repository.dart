@@ -148,21 +148,28 @@ class MemoryCacheRepositoryQueryExecutor with IsRepositoryQueryExecutor {
     final cachedStateIds = cachedStates.map((state) => state.id!).toList();
 
     final sourceStateIds = <String>[];
-    final sourceResult = await repository.repository.executeQuery(
-      queryRequest,
-      onStateRetreived: (state) => sourceStateIds.add(state.id!),
-    );
+    try {
+      final sourceResult = await repository.repository.executeQuery(
+        queryRequest,
+        onStateRetreived: (state) => sourceStateIds.add(state.id!),
+      );
 
-    for (final cachedStateId in cachedStateIds) {
-      if (!sourceStateIds.contains(cachedStateId)) {
-        repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(cachedStateId);
+      for (final cachedStateId in cachedStateIds) {
+        if (!sourceStateIds.contains(cachedStateId)) {
+          repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(cachedStateId);
+        }
       }
+
+      completer.complete(sourceResult);
+      _completerByLoadingQueryRequestX.value = completerByLoadingQueryRequest.copy()..remove(queryRequest);
+
+      return sourceResult;
+    } catch (e) {
+      completer.completeError(e);
+      _completerByLoadingQueryRequestX.value = completerByLoadingQueryRequest.copy()..remove(queryRequest);
+
+      rethrow;
     }
-
-    completer.complete(sourceResult);
-    _completerByLoadingQueryRequestX.value = completerByLoadingQueryRequest.copy()..remove(queryRequest);
-
-    return sourceResult;
   }
 }
 

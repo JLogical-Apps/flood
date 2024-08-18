@@ -15,6 +15,10 @@ class AssetMetadata extends Equatable {
     this.uri,
   });
 
+  bool get isImage => mimeType?.startsWith('image/') ?? false;
+
+  bool get isVideo => mimeType?.startsWith('video/') ?? false;
+
   AssetMetadata copyWith({
     required String? mimeType,
     int? size,

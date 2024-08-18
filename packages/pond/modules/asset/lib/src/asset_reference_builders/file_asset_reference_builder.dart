@@ -18,7 +18,7 @@ class FileAssetReferenceBuilder extends AssetReferenceBuilder {
   ) {
     final file = getAssetFile(assetReferenceBuilderContext.assetReference)!;
     final metadata = assetReferenceBuilderContext.assetMetadata;
-    if (metadata.mimeType!.startsWith('image/')) {
+    if (metadata.isImage) {
       final fileImage = useMemoized(() => FileImage(file));
       useEffect(
         () {

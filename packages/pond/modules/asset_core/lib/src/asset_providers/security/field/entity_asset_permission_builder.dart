@@ -4,6 +4,7 @@ import 'package:asset_core/src/asset_path_context.dart';
 import 'package:asset_core/src/asset_providers/security/asset_permission.dart';
 import 'package:asset_core/src/asset_providers/security/field/asset_permission_field.dart';
 import 'package:drop_core/drop_core.dart';
+import 'package:utils_core/utils_core.dart';
 
 class AssetPermissionEntityBuilder<E extends Entity> {
   final AssetPermissionField permissionField;
@@ -43,7 +44,10 @@ class EntityPropertyAssetPermissionField with IsAssetPermissionField {
       if (entityId == null) {
         return null;
       }
-      return await Query.getByIdOrNullRuntime(entityType, entityId).get(context.dropCoreComponent);
+      return await guardAsync<Entity?>(
+        () => Query.getByIdOrNullRuntime(entityType, entityId).get(context.dropCoreComponent),
+        onException: (e, stack) => print('$e\n$stack'),
+      );
     } else {
       return await permissionField.getRootEntity(context);
     }

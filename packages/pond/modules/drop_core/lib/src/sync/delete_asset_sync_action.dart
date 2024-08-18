@@ -5,6 +5,7 @@ import 'package:drop_core/src/record/value_object/value_object_property.dart';
 import 'package:drop_core/src/repository/device_sync_cache_repository.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:drop_core/src/sync/sync_action.dart';
+import 'package:log_core/log_core.dart';
 import 'package:utils_core/utils_core.dart';
 
 class DeleteAssetSyncAction extends SyncAction {
@@ -34,6 +35,9 @@ class DeleteAssetSyncAction extends SyncAction {
       values: {State.idField: entityIdProperty.value},
       metadata: {forceSourceUpdateField: true},
     );
-    await guardAsync(() => assetProvider.delete(assetPathContext, idProperty.value)).timeout(Duration(seconds: 4));
+    await guardAsync(
+      () => assetProvider.delete(assetPathContext, idProperty.value),
+      onException: (e, stackTrace) => context.context.logError(e, stackTrace),
+    ).timeout(Duration(seconds: 4));
   }
 }

@@ -43,60 +43,79 @@ class AssetProviderStatic {
         assetProviderGetter: assetProviderGetter,
       );
 
-  AssetProvider adapting(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
-      environmental(
-        context,
-        (environment) {
-          if (environment.environment == EnvironmentType.static.testing) {
-            return AssetProvider.static.memory;
-          } else if (environment.environment == EnvironmentType.static.device) {
-            return AssetProvider.static.file(context, pathGetter).withCache();
-          } else if (environment.environment.isOnline) {
-            if (environment.platform == Platform.web) {
-              return AssetProvider.static.cloud(context, pathGetter);
-            }
-
-            return AssetProvider.static.cloud(context, pathGetter).withCache(AssetProvider.static.file(
-                  context,
-                  (context) => pathGetter(context),
-                ));
-          } else {
-            return throw Exception('Invalid environment for environmental asset provider');
+  AssetProvider adapting(
+    AssetCoreComponent context,
+    String Function(AssetPathContext context) pathGetter, {
+    AssetProvider Function(AssetProvider)? sourceAssetProviderWrapper,
+  }) {
+    sourceAssetProviderWrapper ??= (assetProvider) => assetProvider;
+    return environmental(
+      context,
+      (environment) {
+        if (environment.environment == EnvironmentType.static.testing) {
+          return sourceAssetProviderWrapper!(AssetProvider.static.memory);
+        } else if (environment.environment == EnvironmentType.static.device) {
+          return sourceAssetProviderWrapper!(AssetProvider.static.file(context, pathGetter)).withCache();
+        } else if (environment.environment.isOnline) {
+          if (environment.platform == Platform.web) {
+            return sourceAssetProviderWrapper!(AssetProvider.static.cloud(context, pathGetter));
           }
-        },
-      );
 
-  AssetProvider syncing(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) =>
-      environmental(
-        context,
-        (environment) {
-          if (environment.environment == EnvironmentType.static.testing) {
-            return AssetProvider.static.memory;
-          } else if (environment.environment == EnvironmentType.static.device) {
-            return AssetProvider.static.file(context, pathGetter).withCache();
-          } else if (environment.environment.isOnline) {
-            if (environment.platform == Platform.web) {
-              return AssetProvider.static.cloud(context, pathGetter);
-            }
+          return sourceAssetProviderWrapper!(AssetProvider.static.cloud(context, pathGetter))
+              .withCache(AssetProvider.static.file(
+            context,
+            (context) => pathGetter(context),
+          ));
+        } else {
+          return throw Exception('Invalid environment for environmental asset provider');
+        }
+      },
+    );
+  }
 
-            return AssetProvider.static.cloud(context, pathGetter).withDeviceSyncCache(AssetProvider.static.file(
-                  context,
-                  (context) => 'deviceAssetCache/${pathGetter(context)}',
-                ));
-          } else {
-            return throw Exception('Invalid environment for environmental asset provider');
+  AssetProvider syncing(
+    AssetCoreComponent context,
+    String Function(AssetPathContext context) pathGetter, {
+    AssetProvider Function(AssetProvider)? sourceAssetProviderWrapper,
+  }) {
+    sourceAssetProviderWrapper ??= (assetProvider) => assetProvider;
+    return environmental(
+      context,
+      (environment) {
+        if (environment.environment == EnvironmentType.static.testing) {
+          return sourceAssetProviderWrapper!(AssetProvider.static.memory);
+        } else if (environment.environment == EnvironmentType.static.device) {
+          return sourceAssetProviderWrapper!(AssetProvider.static.file(context, pathGetter)).withCache();
+        } else if (environment.environment.isOnline) {
+          if (environment.platform == Platform.web) {
+            return sourceAssetProviderWrapper!(AssetProvider.static.cloud(context, pathGetter));
           }
-        },
-      );
 
-  AssetProvider adaptingToDevice(AssetCoreComponent context, String Function(AssetPathContext context) pathGetter) {
+          return sourceAssetProviderWrapper!(AssetProvider.static.cloud(context, pathGetter))
+              .withDeviceSyncCache(AssetProvider.static.file(
+            context,
+            (context) => 'deviceAssetCache/${pathGetter(context)}',
+          ));
+        } else {
+          return throw Exception('Invalid environment for environmental asset provider');
+        }
+      },
+    );
+  }
+
+  AssetProvider adaptingToDevice(
+    AssetCoreComponent context,
+    String Function(AssetPathContext context) pathGetter, {
+    AssetProvider Function(AssetProvider)? sourceAssetProviderWrapper,
+  }) {
+    sourceAssetProviderWrapper ??= (assetProvider) => assetProvider;
     return environmental(
       context,
       (environment) {
         if (environment.environment == EnvironmentType.static.testing || environment.platform == Platform.web) {
-          return AssetProvider.static.memory;
+          return sourceAssetProviderWrapper!(AssetProvider.static.memory);
         } else {
-          return AssetProvider.static.file(context, pathGetter).withCache();
+          return sourceAssetProviderWrapper!(AssetProvider.static.file(context, pathGetter)).withCache();
         }
       },
     );
@@ -114,6 +133,13 @@ extension AssetProviderExtensions on AssetProvider {
   Future<void> delete(AssetPathContext context, String id) => onDelete(context, id);
 
   Future<void> reset() => onReset();
+
+  AssetProvider withCompression(AssetCoreComponent context) {
+    return CompressionAssetProvider(
+      context: context,
+      sourceAssetProvider: this,
+    );
+  }
 
   AssetProvider withCache([AssetProvider? cacheAssetProvider]) {
     return CacheAssetProvider(

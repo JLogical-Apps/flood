@@ -16,6 +16,6 @@ class ImageAssetBuilder extends AssetBuilder {
 
   @override
   bool shouldModify(Asset input) {
-    return input.metadata.mimeType?.startsWith('image/') ?? false;
+    return input.metadata.isImage;
   }
 }
