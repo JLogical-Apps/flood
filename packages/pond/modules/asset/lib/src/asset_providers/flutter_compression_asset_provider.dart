@@ -46,7 +46,7 @@ class FlutterCompressionAssetProvider with IsAssetProviderWrapper {
       await videoDataSource.set(asset.value);
 
       final compressedMediaInfo =
-          await VideoCompress.compressVideo(videoDataSource.file.path, quality: VideoQuality.LowQuality);
+          await VideoCompress.compressVideo(videoDataSource.file.path, quality: VideoQuality.DefaultQuality);
       if (compressedMediaInfo?.file == null) {
         return asset;
       }
