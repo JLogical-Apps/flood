@@ -17,6 +17,7 @@ import 'package:drop_core/src/query/where_query.dart';
 import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:equatable/equatable.dart';
+import 'package:runtime_type/type.dart';
 
 abstract class Query<E extends Entity> with EquatableMixin {
   final Query? parent;
@@ -109,6 +110,20 @@ extension QueryExtensions<E extends Entity> on Query<E> {
 
   PaginatedQueryRequest<E> paginate({int pageSize = 20}) {
     return PaginatedQueryRequest<E>(sourceQueryRequest: PaginateStatesQueryRequest(query: this, pageSize: pageSize));
+  }
+
+  Future<E> getSingleton(DropCoreContext context, [Function(E entity)? entityUpdater]) async {
+    return firstOrNull().map((context, entity) {
+      if (entity != null) {
+        return entity;
+      }
+
+      entity = context.getRuntimeType<E>().createInstance();
+      final valueObject = context.getRuntimeTypeRuntime(entity.valueObjectType).createInstance();
+      entity.set(valueObject);
+      entityUpdater?.call(entity);
+      return entity;
+    }).get(context);
   }
 
   Query get root {
