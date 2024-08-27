@@ -52,7 +52,7 @@ class StyledSearchPortField<R> extends HookWidget {
         );
 
         return ConstrainedBox(
-          constraints: BoxConstraints(minHeight: 70, maxHeight: 70),
+          constraints: BoxConstraints(minHeight: 70),
           child: results.maybeWhen(
             onLoaded: (results) => StyledOptionField<R?>(
               value: selectedValueState.value,
