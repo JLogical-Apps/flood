@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:style/src/color_palette_provider.dart';
+import 'package:style/src/components/dialog/styled_dialog.dart';
+import 'package:style/src/components/input/styled_button.dart';
 import 'package:style/src/components/input/styled_option_field.dart';
+import 'package:style/src/components/input/styled_text_field.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/misc/styled_icon.dart';
@@ -54,6 +58,25 @@ class FlatStyleOptionFieldRenderer with IsTypedStyleRenderer<StyledOptionField> 
                   ))
               .toList(),
           decoration: InputDecoration(
+            suffixIcon: component.stringSearchMapper == null || !component.enabled
+                ? null
+                : Padding(
+                    padding: EdgeInsets.all(4),
+                    child: StyledButton(
+                      iconData: Icons.search,
+                      onPressed: () async {
+                        final result = await context.showStyledDialog(StyledDialog(
+                          titleText: 'Search',
+                          body: SearchDialog(optionField: component),
+                        ));
+                        if (result == null) {
+                          return;
+                        }
+
+                        component.change(result);
+                      },
+                    ),
+                  ),
             contentPadding: EdgeInsets.all(8),
             hoverColor: context.colorPalette().background.regular,
             focusColor: context.colorPalette().background.regular.background.regular,
@@ -183,5 +206,42 @@ class FlatStyleOptionFieldRenderer with IsTypedStyleRenderer<StyledOptionField> 
           ],
         ),
       ));
+  }
+}
+
+class SearchDialog extends HookWidget {
+  final StyledOptionField optionField;
+
+  const SearchDialog({super.key, required this.optionField});
+
+  @override
+  Widget build(BuildContext context) {
+    final searchState = useState<String>('');
+    return StyledList.column(
+      children: [
+        StyledTextField(
+          labelText: 'Search',
+          leadingIcon: Icons.search,
+          onChanged: (value) => searchState.value = value,
+        ),
+        SizedBox(
+          height: 200,
+          child: StyledList.column.withScrollbar(
+              ifEmptyText: 'No Results!',
+              children: optionField.options
+                  .where((option) => option != null)
+                  .where((option) =>
+                      searchState.value.isBlank ||
+                      optionField
+                          .getSearchString(option)
+                          .any((searchString) => searchString.toUpperCase().contains(searchState.value.toUpperCase())))
+                  .map((option) => StyledContainer.subtle(
+                        child: optionField.getOptionChild(option),
+                        onPressed: () => Navigator.of(context).pop(option),
+                      ))
+                  .toList()),
+        ),
+      ],
+    );
   }
 }

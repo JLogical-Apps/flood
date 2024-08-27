@@ -16,6 +16,7 @@ class StyledOptionField<T> extends StyleComponent {
 
   final List<T> options;
   final Widget Function(T value) widgetMapper;
+  final List<String> Function(T value)? stringSearchMapper;
 
   StyledOptionField({
     super.key,
@@ -28,10 +29,15 @@ class StyledOptionField<T> extends StyleComponent {
     this.enabled = true,
     required this.options,
     Widget Function(T value)? widgetMapper,
+    this.stringSearchMapper,
   }) : widgetMapper = widgetMapper ?? _defaultMapper;
 
   Widget getOptionChild(T value) {
     return widgetMapper(value);
+  }
+
+  List<String> getSearchString(T value) {
+    return stringSearchMapper?.call(value) ?? [];
   }
 
   void change(T value) {

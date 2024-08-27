@@ -20,6 +20,7 @@ class ReferenceValueObjectProperty<E extends Entity>
 
   final FutureOr<Query<E>> Function(DropCoreContext context)? searchQueryGetter;
   final FutureOr<List<E>> Function(DropCoreContext context, List<E> results)? searchResultsFilter;
+  final List<String> Function(E)? stringSearchMapper;
 
   @override
   String? value;
@@ -29,6 +30,7 @@ class ReferenceValueObjectProperty<E extends Entity>
     this.value,
     this.searchQueryGetter,
     this.searchResultsFilter,
+    this.stringSearchMapper,
   });
 
   @override
@@ -38,6 +40,8 @@ class ReferenceValueObjectProperty<E extends Entity>
   Type get setterType => typeOf<String?>();
 
   Type get entityType => E;
+
+  bool get hasSearch => stringSearchMapper != null;
 
   @override
   set(String? value) => this.value = value;
@@ -59,6 +63,7 @@ class ReferenceValueObjectProperty<E extends Entity>
       value: value,
       searchResultsFilter: searchResultsFilter,
       searchQueryGetter: searchQueryGetter,
+      stringSearchMapper: stringSearchMapper,
     )..valueObject = valueObject;
   }
 
@@ -85,5 +90,9 @@ class ReferenceValueObjectProperty<E extends Entity>
     }
 
     return entities;
+  }
+
+  List<String> getSearchString(E entity) {
+    return stringSearchMapper!(entity);
   }
 }

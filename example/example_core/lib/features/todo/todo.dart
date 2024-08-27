@@ -1,3 +1,4 @@
+import 'package:example_core/features/tag/tag.dart';
 import 'package:example_core/features/tag/tag_entity.dart';
 import 'package:example_core/features/todo/todo_entity.dart';
 import 'package:example_core/features/user/user_entity.dart';
@@ -19,6 +20,9 @@ class Todo extends ValueObject {
   static const tagsField = 'tags';
   late final tagsProperty = reference<TagEntity>(
     name: tagsField,
+    searchQueryGetter: (context) =>
+        Query.from<TagEntity>().where(Tag.ownerField).isEqualTo(context.context.authCoreComponent.loggedInUserId),
+    stringSearchMapper: (tagEntity) => [tagEntity.value.nameProperty.value],
   ).list().withDisplayName('Tags');
 
   static const userField = 'user';

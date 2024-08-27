@@ -128,12 +128,14 @@ abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext
     required R? Function(T value, List<R> results) resultsMapper,
     required T initialValue,
     T Function(T value)? submitMapper,
+    List<String> Function(R)? stringSearchMapper,
   }) {
     return SearchPortField<R, T>(
       portField: PortField(value: initialValue, submitMapper: submitMapper),
       searchX: searchX,
       valueMapper: valueMapper,
       resultsMapper: resultsMapper,
+      stringSearchMapper: stringSearchMapper,
     );
   }
 

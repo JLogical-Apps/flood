@@ -18,6 +18,8 @@ class ReferenceBehaviorModifier extends PortGeneratorBehaviorModifier<ReferenceV
         valueMapper: (entity) => entity?.id,
         resultsMapper: (id, entities) => entities.firstWhereOrNull((entity) => entity?.id == id),
         initialValue: behavior.value ?? defaultValue,
+        stringSearchMapper:
+            !behavior.hasSearch ? null : (entity) => entity == null ? [] : behavior.getSearchString(entity),
       )
     };
   }

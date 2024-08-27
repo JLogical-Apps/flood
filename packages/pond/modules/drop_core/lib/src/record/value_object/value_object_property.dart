@@ -71,11 +71,13 @@ abstract class ValueObjectProperty<G, S, V extends ValueObjectProperty<dynamic, 
     required String name,
     FutureOr<Query<E>> Function(DropCoreContext context)? searchQueryGetter,
     FutureOr<List<E>> Function(DropCoreContext context, List<E> results)? searchResultsFilter,
+    List<String> Function(E)? stringSearchMapper,
   }) {
     return ReferenceValueObjectProperty(
       name: name,
       searchQueryGetter: searchQueryGetter,
       searchResultsFilter: searchResultsFilter,
+      stringSearchMapper: stringSearchMapper,
     );
   }
 

@@ -29,7 +29,6 @@ class StyledListPortField<T> extends HookWidget {
       fieldPath: fieldPath,
       builder: (context, field, value, error) {
         return StyledList.column(
-          key: EquatableKey(value),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (label != null)

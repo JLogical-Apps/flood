@@ -27,6 +27,11 @@ dependencies:
       url: git@github.com:JLogical-Apps/flood.git
       ref: "v4.2"
       path: packages/pond/modules/asset
+  log:
+    git:
+      url: git@github.com:JLogical-Apps/flood.git
+      ref: "v4.2"
+      path: packages/pond/modules/log
   persistence_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git

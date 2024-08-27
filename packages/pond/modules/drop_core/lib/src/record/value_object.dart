@@ -131,11 +131,13 @@ abstract class ValueObject extends Record with EquatableMixin, IsValidatorWrappe
     required String name,
     FutureOr<Query<E>> Function(DropCoreContext context)? searchQueryGetter,
     FutureOr<List<E>> Function(DropCoreContext context, List<E> results)? searchResultsFilter,
+    List<String> Function(E)? stringSearchMapper,
   }) =>
       ValueObjectProperty.reference<E>(
         name: name,
         searchQueryGetter: searchQueryGetter,
         searchResultsFilter: searchResultsFilter,
+        stringSearchMapper: stringSearchMapper,
       );
 
   ComputedValueObjectProperty<T> computed<T>({required String name, required T Function() computation}) =>

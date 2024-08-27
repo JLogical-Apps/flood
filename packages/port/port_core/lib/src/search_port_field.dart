@@ -12,12 +12,16 @@ class SearchPortField<R, T> with IsPortFieldWrapper<T, T> {
 
   final T Function(R result) valueMapper;
   final R? Function(T value, List<R> results) resultsMapper;
+  final List<String> Function(R)? stringSearchMapper;
+
+  bool get hasStringSearch => stringSearchMapper != null;
 
   SearchPortField({
     required this.portField,
     required this.searchX,
     required this.valueMapper,
     required this.resultsMapper,
+    this.stringSearchMapper,
   });
 
   @override
@@ -27,6 +31,7 @@ class SearchPortField<R, T> with IsPortFieldWrapper<T, T> {
       searchX: searchX,
       valueMapper: valueMapper,
       resultsMapper: resultsMapper,
+      stringSearchMapper: stringSearchMapper,
     );
   }
 
@@ -36,5 +41,9 @@ class SearchPortField<R, T> with IsPortFieldWrapper<T, T> {
 
   R? getResult(T value, List<R> results) {
     return resultsMapper(value, results);
+  }
+
+  List<String> getSearchString(R value) {
+    return stringSearchMapper!(value);
   }
 }
