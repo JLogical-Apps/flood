@@ -136,6 +136,7 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                   onSubmitted: component.onSubmitted == null ? null : (text) => component.onSubmitted!(text),
                   suggestionBackgroundColor: context.colorPalette().background.regular,
                   progressIndicatorBuilder: StyledLoadingIndicator(),
+                  autofocus: component.autofocus,
                   decoration: inputDecoration,
                 );
               }
@@ -153,6 +154,7 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                 maxLines: component.maxLines,
                 keyboardType: component.keyboard,
                 onSubmitted: component.onSubmitted == null ? null : (text) => component.onSubmitted!(text),
+                autofocus: component.autofocus,
                 decoration: inputDecoration,
               );
             },

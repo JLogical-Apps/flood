@@ -223,6 +223,7 @@ class SearchDialog extends HookWidget {
           labelText: 'Search',
           leadingIcon: Icons.search,
           onChanged: (value) => searchState.value = value,
+          autofocus: true,
         ),
         SizedBox(
           height: 200,
