@@ -77,7 +77,7 @@ abstract class ValueObjectProperty<G, S, V extends ValueObjectProperty<dynamic, 
       name: name,
       searchQueryGetter: searchQueryGetter,
       searchResultsFilter: searchResultsFilter,
-      stringSearchMapper: stringSearchMapper,
+      stringSearchMapperOverride: stringSearchMapper,
     );
   }
 

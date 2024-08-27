@@ -7,6 +7,7 @@ import 'package:drop_core/src/record/value_object/meta/list_embedded_meta_modifi
 import 'package:drop_core/src/record/value_object/meta/list_meta_modifier.dart';
 import 'package:drop_core/src/record/value_object/meta/mapper_meta_modifier.dart';
 import 'package:drop_core/src/record/value_object/meta/only_date_meta_modifier.dart';
+import 'package:drop_core/src/record/value_object/meta/reference_meta_modifier.dart';
 import 'package:drop_core/src/record/value_object/meta/required_meta_modifier.dart';
 import 'package:drop_core/src/record/value_object/meta/required_on_edit_meta_modifier.dart';
 import 'package:utils_core/utils_core.dart';
@@ -32,6 +33,10 @@ abstract class BehaviorMetaModifier<T extends ValueObjectBehavior> with IsTypedM
     return null;
   }
 
+  bool isReference(T behavior) {
+    return false;
+  }
+
   static final behaviorMetaModifierResolver = ModifierResolver<BehaviorMetaModifier, ValueObjectBehavior>(modifiers: [
     AssetMetaModifier(),
     DefaultMetaModifier(),
@@ -41,6 +46,7 @@ abstract class BehaviorMetaModifier<T extends ValueObjectBehavior> with IsTypedM
     OnlyDateMetaModifier(),
     RequiredMetaModifier(),
     RequiredOnEditMetaModifier(),
+    ReferenceMetaModifier(),
     MapperMetaModifier(),
     WrapperBehaviorMetaModifier(),
   ]);
@@ -78,5 +84,11 @@ class WrapperBehaviorMetaModifier<T extends ValueObjectPropertyWrapper> extends 
   void Function(ValueObject valueObject)? getValueObjectInstantiator(T behavior) {
     final unwrappedBehavior = behavior.property;
     return BehaviorMetaModifier.getModifier(unwrappedBehavior)?.getValueObjectInstantiator(unwrappedBehavior);
+  }
+
+  @override
+  bool isReference(T behavior) {
+    final unwrappedBehavior = behavior.property;
+    return BehaviorMetaModifier.getModifier(unwrappedBehavior)?.isReference(unwrappedBehavior) ?? false;
   }
 }

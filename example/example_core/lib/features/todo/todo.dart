@@ -22,7 +22,6 @@ class Todo extends ValueObject {
     name: tagsField,
     searchQueryGetter: (context) =>
         Query.from<TagEntity>().where(Tag.ownerField).isEqualTo(context.context.authCoreComponent.loggedInUserId),
-    stringSearchMapper: (tagEntity) => [tagEntity.value.nameProperty.value],
   ).list().withDisplayName('Tags');
 
   static const userField = 'user';

@@ -31,4 +31,10 @@ class MapperMetaModifier extends BehaviorMetaModifier<MapperValueObjectProperty>
     final unwrappedBehavior = behavior.property;
     return BehaviorMetaModifier.getModifier(unwrappedBehavior)?.getValueObjectInstantiator(unwrappedBehavior);
   }
+
+  @override
+  bool isReference(MapperValueObjectProperty behavior) {
+    final unwrappedBehavior = behavior.property;
+    return BehaviorMetaModifier.getModifier(unwrappedBehavior)?.isReference(unwrappedBehavior) ?? false;
+  }
 }
