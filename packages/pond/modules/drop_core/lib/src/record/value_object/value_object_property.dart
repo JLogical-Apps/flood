@@ -303,6 +303,22 @@ extension NullableIntValueObjectPropertyExtensions<G extends int?, S extends int
   ColorValueObjectProperty<G, S> color([bool isColor = true]) {
     return ColorValueObjectProperty<G, S>(property: this, isColor: isColor);
   }
+
+  MapperValueObjectProperty<G, S, E, E> asEnumIndex<E extends Enum>(List<E> enumValues, {E? defaultValue}) {
+    return withMapper(
+      getMapper: (index) => index == null ? (defaultValue ?? enumValues.first) : enumValues[index],
+      setMapper: (E value) => enumValues.indexOf(value) as S,
+    );
+  }
+}
+
+extension IntValueObjectPropertyExtensions<V extends ValueObjectProperty> on ValueObjectProperty<int, int, V> {
+  MapperValueObjectProperty<int, int, E, E> asEnumIndex<E extends Enum>(List<E> enumValues) {
+    return withMapper(
+      getMapper: (index) => enumValues[index],
+      setMapper: (E value) => enumValues.indexOf(value),
+    );
+  }
 }
 
 extension SameNullableGetterSetterValueObjectPropertyExtensions<T, V extends ValueObjectProperty>

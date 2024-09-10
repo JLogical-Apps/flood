@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:style/src/components/input/styled_menu_button.dart';
 import 'package:style/src/components/page/styled_page.dart';
 import 'package:style/src/components/text/styled_text.dart';
-import 'package:style/src/flat/flat_style.dart';
 import 'package:style/src/style_build_context_extensions.dart';
 import 'package:style/src/style_renderer.dart';
 import 'package:tinycolor2/tinycolor2.dart';
@@ -14,7 +13,7 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
   Widget renderTyped(BuildContext context, StyledPage component) {
     final colorPalette = context.colorPalette();
     final systemOverlayStyle =
-        (context.style() as FlatStyle).backgroundColor.isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
+        context.style().colorPalette.baseBackground.isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark;
     return PopScope(
       canPop: component.onShouldPop == null,
       onPopInvokedWithResult: component.onShouldPop == null

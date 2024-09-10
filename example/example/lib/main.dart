@@ -7,7 +7,9 @@ import 'package:example/presentation/pages_pond_component.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example/testing.dart';
+import 'package:example/user_theme_extensions.dart';
 import 'package:example_core/features/public_settings/public_settings_entity.dart';
+import 'package:example_core/features/user/user_entity.dart';
 import 'package:example_core/pond.dart';
 import 'package:flood/flood.dart' as flood;
 import 'package:flood/flood.dart';
@@ -60,7 +62,21 @@ Future<AppPondContext> buildAppPondContext() async {
 
   final appPondContext = AppPondContext(corePondContext: corePondContext);
   await appPondContext.register(FloodAppComponent(
-    style: style,
+    style: darkStyle,
+    styleLoader: (context) async {
+      final loggedInUserId = context.authCoreComponent.loggedInUserId;
+      if (loggedInUserId == null) {
+        return null;
+      }
+
+      final loggedInUserEntity = await Query.getByIdOrNull<UserEntity>(loggedInUserId).get(context.dropCoreComponent);
+      if (loggedInUserEntity == null) {
+        return null;
+      }
+
+      final theme = loggedInUserEntity.value.themeProperty.value;
+      return theme.style;
+    },
     latestAllowedVersion: () => guardAsync<Version?>(
         () async => await latestAllowedVersionDataSource?.getOrNull().timeout(Duration(seconds: 1))),
     styledSearchResultOverrides: [

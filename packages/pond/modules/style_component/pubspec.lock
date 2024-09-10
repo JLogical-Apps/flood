@@ -269,7 +269,7 @@ packages:
     source: git
     version: "0.0.4"
   flutter_hooks:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_hooks
       sha256: "05fa920d9901cf2c5f264b5b4a0bf26a869dda06534b8d20fd094b371e2215a5"
@@ -713,7 +713,7 @@ packages:
     source: hosted
     version: "2.0.0"
   rxdart:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: rxdart
       sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
@@ -964,14 +964,14 @@ packages:
     source: hosted
     version: "0.2.0"
   utils:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../../../utils/utils"
       relative: true
     source: path
     version: "0.0.1"
   utils_core:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       path: "../../../utils/utils_core"
       relative: true

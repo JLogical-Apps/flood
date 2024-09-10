@@ -1,3 +1,4 @@
+import 'package:example/presentation/components/theme_switcher.dart';
 import 'package:example/presentation/components/todo_entity_card.dart';
 import 'package:example/presentation/pages/auth/login_page.dart';
 import 'package:example/presentation/pages/tags_page.dart';
@@ -48,6 +49,7 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
               SyncIndicator(),
               SizedBox(width: 5),
             ],
+            ThemeSwitcher(),
             profileButton(
               context,
               user: loggedInUserEntity.value,

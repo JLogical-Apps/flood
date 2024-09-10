@@ -21,12 +21,14 @@ import 'package:url_bar/url_bar.dart';
 
 class FloodAppComponent with IsAppPondComponent {
   final Style style;
+  final FutureOr<Style?> Function(AppPondContext context)? styleLoader;
   final List<StyledObjectPortOverride> styledObjectPortOverrides;
   final List<StyledSearchResultOverride> styledSearchResultOverrides;
   final FutureOr<Version?> Function()? latestAllowedVersion;
 
   FloodAppComponent({
     required this.style,
+    this.styleLoader,
     this.styledObjectPortOverrides = const [],
     this.styledSearchResultOverrides = const [],
     this.latestAllowedVersion,
@@ -47,7 +49,7 @@ class FloodAppComponent with IsAppPondComponent {
       portOverrides: styledObjectPortOverrides,
       searchResultOverrides: styledSearchResultOverrides,
     ));
-    await context.register(StyleAppComponent(style: style));
+    await context.register(StyleAppComponent(style: style, styleLoader: styleLoader));
     await context.register(UrlBarAppComponent());
     await context.register(EnvironmentBannerAppComponent());
     await context.register(ShareAppComponent());

@@ -23,3 +23,31 @@ abstract class Style {
 }
 
 mixin IsStyle implements Style {}
+
+abstract class StyleWrapper implements Style {
+  Style get style;
+}
+
+mixin IsStyleWrapper implements StyleWrapper {
+  @override
+  Widget render(BuildContext context, StyleComponent component) => style.render(context, component);
+
+  @override
+  Styleguide getStyleguide() => style.getStyleguide();
+
+  @override
+  ColorPalette get colorPalette => style.colorPalette;
+
+  @override
+  ColorPalette getColorPaletteFromBackground(Color backgroundColor) =>
+      style.getColorPaletteFromBackground(backgroundColor);
+
+  @override
+  TextStyle getTextStyle(BuildContext context, StyledText text) => style.getTextStyle(context, text);
+
+  @override
+  Future<T?> showDialog<T>(BuildContext context, StyledDialog<T> dialog) => style.showDialog(context, dialog);
+
+  @override
+  Future<void> showMessage(BuildContext context, StyledMessage message) => style.showMessage(context, message);
+}

@@ -10,8 +10,8 @@ class StyleProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<Style>(
-      create: (_) => style,
+    return Provider<Style>.value(
+      value: style,
       child: ColorPaletteProvider(
         colorPalette: style.colorPalette,
         child: child,

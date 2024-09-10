@@ -4,7 +4,6 @@ import 'package:style/src/color_palette_provider.dart';
 import 'package:style/src/components/layout/styled_container.dart';
 import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/text/styled_text.dart';
-import 'package:style/src/flat/flat_style.dart';
 import 'package:style/src/style_build_context_extensions.dart';
 import 'package:style/src/style_renderer.dart';
 import 'package:style/src/styleguide.dart';
@@ -41,15 +40,13 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
   }
 
   ColorPalette getBackgroundColor(BuildContext context, {required StyledContainer container}) {
-    final flatStyle = context.style() as FlatStyle;
-
     final color = container.color;
     if (color != null) {
       if (color.opacity < 1) {
         final mixedColor = context.colorPalette().baseBackground.mix(color, (color.opacity * 100).round());
-        return flatStyle.getColorPaletteFromBackground(mixedColor);
+        return context.style().getColorPaletteFromBackground(mixedColor);
       }
-      return flatStyle.getColorPaletteFromBackground(color);
+      return context.style().getColorPaletteFromBackground(color);
     }
 
     return context.colorPalette().background.getByEmphasis(container.emphasis);
