@@ -35,6 +35,7 @@ import 'package:drop_core/src/record/value_object/placeholder_value_object_prope
 import 'package:drop_core/src/record/value_object/reference_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_on_edit_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/required_value_object_property.dart';
+import 'package:drop_core/src/record/value_object/suggestions_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/time/creation_time_property.dart';
 import 'package:drop_core/src/record/value_object/time/time_value_object_property.dart';
 import 'package:drop_core/src/record/value_object/time/timestamp.dart';
@@ -169,6 +170,11 @@ extension ValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty> on 
 
   OptionsValueObjectProperty<G, S> withOptions(List<S> options, {bool canBeNull = false}) {
     return OptionsValueObjectProperty(property: this, options: options, canBeNull: canBeNull);
+  }
+
+  SuggestionsValueObjectProperty<G, S> withSuggestions(
+      FutureOr<List<S>> Function(DropCoreContext, G value) suggestionsGetter) {
+    return SuggestionsValueObjectProperty(property: this, suggestionsGetter: suggestionsGetter);
   }
 
   MapperValueObjectProperty<G, S, G2, S2> withMapper<G2, S2>({

@@ -26,6 +26,7 @@ import 'package:port_drop_core/src/behavior_modifiers/reference_behavior_modifie
 import 'package:port_drop_core/src/behavior_modifiers/required_on_edit_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/required_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/string_field_behavior_modifier.dart';
+import 'package:port_drop_core/src/behavior_modifiers/suggestions_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/timestamp_field_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/validator_property_behavior_modifier.dart';
 import 'package:port_drop_core/src/behavior_modifiers/value_object_field_behavior_modifier.dart';
@@ -61,6 +62,7 @@ class PortDropCoreComponent with IsCorePondComponent {
       FallbackReplacementPropertyBehaviorModifier(),
       PlaceholderPropertyBehaviorModifier(),
       DisplayNamePropertyBehaviorModifier(),
+      SuggestionsPropertyBehaviorModifier(),
       MultilinePropertyBehaviorModifier(),
       IsNamePropertyBehaviorModifier(),
       IsEmailPropertyBehaviorModifier(),
