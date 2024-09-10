@@ -73,7 +73,7 @@ class StyledTextFieldPortField<S> extends HookWidget {
           ],
           suggestionsGetter: suggestionsGetter,
           suggestionBuilder: suggestionBuilder,
-          onSuggestionPressed: onSuggestionPressed ?? (value, controller) => controller.text = value?.toString() ?? '',
+          onSuggestionPressed: onSuggestionPressed ?? (value, controller) => port[fieldPath] = value,
           suggestionsDebounceDuration: suggestionsDebounceDuration,
         );
       },
