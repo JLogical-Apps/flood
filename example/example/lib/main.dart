@@ -7,7 +7,7 @@ import 'package:example/presentation/pages_pond_component.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example/testing.dart';
-import 'package:example/user_theme_extensions.dart';
+import 'package:example/presentation/utils/user_theme_extensions.dart';
 import 'package:example_core/features/public_settings/public_settings_entity.dart';
 import 'package:example_core/features/user/user_entity.dart';
 import 'package:example_core/pond.dart';
