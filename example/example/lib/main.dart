@@ -6,10 +6,10 @@ import 'package:example/port/styled_todo_port_override.dart';
 import 'package:example/presentation/pages_pond_component.dart';
 import 'package:example/presentation/style.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
+import 'package:example/presentation/utils/theme_mode_extensions.dart';
 import 'package:example/testing.dart';
-import 'package:example/presentation/utils/user_theme_extensions.dart';
+import 'package:example_core/features/local_settings/local_settings_entity.dart';
 import 'package:example_core/features/public_settings/public_settings_entity.dart';
-import 'package:example_core/features/user/user_entity.dart';
 import 'package:example_core/pond.dart';
 import 'package:flood/flood.dart' as flood;
 import 'package:flood/flood.dart';
@@ -64,17 +64,9 @@ Future<AppPondContext> buildAppPondContext() async {
   await appPondContext.register(FloodAppComponent(
     style: darkStyle,
     styleLoader: (context) async {
-      final loggedInUserId = context.authCoreComponent.loggedInUserId;
-      if (loggedInUserId == null) {
-        return null;
-      }
+      final localSettingsEntity = await Query.from<LocalSettingsEntity>().getSingleton(context.dropCoreComponent);
 
-      final loggedInUserEntity = await Query.getByIdOrNull<UserEntity>(loggedInUserId).get(context.dropCoreComponent);
-      if (loggedInUserEntity == null) {
-        return null;
-      }
-
-      final theme = loggedInUserEntity.value.themeProperty.value;
+      final theme = localSettingsEntity.value.themeProperty.value;
       return theme.style;
     },
     latestAllowedVersion: () => guardAsync<Version?>(

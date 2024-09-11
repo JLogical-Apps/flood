@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:example_core/components/testing_utility_component.dart';
+import 'package:example_core/features/local_settings/local_settings_repository.dart';
 import 'package:example_core/features/public_settings/public_settings_repository.dart';
 import 'package:example_core/features/tag/tag_repository.dart';
 import 'package:example_core/features/todo/todo.dart';
@@ -69,6 +70,7 @@ Future<CorePondContext> getCorePondContext({
   await corePondContext.register(TodoRepository());
   await corePondContext.register(TagRepository());
   await corePondContext.register(PublicSettingsRepository());
+  await corePondContext.register(LocalSettingsRepository());
   return corePondContext;
 }
 

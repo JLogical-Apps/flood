@@ -1,5 +1,4 @@
 import 'package:example_core/features/user/user_entity.dart';
-import 'package:example_core/features/user/user_theme.dart';
 import 'package:example_core/utils/asset_provider_utils.dart';
 import 'package:flood_core/flood_core.dart';
 
@@ -21,16 +20,12 @@ class User extends ValueObject {
       )
       .withDisplayName('Profile Picture');
 
-  static const themeField = 'theme';
-  late final themeProperty = field<int>(name: themeField).hidden().asEnumIndex(UserTheme.values);
-
   @override
   late final List<ValueObjectBehavior> behaviors = [
     nameProperty,
     emailProperty,
     deviceTokenProperty,
     profilePictureProperty,
-    themeProperty,
     creationTime(),
   ];
 }
