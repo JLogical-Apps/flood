@@ -1,60 +1,50 @@
-# Flood
+<a href="https://www.flooddev.com" ><img src="/flood_logo.png" height=200 /></a>
 
-[Flood](https://www.flooddev.com) is a framework for Flutter to streamline Flutter/Dart development.
+# [Flood](https://www.flooddev.com) 🌊
 
-## Example
+Flood is a powerful open-source toolkit designed to supercharge your Flutter development process. It offers a comprehensive set of modules and tools to help you build complex, high-quality applications with ease and efficiency.
 
-Look in `example` to see an app that utilizes many of the features in Flood. Feel free to
-modify the example app to include anything that would help with testing.
+## Key Modules
 
-## Packages
+### 🏗️ [Pond](https://docs.flooddev.com/pond)
+The foundation of Flood, providing a modular ecosystem for managing components and utilities. Pond helps organize your code into manageable pieces, making it easier to maintain and scale your codebase.
 
-All utilities are isolated into separate packages in `packages`. This allows each package to
-explicitly declare its dependencies and not depend on frameworks it doesn't need. For example, a CLI
-module cannot depend on Flutter, so the separate packages allow to clearly know whether a package
-depends on Flutter or not.
+### 🎨 [Style](https://docs.flooddev.com/style)
+A comprehensive theming system for consistent and beautiful UIs. Style helps you maintain a cohesive look and feel throughout your application.
 
-The structure of this repository is called a `monorepo`. The `monorepo` is managed by a dart package
-called [melos](https://pub.dev/packages/melos). More details on the tools `melos` provides are down
-below.
+### 🚢 [Port](https://docs.flooddev.com/port)
+Simplifies form management with automatic UI generation and validation. Port makes it easy to create and manage complex forms in your application.
 
-Each package is a separate Dart/Flutter project with its own `pubspec.yaml` file and `lib` folder.
+### 💧 [Drop](https://docs.flooddev.com/drop)
+A robust data layer framework for creating, querying, and managing entities and value objects. Drop simplifies data handling and provides powerful querying capabilities.
 
-### Types of packages
+### 🖼️ [Asset](https://docs.flooddev.com/asset)
+Streamlines asset management across different environments. Asset makes it easy to handle images, files, and other resources in your app.
 
-Some packages define utilities for a Flutter app and contain utilities to be used in all contexts (
-such as a CLI). Since CLIs cannot depend on Flutter, we break up such packages into a `core` package
-and a regular package.
+### 🌐 [Environment](https://docs.flooddev.com/environment)
+Manage and customize your application's environment settings easily. Environment helps you handle different configurations for various deployment scenarios.
 
-Packages that end with `_core` define core functionality of the package that can be used in all
-contexts. Packages that do not end in `_core` are assumed to depend on Flutter.
+### 🤖 [Automate](https://docs.flooddev.com/automate)
+Powerful tools for automating tasks like releases and backend deployments. Automate helps streamline your development workflow and deployment processes.
 
-### Referencing another package
+### 🔐 [Auth](https://docs.flooddev.com/auth)
+Unified authentication system with flexible implementations. Auth simplifies user authentication and management in your application.
 
-In the case where a package needs to depend on another package, for example, `pond_core`
-depends on the `utils_core` package, use this pattern in the `pubspec.yaml` of `pond_core`:
+### 🔍 [Debug](https://docs.flooddev.com/debug)
+Enhanced debugging capabilities for Flutter applications. Debug provides tools to help you identify and fix issues in your app.
 
-```yaml
-dependencies:
-  utils_core: # Must be the name of the package as defined in its `pubspec.yaml` `name` field. 
-    git:
-      url: git@github.com:JLogical-Apps/flood.git # Reference the git repository.
-      ref: v4.2
-      path: packages/utils/utils_core # The path of the package 
-```
+## Getting Started
 
-## Setup
+To get started with Flood, check out our [Installation Guide](https://docs.flooddev.com/install-and-run-your-first-app) and explore the [documentation](https://docs.flooddev.com) for detailed information on each module.
 
-Install melos using their [installation guide](https://pub.dev/packages/melos#getting-started)
+## Examples
 
-## Development
+For a practical example of Flood in action, check out our [example Todo App](https://github.com/JLogical-Apps/flood-example).
 
-### Adding a new dependency
+## Support
 
-Run `melos bootstrap` (`melos bs` for short) every time you add a new dependency to any of the
-package (including `example`!). This will link all your packages up internally and get all the
-external packages as well.
+If you need help or have any questions, feel free to reach out to us at [contact@flooddev.com](mailto:contact@flooddev.com).
 
-### Testing
+## License
 
-Run `melos test` to run tests on all the packages.
+Flood is released under the [BSD 3-Clause License](LICENSE).
