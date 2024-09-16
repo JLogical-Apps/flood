@@ -1,4 +1,4 @@
-<a href="https://www.flooddev.com" ><img src="/flood_logo.png" height=200 /></a>
+<a href="https://www.flooddev.com" ><img src="/flood_logo.png" /></a>
 
 # [Flood](https://www.flooddev.com) 🌊
 
