@@ -11,8 +11,11 @@ class StyledCarousel extends StyleComponent {
   final bool allowUserNavigation;
 
   final void Function()? onComplete;
+  final String? completeButtonText;
+  final String? nextButtonText;
 
   final void Function()? onSkip;
+  final String? skipButtonText;
 
   StyledCarousel({
     super.key,
@@ -21,6 +24,9 @@ class StyledCarousel extends StyleComponent {
     this.allowUserNavigation = true,
     this.showNavigation = false,
     this.onComplete,
+    this.completeButtonText,
+    this.nextButtonText,
     this.onSkip,
+    this.skipButtonText,
   });
 }

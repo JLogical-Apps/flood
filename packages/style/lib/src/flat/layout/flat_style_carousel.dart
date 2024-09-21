@@ -40,7 +40,7 @@ class FlatStyleCarouselRenderer with IsTypedStyleRenderer<StyledCarousel> {
                   child: animatedFadeIn(
                     isVisible: pageState.value < component.pages.length - 1,
                     child: StyledButton.subtle(
-                      labelText: 'Skip',
+                      labelText: component.skipButtonText ?? 'Skip',
                       onPressed: pageState.value < component.pages.length - 1 ? () => component.onSkip!() : null,
                     ),
                   ),
@@ -73,12 +73,12 @@ class FlatStyleCarouselRenderer with IsTypedStyleRenderer<StyledCarousel> {
                     child: pageState.value == component.pages.length - 1
                         ? StyledButton.strong(
                             key: ValueKey('done'), // Key is needed for AnimatedSwitcher to fade between buttons.
-                            labelText: 'Done',
+                            labelText: component.completeButtonText ?? 'Done',
                             onPressed: component.onComplete,
                           )
                         : StyledButton.subtle(
                             key: ValueKey('next'),
-                            labelText: 'Next',
+                            labelText: component.nextButtonText ?? 'Next',
                             onPressed: () {
                               pageController.animateToPage(
                                 pageState.value + 1,
