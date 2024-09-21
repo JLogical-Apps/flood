@@ -21,12 +21,12 @@ dependencies:
   persistence_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.2"
+      ref: "v4.3"
       path: packages/persistence/persistence_core
   utils_core:
     git:
       url: git@github.com:JLogical-Apps/flood.git
-      ref: "v4.2"
+      ref: "v4.3"
       path: packages/utils/utils_core
 dev_dependencies:
   lints: ^2.0.0
