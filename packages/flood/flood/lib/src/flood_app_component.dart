@@ -25,6 +25,7 @@ class FloodAppComponent with IsAppPondComponent {
   final List<StyledObjectPortOverride> styledObjectPortOverrides;
   final List<StyledSearchResultOverride> styledSearchResultOverrides;
   final FutureOr<Version?> Function()? latestAllowedVersion;
+  final bool Function()? shouldShowEnvironmentBanner;
 
   FloodAppComponent({
     required this.style,
@@ -32,6 +33,7 @@ class FloodAppComponent with IsAppPondComponent {
     this.styledObjectPortOverrides = const [],
     this.styledSearchResultOverrides = const [],
     this.latestAllowedVersion,
+    this.shouldShowEnvironmentBanner,
   });
 
   @override
@@ -51,7 +53,7 @@ class FloodAppComponent with IsAppPondComponent {
     ));
     await context.register(StyleAppComponent(style: style, styleLoader: styleLoader));
     await context.register(UrlBarAppComponent());
-    await context.register(EnvironmentBannerAppComponent());
+    await context.register(EnvironmentBannerAppComponent(shouldShow: shouldShowEnvironmentBanner));
     await context.register(ShareAppComponent());
   }
 }
