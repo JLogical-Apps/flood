@@ -51,6 +51,7 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
     if (label == null && (icon != null || background != null)) {
       return IconButton(
         style: ButtonStyle(
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           shape: WidgetStateProperty.all(CircleBorder()),
           backgroundColor: WidgetStateProperty.all(backgroundColorPalette),
           backgroundBuilder: background == null

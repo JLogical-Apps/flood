@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intersperse/intersperse.dart';
 import 'package:style/src/components/input/styled_menu_button.dart';
 import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/layout/styled_section.dart';
@@ -20,11 +19,12 @@ class FlatStyleSectionRenderer with IsTypedStyleRenderer<StyledSection> {
         StyledList.row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(width: 4),
             if (leading != null) leading,
             Expanded(child: title ?? Container()),
             if (trailing != null) trailing,
             if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
-          ].intersperse(SizedBox(width: 6)).toList(),
+          ],
         ),
         ...component.children,
       ],

@@ -14,35 +14,39 @@ class TodoEntityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return StyledCard(
       titleText: todoEntity.value.nameProperty.value,
-      body: StyledList.column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (todoEntity.value.descriptionProperty.value != null)
-            StyledText.body(todoEntity.value.descriptionProperty.value!),
-          if (todoEntity.value.tagsProperty.value.isNotEmpty)
-            StyledList.row.wrap(
-              children: todoEntity.value.tagsProperty.value
-                  .map((tag) => ReferenceBuilder<TagEntity>(
-                        id: tag,
-                        builder: (TagEntity? tagEntity) =>
-                            tagEntity == null ? Container() : TagChip(tag: tagEntity.value),
-                      ))
-                  .toList(),
-            ),
-          if (todoEntity.value.assetsProperty.value.isNotEmpty)
-            StyledList.row.withScrollbar(
-              children: todoEntity.value.assetsProperty.value
-                  .map((asset) => StyledContainer.subtle(
-                        onPressed: () {},
-                        child: StyledAssetProperty(
-                          assetProperty: asset,
-                          height: 100,
-                        ),
-                      ))
-                  .toList(),
-            ),
-        ],
-      ),
+      body: todoEntity.value.descriptionProperty.value != null ||
+              todoEntity.value.tagsProperty.value.isNotEmpty ||
+              todoEntity.value.assetsProperty.value.isNotEmpty
+          ? StyledList.column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (todoEntity.value.descriptionProperty.value != null)
+                  StyledText.body(todoEntity.value.descriptionProperty.value!),
+                if (todoEntity.value.tagsProperty.value.isNotEmpty)
+                  StyledList.row.wrap(
+                    children: todoEntity.value.tagsProperty.value
+                        .map((tag) => ReferenceBuilder<TagEntity>(
+                              id: tag,
+                              builder: (TagEntity? tagEntity) =>
+                                  tagEntity == null ? Container() : TagChip(tag: tagEntity.value),
+                            ))
+                        .toList(),
+                  ),
+                if (todoEntity.value.assetsProperty.value.isNotEmpty)
+                  StyledList.row.withScrollbar(
+                    children: todoEntity.value.assetsProperty.value
+                        .map((asset) => StyledContainer.subtle(
+                              onPressed: () {},
+                              child: StyledAssetProperty(
+                                assetProperty: asset,
+                                height: 100,
+                              ),
+                            ))
+                        .toList(),
+                  ),
+              ],
+            )
+          : null,
       leading: StyledCheckbox(
         value: todoEntity.value.completedProperty.value,
         onChanged: (value) async {

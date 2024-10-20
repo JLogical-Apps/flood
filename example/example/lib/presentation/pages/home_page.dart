@@ -159,20 +159,17 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
   }
 
   Widget profileButton(BuildContext context, {required User user, required List<ActionItem> actions}) {
-    return Padding(
-      padding: EdgeInsets.only(right: 8),
-      child: StyledButton(
-        onPressed: () async {
-          await context.showStyledDialog(StyledDialog.actionList(context: context, actions: actions));
-        },
-        background: user.profilePictureProperty.value != null
-            ? StyledAssetProperty(
-                assetProperty: user.profilePictureProperty.value!,
-                fit: BoxFit.cover,
-              )
-            : null,
-        icon: user.profilePictureProperty.value == null ? StyledIcon(Icons.person) : null,
-      ),
+    return StyledButton(
+      onPressed: () async {
+        await context.showStyledDialog(StyledDialog.actionList(context: context, actions: actions));
+      },
+      background: user.profilePictureProperty.value != null
+          ? StyledAssetProperty(
+              assetProperty: user.profilePictureProperty.value!,
+              fit: BoxFit.cover,
+            )
+          : null,
+      icon: user.profilePictureProperty.value == null ? StyledIcon(Icons.person) : null,
     );
   }
 }

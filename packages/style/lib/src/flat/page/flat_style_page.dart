@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:style/src/components/input/styled_menu_button.dart';
+import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/page/styled_page.dart';
 import 'package:style/src/components/text/styled_text.dart';
 import 'package:style/src/style_build_context_extensions.dart';
@@ -39,10 +40,17 @@ class FlatStylePageRenderer with IsTypedStyleRenderer<StyledPage> {
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                   systemOverlayStyle: systemOverlayStyle,
-                  actions: [
-                    ...component.actionWidgets,
-                    if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
-                  ],
+                  actions: component.actionWidgets.isNotEmpty || component.actions.isNotEmpty
+                      ? [
+                          StyledList.row(
+                            children: [
+                              ...component.actionWidgets,
+                              if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
+                            ],
+                          ),
+                          SizedBox(width: 4),
+                        ]
+                      : [],
                 ),
           backgroundColor: colorPalette.baseBackground,
           body: Padding(padding: component.innerPadding, child: component.body),
