@@ -8,7 +8,16 @@ class ReferenceBuilder<E extends Entity> extends HookWidget {
   final String id;
   final Widget Function(E? entity) builder;
 
-  const ReferenceBuilder({super.key, required this.id, required this.builder});
+  final Widget? loadingIndicator;
+  final Widget Function(dynamic error, StackTrace stacktrace)? errorBuilder;
+
+  const ReferenceBuilder({
+    super.key,
+    required this.id,
+    required this.builder,
+    this.loadingIndicator,
+    this.errorBuilder,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +25,8 @@ class ReferenceBuilder<E extends Entity> extends HookWidget {
     return ModelBuilder(
       model: entityModel,
       builder: builder,
+      loadingIndicator: loadingIndicator,
+      errorBuilder: errorBuilder,
     );
   }
 }
