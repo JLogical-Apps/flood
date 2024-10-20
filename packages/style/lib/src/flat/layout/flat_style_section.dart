@@ -15,6 +15,7 @@ class FlatStyleSectionRenderer with IsTypedStyleRenderer<StyledSection> {
     final trailing = component.trailingIcon?.mapIfNonNull((icon) => StyledIcon(icon)) ?? component.trailing;
 
     return StyledList.column(
+      crossAxisAlignment: component.alignment,
       children: [
         StyledList.row(
           crossAxisAlignment: CrossAxisAlignment.center,

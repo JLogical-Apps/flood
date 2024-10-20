@@ -12,6 +12,7 @@ class StyledCard extends StyleComponent {
   final Widget? body;
   final String? bodyText;
   final List<Widget> children;
+  final CrossAxisAlignment alignment;
   final Widget? leading;
   final IconData? leadingIcon;
   final Widget? trailing;
@@ -32,6 +33,7 @@ class StyledCard extends StyleComponent {
     this.body,
     this.bodyText,
     this.children = const [],
+    this.alignment = CrossAxisAlignment.stretch,
     this.leading,
     this.leadingIcon,
     this.trailing,
@@ -52,6 +54,7 @@ class StyledCard extends StyleComponent {
     this.body,
     this.bodyText,
     this.children = const [],
+    this.alignment = CrossAxisAlignment.stretch,
     this.leading,
     this.leadingIcon,
     this.trailing,
@@ -72,6 +75,7 @@ class StyledCard extends StyleComponent {
     this.body,
     this.bodyText,
     this.children = const [],
+    this.alignment = CrossAxisAlignment.stretch,
     this.leading,
     this.leadingIcon,
     this.trailing,

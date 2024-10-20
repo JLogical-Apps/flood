@@ -37,7 +37,7 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
         .where(Todo.userField)
         .isEqualTo(loggedInUserId)
         .orderByAscending(CreationTimeProperty.field)
-        .paginate(pageSize: 2));
+        .paginate());
 
     return ModelBuilder.page(
       model: loggedInUserModel,
@@ -135,14 +135,17 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                               key: ValueKey(todoEntity.id),
                               todoEntity: todoEntity,
                             )),
-                        if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) ...[
-                          StyledDivider(),
-                          StyledText.xl.display.bold('Completed'),
-                        ],
-                        ...completedTodos.map((todoEntity) => TodoEntityCard(
-                              key: ValueKey(todoEntity.id),
-                              todoEntity: todoEntity,
-                            )),
+                        if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) StyledDivider(),
+                        if (completedTodos.isNotEmpty)
+                          StyledSection(
+                            titleText: 'Completed',
+                            children: completedTodos
+                                .map((todoEntity) => TodoEntityCard(
+                                      key: ValueKey(todoEntity.id),
+                                      todoEntity: todoEntity,
+                                    ))
+                                .toList(),
+                          ),
                         if (loadMore != null)
                           StyledButton(
                             labelText: 'Load More',

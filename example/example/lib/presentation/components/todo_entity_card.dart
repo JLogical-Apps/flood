@@ -14,9 +14,7 @@ class TodoEntityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return StyledCard(
       titleText: todoEntity.value.nameProperty.value,
-      body: todoEntity.value.descriptionProperty.value != null ||
-              todoEntity.value.tagsProperty.value.isNotEmpty ||
-              todoEntity.value.assetsProperty.value.isNotEmpty
+      body: todoEntity.value.descriptionProperty.value != null || todoEntity.value.tagsProperty.value.isNotEmpty
           ? StyledList.column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -29,18 +27,6 @@ class TodoEntityCard extends StatelessWidget {
                               id: tag,
                               builder: (TagEntity? tagEntity) =>
                                   tagEntity == null ? Container() : TagChip(tag: tagEntity.value),
-                            ))
-                        .toList(),
-                  ),
-                if (todoEntity.value.assetsProperty.value.isNotEmpty)
-                  StyledList.row.withScrollbar(
-                    children: todoEntity.value.assetsProperty.value
-                        .map((asset) => StyledContainer.subtle(
-                              onPressed: () {},
-                              child: StyledAssetProperty(
-                                assetProperty: asset,
-                                height: 100,
-                              ),
                             ))
                         .toList(),
                   ),
@@ -58,6 +44,20 @@ class TodoEntityCard extends StatelessWidget {
         entity: todoEntity,
         duplicator: (Todo todo) => todo..nameProperty.update((name) => '$name - Copy'),
       ),
+      children: [
+        if (todoEntity.value.assetsProperty.value.isNotEmpty)
+          StyledList.row.withScrollbar(
+            children: todoEntity.value.assetsProperty.value
+                .map((asset) => StyledContainer.subtle(
+                      onPressed: () {},
+                      child: StyledAssetProperty(
+                        assetProperty: asset,
+                        height: 100,
+                      ),
+                    ))
+                .toList(),
+          ),
+      ],
     );
   }
 }

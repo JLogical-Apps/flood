@@ -45,6 +45,7 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
       child: Padding(
         padding: EdgeInsets.all(4),
         child: StyledList.column.withScrollbar(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (hasHeader)
               Padding(
@@ -82,13 +83,13 @@ class FlatStyleCardRenderer with IsTypedStyleRenderer<StyledCard> {
               Padding(
                 padding: EdgeInsets.all(4),
                 child: StyledList.column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: component.alignment,
                   children: [
                     ...component.children,
                   ],
                 ),
               ),
-            ]
+            ],
           ],
         ),
       ),
