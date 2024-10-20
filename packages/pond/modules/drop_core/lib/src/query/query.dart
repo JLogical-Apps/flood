@@ -18,6 +18,8 @@ import 'package:drop_core/src/record/entity.dart';
 import 'package:drop_core/src/state/state.dart';
 import 'package:equatable/equatable.dart';
 import 'package:runtime_type/type.dart';
+import 'package:rxdart/streams.dart';
+import 'package:utils_core/utils_core.dart';
 
 abstract class Query<E extends Entity> with EquatableMixin {
   final Query? parent;
@@ -124,6 +126,20 @@ extension QueryExtensions<E extends Entity> on Query<E> {
       entityUpdater?.call(entity);
       return entity;
     }).get(context);
+  }
+
+  ValueStream<FutureValue<E>> getSingletonX(DropCoreContext context, [Function(E entity)? entityUpdater]) {
+    return firstOrNull().map((context, entity) {
+      if (entity != null) {
+        return entity;
+      }
+
+      entity = context.getRuntimeType<E>().createInstance();
+      final valueObject = context.getRuntimeTypeRuntime(entity.valueObjectType).createInstance();
+      entity.set(valueObject);
+      entityUpdater?.call(entity);
+      return entity;
+    }).getX(context);
   }
 
   Query get root {
