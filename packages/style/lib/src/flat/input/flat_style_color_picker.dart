@@ -4,6 +4,7 @@ import 'package:style/src/components/dialog/styled_dialog.dart';
 import 'package:style/src/components/input/styled_button.dart';
 import 'package:style/src/components/input/styled_color_picker.dart';
 import 'package:style/src/components/input/styled_text_field.dart';
+import 'package:style/src/components/layout/styled_list.dart';
 import 'package:style/src/components/misc/styled_icon.dart';
 import 'package:style/src/flat/flat_style.dart';
 import 'package:style/src/style_build_context_extensions.dart';
@@ -84,8 +85,7 @@ class FlatStyleColorPickerRenderer with IsTypedStyleRenderer<StyledColorPicker> 
                               }).toList(),
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          StyledList.row.centered(
                             children: [
                               if (canBeNone)
                                 StyledButton.subtle(
@@ -127,6 +127,13 @@ class FlatStyleColorPickerRenderer with IsTypedStyleRenderer<StyledColorPicker> 
     styleguide.getTabByNameOrCreate('Input', icon: Icons.input).getSectionByNameOrCreate('Color Field')
       ..add(StyledColorPicker(
         labelText: 'Color Field',
+        onChanged: (color) {
+          print('Selected Color: $color');
+        },
+      ))
+      ..add(StyledColorPicker(
+        labelText: 'Clearable Color Field',
+        canBeNone: true,
         onChanged: (color) {
           print('Selected Color: $color');
         },
