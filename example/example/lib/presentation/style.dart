@@ -10,5 +10,5 @@ Style darkStyle = FlatStyle(
 Style lightStyle = FlatStyle(
   primaryColor: Color(0xff9333ea),
   accentColor: Color(0xff4f46e5),
-  backgroundColor: Color(0xffffffff),
+  backgroundColor: Color(0xffececec),
 );

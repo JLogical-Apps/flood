@@ -25,6 +25,7 @@ import 'package:style/src/flat/layout/flat_style_card.dart';
 import 'package:style/src/flat/layout/flat_style_carousel.dart';
 import 'package:style/src/flat/layout/flat_style_container.dart';
 import 'package:style/src/flat/layout/flat_style_list.dart';
+import 'package:style/src/flat/layout/flat_style_section.dart';
 import 'package:style/src/flat/layout/flat_style_tabs.dart';
 import 'package:style/src/flat/media/flat_style_image.dart';
 import 'package:style/src/flat/media/flat_style_video.dart';
@@ -61,6 +62,7 @@ class FlatStyle with IsStyle {
     this.minPrimaryColorDistance = 30000,
   })  : renderers = [
           FlatStyleCardRenderer(),
+          FlatStyleSectionRenderer(),
           FlatStyleListRenderer(),
           FlatStyleTextRenderer(),
           FlatStyleTextFieldRenderer(),

@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:style/src/color_palette.dart';
-import 'package:style/src/color_palette_provider.dart';
-import 'package:style/src/components/layout/styled_container.dart';
-import 'package:style/src/components/layout/styled_list.dart';
-import 'package:style/src/components/text/styled_text.dart';
-import 'package:style/src/style_build_context_extensions.dart';
-import 'package:style/src/style_renderer.dart';
-import 'package:style/src/styleguide.dart';
+import 'package:style/style.dart';
 import 'package:tinycolor2/tinycolor2.dart';
 import 'package:utils/utils.dart';
 
@@ -47,6 +40,12 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
         return context.style().getColorPaletteFromBackground(mixedColor);
       }
       return context.style().getColorPaletteFromBackground(color);
+    }
+
+    if (context.colorPalette().isLight &&
+        context.colorPalette().baseBackground == (context.style() as FlatStyle).backgroundColor &&
+        container.emphasis == Emphasis.regular) {
+      return context.style().getColorPaletteFromBackground(Colors.white);
     }
 
     return context.colorPalette().background.getByEmphasis(container.emphasis);

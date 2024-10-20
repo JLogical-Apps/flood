@@ -25,4 +25,13 @@ class StyledImage extends StyleComponent {
     this.fit,
     this.errorBuilder,
   }) : image = AssetImage(assetPath);
+
+  StyledImage.network(
+    String imageUrl, {
+    super.key,
+    this.width,
+    this.height,
+    this.fit,
+    this.errorBuilder,
+  }) : image = NetworkImage(imageUrl);
 }

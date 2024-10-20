@@ -20,6 +20,7 @@ export 'src/components/layout/styled_card.dart';
 export 'src/components/layout/styled_carousel.dart';
 export 'src/components/layout/styled_container.dart';
 export 'src/components/layout/styled_list.dart';
+export 'src/components/layout/styled_section.dart';
 export 'src/components/layout/styled_tabs.dart';
 export 'src/components/media/styled_image.dart';
 export 'src/components/media/styled_video.dart';

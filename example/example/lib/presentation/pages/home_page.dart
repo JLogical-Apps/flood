@@ -43,7 +43,7 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
       model: loggedInUserModel,
       builder: (UserEntity loggedInUserEntity) {
         return StyledPage(
-          titleText: 'Todos',
+          titleText: 'Welcome',
           actionWidgets: [
             if (context.corePondContext.testingComponent.useSyncing) ...[
               SyncIndicator(),
@@ -107,20 +107,19 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
               ],
             ),
           ],
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: PaginatedQueryModelBuilder(
-                paginatedQueryModel: todosModel,
-                builder: (List<TodoEntity> todoEntities, loadMore) {
-                  final uncompletedTodos =
-                      todoEntities.where((todoEntity) => !todoEntity.value.completedProperty.value).toList();
-                  final completedTodos =
-                      todoEntities.where((todoEntity) => todoEntity.value.completedProperty.value).toList();
+          body: PaginatedQueryModelBuilder(
+              paginatedQueryModel: todosModel,
+              builder: (List<TodoEntity> todoEntities, loadMore) {
+                final uncompletedTodos =
+                    todoEntities.where((todoEntity) => !todoEntity.value.completedProperty.value).toList();
+                final completedTodos =
+                    todoEntities.where((todoEntity) => todoEntity.value.completedProperty.value).toList();
 
-                  return StyledList.column.withScrollbar.centered(
-                    children: [
-                      StyledButton(
-                        labelText: 'Create Todo',
+                return StyledList.column.withScrollbar(
+                  children: [
+                    StyledSection(
+                      titleText: 'Todos',
+                      trailing: StyledButton(
                         iconData: Icons.add,
                         onPressed: () => context.showStyledDialog(StyledPortDialog(
                           titleText: 'Create Todo',
@@ -131,27 +130,29 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                           },
                         )),
                       ),
-                      ...uncompletedTodos.map((todoEntity) => TodoEntityCard(
-                            key: ValueKey(todoEntity.id),
-                            todoEntity: todoEntity,
-                          )),
-                      if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) ...[
-                        StyledDivider(),
-                        StyledText.xl.display.bold('Completed'),
+                      children: [
+                        ...uncompletedTodos.map((todoEntity) => TodoEntityCard(
+                              key: ValueKey(todoEntity.id),
+                              todoEntity: todoEntity,
+                            )),
+                        if (uncompletedTodos.isNotEmpty && completedTodos.isNotEmpty) ...[
+                          StyledDivider(),
+                          StyledText.xl.display.bold('Completed'),
+                        ],
+                        ...completedTodos.map((todoEntity) => TodoEntityCard(
+                              key: ValueKey(todoEntity.id),
+                              todoEntity: todoEntity,
+                            )),
+                        if (loadMore != null)
+                          StyledButton(
+                            labelText: 'Load More',
+                            onPressed: loadMore,
+                          ),
                       ],
-                      ...completedTodos.map((todoEntity) => TodoEntityCard(
-                            key: ValueKey(todoEntity.id),
-                            todoEntity: todoEntity,
-                          )),
-                      if (loadMore != null)
-                        StyledButton(
-                          labelText: 'Load More',
-                          onPressed: loadMore,
-                        ),
-                    ],
-                  );
-                }),
-          ),
+                    ),
+                  ],
+                );
+              }),
         );
       },
     );
@@ -160,25 +161,17 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
   Widget profileButton(BuildContext context, {required User user, required List<ActionItem> actions}) {
     return Padding(
       padding: EdgeInsets.only(right: 8),
-      child: StyledContainer(
-        shape: CircleBorder(),
+      child: StyledButton(
         onPressed: () async {
           await context.showStyledDialog(StyledDialog.actionList(context: context, actions: actions));
         },
-        child: user.profilePictureProperty.value != null
+        background: user.profilePictureProperty.value != null
             ? StyledAssetProperty(
                 assetProperty: user.profilePictureProperty.value!,
-                width: 35,
-                height: 35,
                 fit: BoxFit.cover,
               )
-            : Padding(
-                padding: EdgeInsets.all(5),
-                child: StyledIcon(
-                  Icons.person,
-                  size: 25,
-                ),
-              ),
+            : null,
+        icon: user.profilePictureProperty.value == null ? StyledIcon(Icons.person) : null,
       ),
     );
   }

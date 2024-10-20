@@ -23,6 +23,7 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
     final backgroundColorPalette =
         component.backgroundColor?.mapIfNonNull((color) => context.style().getColorPaletteFromBackground(color)) ??
             context.colorPalette().background.getByEmphasis(component.emphasis);
+    final background = component.background;
 
     final loadingState = useState<bool>(false);
     final errorState = useState<bool>(false);
@@ -47,15 +48,26 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
 
     final canPress = !loadingState.value && !errorState.value;
 
-    if (label == null && icon != null) {
+    if (label == null && (icon != null || background != null)) {
       return IconButton(
         style: ButtonStyle(
           shape: WidgetStateProperty.all(CircleBorder()),
           backgroundColor: WidgetStateProperty.all(backgroundColorPalette),
+          backgroundBuilder: background == null
+              ? null
+              : (context, states, child) => ClipRRect(
+                    borderRadius: BorderRadius.circular(999),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: background,
+                    ),
+                  ),
         ),
         icon: ColorPaletteProvider(
           colorPalette: backgroundColorPalette,
           child: Stack(
+            alignment: Alignment.center,
             children: [
               Opacity(
                 opacity: canPress ? 1 : 0,
