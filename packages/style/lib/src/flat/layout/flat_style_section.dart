@@ -14,21 +14,24 @@ class FlatStyleSectionRenderer with IsTypedStyleRenderer<StyledSection> {
     final leading = component.leadingIcon?.mapIfNonNull((icon) => StyledIcon(icon)) ?? component.leading;
     final trailing = component.trailingIcon?.mapIfNonNull((icon) => StyledIcon(icon)) ?? component.trailing;
 
-    return StyledList.column(
-      crossAxisAlignment: component.alignment,
-      children: [
-        StyledList.row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(width: 4),
-            if (leading != null) leading,
-            Expanded(child: title ?? Container()),
-            if (trailing != null) trailing,
-            if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
-          ],
-        ),
-        ...component.children,
-      ],
+    return Padding(
+      padding: component.padding,
+      child: StyledList.column(
+        crossAxisAlignment: component.alignment,
+        children: [
+          StyledList.row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(width: 4),
+              if (leading != null) leading,
+              Expanded(child: title ?? Container()),
+              if (trailing != null) trailing,
+              if (component.actions.isNotEmpty) StyledMenuButton(actions: component.actions),
+            ],
+          ),
+          ...component.children,
+        ],
+      ),
     );
   }
 }
