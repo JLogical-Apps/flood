@@ -11,6 +11,8 @@ class StyledTextBuilder {
   TextDecoration? textDecoration;
   bool? isDisplay;
   Color? color;
+  int? maxLines;
+  TextOverflow? overflow;
   bool isError = false;
 
   StyledTextBuilder get subtle {
@@ -113,6 +115,16 @@ class StyledTextBuilder {
     return this;
   }
 
+  StyledTextBuilder withMaxLines(int? maxLines) {
+    this.maxLines = maxLines;
+    return this;
+  }
+
+  StyledTextBuilder withOverflow(TextOverflow? overflow) {
+    this.overflow = overflow;
+    return this;
+  }
+
   StyledText call(String text, {EdgeInsets? padding}) {
     return StyledText(
       text,
@@ -125,6 +137,8 @@ class StyledTextBuilder {
       isDisplay: isDisplay ?? false,
       color: color,
       isError: isError,
+      maxLines: maxLines,
+      overflow: overflow,
       padding: padding,
     );
   }

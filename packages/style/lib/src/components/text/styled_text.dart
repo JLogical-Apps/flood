@@ -15,6 +15,8 @@ class StyledText extends StyleComponent {
   final bool isDisplay;
   final Color? color;
   final bool isError;
+  int? maxLines;
+  TextOverflow? overflow;
   final EdgeInsets? padding;
 
   StyledText(
@@ -28,6 +30,8 @@ class StyledText extends StyleComponent {
     this.isDisplay = false,
     this.color,
     this.isError = false,
+    this.maxLines,
+    this.overflow,
     this.padding,
   });
 

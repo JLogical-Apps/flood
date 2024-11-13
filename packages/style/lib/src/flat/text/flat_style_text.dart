@@ -12,7 +12,8 @@ class FlatStyleTextRenderer with IsTypedStyleRenderer<StyledText> {
         component.text,
         textAlign: component.textAlign,
         style: context.style().getTextStyle(context, component),
-        overflow: TextOverflow.fade,
+        maxLines: component.maxLines,
+        overflow: component.overflow ?? TextOverflow.fade,
       ),
     );
   }
