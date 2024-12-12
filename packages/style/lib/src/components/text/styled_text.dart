@@ -15,8 +15,8 @@ class StyledText extends StyleComponent {
   final bool isDisplay;
   final Color? color;
   final bool isError;
-  int? maxLines;
-  TextOverflow? overflow;
+  final int? maxLines;
+  final TextOverflow? overflow;
   final EdgeInsets? padding;
 
   StyledText(
