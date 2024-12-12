@@ -346,7 +346,7 @@ packages:
       path: "."
       ref: "582b4ce5785f954276b6c465e4a8fbf02e4ef733"
       resolved-ref: "582b4ce5785f954276b6c465e4a8fbf02e4ef733"
-      url: "git@github.com:rahmanrezaee/flutter_async_autocomplete.git"
+      url: "https://github.com/rahmanrezaee/flutter_async_autocomplete.git"
     source: git
     version: "0.0.4"
   flutter_hooks:

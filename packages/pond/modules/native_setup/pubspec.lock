@@ -787,7 +787,7 @@ packages:
       path: "."
       ref: a06c08297ca8611478b76313760ff70e7f1df70f
       resolved-ref: a06c08297ca8611478b76313760ff70e7f1df70f
-      url: "git@github.com:jaboyc/xcodeproj.git"
+      url: "https://github.com/jaboyc/xcodeproj.git"
     source: git
     version: "0.2.3"
   xml:
