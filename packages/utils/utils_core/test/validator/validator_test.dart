@@ -60,6 +60,16 @@ void main() {
     expect(await isEmail.validate('t@t.t'), isNull);
     expect(await isEmail.validate('tt.t'), isNotNull);
 
+    expect(await Validator.minLength(4).validate(null), isNull);
+    expect(await Validator.minLength(4).validate('1'), isNotNull);
+    expect(await Validator.minLength(4).validate('1234'), isNull);
+    expect(await Validator.minLength(4).validate('12345'), isNull);
+
+    expect(await Validator.maxLength(4).validate(null), isNull);
+    expect(await Validator.maxLength(4).validate('1'), isNull);
+    expect(await Validator.maxLength(4).validate('1234'), isNull);
+    expect(await Validator.maxLength(4).validate('12345'), isNotNull);
+
     final isInt = Validator.isInt();
     final isDouble = Validator.isDouble();
     expect(await isInt.validate('1'), isNull);

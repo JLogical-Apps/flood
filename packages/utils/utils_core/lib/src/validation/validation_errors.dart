@@ -107,3 +107,23 @@ class IsDoubleValidationError {
   @override
   String toString() => '[$value] must be a number!';
 }
+
+class MaxLengthValidationError {
+  final int max;
+  final int actual;
+
+  MaxLengthValidationError(this.max, this.actual);
+
+  @override
+  String toString() => 'Cannot have more than [$max] characters!';
+}
+
+class MinLengthValidationError {
+  final int min;
+  final int actual;
+
+  MinLengthValidationError(this.min, this.actual);
+
+  @override
+  String toString() => 'Must be longer than [$min] characters!';
+}

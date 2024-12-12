@@ -173,6 +173,30 @@ abstract class Validator<T, E> {
 
         return null;
       });
+
+  static Validator<String?, MaxLengthValidationError> maxLength(int max) => Validator((data) {
+        if (data == null) {
+          return null;
+        }
+
+        if (data.length > max) {
+          return MaxLengthValidationError(max, data.length);
+        }
+
+        return null;
+      });
+
+  static Validator<String?, MinLengthValidationError> minLength(int min) => Validator((data) {
+        if (data == null) {
+          return null;
+        }
+
+        if (data.length < min) {
+          return MinLengthValidationError(min, data.length);
+        }
+
+        return null;
+      });
 }
 
 extension ValidatorExtensions<T, E> on Validator<T, E> {
