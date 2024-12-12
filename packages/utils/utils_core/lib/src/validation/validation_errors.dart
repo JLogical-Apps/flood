@@ -115,7 +115,7 @@ class MaxLengthValidationError {
   MaxLengthValidationError(this.max, this.actual);
 
   @override
-  String toString() => 'Cannot have more than [$max] characters!';
+  String toString() => 'Cannot have more than $max characters!';
 }
 
 class MinLengthValidationError {
@@ -125,5 +125,5 @@ class MinLengthValidationError {
   MinLengthValidationError(this.min, this.actual);
 
   @override
-  String toString() => 'Must be longer than [$min] characters!';
+  String toString() => 'Must be longer than $min characters!';
 }

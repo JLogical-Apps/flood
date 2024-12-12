@@ -465,6 +465,10 @@ extension StringPortFieldExtensions<S> on PortField<String, S> {
 
   PortField<String, S> multiline([bool isMultiline = true]) =>
       MultilinePortField(portField: this, isMultiline: isMultiline);
+
+  PortField<String, S> withMinLength(int min) => withValidator(Validator.minLength(min).forPortField());
+
+  PortField<String, S> withMaxLength(int min) => withValidator(Validator.maxLength(min).forPortField());
 }
 
 extension IntPortFieldExtensions<T extends int?, S> on PortField<T, S> {
