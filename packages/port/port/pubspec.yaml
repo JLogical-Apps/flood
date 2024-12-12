@@ -21,11 +21,6 @@ dependencies:
       url: https://github.com/JLogical-Apps/flood.git
       ref: "v4.3"
       path: packages/port/port_core
-  style:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/style
   utils:
     git:
       url: https://github.com/JLogical-Apps/flood.git
