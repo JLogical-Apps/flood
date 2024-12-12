@@ -45,7 +45,7 @@ class MapPortField<T1, S1, T2, S2> with IsPortField<T2, S2> {
   get error => portField.error;
 
   @override
-  Future<String?> onValidate(PortFieldValidatorContext data) async {
+  Future<Object?> onValidate(PortFieldValidatorContext data) async {
     return validator.onValidate(data);
   }
 
@@ -64,7 +64,7 @@ class MapPortField<T1, S1, T2, S2> with IsPortField<T2, S2> {
   }
 
   @override
-  Validator<PortFieldValidatorContext, String> get validator =>
+  Validator<PortFieldValidatorContext, dynamic> get validator =>
       portField.validator.map((context) => context.map<T1>((value) => newToSourceMapper(value)));
 
   @override

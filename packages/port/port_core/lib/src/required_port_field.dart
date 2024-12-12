@@ -11,7 +11,7 @@ class RequiredPortField<T, S> with IsPortFieldWrapper<T, S> {
   RequiredPortField({required this.portField, this.isRequired = true});
 
   @override
-  Validator<PortFieldValidatorContext, String> get validator {
+  Validator<PortFieldValidatorContext, dynamic> get validator {
     if (!isRequired) {
       return portField.validator;
     }

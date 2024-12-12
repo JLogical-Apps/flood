@@ -87,7 +87,7 @@ class ListPortField<T, S> with IsPortFieldWrapper<Map<String, T?>, List<S>> {
   }
 
   @override
-  Validator<PortFieldValidatorContext, String> get validator =>
+  Validator<PortFieldValidatorContext, dynamic> get validator =>
       portField.validator +
       Validator((context) async {
         for (final portField in itemPortFieldById.values) {

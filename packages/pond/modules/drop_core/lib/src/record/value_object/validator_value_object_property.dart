@@ -8,7 +8,7 @@ class ValidatorValueObjectProperty<T, S> with IsValueObjectPropertyWrapper<T, S,
   @override
   final ValueObjectProperty<T, S, dynamic> property;
 
-  final Validator<T, String> validator;
+  final Validator<T, dynamic> validator;
 
   ValidatorValueObjectProperty({required this.property, required this.validator});
 
@@ -16,10 +16,10 @@ class ValidatorValueObjectProperty<T, S> with IsValueObjectPropertyWrapper<T, S,
   FutureOr<String?> onValidate(ValueObject data) async {
     final error = await property.validate(data);
     if (error != null) {
-      return error;
+      return error.toString();
     }
 
-    return await validator.validate(property.value);
+    return (await validator.validate(property.value))?.toString();
   }
 
   @override

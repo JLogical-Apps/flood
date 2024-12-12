@@ -28,7 +28,7 @@ import 'package:uuid/uuid.dart';
 
 typedef SimplePortField<T> = PortField<T, T>;
 
-abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext, String> {
+abstract class PortField<T, S> with IsValidatorWrapper<PortFieldValidatorContext, dynamic> {
   T get value;
 
   dynamic get error;
@@ -222,7 +222,7 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
 
   PortField<T, S> copyWithError(dynamic error) => copyWith(value: value, error: error);
 
-  PortField<T, S> withValidator(Validator<PortFieldValidatorContext, String> validator) => ValidatorPortField(
+  PortField<T, S> withValidator(Validator<PortFieldValidatorContext, dynamic> validator) => ValidatorPortField(
         portField: this,
         additionalValidator: validator,
       );
@@ -358,7 +358,7 @@ mixin IsPortField<T, S> implements PortField<T, S> {
   }
 }
 
-class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldValidatorContext, String> {
+class _PortFieldImpl<T, S> with IsPortField<T, S>, IsValidatorWrapper<PortFieldValidatorContext, dynamic> {
   @override
   final T value;
 
@@ -542,10 +542,10 @@ mixin IsPortFieldWrapper<T, S> implements PortFieldWrapper<T, S> {
   T parseValue(value) => portField.parseValue(value);
 
   @override
-  Validator<PortFieldValidatorContext, String> get validator => portField.validator;
+  Validator<PortFieldValidatorContext, dynamic> get validator => portField.validator;
 
   @override
-  Future<String?> onValidate(data) {
+  Future<Object?> onValidate(data) {
     return validator.validate(data);
   }
 
@@ -564,8 +564,8 @@ mixin IsPortFieldWrapper<T, S> implements PortFieldWrapper<T, S> {
   PortFieldProvider? getPortFieldProviderOrNull() => portField.getPortFieldProviderOrNull();
 }
 
-extension PortFieldValidatorExtensions<T> on Validator<T, String> {
-  Validator<PortFieldValidatorContext, String> forPortField() {
-    return map((context) => context.value);
+extension PortFieldValidatorExtensions<T, E> on Validator<T, E> {
+  Validator<PortFieldValidatorContext, dynamic> forPortField() {
+    return map((context) => context.value as T);
   }
 }

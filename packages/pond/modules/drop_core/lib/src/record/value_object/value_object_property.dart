@@ -136,7 +136,7 @@ extension ValueObjectPropertyExtensions<G, S, V extends ValueObjectProperty> on 
     set(updater(value));
   }
 
-  ValidatorValueObjectProperty<G, S> withValidator(Validator<G, String> validator) {
+  ValidatorValueObjectProperty<G, S> withValidator(Validator<G, dynamic> validator) {
     return ValidatorValueObjectProperty(property: this, validator: validator);
   }
 

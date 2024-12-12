@@ -6,7 +6,7 @@ class ValidatorPortField<T, S> with IsPortFieldWrapper<T, S> {
   @override
   final PortField<T, S> portField;
 
-  final Validator<PortFieldValidatorContext, String> additionalValidator;
+  final Validator<PortFieldValidatorContext, dynamic> additionalValidator;
 
   ValidatorPortField({required this.portField, required this.additionalValidator});
 
@@ -19,5 +19,5 @@ class ValidatorPortField<T, S> with IsPortFieldWrapper<T, S> {
   }
 
   @override
-  Validator<PortFieldValidatorContext, String> get validator => portField.validator + additionalValidator;
+  Validator<PortFieldValidatorContext, dynamic> get validator => portField.validator + additionalValidator;
 }
