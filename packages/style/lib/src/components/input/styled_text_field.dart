@@ -26,6 +26,7 @@ class StyledTextField<S> extends StyleComponent {
   final TextInputType? keyboard;
   final TextInputAction? action;
   final List<TextInputFormatter>? inputFormatters;
+  final List<String>? autofillHints;
   final bool autofocus;
 
   final Function()? onTapped;
@@ -55,6 +56,7 @@ class StyledTextField<S> extends StyleComponent {
     this.keyboard,
     this.action,
     this.inputFormatters,
+    this.autofillHints = const [],
     this.autofocus = false,
     this.onTapped,
     this.onSubmitted,

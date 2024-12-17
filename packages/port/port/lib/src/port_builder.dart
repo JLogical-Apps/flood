@@ -16,7 +16,9 @@ class PortBuilder<T> extends HookWidget {
 
     return Provider<Port>(
       create: (_) => port,
-      child: builder(context, port),
+      child: AutofillGroup(
+        child: builder(context, port),
+      ),
     );
   }
 }

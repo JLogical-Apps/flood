@@ -64,6 +64,7 @@ class StyledTextFieldPortField<S> extends HookWidget {
           onChanged: (text) => port[fieldPath] = text,
           maxLines: maxLines ?? (field.findIsMultiline() ? 3 : null),
           keyboard: getKeyboardType(field),
+          autofillHints: getAutofillHints(field),
           action: TextInputAction.next,
           inputFormatters: [
             if (field.findIsPhone()) ...[
@@ -100,6 +101,24 @@ class StyledTextFieldPortField<S> extends HookWidget {
       return TextInputType.numberWithOptions(decimal: true);
     }
 
+    return null;
+  }
+
+  List<String>? getAutofillHints(PortField field) {
+    if (field.findIsName()) {
+      return [AutofillHints.givenName];
+    }
+    if (field.findIsEmail()) {
+      return [AutofillHints.email];
+    }
+    if (field.findIsPhone()) {
+      return [AutofillHints.telephoneNumber];
+    }
+    if (field.findIsSecret()) {
+      return [
+        field.findIsGeneratingNewSecret() ? AutofillHints.newPassword : AutofillHints.password,
+      ];
+    }
     return null;
   }
 }

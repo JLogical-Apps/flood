@@ -5,6 +5,7 @@ import 'package:example/presentation/utils/otp_utils.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:flood/flood.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class LoginRoute with IsRoute<LoginRoute> {
@@ -60,6 +61,7 @@ class LoginPage with IsAppPageWrapper<LoginRoute> {
                       try {
                         await context.authCoreComponent
                             .login(AuthCredentials.email(email: data['email'], password: data['password']));
+                        TextInput.finishAutofillContext();
                         context.warpTo(HomeRoute());
                       } catch (e, stackTrace) {
                         final errorText = e.as<LoginFailure>()?.displayText ?? e.toString();

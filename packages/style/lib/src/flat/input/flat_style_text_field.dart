@@ -147,6 +147,7 @@ class FlatStyleTextFieldRenderer with IsTypedStyleRenderer<StyledTextField> {
                 onTap: component.onTapped,
                 textInputAction: component.action,
                 inputFormatters: component.inputFormatters,
+                autofillHints: component.autofillHints,
                 style: context.style().getTextStyle(textFieldContext, StyledText.body.empty),
                 cursorColor: textFieldContext.colorPalette().foreground.regular,
                 readOnly: component.readonly || !component.enabled,

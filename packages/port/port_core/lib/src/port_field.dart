@@ -331,6 +331,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
     return PortFieldNodeModifier.getModifierOrNull(this)?.isSecret(this) ?? false;
   }
 
+  bool findIsGeneratingNewSecret() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.isGeneratingNewSecret(this) ?? false;
+  }
+
   bool findIsCurrency() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.isCurrency(this) ?? false;
   }
@@ -453,6 +457,12 @@ extension StringPortFieldExtensions<S> on PortField<String, S> {
   PortField<String, S> isSecret([bool isPassword = true]) => SecretPortField(portField: this, isSecret: isPassword);
 
   PortField<String, S> isPassword([bool isPassword = true]) => SecretPortField(portField: this, isSecret: isPassword);
+
+  PortField<String, S> isNewPassword([bool isPassword = true]) => SecretPortField(
+        portField: this,
+        isSecret: isPassword,
+        isGeneratingNewSecret: true,
+      );
 
   PortField<String, S> isConfirmPassword({required String passwordField}) =>
       SecretPortField(portField: this).withValidator(Validator((context) {

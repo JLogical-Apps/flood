@@ -8,4 +8,9 @@ class SecretPortFieldNodeModifier extends WrapperPortFieldNodeModifier<SecretPor
   bool isSecret(SecretPortField portField) {
     return portField.isSecret;
   }
+
+  @override
+  bool isGeneratingNewSecret(SecretPortField portField) {
+    return portField.isGeneratingNewSecret;
+  }
 }

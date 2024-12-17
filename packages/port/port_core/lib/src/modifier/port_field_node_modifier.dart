@@ -67,6 +67,10 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return false;
   }
 
+  bool isGeneratingNewSecret(T portField) {
+    return false;
+  }
+
   bool isCurrency(T portField) {
     return false;
   }

@@ -3,9 +3,10 @@ import 'package:example/presentation/pages/home_page.dart';
 import 'package:example/presentation/utils/redirect_utils.dart';
 import 'package:example_core/features/user/user.dart';
 import 'package:example_core/features/user/user_entity.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flood/flood.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SignupRoute with IsRoute<SignupRoute> {
   late final redirectPathProperty = field<String>(name: 'redirect');
@@ -79,6 +80,8 @@ class SignupPage with IsAppPageWrapper<SignupRoute> {
                 final account = await context
                     .find<AuthCoreComponent>()
                     .signup(AuthCredentials.email(email: data['email'], password: data['password']));
+                TextInput.finishAutofillContext();
+
                 final deviceToken = context.find<MessagingCoreComponent>().deviceToken;
 
                 await context.dropCoreComponent.updateEntity(
