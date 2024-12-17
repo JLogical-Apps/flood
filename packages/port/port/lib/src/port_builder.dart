@@ -7,8 +7,14 @@ import 'package:utils/utils.dart';
 class PortBuilder<T> extends HookWidget {
   final Port<T> port;
   final Widget Function(BuildContext context, Port<T> port) builder;
+  final AutofillContextAction onDisposeAction;
 
-  PortBuilder({super.key, required this.port, required this.builder});
+  PortBuilder({
+    super.key,
+    required this.port,
+    required this.builder,
+    this.onDisposeAction = AutofillContextAction.commit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +24,7 @@ class PortBuilder<T> extends HookWidget {
       create: (_) => port,
       child: AutofillGroup(
         child: builder(context, port),
+        onDisposeAction: onDisposeAction,
       ),
     );
   }
