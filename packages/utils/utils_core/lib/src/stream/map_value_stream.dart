@@ -45,4 +45,7 @@ class MapValueStream<T, R> extends StreamView<R> implements ValueStream<R> {
 
   @override
   StackTrace? get stackTrace => mappedSource.stackTrace;
+
+  @override
+  StreamNotification<R>? get lastEventOrNull => mappedSource.lastEventOrNull;
 }

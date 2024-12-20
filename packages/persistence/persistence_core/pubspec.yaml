@@ -14,7 +14,7 @@ dependencies:
   csv: ^6.0.0
   json2yaml: ^3.0.0
   path: ^1.8.3
-  rxdart: ^0.27.5
+  rxdart: ^0.28.0
   synchronized: ^3.1.0+1
   watcher: ^1.1.0
   yaml: ^3.1.1

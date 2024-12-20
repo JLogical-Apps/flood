@@ -61,4 +61,8 @@ class CombineLatestValueStream<T, R> extends StreamView<R> implements ValueStrea
 
   @override
   bool get hasValue => true;
+
+  @override
+  StreamNotification<R>? get lastEventOrNull =>
+      errorOrNull != null ? StreamNotification.error(errorOrNull!) : StreamNotification.data(value);
 }

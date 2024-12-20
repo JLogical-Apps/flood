@@ -54,4 +54,7 @@ class AsyncMapValueStream<T, R> extends StreamView<R> implements ValueStream<R> 
 
   @override
   bool get hasValue => source.hasValue;
+
+  @override
+  StreamNotification<R>? get lastEventOrNull => source.lastEventOrNull;
 }

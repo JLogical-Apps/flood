@@ -12,7 +12,7 @@ dependencies:
   collection: ^1.16.0
   equatable: ^2.0.5
   pool: ^1.5.1
-  rxdart: ^0.27.5
+  rxdart: ^0.28.0
   uuid: ^4.1.0
 
   actions_core:

@@ -11,10 +11,7 @@ version: 0.0.1
 dependencies:
   collection: ^1.16.0
   version: ^3.0.0
-  xcodeproj:
-    git:
-      url: https://github.com/jaboyc/xcodeproj.git
-      ref: "a06c08297ca8611478b76313760ff70e7f1df70f"
+  xcodeproj: ^0.2.4
 
   drop_core:
     git:

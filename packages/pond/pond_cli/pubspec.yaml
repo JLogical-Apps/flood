@@ -16,10 +16,7 @@ dependencies:
   mason_logger: ^0.2.12
   path: ^1.8.0
   process_run: ^0.12.5+2
-  xcodeproj:
-    git:
-      url: https://github.com/jaboyc/xcodeproj.git
-      ref: "a06c08297ca8611478b76313760ff70e7f1df70f"
+  xcodeproj: ^0.2.4
 
   persistence_core:
     git:

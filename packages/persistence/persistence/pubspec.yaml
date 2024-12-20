@@ -16,7 +16,7 @@ dependencies:
   localstorage: ^4.0.1+4
   package_info_plus: ^8.0.0
   path: ^1.8.3
-  rxdart: ^0.27.5
+  rxdart: ^0.28.0
 
   persistence_core:
     git:

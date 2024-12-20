@@ -54,4 +54,8 @@ class MergeValueStream<T> extends StreamView<T> implements ValueStream<T> {
 
   @override
   bool get hasValue => true;
+
+  @override
+  StreamNotification<T>? get lastEventOrNull =>
+      errorOrNull != null ? StreamNotification.error(errorOrNull!) : StreamNotification.data(value);
 }
