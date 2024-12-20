@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   collection: ^1.16.0
-  file_picker: ^6.2.0
+  file_picker: ^8.1.6
   flutter_hooks: ^0.21.1-pre.0
   flutter_image_compress: ^2.3.0
   image_picker: ^1.1.1

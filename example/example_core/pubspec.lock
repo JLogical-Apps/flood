@@ -174,10 +174,10 @@ packages:
     dependency: transitive
     description:
       name: dart_appwrite
-      sha256: f773e28b67268b0e48254bfde93395388cb0e8f208f7491e549f11cac6af7883
+      sha256: a6b9a1defb777e7b3e544303207d7da559abcb20881966b008829b044a01a4b2
       url: "https://pub.dev"
     source: hosted
-    version: "11.0.3"
+    version: "12.1.0"
   dart_casing:
     dependency: transitive
     description:
