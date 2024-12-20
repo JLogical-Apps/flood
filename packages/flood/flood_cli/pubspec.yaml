@@ -10,35 +10,17 @@ version: 0.0.1
 
 dependencies:
   firebase_ops:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/firebase_ops
+    path: ../../pond/modules/firebase_ops
   flood_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/flood/flood_core
+    path: ../../flood/flood_core
   native_setup:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/native_setup
+    path: ../../pond/modules/native_setup
   ops:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/ops
+    path: ../../pond/modules/ops
   pond_cli:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/pond_cli
+    path: ../../pond/pond_cli
   release:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/release
+    path: ../../pond/modules/release
 dev_dependencies:
   lints: ^2.0.0
 dependency_overrides:

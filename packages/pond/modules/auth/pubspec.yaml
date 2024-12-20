@@ -19,40 +19,19 @@ dependencies:
   uuid: ^4.1.0
 
   auth_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/auth_core
+    path: ../../../pond/modules/auth_core
   debug:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/debug
+    path: ../../../pond/modules/debug
   drop_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/drop_core
+    path: ../../../pond/modules/drop_core
   model:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/model/model
+    path: ../../../model/model
   pond:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/pond
+    path: ../../../pond/pond
   style:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/style
+    path: ../../../style
   utils:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/utils/utils
+    path: ../../../utils/utils
 dev_dependencies:
   flutter_test:
     sdk: flutter

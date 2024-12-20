@@ -14,15 +14,9 @@ dependencies:
   collection: ^1.16.0
 
   actions_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/actions_core
+    path: ../../../pond/modules/actions_core
   pond:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/pond
+    path: ../../../pond/pond
 dev_dependencies:
   flutter_test:
     sdk: flutter

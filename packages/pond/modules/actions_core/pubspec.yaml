@@ -12,20 +12,11 @@ dependencies:
   collection: ^1.16.0
 
   log_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/log_core
+    path: ../../../pond/modules/log_core
   pond_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/pond_core
+    path: ../../../pond/pond_core
   utils_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/utils/utils_core
+    path: ../../../utils/utils_core
 dev_dependencies:
   lints: ^2.0.0
   test: 1.24.6

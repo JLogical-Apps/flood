@@ -13,15 +13,9 @@ dependencies:
     sdk: flutter
 
   pond:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/pond
+    path: ../../../pond/pond
   environment:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/environment
+    path: ../../../pond/modules/environment
 
 dev_dependencies:
   lints: ^2.0.0

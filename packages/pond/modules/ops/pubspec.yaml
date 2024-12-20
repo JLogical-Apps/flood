@@ -15,75 +15,33 @@ dependencies:
   rxdart: ^0.28.0
 
   appwrite_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/appwrite_core
+    path: ../../../pond/modules/appwrite_core
   asset_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/asset_core
+    path: ../../../pond/modules/asset_core
   drop_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/drop_core
+    path: ../../../pond/modules/drop_core
   environment_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/environment_core
+    path: ../../../pond/modules/environment_core
   firebase_ops:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/firebase_ops
+    path: ../../../pond/modules/firebase_ops
   log_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/log_core
+    path: ../../../pond/modules/log_core
   path_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/path_core
+    path: ../../../path_core
   persistence_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/persistence/persistence_core
+    path: ../../../persistence/persistence_core
   pond_cli:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/pond_cli
+    path: ../../../pond/pond_cli
   pond_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/pond_core
+    path: ../../../pond/pond_core
   task_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/task_core
+    path: ../../../pond/modules/task_core
   runtime_type:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/type
+    path: ../../../type
   type_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/type_core
+    path: ../../../pond/modules/type_core
   utils_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/utils/utils_core
+    path: ../../../utils/utils_core
 dev_dependencies:
   lints: ^2.0.0
   test: 1.24.6

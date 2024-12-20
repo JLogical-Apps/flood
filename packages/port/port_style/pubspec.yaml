@@ -23,50 +23,23 @@ dependencies:
   uuid: ^4.1.0
 
   asset:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/asset
+    path: ../../pond/modules/asset
   log:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/log
+    path: ../../pond/modules/log
   persistence_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/persistence/persistence_core
+    path: ../../persistence/persistence_core
   pond:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/pond
+    path: ../../pond/pond
   port:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/port/port
+    path: ../../port/port
   runtime_type:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/type
+    path: ../../type
   style:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/style
+    path: ../../style
   type_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/type_core
+    path: ../../pond/modules/type_core
   utils:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/utils/utils
+    path: ../../utils/utils
 dev_dependencies:
   lints: ^2.0.0
   test: 1.24.6

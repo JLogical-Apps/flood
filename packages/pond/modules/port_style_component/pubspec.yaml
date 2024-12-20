@@ -16,35 +16,17 @@ dependencies:
   provider: ^6.0.5
 
   drop_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/modules/drop_core
+    path: ../../../pond/modules/drop_core
   port:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/port/port
+    path: ../../../port/port
   port_style:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/port/port_style
+    path: ../../../port/port_style
   pond:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/pond/pond
+    path: ../../../pond/pond
   style:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/style
+    path: ../../../style
   utils_core:
-    git:
-      url: https://github.com/JLogical-Apps/flood.git
-      ref: "v4.3"
-      path: packages/utils/utils_core
+    path: ../../../utils/utils_core
 dev_dependencies:
   lints: ^2.0.0
   test: 1.24.6
