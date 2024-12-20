@@ -13,7 +13,7 @@ class FlatStyleScrollbarRenderer with IsTypedStyleRenderer<StyledScrollbar> {
       child: RawScrollbar(
         child: component.child,
         controller: component.controller,
-        thumbColor: context.colorPalette().foreground.regular.withOpacity(0.6),
+        thumbColor: context.colorPalette().foreground.regular.withValues(alpha: 0.6),
         trackColor: context.colorPalette().background.subtle,
         radius: Radius.circular(12),
         trackRadius: Radius.circular(12),

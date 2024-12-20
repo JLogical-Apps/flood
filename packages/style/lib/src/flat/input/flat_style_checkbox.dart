@@ -73,7 +73,7 @@ class FlatStyleCheckboxRenderer with IsTypedStyleRenderer<StyledCheckbox> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(3),
               ),
-              overlayColor: WidgetStateProperty.all(context.colorPalette().background.regular.withOpacity(0.5)),
+              overlayColor: WidgetStateProperty.all(context.colorPalette().background.regular.withValues(alpha: 0.5)),
               value: component.value,
               onChanged: component.onChanged == null ? null : (value) => component.onChanged!(value ?? false),
             ),

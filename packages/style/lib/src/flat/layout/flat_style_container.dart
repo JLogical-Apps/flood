@@ -35,8 +35,8 @@ class FlatStyleContainerRenderer with IsTypedStyleRenderer<StyledContainer> {
   ColorPalette getBackgroundColor(BuildContext context, {required StyledContainer container}) {
     final color = container.color;
     if (color != null) {
-      if (color.opacity < 1) {
-        final mixedColor = context.colorPalette().baseBackground.mix(color, (color.opacity * 100).round());
+      if (color.a < 1) {
+        final mixedColor = context.colorPalette().baseBackground.mix(color, (color.a * 100).round());
         return context.style().getColorPaletteFromBackground(mixedColor);
       }
       return context.style().getColorPaletteFromBackground(color);

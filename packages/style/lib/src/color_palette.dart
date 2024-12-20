@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:style/src/emphasis.dart';
+import 'package:utils/utils.dart';
 
 class ColorPalette extends Color {
   final Color baseBackground;
@@ -24,7 +25,7 @@ class ColorPalette extends Color {
     required this.strongErrorColorPaletteGetter,
     required this.regularErrorColorPaletteGetter,
     required this.subtleErrorColorPaletteGetter,
-  }) : super(baseBackground.value);
+  }) : super(baseBackground.toInt32);
 
   ColorPaletteContext get background => ColorPaletteContext(
         strongColorPaletteGetter: strongBackgroundColorPaletteGetter,

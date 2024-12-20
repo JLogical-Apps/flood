@@ -41,7 +41,7 @@ class FlatStyleColorPickerRenderer with IsTypedStyleRenderer<StyledColorPicker> 
                 ),
               ),
             ),
-      text: component.value?.mapIfNonNull((color) => '#${color.value.toRadixString(16).padLeft(6, '0')}') ?? '',
+      text: component.value?.mapIfNonNull((color) => '#${color.toInt32.toRadixString(16).padLeft(6, '0')}') ?? '',
       hintText: component.value == null ? 'Select Color...' : null,
       onTapped: component.onChanged != null
           ? () async {

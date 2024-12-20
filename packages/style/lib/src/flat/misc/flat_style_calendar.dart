@@ -50,11 +50,11 @@ class FlatStyleCalendarRenderer with IsTypedStyleRenderer<StyledCalendar> {
         markerSize: 14,
         markerDecoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: context.colorPalette().background.strong.withOpacity(0.8),
+          color: context.colorPalette().background.strong.withValues(alpha: 0.8),
         ),
         todayDecoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: context.colorPalette().background.strong.withOpacity(0.5),
+          color: context.colorPalette().background.strong.withValues(alpha: 0.5),
         ),
       ),
       headerStyle: HeaderStyle(

@@ -38,7 +38,7 @@ class StyledColorPickerPortField extends HookWidget {
           label: label,
           showRequiredIndicator: field.findIsRequired(),
           errorText: error?.toString(),
-          onChanged: (color) => port[fieldPath] = color?.value,
+          onChanged: (color) => port[fieldPath] = color?.toInt32,
           canBeNone: canBeNone,
           allowedColors: allowedColors,
         );

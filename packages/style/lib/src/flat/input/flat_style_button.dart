@@ -158,7 +158,7 @@ class FlatStyleButtonRenderer with IsTypedStyleRenderer<StyledButton> {
         ),
         style: ButtonStyle(
           backgroundColor:
-              WidgetStateProperty.all(backgroundColorPalette.withOpacity(component.onPressed == null ? 0.6 : 1)),
+              WidgetStateProperty.all(backgroundColorPalette.withValues(alpha: component.onPressed == null ? 0.6 : 1)),
           textStyle: WidgetStateProperty.all(context.style().getTextStyle(context, StyledText.body.empty)),
           elevation: WidgetStateProperty.all(0),
           shape: WidgetStateProperty.all(RoundedRectangleBorder(

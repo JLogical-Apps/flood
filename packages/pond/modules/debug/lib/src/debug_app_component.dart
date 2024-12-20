@@ -52,7 +52,7 @@ class DebugAppComponent with IsAppPondComponent {
               if (showDebug.value)
                 Positioned.fill(
                   child: StyledContainer(
-                    color: context.style().colorPalette.background.strong.withOpacity(0.3),
+                    color: context.style().colorPalette.background.strong.withValues(alpha: 0.3),
                     child: SafeArea(
                       child: StyledList.column.withScrollbar.centered(
                         children: [

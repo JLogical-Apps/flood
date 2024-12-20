@@ -96,6 +96,7 @@ void main() {
 
     final model = Model(loader: () async {
       loadCount++;
+      await Future(() {});
       return loadCount;
     }).flatMap((value) => Model(loader: () => value.toString()));
 
@@ -103,7 +104,6 @@ void main() {
         model.stateX,
         emitsInOrder(<FutureValue<String>>[
           FutureValue.empty(),
-          FutureValue.loading(),
           FutureValue.loading(),
           FutureValue.loaded('1'),
         ]));
