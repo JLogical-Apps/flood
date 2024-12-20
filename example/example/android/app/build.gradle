@@ -32,6 +32,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace "com.jlogical.example"
     compileSdkVersion flutter.compileSdkVersion
 
     sourceSets {
@@ -64,10 +65,19 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 }
 
 flutter {
     source '../..'
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
