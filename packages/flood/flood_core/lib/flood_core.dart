@@ -11,6 +11,7 @@ export 'package:model_core/model_core.dart';
 export 'package:path_core/path_core.dart';
 export 'package:persistence_core/persistence_core.dart';
 export 'package:pond_core/pond_core.dart';
+export 'package:port_core/port_core.dart';
 export 'package:port_drop_core/port_drop_core.dart';
 export 'package:runtime_type/type.dart';
 export 'package:task_core/task_core.dart';
