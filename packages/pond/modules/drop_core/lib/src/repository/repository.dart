@@ -170,45 +170,52 @@ extension RepositoryExtension on Repository {
     );
   }
 
-  Repository adapting(String rootPath) {
+  Repository adapting(String rootPath, {bool memoryCache = true}) {
     return environmental((repository, context) {
       if (context.environment == EnvironmentType.static.testing) {
         return repository.memory();
       } else if (context.environment == EnvironmentType.static.device) {
-        return repository.file(rootPath).withMemoryCache();
+        return repository.file(rootPath).withMaybeMemoryCache(memoryCache);
       } else {
-        return repository.cloud(rootPath).withMemoryCache();
+        return repository.cloud(rootPath).withMaybeMemoryCache(memoryCache);
       }
     });
   }
 
-  Repository syncing(String rootPath) {
+  Repository syncing(String rootPath, {bool memoryCache = true}) {
     return environmental((repository, context) {
       if (context.environment == EnvironmentType.static.testing) {
         return repository.memory();
       } else if (context.environment == EnvironmentType.static.device) {
-        return repository.file(rootPath).withMemoryCache();
+        return repository.file(rootPath).withMaybeMemoryCache(memoryCache);
       } else {
         if (context.platform == Platform.web) {
-          return repository.cloud(rootPath).withMemoryCache();
+          return repository.cloud(rootPath).withMaybeMemoryCache(memoryCache);
         }
-        return repository.cloud(rootPath, includeLifecycle: false).withDeviceSyncCache().withMemoryCache();
+        return repository
+            .cloud(rootPath, includeLifecycle: false)
+            .withDeviceSyncCache()
+            .withMaybeMemoryCache(memoryCache);
       }
     });
   }
 
-  Repository adaptingToDevice(String rootPath) {
+  Repository adaptingToDevice(String rootPath, {bool memoryCache = true}) {
     return environmental((repository, context) {
       if (context.environment == EnvironmentType.static.testing) {
         return repository.memory();
       } else {
-        return repository.file(rootPath).withMemoryCache();
+        return repository.file(rootPath).withMaybeMemoryCache(memoryCache);
       }
     });
   }
 
   MemoryCacheRepository withMemoryCache() {
     return MemoryCacheRepository(sourceRepository: this);
+  }
+
+  Repository withMaybeMemoryCache(bool memoryCache) {
+    return memoryCache ? withMemoryCache() : this;
   }
 
   DeviceSyncCacheRepository withDeviceSyncCache() {
