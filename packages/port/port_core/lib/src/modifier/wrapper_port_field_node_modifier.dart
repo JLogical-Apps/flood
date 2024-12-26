@@ -79,6 +79,11 @@ class WrapperPortFieldNodeModifier<T extends PortFieldWrapper> extends PortField
   }
 
   @override
+  C? getCustomModifierOrNull<C>(T portField) {
+    return modifierGetter(portField.portField)?.getCustomModifierOrNull<C>(portField.portField);
+  }
+
+  @override
   StagePortField? findStagePortFieldOrNull(T portField) {
     return modifierGetter(portField.portField)?.findStagePortFieldOrNull(portField.portField);
   }

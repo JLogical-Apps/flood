@@ -74,6 +74,11 @@ class MapPortFieldNodeModifier extends PortFieldNodeModifier<MapPortField> {
   }
 
   @override
+  C? getCustomModifierOrNull<C>(MapPortField portField) {
+    return modifierGetter(portField.portField)?.getCustomModifierOrNull<C>(portField.portField);
+  }
+
+  @override
   dynamic getHintOrNull(MapPortField portField) {
     return modifierGetter(portField.portField)?.getHintOrNull(portField.portField);
   }

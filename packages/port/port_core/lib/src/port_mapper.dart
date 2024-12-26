@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:port_core/port_core.dart';
-import 'package:port_core/src/port_submit_result.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:utils_core/utils_core.dart';
 

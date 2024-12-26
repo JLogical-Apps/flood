@@ -8,6 +8,7 @@ import 'package:port_core/port_core.dart';
 import 'package:port_core/src/allowed_file_types_port_field.dart';
 import 'package:port_core/src/color_port_field.dart';
 import 'package:port_core/src/currency_port_field.dart';
+import 'package:port_core/src/custom_modifier_port_field.dart';
 import 'package:port_core/src/display_name_port_field.dart';
 import 'package:port_core/src/email_port_field.dart';
 import 'package:port_core/src/fallback_port_field.dart';
@@ -267,6 +268,9 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
   PortField<T, S> withSuggestions(Future<List<T>> Function(T value) suggestionsGetter) =>
       SuggestionsPortField(portField: this, suggestionsGetter: suggestionsGetter);
 
+  PortField<T, S> withCustomModifier<C>(C customModifier) =>
+      CustomModifierPortField<T, S, C>(portField: this, customModifier: customModifier);
+
   bool findIsRequired() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.isRequired(this) ?? false;
   }
@@ -341,6 +345,10 @@ extension PortFieldExtensions<T, S> on PortField<T, S> {
 
   bool findIsColor() {
     return PortFieldNodeModifier.getModifierOrNull(this)?.isColor(this) ?? false;
+  }
+
+  C? findCustomModifierOrNull<C>() {
+    return PortFieldNodeModifier.getModifierOrNull(this)?.getCustomModifierOrNull<C>(this);
   }
 }
 

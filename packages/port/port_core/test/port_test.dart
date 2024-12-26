@@ -1,5 +1,4 @@
 import 'package:port_core/port_core.dart';
-import 'package:port_core/src/port_submit_result.dart';
 import 'package:test/test.dart';
 import 'package:utils_core/utils_core.dart';
 
@@ -208,6 +207,13 @@ void main() {
     expect(port['words/2'], 'Test');
 
     expect(() => port.getFieldByPath('words/3'), throwsRangeError);
+  });
+
+  test('custom modifiers', () {
+    final field = PortField.string().withCustomModifier<int>(3).withCustomModifier<String>('Hello World').required();
+    expect(field.findCustomModifierOrNull<int>(), 3);
+    expect(field.findCustomModifierOrNull<String>(), 'Hello World');
+    expect(field.findCustomModifierOrNull<bool>(), null);
   });
 }
 

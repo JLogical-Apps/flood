@@ -6,6 +6,7 @@ import 'package:port_core/src/modifier/asset_port_field_modifier.dart';
 import 'package:port_core/src/modifier/base_port_field_modifier.dart';
 import 'package:port_core/src/modifier/color_port_field_modifier.dart';
 import 'package:port_core/src/modifier/currency_port_field_modifier.dart';
+import 'package:port_core/src/modifier/custom_modifier_port_field_modifier.dart';
 import 'package:port_core/src/modifier/date_port_field_modifier.dart';
 import 'package:port_core/src/modifier/display_name_port_field_modifier.dart';
 import 'package:port_core/src/modifier/email_port_field_modifier.dart';
@@ -83,6 +84,10 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     return false;
   }
 
+  C? getCustomModifierOrNull<C>(T portField) {
+    return null;
+  }
+
   StagePortField? findStagePortFieldOrNull(T portField) {
     return null;
   }
@@ -127,6 +132,7 @@ abstract class PortFieldNodeModifier<T extends PortField<dynamic, dynamic>>
     ColorPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     FallbackPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     HintPortFieldNodeModifier(modifierGetter: getModifierOrNull),
+    CustomModifierPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     WrapperPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     MapPortFieldNodeModifier(modifierGetter: getModifierOrNull),
     BasePortFieldModifier(),
