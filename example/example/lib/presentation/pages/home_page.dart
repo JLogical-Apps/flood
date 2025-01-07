@@ -73,7 +73,7 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                   titleText: 'Import',
                   color: Colors.blue,
                   iconData: Icons.download,
-                  descriptionText: 'Import a csv of todos',
+                  descriptionText: 'Import a csv of todos.',
                   onPerform: (context) async {
                     await context.showStyledDialog(StyledPortDialog(
                       port: Port.of({
@@ -82,14 +82,34 @@ class HomePage with IsAppPageWrapper<HomeRoute> {
                       titleText: 'Import Todos',
                       onAccept: (file) async {
                         final csv = await DataSource.static.crossFile(file).mapCsv(hasHeaderRow: true).get();
-                        final todos = csv
+                        final todoEntities = csv
                             .map((row) => Todo()
                               ..nameProperty.set(row[0])
                               ..descriptionProperty.set(row[1])
                               ..userProperty.set(loggedInUserId))
+                            .map((todo) => TodoEntity()..set(todo))
                             .toList();
-                        await Future.wait(
-                            todos.map((todo) => context.dropCoreComponent.update(TodoEntity()..set(todo))));
+                        await context.dropCoreComponent.updateAll(todoEntities);
+                      },
+                    ));
+                  },
+                ),
+                ActionItem(
+                  titleText: 'Delete All Todos',
+                  color: Colors.red,
+                  iconData: Icons.delete,
+                  descriptionText: 'Delete all your todos.',
+                  onPerform: (context) async {
+                    await context.showStyledDialog(StyledDialog.yesNo(
+                      titleText: 'Confirm Delete All',
+                      bodyText: 'Are you sure you want to delete all your todos? You cannot undo this.',
+                      onAccept: () async {
+                        final todoEntities = await Query.from<TodoEntity>()
+                            .where(Todo.userField)
+                            .isEqualTo(loggedInUserId)
+                            .all()
+                            .get(context.dropCoreComponent);
+                        await context.dropCoreComponent.deleteAll(todoEntities);
                       },
                     ));
                   },

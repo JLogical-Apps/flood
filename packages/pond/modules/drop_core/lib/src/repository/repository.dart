@@ -76,9 +76,13 @@ abstract class Repository implements CorePondComponent, RepositoryStateHandlerWr
 
 extension RepositoryExtension on Repository {
   Future<State> update(Stateful stateful) async {
-    var state = stateful.getState(context.locate<DropCoreComponent>());
-    state = await onUpdate(state);
-    return state;
+    final state = stateful.getState(context.dropCoreComponent);
+    return await onUpdate(state);
+  }
+
+  Future<List<State>> updateAll(List<Stateful> statefuls) async {
+    final states = statefuls.map((stateful) => stateful.getState(context.dropCoreComponent)).toList();
+    return await onUpdateAll(states);
   }
 
   Future<E> updateEntity<E extends Entity<V>, V extends ValueObject>(
@@ -111,6 +115,11 @@ extension RepositoryExtension on Repository {
 
   Future<State> delete(Stateful state) {
     return onDelete(state.getState(context.locate<DropCoreComponent>()));
+  }
+
+  Future<List<State>> deleteAll(List<Stateful> statefuls) async {
+    final states = statefuls.map((stateful) => stateful.getState(context.dropCoreComponent)).toList();
+    return await onDeleteAll(states);
   }
 
   WithEmbeddedTypeRepository<V> withEmbeddedType<V extends ValueObject>(
@@ -245,7 +254,13 @@ mixin IsRepository implements Repository, IsRepositoryStateHandlerWrapper, IsRep
   Future<State> onUpdate(State state) => stateHandler.onUpdate(state);
 
   @override
+  Future<List<State>> onUpdateAll(List<State> states) => stateHandler.onUpdateAll(states);
+
+  @override
   Future<State> onDelete(State state) => stateHandler.onDelete(state);
+
+  @override
+  Future<List<State>> onDeleteAll(List<State> states) => stateHandler.onDeleteAll(states);
 
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
@@ -303,7 +318,13 @@ mixin IsRepositoryWrapper implements RepositoryWrapper, RepositoryStateHandlerWr
   Future<State> onUpdate(State state) => stateHandler.onUpdate(state);
 
   @override
+  Future<List<State>> onUpdateAll(List<State> states) => stateHandler.onUpdateAll(states);
+
+  @override
   Future<State> onDelete(State state) => stateHandler.onDelete(state);
+
+  @override
+  Future<List<State>> onDeleteAll(List<State> states) => stateHandler.deleteAll(states);
 
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(

@@ -39,6 +39,30 @@ class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
   }
 
   @override
+  Future<List<State>> onUpdateAll(List<State> states) async {
+    repository.context.log('Saving states to Firebase: [$states]');
+
+    final batch = repository.context.firebaseCoreComponent.firestore.batch();
+
+    for (final state in states) {
+      final doc = collection.doc(state.id!);
+      final json = statePersister.persist(state);
+
+      json.remove(State.idField);
+
+      if (state.type == inferredType) {
+        json.remove(State.typeField);
+      }
+
+      batch.set(doc, json, SetOptions(merge: true));
+    }
+
+    await batch.commit();
+
+    return states;
+  }
+
+  @override
   Future<State> onDelete(State state) async {
     repository.context.log('Deleting state to Firebase: [$state]');
 
@@ -50,5 +74,25 @@ class FirebaseCloudRepositoryStateHandler with IsRepositoryStateHandler {
     }
 
     return state;
+  }
+
+  @override
+  Future<List<State>> onDeleteAll(List<State> states) async {
+    repository.context.log('Deleting states from Firebase: [$states]');
+
+    final batch = repository.context.firebaseCoreComponent.firestore.batch();
+
+    for (final state in states) {
+      final id = state.id ?? (throw Exception('Cannot delete entity that has not been saved yet!'));
+      final doc = collection.doc(id);
+      final snap = await guardAsync(() => doc.get());
+      if (snap?.exists == true) {
+        batch.delete(doc);
+      }
+    }
+
+    await batch.commit();
+
+    return states;
   }
 }
