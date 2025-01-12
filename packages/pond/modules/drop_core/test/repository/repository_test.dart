@@ -82,11 +82,16 @@ void main() {
     final states = [
       User()..nameProperty.set('John Doe'),
       User()..nameProperty.set('Jane Doe'),
-    ].map((user) => user.getState(context.dropCoreComponent)).toList();
+    ].map((user) => UserEntity()..set(user)).map((entity) => entity.getState(context.dropCoreComponent)).toList();
 
     final newStates = await repository.updateAll(states);
 
     expect(states, newStates);
+
+    await repository.deleteAll(states);
+
+    final fetchedStates = await repository.executeQuery(Query.from<UserEntity>().all());
+    expect(fetchedStates, isEmpty);
   });
 
   test('throw on saving invalid ValueObject', () async {
