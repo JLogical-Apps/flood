@@ -2,9 +2,10 @@ name: device_files
 description: App Component to view the device files.
 
 publish_to: "none"
+resolution: workspace
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
+  sdk: ^3.6.0
 
 version: 0.0.1
 

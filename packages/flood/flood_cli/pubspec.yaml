@@ -2,9 +2,10 @@ name: flood_cli
 description: CLI Flood utils
 
 publish_to: "none"
+resolution: workspace
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
+  sdk: ^3.6.0
 
 version: 0.0.1
 
@@ -23,5 +24,3 @@ dependencies:
     path: ../../pond/modules/release
 dev_dependencies:
   lints: ^2.0.0
-dependency_overrides:
-  vm_service: 13.0.0

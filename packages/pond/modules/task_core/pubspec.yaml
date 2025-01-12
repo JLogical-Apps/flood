@@ -2,9 +2,10 @@ name: task_core
 description: Core module for running and scheduling tasks.
 
 publish_to: "none"
+resolution: workspace
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
+  sdk: ^3.6.0
 
 version: 0.0.1
 
@@ -22,4 +23,4 @@ dependencies:
     path: ../../../utils/utils_core
 dev_dependencies:
   lints: ^2.0.0
-  test: 1.24.6
+  test: ^1.24.6

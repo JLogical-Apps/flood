@@ -2,9 +2,10 @@ name: environment_banner
 description: App Component to display a banner which shows the current environment.
 
 publish_to: "none"
+resolution: workspace
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
+  sdk: ^3.6.0
 
 version: 0.0.1
 

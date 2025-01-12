@@ -1,10 +1,70 @@
-name: flood
+name: flood_wrapper
 description: All Flood utils
 
 publish_to: "none"
 
+workspace:
+  - example/example
+  - example/example_core
+  - packages/pond/pond
+  - packages/pond/pond_cli
+  - packages/pond/pond_core
+  - packages/pond/modules/auth_core
+  - packages/pond/modules/drop_core
+  - packages/pond/modules/type_core
+  - packages/pond/modules/asset_core
+  - packages/pond/modules/environment_core
+  - packages/pond/modules/actions_core
+  - packages/pond/modules/asset
+  - packages/pond/modules/appwrite_app
+  - packages/pond/modules/auth
+  - packages/pond/modules/location
+  - packages/pond/modules/reset
+  - packages/pond/modules/firebase_ops
+  - packages/pond/modules/release
+  - packages/pond/modules/device_files
+  - packages/pond/modules/native_setup
+  - packages/pond/modules/environment_banner
+  - packages/pond/modules/port_style_component
+  - packages/pond/modules/task_core
+  - packages/pond/modules/location_core
+  - packages/pond/modules/firebase
+  - packages/pond/modules/drop
+  - packages/pond/modules/port_drop_core
+  - packages/pond/modules/log_core
+  - packages/pond/modules/actions
+  - packages/pond/modules/user_device_token_core
+  - packages/pond/modules/environment
+  - packages/pond/modules/app_usage
+  - packages/pond/modules/log
+  - packages/pond/modules/ops
+  - packages/pond/modules/focus_grabber
+  - packages/pond/modules/appwrite_core
+  - packages/pond/modules/url_bar
+  - packages/pond/modules/messaging_core
+  - packages/pond/modules/style_component
+  - packages/pond/modules/testing_setup
+  - packages/pond/modules/user_location
+  - packages/pond/modules/debug
+  - packages/pond/modules/share
+  - packages/flood/flood_core
+  - packages/flood/flood_cli
+  - packages/flood/flood
+  - packages/utils/utils_core
+  - packages/utils/utils
+  - packages/style
+  - packages/type
+  - packages/persistence/persistence_core
+  - packages/persistence/persistence
+  - packages/model/model
+  - packages/model/model_core
+  - packages/path_core
+  - packages/port/port_style
+  - packages/port/port_core
+  - packages/port/port
+
 environment:
-  sdk: ">=3.2.0 <4.0.0"
+  sdk: ^3.6.0
 
 version: 3.0.0
 
@@ -12,4 +72,23 @@ dependencies:
   lints: ^2.0.0
 
 dev_dependencies:
-  melos: ^3.1.1
+  melos: ^7.0.0-dev.3
+
+dependency_overrides:
+  http: 0.13.5
+  vm_service: 13.0.0
+  win32: ^5.4.0
+
+melos:
+  scripts:
+    test:
+      name: test
+      description: 'Tests every module'
+      run: |
+        melos exec --fail-fast                                  -- flutter analyze . && \
+        melos exec --fail-fast --dir-exists="test" -- flutter test
+    clean_all:
+      name: clean_all
+      description: 'Clean every module'
+      run: |
+        melos exec --fail-fast -- flutter clean
