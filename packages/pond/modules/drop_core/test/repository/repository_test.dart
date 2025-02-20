@@ -66,6 +66,34 @@ void main() {
     expect(stateByIdX.value, {});
   });
 
+  test('updating more than one state at a time.', () async {
+    final repository = Repository.forType<UserEntity, User>(
+      UserEntity.new,
+      User.new,
+      entityTypeName: 'UserEntity',
+      valueObjectTypeName: 'User',
+    ).memory();
+
+    final context = CorePondContext();
+    await context.register(TypeCoreComponent());
+    await context.register(DropCoreComponent());
+    await context.register(repository);
+
+    final states = [
+      User()..nameProperty.set('John Doe'),
+      User()..nameProperty.set('Jane Doe'),
+    ].map((user) => UserEntity()..set(user)).map((entity) => entity.getState(context.dropCoreComponent)).toList();
+
+    final newStates = await repository.updateAll(states);
+
+    expect(states, newStates);
+
+    await repository.deleteAll(states);
+
+    final fetchedStates = await repository.executeQuery(Query.from<UserEntity>().all());
+    expect(fetchedStates, isEmpty);
+  });
+
   test('throw on saving invalid ValueObject', () async {
     final memoryRepository = UserRepository();
 

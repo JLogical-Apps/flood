@@ -5,7 +5,11 @@ import 'package:drop_core/src/state/state.dart';
 abstract class RepositoryStateHandler {
   Future<State> onUpdate(State state);
 
+  Future<List<State>> onUpdateAll(List<State> states);
+
   Future<State> onDelete(State state);
+
+  Future<List<State>> onDeleteAll(List<State> states);
 }
 
 extension RepositoryStateHandlerExtensions on RepositoryStateHandler {
@@ -13,8 +17,16 @@ extension RepositoryStateHandlerExtensions on RepositoryStateHandler {
     return onUpdate(state);
   }
 
+  Future<List<State>> updateAll(List<State> states) {
+    return onUpdateAll(states);
+  }
+
   Future<State> delete(State state) {
     return onDelete(state);
+  }
+
+  Future<List<State>> deleteAll(List<State> states) {
+    return onDeleteAll(states);
   }
 
   RepositoryStateHandler withEntityStateLifecycle(DropCoreContext context) {
@@ -22,7 +34,27 @@ extension RepositoryStateHandlerExtensions on RepositoryStateHandler {
   }
 }
 
-mixin IsRepositoryStateHandler implements RepositoryStateHandler {}
+mixin IsRepositoryStateHandler implements RepositoryStateHandler {
+  @override
+  Future<List<State>> onUpdateAll(List<State> states) async {
+    final updatedStates = <State>[];
+    for (final state in states) {
+      updatedStates.add(await update(state));
+    }
+
+    return updatedStates;
+  }
+
+  @override
+  Future<List<State>> onDeleteAll(List<State> states) async {
+    final deletedStates = <State>[];
+    for (final state in states) {
+      deletedStates.add(await delete(state));
+    }
+
+    return deletedStates;
+  }
+}
 
 abstract class RepositoryStateHandlerWrapper implements RepositoryStateHandler {
   RepositoryStateHandler get stateHandler;
@@ -33,5 +65,11 @@ mixin IsRepositoryStateHandlerWrapper implements RepositoryStateHandlerWrapper {
   Future<State> onUpdate(State state) => stateHandler.update(state);
 
   @override
+  Future<List<State>> onUpdateAll(List<State> states) => stateHandler.updateAll(states);
+
+  @override
   Future<State> onDelete(State state) => stateHandler.delete(state);
+
+  @override
+  Future<List<State>> onDeleteAll(List<State> states) => stateHandler.deleteAll(states);
 }

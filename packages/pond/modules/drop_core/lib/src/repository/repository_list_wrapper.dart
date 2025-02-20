@@ -46,7 +46,13 @@ mixin IsRepositoryListWrapper implements RepositoryListWrapper {
   Future<State> onUpdate(State state) => stateHandler.onUpdate(state);
 
   @override
+  Future<List<State>> onUpdateAll(List<State> states) => stateHandler.onUpdateAll(states);
+
+  @override
   Future<State> onDelete(State state) => stateHandler.onDelete(state);
+
+  @override
+  Future<List<State>> onDeleteAll(List<State> states) => stateHandler.onDeleteAll(states);
 
   @override
   Future<T> onExecuteQuery<E extends Entity, T>(
@@ -82,9 +88,33 @@ class _RepositoryListStateHandler implements RepositoryStateHandler {
   }
 
   @override
+  Future<List<State>> onUpdateAll(List<State> states) async {
+    if (states.isEmpty) {
+      return [];
+    }
+
+    return await repositories
+            .firstWhereOrNull((repository) => repository.handledTypes.contains(states.first.type))
+            ?.updateAll(states) ??
+        (throw Exception('Cannot find repository to handle update for [$states]'));
+  }
+
+  @override
   Future<State> onDelete(State state) {
     return repositories.firstWhereOrNull((repository) => repository.handledTypes.contains(state.type))?.delete(state) ??
         (throw Exception('Cannot find repository to handle delete for [$state]'));
+  }
+
+  @override
+  Future<List<State>> onDeleteAll(List<State> states) async {
+    if (states.isEmpty) {
+      return [];
+    }
+
+    return await repositories
+            .firstWhereOrNull((repository) => repository.handledTypes.contains(states.first.type))
+            ?.deleteAll(states) ??
+        (throw Exception('Cannot find repository to handle deletes for [$states]'));
   }
 }
 

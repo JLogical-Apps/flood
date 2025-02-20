@@ -26,6 +26,25 @@ abstract class Entity<V extends ValueObject> extends Record with EquatableMixin,
 
   void set(V valueObject) => value = valueObject;
 
+  void update(DropCoreContext context, V Function(V) updater) {
+    final valueObjectType = V == ValueObject ? this.valueObjectType : V;
+    var valueObjectRuntimeType = context.getRuntimeTypeRuntime(valueObjectType);
+    if (valueObjectRuntimeType.isAbstract) {
+      valueObjectRuntimeType = context.getRuntimeTypeRuntime(this.valueObjectType);
+    }
+
+    final newValueObject = valueObjectRuntimeType.createInstance() as V;
+
+    if (hasValue) {
+      newValueObject.idToUse = value.idToUse;
+      newValueObject.entity = this;
+      newValueObject.copyFrom(context, value);
+    }
+
+    updater(newValueObject);
+    value = newValueObject;
+  }
+
   @override
   State getState(DropCoreContext context) => value
       .getState(context)

@@ -188,6 +188,16 @@ class MemoryCacheRepositoryStateHandler with IsRepositoryStateHandler {
     return state;
   }
 
+  @override
+  Future<List<State>> onUpdateAll(List<State> states) async {
+    final newStates = await repository.repository.updateAll(states);
+    repository.queryExecutor.paginationQueryRequestResults.clear();
+    for (final state in newStates) {
+      updateCachedState(state);
+    }
+    return newStates;
+  }
+
   void updateCachedState(State state) {
     repository.queryExecutor.cachedQueryRequestResults.clear();
     final cachedState = statePersister.inflate(statePersister.persist(state));
@@ -203,5 +213,17 @@ class MemoryCacheRepositoryStateHandler with IsRepositoryStateHandler {
     repository.stateByIdX.value = repository.stateByIdX.value.copy()..remove(state.id!);
 
     return state;
+  }
+
+  @override
+  Future<List<State>> onDeleteAll(List<State> states) async {
+    final newStates = await repository.repository.deleteAll(states);
+
+    repository.queryExecutor.cachedQueryRequestResults.clear();
+    repository.queryExecutor.paginationQueryRequestResults.clear();
+    repository.stateByIdX.value = repository.stateByIdX.value.copy()
+      ..removeWhere((id, state) => newStates.any((newState) => newState.id == id));
+
+    return newStates;
   }
 }

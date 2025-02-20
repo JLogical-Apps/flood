@@ -92,7 +92,7 @@ class FileRepositoryQueryExecutor with IsRepositoryQueryExecutorWrapper {
   }
 }
 
-class FileRepositoryStateHandler implements RepositoryStateHandler {
+class FileRepositoryStateHandler with IsRepositoryStateHandler {
   final FileRepository repository;
 
   FileRepositoryStateHandler({required this.repository});
