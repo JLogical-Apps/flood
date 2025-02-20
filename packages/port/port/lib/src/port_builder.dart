@@ -7,25 +7,30 @@ import 'package:utils/utils.dart';
 class PortBuilder<T> extends HookWidget {
   final Port<T> port;
   final Widget Function(BuildContext context, Port<T> port) builder;
-  final AutofillContextAction onDisposeAction;
+  final AutofillContextAction? onDisposeAction;
 
   PortBuilder({
     super.key,
     required this.port,
     required this.builder,
-    this.onDisposeAction = AutofillContextAction.commit,
+    this.onDisposeAction,
   });
 
   @override
   Widget build(BuildContext context) {
     useValueStream(useMemoized(() => port.getPortX()));
 
-    return Provider<Port>(
-      create: (_) => port,
-      child: AutofillGroup(
-        child: builder(context, port),
-        onDisposeAction: onDisposeAction,
-      ),
+    final onDisposeAction = this.onDisposeAction;
+
+    final child = builder(context, port);
+    return Provider<Port>.value(
+      value: port,
+      child: onDisposeAction == null
+          ? child
+          : AutofillGroup(
+              child: child,
+              onDisposeAction: onDisposeAction,
+            ),
     );
   }
 }
