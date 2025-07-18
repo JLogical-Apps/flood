@@ -19,9 +19,11 @@ class ShareAppComponent with IsAppPondComponent {
     }
 
     final box = context.findRenderObject() as RenderBox?;
-    await Share.share(
-      text,
-      sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+    await SharePlus.instance.share(
+      ShareParams(
+        text: text,
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      ),
     );
   }
 
@@ -47,12 +49,12 @@ class ShareAppComponent with IsAppPondComponent {
     }
 
     final size = MediaQuery.of(context).size;
-    await Share.shareXFiles(
-      [XFile.fromData(fileBytes, name: fileName, mimeType: mimeType)],
+    await SharePlus.instance.share(ShareParams(
+      files: [XFile.fromData(fileBytes, name: fileName, mimeType: mimeType)],
       text: text,
       subject: subject,
       sharePositionOrigin: Rect.fromLTWH(0, 0, size.width, size.height / 2),
-    );
+    ));
   }
 }
 

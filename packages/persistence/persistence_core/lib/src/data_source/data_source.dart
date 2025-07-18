@@ -144,7 +144,7 @@ extension DirectoryDataSourceExtensions on DataSource<Directory> {
 
 extension RawDataSourceExtensions on DataSource<List<int>> {
   DataSource<List<int>> mapGzip() => map(
-        getMapper: (data) => GZipEncoder().encode(data)!,
+        getMapper: (data) => GZipEncoder().encode(data),
         setMapper: (data) => GZipDecoder().decodeBytes(data),
       );
 }

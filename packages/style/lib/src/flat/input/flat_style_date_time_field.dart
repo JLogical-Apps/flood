@@ -144,7 +144,7 @@ class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> 
                 ),
               ),
             ),
-            dialogTheme: DialogTheme(
+            dialogTheme: DialogThemeData(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -208,7 +208,7 @@ class FlatStyleDateFieldRenderer with IsTypedStyleRenderer<StyledDateTimeField> 
                 ),
               ),
             ),
-            dialogTheme: DialogTheme(
+            dialogTheme: DialogThemeData(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

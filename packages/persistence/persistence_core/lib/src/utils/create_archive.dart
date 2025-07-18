@@ -15,7 +15,7 @@ extension ArchiveDirectoryExtensions on Directory {
       // If it's a Directory, only add empty directories
       if (file is Directory) {
         final filename = path.relative(file.path, from: this.path);
-        final af = ArchiveFile('$filename/', 0, null);
+        final af = ArchiveFile('$filename/', 0, []);
         af.mode = file.statSync().mode;
         af.isFile = false;
         archive.addFile(af);
@@ -24,7 +24,7 @@ extension ArchiveDirectoryExtensions on Directory {
         final filename = path.relative(file.path, from: this.path);
 
         final fileStream = InputFileStream(file.path);
-        final af = ArchiveFile.stream(filename, file.lengthSync(), fileStream);
+        final af = ArchiveFile.stream(filename, fileStream);
         af.lastModTime = file.lastModifiedSync().millisecondsSinceEpoch ~/ 1000;
         af.mode = file.statSync().mode;
 

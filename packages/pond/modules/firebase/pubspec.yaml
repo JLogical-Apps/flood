@@ -23,7 +23,7 @@ dependencies:
   firebase_crashlytics: ^4.2.0
   firebase_messaging: ^15.1.6
   firebase_storage: ^12.3.7
-  mime: ^1.0.5
+  mime: ^2.0.0
   path: ^1.8.2
 
   asset:
