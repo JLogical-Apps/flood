@@ -7,7 +7,7 @@ environment:
   sdk: ^3.6.0
 dependencies:
   collection: ^1.16.0
-  intl: ^0.18.0
+  intl: ^0.20.2
   meta: ^1.8.0
   flood_core:
     path: ../../packages/flood/flood_core

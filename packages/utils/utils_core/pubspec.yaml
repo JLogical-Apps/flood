@@ -15,7 +15,7 @@ dependencies:
   dlibphonenumber: ^1.1.14
   equatable: ^2.0.5
   filesize: ^2.0.1
-  intl: ^0.18.0
+  intl: ^0.20.2
   path: ^1.8.2
   rxdart: ^0.28.0
   yaml: ^3.1.2
